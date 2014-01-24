@@ -80,7 +80,7 @@ public:
 		array[2] -= other.array[2];
 	}
 
-	inline operator*=(T val) {
+	inline void operator*=(T val) {
 		array[0] *= val;
 		array[1] *= val;
 		array[2] *= val;
@@ -136,12 +136,12 @@ public:
 		return sqrt(squaredLength());
 	}
 
-	static T distSq(const point3d& v0, const point3d& v1) const {
+	static T distSq(const point3d& v0, const point3d& v1) {
 		return ((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]) + (v0.array[2]-v1.array[2])*(v0.array[2]-v1.array[2]));
 	}
 
-	static T dist(const point3d& v0, const point3d& v1) const {
-		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]) + (v0.array[2]-v1.array[2])*(v0.array[2]-v1.array[2])));
+	static T dist(const point3d& v0, const point3d& v1) {
+		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]) + (v0.array[2]-v1.array[2])*(v0.array[2]-v1.array[2]));
 	}
 
 

@@ -102,10 +102,6 @@ public:
 		return (array[0]*array[0]);
 	}
 
-	inline T lengthSq() const {
-		return array[0]*array[0];
-	}
-
 	inline T length() const {
 		return array[0];
 	}

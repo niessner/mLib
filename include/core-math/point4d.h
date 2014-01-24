@@ -29,7 +29,7 @@ public:
 		array[3] = w;
 	}
 
-	point4d(const point3d<FloatType>& other, FloatType w = (T)1) {
+	point4d(const point3d<T>& other, T w = (T)1) {
 		array[0] = other.array[0];
 		array[1] = other.array[1];
 		array[2] = other.array[2];
@@ -141,7 +141,7 @@ public:
 		return sqrt(lengthSq());
 	}
 
-	static T distSq(const point4d& v0, const point4d& v1) const {
+	static T distSq(const point4d& v0, const point4d& v1) {
 		return (
 			(v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) +
 			(v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]) +
@@ -150,7 +150,7 @@ public:
 			);
 	}
 
-	static T dist(const point4d& v0, const point4d& v1) const {
+	static T dist(const point4d& v0, const point4d& v1) {
 		return (*this - other).length();
 	}
 
@@ -221,7 +221,7 @@ __forceinline std::ostream& operator<<(std::ostream& s, const point4d<T>& v)
 
 //! read a point4d from a stream
 template <class T>
-__forceinline inline std::istream& operator>>(std::istream& s, point4d<T>& v)
+__forceinline std::istream& operator>>(std::istream& s, point4d<T>& v)
 { return (s >> v[0] >> v[1] >> v[2] >> v[3]); }
 
 

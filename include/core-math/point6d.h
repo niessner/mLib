@@ -140,11 +140,11 @@ public:
 		return sqrt(lengthSq());
 	}
 
-	static distSq(const point6d& v0, const point6d& v1) {
+	static T distSq(const point6d& v0, const point6d& v1) {
 		return (v0-v1).lengthSq();
 	}
 
-	static dist(const point6d& v0, const point6d& v1) {
+	static T dist(const point6d& v0, const point6d& v1) {
 		return (v0-v1).length()
 	}
 
