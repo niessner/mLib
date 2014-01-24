@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+  <Type Name="Vector&lt;*&gt;">
+    <DisplayString>{{ size={m_length} }}</DisplayString>
+    <Expand>
+      <Item Name="[size]">m_length</Item>
+      <Item Name="[capacity]">m_capacity</Item>
+      <ArrayItems>
+        <Size>m_length</Size>
+        <ValuePointer>m_data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+  <Type Name="Grid&lt;*&gt;">
+    <DisplayString>{{ size={m_rows, m_cols} }}</DisplayString>
+    <Expand>
+      <Item Name="[rows]">m_rows</Item>
+      <Item Name="[cols]">m_cols</Item>
+      <ArrayItems>
+        <Size>_rows * _cols</Size>
+        <ValuePointer>m_data</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+
+</AutoVisualizer>

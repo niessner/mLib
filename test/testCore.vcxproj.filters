@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="mLibHeader">
+      <UniqueIdentifier>{569ec575-1bb8-492b-9e9f-0248ce674c34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mLibHeader\Aggregate">
+      <UniqueIdentifier>{875cf65f-9fd6-4ff3-8679-6f134dcbd653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mLibHeader\core-base">
+      <UniqueIdentifier>{ca9cff61-1097-4bab-a7cd-ef28a2d68f1d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mLibSource.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\core-base.h">
+      <Filter>mLibHeader\Aggregate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-graphics.h">
+      <Filter>mLibHeader\Aggregate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math.h">
+      <Filter>mLibHeader\Aggregate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util.h">
+      <Filter>mLibHeader\Aggregate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\classList.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\string.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\vector.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\mLibCore.h">
+      <Filter>mLibHeader\Aggregate</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h" />
+    <ClInclude Include="testVector.h" />
+    <ClInclude Include="mLibInclude.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="..\include\core-base\common.h">
+      <Filter>mLibHeader\Aggregate</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="notes.txt" />
+  </ItemGroup>
+</Project>

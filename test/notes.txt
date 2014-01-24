@@ -1,0 +1,6 @@
+
+most constructors should be made explicit to avoid accidental casts, ex. Vector(int)
+
+UINT should be used most of the time (instead of unsigned int)
+
+mLib.natvis goes in C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Packages\Debugger\Visualizers
