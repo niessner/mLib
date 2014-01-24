@@ -1,16 +1,7 @@
-/*
-String.h
-Written by Matthew Fisher
-
-String class and related conversions.
-*/
 
 #pragma once
 
-//
-// Intellisense for custom types via autoexp.dat
-//
-//http://www.idigitalhouse.com/Blog/?p=83
+#include <string.h>
 
 class String
 {
@@ -19,371 +10,320 @@ public:
     {
         bool operator()(const String &L, const String &R) const
         {
-            return strcmp(L.CString(), R.CString()) < 0;
+            return strcmp(L.ptr(), R.ptr()) < 0;
         }
         static bool Compare(const String &L, const String &R)
         {
-            return strcmp(L.CString(), R.CString()) < 0;
+            return strcmp(L.ptr(), R.ptr()) < 0;
         }
     };
 
     String()
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
     }
 
     ~String()
     {
-        if(_Data != NULL)
-        {
-            delete[] _Data;
-        }
+        if(m_data != NULL) delete[] m_data;
     }
 
     String(const String &S)
     {
-        if(S._Data == NULL)
+        if(S.m_data == NULL)
         {
-            _Data = NULL;
-            _Capacity = 0;
-            _Length = 0;
+            m_data = NULL;
+            m_capacity = 0;
+            m_length = 0;
         }
         else
         {
-            _Length = S._Length;
-            const UINT NewCapacity = _Length + 1;
-            _Capacity = NewCapacity;
-            _Data = new char[NewCapacity];
-            memcpy(_Data, S._Data, NewCapacity);
+            m_length = S.m_length;
+            const UINT newCapacity = m_length + 1;
+            m_capacity = newCapacity;
+            m_data = new char[newCapacity];
+            memcpy(m_data, S.m_data, newCapacity);
         }
     }
 
     String(String &&S)
     {
-        _Length = S._Length;
-        _Capacity = S._Capacity;
-        _Data = S._Data;
-        S._Length = 0;
-        S._Capacity = 0;
-        S._Data = NULL;
+        m_length = S.m_length;
+        m_capacity = S.m_capacity;
+        m_data = S.m_data;
+        S.m_length = 0;
+        S.m_capacity = 0;
+        S.m_data = NULL;
     }
 
-    explicit String(const UnicodeString &S);
-    explicit String(UINT Value)
+    explicit String(UINT value)
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        *this = Value;
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
+        *this = value;
     }
-    explicit String(UINT64 Value)
+    explicit String(UINT64 value)
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        *this = Value;
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
+        *this = value;
     }
-    explicit String(DWORD Value)
+    explicit String(int value)
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        *this = int(Value);
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
+        *this = value;
     }
-    explicit String(int Value)
+    explicit String(float value)
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        *this = Value;
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
+        *this = value;
     }
-    explicit String(float Value)
+    explicit String(double value)
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        *this = Value;
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
+        *this = float(value);
     }
-    explicit String(double Value)
+    String(const char *text)
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        *this = float(Value);
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
+        *this = text;
     }
-    String(const char *Text)
+    explicit String(char character)
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        *this = Text;
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
+        *this = character;
     }
-    explicit String(char Character)
+    explicit String(bool b)
     {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        *this = Character;
-    }
-    explicit String(bool B)
-    {
-        _Data = NULL;
-        _Capacity = 0;
-        _Length = 0;
-        if(B)
-        {
-            *this = "true";
-        }
-        else
-        {
-            *this = "false";
-        }
+        m_data = NULL;
+        m_capacity = 0;
+        m_length = 0;
+        if(b) *this = "true";
+        else *this = "false";
     }
 
     //
     // Memory
     //
-    __forceinline void FreeMemory()
+    inline void deleteMemory()
     {
-        if(_Data != NULL)
+        if(m_data != NULL)
         {
-            delete[] _Data;
-            _Data = NULL;
+            delete[] m_data;
+            m_data = NULL;
         }
-        _Length = 0;
-        _Capacity = 0;
+        m_length = 0;
+        m_capacity = 0;
     }
 
-    __forceinline void Allocate(UINT Capacity)
+    inline void allocate(UINT capacity)
     {
-        if(_Data != NULL)
+        if(m_data != NULL)
         {
-            delete[] _Data;
+            delete[] m_data;
         }
-        _Data = new char[Capacity];
-        _Data[0] = '\0';
-        _Length = 0;
-        _Capacity = Capacity;
+        m_data = new char[capacity];
+        m_data[0] = '\0';
+        m_length = 0;
+        m_capacity = capacity;
     }
 
-    __forceinline void AllocateLength(UINT Length)
+    /*inline void AllocateLength(UINT Length)
     {
-        if(_Data != NULL)
+        if(m_data != NULL)
         {
-            delete[] _Data;
+            delete[] m_data;
         }
-        _Data = new char[Length + 1];
-        _Data[Length] = '\0';
-        _Length = Length;
-        _Capacity = Length + 1;
-    }
+        m_data = new char[Length + 1];
+        m_data[Length] = '\0';
+        m_length = Length;
+        m_capacity = Length + 1;
+    }*/
 
-    __forceinline void ReSize(UINT NewLength)
+    inline void resize(UINT newLength)
     {
-        const UINT NewCapacity = NewLength + 1;
-        _Length = Math::Min(_Length, NewLength);
-        char *NewData = new char[NewCapacity];
-        if(_Length > 0)
-        {
-            memcpy(NewData, _Data, _Length);
-        }
-        NewData[_Length] = '\0';
-        if(_Data != NULL)
-        {
-            delete[] _Data;
-        }
-        _Data = NewData;
-        _Capacity = NewCapacity;
+        const UINT newCapacity = newLength + 1;
+        m_length = std::min(m_length, newLength);
+        char *newData = new char[newCapacity];
+        
+		if(m_length > 0) memcpy(newData, m_data, m_length);
+        
+		newData[m_length] = '\0';
+        
+		if(m_data != NULL) delete[] m_data;
+        
+		m_data = newData;
+        m_capacity = newCapacity;
     }
 
     //
     // Accessors
     //
-    __forceinline char* CString()
+    inline char* ptr()
     {
-        if(_Data != NULL)
-        {
-            return _Data;
-        }
-        else
-        {
-            return (char *)&(_Data);
-        }
+        if(m_data != NULL) return m_data;
+        return (char *)&(m_data);
     }
 
-    __forceinline const char* CString() const
+    inline const char* ptr() const
     {
-        if(_Data != NULL)
-        {
-            return _Data;
-        }
-        else
-        {
-            return (char *)&(_Data);
-        }
+		if(m_data != NULL) return m_data;
+		return (char *)&(m_data);
     }
 
-    __forceinline UINT Length() const
-    {
-        return _Length;
-    }
+	
+	// STL defines both size and length for std::string
+    //inline UINT size() const
+    //{
+    //    return m_length;
+    //}
 
-    __forceinline char Last() const
+	// STL defines both size and length for std::string
+	inline UINT length() const
+	{
+		return m_length;
+	}
+
+    inline char last() const
     {
-#ifdef VECTOR_DEBUG
-        if(_Length == 0)
-        {
-            SignalError("Last called on zero-length string");
-        }
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+        if(m_length == 0) MLIB_ERROR("Last called on zero-length string");
 #endif
-        return _Data[_Length - 1];
+        return m_data[m_length - 1];
     }
 
-    __forceinline char& operator [] (UINT k)
+    inline char& operator [] (UINT k)
     {
-#ifdef VECTOR_DEBUG
-        if(k >= _Length)
-        {
-            SignalError("Out-of-bounds string access");
-        }
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+        if(k >= m_length) MLIB_ERROR("Out-of-bounds string access");
 #endif
-        return _Data[k];
+        return m_data[k];
     }
 
-    __forceinline char& operator [] (int k) 
+    inline char& operator [] (int k) 
     {
-#ifdef VECTOR_DEBUG
-        if(k < 0 || k >= int(_Length))
-        {
-            SignalError("Out-of-bounds string access");
-        }
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+        if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds string access");
 #endif
-        return _Data[k];
+        return m_data[k];
     }
 
-    __forceinline const char& operator [] (UINT k) const
+    inline const char& operator [] (UINT k) const
     {
-#ifdef VECTOR_DEBUG
-        if(k >= _Length)
-        {
-            SignalError("Out-of-bounds string access");
-        }
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+        if(k >= m_length) MLIB_ERROR("Out-of-bounds string access");
 #endif
-        return _Data[k];
+        return m_data[k];
     }
 
-    __forceinline const char& operator [] (int k) const
+    inline const char& operator [] (int k) const
     {
-#ifdef VECTOR_DEBUG
-        if(k < 0 || k >= int(_Length))
-        {
-            SignalError("Out-of-bounds string access");
-        }
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+        if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds string access");
 #endif
-        return _Data[k];
+        return m_data[k];
     }
 
     //
     // Conversions
     //
-    int ConvertToInteger() const
+    int toInt32() const
     {
-        return atoi(CString());
+        return atoi(ptr());
     }
 
-    UINT ConvertToUnsignedInteger() const
+    UINT toUInt32() const
     {
-        return UINT(_atoi64(CString()));
+        return UINT(_atoi64(ptr()));
     }
 
-    LONGLONG ConvertToLongInteger() const
+    INT64 toInt64() const
     {
-        return _atoi64(CString());
+        return _atoi64(ptr());
     }
 
-    ULONGLONG ConvertToLongUnsignedInteger() const
+    UINT64 toUINT64() const
     {
-        return ULONGLONG(_atoi64(CString()));
+        return UINT64(_atoi64(ptr()));
     }
 
-    double ConvertToDouble() const
+    double toDouble() const
     {
-        return atof(CString());
+        return atof(ptr());
     }
 
-    bool ConvertToBoolean() const;
+    bool toBool() const;
 
-    float ConvertToFloat() const
+    float toFloat() const
     {
-        return float(atof(CString()));
-    }
-
-    Vec4f ConvertToVec4f() const
-    {
-        Vec4f Result;
-        sscanf(_Data, "%f %f %f %f", &Result.x, &Result.y, &Result.z, &Result.w);
-        return Result;
+        return float(atof(ptr()));
     }
 
     //
     // Query
     //
-    bool ExactMatchAtOffset(const String &Find, UINT Offset) const;
-    bool Contains(const String &Find) const;
-    bool IsNumeric() const;
-    bool StartsWith(const char *StartCanidate) const;
-    bool StartsWith(const String &StartCanidate) const;
-    bool EndsWith(const String &EndCanidate) const;
-    int FindFirstIndex(char Seperator) const;
-    int FindLastIndex(char Seperator) const;
-	int FindFirstIndex(const String &Find) const;
-    String FindAndReplace(const String &Find, const String &Replace) const;
-    String MakeLowercase() const;
-    String MakeUppercase() const;
-    String RemoveSuffix(const String &EndCandidate) const;
-    String RemovePrefix(const String &StartCandidate) const;
-    UINT32 Hash32() const;
+	bool exactMatchAtOffset(const String &find, UINT offset) const;
+    bool contains(const String &find) const;
+    bool startsWith(const String &startCanidate) const;
+    bool endsWith(const String &endCanidate) const;
 
-    //
-    // Partitioning
-    //
-    void Partition(char Seperator, Vector<String> &Output, bool PushEmptyStrings = false) const;
-    Vector<String> Partition(char Seperator) const;
-    
-    void Partition(const String &Seperator, Vector<String> &Output) const;
-    Vector<String> Partition(const String &Seperator) const;
+    int findFirstIndex(char seperator) const;
+    int findLastIndex(char seperator) const;
+	int findFirstIndex(const String &find) const;
 
-    void PartitionAboutIndex(UINT Index, String &Left, String &Right) const;
-    Vector<String> PartitionAboutIndex(UINT Index) const;
+    String findAndReplace(const String &find, const String &replace) const;
+
+    String makeLowercase() const;
+    String makeUppercase() const;
+
+    String removeSuffix(const String &end) const;
+    String removePrefix(const String &start) const;
+
+	bool isNumeric() const;
     
+    //
+    // Splitting
+    //
+    Vector<String> split(char seperator, bool pushEmptytrings = false) const;
+    Vector<String> split(const String &seperator, bool pushEmptytrings = false) const;
 
     //
     // Assignment
     //
-    String& operator = (const char *String);
-    String& operator = (char Character);
-    String& operator = (float Value);
-    String& operator = (int Value);
-    String& operator = (UINT Value);
-    String& operator = (UINT64 Value);
+    String& operator = (const char *value);
+    String& operator = (char value);
+    String& operator = (float value);
+    String& operator = (int value);
+    String& operator = (UINT value);
+    String& operator = (UINT64 value);
+	String& operator = (INT64 value);
     String& operator = (const String &S);
 
     void operator=(String&& S)
     {
         if(this != &S)
         {
-            if(_Data != NULL)
-            {
-                delete[] _Data;
-            }
-            _Length = S._Length;
-            _Capacity = S._Capacity;
-            _Data = S._Data;
-            S._Length = 0;
-            S._Capacity = 0;
-            S._Data = NULL;
+            if(m_data != NULL) delete[] m_data;
+            m_length = S.m_length;
+            m_capacity = S.m_capacity;
+            m_data = S.m_data;
+            S.m_length = 0;
+            S.m_capacity = 0;
+            S.m_data = NULL;
         }
     }
 
@@ -391,147 +331,111 @@ public:
     // Modifiers
     //
     String& operator += (const String &S);
-    __forceinline void operator += (char C)
+    inline void operator += (char c)
     {
-        PushEnd(C);
+        pushBack(c);
     }
 
-    __forceinline void PushEnd(char C)
+    inline void pushBack(char c)
     {
-        if(_Length + 1 >= _Capacity)
+        if(m_length + 1 >= m_capacity)
         {
-            ReSize(_Capacity * 2 + 3);
+            resize(m_capacity * 2 + 3);
         }
-        _Data[_Length] = C;
-        _Length++;
-        _Data[_Length] = '\0';
+        m_data[m_length] = c;
+        m_length++;
+        m_data[m_length] = '\0';
     }
 
-    __forceinline void PopEnd()
+    inline void popBack()
     {
-#ifdef VECTOR_DEBUG
-        if(_Length == 0)
-        {
-            SignalError("Pop called on empty string");
-        }
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+        if(m_length == 0) MLIB_ERROR("Pop called on empty string");
 #endif
-        _Length--;
-        _Data[_Length] = '\0';
+        m_length--;
+        m_data[m_length] = '\0';
     }
 
     void PopFront()
     {
-#ifdef VECTOR_DEBUG
-        if(_Length == 0)
-        {
-            SignalError("Pop called on empty string");
-        }
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+        if(m_length == 0) MLIB_ERROR("Pop called on empty string");
 #endif
-        _Length--;
-        for(UINT Index = 0; Index < _Length; Index++)
-        {
-            _Data[Index] = _Data[Index + 1];
-        }
-        _Data[_Length] = '\0';
+        m_length--;
+        for(UINT i = 0; i < m_length; i++) m_data[i] = m_data[i + 1];
+        m_data[m_length] = '\0';
     }
 
     //
     // Formatting
     //
-    static String UnsignedIntAsHex(UINT Value);
-    static String ZeroPad(int i, UINT ZeroPadding);
-    static String ZeroPad(const String &S, UINT ZeroPadding);
-    static String Hash32ToHexString(UINT32 hash);
-    static String Hash64ToHexString(UINT64 hash);
-    static UINT32 HexStringToHash32(const String &s);
-    static UINT64 HexStringToHash64(const String &s);
-
-    static void ByteStreamToHexString(const BYTE *stream, UINT count, String &result);
-    static String ByteStreamToHexString(const BYTE *stream, UINT count);
-    static void HexStringToByteStream(const String &hexString, BYTE *result);
-
+    static String zeroPad(int i, UINT zeroPadding);
+    static String zeroPad(const String &S, UINT zeroPadding);
+    
 private:
     friend String operator + (const String &L, const String &R);
     friend bool operator == (const String &L, const String &R);
     friend bool operator == (const char *L, const String &R);
 
-    void ResizeToCStringLength();
+    void resizeToDataLength();
     
-    //Vector<char> _Data;
-    char *_Data;
-    UINT _Capacity;
-    UINT _Length;
+    char *m_data;
+    UINT m_capacity;
+    UINT m_length;
 };
 
 //
 // String Comparison
 //
-__forceinline bool operator == (const String &L, const String &R)
+inline bool operator == (const String &L, const String &R)
 {
-    const UINT LLen = L._Length;
-    const UINT RLen = R._Length;
-    if(LLen != RLen)
-    {
-        return false;
-    }
-    const char *LData = L._Data;
-    const char *RData = R._Data;
+    const UINT LLen = L.m_length;
+    const UINT RLen = R.m_length;
+    if(LLen != RLen) return false;
+    
+	const char *LData = L.m_data;
+    const char *RData = R.m_data;
     for(UINT i = 0; i < LLen; i++)
-    {
         if(LData[i] != RData[i])
-        {
             return false;
-        }
-    }
     return true;
 }
 
-__forceinline bool operator == (const char *L, const String &R)
+inline bool operator == (const char *L, const String &R)
 {
     const UINT LLen = UINT(strlen(L));
-    const UINT RLen = R._Length;
-    if(LLen != RLen)
-    {
-        return false;
-    }
-    const char *RData = R._Data;
+    const UINT RLen = R.m_length;
+    if(LLen != RLen) return false;
+    
+	const char *RData = R.m_data;
     for(UINT i = 0; i < RLen; i++)
-    {
         if(L[i] != RData[i])
-        {
             return false;
-        }
-    }
     return true;
 }
 
-__forceinline bool operator == (const String &R, const char *L)
+inline bool operator == (const String &R, const char *L)
 {
     return (L == R);
 }
 
-__forceinline bool operator != (const String &L, const String &R)
+inline bool operator != (const String &L, const String &R)
 {
     return !(L == R);
 }
-__forceinline bool operator != (const char *L, const String &R)
+inline bool operator != (const char *L, const String &R)
 {
     return !(L == R);
 }
-__forceinline bool operator != (const String &R, const char *L)
+inline bool operator != (const String &R, const char *L)
 {
     return !(L == R);
 }
 
-__forceinline bool operator < (const String &L, const String &R)
+inline bool operator < (const String &L, const String &R)
 {
-    return strcmp(L.CString(), R.CString()) < 0;
+    return strcmp(L.ptr(), R.ptr()) < 0;
 }
 
-//
-// String Operations
-//
 String operator + (const String &L, const String &R);
-//String operator + (const char *L, const String &R);
-//String operator + (const String &R, const char *L);
-ostream& operator << (ostream &os, const String &S);
+std::ostream& operator << (std::ostream &os, const String &S);

@@ -160,46 +160,46 @@ public:
     //
     // Accessors
     //
-    INLINE T& operator [] (UINT64 k)
+    inline T& operator [] (UINT64 k)
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
         if(k >= m_length) MLIB_ERROR("Out-of-bounds vector access");
 #endif
         return m_data[k];
     }
-    INLINE T& operator [] (int k) 
+    inline T& operator [] (int k) 
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
         if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
 #endif
         return m_data[k];
     }
-    INLINE const T& operator [] (UINT64 k) const
+    inline const T& operator [] (UINT64 k) const
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
         if(k >= m_length) MLIB_ERROR("Out-of-bounds vector access");
 #endif
         return m_data[k];
     }
-    INLINE const T& operator [] (int k) const
+    inline const T& operator [] (int k) const
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
         if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
 #endif
         return m_data[k];
     }
-    INLINE UINT64 size() const
+    inline UINT64 size() const
     {
         return m_length;
     }
-    __forceinline T* ptr()
+    inline T* ptr()
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
         if(m_length == 0) MLIB_ERROR("ptr called on zero-length vector");
 #endif
         return m_data;
     }
-    __forceinline const T* ptr() const
+    inline const T* ptr() const
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
 		if(m_length == 0) MLIB_ERROR("ptr called on zero-length vector");
@@ -210,51 +210,51 @@ public:
 	//
 	// Random element uses rand() but we should also have a version that uses a RNG object
 	//
-    __forceinline T& randomElement()
+    inline T& randomElement()
     {
         MLIB_ASSERT(m_length > 0, "RandomElement called with no elements");
         return m_data[rand() % m_length];
     }
-    __forceinline const T& randomElement() const
+    inline const T& randomElement() const
     {
         MLIB_ASSERT(m_length > 0, "RandomElement called with no elements");
         return m_data[rand() % m_length];
     }
 
-    __forceinline T& back()
+    inline T& back()
     {
         MLIB_ASSERT(m_length > 0, "Last called with no elements");
         return m_data[m_length - 1];
     }
-    __forceinline const T& back() const
+    inline const T& back() const
     {
         MLIB_ASSERT(m_length > 0, "Last called with no elements");
         return m_data[m_length - 1];
     }
-    __forceinline T& front()
+    inline T& front()
     {
         MLIB_ASSERT(m_length > 0, "First called with no elements");
         return m_data[0];
     }
-    __forceinline const T& front() const
+    inline const T& front() const
     {
         MLIB_ASSERT(m_length > 0, "First called with no elements");
         return m_data[0];
     }
     
-    __forceinline T* begin()
+    inline T* begin()
     {
         return m_data;
     }
-    __forceinline const T* begin() const
+    inline const T* begin() const
     {
         return m_data;
     }
-    __forceinline T* end()
+    inline T* end()
     {
         return m_data + m_length;
     }
-    __forceinline const T* end() const
+    inline const T* end() const
     {
         return m_data + m_length;
     }
@@ -265,8 +265,8 @@ public:
     void pushBack(const T &t);
     void pushBack(T &&t);
 	void popBack();
-    void removeCopy(UINT64 index);
-    void removeSwap(UINT64 index);
+    void removeCopy(UINT64 i);
+    void removeSwap(UINT64 i);
     void sort();
     template<class orderingType> void sort(orderingType Function)
     {
@@ -319,17 +319,17 @@ private:
     UINT64 m_capacity;
 };
 
-template <class T> __forceinline bool operator == (const Vector<T> &a, const Vector<T> &b)
+template <class T> inline bool operator == (const Vector<T> &a, const Vector<T> &b)
 {
 	if(a.length() != b.length()) return false;
 	const UINT length = a.length();
 	for(UINT i = 0; i < length; i++)
-		if(a[index] != b[index])
+		if(a[i] != b[i])
 			return false;
 	return true;
 }
 
-template <class T> __forceinline bool operator != (const Vector<T> &a, const Vector<T> &b)
+template <class T> inline bool operator != (const Vector<T> &a, const Vector<T> &b)
 {
 	if(a.length() != b.length()) return true;
 	const UINT length = a.length();

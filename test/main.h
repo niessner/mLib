@@ -4,3 +4,4 @@
 #include "test.h"
 
 #include "testVector.h"
+#include "testString.h"

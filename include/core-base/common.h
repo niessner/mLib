@@ -11,6 +11,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <algorithm>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -33,21 +34,19 @@ public:
 
 #define MLIB_EXCEPTION(s) std::exception(std::string(__FUNCTION__).append(": ").append(s).c_str())
 
-#define INLINE __forceinline
-
 #ifdef MLIB_ERROR_CHECK
 
-INLINE void MLIB_WARNING(const char *description)
+inline void MLIB_WARNING(const char *description)
 {
 	Console::log() << description << std::endl;
 }
 
-INLINE void MLIB_ERROR(const char *description)
+inline void MLIB_ERROR(const char *description)
 {
 	Console::log() << description << std::endl;
 }
 
-INLINE void MLIB_ASSERT(bool statement, const char *description)
+inline void MLIB_ASSERT(bool statement, const char *description)
 {
 	if(!statement)
 	{
@@ -55,17 +54,17 @@ INLINE void MLIB_ASSERT(bool statement, const char *description)
 	}
 }
 
-INLINE void MLIB_WARNING(const std::string &description)
+inline void MLIB_WARNING(const std::string &description)
 {
 	Console::log() << description << std::endl;
 }
 
-INLINE void MLIB_ERROR(const std::string &description)
+inline void MLIB_ERROR(const std::string &description)
 {
 	Console::log() << description << std::endl;
 }
 
-INLINE void MLIB_ASSERT(bool statement, const std::string &description)
+inline void MLIB_ASSERT(bool statement, const std::string &description)
 {
 	if(!statement)
 	{

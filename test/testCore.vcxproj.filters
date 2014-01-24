@@ -10,6 +10,9 @@
     <Filter Include="mLibHeader\core-base">
       <UniqueIdentifier>{ca9cff61-1097-4bab-a7cd-ef28a2d68f1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tests">
+      <UniqueIdentifier>{a1cc98bd-ad38-47fc-bba7-6dd0e142187b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -40,12 +43,19 @@
     <ClInclude Include="..\include\mLibCore.h">
       <Filter>mLibHeader\Aggregate</Filter>
     </ClInclude>
-    <ClInclude Include="test.h" />
-    <ClInclude Include="testVector.h" />
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="..\include\core-base\common.h">
       <Filter>mLibHeader\Aggregate</Filter>
+    </ClInclude>
+    <ClInclude Include="testString.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="testVector.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h">
+      <Filter>tests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -97,6 +97,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="test.h" />
+    <ClInclude Include="testString.h" />
     <ClInclude Include="testVector.h" />
   </ItemGroup>
   <ItemGroup>
