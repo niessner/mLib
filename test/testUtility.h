@@ -18,6 +18,10 @@ public:
 		Utility::copyStringToClipboard(data);
 		MLIB_ASSERT(Utility::loadStringFromClipboard() == data, "Clipboard test failed");
 
+		Directory dir("testDir");
+		MLIB_ASSERT(dir.files().contains("output.txt") && dir.filesWithSuffix(".txt").contains("output.txt"), "Directory failed");
+
+
 		Console::log("Utility tests passed");
 	}
 

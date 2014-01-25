@@ -5,58 +5,52 @@ Written by Matthew Fisher
 
 Directory::Directory(const String &path)
 {
-    Load(path);
+    load(path);
 }
 
-void Directory::Load(const String &path)
+void Directory::load(const String &path)
 {
     m_path = path + "\\";
     m_files.deleteMemory();
     m_directories.deleteMemory();
 
-    WIN32_FIND_DATA FindResult;
-    //LARGE_INTEGER FileSize;
+    WIN32_FIND_DATAA findResult;
     
-    HANDLE hFind = FindFirstFile((path + String("\\*")).CString(), &FindResult);
+    HANDLE hFind = FindFirstFileA((path + String("\\*")).ptr(), &findResult);
 
-    if (hFind == INVALID_HANDLE_VALUE)
-    {
-        return;
-    } 
+    if (hFind == INVALID_HANDLE_VALUE) return;
 
     do
     {
-        if (FindResult.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        if (findResult.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
         {
-            String DirectoryName(FindResult.cFileName);
-            if(DirectoryName != String(".") &&
-               DirectoryName != String("..") &&
-               DirectoryName != String(".svn"))
+            String directoryName(findResult.cFileName);
+            if(!directoryName.startsWith("."))
             {
-                m_directories.PushEnd(DirectoryName);
+                m_directories.pushBack(directoryName);
             }
         }
         else
         {
-            //FileSize.LowPart = FindResult.nFileSizeLow;
-            //FileSize.HighPart = FindResult.nFileSizeHigh;
-            m_files.PushEnd(String(FindResult.cFileName));
+            //FileSize.LowPart = findResult.nFileSizeLow;
+            //FileSize.HighPart = findResult.nFileSizeHigh;
+            m_files.pushBack(String(findResult.cFileName));
         }
     }
-    while (FindNextFile(hFind, &FindResult) != 0);
+    while (FindNextFileA(hFind, &findResult) != 0);
 
     FindClose(hFind);
 }
 
-Vector<String> Directory::FilesWithSuffix(const String &suffix) const
+Vector<String> Directory::filesWithSuffix(const String &suffix) const
 {
     Vector<String> result;
-    for(UINT fileIndex = 0; fileIndex < m_files.Length(); fileIndex++)
+    for(UINT fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
     {
-        const String &curFilename = m_files[fileIndex];
-        if(curFilename.EndsWith(suffix))
+        const String &filename = m_files[fileIndex];
+        if(filename.endsWith(suffix))
         {
-            result.PushEnd(curFilename);
+            result.pushBack(filename);
         }
     }
     return result;

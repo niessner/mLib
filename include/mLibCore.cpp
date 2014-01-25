@@ -10,3 +10,4 @@
 // core-util source files
 //
 #include "../src/core-util/utility.cpp"
+#include "../src/core-util/directory.cpp"

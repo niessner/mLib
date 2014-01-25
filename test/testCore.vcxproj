@@ -96,6 +96,7 @@
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-util\directory.h" />
+    <ClInclude Include="..\include\core-util\utility.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />

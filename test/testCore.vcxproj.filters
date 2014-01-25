@@ -59,6 +59,9 @@
     <ClInclude Include="..\include\core-util\directory.h">
       <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-util\utility.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
