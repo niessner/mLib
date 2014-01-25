@@ -7,3 +7,7 @@
 //
 template<class T> class Vector;
 class String;
+
+//
+// core-math
+//

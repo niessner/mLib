@@ -167,17 +167,18 @@ public:
 #endif
         return m_data[k];
     }
+	inline const T& operator [] (UINT64 k) const
+	{
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+		if(k >= m_length) MLIB_ERROR("Out-of-bounds vector access");
+#endif
+		return m_data[k];
+	}
+
     inline T& operator [] (int k) 
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
         if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
-#endif
-        return m_data[k];
-    }
-    inline const T& operator [] (UINT64 k) const
-    {
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-        if(k >= m_length) MLIB_ERROR("Out-of-bounds vector access");
 #endif
         return m_data[k];
     }
@@ -188,6 +189,22 @@ public:
 #endif
         return m_data[k];
     }
+
+	inline T& operator [] (UINT k) 
+	{
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+		if(k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
+#endif
+		return m_data[k];
+	}
+	inline const T& operator [] (UINT k) const
+	{
+#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+		if(k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
+#endif
+		return m_data[k];
+	}
+
     inline UINT64 size() const
     {
         return m_length;

@@ -437,5 +437,10 @@ inline bool operator < (const String &L, const String &R)
     return strcmp(L.ptr(), R.ptr()) < 0;
 }
 
+inline bool operator > (const String &L, const String &R)
+{
+	return strcmp(L.ptr(), R.ptr()) > 0;
+}
+
 String operator + (const String &L, const String &R);
 std::ostream& operator << (std::ostream &os, const String &S);

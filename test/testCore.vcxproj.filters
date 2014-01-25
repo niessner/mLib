@@ -10,6 +10,9 @@
     <Filter Include="tests">
       <UniqueIdentifier>{a1cc98bd-ad38-47fc-bba7-6dd0e142187b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-util">
+      <UniqueIdentifier>{0040808b-2df2-4c81-8488-c897d1fe54c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -49,6 +52,12 @@
     </ClInclude>
     <ClInclude Include="..\include\mLibCore.h">
       <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\grid.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\directory.h">
+      <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

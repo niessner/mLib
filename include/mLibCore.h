@@ -6,12 +6,14 @@
 #include "core-base/common.h"
 #include "core-base/console.h"
 #include "core-base/vector.h"
+#include "core-base/grid.h"
 #include "core-base/string.h"
 
 //
 // core-util headers
 //
 #include "core-util/utility.h"
+#include "core-util/directory.h"
 
 //
 // core-math headers

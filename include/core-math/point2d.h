@@ -174,11 +174,11 @@ public:
 
 
 //! write a point2d to a stream
-template <class T> __forceinline std::ostream& operator<<(std::ostream& s, const point2d<T>& v)
+template <class T> inline std::ostream& operator<<(std::ostream& s, const point2d<T>& v)
 { return (s << v[0] << " / " << v[1]);}
 
 //! read a point2d from a stream
-template <class T> __forceinline std::istream& operator>>(std::istream& s, point2d<T>& v)
+template <class T> inline std::istream& operator>>(std::istream& s, point2d<T>& v)
 { return (s >> v[0] >> v[1]); }
 
 

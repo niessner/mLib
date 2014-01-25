@@ -210,18 +210,18 @@ public:
 
 //! operator for scalar * vector
 template <class T>
-__forceinline point4d<T> operator*(T s, const point4d<T>& v) {
+inline point4d<T> operator*(T s, const point4d<T>& v) {
 	return v * s;
 }
 
 //! write a point4d to a stream (should be the inverse of read operator; with " ")
 template <class T> 
-__forceinline std::ostream& operator<<(std::ostream& s, const point4d<T>& v)
+inline std::ostream& operator<<(std::ostream& s, const point4d<T>& v)
 { return (s << v[0] << " / " << v[1] << " / " << v[2] << " / " << v[3]);}
 
 //! read a point4d from a stream
 template <class T>
-__forceinline std::istream& operator>>(std::istream& s, point4d<T>& v)
+inline std::istream& operator>>(std::istream& s, point4d<T>& v)
 { return (s >> v[0] >> v[1] >> v[2] >> v[3]); }
 
 

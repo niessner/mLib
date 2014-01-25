@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="..\include\core-base\classList.h" />
     <ClInclude Include="..\include\core-base\common.h" />
+    <ClInclude Include="..\include\core-base\grid.h" />
     <ClInclude Include="..\include\core-base\string.h" />
     <ClInclude Include="..\include\core-base\vector.h" />
     <ClInclude Include="..\include\core-math\point1d.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="..\include\core-math\point3d.h" />
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
+    <ClInclude Include="..\include\core-util\directory.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />
