@@ -160,7 +160,7 @@ public:
 	}
 
 	inline void print() const {
-		std::cout << "(" << array[0] << " / " << array[1] << ")" << std::endl;
+		Console::log() << "(" << array[0] << " / " << array[1] << ")" << std::endl;
 	}
 
 

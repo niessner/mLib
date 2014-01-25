@@ -85,19 +85,15 @@
     <ClCompile Include="mLibSource.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\core-base.h" />
     <ClInclude Include="..\include\core-base\classList.h" />
     <ClInclude Include="..\include\core-base\common.h" />
     <ClInclude Include="..\include\core-base\string.h" />
     <ClInclude Include="..\include\core-base\vector.h" />
-    <ClInclude Include="..\include\core-graphics.h" />
-    <ClInclude Include="..\include\core-math.h" />
     <ClInclude Include="..\include\core-math\point1d.h" />
     <ClInclude Include="..\include\core-math\point2d.h" />
     <ClInclude Include="..\include\core-math\point3d.h" />
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
-    <ClInclude Include="..\include\core-util.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />
@@ -107,6 +103,7 @@
     <ClInclude Include="testVector.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="console.txt" />
     <Text Include="notes.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

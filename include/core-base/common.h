@@ -19,21 +19,6 @@
 #define NOMINMAX
 #endif
 
-//TODO move Console to its own file and replace it with a multistream to a file and the console
-class Console
-{
-public:
-	static std::ostream& log()
-	{
-		return std::cout;
-	}
-
-	static void log(const std::string &s)
-	{
-		log() << s << std::endl;
-	}
-};
-
 #define MLIB_EXCEPTION(s) std::exception(std::string(__FUNCTION__).append(": ").append(s).c_str())
 
 #ifdef MLIB_ERROR_CHECK
@@ -71,7 +56,7 @@ void MLIB_ASSERT(bool statement, const String &description);
 #endif
 
 #ifndef E_RETURN
-#define E_RETURN(hr) { if(FAILED(hr)) { std::cout << #hr << " " << hr << std::endl; while(1); } }
+#define E_RETURN(hr) { if(FAILED(hr)) { Console::log() << #hr << " " << hr << std::endl; } }
 #endif
 
 #ifndef UINT

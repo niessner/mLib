@@ -157,7 +157,7 @@ public:
 	~point4d(void) {};
 
 	void print() const {
-		std::cout << "(" << array[0] << " / " << array[1] << " / " << array[2] << " / " << array[3] << " ) " << std::endl;
+		Console::log() << "(" << array[0] << " / " << array[1] << " / " << array[2] << " / " << array[3] << " ) " << std::endl;
 	}
 
 	inline const T& operator[](int i) const {

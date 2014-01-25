@@ -157,7 +157,7 @@ public:
 
 
 	inline void print() const {
-		std::cout << "(" << array[0] << " / " << array[1] << " / " << array[2] << ")" << std::endl;
+		Console::log() << "(" << array[0] << " / " << array[1] << " / " << array[2] << ")" << std::endl;
 	}
 
 	const T& operator[](int i) const {

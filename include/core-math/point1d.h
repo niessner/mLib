@@ -123,7 +123,7 @@ public:
 	}
 
 	inline void print() const {
-		std::cout << "(" << array[0] << ")" << std::endl;
+		Console::log() << "(" << array[0] << ")" << std::endl;
 	}
 
 	union {

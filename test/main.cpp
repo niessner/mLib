@@ -14,6 +14,8 @@ private:
 
 void App::go()
 {
+	Console::openLogFile("console.txt");
+
 	m_vector.run();
 	m_string.run();
 	m_utility.run();
