@@ -1,9 +1,10 @@
 #pragma once
 
-#ifndef _MLIBBASIC_H_
-#define _MLIBBASIC_H_
+#ifndef _MLIBCOMMON_H_
+#define _MLIBCOMMON_H_
 
 #define _SCL_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <exception>
 #include <iostream>
@@ -12,6 +13,7 @@
 #include <string>
 #include <functional>
 #include <algorithm>
+#include <fstream>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -36,41 +38,13 @@ public:
 
 #ifdef MLIB_ERROR_CHECK
 
-inline void MLIB_WARNING(const char *description)
-{
-	Console::log() << description << std::endl;
-}
+void MLIB_WARNING(const char *description);
+void MLIB_ERROR(const char *description);
+void MLIB_ASSERT(bool statement, const char *description);
 
-inline void MLIB_ERROR(const char *description)
-{
-	Console::log() << description << std::endl;
-}
-
-inline void MLIB_ASSERT(bool statement, const char *description)
-{
-	if(!statement)
-	{
-		Console::log() << description << std::endl;
-	}
-}
-
-inline void MLIB_WARNING(const std::string &description)
-{
-	Console::log() << description << std::endl;
-}
-
-inline void MLIB_ERROR(const std::string &description)
-{
-	Console::log() << description << std::endl;
-}
-
-inline void MLIB_ASSERT(bool statement, const std::string &description)
-{
-	if(!statement)
-	{
-		Console::log() << description << std::endl;
-	}
-}
+void MLIB_WARNING(const String &description);
+void MLIB_ERROR(const String &description);
+void MLIB_ASSERT(bool statement, const String &description);
 
 #else
 
@@ -110,6 +84,10 @@ typedef unsigned char UCHAR;
 
 #ifndef INT64
 typedef __int64 INT64;
+#endif
+
+#ifndef UINT32
+typedef unsigned __int32 UINT32;
 #endif
 
 #ifndef UINT64

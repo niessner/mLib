@@ -103,6 +103,7 @@
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="testString.h" />
+    <ClInclude Include="testUtility.h" />
     <ClInclude Include="testVector.h" />
   </ItemGroup>
   <ItemGroup>

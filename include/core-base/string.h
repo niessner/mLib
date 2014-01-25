@@ -142,16 +142,16 @@ public:
         m_capacity = capacity;
     }
 
-    /*inline void AllocateLength(UINT Length)
+    /*inline void AllocateLength(UINT length)
     {
         if(m_data != NULL)
         {
             delete[] m_data;
         }
-        m_data = new char[Length + 1];
-        m_data[Length] = '\0';
-        m_length = Length;
-        m_capacity = Length + 1;
+        m_data = new char[length + 1];
+        m_data[length] = '\0';
+        m_length = length;
+        m_capacity = length + 1;
     }*/
 
     inline void resize(UINT newLength)
