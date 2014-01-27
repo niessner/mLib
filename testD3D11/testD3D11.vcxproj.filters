@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="mLibHeader">
+      <UniqueIdentifier>{4c5526ff-9213-4f4f-80e1-fe88278c8b83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mLibHeader\graphicsdevice-base">
+      <UniqueIdentifier>{6573b152-c912-4804-99d1-bd213f0f7bde}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\graphicsdevice-base\graphicsAsset.h">
+      <Filter>mLibHeader\graphicsdevice-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\graphicsdevice-base\graphicsDevice.h">
+      <Filter>mLibHeader\graphicsdevice-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\mLibCore.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h" />
+    <ClInclude Include="mLibInclude.h" />
+    <ClInclude Include="..\include\graphicsdevice-base\applicationWin32.h">
+      <Filter>mLibHeader\graphicsdevice-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\mLibD3D11.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\graphicsdevice-base\windowWin32.h">
+      <Filter>mLibHeader\graphicsdevice-base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mLibSource.cpp" />
+    <ClCompile Include="winMain.cpp" />
+  </ItemGroup>
+</Project>

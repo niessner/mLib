@@ -14,6 +14,7 @@
 #include <functional>
 #include <algorithm>
 #include <fstream>
+#include <memory>
 
 #ifndef NOMINMAX
 #define NOMINMAX
