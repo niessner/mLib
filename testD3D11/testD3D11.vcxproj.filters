@@ -7,6 +7,9 @@
     <Filter Include="mLibHeader\graphicsdevice-base">
       <UniqueIdentifier>{6573b152-c912-4804-99d1-bd213f0f7bde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\graphicsdevice-d3d11">
+      <UniqueIdentifier>{518d3ba9-1614-4814-b5b6-29d742a8e13a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\graphicsdevice-base\graphicsAsset.h">
@@ -28,6 +31,9 @@
     </ClInclude>
     <ClInclude Include="..\include\graphicsdevice-base\windowWin32.h">
       <Filter>mLibHeader\graphicsdevice-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\graphicsdevice-d3d11\graphicsDeviceD3D11.h">
+      <Filter>mLibHeader\graphicsdevice-d3d11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

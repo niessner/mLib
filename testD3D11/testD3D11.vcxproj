@@ -52,7 +52,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,6 +81,7 @@
     <ClInclude Include="..\include\graphicsdevice-base\graphicsAsset.h" />
     <ClInclude Include="..\include\graphicsdevice-base\graphicsDevice.h" />
     <ClInclude Include="..\include\graphicsdevice-base\windowWin32.h" />
+    <ClInclude Include="..\include\graphicsdevice-d3d11\graphicsDeviceD3D11.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="..\include\mLibD3D11.h" />
     <ClInclude Include="main.h" />

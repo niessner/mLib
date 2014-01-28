@@ -106,13 +106,13 @@ void WindowWin32::init(HINSTANCE instance, int width, int height, const String &
 	m_class.hCursor = LoadCursor(NULL, IDC_ARROW);
 	m_class.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); 
 	m_class.lpszMenuName =  NULL;
-	m_class.lpszClassName = name.ptr();
+	m_class.lpszClassName = m_className.ptr();
 	RegisterClassA(&m_class);
 
 	s_mainWindow = this;
 	m_handle = CreateWindowA(
-		name.ptr(), 
-		name.ptr(), 
+		m_className.ptr(), 
+		m_className.ptr(), 
 		WS_OVERLAPPEDWINDOW, 
 		0, //CW_USEDEFAULT
 		0, //CW_USEDEFAULT
