@@ -8,6 +8,7 @@
 //
 // application-d3d11 source files
 //
-#include "../src/application-d3d11/graphicsDeviceD3D11.cpp"
+#include "../src/application-d3d11/D3D11GraphicsDevice.cpp"
+#include "../src/application-d3d11/D3D11Utility.cpp"
 #include "../src/application-d3d11/D3D11VertexShader.cpp"
 #include "../src/application-d3d11/D3D11PixelShader.cpp"

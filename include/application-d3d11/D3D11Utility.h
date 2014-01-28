@@ -2,5 +2,5 @@
 class D3D11Utility
 {
 public:
-	static CompileShader(const String &filename);
-}
+	static ID3DBlob* CompileShader(const String &filename, const String &entryPoint, const String &shaderModel);
+};

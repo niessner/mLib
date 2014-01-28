@@ -57,10 +57,10 @@
     <ClInclude Include="..\include\application-d3d11\D3D11VertexShader.h">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\graphicsDeviceD3D11.h">
+    <ClInclude Include="..\include\application-d3d11\D3D11Utility.h">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11Utility.h">
+    <ClInclude Include="..\include\application-d3d11\D3D11GraphicsDevice.h">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClInclude>
   </ItemGroup>
