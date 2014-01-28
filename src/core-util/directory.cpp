@@ -1,7 +1,3 @@
-/*
-Directory.cpp
-Written by Matthew Fisher
-*/
 
 Directory::Directory(const String &path)
 {
