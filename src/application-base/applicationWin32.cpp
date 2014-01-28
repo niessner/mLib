@@ -1,5 +1,6 @@
 
-ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const String &name, GraphicsDeviceType graphicsType)
+ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const String &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback) :
+	m_callback(callback)
 {
 	m_window.init(instance, windowWidth, windowHeight, name);
 
@@ -14,6 +15,8 @@ ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT wi
 	m_device->init(m_window);
 
 	m_data = new ApplicationData(&m_window, m_device);
+
+	m_callback.init(*m_data);
 }
 
 ApplicationWin32::~ApplicationWin32()
@@ -40,7 +43,9 @@ void ApplicationWin32::messageLoop()
 		}
 		else
 		{
-			//DXUTRender3DEnvironment();
+			m_device->renderBeginFrame();
+			m_callback.render(*m_data);
+			m_device->renderEndFrame();
 		}
 	}
 }

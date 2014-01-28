@@ -11,10 +11,18 @@ struct ApplicationData
 	GraphicsDevice &device;
 };
 
+class ApplicationCallback
+{
+public:
+	virtual void init(ApplicationData &app) = 0;
+	virtual void render(ApplicationData &app) = 0;
+	virtual void keyPress(ApplicationData &app, UINT key) = 0;
+};
+
 class ApplicationWin32
 {
 public:
-	ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const String &name, GraphicsDeviceType graphicsType);
+	ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const String &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback);
 	~ApplicationWin32();
 
 	void messageLoop();
@@ -35,4 +43,6 @@ private:
 	GraphicsDevice *m_device;
 
 	HINSTANCE m_instance;
+
+	ApplicationCallback &m_callback;
 };

@@ -15,6 +15,11 @@ public:
 	UINT width() const;
 	UINT height() const;
 
+	HWND handle() const
+	{
+		return m_handle;
+	}
+
 private:
 	String    m_className;
 	WNDCLASSA m_class;

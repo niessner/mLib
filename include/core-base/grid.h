@@ -58,14 +58,14 @@ public:
 	//
 	inline T& operator() (UINT row, UINT col)
 	{
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
 		MLIB_ASSERT( (row < m_rows) && (col < m_cols), "Out-of-bounds grid access");
 #endif
 		return m_data[row * m_cols + col];
 	}
 	inline const T& operator() (UINT row, UINT col) const
 	{
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
 		MLIB_ASSERT( (row < m_rows) && (col < m_cols), "Out-of-bounds grid access");
 #endif
 		return m_data[row * m_cols + col];

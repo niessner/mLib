@@ -162,14 +162,14 @@ public:
     //
     inline T& operator [] (UINT64 k)
     {
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
         if(k >= m_length) MLIB_ERROR("Out-of-bounds vector access");
 #endif
         return m_data[k];
     }
 	inline const T& operator [] (UINT64 k) const
 	{
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
 		if(k >= m_length) MLIB_ERROR("Out-of-bounds vector access");
 #endif
 		return m_data[k];
@@ -177,14 +177,14 @@ public:
 
     inline T& operator [] (int k) 
     {
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
         if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
 #endif
         return m_data[k];
     }
     inline const T& operator [] (int k) const
     {
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
         if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
 #endif
         return m_data[k];
@@ -192,14 +192,14 @@ public:
 
 	inline T& operator [] (UINT k) 
 	{
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
 		if(k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
 #endif
 		return m_data[k];
 	}
 	inline const T& operator [] (UINT k) const
 	{
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
 		if(k >= int(m_length)) MLIB_ERROR("Out-of-bounds vector access");
 #endif
 		return m_data[k];
@@ -211,14 +211,14 @@ public:
     }
     inline T* ptr()
     {
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
         if(m_length == 0) MLIB_ERROR("ptr called on zero-length vector");
 #endif
         return m_data;
     }
     inline const T* ptr() const
     {
-#if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
 		if(m_length == 0) MLIB_ERROR("ptr called on zero-length vector");
 #endif
         return m_data;

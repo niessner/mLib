@@ -35,9 +35,11 @@
     <ClInclude Include="..\include\graphicsdevice-d3d11\graphicsDeviceD3D11.h">
       <Filter>mLibHeader\graphicsdevice-d3d11</Filter>
     </ClInclude>
+    <ClInclude Include="appTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
     <ClCompile Include="winMain.cpp" />
+    <ClCompile Include="appTest.cpp" />
   </ItemGroup>
 </Project>
