@@ -2,12 +2,11 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
-class D3D11GraphicsDevice : public GraphicsDevice
+class GraphicsDeviceD3D11 : public GraphicsDevice
 {
 public:
-	D3D11GraphicsDevice()
+	GraphicsDeviceD3D11()
 	{
-		m_type = GraphicsDeviceTypeD3D11;
 		m_device = NULL;
 		m_context = NULL;
 		m_view = NULL;
@@ -15,7 +14,7 @@ public:
 		m_swapChain = NULL;
 		m_featureLevel = D3D_FEATURE_LEVEL_9_1;
 	}
-	~D3D11GraphicsDevice()
+	~GraphicsDeviceD3D11()
 	{
 		SAFE_RELEASE(m_context);
 		SAFE_RELEASE(m_view);
@@ -31,12 +30,6 @@ public:
 	void init(const WindowWin32 &window);
 	void renderBeginFrame();
 	void renderEndFrame();
-	void registerAsset(GraphicsAsset *asset);
-
-	ID3D11Device& device()
-	{
-		return *m_device;
-	}
 
 private:
 	ID3D11Device *m_device;
@@ -45,9 +38,5 @@ private:
 	ID3D11Debug *m_debug;
 	IDXGISwapChain *m_swapChain;
 	D3D_FEATURE_LEVEL m_featureLevel;
-
-	Vector<GraphicsAsset*> m_assets;
 };
-
-
 

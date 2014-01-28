@@ -7,7 +7,7 @@ ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT wi
 	switch(graphicsType)
 	{
 	case GraphicsDeviceTypeD3D11:
-		m_device = new GraphicsDeviceD3D11();
+		m_device = new D3D11GraphicsDevice();
 		break;
 	default:
 		MLIB_ERROR("invalid graphics device type");
@@ -21,6 +21,7 @@ ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT wi
 
 ApplicationWin32::~ApplicationWin32()
 {
+	delete m_device;
 	delete m_data;
 }
 

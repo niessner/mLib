@@ -78,11 +78,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\graphicsdevice-base\applicationWin32.h" />
-    <ClInclude Include="..\include\graphicsdevice-base\graphicsAsset.h" />
-    <ClInclude Include="..\include\graphicsdevice-base\graphicsDevice.h" />
-    <ClInclude Include="..\include\graphicsdevice-base\windowWin32.h" />
-    <ClInclude Include="..\include\graphicsdevice-d3d11\graphicsDeviceD3D11.h" />
+    <ClInclude Include="..\include\application-base\applicationWin32.h" />
+    <ClInclude Include="..\include\application-base\graphicsAsset.h" />
+    <ClInclude Include="..\include\application-base\graphicsDevice.h" />
+    <ClInclude Include="..\include\application-base\windowWin32.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11PixelShader.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11Utility.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11VertexShader.h" />
+    <ClInclude Include="..\include\application-d3d11\graphicsDeviceD3D11.h" />
+    <ClInclude Include="..\include\core-base\classList.h" />
+    <ClInclude Include="..\include\core-base\common.h" />
+    <ClInclude Include="..\include\core-base\console.h" />
+    <ClInclude Include="..\include\core-base\grid.h" />
+    <ClInclude Include="..\include\core-base\string.h" />
+    <ClInclude Include="..\include\core-base\vector.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="..\include\mLibD3D11.h" />
     <ClInclude Include="appTest.h" />
@@ -93,6 +102,9 @@
     <ClCompile Include="appTest.cpp" />
     <ClCompile Include="mLibSource.cpp" />
     <ClCompile Include="winMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="console.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

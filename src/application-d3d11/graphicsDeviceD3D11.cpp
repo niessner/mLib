@@ -1,5 +1,5 @@
 
-void GraphicsDeviceD3D11::init(const WindowWin32 &window)
+void D3D11GraphicsDevice::init(const WindowWin32 &window)
 {
 	UINT width = window.width();
 	UINT height = window.height();
@@ -52,14 +52,23 @@ void GraphicsDeviceD3D11::init(const WindowWin32 &window)
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	m_context->RSSetViewports( 1, &viewport );
+
+#ifdef _DEBUG
+	m_device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_debug));
+#endif
 }
 
-void GraphicsDeviceD3D11::renderBeginFrame()
+void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)
+{
+	if(!m_assets.contains(asset)) m_assets.pushBack(asset);
+}
+
+void D3D11GraphicsDevice::renderBeginFrame()
 {
 
 }
 
-void GraphicsDeviceD3D11::renderEndFrame()
+void D3D11GraphicsDevice::renderEndFrame()
 {
 
 }

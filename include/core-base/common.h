@@ -52,6 +52,10 @@ void MLIB_ASSERT(bool statement, const String &description);
 #define SAFE_FREE(p) { if (p) { free (p);   (p)=NULL; } }
 #endif
 
+#ifndef SAFE_RELEASE
+#define SAFE_RELEASE(p) { if (p) { p->Release();   (p)=NULL; } }
+#endif
+
 //#ifndef V_RETURN
 //#define V_RETURN(hr) { if (FAILED(hr)) { return (hr); } }
 //#endif

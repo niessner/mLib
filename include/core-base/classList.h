@@ -11,3 +11,13 @@ class String;
 //
 // core-math
 //
+
+//
+// application-base
+//
+class GraphicsDevice;
+
+//
+// application-d3d11
+//
+class D3D11GraphicsDevice;

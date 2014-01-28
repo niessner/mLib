@@ -4,42 +4,72 @@
     <Filter Include="mLibHeader">
       <UniqueIdentifier>{4c5526ff-9213-4f4f-80e1-fe88278c8b83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mLibHeader\graphicsdevice-base">
-      <UniqueIdentifier>{6573b152-c912-4804-99d1-bd213f0f7bde}</UniqueIdentifier>
+    <Filter Include="mLibHeader\core-base">
+      <UniqueIdentifier>{7f2ee88f-7ae9-4603-a195-060206b4fca4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mLibHeader\graphicsdevice-d3d11">
-      <UniqueIdentifier>{518d3ba9-1614-4814-b5b6-29d742a8e13a}</UniqueIdentifier>
+    <Filter Include="mLibHeader\application-D3D11">
+      <UniqueIdentifier>{51fd6b4c-eb65-4ca3-9e07-0354d892179d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\graphicsdevice-base\graphicsAsset.h">
-      <Filter>mLibHeader\graphicsdevice-base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\graphicsdevice-base\graphicsDevice.h">
-      <Filter>mLibHeader\graphicsdevice-base</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\mLibCore.h">
       <Filter>mLibHeader</Filter>
     </ClInclude>
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />
-    <ClInclude Include="..\include\graphicsdevice-base\applicationWin32.h">
-      <Filter>mLibHeader\graphicsdevice-base</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\mLibD3D11.h">
       <Filter>mLibHeader</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\graphicsdevice-base\windowWin32.h">
-      <Filter>mLibHeader\graphicsdevice-base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\graphicsdevice-d3d11\graphicsDeviceD3D11.h">
-      <Filter>mLibHeader\graphicsdevice-d3d11</Filter>
-    </ClInclude>
     <ClInclude Include="appTest.h" />
+    <ClInclude Include="..\include\application-base\applicationWin32.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\application-base\graphicsAsset.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\application-base\graphicsDevice.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\application-base\windowWin32.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\classList.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\common.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\console.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\grid.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\string.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\vector.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\application-d3d11\D3D11PixelShader.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\application-d3d11\D3D11VertexShader.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\application-d3d11\graphicsDeviceD3D11.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\application-d3d11\D3D11Utility.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
     <ClCompile Include="winMain.cpp" />
     <ClCompile Include="appTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="console.txt" />
   </ItemGroup>
 </Project>

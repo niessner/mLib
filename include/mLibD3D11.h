@@ -11,3 +11,6 @@
 // application-d3d11 headers
 //
 #include "application-d3d11/graphicsDeviceD3D11.h"
+#include "application-d3d11/D3D11Utility.h"
+#include "application-d3d11/D3D11VertexShader.h"
+#include "application-d3d11/D3D11PixelShader.h"
