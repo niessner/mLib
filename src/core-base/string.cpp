@@ -256,6 +256,16 @@ bool String::isNumeric() const
             m_data[0] == '-'));
 }
 
+UINT String::hash32() const
+{
+	return Utility::hash32((const BYTE *)m_data, m_length);
+}
+
+UINT64 String::hash64() const
+{
+	return Utility::hash64((const BYTE *)m_data, m_length);
+}
+
 String String::removeSuffix(const String &endCandidate) const
 {
     MLIB_ASSERT(endsWith(endCandidate), "Removing invalid suffix");

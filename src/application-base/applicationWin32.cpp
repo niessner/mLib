@@ -7,21 +7,21 @@ ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT wi
 	switch(graphicsType)
 	{
 	case GraphicsDeviceTypeD3D11:
-		m_device = new D3D11GraphicsDevice();
+		m_graphics = new D3D11GraphicsDevice();
 		break;
 	default:
 		MLIB_ERROR("invalid graphics device type");
 	}
-	m_device->init(m_window);
+	m_graphics->init(m_window);
 
-	m_data = new ApplicationData(&m_window, m_device);
+	m_data = new ApplicationData(&m_window, m_graphics);
 
 	m_callback.init(*m_data);
 }
 
 ApplicationWin32::~ApplicationWin32()
 {
-	delete m_device;
+	delete m_graphics;
 	delete m_data;
 }
 
@@ -44,9 +44,9 @@ void ApplicationWin32::messageLoop()
 		}
 		else
 		{
-			m_device->renderBeginFrame();
+			m_graphics->renderBeginFrame();
 			m_callback.render(*m_data);
-			m_device->renderEndFrame();
+			m_graphics->renderEndFrame();
 		}
 	}
 }

@@ -294,6 +294,9 @@ public:
     String removePrefix(const String &start) const;
 
 	bool isNumeric() const;
+
+	UINT hash32() const;
+	UINT64 hash64() const;
     
     //
     // Splitting

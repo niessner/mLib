@@ -65,10 +65,11 @@ void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)
 
 void D3D11GraphicsDevice::renderBeginFrame()
 {
-
+	float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	m_context->ClearRenderTargetView( m_view, clearColor );
 }
 
 void D3D11GraphicsDevice::renderEndFrame()
 {
-
+	m_swapChain->Present( 0, 0 );
 }

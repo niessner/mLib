@@ -1,14 +1,14 @@
 
 struct ApplicationData
 {
-	ApplicationData(WindowWin32 *window_ptr, GraphicsDevice *device_ptr) :
+	ApplicationData(WindowWin32 *window_ptr, GraphicsDevice *graphics_ptr) :
 		window(*window_ptr),
-		device(*device_ptr)
+		graphics(*graphics_ptr)
 	{
 
 	}
 	WindowWin32 &window;
-	GraphicsDevice &device;
+	GraphicsDevice &graphics;
 };
 
 class ApplicationCallback
@@ -40,7 +40,7 @@ private:
 	ApplicationData *m_data;
 	
 	WindowWin32 m_window;
-	GraphicsDevice *m_device;
+	GraphicsDevice *m_graphics;
 
 	HINSTANCE m_instance;
 

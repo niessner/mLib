@@ -14,7 +14,7 @@
     <ProjectGuid>{FC66760E-55F5-49EC-B5F6-8C8179E9BF22}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>test</RootNamespace>
-    <ProjectName>testCore</ProjectName>
+    <ProjectName>webpagePapers</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -90,11 +90,6 @@
     <ClInclude Include="..\include\core-base\grid.h" />
     <ClInclude Include="..\include\core-base\string.h" />
     <ClInclude Include="..\include\core-base\vector.h" />
-    <ClInclude Include="..\include\core-math\point1d.h" />
-    <ClInclude Include="..\include\core-math\point2d.h" />
-    <ClInclude Include="..\include\core-math\point3d.h" />
-    <ClInclude Include="..\include\core-math\point4d.h" />
-    <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-util\directory.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
     <ClInclude Include="..\include\mLibCore.h" />
@@ -107,7 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="console.txt" />
-    <Text Include="notes.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -41,6 +41,11 @@ public:
 		return *m_device;
 	}
 
+	ID3D11DeviceContext& context()
+	{
+		return *m_context;
+	}
+
 private:
 	ID3D11Device *m_device;
 	ID3D11DeviceContext *m_context;
@@ -48,7 +53,7 @@ private:
 	ID3D11Debug *m_debug;
 	IDXGISwapChain *m_swapChain;
 	D3D_FEATURE_LEVEL m_featureLevel;
-
+	
 	Vector<GraphicsAsset*> m_assets;
 };
 
