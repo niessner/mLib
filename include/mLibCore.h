@@ -23,6 +23,7 @@
 #include "core-math/point3d.h"
 #include "core-math/point4d.h"
 #include "core-math/point6d.h"
+#include "core-math/sparseMatrix.h"
 
 //
 // core-graphics headers

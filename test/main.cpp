@@ -10,6 +10,7 @@ private:
 	TestVector m_vector;
 	TestString m_string;
 	TestUtility m_utility;
+	TestMath m_math;
 };
 
 void App::go()
@@ -19,6 +20,7 @@ void App::go()
 	m_vector.run();
 	m_string.run();
 	m_utility.run();
+	m_math.run();
 
 	Console::log("All tests completed");
 	std::cin.get();

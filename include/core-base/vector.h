@@ -336,11 +336,42 @@ private:
     UINT64 m_capacity;
 };
 
+template <class T> inline Vector<T> operator + (const Vector<T> &a, const Vector<T> &b)
+{
+	MLIB_ASSERT(a.size() == b.size(), "vector add with inconsistent size");
+	
+	const UINT length = a.size();
+	Vector<T> result(length);
+	for(UINT i = 0; i < length; i++)
+		result[i] = a[i] + b[i];
+	return result;
+}
+
+template <class T> inline Vector<T> operator - (const Vector<T> &a, const Vector<T> &b)
+{
+	MLIB_ASSERT(a.size() == b.size(), "vector subtract with inconsistent size");
+
+	const UINT length = a.size();
+	Vector<T> result(length);
+	for(UINT i = 0; i < length; i++)
+		result[i] = a[i] - b[i];
+	return result;
+}
+
+template <class T, class D> inline Vector<T> operator * (const Vector<T> &a, D b)
+{
+	const UINT length = a.size();
+	Vector<T> result(length);
+	for(UINT i = 0; i < length; i++)
+		result[i] = a[i] * b;
+	return result;
+}
+
 template <class T> inline bool operator == (const Vector<T> &a, const Vector<T> &b)
 {
-	if(a.length() != b.length()) return false;
-	const UINT length = a.length();
-	for(UINT i = 0; i < length; i++)
+	if(a.size() != b.size()) return false;
+	const UINT size = a.size();
+	for(UINT i = 0; i < size; i++)
 		if(a[i] != b[i])
 			return false;
 	return true;
@@ -348,9 +379,9 @@ template <class T> inline bool operator == (const Vector<T> &a, const Vector<T> 
 
 template <class T> inline bool operator != (const Vector<T> &a, const Vector<T> &b)
 {
-	if(a.length() != b.length()) return true;
-	const UINT length = a.length();
-	for(UINT i = 0; i < length; i++)
+	if(a.size() != b.size()) return true;
+	const UINT size = a.size();
+	for(UINT i = 0; i < size; i++)
 		if(a[i] != b[i])
 			return true;
 	return false;

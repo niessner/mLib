@@ -6,3 +6,4 @@
 #include "testVector.h"
 #include "testString.h"
 #include "testUtility.h"
+#include "testMath.h"
