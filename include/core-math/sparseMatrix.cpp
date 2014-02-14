@@ -66,7 +66,7 @@ Vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Vector<D> &B
 	for(UINT row = 0; row < rows; row++)
 	{
 		D val = 0.0;
-		for(const SparseRowEntry<D> &e : B.m_data[row].entries)
+		for(const SparseRowEntry<D> &e : A.m_data[row].entries)
 			val += e.val * B[e.col];
 		result[row] = val;
 	}
@@ -91,6 +91,5 @@ SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Sparse
 			}
 		}
 	}
-
 	return result;
 }

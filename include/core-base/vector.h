@@ -329,6 +329,9 @@ public:
     bool contains(const T &t) const;
     UINT64 count(const T &t) const;
     int findFirstIndex(const T &t) const;
+
+	static T dotProduct(const Vector<T> &a, const Vector<T> &b);
+	static Vector<T> directProduct(const Vector<T> &a, const Vector<T> &b);
     
 private:
     T*     m_data;
@@ -340,7 +343,7 @@ template <class T> inline Vector<T> operator + (const Vector<T> &a, const Vector
 {
 	MLIB_ASSERT(a.size() == b.size(), "vector add with inconsistent size");
 	
-	const UINT length = a.size();
+	const UINT length = (UINT)a.size();
 	Vector<T> result(length);
 	for(UINT i = 0; i < length; i++)
 		result[i] = a[i] + b[i];
@@ -351,7 +354,7 @@ template <class T> inline Vector<T> operator - (const Vector<T> &a, const Vector
 {
 	MLIB_ASSERT(a.size() == b.size(), "vector subtract with inconsistent size");
 
-	const UINT length = a.size();
+	const UINT length = (UINT)a.size();
 	Vector<T> result(length);
 	for(UINT i = 0; i < length; i++)
 		result[i] = a[i] - b[i];
@@ -360,7 +363,16 @@ template <class T> inline Vector<T> operator - (const Vector<T> &a, const Vector
 
 template <class T, class D> inline Vector<T> operator * (const Vector<T> &a, D b)
 {
-	const UINT length = a.size();
+	const UINT length = (UINT)a.size();
+	Vector<T> result(length);
+	for(UINT i = 0; i < length; i++)
+		result[i] = a[i] * b;
+	return result;
+}
+
+template <class T, class D> inline Vector<T> operator * (D b, const Vector<T> &a)
+{
+	const UINT length = (UINT)a.size();
 	Vector<T> result(length);
 	for(UINT i = 0; i < length; i++)
 		result[i] = a[i] * b;

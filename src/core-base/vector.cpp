@@ -47,19 +47,19 @@ template <class T> T Vector<T>::product() const
 
 template <class T> UINT64 Vector<T>::minIndex() const
 {
-	Assert(m_length > 0, "minIndex called on zero-length vector");
+	MLIB_ASSERT(m_length > 0, "minIndex called on zero-length vector");
 	const UINT64 length = m_length;
 	const T *ptr = m_data;
 	UINT64 smallestIndexSeen = 0;
 	for(UINT64 i = 1; i < length; i++)
 		if(ptr[i] < ptr[smallestIndexSeen])
 			smallestIndexSeen = i;
-	return SmallestIndexSeen;
+	return smallestIndexSeen;
 }
 
 template <class T> UINT64 Vector<T>::maxIndex() const
 {
-    Assert(m_length > 0, "maxIndex called on zero-length vector");
+    MLIB_ASSERT(m_length > 0, "maxIndex called on zero-length vector");
     const UINT64 length = m_length;
     const T *ptr = m_data;
     UINT64 largestIndexSeen = 0;
@@ -71,17 +71,17 @@ template <class T> UINT64 Vector<T>::maxIndex() const
 
 template <class T> const T& Vector<T>::minValue() const
 {
-	return m_data[MinIndex()];
+	return m_data[minIndex()];
 }
 
 template <class T> const T& Vector<T>::maxValue() const
 {
-    return m_data[MaxIndex()];
+    return m_data[maxIndex()];
 }
 
 template <class T> UINT64 Vector<T>::maxIndex(const std::function<double(const T&)> &valueFunction) const
 {
-	Assert(m_length > 0, "maxIndex called on zero-length vector");
+	MLIB_ASSERT(m_length > 0, "maxIndex called on zero-length vector");
 	double maxValue = valueFunction(m_data[0]);
 	UINT64 maxIndex = 0;
 	for(UINT64 i = 0; i < m_length; i++)
@@ -97,7 +97,7 @@ template <class T> UINT64 Vector<T>::maxIndex(const std::function<double(const T
 }
 template <class T> UINT64 Vector<T>::minIndex(const std::function<double(const T&)> &valueFunction) const
 {
-	Assert(m_length > 0, "minIndex called on zero-length vector");
+	MLIB_ASSERT(m_length > 0, "minIndex called on zero-length vector");
 	double minValue = valueFunction(m_data[0]);
 	UINT64 minIndex = 0;
 	for(UINT64 i = 0; i < m_length; i++)
@@ -207,4 +207,28 @@ template <class T> void Vector<T>::randomize()
         UINT64 randomNumber = UINT64(rand());
         std::swap(m_data[i], m_data[i + randomNumber % (length - i)]);
     }
+}
+
+template <class T> T Vector<T>::dotProduct(const Vector<T> &a, const Vector<T> &b)
+{
+	MLIB_ASSERT(a.size() == b.size(), "dotProduct called with invalid vectors");
+	T result = a[0] * b[0];
+	UINT64 length = a.m_length;
+	for(UINT64 i = 1; i < length; i++)
+	{
+		result += a[i] * b[i];
+	}
+	return result;
+}
+
+template <class T> Vector<T> Vector<T>::directProduct(const Vector<T> &a, const Vector<T> &b)
+{
+	MLIB_ASSERT(a.size() == b.size(), "directProduct called with invalid vectors");
+	UINT64 length = a.m_length;
+	Vector<T> result(length);
+	for(UINT64 i = 0; i < length; i++)
+	{
+		result[i] = a[i] * b[i];
+	}
+	return result;
 }

@@ -31,7 +31,7 @@ template <class D> struct SparseRow
 	}
 	D operator()(UINT col) const
 	{
-		for(SparseRowEntry<D> &e : entries)
+		for(const SparseRowEntry<D> &e : entries)
 		{
 			if(e.col == col) return e.val;
 		}
@@ -122,9 +122,31 @@ public:
 	{
 		return m_cols;
 	}
-	const SparseRow<D>& getRow(UINT row) const
+	const SparseRow<D>& sparseRow(UINT row) const
 	{
 		return m_data[row];
+	}
+	const Vector<D> denseRow(UINT row) const
+	{
+		Vector<D> result(m_cols);
+		for(UINT col = 0; col < m_cols; col++)
+			result[col] = (*this)(row, col);
+		return result;
+	}
+	const Vector<D> denseCol(UINT col) const
+	{
+		Vector<D> result(m_rows);
+		for(UINT row = 0; row < m_rows; row++)
+			result[row] = (*this)(row, col);
+		return result;
+	}
+	Vector<D> diagonal() const
+	{
+		MLIB_ASSERT(square(), "diagonal called on non-square matrix");
+		Vector<D> result(m_rows);
+		for(UINT row = 0; row < m_rows; row++)
+			result[row] = m_data[row](row);
+		return result;
 	}
 
 	//
@@ -132,15 +154,25 @@ public:
 	//
 	SparseMatrix<D> transpose() const;
 	D maxMagnitude() const;
+	bool square() const
+	{
+		return (m_rows == m_cols);
+	}
 
 	//
 	// overloaded operator helpers
 	//
 	static SparseMatrix<D> add(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
 	static SparseMatrix<D> subtract(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
-	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, D val);
-	static Vector<D> multiply(const SparseMatrix<D> &A, const Vector<D> &B);
+	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, D c);
+	static Vector<D> multiply(const SparseMatrix<D> &A, const Vector<D> &v);
 	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
+	
+	// returns the scalar v^T A v
+	static D quadratic(const SparseMatrix<D> &A, const Vector<D> &v)
+	{
+		return Vector<D>::dotProduct(v, multiply(A, v));
+	}
 
 private:
 	UINT m_rows, m_cols;
