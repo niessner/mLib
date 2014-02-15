@@ -131,6 +131,12 @@ template <class T> void Vector<T>::pushBack(T &&t)
     m_length++;
 }
 
+template <class T> void Vector<T>::pushBack()
+{
+	if(m_length >= m_capacity) reserve(m_length * 2 + 4);
+	m_length++;
+}
+
 template <class T> void Vector<T>::popBack()
 {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)

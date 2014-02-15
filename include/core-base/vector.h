@@ -281,6 +281,7 @@ public:
     //
     void pushBack(const T &t);
     void pushBack(T &&t);
+	void pushBack();
 	void popBack();
     void removeCopy(UINT64 i);
     void removeSwap(UINT64 i);
@@ -299,7 +300,7 @@ public:
 	// v.map([](T n) {return String(n);});
 	//
     template<class mapFunction>
-    auto map(mapFunction function) -> Vector<decltype(function(std::declval<T>()))>
+    auto map(mapFunction function) -> Vector<decltype(function(std::declval<T>()))> const
     {
         Vector<decltype(function(std::declval<T>()))> result(m_length);
         for(UINT64 i = 0; i < m_length; i++) result[i] = function(m_data[i]);
@@ -354,18 +355,18 @@ template <class T> inline Vector<T> operator - (const Vector<T> &a, const Vector
 {
 	MLIB_ASSERT(a.size() == b.size(), "vector subtract with inconsistent size");
 
-	const UINT length = (UINT)a.size();
+	const UINT64 length = a.size();
 	Vector<T> result(length);
-	for(UINT i = 0; i < length; i++)
+	for(UINT64 i = 0; i < length; i++)
 		result[i] = a[i] - b[i];
 	return result;
 }
 
 template <class T, class D> inline Vector<T> operator * (const Vector<T> &a, D b)
 {
-	const UINT length = (UINT)a.size();
+	const UINT64 length = a.size();
 	Vector<T> result(length);
-	for(UINT i = 0; i < length; i++)
+	for(UINT64 i = 0; i < length; i++)
 		result[i] = a[i] * b;
 	return result;
 }
@@ -382,8 +383,8 @@ template <class T, class D> inline Vector<T> operator * (D b, const Vector<T> &a
 template <class T> inline bool operator == (const Vector<T> &a, const Vector<T> &b)
 {
 	if(a.size() != b.size()) return false;
-	const UINT size = a.size();
-	for(UINT i = 0; i < size; i++)
+	const UINT64 size = a.size();
+	for(UINT64 i = 0; i < size; i++)
 		if(a[i] != b[i])
 			return false;
 	return true;
@@ -392,7 +393,7 @@ template <class T> inline bool operator == (const Vector<T> &a, const Vector<T> 
 template <class T> inline bool operator != (const Vector<T> &a, const Vector<T> &b)
 {
 	if(a.size() != b.size()) return true;
-	const UINT size = a.size();
+	const UINT64 size = a.size();
 	for(UINT i = 0; i < size; i++)
 		if(a[i] != b[i])
 			return true;

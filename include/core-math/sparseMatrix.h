@@ -216,4 +216,7 @@ SparseMatrix<D> operator * (const SparseMatrix<D> &A, D val)
 	return SparseMatrix<D>::multiply(A, val);
 }
 
+//typedef SparseMatrix<float> SparseMatrixf;
+//typedef SparseMatrix<double> SparseMatrixd;
+
 #include "sparseMatrix.cpp"

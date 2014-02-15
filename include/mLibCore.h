@@ -14,6 +14,7 @@
 //
 #include "core-util/utility.h"
 #include "core-util/directory.h"
+#include "core-util/nearestNeighborSearch.h"
 
 //
 // core-math headers

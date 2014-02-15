@@ -13,6 +13,9 @@
     <Filter Include="mLibHeader\core-util">
       <UniqueIdentifier>{0040808b-2df2-4c81-8488-c897d1fe54c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-math">
+      <UniqueIdentifier>{db48bfcf-9130-4df7-8c1a-f5ef3b168b57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -39,11 +42,6 @@
     <ClInclude Include="test.h">
       <Filter>tests</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-math\point1d.h" />
-    <ClInclude Include="..\include\core-math\point2d.h" />
-    <ClInclude Include="..\include\core-math\point3d.h" />
-    <ClInclude Include="..\include\core-math\point4d.h" />
-    <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-base\common.h">
       <Filter>mLibHeader\core-base</Filter>
     </ClInclude>
@@ -63,6 +61,33 @@
       <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
     <ClInclude Include="testMath.h">
+      <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\sparseMatrix.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\linearSolver.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point1d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point2d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point3d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point4d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point6d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\mLibANN.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="testANN.h">
       <Filter>tests</Filter>
     </ClInclude>
   </ItemGroup>

@@ -42,7 +42,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../include/;$(IncludePath)</IncludePath>
+    <IncludePath>../include/;../external/include/;$(IncludePath)</IncludePath>
+    <LibraryPath>../external/lib64/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -59,6 +60,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ANN64.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -90,17 +92,21 @@
     <ClInclude Include="..\include\core-base\grid.h" />
     <ClInclude Include="..\include\core-base\string.h" />
     <ClInclude Include="..\include\core-base\vector.h" />
+    <ClInclude Include="..\include\core-math\linearSolver.h" />
     <ClInclude Include="..\include\core-math\point1d.h" />
     <ClInclude Include="..\include\core-math\point2d.h" />
     <ClInclude Include="..\include\core-math\point3d.h" />
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
+    <ClInclude Include="..\include\core-math\sparseMatrix.h" />
     <ClInclude Include="..\include\core-util\directory.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
+    <ClInclude Include="..\include\mLibANN.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="test.h" />
+    <ClInclude Include="testANN.h" />
     <ClInclude Include="testMath.h" />
     <ClInclude Include="testString.h" />
     <ClInclude Include="testUtility.h" />
