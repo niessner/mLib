@@ -62,7 +62,7 @@ public:
 		Console::log() << "Eigen test passed" << std::endl;
 	}
 
-	std::string name()
+	String name()
 	{
 		return "math";
 	}

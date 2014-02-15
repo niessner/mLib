@@ -35,6 +35,18 @@ public:
 		return m_args[argIndex];
 	}
 
+	bool hasArgWithPrefix(const String &prefix) const
+	{
+		return (m_args.findFirstIndex([prefix](const String &s) { return s.startsWith(prefix); }) != -1);
+	}
+
+	String argWithPrefix(const String &prefix) const
+	{
+		int index = m_args.findFirstIndex([prefix](const String &s) { return s.startsWith(prefix); });
+		if(index == -1) return "";
+		else return m_args[index].removePrefix(prefix);
+	}
+
 private:
 	Vector<String> m_args;
 	String m_commandLine;

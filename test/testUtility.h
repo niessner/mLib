@@ -25,7 +25,7 @@ public:
 		Console::log("Utility tests passed");
 	}
 
-	std::string name()
+	String name()
 	{
 		return "utility";
 	}

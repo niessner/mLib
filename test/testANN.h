@@ -33,7 +33,7 @@ public:
 		}
 	}
 
-	std::string name()
+	String name()
 	{
 		return "ANN";
 	}

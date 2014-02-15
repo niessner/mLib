@@ -306,6 +306,31 @@ public:
         for(UINT64 i = 0; i < m_length; i++) result[i] = function(m_data[i]);
         return result;
     }
+
+	//
+	// findFirstIndex usage:
+	// v.findFirstIndex([](T n) { return n.startsWith("matt"); });
+	// returns the first index matching the predicate, otherwise -1
+	//
+	template<class predicateFunction>
+	int findFirstIndex(predicateFunction function) const
+	{
+		for(UINT64 i = 0; i < m_length; i++) if(function(m_data[i])) return (int)i;
+		return -1;
+	}
+
+	//
+	// findFirst usage:
+	// v.findFirst([](T n) { return n.startsWith("matt"); });
+	// returns the first element matching the predicate, otherwise throws an error.
+	//
+	template<class predicateFunction>
+	const T& findFirst(predicateFunction function) const
+	{
+		for(UINT64 i = 0; i < m_length; i++) if(function(m_data[i])) return m_data[i];
+		MLIB_ERROR("entry matching predicate not found");
+		return (*m_data);
+	}
     
     void clear(const T &T);
 

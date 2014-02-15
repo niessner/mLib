@@ -18,7 +18,7 @@ public:
 		Console::log() << "string test0 passed" << std::endl;
 	}
 
-	std::string name()
+	String name()
 	{
 		return "vector";
 	}

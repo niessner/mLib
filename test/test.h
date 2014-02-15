@@ -16,7 +16,7 @@ public:
 		test9();
 	}
 
-	virtual std::string name() = 0;
+	virtual String name() = 0;
 	virtual void test0() {}
 	virtual void test1() {}
 	virtual void test2() {}

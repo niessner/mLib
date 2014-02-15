@@ -63,7 +63,7 @@ public:
 		Console::log() << "grid test passed" << std::endl;
 	}
 
-	std::string name()
+	String name()
 	{
 		return "vector";
 	}
