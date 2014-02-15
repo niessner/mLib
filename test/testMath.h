@@ -25,6 +25,38 @@ public:
 		Console::log() << "matrix test passed" << std::endl;
 	}
 
+	void test1()
+	{
+		SparseMatrix<double> A(100, 10);
+		Vector<double> b(100);
+
+		for(UINT row = 0; row < A.rows(); row++)
+			for(UINT col = 0; col < A.cols(); col++)
+				A(row, col) = ((double)rand() / (double)RAND_MAX - 0.5) * 100.0;
+
+		for(UINT val = 0; val < b.size(); val++)
+			b[val] = ((double)rand() / (double)RAND_MAX - 0.5) * 100.0;
+
+		Vector<double> bSquare = A.transpose() * b;
+
+		SparseMatrix<double> ASquare = A.transpose() * A;
+
+		LinearSolverConjugateGradient<double> linearSolver;
+		LinearSolverEigen<double> eigenSolver;
+
+		Vector<double> x0 = linearSolver.solve(ASquare, bSquare);
+		Vector<double> x1 = eigenSolver.solve(ASquare, bSquare);
+		Vector<double> x2 = linearSolver.solveLeastSquares(A, b);
+		Vector<double> x3 = eigenSolver.solveLeastSquares(A, b);
+
+		double solveError0 = LinearSolver<double>::solveError(ASquare, x0, bSquare);
+		double solveError1 = LinearSolver<double>::solveError(ASquare, x1, bSquare);
+		double solveError2 = LinearSolver<double>::solveError(ASquare, x2, bSquare);
+		double solveError3 = LinearSolver<double>::solveError(ASquare, x3, bSquare);
+
+		Console::log() << "Eigen test passed" << std::endl;
+	}
+
 	std::string name()
 	{
 		return "math";

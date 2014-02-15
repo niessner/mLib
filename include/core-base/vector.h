@@ -300,7 +300,7 @@ public:
 	// v.map([](T n) {return String(n);});
 	//
     template<class mapFunction>
-    auto map(mapFunction function) -> Vector<decltype(function(std::declval<T>()))> const
+    auto map(mapFunction function) const -> Vector<decltype(function(std::declval<T>()))>
     {
         Vector<decltype(function(std::declval<T>()))> result(m_length);
         for(UINT64 i = 0; i < m_length; i++) result[i] = function(m_data[i]);

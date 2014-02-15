@@ -5,7 +5,8 @@ template<class D> class LinearSolver
 {
 public:
 	virtual Vector<D> solve(const SparseMatrix<D> &A, const Vector<D> &b) = 0;
-	double solveError(const SparseMatrix<D> &A, const Vector<D> &x, const Vector<D> &b)
+	virtual Vector<D> solveLeastSquares(const SparseMatrix<D> &A, const Vector<D> &b) = 0;
+	static double solveError(const SparseMatrix<D> &A, const Vector<D> &x, const Vector<D> &b)
 	{
 		//.map([](T n) {return String(n);})
 		return (A * x - b).map([](D x) {return fabs(x);}).maxValue();
@@ -15,11 +16,12 @@ public:
 template<class D> class LinearSolverConjugateGradient : public LinearSolver<D>
 {
 public:
-	LinearSolverConjugateGradient(UINT _maxIterations = 10000, double _tolerance = 1e-5)
+	LinearSolverConjugateGradient(UINT maxIterations = 10000, double tolerance = 1e-10)
 	{
-		maxIterations = _maxIterations;
-		tolerance = _tolerance;
+		m_maxIterations = maxIterations;
+		m_tolerance = tolerance;
 	}
+
 	Vector<D> solve(const SparseMatrix<D> &A, const Vector<D> &b)
 	{
 		MLIB_ASSERT(A.square() && b.size() == A.rows(), "invalid solve dimensions");
@@ -32,14 +34,14 @@ public:
 		Vector<D> z = Vector<D>::directProduct(dInverse, r);
 		Vector<D> p = z;
 
-		for(UINT iteration = 0; iteration < maxIterations; iteration++)
+		for(UINT iteration = 0; iteration < m_maxIterations; iteration++)
 		{
 			D gamma = Vector<D>::dotProduct(r, z);
-			if(fabs(gamma) < 1e-10) break;
+			if(fabs(gamma) < 1e-20) break;
 			D alpha = gamma / SparseMatrix<D>::quadratic(A, p);
 			x = x + alpha * p;
 			r = r - alpha * (A * p);
-			if(r.maxValue() <= tolerance && r.minIndex() >= tolerance) break;
+			if(r.maxValue() <= m_tolerance && r.minIndex() >= -m_tolerance) break;
 			z = Vector<D>::directProduct(dInverse, r);
 
 			D beta = Vector<D>::dotProduct(z, r) / gamma;
@@ -48,6 +50,13 @@ public:
 		return x;
 	}
 
-	UINT maxIterations;
-	double tolerance;
+	Vector<D> solveLeastSquares(const SparseMatrix<D> &A, const Vector<D> &b)
+	{
+		auto Atranspose = A.transpose();
+		return solve(Atranspose * A, Atranspose * b);
+	}
+
+private:
+	UINT m_maxIterations;
+	double m_tolerance;
 };

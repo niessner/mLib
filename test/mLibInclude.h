@@ -12,3 +12,4 @@
 
 #include "mLibCore.h"
 #include "mLibANN.h"
+#include "mLibEigen.h"

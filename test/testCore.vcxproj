@@ -56,6 +56,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>main.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/Zm180 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -100,9 +101,14 @@
     <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-math\sparseMatrix.h" />
     <ClInclude Include="..\include\core-util\directory.h" />
+    <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
+    <ClInclude Include="..\include\ext-ANN\nearestNeighborSearchANN.h" />
+    <ClInclude Include="..\include\ext-eigen\eigenSolver.h" />
+    <ClInclude Include="..\include\ext-eigen\eigenUtility.h" />
     <ClInclude Include="..\include\mLibANN.h" />
     <ClInclude Include="..\include\mLibCore.h" />
+    <ClInclude Include="..\include\mLibEigen.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="test.h" />

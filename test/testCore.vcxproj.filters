@@ -16,6 +16,12 @@
     <Filter Include="mLibHeader\core-math">
       <UniqueIdentifier>{db48bfcf-9130-4df7-8c1a-f5ef3b168b57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\ext-eigen">
+      <UniqueIdentifier>{1454aea4-d797-49b0-8a5e-bbd21cdbbc40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mLibHeader\ext-ANN">
+      <UniqueIdentifier>{15c97299-a156-4581-a39d-450885e339c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -89,6 +95,21 @@
     </ClInclude>
     <ClInclude Include="testANN.h">
       <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\mLibEigen.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-eigen\eigenSolver.h">
+      <Filter>mLibHeader\ext-eigen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-eigen\eigenUtility.h">
+      <Filter>mLibHeader\ext-eigen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-ANN\nearestNeighborSearchANN.h">
+      <Filter>mLibHeader\ext-ANN</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\nearestNeighborSearch.h">
+      <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
