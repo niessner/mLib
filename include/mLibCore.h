@@ -14,7 +14,9 @@
 //
 #include "core-util/utility.h"
 #include "core-util/directory.h"
+#include "core-util/clock.h"
 #include "core-util/nearestNeighborSearch.h"
+#include "core-util/commandLineReader.h"
 
 //
 // core-math headers

@@ -60,10 +60,12 @@ public:
 		return s_stream;
 	}
 
-	static void log(const std::string &s)
-	{
-		s_stream << s << std::endl;
-	}
+	//static void log(const std::string &s)
+	//{
+	//	s_stream << s << std::endl;
+	//}
+
+	static void log(const String &s);
 
 private:
 	static MultiStream s_stream;

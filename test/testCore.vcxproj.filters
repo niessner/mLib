@@ -111,6 +111,9 @@
     <ClInclude Include="..\include\core-util\nearestNeighborSearch.h">
       <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-util\clock.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
