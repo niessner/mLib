@@ -54,6 +54,11 @@ public:
 		double solveError2 = LinearSolver<double>::solveError(ASquare, x2, bSquare);
 		double solveError3 = LinearSolver<double>::solveError(ASquare, x3, bSquare);
 
+		MLIB_ASSERT(solveError0 <= 1e-5, "solve failed");
+		MLIB_ASSERT(solveError1 <= 1e-5, "solve failed");
+		MLIB_ASSERT(solveError2 <= 1e-5, "solve failed");
+		MLIB_ASSERT(solveError3 <= 1e-5, "solve failed");
+
 		Console::log() << "Eigen test passed" << std::endl;
 	}
 
