@@ -15,6 +15,8 @@
 #include <algorithm>
 #include <fstream>
 #include <memory>
+#include <thread>
+#include <mutex>
 
 #ifndef NOMINMAX
 #define NOMINMAX

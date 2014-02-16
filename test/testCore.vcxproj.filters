@@ -22,6 +22,9 @@
     <Filter Include="mLibHeader\ext-ANN">
       <UniqueIdentifier>{15c97299-a156-4581-a39d-450885e339c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-multithreading">
+      <UniqueIdentifier>{6806ce57-37ce-4d82-9121-60d3e46b6e09}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -113,6 +116,21 @@
     </ClInclude>
     <ClInclude Include="..\include\core-util\clock.h">
       <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\commandLineReader.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-multithreading\taskList.h">
+      <Filter>mLibHeader\core-multithreading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-multithreading\threadPool.h">
+      <Filter>mLibHeader\core-multithreading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-multithreading\workerThread.h">
+      <Filter>mLibHeader\core-multithreading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-multithreading\mutex.h">
+      <Filter>mLibHeader\core-multithreading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

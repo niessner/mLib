@@ -19,6 +19,14 @@
 #include "core-util/commandLineReader.h"
 
 //
+// core-multithreading headers
+//
+#include "core-multithreading/mutex.h"
+#include "core-multithreading/taskList.h"
+#include "core-multithreading/workerThread.h"
+#include "core-multithreading/threadPool.h"
+
+//
 // core-math headers
 //
 #include "core-math/point1d.h"

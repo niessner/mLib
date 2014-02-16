@@ -12,3 +12,9 @@
 #include "../src/core-util/utility.cpp"
 #include "../src/core-util/directory.cpp"
 #include "../src/core-util/clock.cpp"
+
+//
+// core-multithreading source files
+//
+#include "../src/core-multithreading/threadPool.cpp"
+#include "../src/core-multithreading/workerThread.cpp"

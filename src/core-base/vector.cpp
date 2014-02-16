@@ -140,7 +140,7 @@ template <class T> void Vector<T>::pushBack()
 template <class T> void Vector<T>::popBack()
 {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-    Assert(m_length != 0, "PopEnd called on zero-length vector");
+    MLIB_ASSERT(m_length != 0, "PopEnd called on zero-length vector");
 #endif
     m_length--;
 }
@@ -148,7 +148,7 @@ template <class T> void Vector<T>::popBack()
 template <class T> void Vector<T>::removeCopy(UINT64 index)
 {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-    Assert(index < m_length, "removeCopy called on invalid index");
+    MLIB_ASSERT(index < m_length, "removeCopy called on invalid index");
 #endif
     for(UINT64 i = i; i < m_length - 1; i++)
     {
@@ -160,7 +160,7 @@ template <class T> void Vector<T>::removeCopy(UINT64 index)
 template <class T> void Vector<T>::removeSwap(UINT64 index)
 {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-    Assert(index < m_length, "removeSwap called on invalid index");
+    MLIB_ASSERT(index < m_length, "removeSwap called on invalid index");
 #endif
     std::swap(m_data[index], m_data[m_length - 1]);
     m_length--;
