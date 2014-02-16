@@ -42,7 +42,7 @@ public:
 		SparseMatrix<double> ASquare = A.transpose() * A;
 
 		LinearSolverConjugateGradient<double> linearSolver;
-		LinearSolverEigen<double> eigenSolver;
+		LinearSolverEigen<double> eigenSolver(LinearSolverEigen<double>::Profile);
 
 		Vector<double> x0 = linearSolver.solve(ASquare, bSquare);
 		Vector<double> x1 = eigenSolver.solve(ASquare, bSquare);
