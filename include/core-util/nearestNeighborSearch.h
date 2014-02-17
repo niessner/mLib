@@ -76,7 +76,7 @@ public:
 		m_farthestDist = clearValue;
 	}
 
-	__forceinline void insert(const NeighborEntry &entry)
+	inline void insert(const NeighborEntry &entry)
 	{
 		if(entry.dist < m_farthestDist)
 		{

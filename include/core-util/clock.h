@@ -6,11 +6,11 @@ public:
     void start();
     double elapsed();
 
-	__forceinline UINT64 startTime()
+	inline UINT64 startTime()
 	{
 		return m_startTime;
 	}
-	__forceinline UINT64 ticksPerSecond()
+	inline UINT64 ticksPerSecond()
 	{
 		return m_ticksPerSecond;
 	}
