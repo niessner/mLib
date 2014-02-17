@@ -61,9 +61,10 @@ template<class D>
 Vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Vector<D> &B)
 {
 	MLIB_ASSERT(A.cols() == B.size(), "invalid dimensions");
-	const UINT rows = A.m_rows;
+	const int rows = A.m_rows;
 	Vector<D> result(rows);
-	for(UINT row = 0; row < rows; row++)
+#pragma omp parallel for
+	for(int row = 0; row < rows; row++)
 	{
 		D val = 0.0;
 		for(const SparseRowEntry<D> &e : A.m_data[row].entries)

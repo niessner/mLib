@@ -85,7 +85,7 @@ private:
 		else if(method == ConjugateGradient_Diag)
 		{
 			Eigen::ConjugateGradient< Eigen::SparseMatrix<double>, Eigen::Lower, Eigen::DiagonalPreconditioner<double > > solver;
-			solver.setTolerance(1e-10);
+			solver.setTolerance(1e-20);
 			solver.compute(A);
 			x = solver.solve(bEigen);
 			//Console::log("Iterations: " + String(solver.iterations()));
