@@ -27,6 +27,13 @@ namespace Math
 	}
 
 	template<class T>
+	inline T abs(T x)
+	{
+		if(x < 0) return -x;
+		return x;
+	}
+
+	template<class T>
 	inline T linearMap(T s1, T e1, T s2, T e2, T start)
     {
         return ((start-s1)*(e2-s2)/(e1-s1)+s2);

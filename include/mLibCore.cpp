@@ -18,3 +18,8 @@
 //
 #include "../src/core-multithreading/threadPool.cpp"
 #include "../src/core-multithreading/workerThread.cpp"
+
+//
+// core-graphics source files
+//
+#include "../src/core-graphics/RGBColor.cpp"

@@ -25,6 +25,9 @@
     <Filter Include="mLibHeader\core-multithreading">
       <UniqueIdentifier>{6806ce57-37ce-4d82-9121-60d3e46b6e09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-graphics">
+      <UniqueIdentifier>{89597fa9-63ab-451e-a2da-cced69cc82ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -134,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="..\include\core-math\kMeansClustering.h">
       <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-graphics\RGBColor.h">
+      <Filter>mLibHeader\core-graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

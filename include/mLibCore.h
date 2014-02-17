@@ -41,3 +41,4 @@
 //
 // core-graphics headers
 //
+#include "core-graphics/RGBColor.h"
