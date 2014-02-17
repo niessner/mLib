@@ -36,6 +36,7 @@
 #include "core-math/point6d.h"
 #include "core-math/sparseMatrix.h"
 #include "core-math/linearSolver.h"
+#include "core-math/kMeansClustering.h"
 
 //
 // core-graphics headers

@@ -42,7 +42,7 @@ public:
 		SparseMatrix<double> ASquare = A.transpose() * A;
 
 		LinearSolverConjugateGradient<double> linearSolver;
-		LinearSolverEigen<double> eigenSolver(LinearSolverEigen<double>::Profile);
+		LinearSolverEigen<double> eigenSolver(LinearSolverEigen<double>::ConjugateGradient_Diag);
 
 		Vector<double> x0 = linearSolver.solve(ASquare, bSquare);
 		Vector<double> x1 = eigenSolver.solve(ASquare, bSquare);
@@ -60,6 +60,27 @@ public:
 		MLIB_ASSERT(solveError3 <= 1e-5, "solve failed");
 
 		Console::log() << "Eigen test passed" << std::endl;
+	}
+
+	void test2()
+	{
+		const UINT pointCount = 1000;
+		const UINT clusterCount = 10;
+		const UINT maxIterations = 25;
+
+		Vector<vec3f> points(pointCount);
+		for(int i = 0; i < pointCount; i++)
+			points[i] = vec3f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
+
+		for(UINT iteration = 0; iteration < 2; iteration++)
+		{
+			Clock timer;
+			KMeansClustering<vec3f, Vec3fKMeansMetric> clustering;
+			clustering.cluster(points, clusterCount, maxIterations, false);
+			Console::log() << "iteration " << iteration << ": " << timer.elapsed() << std::endl;
+		}
+		
+		Console::log() << "clustering test passed" << std::endl;
 	}
 
 	String name()

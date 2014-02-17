@@ -10,16 +10,15 @@ missing mLib components (roughly in order of importance):
  -- binary input and output file streams w/ compression
  -- parameter files
  -- dense matrices
+ -- random number generator
  -- eigen wrapper for dense matrices
  -- rectangles / bounding box (pointNd min/max pairs)
  -- PCA
  -- specialized KD trees for point 2d/3d/4d
- -- k-means clustering
  -- geometric primitives (lines, planes, rays, etc.)
  -- triangle-only mesh structure
  -- adjacency-aware mesh structure
  -- remainder of D3D11 objects wrapped
  -- graphs
- -- multithreading
  -- machine learning
  -- basic algorithms (fourier transform, etc.)

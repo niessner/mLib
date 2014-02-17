@@ -132,6 +132,9 @@
     <ClInclude Include="..\include\core-multithreading\mutex.h">
       <Filter>mLibHeader\core-multithreading</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-math\kMeansClustering.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
