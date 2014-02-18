@@ -334,7 +334,7 @@ public:
 		return (*m_data);
 	}
     
-    void clear(const T &T);
+    void clear(const T &clearValue);
 
 	//randomize should also take a RNG
 	void randomize();

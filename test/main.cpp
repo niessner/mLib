@@ -28,9 +28,10 @@ void App::go()
 	std::cin.get();
 }
 
-void main()
+int main()
 {
 	App a;
 	a.go();
 
+	return 0;
 }

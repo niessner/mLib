@@ -145,7 +145,7 @@ public:
 	//
 	// Modifiers
 	//
-	void clear(const T &T);
+	void clear(const T &clearValue);
 
 protected:
 	T *m_data;

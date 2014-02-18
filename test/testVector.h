@@ -20,7 +20,7 @@ public:
 			return f(n);
 		});
 
-		Vector<std::string> v2 = v1.map([](int n)
+		Vector<std::string> v2 = v1.map([](int n) -> std::string
 		{
 			std::stringstream s;
 			s << n;

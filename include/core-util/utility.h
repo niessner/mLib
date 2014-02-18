@@ -65,7 +65,7 @@ namespace Math
     {
         int floorX = floor(x);
         if(x == float(floorX)) return floorX;
-        else return FloorX + 1;
+        else return floorX + 1;
     }
 
 	template<class T>
@@ -121,14 +121,14 @@ namespace Utility
     UINT32 hash32(const BYTE *start, UINT length);
     UINT64 hash64(const BYTE *start, UINT length);
 
-    template <class T> inline UINT32 hash32(const T &Obj)
+    template <class T> inline UINT32 hash32(const T &obj)
     {
-        return Hash32((const BYTE *)&Obj, sizeof(T));
+        return hash32((const BYTE *)&obj, sizeof(T));
     }
 
-    template <class T> inline UINT64 hash64(const T &Obj)
+    template <class T> inline UINT64 hash64(const T &obj)
     {
-        return Hash64((const BYTE *)&Obj, sizeof(T));
+        return hash64((const BYTE *)&obj, sizeof(T));
     }
 
 	//

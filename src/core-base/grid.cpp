@@ -100,10 +100,10 @@ template <class T> void Grid<T>::allocate(UINT rows, UINT cols, const T &clearVa
 	clear(clearValue);
 }
 
-template <class T> void Grid<T>::clear(const T &T)
+template <class T> void Grid<T>::clear(const T &clearValue)
 {
 	const UINT totalEntries = m_rows * m_cols;
-	for(UINT i = 0; i < totalEntries; i++) m_data[i] = T;
+	for(UINT i = 0; i < totalEntries; i++) m_data[i] = clearValue;
 }
 
 template <class T> std::pair<UINT, UINT> Grid<T>::maxIndex() const
@@ -126,7 +126,7 @@ template <class T> std::pair<UINT, UINT> Grid<T>::maxIndex() const
 template <class T> const T& Grid<T>::maxValue() const
 {
 	std::pair<UINT, UINT> index = maxIndex();
-	return m_data[index.x * m_cols + index.y];
+	return m_data[index.first * m_cols + index.second];
 }
 
 template <class T> std::pair<UINT, UINT> Grid<T>::minIndex() const
@@ -151,5 +151,5 @@ template <class T> std::pair<UINT, UINT> Grid<T>::minIndex() const
 template <class T> const T& Grid<T>::minValue() const
 {
 	std::pair<UINT, UINT> index = minIndex();
-	return m_data[index.x * m_cols + index.y];
+	return m_data[index.first * m_cols + index.second];
 }

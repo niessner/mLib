@@ -13,7 +13,7 @@ public:
 	}
 	void kNearest(const D *query, UINT k, D epsilon, Vector<UINT> &result) const
 	{
-		kNearestInternal(points, dimension, maxK);
+		kNearestInternal(query, k, epsilon, result);
 	}
 	
 	void init(const Vector< Vector<D> > &points, UINT maxK)

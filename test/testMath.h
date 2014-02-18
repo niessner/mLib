@@ -22,6 +22,8 @@ public:
 		Vector<double> x = solver.solve(b.transpose() * b, rhs);
 		double solveError = solver.solveError(b.transpose() * b, x, rhs);
 
+		MLIB_ASSERT(solveError <= 1e-5, "solve failed");
+
 		Console::log() << "matrix test passed" << std::endl;
 	}
 

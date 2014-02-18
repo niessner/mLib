@@ -248,17 +248,17 @@ public:
 
     UINT toUInt32() const
     {
-        return UINT(_atoi64(ptr()));
+        return UINT(atoi(ptr()));
     }
 
     INT64 toInt64() const
     {
-        return _atoi64(ptr());
+        return INT64(atoi(ptr()));
     }
 
     UINT64 toUINT64() const
     {
-        return UINT64(_atoi64(ptr()));
+        return UINT64(atoi(ptr()));
     }
 
     double toDouble() const

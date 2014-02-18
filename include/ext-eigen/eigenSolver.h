@@ -59,7 +59,7 @@ public:
 private:
 	Vector<D> solveUsingMethod(const Eigen::SparseMatrix<D> &A, const Vector<D> &b, Method method)
 	{
-		ComponentTimer("Solving using method: " + getMethodName(method));
+		ComponentTimer timer("Solving using method: " + getMethodName(method));
 		
 		const Eigen::VectorXd bEigen = EigenUtility::makeEigenVector(b);
 		Eigen::VectorXd x;
