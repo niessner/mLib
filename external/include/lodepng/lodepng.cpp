@@ -37,7 +37,9 @@ Rename this file to lodepng.cpp to use it for C++, or to lodepng.c to use it for
 #include <fstream>
 #endif /*LODEPNG_COMPILE_CPP*/
 
+#ifdef WIN32
 #pragma warning(disable : 4267)
+#endif
 
 #define VERSION_STRING "20130824"
 
