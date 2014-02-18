@@ -12,6 +12,7 @@ private:
 	TestUtility m_utility;
 	TestMath m_math;
 	//TestANN m_ANN;
+	TestLodePNG m_lodePNG;
 };
 
 void App::go()
@@ -23,6 +24,7 @@ void App::go()
 	m_utility.run();
 	m_math.run();
 	//m_ANN.run();
+	m_lodePNG.run();
 
 	Console::log("All tests completed");
 	std::cin.get();

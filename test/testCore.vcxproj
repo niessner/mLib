@@ -124,10 +124,12 @@
     <ClInclude Include="..\include\mLibANN.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="..\include\mLibEigen.h" />
+    <ClInclude Include="..\include\mLibLodePNG.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="test.h" />
     <ClInclude Include="testANN.h" />
+    <ClInclude Include="testLodePNG.h" />
     <ClInclude Include="testMath.h" />
     <ClInclude Include="testString.h" />
     <ClInclude Include="testUtility.h" />

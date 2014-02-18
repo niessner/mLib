@@ -8,3 +8,4 @@
 #include "testUtility.h"
 #include "testMath.h"
 //#include "testANN.h"
+#include "testLodePNG.h"

@@ -141,6 +141,12 @@
     <ClInclude Include="..\include\core-graphics\RGBColor.h">
       <Filter>mLibHeader\core-graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\mLibLodePNG.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="testLodePNG.h">
+      <Filter>tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
