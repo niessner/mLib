@@ -8,12 +8,14 @@
 #   $(NAME) should be module name
 #   $(CCSRCS) should list C++ source files
 #   $(CSRCS) should list C source files
+#   $(MLIB_RELATIVE_PATH) should be the (relative) location of mLib
 #
 # For example ...
 #   NAME=foo
 #   CCSRCS=$(NAME).C \
 #       foo1.C foo2.C foo3.C
 #   CSRCS=foo4.c foo5.c
+#   MLIB_RELATIVE_PATH=../mLib
 #
 
 
@@ -36,7 +38,7 @@ ARCH=$(shell uname -m)
 #
 
 CC=clang++
-BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall
+BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall -I$(MLIB_RELATIVE_PATH)/include -I$(MLIB_RELATIVE_PATH)/external/include
 #BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall -I../include -I../external/include
 DEBUG_CFLAGS=$(BASE_CFLAGS) -g
 OPT_CFLAGS=$(BASE_CFLAGS) -O3 -DNDEBUG

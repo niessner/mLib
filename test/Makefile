@@ -2,6 +2,6 @@ NAME=test
 
 CCSRCS=main.cpp mLibSource.cpp
 
-USER_CFLAGS=-I../include -I../external/include
+MLIB_RELATIVE_PATH=../../mLib
 
-include ../Makefile.app
+include $(MLIB_RELATIVE_PATH)/Makefile.app
