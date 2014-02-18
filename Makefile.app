@@ -36,7 +36,8 @@ ARCH=$(shell uname -m)
 #
 
 CC=clang++
-BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall -I../include -I../external/include
+BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall
+#BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall -I../include -I../external/include
 DEBUG_CFLAGS=$(BASE_CFLAGS) -g
 OPT_CFLAGS=$(BASE_CFLAGS) -O3 -DNDEBUG
 CFLAGS=$(DEBUG_CFLAGS)
