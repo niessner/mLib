@@ -96,7 +96,7 @@ public:
 		}
 	}
 
-	void cluster(const Vector<T> &elements, const Vector<float> &weights, UINT clusterCount, UINT maxIterations = 0, bool verbose = true)
+	void cluster(const Vector<T> &elements, const Vector<float> &weights, UINT clusterCount, UINT maxIterations = 0, bool verbose = true, double maxDelta = 0.0)
 	{
 		if(verbose) Console::log(String("k-means clustering, ") + String(elements.size()) + String(" points, ") + String(clusterCount) + String(" clusters"));
 
@@ -210,7 +210,6 @@ private:
 		for(int elementIndex = 0; elementIndex < elementCount; elementIndex++)
 		{
 			const T& e = elementPtr[elementIndex];
-			float w = weightsPtr[elementIndex];
 			UINT closestClusterIndex = 0;
 			double closestClusterDist = Metric::Dist(e, clustersPtr[0].center);
 			for(UINT clusterIndex = 1; clusterIndex < clusterCount; clusterIndex++)
@@ -226,7 +225,7 @@ private:
 		}
 
 		for(int elementIndex = 0; elementIndex < elementCount; elementIndex++)
-			clustersPtr[storage[elementIndex]].addEntry(weightedElements[elementIndex], w);
+			clustersPtr[storage[elementIndex]].addEntry(weightedElements[elementIndex], weightsPtr[elementIndex]);
 
 		for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
 			clustersPtr[clusterIndex].finalizeIteration(elements.randomElement());

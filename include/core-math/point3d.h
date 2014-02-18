@@ -135,7 +135,7 @@ public:
 	}
 
 	inline T length() const {
-		return sqrt(squaredLength());
+		return sqrt(lengthSq());
 	}
 
 	static T distSq(const point3d& v0, const point3d& v1) {

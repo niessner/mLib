@@ -98,7 +98,7 @@ typedef unsigned char UCHAR;
 #ifdef WIN32
 	typedef unsigned __int64 UINT64;
 #else
-	typedef unsigned uint64_t UINT64;
+	typedef uint64_t UINT64;
 #endif
 #endif
 

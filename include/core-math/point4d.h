@@ -152,7 +152,7 @@ public:
 	}
 
 	static T dist(const point4d& v0, const point4d& v1) {
-		return (*this - other).length();
+		return (v0 - v1).length();
 	}
 
 	~point4d(void) {};
@@ -181,7 +181,7 @@ public:
 
 	inline point4d getNormalized() const {
 		T inv = (T)1/length();
-		return point4d<T>(array[0]/val, array[1]/val, array[2]/val, array[3]/val);
+		return point4d<T>(array[0]*inv, array[1]*inv, array[2]*inv, array[3]*inv);
 	}
 
 	inline void dehomogenize() {

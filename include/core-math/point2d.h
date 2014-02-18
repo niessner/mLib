@@ -145,7 +145,7 @@ public:
 		return ((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]));
 	}
 
-	static T dist(const point2d& other) {
+	static T dist(const point2d& v0, const point2d& v1) {
 		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]));
 	}
 

@@ -147,13 +147,13 @@ public:
 	}
 
 	static T dist(const point6d& v0, const point6d& v1) {
-		return (v0-v1).length()
+		return (v0-v1).length();
 	}
 
 	~point6d(void) {};
 
 	inline void print() const {
-		std::out << "(" << array[0] << " / " << array[1] << " / " << array[2] << " / " << array[3] << " / " << array[4] << " / " << array[5] << ")" << std::endl;
+		std::cout << "(" << array[0] << " / " << array[1] << " / " << array[2] << " / " << array[3] << " / " << array[4] << " / " << array[5] << ")" << std::endl;
 	}
 
 

@@ -98,11 +98,11 @@ public:
 	}
 	void operator=(SparseMatrix<D>&& V)
 	{
-		m_rows = s.m_rows;
-		m_cols = s.m_cols;
-		s.m_rows = 0;
-		s.m_cols = 0;
-		m_data = std::move(s.m_data);
+		m_rows = V.m_rows;
+		m_cols = V.m_cols;
+		V.m_rows = 0;
+		V.m_cols = 0;
+		m_data = std::move(V.m_data);
 	}
 
 	//
