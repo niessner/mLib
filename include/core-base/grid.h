@@ -152,4 +152,19 @@ protected:
 	UINT m_rows, m_cols;
 };
 
+template <class T> inline bool operator == (const Grid<T> &a, const Grid<T> &b)
+{
+	if(a.rows() != b.rows() || a.cols() != b.cols()) return false;
+	for(UINT row = 0; row < a.rows(); row++)
+		for(UINT col = 0; col < a.cols(); col++)
+			if(a(row, col) != b(row, col))
+				return false;
+	return true;
+}
+
+template <class T> inline bool operator != (const Grid<T> &a, const Grid<T> &b)
+{
+	return !(a == b);
+}
+
 #include "../../src/core-base/grid.cpp"
