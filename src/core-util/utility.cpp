@@ -273,7 +273,7 @@ namespace Utility
 
 	void makeDirectory(const String &directory)
 	{
-		mkdir(directory.ptr());
+		mkdir(directory.ptr(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}
 #endif
 }

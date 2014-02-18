@@ -25,10 +25,6 @@ RGBColor::RGBColor(const String &hex)
 		channel[1] = carray[offset++];
 		channel[2] = '\0';
 
-		char first = channel[0];
-		char second = channel[1];
-
-		long int a = strtol(channel, NULL, 16);
 		color[c] = (BYTE) strtol(channel, NULL, 16);
 	}
 	r = color[0];

@@ -1,3 +1,7 @@
+#ifndef WIN32
+#define LINUX
+#endif
+
 
 //
 // core-base headers

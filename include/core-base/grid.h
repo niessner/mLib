@@ -28,7 +28,7 @@ public:
 	void allocate(UINT rows, UINT cols);
 	void allocate(UINT rows, UINT cols, const T &clearValue);
 
-	inline Grid<T>& Grid<T>::operator += (const Grid<T> &right)
+	inline Grid<T>& operator += (const Grid<T> &right)
 	{
 		MLIB_ASSERT(m_rows == right.m_rows && m_cols == right.m_cols, "grid dimensions must be equal");
 		for (UINT r = 0; r < m_rows; r++)
@@ -36,7 +36,7 @@ public:
 				m_data[r * m_cols + c] += right(r,c);
 		return *this;
 	}
-	inline Grid<T>& Grid<T>::operator *= (T right)
+	inline Grid<T>& operator *= (T right)
 	{
 		for (UINT r = 0; r < m_rows; r++)
 			for (UINT c = 0; c < m_cols; c++)

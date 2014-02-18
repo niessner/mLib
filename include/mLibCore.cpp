@@ -4,7 +4,8 @@
 #endif
 
 #ifdef LINUX
-
+#define _POSIX_SOURCE
+#include <sys/stat.h>
 #endif
 
 //
