@@ -50,6 +50,14 @@ public:
 		m_rows = 0;
 		m_cols = 0;
 	}
+
+	SparseMatrix(const SparseMatrix<D>& s)
+	{
+		m_rows = s.m_rows;
+		m_cols = s.m_cols;
+		m_data = s.m_data;
+	}
+
 	SparseMatrix(SparseMatrix &&s)
 	{
 		m_rows = s.m_rows;
@@ -58,18 +66,21 @@ public:
 		s.m_cols = 0;
 		m_data = std::move(s.m_data);
 	}
+
 	explicit SparseMatrix(UINT squareDimension)
 	{
 		m_rows = squareDimension;
 		m_cols = squareDimension;
 		m_data.allocate(m_rows);
 	}
+
 	SparseMatrix(UINT rows, UINT cols)
 	{
 		m_rows = rows;
 		m_cols = cols;
 		m_data.allocate(m_rows);
 	}
+
 	SparseMatrix(const String &s, MatrixStringFormat format)
 	{
 		if(format == MatrixStringFormatMathematica)
@@ -96,13 +107,21 @@ public:
 			MLIB_ERROR("invalid matrix string format");
 		}
 	}
-	void operator=(SparseMatrix<D>&& V)
+
+	void operator=(const SparseMatrix<D>& s)
 	{
-		m_rows = V.m_rows;
-		m_cols = V.m_cols;
-		V.m_rows = 0;
-		V.m_cols = 0;
-		m_data = std::move(V.m_data);
+		m_rows = s.m_rows;
+		m_cols = s.m_cols;
+		m_data = s.m_data;
+	}
+
+	void operator=(SparseMatrix<D>&& s)
+	{
+		m_rows = s.m_rows;
+		m_cols = s.m_cols;
+		s.m_rows = 0;
+		s.m_cols = 0;
+		m_data = std::move(s.m_data);
 	}
 
 	//

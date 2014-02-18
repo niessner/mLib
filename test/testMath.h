@@ -28,7 +28,7 @@ public:
 	void test1()
 	{
 		SparseMatrix<double> A(100, 10);
-		Vector<double> b(10);
+		Vector<double> b(100);
 
 		for(UINT row = 0; row < A.rows(); row++)
 			for(UINT col = 0; col < A.cols(); col++)
