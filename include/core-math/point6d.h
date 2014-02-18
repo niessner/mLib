@@ -1,3 +1,5 @@
+
+#pragma once
 #ifndef _POINT6D_H_
 #define _POINT6D_H_
 

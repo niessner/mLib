@@ -1,5 +1,7 @@
 
 #pragma once
+#ifndef _VECTOR_H_
+#define _VECTOR_H_
 
 template <class T> class Vector
 {
@@ -426,3 +428,6 @@ template <class T> inline bool operator != (const Vector<T> &a, const Vector<T> 
 }
 
 #include "../../src/core-base/vector.cpp"
+
+
+#endif // _VECTOR_H_

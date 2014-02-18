@@ -1,5 +1,7 @@
 
 #pragma once
+#ifndef _EIGEN_SOLVER_H_
+#define _EIGEN_SOLVER_H_
 
 template<class D> class LinearSolverEigen : public LinearSolver<D>
 {
@@ -153,3 +155,5 @@ private:
 
 	Method m_method;
 };
+
+#endif // _EIGEN_SOLVER_H_

@@ -1,5 +1,7 @@
 
 #pragma once
+#ifndef SPARSE_MATRIX_H
+#define SPARSE_MATRIX_H
 
 enum MatrixStringFormat
 {
@@ -220,3 +222,5 @@ SparseMatrix<D> operator * (const SparseMatrix<D> &A, D val)
 //typedef SparseMatrix<double> SparseMatrixd;
 
 #include "sparseMatrix.cpp"
+
+#endif // SPARSE_MATRIX_H

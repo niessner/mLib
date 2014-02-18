@@ -1,5 +1,7 @@
 
 #pragma once
+#ifndef _EIGEN_UTILITY_H_
+#define _EIGEN_UTILITY_H_
 
 namespace EigenUtility
 {
@@ -49,3 +51,5 @@ namespace EigenUtility
 		return result;
 	}
 }
+
+#endif // _EIGEN_UTILITY_H_

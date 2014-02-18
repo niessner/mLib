@@ -1,5 +1,7 @@
 
 #pragma once
+#ifndef NEAREST_NEIGHBOR_SEARCH_ANN_H
+#define NEAREST_NEIGHBOR_SEARCH_ANN_H
 
 template<class D>
 class NearestNeighborSearchANN : public NearestNeighborSearch<D>
@@ -67,3 +69,5 @@ private:
 	mutable ANNdistArray m_dists;       // near neighbor distances
 	ANNpointSet*         m_tree;        // search structure
 };
+
+#endif // NEAREST_NEIGHBOR_SEARCH_ANN_H

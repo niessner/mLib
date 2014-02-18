@@ -79,15 +79,27 @@ typedef unsigned char UCHAR;
 #endif
 
 #ifndef INT64
-typedef __int64 INT64;
+#ifdef WIN32
+	typedef __int64 INT64;
+#else
+	typedef int64_t INT64;
+#endif
 #endif
 
 #ifndef UINT32
-typedef unsigned __int32 UINT32;
+#ifdef WIN32
+	typedef unsigned __int32 UINT32;
+#else
+	typedef uint32_t UINT32;
+#endif
 #endif
 
 #ifndef UINT64
-typedef unsigned __int64 UINT64;
+#ifdef WIN32
+	typedef unsigned __int64 UINT64;
+#else
+	typedef unsigned uint64_t UINT64;
+#endif
 #endif
 
 #ifndef FLOAT

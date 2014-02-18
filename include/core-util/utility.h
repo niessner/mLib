@@ -1,5 +1,7 @@
 
 #pragma once
+#ifndef _UTILITY_H_
+#define _UTILITY_H_
 
 namespace Math
 {
@@ -202,3 +204,5 @@ namespace Utility
         MLIB_ASSERT(!ferror(file) && result == 0, "fseek failed");
     }
 }
+
+#endif // _UTILITY_H_

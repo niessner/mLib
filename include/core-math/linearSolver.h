@@ -1,5 +1,7 @@
 
 #pragma once
+#ifndef _LINEAR_SOLVER_H_
+#define _LINEAR_SOLVER_H_
 
 template<class D> class LinearSolver
 {
@@ -60,3 +62,5 @@ private:
 	UINT m_maxIterations;
 	double m_tolerance;
 };
+
+#endif // _LINEAR_SOLVER_H_

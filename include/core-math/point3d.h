@@ -1,3 +1,5 @@
+
+#pragma once
 #ifndef _POINT3D_H_
 #define _POINT3D_H_
 

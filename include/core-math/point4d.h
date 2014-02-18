@@ -1,4 +1,5 @@
 
+#pragma once
 #ifndef _POINT4D_H_
 #define _POINT4D_H_
 

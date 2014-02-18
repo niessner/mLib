@@ -1,5 +1,7 @@
 
 #pragma once
+#ifndef _NEAREST_NEIGHBOR_SEARCH_H_
+#define _NEAREST_NEIGHBOR_SEARCH_H_
 
 template<class D>
 class NearestNeighborSearch
@@ -154,3 +156,5 @@ private:
 	Vector< const D* > m_points;
 	mutable KNearestNeighborQueue<D> m_queue;
 };
+
+#endif // _NEAREST_NEIGHBOR_SEARCH_H_
