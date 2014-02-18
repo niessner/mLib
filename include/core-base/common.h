@@ -3,8 +3,14 @@
 #ifndef _MLIBCOMMON_H_
 #define _MLIBCOMMON_H_
 
+#ifdef WIN32
+
 #define _SCL_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
+
+#define MLIB_OPENMP
+
+#endif
 
 #include <exception>
 #include <iostream>

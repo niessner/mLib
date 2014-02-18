@@ -173,7 +173,9 @@ private:
 		const int clusterCount = (int)m_clusters.size();
 		KMeansCluster<T> *clustersPtr = m_clusters.ptr();
 
+#ifdef MLIB_OPENMP
 #pragma omp parallel for
+#endif
 		for(int elementIndex = 0; elementIndex < elementCount; elementIndex++)
 		{
 			const T& e = elementPtr[elementIndex];
@@ -206,7 +208,9 @@ private:
 		const UINT clusterCount = (UINT)m_clusters.size();
 		KMeansCluster<T> *clustersPtr = m_clusters.ptr();
 
+#ifdef MLIB_OPENMP
 #pragma omp parallel for
+#endif
 		for(int elementIndex = 0; elementIndex < elementCount; elementIndex++)
 		{
 			const T& e = elementPtr[elementIndex];
