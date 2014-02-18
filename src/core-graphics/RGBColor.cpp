@@ -29,7 +29,7 @@ RGBColor::RGBColor(const String &hex)
 		char second = channel[1];
 
 		long int a = strtol(channel, NULL, 16);
-		color[c] = (byte) strtol(channel, NULL, 16);
+		color[c] = (BYTE) strtol(channel, NULL, 16);
 	}
 	r = color[0];
 	g = color[1];

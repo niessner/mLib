@@ -1,4 +1,5 @@
 
+#ifdef WIN32
 Clock::Clock()
 {
 	LARGE_INTEGER ticksPerSecond;
@@ -20,3 +21,21 @@ double Clock::elapsed()
 	QueryPerformanceCounter( &time );
 	return double(time.QuadPart - m_startTime) / double(m_ticksPerSecond);
 }
+#endif
+
+#ifdef LINUX
+Clock::Clock()
+{
+	
+}
+
+void Clock::start()
+{
+	
+}
+
+double Clock::elapsed()
+{
+	return 0.0;
+}
+#endif

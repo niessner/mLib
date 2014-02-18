@@ -42,7 +42,7 @@ void ThreadPool::runTasks(TaskList<WorkerThreadTask*> &tasks, bool useConsole)
 		{
 			consoleDelay--;
 		}
-		Sleep(25);
+		std::this_thread::sleep_for( std::chrono::milliseconds(25) );
 	}
 	if(useConsole) Console::log("all tasks completed");
 }

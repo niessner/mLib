@@ -1,8 +1,4 @@
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 namespace Utility
 {
 	//
@@ -108,44 +104,6 @@ namespace Utility
 		return UINT64(c) + UINT64(UINT64(a) << 32);
 	}
 
-    void copyStringToClipboard(const String &S)
-    {
-        OpenClipboard(NULL);
-        EmptyClipboard();
-
-        HGLOBAL globalHandle;
-        UINT bytesToCopy = S.length() + 1;
-        globalHandle = GlobalAlloc(GMEM_MOVEABLE, bytesToCopy);
-        if(globalHandle != NULL)
-        {
-            BYTE *stringPointer = (BYTE*)GlobalLock(globalHandle); 
-            memcpy(stringPointer, S.ptr(), bytesToCopy); 
-            GlobalUnlock(globalHandle);
-            SetClipboardData(CF_TEXT, globalHandle);
-        }
-        CloseClipboard();
-    }
-
-    String loadStringFromClipboard()
-    {
-        String result;
-        
-        OpenClipboard(NULL);
-        HGLOBAL globalHandle = GetClipboardData(CF_TEXT);
-        if(globalHandle != NULL)
-        {
-            const char *stringPointer = (const char *)GlobalLock(globalHandle);
-            if(stringPointer != NULL)
-            {
-                result = stringPointer;
-                GlobalUnlock(GlobalHandle);
-            }
-        }
-        CloseClipboard();
-
-        return result;
-    }
-
     bool fileExists(const String &filename)
     {
         std::ifstream file(filename.ptr());
@@ -178,6 +136,63 @@ namespace Utility
         return getFileLines(file, minLineLength);
     }
 
+	Vector<BYTE> getFileData(const String &filename)
+	{
+		FILE *inputFile = Utility::checkedFOpen(filename.ptr(), "rb");
+		UINT fileSize = Utility::getFileSize(filename);
+		Vector<BYTE> result(fileSize);
+		Utility::checkedFRead(result.ptr(), sizeof(BYTE), fileSize, inputFile);
+		fclose(inputFile);
+		return result;
+	}
+
+	void copyFile(const String &sourceFile, const String &destFile)
+	{
+		Vector<BYTE> data = getFileData(sourceFile);
+		FILE *file = Utility::checkedFOpen(destFile.ptr(), "wb");
+		Utility::checkedFWrite(data.ptr(), sizeof(BYTE), data.size(), file);
+		fclose(file);
+	}
+
+#ifdef WIN32
+	void copyStringToClipboard(const String &S)
+	{
+		OpenClipboard(NULL);
+		EmptyClipboard();
+
+		HGLOBAL globalHandle;
+		UINT bytesToCopy = S.length() + 1;
+		globalHandle = GlobalAlloc(GMEM_MOVEABLE, bytesToCopy);
+		if(globalHandle != NULL)
+		{
+			BYTE *stringPointer = (BYTE*)GlobalLock(globalHandle); 
+			memcpy(stringPointer, S.ptr(), bytesToCopy); 
+			GlobalUnlock(globalHandle);
+			SetClipboardData(CF_TEXT, globalHandle);
+		}
+		CloseClipboard();
+	}
+
+	String loadStringFromClipboard()
+	{
+		String result;
+
+		OpenClipboard(NULL);
+		HGLOBAL globalHandle = GetClipboardData(CF_TEXT);
+		if(globalHandle != NULL)
+		{
+			const char *stringPointer = (const char *)GlobalLock(globalHandle);
+			if(stringPointer != NULL)
+			{
+				result = stringPointer;
+				GlobalUnlock(GlobalHandle);
+			}
+		}
+		CloseClipboard();
+
+		return result;
+	}
+
     UINT getFileSize(const String &filename)
     {
         BOOL success;
@@ -186,35 +201,7 @@ namespace Utility
         MLIB_ASSERT(success && fileInfo.nFileSizeHigh == 0, String("GetFileAttributesEx failed on ") + filename);
         return fileInfo.nFileSizeLow;
     }
-
-    Vector<BYTE> getFileData(const String &filename)
-    {
-        FILE *inputFile = Utility::checkedFOpen(filename.ptr(), "rb");
-        UINT fileSize = Utility::getFileSize(filename);
-        Vector<BYTE> result(fileSize);
-        Utility::checkedFRead(result.ptr(), sizeof(BYTE), fileSize, inputFile);
-        fclose(inputFile);
-        return result;
-    }
-
-    void copyFile(const String &sourceFile, const String &destFile)
-    {
-        Vector<BYTE> data = getFileData(sourceFile);
-        FILE *file = Utility::checkedFOpen(destFile.ptr(), "wb");
-        Utility::checkedFWrite(data.ptr(), sizeof(BYTE), data.size(), file);
-        fclose(file);
-    }
-
-    void messageBox(const char *s)
-    {
-        MessageBoxA(NULL, s, "Message", MB_OK);
-    }
-
-    void messageBox(const String &s)
-    {
-        MessageBoxA(NULL, s.ptr(), "Message", MB_OK);
-    }
-
+    
     // Create a process with the given command line, and wait until it returns
     int runCommand(const String &executablePath, const String &commandLine, bool block)
     {
@@ -260,4 +247,33 @@ namespace Utility
     {
         CreateDirectoryA(directory.ptr(), NULL);
     }
+#endif
+
+#ifdef LINUX
+	void copyStringToClipboard(const String &S)
+	{
+		
+	}
+
+	String loadStringFromClipboard()
+	{
+		return "";
+	}
+
+	UINT getFileSize(const String &filename)
+	{
+		return 0;
+	}
+
+	// Create a process with the given command line, and wait until it returns
+	int runCommand(const String &executablePath, const String &commandLine, bool block)
+	{
+		return 0;
+	}
+
+	void makeDirectory(const String &directory)
+	{
+		mkdir(directory.ptr());
+	}
+#endif
 }

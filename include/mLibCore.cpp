@@ -1,4 +1,12 @@
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+#ifdef LINUX
+
+#endif
+
 //
 // core-base source files
 //
