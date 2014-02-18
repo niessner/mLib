@@ -16,6 +16,11 @@
 #include "../src/core-base/string.cpp"
 
 //
+// core-math source files
+//
+#include "../src/core-math/point.cpp"
+
+//
 // core-util source files
 //
 #include "../src/core-util/utility.cpp"

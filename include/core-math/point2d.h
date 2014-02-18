@@ -3,9 +3,6 @@
 #ifndef _POINT2D_H_
 #define _POINT2D_H_
 
-// Disables the 'nameless struct/union' warning in VC.
-#pragma warning( disable : 4201 )
-
 #include "point1d.h"
 
 #include <iostream>

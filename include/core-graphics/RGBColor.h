@@ -53,6 +53,12 @@ struct RGBColor
 
     static RGBColor interpolate(RGBColor LowColor, RGBColor HighColor, float s);
 
+	operator vec3f() const
+	{
+		const float scale = 1.0f / 255.0f;
+		return vec3f(r * scale, g * scale, b * scale);
+	}
+
     static const RGBColor White;
     static const RGBColor Red;
     static const RGBColor Green;

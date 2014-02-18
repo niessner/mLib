@@ -88,7 +88,8 @@ public:
 		array[2] *= val;
 	}
 
-	inline void operator/=(T val) {
+	template<class D>
+	inline void operator/=(D val) {
 		T inv_val = ((T)1)/(val);
 
 		array[0] *= inv_val;
@@ -184,6 +185,10 @@ public:
 		array[2] /= val;
 	}
 
+	static const point3d<T> origin;
+	static const point3d<T> eX;
+	static const point3d<T> eY;
+	static const point3d<T> eZ;
 
 	union {
 		struct {
