@@ -278,7 +278,7 @@ String String::removePrefix(const String &startCandidate) const
 {
     MLIB_ASSERT(startsWith(startCandidate), "Removing invalid prefix");
     String result = *this;
-    for(UINT i = 0; i < startCandidate.m_length; i++) result.PopFront();
+    for(UINT i = 0; i < startCandidate.m_length; i++) result.popFront();
     return result;
 }
 

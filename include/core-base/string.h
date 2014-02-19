@@ -182,9 +182,14 @@ public:
     inline const char* ptr() const
     {
 		if(m_data != NULL) return m_data;
-		return (char *)&(m_data);
+		return (const char *)&(m_data);
     }
 
+	operator const char *() const
+	{
+		if(m_data != NULL) return m_data;
+		return (const char *)&(m_data);
+	}
 	
 	// STL defines both size and length for std::string
     //inline UINT size() const
@@ -359,7 +364,7 @@ public:
         m_data[m_length] = '\0';
     }
 
-    void PopFront()
+    void popFront()
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
         if(m_length == 0) MLIB_ERROR("Pop called on empty string");
