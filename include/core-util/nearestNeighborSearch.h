@@ -139,7 +139,7 @@ public:
 				D diff = point[d] - query[d];
 				dist += diff * diff;
 			}
-			m_queue.insert(KNearestNeighborQueue<D>::NeighborEntry(pointIndex, dist));
+			m_queue.insert(typename KNearestNeighborQueue<D>::NeighborEntry(pointIndex, dist));
 		}
 
 		if(result.size() != k) result.allocate(k);

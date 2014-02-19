@@ -11,7 +11,7 @@ private:
 	TestString m_string;
 	TestUtility m_utility;
 	TestMath m_math;
-	//TestANN m_ANN;
+	TestANN m_ANN;
 	TestLodePNG m_lodePNG;
 };
 
@@ -23,7 +23,7 @@ void App::go()
 	m_string.run();
 	m_utility.run();
 	m_math.run();
-	//m_ANN.run();
+	m_ANN.run();
 	m_lodePNG.run();
 
 	Console::log("All tests completed");

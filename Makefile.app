@@ -39,7 +39,6 @@ ARCH=$(shell uname -m)
 
 CC=clang++
 BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall -I$(MLIB_RELATIVE_PATH)/include -I$(MLIB_RELATIVE_PATH)/external/include
-#BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall -I../include -I../external/include
 DEBUG_CFLAGS=$(BASE_CFLAGS) -g
 OPT_CFLAGS=$(BASE_CFLAGS) -O3 -DNDEBUG
 CFLAGS=$(DEBUG_CFLAGS)
@@ -50,7 +49,7 @@ CFLAGS=$(DEBUG_CFLAGS)
 
 RELEASE_DIR=release
 EXE_DIR=bin
-LIB_DIR=lib
+LIB_DIR=$(MLIB_RELATIVE_PATH)/external/lib64
 
 #
 # default rules
@@ -79,8 +78,7 @@ EXE = $(EXE_DIR)/$(NAME)
 # link options
 #
 
-#BASE_LDFLAGS=-stdlib=libc++ $(USER_LDFLAGS) -L$(LIB_DIR)
-BASE_LDFLAGS=-stdlib=libc++ $(USER_LDFLAGS)
+BASE_LDFLAGS=-lc++ $(USER_LDFLAGS) -L$(LIB_DIR)
 DEBUG_LDFLAGS=$(BASE_LDFLAGS) -g
 OPT_LDFLAGS=$(BASE_LDFLAGS) -O 
 LDFLAGS=$(DEBUG_LDFLAGS)
@@ -100,7 +98,7 @@ LDFLAGS=$(DEBUG_LDFLAGS)
 #OPENGL_LIBS=-lfglut -lGLU -lGL -lm
 #endif
 #LIBS=$(USER_LIBS) $(PKG_LIBS) $(OPENGL_LIBS)
-LIBS=$(USER_LIBS) 
+LIBS=$(USER_LIBS) $(PKG_LIBS)
 
 
 

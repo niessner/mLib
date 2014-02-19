@@ -7,5 +7,5 @@
 #include "testString.h"
 #include "testUtility.h"
 #include "testMath.h"
-//#include "testANN.h"
+#include "testANN.h"
 #include "testLodePNG.h"
