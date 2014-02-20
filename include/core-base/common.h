@@ -8,8 +8,17 @@
 #define _SCL_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 
+#define _SECURE_SCL 0
+#define _HAS_ITERATOR_DEBUGGING 0
+
 #define MLIB_OPENMP
 
+#define DEBUG_BREAK __debugbreak()
+
+#endif
+
+#ifdef LINUX
+#define DEBUG_BREAK assert(false)
 #endif
 
 #include <exception>

@@ -76,13 +76,9 @@ template <class T> Grid<T>& Grid<T>::operator = (const Grid<T> &G)
 
 template <class T> Grid<T>& Grid<T>::operator = (Grid<T> &&G)
 {
-	if(&G != this)
-	{
-		deleteMemory();
-		m_data = G.m_data;
-		m_rows = G.m_rows;
-		m_cols = G.m_cols;
-	}
+	std::swap(m_rows, G.m_rows);
+	std::swap(m_cols, G.m_cols);
+	std::swap(m_data, G.m_data);
 	return *this;
 }
 
