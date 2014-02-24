@@ -199,7 +199,7 @@ template <class T> int Vector<T>::findFirstIndex(const T &t) const
     {
         if(m_data[i] == t)
         {
-            return i;
+            return (int)i;
         }
     }
     return -1;

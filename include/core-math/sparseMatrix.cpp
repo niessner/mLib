@@ -96,3 +96,112 @@ SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Sparse
 	}
 	return result;
 }
+
+template<class D>
+void SparseMatrix<D>::invertInPlace()
+{
+	MLIB_ASSERT(square(), "SparseMatrix<D>::invertInPlace called on non-square matrix");
+	for (UINT i = 1; i < m_rows; i++)
+	{
+		(*this)(0, i) /= (*this)(0, 0);
+	}
+
+	for (UINT i = 1; i < m_rows; i++)
+	{
+		//
+		// do a column of L
+		//
+		for (UINT j = i; j < m_rows; j++)
+		{
+			D sum = 0;
+			for (UINT k = 0; k < i; k++)  
+			{
+				sum += (*this)(j, k) * (*this)(k, i);
+			}
+			(*this)(j, i) -= sum;
+		}
+		if (i == m_rows - 1)
+		{
+			continue;
+		}
+
+		//
+		// do a row of U
+		//
+		for (UINT j = i + 1; j < m_rows; j++)
+		{
+			D sum = 0;
+			for (UINT k = 0; k < i; k++)
+				sum += (*this)(i, k) * (*this)(k, j);
+			(*this)(i, j) = ((*this)(i, j) - sum) / (*this)(i, i);
+		}
+	}
+
+	//
+	// invert L
+	//
+	for (UINT i = 0; i < m_rows; i++)
+		for (UINT j = i; j < m_rows; j++)
+		{
+			D sum = (D)1.0;
+			if ( i != j )
+			{
+				sum = 0;
+				for (UINT k = i; k < j; k++ ) 
+				{
+					sum -= (*this)(j, k) * (*this)(k, i);
+				}
+			}
+			(*this)(j, i) = sum / (*this)(j, j);
+		}
+
+		//
+		// invert U
+		//
+		for (UINT i = 0; i < m_rows; i++)
+			for (UINT j = i; j < m_rows; j++)
+			{
+				if ( i == j )
+				{
+					continue;
+				}
+				D sum = 0;
+				for (UINT k = i; k < j; k++)
+				{
+					D val = (D)1.0;
+					if(i != k)
+					{
+						val = (*this)(i, k);
+					}
+					sum += (*this)(k, j) * val;
+				}
+				(*this)(i, j) = -sum;
+			}
+
+			//
+			// final inversion
+			//
+			for (UINT i = 0; i < m_rows; i++)
+			{
+				for (UINT j = 0; j < m_rows; j++)
+				{
+					D sum = 0;
+					UINT larger = j;
+					if(i > j)
+					{
+						larger = i;
+					}
+					for (UINT k = larger; k < m_rows; k++)
+					{
+						D val = (D)1.0;
+						if(j != k)
+						{
+							val = (*this)(j, k);
+						}
+						sum += val * (*this)(k, i);
+					}
+					(*this)(j, i) = sum;
+				}
+			}
+			//Assert(ElementsValid(), "Degenerate Matrix inversion.");
+}

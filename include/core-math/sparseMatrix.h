@@ -179,6 +179,7 @@ public:
 	{
 		return (m_rows == m_cols);
 	}
+	void invertInPlace();
 
 	//
 	// overloaded operator helpers
