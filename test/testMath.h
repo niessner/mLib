@@ -24,10 +24,34 @@ public:
 
 		MLIB_ASSERT(solveError <= 1e-5, "solve failed");
 
-		Console::log() << "matrix test passed" << std::endl;
+		Console::log() << "sparse matrix test passed" << std::endl;
 	}
 
 	void test1()
+	{
+		DenseMatrix<double> a("{{2,6,-1},{-9,-7,3}}", MatrixStringFormatMathematica);
+		DenseMatrix<double> b("{{3,4,1},{2,5,0},{-6,6,-1},{8,7,-2}}", MatrixStringFormatMathematica);
+		DenseMatrix<double> correctProduct("{{29,34,25,60},{-52,-53,9,-127}}", MatrixStringFormatMathematica);
+
+		DenseMatrix<double> product = a * b.transpose();
+		DenseMatrix<double> sum = a + a;
+		DenseMatrix<double> sumCheck = a * 2.0;
+
+		double productError = (product - correctProduct).maxMagnitude();
+		MLIB_ASSERT(productError == 0.0, "matrix product test failed");
+
+		double sumError = (sumCheck - sum).maxMagnitude();
+		MLIB_ASSERT(sumError == 0.0, "matrix sum test failed");
+
+		DenseMatrix<double> aTa = a * a.transpose();
+		DenseMatrix<double> inverseCheck = aTa.inverse() * aTa + aTa * aTa.inverse() - DenseMatrix<double>::identity(aTa.rows()) * 2.0;
+		double inverseError = inverseCheck.maxMagnitude();
+		MLIB_ASSERT(inverseError < 1e-6, "matrix inverse test failed");
+
+		Console::log() << "dense matrix test passed" << std::endl;
+	}
+
+	void test2()
 	{
 		SparseMatrix<double> A(100, 10);
 		Vector<double> b(100);
@@ -64,7 +88,7 @@ public:
 		Console::log() << "Eigen test passed" << std::endl;
 	}
 
-	void test2()
+	void test3()
 	{
 		const UINT pointCount = 1000;
 		const UINT clusterCount = 10;

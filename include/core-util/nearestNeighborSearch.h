@@ -30,7 +30,6 @@ public:
 		kNearestInternal(query.ptr(), k, epsilon, result);
 	}
 
-
 	Vector<UINT> kNearest(const Vector<D> &query, UINT k, D epsilon) const
 	{
 		Vector<UINT> result;

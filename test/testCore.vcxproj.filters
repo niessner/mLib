@@ -147,6 +147,9 @@
     <ClInclude Include="testLodePNG.h">
       <Filter>tests</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-math\denseMatrix.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
