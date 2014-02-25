@@ -63,6 +63,10 @@ Vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Vector<D> &B
 	MLIB_ASSERT(A.cols() == B.size(), "invalid dimensions");
 	const int rows = A.m_rows;
 	Vector<D> result(rows);
+
+	const D* BPtr = B.ptr();
+	D* resultPtr = result.ptr();
+
 #ifdef MLIB_OPENMP
 #pragma omp parallel for
 #endif
@@ -70,8 +74,8 @@ Vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Vector<D> &B
 	{
 		D val = 0.0;
 		for(const SparseRowEntry<D> &e : A.m_data[row].entries)
-			val += e.val * B[e.col];
-		result[row] = val;
+			val += e.val * BPtr[e.col];
+		resultPtr[row] = val;
 	}
 	return result;
 }

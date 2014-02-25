@@ -85,7 +85,7 @@ Vector<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const Vector<D> &B)
 {
 	MLIB_ASSERT(A.cols() == B.size(), "invalid dimensions");
 	const int rows = A.m_rows;
-	const int cols = A.m_cols;
+	const UINT cols = A.m_cols;
 	Vector<D> result(rows);
 //#ifdef MLIB_OPENMP
 //#pragma omp parallel for
@@ -94,7 +94,7 @@ Vector<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const Vector<D> &B)
 	{
 		D val = 0.0;
 		for(UINT col = 0; col < cols; col++)
-			val += m_dataPtr[row * cols + col] * B[e.col];
+			val += A.m_dataPtr[row * cols + col] * B[col];
 		result[row] = val;
 	}
 	return result;
