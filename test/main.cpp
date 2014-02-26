@@ -38,28 +38,15 @@ int main()
 #endif
 
 
+	std::string s = "hello.exe";
+	std::cout << StringUtil::findAndReplace(s, "ll", "") << std::endl;
+	ParameterFile pm("bla.txt");
+	unsigned int a = 4;
+	pm.getParameterForValue("a", a);
+	std::cout << a << std::endl;
 
-	//std::string sd;
-	//String s = "hello";
-	//s.reserve(100);
-	//s = s.removeChar('l');
-	//s.clear();
-	//s.pushBack('a');
-	//s.pushBack('b');
-	//s.popFront();
-	//std::cout << s << std::endl;
-	//s << "a";
-	//s << 1;
-	//s << true;
-	//std::cout << s << std::endl;
-	//try {
-	//	throw MLIB_EXCEPTION("exp");
-	//} catch(std::exception& e) {
-	//	std::cout << e.what() << std::endl;
-	//}
-	//MLIB_WARNING("bla");
-	App a;
-	a.go();
+	//App a;
+	//a.go();
 
 	getchar();
 	return 0;

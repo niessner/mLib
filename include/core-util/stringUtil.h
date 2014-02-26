@@ -53,6 +53,10 @@ namespace StringUtil {
 		return result;
 	}
 
+	inline std::string findAndReplace(const std::string& str, char find, char replace) {
+		return findAndReplace(str, std::to_string(find), std::to_string(replace));
+	}
+
 
 	//TODO TEST
 	inline Vector<std::string> split(const std::string& str, const std::string& seperator, bool pushEmptyStrings = false) {
@@ -99,123 +103,131 @@ namespace StringUtil {
 				res[i] -= ('Z'-'z');
 			}
 		}
+		return res;
 	}
-
-	//inline std::string findAndReplace(const std::string& str, const std::string &find, const std::string &replace)
-	//{
-	//	std::string result;
-	//	for (unsigned int i = 0; i < str.size(); i++) {
-	//		if(exactMatchAtOffset(find, i))
-	//		{
-	//			result += replace;
-	//			i += find.size() - 1;
-	//		}
-	//		else result += m_data[i];
-	//	}
-	//	return result;
-	//}
+	//! converts all chars of a string to uppercase (returns the result)
+	inline std::string toUpper(const std::string& str) {
+		std::string res(str);
+		for (size_t i = 0; i < res.length(); i++) {
+			if (res[i] <= 'z' &&  res[i] >= 'a') {
+				res[i] += ('Z'-'z');
+			}
+		}
+		return res;
+	}
 
 	//! removes all characters from a string
-	inline void removeChar(std::string &str, const char c) {
-		 str.erase (std::remove(str.begin(), str.end(), c), str.end());
-	}
 	inline std::string removeChar(const std::string &strInput, const char c) {
 		std::string str(strInput);
-		str.erase (std::remove(str.begin(), str.end(), c), str.end());
+		str.erase(std::remove(str.begin(), str.end(), c), str.end());
 		return str;
 	}
-
-
-
-
-
 
 
 	//////////////////////
 	// native functions //
 	//////////////////////
-	inline int convertStringToINT(const std::string& s) {
-		return atoi(s.c_str());
-	}
-	inline unsigned int convertStringToUINT(const std::string& s) {
-		return (unsigned int)convertStringToINT(s);
-	}
-	inline double convertStringToDOUBLE(const std::string& s) {
-		return atof(s.c_str());
-	}
-	inline float convertStringToFLOAT(const std::string& s) {
-		return (float)convertStringToDOUBLE(s);
-	}
-	inline char convertStringToCHAR(const std::string& s) {
-		return s[0];
-	}
-	template<class U> inline point2d<U> convertStringToPoint2D(const std::string& s) {
-		point3d<U> ret;
-		std::stringstream ss(removeChar(s,'f'));
-		ss >> ret.x >> ret.y;
-		return ret;
-	}
-	template<class U> inline point3d<U> convertStringToPoint3D(const std::string& s) {
-		point3d<U> ret;
-		std::stringstream ss(removeChar(s,'f'));
-		ss >> ret.x >> ret.y >> ret.z;
-		return ret;
-	}
-	template<class U> inline point4d<U> convertStringToPoint4D(const std::string& s) {
-		point4d<U> ret;
-		std::stringstream ss(removeChar(s,'f'));
-		ss >> ret.x >> ret.y >> ret.z >> ret.w;
-		return ret;
-	}
-	inline bool convertStringToBOOL(const std::string& s) {
-		if (s == "false" || s == "0")	return false;
-		else return true;		
-	}
+	namespace Convert {
+		inline int toInt(const std::string& s) {
+			return std::stoi(s);
+		}
+		inline unsigned int toUInt(const std::string& s) {
+			return (unsigned int)toInt(s);
+		}
+		inline double toDouble(const std::string& s) {
+			return std::stod(s);
+		}
+		inline float toFloat(const std::string& s) {
+			return std::stof(s);
+		}
+		inline char toChar(const std::string& s) {
+			return s[0];
+		}
+		inline bool toBool(const std::string& s) {
+			if (s == "false" || s == "0")	return false;
+			else return true;		
+		}
+		template<class U> inline point2d<U> toPoint2D(const std::string& s) {
+			point3d<U> ret;
+			std::stringstream ss(removeChar(s,'f'));
+			ss >> ret.x >> ret.y;
+			return ret;
+		}
+		template<class U> inline point3d<U> toPoint3D(const std::string& s) {
+			point3d<U> ret;
+			std::stringstream ss(removeChar(s,'f'));
+			ss >> ret.x >> ret.y >> ret.z;
+			return ret;
+		}
+		template<class U> inline point4d<U> toPoint4D(const std::string& s) {
+			point4d<U> ret;
+			std::stringstream ss(removeChar(s,'f'));
+			ss >> ret.x >> ret.y >> ret.z >> ret.w;
+			return ret;
+		}
+		
+
+		template<class T>	inline void to(const std::string& s, T& res);
+
+		template<>	inline void to<int>(const std::string& s, int& res) {
+			res = toInt(s);
+		}
+		template<>	inline void to<unsigned int>(const std::string& s, unsigned int& res) {
+			res = toUInt(s);
+		}
+		template<>	inline void to<double>(const std::string& s, double& res) {
+			res = toDouble(s);
+		}
+		template<>	inline void to<float>(const std::string& s, float& res) {
+			res = toFloat(s);
+		}
+		template<>	inline void to<std::string>(const std::string& s, std::string& res) {
+			res = s;
+		}
+		template<>	inline void to<char>(const std::string& s, char& res) {
+			res = toChar(s);
+		}
+		template<> inline void to<bool>(const std::string& s, bool& res) {
+			res = toBool(s);
+		}
+		template<class U> inline void to(const std::string& s, point2d<U>& res) {
+			std::stringstream ss(removeChar(s,'f'));
+			ss >> res.x >> res.y;
+		}
+		template<class U> inline void to(const std::string& s, point3d<U>& res) {
+			std::stringstream ss(removeChar(s,'f'));
+			ss >> res.x >> res.y >> res.z;
+		}
+		template<class U> inline void to(const std::string& s, point4d<U>& res) {
+			std::stringstream ss(removeChar(s,'f'));
+			ss >> res.x >> res.y >> res.z >> res.w;
+		}
+
+	};
+	
+
 
 	////////////////////////
 	// template overloads //
 	////////////////////////
-	//template<class T> inline T convertTo(const std::string& s) {
-	//	std::string res;
-	//	convertStringTo(s, res);
-	//	return res;
-	//}
+	template<class T> inline T convertTo(const std::string& s) {
+		T res;
+		Convert::to<T>(s, res);
+		return res;
+	}
 
-	template<class T>	inline void convertStringTo(const std::string& s, T& res);
+	template<class T> inline void convertTo(const std::string& s, T& res) {
+		Convert::to<T>(s, res);
+	}
 
-	template<>	inline void convertStringTo<int>(const std::string& s, int& res) {
-		res = convertStringToINT(s);
-	}
-	template<>	inline void convertStringTo<unsigned int>(const std::string& s, unsigned int& res) {
-		res = convertStringToUINT(s);
-	}
-	template<>	inline void convertStringTo<double>(const std::string& s, double& res) {
-		res = convertStringToDOUBLE(s);
-	}
-	template<>	inline void convertStringTo<float>(const std::string& s, float& res) {
-		res = convertStringToFLOAT(s);
-	}
-	template<>	inline void convertStringTo<std::string>(const std::string& s, std::string& res) {
-		res = s;
-	}
-	template<>	inline void convertStringTo<char>(const std::string& s, char& res) {
-		res = convertStringToCHAR(s);
-	}
-	template<class U> inline void convertStringTo(const std::string& s, point2d<U>& res) {
-		std::stringstream ss(removeChar(s,'f'));
-		ss >> res.x >> res.y;
-	}
-	template<class U> inline void convertStringTo(const std::string& s, point3d<U>& res) {
-		std::stringstream ss(removeChar(s,'f'));
-		ss >> res.x >> res.y >> res.z;
-	}
-	template<class U> inline void convertStringTo(const std::string& s, point4d<U>& res) {
-		std::stringstream ss(removeChar(s,'f'));
-		ss >> res.x >> res.y >> res.z >> res.w;
-	}
-	template<> inline void convertStringTo<bool>(const std::string& s, bool& res) {
-		res = convertStringToBOOL(s);
-	}
+
+}
+
+//! stringstream functionality
+template<class T>
+inline std::string& operator<<(std::string& s, const T& in) {
+	s += std::to_string(in);
+	return s;
 }
 
 

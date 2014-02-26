@@ -76,7 +76,7 @@ public:
 			if (s == m_Values.end()) {
 				return false; 
 			} else {
-				StringUtil::convertStringTo(s->second, value);
+				StringUtil::convertTo<T>(s->second, value);
 				return true;
 			}
 		} else {
@@ -85,7 +85,7 @@ public:
 			if (s == m_Values.end()) {
 				return false; 
 			} else {
-				StringUtil::convertStringTo(s->second, value);
+				StringUtil::convertTo<T>(s->second, value);
 				return true;
 			}
 		}
