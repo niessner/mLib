@@ -4,7 +4,7 @@ class Camera
 public:
 
 	Camera() {}
-	Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float fieldOfView, float zNear, float zFar);
+	Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float fieldOfView, float aspect, float zNear, float zFar);
 
 	void lookRight(float theta);
 	void lookUp(float theta);

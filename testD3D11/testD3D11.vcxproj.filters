@@ -13,6 +13,9 @@
     <Filter Include="mLibHeader\core-math">
       <UniqueIdentifier>{a8945759-7745-448f-8299-e8590104a310}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-graphics">
+      <UniqueIdentifier>{a5f2d67d-6ed2-49f9-b6e9-76c5ec370d31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\mLibCore.h">
@@ -98,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="..\include\core-math\sparseMatrix.h">
       <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-graphics\camera.h">
+      <Filter>mLibHeader\core-graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

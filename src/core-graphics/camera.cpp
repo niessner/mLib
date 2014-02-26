@@ -1,5 +1,5 @@
 
-Camera::Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float fieldOfView, float zNear, float zFar)
+Camera::Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float fieldOfView, float aspect, float zNear, float zFar)
 {
 	m_eye = eye;
 	m_worldUp = worldUp.normalize();
@@ -7,7 +7,7 @@ Camera::Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float
 	m_look = (m_worldUp ^ m_right).normalize();
 	m_up = (m_right ^ m_look).normalize();
 
-	m_perspective = Matrix4f::perspectiveFov(fieldOfView, zNear, zFar);
+	m_perspective = Matrix4f::perspectiveFov(fieldOfView, aspect, zNear, zFar);
 
 	update();
 }

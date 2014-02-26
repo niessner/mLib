@@ -94,6 +94,7 @@
     <ClInclude Include="..\include\core-base\grid.h" />
     <ClInclude Include="..\include\core-base\string.h" />
     <ClInclude Include="..\include\core-base\vector.h" />
+    <ClInclude Include="..\include\core-graphics\camera.h" />
     <ClInclude Include="..\include\core-math\denseMatrix.h" />
     <ClInclude Include="..\include\core-math\kMeansClustering.h" />
     <ClInclude Include="..\include\core-math\linearSolver.h" />

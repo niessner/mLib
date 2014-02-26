@@ -9,11 +9,11 @@ public:
 
 	}
 
-    Matrix4(const Matrix4<D> &m)
+    Matrix4(const Matrix4<D> &x)
 	{
 		for(UINT row = 0; row < 4; row++)
 			for(UINT col = 0; col < 4; col++)
-				m[row][col] = M[row][col];
+				m[row][col] = x.m[row][col];
 	}
     
 	//
@@ -120,8 +120,8 @@ public:
     static Matrix4 perspectiveFov(D fov, D aspect, D zNear, D zFar);
     
     friend Matrix4 operator * (const Matrix4 &l, const Matrix4 &r);
-    friend Matrix4 operator * (const Matrix4 &l, D &r);
-    friend Matrix4 operator * (D &l, const Matrix4 &r);
+    friend Matrix4 operator * (const Matrix4 &l, D r);
+    friend Matrix4 operator * (D l, const Matrix4 &r);
     friend Matrix4 operator + (const Matrix4 &l, const Matrix4 &r);
     friend Matrix4 operator - (const Matrix4 &l, const Matrix4 &r);
 

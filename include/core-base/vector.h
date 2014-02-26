@@ -62,7 +62,7 @@ public:
     //
     // Memory
     //
-    void deleteMemory()
+    void clear()
     {
         if(m_data != NULL)
         {
@@ -109,7 +109,7 @@ public:
     {
         if(size == 0)
 		{
-			deleteMemory();
+			clear();
 			return;
 		}
         

@@ -22,8 +22,8 @@ Vector<String> Directory::filesWithSuffix(const String &suffix) const
 void Directory::load(const String &path)
 {
 	m_path = path + "\\";
-	m_files.deleteMemory();
-	m_directories.deleteMemory();
+	m_files.clear();
+	m_directories.clear();
 
 	WIN32_FIND_DATAA findResult;
 

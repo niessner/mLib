@@ -104,6 +104,7 @@
     <ClInclude Include="..\include\core-math\denseMatrix.h" />
     <ClInclude Include="..\include\core-math\kMeansClustering.h" />
     <ClInclude Include="..\include\core-math\linearSolver.h" />
+    <ClInclude Include="..\include\core-math\matrix4.h" />
     <ClInclude Include="..\include\core-math\point1d.h" />
     <ClInclude Include="..\include\core-math\point2d.h" />
     <ClInclude Include="..\include\core-math\point3d.h" />
