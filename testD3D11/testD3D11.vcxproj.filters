@@ -105,6 +105,9 @@
     <ClInclude Include="..\include\core-graphics\camera.h">
       <Filter>mLibHeader\core-graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\application-d3d11\D3D11ConstantBuffer.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
@@ -113,5 +116,8 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="console.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\test.shader" />
   </ItemGroup>
 </Project>

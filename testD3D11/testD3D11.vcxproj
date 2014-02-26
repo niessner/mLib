@@ -83,6 +83,7 @@
     <ClInclude Include="..\include\application-base\graphicsAsset.h" />
     <ClInclude Include="..\include\application-base\graphicsDevice.h" />
     <ClInclude Include="..\include\application-base\windowWin32.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11ConstantBuffer.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11GraphicsDevice.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11PixelShader.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11TriMesh.h" />
@@ -118,6 +119,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="console.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\test.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -128,7 +128,7 @@ public:
 
     void resize(UINT64 size)
     {
-        if(size == 0) deleteMemory();
+        if(size == 0) clear();
         else if(size <= m_capacity) m_length = size;
         else
         {

@@ -119,11 +119,6 @@ public:
     static Matrix4 camera(const point3d<D> &eye, const point3d<D> &look, const point3d<D> &up, const point3d<D> &right);
     static Matrix4 perspectiveFov(D fov, D aspect, D zNear, D zFar);
     
-    friend Matrix4 operator * (const Matrix4 &l, const Matrix4 &r);
-    friend Matrix4 operator * (const Matrix4 &l, D r);
-    friend Matrix4 operator * (D l, const Matrix4 &r);
-    friend Matrix4 operator + (const Matrix4 &l, const Matrix4 &r);
-    friend Matrix4 operator - (const Matrix4 &l, const Matrix4 &r);
 
     D m[4][4];
 };

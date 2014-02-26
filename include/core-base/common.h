@@ -56,10 +56,6 @@
 #define MLIB_ERROR(s) errorFunctionMLIB(String(FUNCTION_LINE_STRING) + ": " + String(s))
 #define MLIB_ASSERT(b,s) assertFunctionMLIB(b, String(FUNCTION_LINE_STRING) + ": " + String(s))
 
-void warningFunctionMLIB(const char *description);
-void errorFunctionMLIB(const char *description);
-void assertFunctionMLIB(bool statement, const char *description);
-
 void warningFunctionMLIB(const String &description);
 void errorFunctionMLIB(const String &description);
 void assertFunctionMLIB(bool statement, const String &description);
