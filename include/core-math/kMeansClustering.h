@@ -45,7 +45,7 @@ public:
 		center = newCenter;
 		if(sum > 0.0f)
 			center *= (1.0f / sum);
-		entries.deleteMemory();
+		entries.clear();
 	}
 	void addEntry(const T &preWeightedEntry, float weight)
 	{
