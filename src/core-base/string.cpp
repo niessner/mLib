@@ -117,7 +117,7 @@ String String::makeUppercase() const
 
 Vector<String> String::split(const String &seperator, bool pushEmptyStrings) const
 {
-	MLIB_ASSERT(seperator.length() >= 1, "empty seperator");
+	MLIB_ASSERT_STR(seperator.length() >= 1, "empty seperator");
 	Vector<String> result;
 	String entry;
 	const UINT length = m_length;
@@ -261,7 +261,7 @@ UINT64 String::hash64() const
 
 String String::removeSuffix(const String &endCandidate) const
 {
-    MLIB_ASSERT(endsWith(endCandidate), "Removing invalid suffix");
+    MLIB_ASSERT_STR(endsWith(endCandidate), "Removing invalid suffix");
     String result = *this;
     for(UINT i = 0; i < endCandidate.m_length; i++) result.popBack();
     return result;
@@ -269,7 +269,7 @@ String String::removeSuffix(const String &endCandidate) const
 
 String String::removePrefix(const String &startCandidate) const
 {
-    MLIB_ASSERT(startsWith(startCandidate), "Removing invalid prefix");
+    MLIB_ASSERT_STR(startsWith(startCandidate), "Removing invalid prefix");
     String result = *this;
     for(UINT i = 0; i < startCandidate.m_length; i++) result.popFront();
     return result;
