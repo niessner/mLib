@@ -103,7 +103,7 @@ public:
 		MLIB_ASSERT(elements.size() >= clusterCount, "Too many clusters");
 		MLIB_ASSERT(elements.size() == weights.size(), "Incorrect number of weights");
 
-		m_clusters.allocate(clusterCount);
+		m_clusters.resize(clusterCount);
 		for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
 			m_clusters[clusterIndex].init(elements.randomElement());
 

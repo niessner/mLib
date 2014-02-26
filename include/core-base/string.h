@@ -30,16 +30,12 @@ public:
         if(m_data != NULL) delete[] m_data;
     }
 
-    String(const String &S)
-    {
-        if(S.m_data == NULL)
-        {
+    String(const String &S)  {
+        if (S.m_data == NULL) {
             m_data = NULL;
             m_capacity = 0;
             m_length = 0;
-        }
-        else
-        {
+        } else {
             m_length = S.m_length;
             const UINT newCapacity = m_length + 1;
             m_capacity = newCapacity;
@@ -48,8 +44,7 @@ public:
         }
     }
 
-    String(String &&S)
-    {
+    String(String &&S) {
         m_length = S.m_length;
         m_capacity = S.m_capacity;
         m_data = S.m_data;
@@ -119,48 +114,29 @@ public:
     //
     // Memory
     //
-    inline void deleteMemory()
-    {
-        if(m_data != NULL)
-        {
-            delete[] m_data;
-            m_data = NULL;
-        }
-        m_length = 0;
-        m_capacity = 0;
-    }
+	//! clears the string (also frees the memory)
+	inline void clear() {
+		deleteMemory();
+	}
 
-    inline void allocate(UINT capacity)
-    {
-        if(m_data != NULL)
-        {
-            delete[] m_data;
-        }
-        m_data = new char[capacity];
-        m_data[0] = '\0';
-        m_length = 0;
-        m_capacity = capacity;
-    }
+	//! makes capacity for n characters (newCapacity + '\0')
+	inline void reserve(UINT newCapacity) {
+		if (newCapacity + 1 > m_capacity) {
+			m_capacity = newCapacity + 1;
+			char* newData = new char[m_capacity];
+			if (m_length > 0) memcpy(newData, m_data, sizeof(char)*(m_length + 1));
+			SAFE_DELETE_ARRAY(m_data);
+			m_data = newData;
+		}
+	}
 
-    /*inline void AllocateLength(UINT length)
-    {
-        if(m_data != NULL)
-        {
-            delete[] m_data;
-        }
-        m_data = new char[length + 1];
-        m_data[length] = '\0';
-        m_length = length;
-        m_capacity = length + 1;
-    }*/
-
-    inline void resize(UINT newLength)
-    {
+	//! the string is resized to the 'newLength' + '\0'
+    inline void resize(UINT newLength) {
         const UINT newCapacity = newLength + 1;
         m_length = std::min(m_length, newLength);
         char *newData = new char[newCapacity];
         
-		if(m_length > 0) memcpy(newData, m_data, m_length);
+		if (m_length > 0) memcpy(newData, m_data, m_length);
         
 		newData[m_length] = '\0';
         
@@ -182,14 +158,9 @@ public:
     inline const char* ptr() const
     {
 		if(m_data != NULL) return m_data;
-		return (const char *)&(m_data);
+		return (char *)&(m_data);
     }
 
-	operator const char *() const
-	{
-		if(m_data != NULL) return m_data;
-		return (const char *)&(m_data);
-	}
 	
 	// STL defines both size and length for std::string
     //inline UINT size() const
@@ -206,7 +177,7 @@ public:
     inline char last() const
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-        if(m_length == 0) MLIB_ERROR("Last called on zero-length string");
+        if(m_length == 0) throw MLIB_EXCEPTION("Last called on zero-length string");
 #endif
         return m_data[m_length - 1];
     }
@@ -214,7 +185,7 @@ public:
     inline char& operator [] (UINT k)
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-        if(k >= m_length) MLIB_ERROR("Out-of-bounds string access");
+        if(k >= m_length) throw MLIB_EXCEPTION("Out-of-bounds string access");
 #endif
         return m_data[k];
     }
@@ -222,7 +193,7 @@ public:
     inline char& operator [] (int k) 
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-        if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds string access");
+        if(k < 0 || k >= int(m_length)) throw MLIB_EXCEPTION("Out-of-bounds string access");
 #endif
         return m_data[k];
     }
@@ -230,7 +201,7 @@ public:
     inline const char& operator [] (UINT k) const
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-        if(k >= m_length) MLIB_ERROR("Out-of-bounds string access");
+        if(k >= m_length) throw MLIB_EXCEPTION("Out-of-bounds string access");
 #endif
         return m_data[k];
     }
@@ -238,25 +209,35 @@ public:
     inline const char& operator [] (int k) const
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-        if(k < 0 || k >= int(m_length)) MLIB_ERROR("Out-of-bounds string access");
+        if(k < 0 || k >= int(m_length)) throw MLIB_EXCEPTION("Out-of-bounds string access");
 #endif
         return m_data[k];
     }
 
+
+
     //
-    // Conversions
+    // Conversions from string to something else
     //
-    int toInt32() const
+	char toCHAR() const {
+		return ptr()[0];
+	}
+
+	unsigned char toUCHAR() const {
+		return ptr()[0];
+	}
+
+    int toINT() const
     {
         return atoi(ptr());
     }
 
-    UINT toUInt32() const
+    UINT toUINT() const
     {
         return UINT(atoi(ptr()));
     }
 
-    INT64 toInt64() const
+    INT64 toINT64() const
     {
         return INT64(atoi(ptr()));
     }
@@ -266,17 +247,21 @@ public:
         return UINT64(atoi(ptr()));
     }
 
-    double toDouble() const
+    double toDOUBLE() const
     {
         return atof(ptr());
     }
 
-    bool toBool() const;
-
-    float toFloat() const
+    float toFLOAT() const
     {
         return float(atof(ptr()));
     }
+
+	bool toBOOL() const 
+	{
+		if (*this == "false" || *this == "0")	return false;
+		else return true;		
+	}
 
     //
     // Query
@@ -297,6 +282,8 @@ public:
 
     String removeSuffix(const String &end) const;
     String removePrefix(const String &start) const;
+
+	String removeChar(char c) const;
 
 	bool isNumeric() const;
 
@@ -358,7 +345,7 @@ public:
     inline void popBack()
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-        if(m_length == 0) MLIB_ERROR("Pop called on empty string");
+        if(m_length == 0) throw MLIB_EXCEPTION("Pop called on empty string");
 #endif
         m_length--;
         m_data[m_length] = '\0';
@@ -367,7 +354,7 @@ public:
     void popFront()
     {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-        if(m_length == 0) MLIB_ERROR("Pop called on empty string");
+        if(m_length == 0) throw MLIB_EXCEPTION("Pop called on empty string");
 #endif
         m_length--;
         for(UINT i = 0; i < m_length; i++) m_data[i] = m_data[i + 1];
@@ -380,16 +367,50 @@ public:
     static String zeroPad(int i, UINT zeroPadding);
     static String zeroPad(const String &S, UINT zeroPadding);
     
+
+	// similar to the stringstream functionality
+	template<class T>
+	String& operator << (const T& in) {
+		*this += String(in);
+		return *this;
+	}
+
+
 private:
+	inline void deleteMemory()
+	{
+		if(m_data != NULL)
+		{
+			delete[] m_data;
+			m_data = NULL;
+		}
+		m_length = 0;
+		m_capacity = 0;
+	}
+
+	inline void allocate(UINT capacity)
+	{
+		if(m_data != NULL)
+		{
+			delete[] m_data;
+		}
+		m_data = new char[capacity];
+		m_data[0] = '\0';
+		m_length = 0;
+		m_capacity = capacity;
+	}
+
+
     friend String operator + (const String &L, const String &R);
     friend bool operator == (const String &L, const String &R);
     friend bool operator == (const char *L, const String &R);
 
+	//! call this function to avoid over-allocation (reduces m_capacity to length)
     void resizeToDataLength();
     
-    char *m_data;
-    UINT m_capacity;
-    UINT m_length;
+    char* m_data;		//data storage (reserved for capacity)
+	UINT  m_capacity;	//memory capacity (including space for the '\0')
+    UINT  m_length;		//number of characters (not including the '\0')
 };
 
 //
@@ -452,3 +473,4 @@ inline bool operator > (const String &L, const String &R)
 
 String operator + (const String &L, const String &R);
 std::ostream& operator << (std::ostream &os, const String &S);
+

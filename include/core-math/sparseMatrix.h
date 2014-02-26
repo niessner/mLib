@@ -98,7 +98,7 @@ public:
 				Vector<String> values = data[row].split(",");
 				for(UINT col = 0; col < values.size(); col++)
 				{
-					(*this)(row, col) = (D)values[col].findAndReplace("{","").findAndReplace("}","").toDouble();
+					(*this)(row, col) = (D)values[col].findAndReplace("{","").findAndReplace("}","").toDOUBLE();
 				}
 			}
 		}

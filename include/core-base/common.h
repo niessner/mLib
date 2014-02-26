@@ -37,17 +37,32 @@
 #define NOMINMAX
 #endif
 
+
+
+#if defined (LINUX)
+#define __FUNCTION__ __func__
+#define __LINE__
+#endif
+
+#define FUNCTION_LINE_STRING (String(__FUNCTION__) + ":" + String(__LINE__))
+
+//#define MLIB_EXCEPTION(s) std::exception(((FUNCTION_LINE_STRING) + ": " + String(s)).ptr())
 #define MLIB_EXCEPTION(s) std::exception(std::string(__FUNCTION__).append(": ").append(s).c_str())
 
 #ifdef MLIB_ERROR_CHECK
 
-void MLIB_WARNING(const char *description);
-void MLIB_ERROR(const char *description);
-void MLIB_ASSERT(bool statement, const char *description);
 
-void MLIB_WARNING(const String &description);
-void MLIB_ERROR(const String &description);
-void MLIB_ASSERT(bool statement, const String &description);
+#define MLIB_WARNING(s) warningFunctionMLIB(String(FUNCTION_LINE_STRING) + String() + ": " + String(s))
+#define MLIB_ERROR(s) errorFunctionMLIB(String(FUNCTION_LINE_STRING) + ": " + String(s))
+#define MLIB_ASSERT(b,s) assertFunctionMLIB(b, String(FUNCTION_LINE_STRING) + ": " + String(s))
+
+void warningFunctionMLIB(const char *description);
+void errorFunctionMLIB(const char *description);
+void assertFunctionMLIB(bool statement, const char *description);
+
+void warningFunctionMLIB(const String &description);
+void errorFunctionMLIB(const String &description);
+void assertFunctionMLIB(bool statement, const String &description);
 
 #else
 
