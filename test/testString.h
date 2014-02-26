@@ -12,7 +12,7 @@ public:
 
 		for(int i = 0; i < 100; i++)
 		{
-			MLIB_ASSERT(String(i).toInt32() == i, "convert test failed");
+			MLIB_ASSERT(String(i).toINT() == i, "convert test failed");
 		}
 
 		Console::log() << "string test0 passed" << std::endl;

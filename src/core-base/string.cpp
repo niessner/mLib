@@ -12,13 +12,6 @@ String String::zeroPad(const String &S, UINT zeroPadding)
     return prefix + S;
 }
 
-bool String::toBool() const
-{
-	if(*this == "true") return true;
-	if(*this == "false") return false;
-	MLIB_WARNING("Invalid string to boolean conversion");
-	return false;
-}
 
 void String::resizeToDataLength()
 {
@@ -250,7 +243,7 @@ String String::findAndReplace(const String &find, const String &replace) const
 bool String::isNumeric() const
 {
     return (m_length > 0 &&
-           (toDouble() != 0.0 ||
+           (toDOUBLE() != 0.0 ||
             m_data[0] == '0' ||
             m_data[0] == '.' ||
             m_data[0] == '-'));
@@ -281,6 +274,21 @@ String String::removePrefix(const String &startCandidate) const
     for(UINT i = 0; i < startCandidate.m_length; i++) result.popFront();
     return result;
 }
+
+
+String String::removeChar( char c ) const
+{
+	unsigned int numNewChars = 0;
+	for (UINT i = 0; i < m_length; i++) {
+		if ((*this)[i] != c)	numNewChars++;
+	}
+	String result;	result.reserve(numNewChars);
+	for (UINT i = 0; i < m_length; i++) {
+		if ((*this)[i] != c)	result += (*this)[i];
+	}
+	return result;
+}
+
 
 bool String::endsWith(const String &endCanidate) const
 {

@@ -1,17 +1,15 @@
 
-void MLIB_WARNING(const char *description)
+void warningFunctionMLIB(const char *description)
 {
 	Console::log() << description << std::endl;
-	DEBUG_BREAK;
 }
 
-void MLIB_ERROR(const char *description)
+void errorFunctionMLIB(const char *description)
 {
 	Console::log() << description << std::endl;
-	DEBUG_BREAK;
 }
 
-void MLIB_ASSERT(bool statement, const char *description)
+void assertFunctionMLIB(bool statement, const char *description)
 {
 	if(!statement)
 	{
@@ -20,19 +18,17 @@ void MLIB_ASSERT(bool statement, const char *description)
 	}
 }
 
-void MLIB_WARNING(const String &description)
+void warningFunctionMLIB(const String &description)
 {
 	Console::log() << description << std::endl;
-	DEBUG_BREAK;
 }
 
-void MLIB_ERROR(const String &description)
+void errorFunctionMLIB(const String &description)
 {
 	Console::log() << description << std::endl;
-	DEBUG_BREAK;
 }
 
-void MLIB_ASSERT(bool statement, const String &description)
+void assertFunctionMLIB(bool statement, const String &description)
 {
 	if(!statement)
 	{
