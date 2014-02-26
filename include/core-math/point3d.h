@@ -115,6 +115,11 @@ public:
 		return (array[0]*other.array[0] + array[1]*other.array[1] + array[2]*other.array[2]);
 	}
 
+	static inline T dot(const point3d& l, const point3d& r)
+	{
+		return(l.array[0] * r.array[0] + l.array[1] * r.array[1] + l.array[2] * r.array[2]);
+	}
+
 	inline point3d<T> operator-(const point3d& other) const {
 		return point3d<T>(array[0]-other.array[0], array[1]-other.array[1], array[2]-other.array[2]);
 	}
@@ -173,16 +178,16 @@ public:
 		return array[i];
 	}
 
-	inline point3d getNormalized() const {
-		T val = length();
-		return point3d<T>(array[0]/val, array[1]/val, array[2]/val);
+	inline void normalizeInPlace() {
+		T val = (T)1.0 / length();
+		array[0] *= val;
+		array[1] *= val;
+		array[2] *= val;
 	}
 
-	inline void normalize() {
-		T val = length();
-		array[0] /= val;
-		array[1] /= val;
-		array[2] /= val;
+	inline point3d<T> normalize() const {
+		T val = (T)1.0 / length();
+		return point3d<T>(array[0] * val, array[1] * val, array[2] * val);
 	}
 
 	static const point3d<T> origin;

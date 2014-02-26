@@ -146,15 +146,15 @@ public:
 		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]));
 	}
 
-	inline point2d getNormalized() const {
-		T inv = (T)1/length();
-		return point2d<T>(array[0]*inv, array[1]*inv);
+	inline void normalizeInPlace() {
+		T val = (T)1.0 / length();
+		array[0] *= val;
+		array[1] *= val;
 	}
 
-	inline void normalize() {
-		T inv = (T)1/length();
-		array[0] *= inv;
-		array[1] *= inv;
+	inline point2d<T> normalize() const {
+		T val = (T)1.0 / length();
+		return point2d<T>(array[0] * val, array[1] * val);
 	}
 
 	inline void print() const {

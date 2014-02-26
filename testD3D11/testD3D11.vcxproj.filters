@@ -10,6 +10,9 @@
     <Filter Include="mLibHeader\application-D3D11">
       <UniqueIdentifier>{51fd6b4c-eb65-4ca3-9e07-0354d892179d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-math">
+      <UniqueIdentifier>{a8945759-7745-448f-8299-e8590104a310}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\mLibCore.h">
@@ -62,6 +65,39 @@
     </ClInclude>
     <ClInclude Include="..\include\application-d3d11\D3D11GraphicsDevice.h">
       <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\application-d3d11\D3D11TriMesh.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\denseMatrix.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\kMeansClustering.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\linearSolver.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\matrix4.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point1d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point2d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point3d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point4d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\point6d.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\sparseMatrix.h">
+      <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

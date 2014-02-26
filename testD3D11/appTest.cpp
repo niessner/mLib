@@ -16,6 +16,8 @@ void AppTest::init(ApplicationData &app)
 	m_mesh.load(app.graphics, vertices, indices);
 	m_vertexShader.load(app.graphics, "shaders/test.shader");
 	m_pixelShader.load(app.graphics, "shaders/test.shader");
+
+
 }
 
 void AppTest::render(ApplicationData &app)

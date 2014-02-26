@@ -171,17 +171,17 @@ public:
 		return array[i];
 	}
 
-	inline void normalize() {
-		T inv = (T)1/length();
-		array[0] *= inv;
-		array[1] *= inv;
-		array[2] *= inv;
-		array[3] *= inv;
+	inline void normalizeInPlace() {
+		T val = (T)1.0 / length();
+		array[0] *= val;
+		array[1] *= val;
+		array[2] *= val;
+		array[3] *= val;
 	}
 
-	inline point4d getNormalized() const {
-		T inv = (T)1/length();
-		return point4d<T>(array[0]*inv, array[1]*inv, array[2]*inv, array[3]*inv);
+	inline point4d<T> normalize() const {
+		T val = (T)1.0 / length();
+		return point4d<T>(array[0] * val, array[1] * val, array[2] * val, array[3] * val);
 	}
 
 	inline void dehomogenize() {
