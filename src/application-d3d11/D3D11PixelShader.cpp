@@ -5,11 +5,10 @@ void D3D11PixelShader::load(GraphicsDevice &g, const std::string &filename)
 	SAFE_RELEASE(m_blob);
 
 	m_filename = filename;
-	m_hash64 = m_filename.hash64();
 	g.castD3D11().registerAsset(this);
 
 	m_blob = D3D11Utility::CompileShader(m_filename, "pixelShaderMain", "ps_4_0");
-	MLIB_ASSERT(m_blob != NULL, "CompileShader failed");
+	MLIB_ASSERT_STR(m_blob != NULL, "CompileShader failed");
 
 	reset(g);
 }

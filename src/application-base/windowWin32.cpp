@@ -99,13 +99,13 @@ void WindowWin32::init(HINSTANCE instance, int width, int height, const std::str
 	m_class.hCursor = LoadCursor(NULL, IDC_ARROW);
 	m_class.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); 
 	m_class.lpszMenuName =  NULL;
-	m_class.lpszClassName = m_className.ptr();
+	m_class.lpszClassName = m_className.c_str();
 	RegisterClassA(&m_class);
 
 	s_mainWindow = this;
 	m_handle = CreateWindowA(
-		m_className.ptr(), 
-		m_className.ptr(), 
+		m_className.c_str(), 
+		m_className.c_str(), 
 		WS_OVERLAPPEDWINDOW, 
 		0, //CW_USEDEFAULT
 		0, //CW_USEDEFAULT
@@ -123,7 +123,7 @@ void WindowWin32::init(HINSTANCE instance, int width, int height, const std::str
 void WindowWin32::destroy()
 {
 	DestroyWindow(m_handle);
-	UnregisterClassA( m_className.ptr(), m_class.hInstance );
+	UnregisterClassA( m_className.c_str(), m_class.hInstance );
 }
 
 UINT WindowWin32::width() const

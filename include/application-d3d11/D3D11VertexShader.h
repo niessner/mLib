@@ -21,14 +21,10 @@ public:
 
 	void bind(GraphicsDevice &g);
 
-	UINT64 hash64();
-
 private:
 	ID3D11VertexShader *m_shader;
 	ID3DBlob *m_blob;
 	std::string m_filename;
 
 	ID3D11InputLayout *m_standardLayout;
-
-	UINT64 m_hash64;
 };

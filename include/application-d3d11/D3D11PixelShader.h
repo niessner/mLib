@@ -25,6 +25,4 @@ private:
 	ID3D11PixelShader *m_shader;
 	ID3DBlob *m_blob;
 	std::string m_filename;
-
-	UINT64 m_hash64;
 };
