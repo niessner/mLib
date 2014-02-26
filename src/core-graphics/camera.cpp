@@ -8,7 +8,6 @@ Camera::Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float
 	m_up = (m_right ^ m_look).normalize();
 
 	m_perspective = Matrix4f::perspectiveFov(fieldOfView, aspect, zNear, zFar);
-	m_perspective = Matrix4f::identity();
 
 	update();
 }

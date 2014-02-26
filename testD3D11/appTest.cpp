@@ -21,7 +21,7 @@ void AppTest::init(ApplicationData &app)
 	//vec3f eye(1.0f, 2.0f, 3.0f);
 	vec3f eye(0.0f, 0.0f, 0.0f);
 	vec3f worldUp(0.0f, 1.0f, 0.0f);
-	m_camera = Camera(eye, worldUp, (vec3f::eZ - eye) ^ worldUp, Math::degreesToRadians(60.0f), 1.0f, 0.01f, 1000.0f);
+	m_camera = Camera(eye, worldUp, worldUp ^ (vec3f::eZ - eye), Math::degreesToRadians(60.0f), 1.0f, 0.01f, 1000.0f);
 }
 
 void AppTest::render(ApplicationData &app)
@@ -30,8 +30,7 @@ void AppTest::render(ApplicationData &app)
 	m_pixelShader.bind(app.graphics);
 
 	ConstantBuffer constants;
-	constants.worldViewProj = m_camera.cameraPerspective();
-	//constants.worldViewProj = Matrix4f::identity();
+	constants.worldViewProj = m_camera.cameraPerspective().transpose();
 	m_constants.update(app.graphics, constants);
 	m_constants.bindVertexShader(app.graphics, 0);
 
