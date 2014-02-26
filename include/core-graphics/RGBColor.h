@@ -17,7 +17,7 @@ struct RGBColor
 		a = _a;
 	}
 	
-	RGBColor(const String &hex);
+	RGBColor(const std::string &hex);
     explicit RGBColor(const vec3f &v);
     explicit RGBColor(const vec4f &v);
 

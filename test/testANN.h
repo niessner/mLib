@@ -29,11 +29,11 @@ public:
 			Vector<UINT> resultA = bruteForce.kNearest(randomPt, maxK, 0.0);
 			Vector<UINT> resultB = ANN.kNearest(randomPt, maxK, 0.0);
 
-			MLIB_ASSERT(resultA == resultB, "NN search inconsistent");
+			MLIB_ASSERT_STR(resultA == resultB, "NN search inconsistent");
 		}
 	}
 
-	String name()
+	std::string name()
 	{
 		return "ANN";
 	}

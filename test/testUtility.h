@@ -10,22 +10,22 @@ public:
 		Utility::makeDirectory("testDir");
 		Utility::copyFile("fileTest.txt", "testDir/output.txt");
 
-		MLIB_ASSERT(Utility::getFileData("testDir/output.txt").size() == 14, "File test0 failed");
-		MLIB_ASSERT(Utility::getFileLines("testDir/output.txt")[1] == "56789", "File test1 failed");
-		MLIB_ASSERT(Utility::getFileSize("testDir/output.txt") == Utility::getFileData("testDir/output.txt").size(), "File test1 failed");
+		MLIB_ASSERT_STR(Utility::getFileData("testDir/output.txt").size() == 14, "File test0 failed");
+		MLIB_ASSERT_STR(Utility::getFileLines("testDir/output.txt")[1] == "56789", "File test1 failed");
+		MLIB_ASSERT_STR(Utility::getFileSize("testDir/output.txt") == Utility::getFileData("testDir/output.txt").size(), "File test1 failed");
 		
-		String data = "test data here";
+		std::string data = "test data here";
 		Utility::copyStringToClipboard(data);
-		MLIB_ASSERT(Utility::loadStringFromClipboard() == data, "Clipboard test failed");
+		MLIB_ASSERT_STR(Utility::loadStringFromClipboard() == data, "Clipboard test failed");
 
 		Directory dir("testDir");
-		MLIB_ASSERT(dir.files().contains("output.txt") && dir.filesWithSuffix(".txt").contains("output.txt"), "Directory failed");
+		MLIB_ASSERT_STR(dir.files().contains("output.txt") && dir.filesWithSuffix(".txt").contains("output.txt"), "Directory failed");
 
 
 		Console::log("Utility tests passed");
 	}
 
-	String name()
+	std::string name()
 	{
 		return "utility";
 	}

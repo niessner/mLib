@@ -12,17 +12,17 @@ public:
 		SparseMatrix<double> sumCheck = a * 2.0;
 
 		double productError = (product - correctProduct).maxMagnitude();
-		MLIB_ASSERT(productError == 0.0, "matrix product test failed");
+		MLIB_ASSERT_STR(productError == 0.0, "matrix product test failed");
 
 		double sumError = (sumCheck - sum).maxMagnitude();
-		MLIB_ASSERT(sumError == 0.0, "matrix sum test failed");
+		MLIB_ASSERT_STR(sumError == 0.0, "matrix sum test failed");
 
 		LinearSolverConjugateGradient<double> solver;
 		Vector<double> rhs = SparseMatrix<double>("{{3,6,-1}}", MatrixStringFormatMathematica).denseRow(0);
 		Vector<double> x = solver.solve(b.transpose() * b, rhs);
 		double solveError = solver.solveError(b.transpose() * b, x, rhs);
 
-		MLIB_ASSERT(solveError <= 1e-5, "solve failed");
+		MLIB_ASSERT_STR(solveError <= 1e-5, "solve failed");
 
 		Console::log() << "sparse matrix test passed" << std::endl;
 	}
@@ -38,15 +38,15 @@ public:
 		DenseMatrix<double> sumCheck = a * 2.0;
 
 		double productError = (product - correctProduct).maxMagnitude();
-		MLIB_ASSERT(productError == 0.0, "matrix product test failed");
+		MLIB_ASSERT_STR(productError == 0.0, "matrix product test failed");
 
 		double sumError = (sumCheck - sum).maxMagnitude();
-		MLIB_ASSERT(sumError == 0.0, "matrix sum test failed");
+		MLIB_ASSERT_STR(sumError == 0.0, "matrix sum test failed");
 
 		DenseMatrix<double> aTa = a * a.transpose();
 		DenseMatrix<double> inverseCheck = aTa.inverse() * aTa + aTa * aTa.inverse() - DenseMatrix<double>::identity(aTa.rows()) * 2.0;
 		double inverseError = inverseCheck.maxMagnitude();
-		MLIB_ASSERT(inverseError < 1e-6, "matrix inverse test failed");
+		MLIB_ASSERT_STR(inverseError < 1e-6, "matrix inverse test failed");
 
 		Console::log() << "dense matrix test passed" << std::endl;
 	}
@@ -80,10 +80,10 @@ public:
 		double solveError2 = LinearSolver<double>::solveError(ASquare, x2, bSquare);
 		double solveError3 = LinearSolver<double>::solveError(ASquare, x3, bSquare);
 
-		MLIB_ASSERT(solveError0 <= 1e-5, "solve failed");
-		MLIB_ASSERT(solveError1 <= 1e-5, "solve failed");
-		MLIB_ASSERT(solveError2 <= 1e-5, "solve failed");
-		MLIB_ASSERT(solveError3 <= 1e-5, "solve failed");
+		MLIB_ASSERT_STR(solveError0 <= 1e-5, "solve failed");
+		MLIB_ASSERT_STR(solveError1 <= 1e-5, "solve failed");
+		MLIB_ASSERT_STR(solveError2 <= 1e-5, "solve failed");
+		MLIB_ASSERT_STR(solveError3 <= 1e-5, "solve failed");
 
 		Console::log() << "Eigen test passed" << std::endl;
 	}
@@ -109,7 +109,7 @@ public:
 		Console::log() << "clustering test passed" << std::endl;
 	}
 
-	String name()
+	std::string name()
 	{
 		return "math";
 	}

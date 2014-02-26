@@ -12,7 +12,7 @@ public:
 		SAFE_RELEASE(m_shader);
 		SAFE_RELEASE(m_blob);
 	}
-	void load(GraphicsDevice &g, const String &filename);
+	void load(GraphicsDevice &g, const std::string &filename);
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
@@ -24,7 +24,7 @@ public:
 private:
 	ID3D11PixelShader *m_shader;
 	ID3DBlob *m_blob;
-	String m_filename;
+	std::string m_filename;
 
 	UINT64 m_hash64;
 };

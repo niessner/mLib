@@ -13,10 +13,10 @@ public:
 	}
 	~WindowWin32();
 
-	void init(HINSTANCE instance, int width, int height, const String &name);
+	void init(HINSTANCE instance, int width, int height, const std::string &name);
 	void destroy();
 	void resize(UINT newWidth, UINT newHeight);
-	void rename(const String &name);
+	void rename(const std::string &name);
 	
 	UINT width() const;
 	UINT height() const;
@@ -31,8 +31,8 @@ public:
 	}
 
 private:
+	std::string    m_className;
 	ApplicationWin32 &m_parent;
-	String    m_className;
 	WNDCLASSA m_class;
 	HWND      m_handle;
 };

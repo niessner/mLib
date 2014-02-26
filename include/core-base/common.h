@@ -44,27 +44,31 @@
 #define __LINE__
 #endif
 
-#define FUNCTION_LINE_STRING (String(__FUNCTION__) + ":" + String(__LINE__))
+#define FUNCTION_LINE_STRING (std::string(__FUNCTION__) + ":" + std::to_string(__LINE__))
+//#define FUNCTION_LINE_STRING (std::string(__FUNCTION__))
 
-//#define MLIB_EXCEPTION(s) std::exception(((FUNCTION_LINE_STRING) + ": " + String(s)).ptr())
+//#define MLIB_EXCEPTION(s) std::exception(((FUNCTION_LINE_STRING) + ": " + std::string(s)).ptr())
 #define MLIB_EXCEPTION(s) std::exception(std::string(__FUNCTION__).append(": ").append(s).c_str())
 
 #ifdef MLIB_ERROR_CHECK
 
 
-#define MLIB_WARNING(s) warningFunctionMLIB(String(FUNCTION_LINE_STRING) + String() + ": " + String(s))
-#define MLIB_ERROR(s) errorFunctionMLIB(String(FUNCTION_LINE_STRING) + ": " + String(s))
-#define MLIB_ASSERT(b,s) assertFunctionMLIB(b, String(FUNCTION_LINE_STRING) + ": " + String(s))
+#define MLIB_WARNING(s) warningFunctionMLIB(std::string(FUNCTION_LINE_STRING) + std::string() + ": " + std::string(s))
+#define MLIB_ERROR(s) errorFunctionMLIB(std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
+#define MLIB_ASSERT_STR(b,s) assertFunctionMLIB(b, std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
+#define MLIB_ASSERT(b) assertFunctionMLIB(b, FUNCTION_LINE_STRING);
 
-void warningFunctionMLIB(const String &description);
-void errorFunctionMLIB(const String &description);
-void assertFunctionMLIB(bool statement, const String &description);
+void warningFunctionMLIB(const std::string &description);
+void errorFunctionMLIB(const std::string &description);
+void assertFunctionMLIB(bool statement, const std::string &description);
+
 
 #else
 
 #define MLIB_WARNING(s)
 #define MLIB_ERROR(s)
-#define MLIB_ASSERT(b,s)
+#define MLIB_ASSERT_STR(b,s)
+#define MLIB_ASSERT(b)
 
 #endif
 

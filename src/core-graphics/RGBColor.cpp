@@ -11,11 +11,11 @@ const RGBColor RGBColor::Black(0, 0, 0);
 const RGBColor RGBColor::Orange(255, 91, 0);
 const RGBColor RGBColor::Purple(111, 49, 152);
 
-RGBColor::RGBColor(const String &hex)
+RGBColor::RGBColor(const std::string &hex)
 {
-	MLIB_ASSERT(hex.length() >= 6, "bad rgb hex code");
-	UINT offset = hex.length() - 6;
-	const char* carray = hex.ptr();
+	MLIB_ASSERT_STR(hex.length() >= 6, "bad rgb hex code");
+	size_t offset = hex.length() - 6;
+	const char* carray = hex.c_str();
 	char channel[3];
 	Vector<BYTE> color(3);
 

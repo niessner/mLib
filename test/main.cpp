@@ -8,7 +8,6 @@ public:
 
 private:
 	TestVector m_vector;
-	TestString m_string;
 	TestUtility m_utility;
 	TestMath m_math;
 	TestANN m_ANN;
@@ -19,7 +18,6 @@ void App::go()
 {
 	Console::openLogFile("console.txt");
 	m_vector.run();
-	m_string.run();
 	m_utility.run();
 	m_math.run();
 	m_ANN.run();
@@ -29,6 +27,9 @@ void App::go()
 	std::cin.get();
 }
 
+
+
+
 int main()
 {
 	// Enable run-time memory check for debug builds.
@@ -36,15 +37,17 @@ int main()
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-	std::string sd;
-	String s = "hello";
-	s.reserve(100);
-	s = s.removeChar('l');
-	s.clear();
-	s.pushBack('a');
-	s.pushBack('b');
-	s.popFront();
-	std::cout << s << std::endl;
+
+
+	//std::string sd;
+	//String s = "hello";
+	//s.reserve(100);
+	//s = s.removeChar('l');
+	//s.clear();
+	//s.pushBack('a');
+	//s.pushBack('b');
+	//s.popFront();
+	//std::cout << s << std::endl;
 	//s << "a";
 	//s << 1;
 	//s << true;
@@ -55,8 +58,8 @@ int main()
 	//	std::cout << e.what() << std::endl;
 	//}
 	//MLIB_WARNING("bla");
-	//App a;
-	//a.go();
+	App a;
+	a.go();
 
 	getchar();
 	return 0;

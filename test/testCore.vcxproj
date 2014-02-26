@@ -98,7 +98,6 @@
     <ClInclude Include="..\include\core-base\classList.h" />
     <ClInclude Include="..\include\core-base\common.h" />
     <ClInclude Include="..\include\core-base\grid.h" />
-    <ClInclude Include="..\include\core-base\string.h" />
     <ClInclude Include="..\include\core-base\vector.h" />
     <ClInclude Include="..\include\core-graphics\RGBColor.h" />
     <ClInclude Include="..\include\core-math\denseMatrix.h" />
@@ -119,6 +118,7 @@
     <ClInclude Include="..\include\core-util\commandLineReader.h" />
     <ClInclude Include="..\include\core-util\directory.h" />
     <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
+    <ClInclude Include="..\include\core-util\stringUtil.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
     <ClInclude Include="..\include\ext-ANN\nearestNeighborSearchANN.h" />
     <ClInclude Include="..\include\ext-eigen\eigenSolver.h" />
@@ -129,11 +129,9 @@
     <ClInclude Include="..\include\mLibLodePNG.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mLibInclude.h" />
-    <ClInclude Include="test.h" />
     <ClInclude Include="testANN.h" />
     <ClInclude Include="testLodePNG.h" />
     <ClInclude Include="testMath.h" />
-    <ClInclude Include="testString.h" />
     <ClInclude Include="testUtility.h" />
     <ClInclude Include="testVector.h" />
   </ItemGroup>

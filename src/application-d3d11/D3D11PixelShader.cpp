@@ -1,5 +1,5 @@
 
-void D3D11PixelShader::load(GraphicsDevice &g, const String &filename)
+void D3D11PixelShader::load(GraphicsDevice &g, const std::string &filename)
 {
 	release(g);
 	SAFE_RELEASE(m_blob);

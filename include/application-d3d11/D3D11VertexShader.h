@@ -14,7 +14,7 @@ public:
 		SAFE_RELEASE(m_blob);
 		SAFE_RELEASE(m_standardLayout);
 	}
-	void load(GraphicsDevice &g, const String &filename);
+	void load(GraphicsDevice &g, const std::string &filename);
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
@@ -26,7 +26,7 @@ public:
 private:
 	ID3D11VertexShader *m_shader;
 	ID3DBlob *m_blob;
-	String m_filename;
+	std::string m_filename;
 
 	ID3D11InputLayout *m_standardLayout;
 

@@ -13,7 +13,6 @@
 //
 #include "../src/core-base/common.cpp"
 #include "../src/core-base/console.cpp"
-#include "../src/core-base/string.cpp"
 
 //
 // core-math source files

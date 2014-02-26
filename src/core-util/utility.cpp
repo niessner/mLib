@@ -104,22 +104,22 @@ namespace Utility
 		return UINT64(c) + UINT64(UINT64(a) << 32);
 	}
 
-    bool fileExists(const String &filename)
+    bool fileExists(const std::string &filename)
     {
-        std::ifstream file(filename.ptr());
+        std::ifstream file(filename);
         return (!file.fail());
     }
 
-    String getNextLine(std::ifstream &file)
+    std::string getNextLine(std::ifstream &file)
     {
         std::string line;
         getline(file, line);
-        return String(line.c_str());
+        return std::string(line.c_str());
     }
 
-    Vector<String> getFileLines(std::ifstream &file, UINT minLineLength)
+    Vector<std::string> getFileLines(std::ifstream &file, UINT minLineLength)
     {
-		Vector<String> result;
+		Vector<std::string> result;
         std::string line;
         while(!file.fail())
         {
@@ -129,16 +129,16 @@ namespace Utility
 		return result;
     }
 
-    Vector<String> getFileLines(const String &filename, UINT minLineLength)
+    Vector<std::string> getFileLines(const std::string &filename, UINT minLineLength)
     {
-        std::ifstream file(filename.ptr());
-        MLIB_ASSERT(!file.fail(), String("Failed to open ") + filename);
+        std::ifstream file(filename);
+        MLIB_ASSERT_STR(!file.fail(), std::string("Failed to open ") + filename);
         return getFileLines(file, minLineLength);
     }
 
-	Vector<BYTE> getFileData(const String &filename)
+	Vector<BYTE> getFileData(const std::string &filename)
 	{
-		FILE *inputFile = Utility::checkedFOpen(filename.ptr(), "rb");
+		FILE *inputFile = Utility::checkedFOpen(filename.c_str(), "rb");
 		UINT fileSize = Utility::getFileSize(filename);
 		Vector<BYTE> result(fileSize);
 		Utility::checkedFRead(result.ptr(), sizeof(BYTE), fileSize, inputFile);
@@ -146,36 +146,36 @@ namespace Utility
 		return result;
 	}
 
-	void copyFile(const String &sourceFile, const String &destFile)
+	void copyFile(const std::string &sourceFile, const std::string &destFile)
 	{
 		Vector<BYTE> data = getFileData(sourceFile);
-		FILE *file = Utility::checkedFOpen(destFile.ptr(), "wb");
+		FILE *file = Utility::checkedFOpen(destFile.c_str(), "wb");
 		Utility::checkedFWrite(data.ptr(), sizeof(BYTE), data.size(), file);
 		fclose(file);
 	}
 
 #ifdef WIN32
-	void copyStringToClipboard(const String &S)
+	void copyStringToClipboard(const std::string &S)
 	{
 		OpenClipboard(NULL);
 		EmptyClipboard();
 
 		HGLOBAL globalHandle;
-		UINT bytesToCopy = S.length() + 1;
+		size_t bytesToCopy = S.length() + 1;
 		globalHandle = GlobalAlloc(GMEM_MOVEABLE, bytesToCopy);
 		if(globalHandle != NULL)
 		{
 			BYTE *stringPointer = (BYTE*)GlobalLock(globalHandle); 
-			memcpy(stringPointer, S.ptr(), bytesToCopy); 
+			memcpy(stringPointer, S.c_str(), bytesToCopy); 
 			GlobalUnlock(globalHandle);
 			SetClipboardData(CF_TEXT, globalHandle);
 		}
 		CloseClipboard();
 	}
 
-	String loadStringFromClipboard()
+	std::string loadStringFromClipboard()
 	{
-		String result;
+		std::string result;
 
 		OpenClipboard(NULL);
 		HGLOBAL globalHandle = GetClipboardData(CF_TEXT);
@@ -193,17 +193,17 @@ namespace Utility
 		return result;
 	}
 
-    UINT getFileSize(const String &filename)
+    UINT getFileSize(const std::string &filename)
     {
         BOOL success;
         WIN32_FILE_ATTRIBUTE_DATA fileInfo;
-        success = GetFileAttributesExA(filename.ptr(), GetFileExInfoStandard, (void*)&fileInfo);
-        MLIB_ASSERT(success && fileInfo.nFileSizeHigh == 0, String("GetFileAttributesEx failed on ") + filename);
+        success = GetFileAttributesExA(filename.c_str(), GetFileExInfoStandard, (void*)&fileInfo);
+        MLIB_ASSERT_STR(success && fileInfo.nFileSizeHigh == 0, std::string("GetFileAttributesEx failed on ") + filename);
         return fileInfo.nFileSizeLow;
     }
     
     // Create a process with the given command line, and wait until it returns
-    int runCommand(const String &executablePath, const String &commandLine, bool block)
+    int runCommand(const std::string &executablePath, const std::string& commandLine, bool block)
     {
         STARTUPINFOA si;
         PROCESS_INFORMATION pi;
@@ -212,11 +212,13 @@ namespace Utility
         si.cb = sizeof(si);
         ZeroMemory( &pi, sizeof(pi) );
 
-        String fullCommandLine = executablePath.ptr() + String(" ") + commandLine.ptr();
-        
+        std::string fullCommandLine = executablePath + " " + commandLine;
+		char* fullCommandLinePtr = new char[fullCommandLine.length()+1];
+		strcpy(fullCommandLinePtr, fullCommandLine.c_str());
+
         // Start the child process. 
-        if( !CreateProcessA( NULL,   // No module name (use command line)
-            fullCommandLine.ptr(),  // Command line
+        if( !CreateProcessA( NULL,  // No module name (use command line)
+            fullCommandLinePtr,		// Command line
             NULL,           // Process handle not inheritable
             NULL,           // Thread handle not inheritable
             FALSE,          // Set handle inheritance to FALSE
@@ -230,6 +232,7 @@ namespace Utility
             MLIB_ERROR("CreateProcess failed");
             return -1;
         }
+		SAFE_DELETE_ARRAY(fullCommandLinePtr);
 
         if(block)
         {
@@ -243,35 +246,35 @@ namespace Utility
         return 0;
     }
 
-    void makeDirectory(const String &directory)
+    void makeDirectory(const std::string &directory)
     {
-        CreateDirectoryA(directory.ptr(), NULL);
+        CreateDirectoryA(directory.c_str(), NULL);
     }
 #endif
 
 #ifdef LINUX
-	void copyStringToClipboard(const String &S)
+	void copyStringToClipboard(const std::string &S)
 	{
 		
 	}
 
-	String loadStringFromClipboard()
+	std::string loadStringFromClipboard()
 	{
 		return "";
 	}
 
-	UINT getFileSize(const String &filename)
+	UINT getFileSize(const std::string &filename)
 	{
 		return 0;
 	}
 
 	// Create a process with the given command line, and wait until it returns
-	int runCommand(const String &executablePath, const String &commandLine, bool block)
+	int runCommand(const std::string &executablePath, const std::string &commandLine, bool block)
 	{
 		return 0;
 	}
 
-	void makeDirectory(const String &directory)
+	void makeDirectory(const std::string &directory)
 	{
 		mkdir(directory.ptr(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}

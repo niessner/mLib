@@ -4,7 +4,7 @@
 #ifndef _PARAMETER_FILE_H_
 #define _PARAMETER_FILE_H_
 
-/*
+
 #include <sstream>
 #include <string>
 #include <map>
@@ -49,7 +49,7 @@ public:
 				MLIB_WARNING("Invalid attribute or value");
 				continue;
 			}
-			if (!m_CaseSensitive)	StringUtil::toLower(attr_name);
+			if (!m_CaseSensitive)	attr_name = StringUtil::toLower(attr_name);
 			m_Values[attr_name] = attr_value;
 		}
 		file.close();
@@ -80,7 +80,7 @@ public:
 				return true;
 			}
 		} else {
-			std::string lname(name);	StringUtil::toLower(lname);
+			std::string lname(name);	lname = StringUtil::toLower(lname);
 			const auto s = m_Values.find(name);
 			if (s == m_Values.end()) {
 				return false; 
@@ -135,10 +135,11 @@ private:
 	//! removes spaces and tabs at the begin and end of the string
 	void removeSpecialCharacters(std::string &str) const {
 		char characters[] = {' ', '\t', '\"', ';'};
+		const unsigned int length = 4;
 		bool found = true;
 		while(str.length() && found) {
 			found = false;
-			for (unsigned int i = 0; i < ARRAYSIZE(characters); i++) {
+			for (unsigned int i = 0; i < length; i++) {
 				if (*str.begin() == characters[i]) {
 					str.erase(str.begin());	found = true;	break;
 				}
@@ -152,7 +153,8 @@ private:
 	//! searches for comments and removes everything after the comment if there is one
 	void removeComments(std::string& s) const {
 		std::string comments[] = {"//", "#", ";"};
-		for (unsigned int i = 0; i < ARRAYSIZE(comments); i++) {
+		const unsigned int length = 3;
+		for (unsigned int i = 0; i < length; i++) {
 			size_t curr = s.find(comments[i]);
 			if (curr != std::string::npos) {
 				s = s.substr(0, curr);
@@ -165,7 +167,7 @@ private:
 	std::list<std::string> m_Filenames;
 };
 
-*/
+
 
 
 #endif

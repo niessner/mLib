@@ -65,7 +65,7 @@ public:
 	//	s_stream << s << std::endl;
 	//}
 
-	static void log(const String &s);
+	static void log(const std::string &s);
 
 private:
 	static MultiStream s_stream;

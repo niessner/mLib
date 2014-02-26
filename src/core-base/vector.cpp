@@ -47,7 +47,7 @@ template <class T> T Vector<T>::product() const
 
 template <class T> UINT64 Vector<T>::minIndex() const
 {
-	MLIB_ASSERT(m_length > 0, "minIndex called on zero-length vector");
+	MLIB_ASSERT_STR(m_length > 0, "minIndex called on zero-length vector");
 	const UINT64 length = m_length;
 	const T *ptr = m_data;
 	UINT64 smallestIndexSeen = 0;
@@ -59,7 +59,7 @@ template <class T> UINT64 Vector<T>::minIndex() const
 
 template <class T> UINT64 Vector<T>::maxIndex() const
 {
-    MLIB_ASSERT(m_length > 0, "maxIndex called on zero-length vector");
+    MLIB_ASSERT_STR(m_length > 0, "maxIndex called on zero-length vector");
     const UINT64 length = m_length;
     const T *ptr = m_data;
     UINT64 largestIndexSeen = 0;
@@ -81,7 +81,7 @@ template <class T> const T& Vector<T>::maxValue() const
 
 template <class T> UINT64 Vector<T>::maxIndex(const std::function<double(const T&)> &valueFunction) const
 {
-	MLIB_ASSERT(m_length > 0, "maxIndex called on zero-length vector");
+	MLIB_ASSERT_STR(m_length > 0, "maxIndex called on zero-length vector");
 	double maxValue = valueFunction(m_data[0]);
 	UINT64 maxIndex = 0;
 	for(UINT64 i = 0; i < m_length; i++)
@@ -97,7 +97,7 @@ template <class T> UINT64 Vector<T>::maxIndex(const std::function<double(const T
 }
 template <class T> UINT64 Vector<T>::minIndex(const std::function<double(const T&)> &valueFunction) const
 {
-	MLIB_ASSERT(m_length > 0, "minIndex called on zero-length vector");
+	MLIB_ASSERT_STR(m_length > 0, "minIndex called on zero-length vector");
 	double minValue = valueFunction(m_data[0]);
 	UINT64 minIndex = 0;
 	for(UINT64 i = 0; i < m_length; i++)
@@ -140,7 +140,7 @@ template <class T> void Vector<T>::pushBack()
 template <class T> void Vector<T>::popBack()
 {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-    MLIB_ASSERT(m_length != 0, "PopEnd called on zero-length vector");
+    MLIB_ASSERT_STR(m_length != 0, "PopEnd called on zero-length vector");
 #endif
     m_length--;
 }
@@ -148,7 +148,7 @@ template <class T> void Vector<T>::popBack()
 template <class T> void Vector<T>::removeCopy(UINT64 index)
 {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-    MLIB_ASSERT(index < m_length, "removeCopy called on invalid index");
+    MLIB_ASSERT_STR(index < m_length, "removeCopy called on invalid index");
 #endif
     for(UINT64 i = i; i < m_length - 1; i++)
     {
@@ -160,7 +160,7 @@ template <class T> void Vector<T>::removeCopy(UINT64 index)
 template <class T> void Vector<T>::removeSwap(UINT64 index)
 {
 #if defined(MLIB_BOUNDS_CHECK) || defined(DEBUG)
-    MLIB_ASSERT(index < m_length, "removeSwap called on invalid index");
+    MLIB_ASSERT_STR(index < m_length, "removeSwap called on invalid index");
 #endif
     std::swap(m_data[index], m_data[m_length - 1]);
     m_length--;
@@ -217,7 +217,7 @@ template <class T> void Vector<T>::randomize()
 
 template <class T> T Vector<T>::dotProduct(const Vector<T> &a, const Vector<T> &b)
 {
-	MLIB_ASSERT(a.size() == b.size(), "dotProduct called with invalid vectors");
+	MLIB_ASSERT_STR(a.size() == b.size(), "dotProduct called with invalid vectors");
 	T result = a[0] * b[0];
 	UINT64 length = a.m_length;
 	for(UINT64 i = 1; i < length; i++)
@@ -229,7 +229,7 @@ template <class T> T Vector<T>::dotProduct(const Vector<T> &a, const Vector<T> &
 
 template <class T> Vector<T> Vector<T>::directProduct(const Vector<T> &a, const Vector<T> &b)
 {
-	MLIB_ASSERT(a.size() == b.size(), "directProduct called with invalid vectors");
+	MLIB_ASSERT_STR(a.size() == b.size(), "directProduct called with invalid vectors");
 	UINT64 length = a.m_length;
 	Vector<T> result(length);
 	for(UINT64 i = 0; i < length; i++)

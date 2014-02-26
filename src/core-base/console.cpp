@@ -2,7 +2,7 @@
 MultiStream Console::s_stream(std::cout);
 std::ofstream Console::s_logFile;
 
-void Console::log(const String &s)
+void Console::log(const std::string &s)
 {
-	s_stream << s.ptr() << std::endl;
+	s_stream << s << std::endl;
 }

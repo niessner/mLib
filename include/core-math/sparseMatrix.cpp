@@ -38,7 +38,7 @@ SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, D val)
 template<class D>
 SparseMatrix<D> SparseMatrix<D>::add(const SparseMatrix<D> &A, const SparseMatrix<D> &B)
 {
-	MLIB_ASSERT(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
+	MLIB_ASSERT_STR(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
 	SparseMatrix<D> result = A;
 	for(UINT row = 0; row < B.m_rows; row++)
 		for(const SparseRowEntry<D> &e : B.m_data[row].entries)
@@ -49,7 +49,7 @@ SparseMatrix<D> SparseMatrix<D>::add(const SparseMatrix<D> &A, const SparseMatri
 template<class D>
 SparseMatrix<D> SparseMatrix<D>::subtract(const SparseMatrix<D> &A, const SparseMatrix<D> &B)
 {
-	MLIB_ASSERT(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
+	MLIB_ASSERT_STR(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
 	SparseMatrix<D> result = A;
 	for(UINT row = 0; row < B.m_rows; row++)
 		for(const SparseRowEntry<D> &e : B.m_data[row].entries)
@@ -60,7 +60,7 @@ SparseMatrix<D> SparseMatrix<D>::subtract(const SparseMatrix<D> &A, const Sparse
 template<class D>
 Vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Vector<D> &B)
 {
-	MLIB_ASSERT(A.cols() == B.size(), "invalid dimensions");
+	MLIB_ASSERT_STR(A.cols() == B.size(), "invalid dimensions");
 	const int rows = A.m_rows;
 	Vector<D> result(rows);
 
@@ -83,7 +83,7 @@ Vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Vector<D> &B
 template<class D>
 SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const SparseMatrix<D> &B)
 {
-	MLIB_ASSERT(A.cols() == B.rows(), "invalid dimensions");
+	MLIB_ASSERT_STR(A.cols() == B.rows(), "invalid dimensions");
 
 	const UINT rows = A.rows();
 	SparseMatrix<D> result(rows, B.cols());
@@ -104,7 +104,7 @@ SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Sparse
 template<class D>
 void SparseMatrix<D>::invertInPlace()
 {
-	MLIB_ASSERT(square(), "SparseMatrix<D>::invertInPlace called on non-square matrix");
+	MLIB_ASSERT_STR(square(), "SparseMatrix<D>::invertInPlace called on non-square matrix");
 	for (UINT i = 1; i < m_rows; i++)
 	{
 		(*this)(0, i) /= (*this)(0, 0);

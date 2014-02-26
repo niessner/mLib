@@ -67,7 +67,7 @@ public:
 
 	void init(UINT k, D clearValue)
 	{
-		if(m_queue.size() != k) m_queue.allocate(k);
+		if(m_queue.size() != k) m_queue.resize(k);
 		clear(clearValue);
 	}
 
@@ -115,7 +115,7 @@ public:
 	void initInternal(const Vector< const D* > &points, UINT dimension, UINT maxK)
 	{
 		m_dimension = dimension;
-		m_pointData.allocate(points.size() * dimension);
+		m_pointData.resize(points.size() * dimension);
 		int pointIndex = 0;
 		for(auto p : points)
 		{
@@ -141,7 +141,7 @@ public:
 			m_queue.insert(typename KNearestNeighborQueue<D>::NeighborEntry(pointIndex, dist));
 		}
 
-		if(result.size() != k) result.allocate(k);
+		if(result.size() != k) result.resize(k);
 		UINT resultIndex = 0;
 		for(const auto &e : m_queue.queue())
 		{

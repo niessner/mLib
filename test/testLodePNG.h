@@ -13,11 +13,11 @@ public:
 		LodePNG::save(bmp, "test.png");
 		Bitmap bmpReloaded = LodePNG::load("test.png");
 
-		MLIB_ASSERT(bmp == bmpReloaded, "bitmaps do not match");
+		MLIB_ASSERT_STR(bmp == bmpReloaded, "bitmaps do not match");
 		Console::log("LodePNG test done");
 	}
 
-	String name()
+	std::string name()
 	{
 		return "LodePNG";
 	}

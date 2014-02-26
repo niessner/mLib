@@ -15,7 +15,7 @@ void WorkerThread::processTasks(TaskList<WorkerThreadTask*> &tasks)
 {
 	m_done = false;
 	m_tasks = &tasks;
-	m_thread = std::thread(workerThreadEntry, this);
+	m_thread = new std::thread(workerThreadEntry, this);
 }
 
 void WorkerThread::workerThreadEntry( WorkerThread *context )

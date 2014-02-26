@@ -55,7 +55,7 @@ public:
 			m_dists,         // distance (returned)
 			epsilon);        // error bound
 
-		if(result.size() < k) result.allocate(k);
+		if(result.size() < k) result.resize(k);
 		for(UINT i = 0; i < k; i++)
 			result[i] = m_indices[i];
 	}

@@ -78,27 +78,32 @@ public:
 	{
 		m_rows = rows;
 		m_cols = cols;
-		m_data.allocate(m_rows);
+		m_data.resize(m_rows);
 	}
 
-	SparseMatrix(const String &s, MatrixStringFormat format)
+	SparseMatrix(const std::string &s, MatrixStringFormat format)
 	{
 		if(format == MatrixStringFormatMathematica)
 		{
 			//
 			// this is really a dense format and should be loaded as such, then cast into a SparseMatrix
 			//
-			Vector<String> data = s.split("},{");
+			//Vector<std::string> data = s.split("},{");
+			Vector<std::string> data = StringUtil::split(s, "},{");
 			m_rows = (UINT)data.size();
-			m_cols = (UINT)data[0].split(",").size();
-			m_data.allocate(m_rows);
+			//m_cols = (UINT)data[0].split(",").size();
+			m_cols = (UINT)StringUtil::split(data[0], ",").size();
+			m_data.resize(m_rows);
 
 			for(UINT row = 0; row < m_rows; row++)
 			{
-				Vector<String> values = data[row].split(",");
+				//Vector<std::string> values = data[row].split(",");
+				Vector<std::string> values = StringUtil::split(data[row], ",");
 				for(UINT col = 0; col < values.size(); col++)
 				{
-					(*this)(row, col) = (D)values[col].findAndReplace("{","").findAndReplace("}","").toDOUBLE();
+					//(*this)(row, col) = (D)values[col].findAndReplace("{","").findAndReplace("}","").toDOUBLE();
+					const std::string s = StringUtil::findAndReplace(StringUtil::findAndReplace(values[col], "{",""), "}","");
+					(*this)(row, col) = (D)std::stod(s);
 				}
 			}
 		}
@@ -163,7 +168,7 @@ public:
 	}
 	Vector<D> diagonal() const
 	{
-		MLIB_ASSERT(square(), "diagonal called on non-square matrix");
+		MLIB_ASSERT_STR(square(), "diagonal called on non-square matrix");
 		Vector<D> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = m_data[row](row);

@@ -10,7 +10,7 @@ Written by Matthew Fisher
 template<class D>
 D DenseMatrix<D>::maxMagnitude() const
 {
-	MLIB_ASSERT(valid(), "dense matrix has invalid entries");
+	MLIB_ASSERT_STR(valid(), "dense matrix has invalid entries");
 	double result = 0.0;
 	for(UINT row = 0; row < m_rows; row++)
 		for(UINT col = 0; col < m_cols; col++)
@@ -53,7 +53,7 @@ DenseMatrix<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, D val)
 template<class D>
 DenseMatrix<D> DenseMatrix<D>::add(const DenseMatrix<D> &A, const DenseMatrix<D> &B)
 {
-	MLIB_ASSERT(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
+	MLIB_ASSERT_STR(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
 	
 	const UINT rows = A.m_rows;
 	const UINT cols = A.m_cols;
@@ -68,7 +68,7 @@ DenseMatrix<D> DenseMatrix<D>::add(const DenseMatrix<D> &A, const DenseMatrix<D>
 template<class D>
 DenseMatrix<D> DenseMatrix<D>::subtract(const DenseMatrix<D> &A, const DenseMatrix<D> &B)
 {
-	MLIB_ASSERT(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
+	MLIB_ASSERT_STR(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
 
 	const UINT rows = A.m_rows;
 	const UINT cols = A.m_cols;
@@ -83,7 +83,7 @@ DenseMatrix<D> DenseMatrix<D>::subtract(const DenseMatrix<D> &A, const DenseMatr
 template<class D>
 Vector<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const Vector<D> &B)
 {
-	MLIB_ASSERT(A.cols() == B.size(), "invalid dimensions");
+	MLIB_ASSERT_STR(A.cols() == B.size(), "invalid dimensions");
 	const int rows = A.m_rows;
 	const UINT cols = A.m_cols;
 	Vector<D> result(rows);
@@ -103,7 +103,7 @@ Vector<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const Vector<D> &B)
 template<class D>
 DenseMatrix<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const DenseMatrix<D> &B)
 {
-	MLIB_ASSERT(A.cols() == B.rows(), "invalid dimensions");
+	MLIB_ASSERT_STR(A.cols() == B.rows(), "invalid dimensions");
 
 	const UINT rows = A.rows();
 	const UINT cols = B.cols();
@@ -134,7 +134,7 @@ DenseMatrix<D> DenseMatrix<D>::inverse()
 template<class D>
 void DenseMatrix<D>::invertInPlace()
 {
-	MLIB_ASSERT(square(), "DenseMatrix<D>::invertInPlace called on non-square matrix");
+	MLIB_ASSERT_STR(square(), "DenseMatrix<D>::invertInPlace called on non-square matrix");
 	for (UINT i = 1; i < m_rows; i++)
 	{
 		(*this)(0, i) /= (*this)(0, 0);

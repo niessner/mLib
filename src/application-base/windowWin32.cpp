@@ -87,7 +87,7 @@ WindowWin32::~WindowWin32()
 	s_mainWindow = NULL;
 }
 
-void WindowWin32::init(HINSTANCE instance, int width, int height, const String &name)
+void WindowWin32::init(HINSTANCE instance, int width, int height, const std::string &name)
 {
 	m_className = name;
 	m_class.style = CS_HREDRAW | CS_VREDRAW;

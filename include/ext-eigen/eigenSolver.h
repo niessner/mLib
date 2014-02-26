@@ -25,7 +25,7 @@ public:
 
 	Vector<D> solve(const SparseMatrix<D> &A, const Vector<D> &b)
 	{
-		MLIB_ASSERT(A.square() && b.size() == A.rows(), "invalid solve dimensions");
+		MLIB_ASSERT_STR(A.square() && b.size() == A.rows(), "invalid solve dimensions");
 		Eigen::SparseMatrix<D> eigenMatrix;
 		EigenUtility::makeEigenMatrix(A, eigenMatrix);
 		return solve(eigenMatrix, b);
@@ -90,8 +90,8 @@ private:
 			solver.setTolerance(1e-20);
 			solver.compute(A);
 			x = solver.solve(bEigen);
-			//Console::log("Iterations: " + String(solver.iterations()));
-			//Console::log("Error: " + String(solver.error()));
+			//Console::log("Iterations: " + std::string(solver.iterations()));
+			//Console::log("Error: " + std::string(solver.error()));
 		}
 		else if(method == BiCGSTAB_Diag)
 		{
@@ -99,8 +99,8 @@ private:
 			solver.setTolerance(1e-10);
 			solver.compute(A);
 			x = solver.solve(bEigen);
-			//Console::log("Iterations: " + String(solver.iterations()));
-			//Console::log("Error: " + String(solver.error()));
+			//Console::log("Iterations: " + std::string(solver.iterations()));
+			//Console::log("Error: " + std::string(solver.error()));
 		}
 		else if(method == BiCGSTAB_LUT)
 		{
@@ -108,8 +108,8 @@ private:
 			solver.setTolerance(1e-10);
 			solver.compute(A);
 			x = solver.solve(bEigen);
-			//Console::log("Iterations: " + String(solver.iterations()));
-			//Console::log("Error: " + String(solver.error()));
+			//Console::log("Iterations: " + std::string(solver.iterations()));
+			//Console::log("Error: " + std::string(solver.error()));
 		}
 		else if(method == Profile)
 		{
@@ -124,7 +124,7 @@ private:
 					double maxDeviation = 0.0;
 					for(UINT variableIndex = 0; variableIndex < b.size(); variableIndex++)
 						maxDeviation = std::max(maxDeviation, fabs(results[methodIndex][variableIndex] - results[0][variableIndex]));
-					Console::log("Max deviation from LLT: " + String(maxDeviation));
+					Console::log("Max deviation from LLT: " + std::to_string(maxDeviation));
 				}
 			}
 			return results[0];
@@ -137,7 +137,7 @@ private:
 		return EigenUtility::dumpEigenVector<D>(x);
 	}
 
-	static String getMethodName(Method m)
+	static std::string getMethodName(Method m)
 	{
 		switch(m)
 		{

@@ -21,6 +21,15 @@ public:
 class WorkerThread
 {
 public:
+	WorkerThread()
+	{
+		m_thread = NULL;
+	}
+	~WorkerThread()
+	{
+		SAFE_DELETE(m_thread);
+	}
+
     void init(UINT threadIndex, ThreadLocalStorage *storage);
     void processTasks(TaskList<WorkerThreadTask*> &tasks);
 
@@ -34,7 +43,7 @@ private:
 	void enterThreadTaskLoop();
 
     bool m_done;
-    std::thread m_thread;
+    std::thread *m_thread;
 
 	UINT m_threadIndex;
     ThreadLocalStorage *m_storage;

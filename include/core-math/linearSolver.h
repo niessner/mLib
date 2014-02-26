@@ -10,7 +10,7 @@ public:
 	virtual Vector<D> solveLeastSquares(const SparseMatrix<D> &A, const Vector<D> &b) = 0;
 	static double solveError(const SparseMatrix<D> &A, const Vector<D> &x, const Vector<D> &b)
 	{
-		//.map([](T n) {return String(n);})
+		//.map([](T n) {return std::string(n);})
 		return (A * x - b).map([](D x) {return fabs(x);}).maxValue();
 	}
 };
@@ -26,7 +26,7 @@ public:
 
 	Vector<D> solve(const SparseMatrix<D> &A, const Vector<D> &b)
 	{
-		MLIB_ASSERT(A.square() && b.size() == A.rows(), "invalid solve dimensions");
+		MLIB_ASSERT_STR(A.square() && b.size() == A.rows(), "invalid solve dimensions");
 		const UINT n = (UINT)b.size();
 
 		Vector<D> dInverse = A.diagonal().map([](D x) {return (D)1.0 / x;});

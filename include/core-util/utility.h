@@ -150,31 +150,31 @@ namespace Utility
 	//
 	// file utility
 	//
-	bool fileExists(const String &filename);
-	UINT getFileSize(const String &filename);
-	void copyFile(const String &sourceFile, const String &destFile);
+	bool fileExists(const std::string &filename);
+	UINT getFileSize(const std::string &filename);
+	void copyFile(const std::string &sourceFile, const std::string &destFile);
 
 	//
 	// There are OS-specific functions
 	//
-    void messageBox(const char *String);
-    void messageBox(const String &S);
-    void copyStringToClipboard(const String &S);
-	String loadStringFromClipboard();
-	int runCommand(const String &executablePath, const String &commandLine, bool Blocking);
-	void makeDirectory(const String &directory);
+    void messageBox(const char *string);
+    void messageBox(const std::string &S);
+    void copyStringToClipboard(const std::string &S);
+	std::string loadStringFromClipboard();
+	int runCommand(const std::string &executablePath, const std::string &commandLine, bool Blocking);
+	void makeDirectory(const std::string &directory);
     
     //
     // Returns the next line in the given file
     //
-    String getNextLine(std::ifstream &file);
-    Vector<BYTE> getFileData(const String &filename);
+    std::string getNextLine(std::ifstream &file);
+    Vector<BYTE> getFileData(const std::string &filename);
 
     //
     // Returns the set of all lines in the given file
     //
-    Vector<String> getFileLines(std::ifstream &file, UINT minLineLength = 0);
-    Vector<String> getFileLines(const String &filename, UINT minLineLength = 0);
+    Vector<std::string> getFileLines(std::ifstream &file, UINT minLineLength = 0);
+    Vector<std::string> getFileLines(const std::string &filename, UINT minLineLength = 0);
 
     //
 	// FILE wrappers
@@ -182,26 +182,26 @@ namespace Utility
     inline FILE* checkedFOpen(const char *filename, const char *mode)
 	{
 		FILE *file = fopen(filename, mode);
-		MLIB_ASSERT(file != NULL && !ferror(file), String("Failed to open file: ") + String(filename));
+		MLIB_ASSERT_STR(file != NULL && !ferror(file), std::string("Failed to open file: ") + std::string(filename));
 		return file;
 	}
 
     inline void checkedFRead(void *dest, UINT64 elementSize, UINT64 elementCount, FILE *file)
     {
         UINT64 elementsRead = fread(dest, elementSize, elementCount, file);
-        MLIB_ASSERT(!ferror(file) && elementsRead == elementCount, "fread failed");
+        MLIB_ASSERT_STR(!ferror(file) && elementsRead == elementCount, "fread failed");
     }
 
     inline void checkedFWrite(const void *Src, UINT64 elementSize, UINT64 elementCount, FILE *file)
     {
         UINT64 elementsWritten = fwrite(Src, elementSize, elementCount, file);
-        MLIB_ASSERT(!ferror(file) && elementsWritten == elementCount, "fwrite failed");
+        MLIB_ASSERT_STR(!ferror(file) && elementsWritten == elementCount, "fwrite failed");
     }
 
     inline void checkedFSeek(UINT offset, FILE *file)
     {
         int result = fseek(file, offset, SEEK_SET);
-        MLIB_ASSERT(!ferror(file) && result == 0, "fseek failed");
+        MLIB_ASSERT_STR(!ferror(file) && result == 0, "fseek failed");
     }
 }
 

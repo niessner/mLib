@@ -7,26 +7,26 @@ class Directory
 {
 public:
     Directory() {}
-    Directory(const String &path);
-    void load(const String &path);
+    Directory(const std::string &path);
+    void load(const std::string &path);
 
-    inline const String& path() const
+    inline const std::string& path() const
     {
         return m_path;
     }
-    inline const Vector<String>& files() const
+    inline const Vector<std::string>& files() const
     {
         return m_files;
     }
-    inline const Vector<String>& directories() const
+    inline const Vector<std::string>& directories() const
     {
         return m_directories;
     }
-    Vector<String> filesWithSuffix(const String &suffix) const;
+    Vector<std::string> filesWithSuffix(const std::string &suffix) const;
 
 private:
-    String m_path;
-    Vector<String> m_files;
-    Vector<String> m_directories;
+    std::string m_path;
+    Vector<std::string> m_files;
+    Vector<std::string> m_directories;
 };
 

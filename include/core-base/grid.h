@@ -30,7 +30,7 @@ public:
 
 	inline Grid<T>& operator += (const Grid<T> &right)
 	{
-		MLIB_ASSERT(m_rows == right.m_rows && m_cols == right.m_cols, "grid dimensions must be equal");
+		MLIB_ASSERT_STR(m_rows == right.m_rows && m_cols == right.m_cols, "grid dimensions must be equal");
 		for (UINT r = 0; r < m_rows; r++)
 			for (UINT c = 0; c < m_cols; c++)
 				m_data[r * m_cols + c] += right(r,c);
@@ -59,14 +59,14 @@ public:
 	inline T& operator() (UINT row, UINT col)
 	{
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-		MLIB_ASSERT( (row < m_rows) && (col < m_cols), "Out-of-bounds grid access");
+		MLIB_ASSERT_STR( (row < m_rows) && (col < m_cols), "Out-of-bounds grid access");
 #endif
 		return m_data[row * m_cols + col];
 	}
 	inline const T& operator() (UINT row, UINT col) const
 	{
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-		MLIB_ASSERT( (row < m_rows) && (col < m_cols), "Out-of-bounds grid access");
+		MLIB_ASSERT_STR( (row < m_rows) && (col < m_cols), "Out-of-bounds grid access");
 #endif
 		return m_data[row * m_cols + col];
 	}
@@ -115,9 +115,8 @@ public:
 
 	Vector<T> getRow(UINT row) const
 	{
-		Vector<T> result;
+		Vector<T> result(m_cols);
 		const T *CPtr = m_data;
-		result.allocate(m_cols);
 		for(UINT col = 0; col < m_cols; col++)
 		{
 			result[col] = CPtr[row * m_cols + col];
@@ -127,9 +126,8 @@ public:
 
 	Vector<T> getCol(UINT col) const
 	{
-		Vector<T> result;
+		Vector<T> result(m_rows);
 		const T *CPtr = m_data;
-		result.allocate(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 		{
 			result[col] = CPtr[row * m_cols + col];

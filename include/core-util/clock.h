@@ -23,7 +23,7 @@ private:
 class ComponentTimer
 {
 public:
-	ComponentTimer(const String &prompt)
+	ComponentTimer(const std::string &prompt)
 	{
 		m_prompt = prompt;
 		m_terminated = false;
@@ -36,11 +36,11 @@ public:
 	void end()
 	{
 		m_terminated = true;
-		Console::log("end " + m_prompt + ", " + String(m_clock.elapsed()) + "s");
+		Console::log("end " + m_prompt + ", " + std::to_string(m_clock.elapsed()) + "s");
 	}
 
 private:
-	String m_prompt;
+	std::string m_prompt;
 	Clock m_clock;
 	bool m_terminated;
 };

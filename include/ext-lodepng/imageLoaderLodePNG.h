@@ -4,6 +4,6 @@ typedef Grid<RGBColor> Bitmap;
 class LodePNG
 {
 public:
-	static Bitmap load(const String &filename);
-	static void save(const Bitmap &bmp, const String &filename);
+	static Bitmap load(const std::string &filename);
+	static void save(const Bitmap &bmp, const std::string &filename);
 };

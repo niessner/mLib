@@ -37,21 +37,12 @@
     <ClInclude Include="..\include\core-base\classList.h">
       <Filter>mLibHeader\core-base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-base\string.h">
-      <Filter>mLibHeader\core-base</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-base\vector.h">
       <Filter>mLibHeader\core-base</Filter>
     </ClInclude>
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="testString.h">
-      <Filter>tests</Filter>
-    </ClInclude>
     <ClInclude Include="testVector.h">
-      <Filter>tests</Filter>
-    </ClInclude>
-    <ClInclude Include="test.h">
       <Filter>tests</Filter>
     </ClInclude>
     <ClInclude Include="..\include\core-base\common.h">
@@ -152,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="..\include\core-math\matrix4.h">
       <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\stringUtil.h">
+      <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 
-ID3DBlob* D3D11Utility::CompileShader(const String &filename, const String &entryPoint, const String &shaderModel)
+ID3DBlob* D3D11Utility::CompileShader(const std::string &filename, const std::string &entryPoint, const std::string &shaderModel)
 {
 	DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
