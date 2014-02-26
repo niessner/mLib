@@ -2,7 +2,7 @@
 //
 // external lodepng source
 //
-#include "../external/include/lodepng/lodepng.cpp"
+#include "../src/ext-lodepng/lodepng.cpp"
 
 //
 // ext-lodepng source files

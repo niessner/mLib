@@ -2,7 +2,7 @@
 //
 // external lodepng headers
 //
-#include "../external/include/lodepng/lodepng.h"
+#include "ext-lodepng/lodepng.h"
 
 //
 // ext-lodepng headers

@@ -2,7 +2,7 @@
 //
 // external ANN headers
 //
-#include "../external/include/ANN/ANN.h"
+#include "ANN/ANN.h"
 
 //
 // ext-ANN headers
