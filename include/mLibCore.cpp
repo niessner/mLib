@@ -37,3 +37,4 @@
 // core-graphics source files
 //
 #include "../src/core-graphics/RGBColor.cpp"
+#include "../src/core-graphics/camera.cpp"

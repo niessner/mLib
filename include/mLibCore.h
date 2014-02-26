@@ -48,3 +48,4 @@
 // core-graphics headers
 //
 #include "core-graphics/RGBColor.h"
+#include "core-graphics/camera.h"

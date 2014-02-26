@@ -14,23 +14,26 @@ public:
 	void jump(float delta);
 	void move(float delta);
 
-	Matrix4 camera()
+	Matrix4f camera()
 	{
 		return m_camera;
 	}
 
-	Matrix4 perspective()
+	Matrix4f perspective()
 	{
 		return m_perspective;
 	}
 
-	Matrix4 cameraPerspective()
+	Matrix4f cameraPerspective()
 	{
 		return m_cameraPerspective;
 	}
 
 private:
-	vec3f m_eye, m_right, m_look;
+	void applyTransform(const Matrix4f &transform);
+	void update();
+
+	vec3f m_eye, m_right, m_look, m_up;
 	vec3f m_worldUp;
 	Matrix4f m_camera;
 	Matrix4f m_perspective;

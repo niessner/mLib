@@ -1,38 +1,60 @@
 
-class Camera
+Camera::Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float fieldOfView, float zNear, float zFar)
 {
-public:
+	m_eye = eye;
+	m_worldUp = worldUp.normalize();
+	m_right = right.normalize();
+	m_look = (m_worldUp ^ m_right).normalize();
+	m_up = (m_right ^ m_look).normalize();
 
-	Camera() {}
-	Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float fieldOfView, float zNear, float zFar);
+	m_perspective = Matrix4f::perspectiveFov(fieldOfView, zNear, zFar);
 
-	void lookRight(float theta);
-	void lookUp(float theta);
-	void roll(float theta);
+	update();
+}
 
-	void strafe(float delta);
-	void jump(float delta);
-	void move(float delta);
+void Camera::update()
+{
+	m_camera = Matrix4f::camera(m_eye, m_look, m_up, m_right);
+	m_cameraPerspective = m_camera * m_perspective;
+}
 
-	Matrix4 camera()
-	{
-		return m_camera;
-	}
+void Camera::lookRight(float theta)
+{
+	applyTransform(Matrix4f::rotation(m_worldUp, theta));
+}
 
-	Matrix4 perspective()
-	{
-		return m_perspective;
-	}
+void Camera::lookUp(float theta)
+{
+	applyTransform(Matrix4f::rotation(m_right, theta));
+}
 
-	Matrix4 cameraPerspective()
-	{
-		return m_cameraPerspective;
-	}
+void Camera::roll(float theta)
+{
+	applyTransform(Matrix4f::rotation(m_look, theta));
+}
 
-private:
-	vec3f m_eye, m_right, m_look;
-	vec3f m_worldUp;
-	Matrix4f m_camera;
-	Matrix4f m_perspective;
-	Matrix4f m_cameraPerspective;
-};
+void Camera::applyTransform(const Matrix4f &transform)
+{
+	m_up = transform.transformPoint(m_up);
+	m_right = transform.transformPoint(m_right);
+	m_look = transform.transformPoint(m_look);
+	update();
+}
+
+void Camera::strafe(float delta)
+{
+	m_eye += m_right * delta;
+	update();
+}
+
+void Camera::jump(float delta)
+{
+	m_eye += m_up * delta;
+	update();
+}
+
+void Camera::move(float delta)
+{
+	m_eye += m_look * delta;
+	update();
+}
