@@ -22,6 +22,7 @@
 #include "core-util/nearestNeighborSearch.h"
 #include "core-util/commandLineReader.h"
 #include "core-util/parameterFile.h"
+#include "core-util/keycodes.h"
 
 //
 // core-multithreading headers

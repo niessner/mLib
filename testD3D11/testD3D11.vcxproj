@@ -106,6 +106,16 @@
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-math\sparseMatrix.h" />
+    <ClInclude Include="..\include\core-util\binaryDataBuffer.h" />
+    <ClInclude Include="..\include\core-util\binaryDataSerialize.h" />
+    <ClInclude Include="..\include\core-util\binaryDataStream.h" />
+    <ClInclude Include="..\include\core-util\clock.h" />
+    <ClInclude Include="..\include\core-util\commandLineReader.h" />
+    <ClInclude Include="..\include\core-util\directory.h" />
+    <ClInclude Include="..\include\core-util\keycodes.h" />
+    <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
+    <ClInclude Include="..\include\core-util\parameterFile.h" />
+    <ClInclude Include="..\include\core-util\utility.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="..\include\mLibD3D11.h" />
     <ClInclude Include="appTest.h" />

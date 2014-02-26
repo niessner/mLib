@@ -31,6 +31,10 @@ public:
 	{
 		return *m_data;
 	}
+	inline ApplicationCallback& callback()
+	{
+		return m_callback;
+	}
 
 private:
 	//

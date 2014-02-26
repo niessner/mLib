@@ -1,6 +1,7 @@
 
 ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const String &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback) :
-	m_callback(callback)
+	m_callback(callback),
+	m_window(*this)
 {
 	m_window.init(instance, windowWidth, windowHeight, name);
 

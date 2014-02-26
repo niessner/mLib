@@ -16,6 +16,9 @@
     <Filter Include="mLibHeader\core-graphics">
       <UniqueIdentifier>{a5f2d67d-6ed2-49f9-b6e9-76c5ec370d31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-util">
+      <UniqueIdentifier>{7c48a95c-3305-4d98-8712-c184c644a4a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\mLibCore.h">
@@ -107,6 +110,36 @@
     </ClInclude>
     <ClInclude Include="..\include\application-d3d11\D3D11ConstantBuffer.h">
       <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\binaryDataBuffer.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\binaryDataSerialize.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\binaryDataStream.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\clock.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\commandLineReader.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\directory.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\keycodes.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\nearestNeighborSearch.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\parameterFile.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\utility.h">
+      <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

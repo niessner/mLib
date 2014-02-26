@@ -53,6 +53,21 @@ void D3D11GraphicsDevice::init(const WindowWin32 &window)
 	viewport.TopLeftY = 0;
 	m_context->RSSetViewports( 1, &viewport );
 
+	// Setup the rasterizer state
+	m_rasterDesc.AntialiasedLineEnable = false;
+	m_rasterDesc.CullMode = D3D11_CULL_NONE;
+	m_rasterDesc.DepthBias = 0;
+	m_rasterDesc.DepthBiasClamp = 0.0f;
+	m_rasterDesc.DepthClipEnable = true;
+	m_rasterDesc.FillMode = D3D11_FILL_SOLID;
+	m_rasterDesc.FrontCounterClockwise = false;
+	m_rasterDesc.MultisampleEnable = false;
+	m_rasterDesc.ScissorEnable = false;
+	m_rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+	D3D_VALIDATE(m_device->CreateRasterizerState(&m_rasterDesc, &m_rasterState));
+	m_context->RSSetState(m_rasterState);
+
 #ifdef _DEBUG
 	m_device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_debug));
 #endif

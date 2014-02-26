@@ -18,9 +18,10 @@ void AppTest::init(ApplicationData &app)
 	m_pixelShader.load(app.graphics, "shaders/test.shader");
 	m_constants.init(app.graphics);
 
-	vec3f eye(1.0f, 2.0f, 3.0f);
-	vec3f worldUp(0.0f, 0.0f, 1.0f);
-	m_camera = Camera(eye, worldUp, (vec3f::origin - eye) ^ worldUp, Math::degreesToRadians(60.0f), 1.0f, 0.01f, 1000.0f);
+	//vec3f eye(1.0f, 2.0f, 3.0f);
+	vec3f eye(0.0f, 0.0f, 0.0f);
+	vec3f worldUp(0.0f, 1.0f, 0.0f);
+	m_camera = Camera(eye, worldUp, (vec3f::eZ - eye) ^ worldUp, Math::degreesToRadians(60.0f), 1.0f, 0.01f, 1000.0f);
 }
 
 void AppTest::render(ApplicationData &app)
@@ -39,5 +40,16 @@ void AppTest::render(ApplicationData &app)
 
 void AppTest::keyPress(ApplicationData &app, UINT key)
 {
+	const float delta = 0.025f;
+	const float theta = 0.02f;
 
+	if(key == KEY_W) m_camera.move(delta);
+	if(key == KEY_S) m_camera.move(-delta);
+	if(key == KEY_A) m_camera.strafe(delta);
+	if(key == KEY_D) m_camera.move(-delta);
+
+	if(key == KEY_NUMPAD2) m_camera.lookUp(theta);
+	if(key == KEY_NUMPAD8) m_camera.lookUp(-theta);
+	if(key == KEY_NUMPAD4) m_camera.lookRight(theta);
+	if(key == KEY_NUMPAD6) m_camera.lookRight(-theta);
 }

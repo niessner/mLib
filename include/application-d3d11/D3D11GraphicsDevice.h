@@ -20,6 +20,7 @@ public:
 	}
 	~D3D11GraphicsDevice()
 	{
+		SAFE_RELEASE(m_rasterState);
 		SAFE_RELEASE(m_context);
 		SAFE_RELEASE(m_view);
 		SAFE_RELEASE(m_swapChain);
@@ -52,7 +53,12 @@ private:
 	ID3D11RenderTargetView *m_view;
 	ID3D11Debug *m_debug;
 	IDXGISwapChain *m_swapChain;
+	
+	ID3D11RasterizerState *m_rasterState;
+	D3D11_RASTERIZER_DESC m_rasterDesc;
+
 	D3D_FEATURE_LEVEL m_featureLevel;
+
 	
 	Vector<GraphicsAsset*> m_assets;
 };

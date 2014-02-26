@@ -21,3 +21,4 @@ class GraphicsDevice;
 // application-d3d11
 //
 class D3D11GraphicsDevice;
+class ApplicationWin32;

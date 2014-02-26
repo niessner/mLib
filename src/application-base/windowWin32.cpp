@@ -25,23 +25,23 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         PostQuitMessage(0);
         break;
 
-    /*case WM_KEYDOWN:
+    case WM_KEYDOWN:
         switch( wParam )                 //key pressed
         {
         case VK_ESCAPE:
-            //PostQuitMessage(0);        //if escape pressed, exit
+            PostQuitMessage(0);        //if escape pressed, exit
             break;
         default:
-            g_WndProcContext->SetKeyState((UINT)wParam, true);
+            s_mainWindow->parent().callback().keyPress(s_mainWindow->parent().data(), (UINT)wParam);
             break;
         }
         break;
 
     case WM_KEYUP:
-        g_WndProcContext->SetKeyState((UINT)wParam, false);
+        //s_mainWindow->parent().callback().keyPress(s_mainWindow->parent().data(), (UINT)wParam);
         break;
 
-    case WM_LBUTTONDOWN:
+    /*case WM_LBUTTONDOWN:
         g_WndProcContext->SetMouseState(MouseButtonLeft, true);
         break;
 
@@ -79,13 +79,6 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
     }
 
     return DefWindowProc( hWnd, msg, wParam, lParam );
-}
-
-WindowWin32::WindowWin32()
-{
-	m_className = "uninitialized";
-	m_handle = NULL;
-	ZeroMemory(&m_class, sizeof(m_class));
 }
 
 WindowWin32::~WindowWin32()
