@@ -18,17 +18,6 @@ class TriMesh {
   TriMesh(const Vector<MeshVertex>& _vertices, const Vector<UINT>& _indices) {
     m_vertices = _vertices;
     m_indices = _indices;
-
-	const bool randomizeColor = true;
-	if(randomizeColor)
-	{
-		for(MeshVertex &v : m_vertices)
-		{
-			v.normal = vec3f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
-			v.attributeA = vec4f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
-			v.attributeB = vec4f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
-		}
-	}
   }
 
   const Vector<MeshVertex>& vertices() const { return m_vertices; }

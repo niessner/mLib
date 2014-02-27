@@ -11,9 +11,9 @@ void AppTest::init(ApplicationData &app)
 	m_constants.init(app.graphics);
 
 	//vec3f eye(1.0f, 2.0f, 3.0f);
-	vec3f eye(0.0f, 0.0f, 0.0f);
+	vec3f eye(-0.5f, -0.5f, 1.5f);
 	vec3f worldUp(0.0f, 0.0f, 1.0f);
-	m_camera = Camera(eye, worldUp, worldUp ^ (vec3f::eX - eye), 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
+	m_camera = Camera(eye, worldUp, vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
 }
 
 void AppTest::render(ApplicationData &app)
