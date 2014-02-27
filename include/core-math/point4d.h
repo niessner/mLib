@@ -203,7 +203,10 @@ public:
 
 	union {
 		struct {
-			T x,y,z,w;          // standard names for components
+			T x,y,z,w;  // standard names for components
+		};
+		struct {
+			T r,g,b,w;	// colors
 		};
 		T array[4];     // array access
 	};

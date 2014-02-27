@@ -128,6 +128,9 @@ public:
 		struct {
 			T x;        // standard names for components
 		};
+		struct {
+			T r;		// colors
+		};
 		T array[1];     // array access
 	};
 };

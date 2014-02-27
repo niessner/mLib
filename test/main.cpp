@@ -45,6 +45,13 @@ int main()
 	pm.getParameterForValue("a", a);
 	std::cout << a << std::endl;
 
+	mat3f m;
+	m(0,0) = 1;
+	std::cout << mat3f::identity() << std::endl;
+	std::cout << mat3f::scale(3.0f) << std::endl;
+	mat4f m4;
+	std::cout << mat4f::rotation(0, 0, 45) << std::endl;
+
 	//App a;
 	//a.go();
 

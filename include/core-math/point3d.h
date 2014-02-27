@@ -199,6 +199,9 @@ public:
 		struct {
 			T x,y,z;    // standard names for components
 		};
+		struct {
+			T r,g,b;	// colors
+		};
 		T array[3];     // array access
 	};
 };

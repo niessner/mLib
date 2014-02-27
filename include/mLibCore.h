@@ -11,7 +11,6 @@
 #include "core-base/console.h"
 #include "core-base/vector.h"
 #include "core-base/grid.h"
-//#include "core-base/string.h"	got replaced by std::string ;)
 
 //
 // core-math headers
@@ -21,7 +20,8 @@
 #include "core-math/point3d.h"
 #include "core-math/point4d.h"
 #include "core-math/point6d.h"
-#include "core-math/matrix4.h"
+#include "core-math/matrix3x3.h"
+#include "core-math/matrix4x4.h"
 #include "core-math/sparseMatrix.h"
 #include "core-math/denseMatrix.h"
 #include "core-math/linearSolver.h"

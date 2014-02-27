@@ -1,4 +1,4 @@
-
+/*
 Camera::Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float fieldOfView, float aspect, float zNear, float zFar)
 {
 	m_eye = eye;
@@ -59,3 +59,4 @@ void Camera::move(float delta)
 	m_eye += m_look * delta;
 	update();
 }
+*/
