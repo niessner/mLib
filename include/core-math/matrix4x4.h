@@ -463,36 +463,36 @@ public:
 
 
 	//! get the x column out of the matrix
-	point3d<FloatType> xcol() const {
-		return point3d<FloatType>(matrix[0],matrix[4],matrix[8]);
+	point4d<FloatType> xcol() const {
+		return point4d<FloatType>(matrix[0],matrix[4],matrix[8],matrix[12]);
 	}
 	//! get the y column out of the matrix
-	point3d<FloatType> ycol() const {
-		return point3d<FloatType>(matrix[1],matrix[5],matrix[9]);
+	point4d<FloatType> ycol() const {
+		return point4d<FloatType>(matrix[1],matrix[5],matrix[9],matrix[13]);
 	}
 	//! get the y column out of the matrix
-	point3d<FloatType> zcol() const {
-		return point3d<FloatType>(matrix[2],matrix[6],matrix[10]);
+	point4d<FloatType> zcol() const {
+		return point4d<FloatType>(matrix[2],matrix[6],matrix[10],matrix[14]);
 	}
 	//! get the t column out of the matrix
-	point3d<FloatType> tcol() const {
-		return point3d<FloatType>(matrix[3],matrix[7],matrix[11]);
+	point4d<FloatType> tcol() const {
+		return point4d<FloatType>(matrix[3],matrix[7],matrix[11],matrix[15]);
 	}
 	//! get the x row out of the matrix
-	point3d<FloatType> xrow() const {
-		point3d<FloatType>(matrix[0],matrix[1],matrix[2]);
+	point4d<FloatType> xrow() const {
+		point4d<FloatType>(matrix[0],matrix[1],matrix[2],matrix[3]);
 	}
 	//! get the y row out of the matrix
-	point3d<FloatType> yrow() const {
-		return point3d<FloatType>(matrix[4],matrix[5],matrix[6]);
+	point4d<FloatType> yrow() const {
+		return point4d<FloatType>(matrix[4],matrix[5],matrix[6],matrix[7]);
 	}
 	//! get the y row out of the matrix
-	point3d<FloatType> zrow() const {
-		point3d<FloatType>(matrix[8],matrix[9],matrix[10]);
+	point4d<FloatType> zrow() const {
+		point4d<FloatType>(matrix[8],matrix[9],matrix[10],matrix[11]);
 	}
 	//! get the t row out of the matrix
-	inline point3d<FloatType> trow() const {
-		point3d<FloatType>(matrix[12],matrix[13],matrix[14]);
+	inline point4d<FloatType> trow() const {
+		point4d<FloatType>(matrix[12],matrix[13],matrix[14],matrix[15]);
 	}
 
 	//! return the inverse matrix; but does not change the current matrix
