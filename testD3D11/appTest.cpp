@@ -41,7 +41,7 @@ void AppTest::keyDown(ApplicationData &app, UINT key)
 
 void AppTest::keyPressed(ApplicationData &app, UINT key)
 {
-	const float distance = 0.025f;
+	const float distance = 0.05f;
 	const float theta = 2.0f;
 
 	if(key == KEY_W) m_camera.move(-distance);
@@ -60,22 +60,30 @@ void AppTest::mouseDown(ApplicationData &app, MouseButtonType button)
 
 }
 
+void AppTest::mouseWheel(ApplicationData &app, int wheelDelta)
+{
+	const float distance = 0.002f;
+	m_camera.move(distance * -wheelDelta);
+}
+
 void AppTest::mouseMove(ApplicationData &app)
 {
-	const float distance = 0.025f;
+	const float distance = 0.01f;
 	const float theta = 0.5f;
 
-	vec2i mouseDelta = app.input.mouse.pos - app.input.prevMouse.pos;
+	vec2i posDelta = app.input.mouse.pos - app.input.prevMouse.pos;
 
 	if(app.input.mouse.buttons[MouseButtonLeft])
 	{
-		m_camera.strafe(distance * mouseDelta.x);
-		m_camera.jump(distance * -mouseDelta.y);
+		m_camera.strafe(distance * posDelta.x);
+		m_camera.jump(distance * -posDelta.y);
 	}
 
 	if(app.input.mouse.buttons[MouseButtonRight])
 	{
-		m_camera.lookRight(theta * -mouseDelta.x);
-		m_camera.lookUp(theta * -mouseDelta.y);
+		m_camera.lookRight(theta * -posDelta.x);
+		m_camera.lookUp(theta * -posDelta.y);
 	}
+
+	
 }

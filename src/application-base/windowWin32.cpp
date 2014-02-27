@@ -74,7 +74,7 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
     case WM_MOUSEMOVE:
         {
             POINTS p = MAKEPOINTS(lParam);
-			parent.data().input.prevMouse = parent.data().input.mouse;
+			parent.data().input.prevMouse.pos = parent.data().input.mouse.pos;
             parent.data().input.mouse.pos = vec2i(p.x, p.y);
 			parent.callback().mouseMove(parent.data());
 
@@ -82,7 +82,7 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         break;
 
     case WM_MOUSEWHEEL:
-		parent.data().input.mouse.mouseWheel += GET_WHEEL_DELTA_WPARAM(wParam);
+		parent.callback().mouseWheel(parent.data(), GET_WHEEL_DELTA_WPARAM(wParam));
         break;
     }
 

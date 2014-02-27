@@ -13,6 +13,7 @@ public:
 	void keyPressed(ApplicationData &app, UINT key);
 	void mouseDown(ApplicationData &app, MouseButtonType button);
 	void mouseMove(ApplicationData &app);
+	void mouseWheel(ApplicationData &app, int wheelDelta);
 	void resize(ApplicationData &app);
 
 private:

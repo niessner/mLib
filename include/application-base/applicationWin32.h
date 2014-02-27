@@ -10,12 +10,10 @@ struct MouseState
 {
 	MouseState()
 	{
-		mouseWheel = 0;
 		buttons[MouseButtonLeft] = false;
 		buttons[MouseButtonRight] = false;
 	}
 	vec2i pos;
-	int mouseWheel;
 	bool buttons[MouseButtonCount];
 };
 
@@ -57,6 +55,7 @@ public:
 	virtual void keyPressed(ApplicationData &app, UINT key) = 0;
 	virtual void mouseDown(ApplicationData &app, MouseButtonType button) = 0;
 	virtual void mouseMove(ApplicationData &app) = 0;
+	virtual void mouseWheel(ApplicationData &app, int wheelDelta) = 0;
 	virtual void resize(ApplicationData &app) = 0;
 };
 
