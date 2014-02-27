@@ -41,13 +41,13 @@ void AppTest::keyDown(ApplicationData &app, UINT key)
 
 void AppTest::keyPressed(ApplicationData &app, UINT key)
 {
-	const float delta = 0.025f;
+	const float distance = 0.025f;
 	const float theta = 2.0f;
 
-	if(key == KEY_W) m_camera.move(-delta);
-	if(key == KEY_S) m_camera.move(delta);
-	if(key == KEY_A) m_camera.strafe(-delta);
-	if(key == KEY_D) m_camera.strafe(delta);
+	if(key == KEY_W) m_camera.move(-distance);
+	if(key == KEY_S) m_camera.move(distance);
+	if(key == KEY_A) m_camera.strafe(-distance);
+	if(key == KEY_D) m_camera.strafe(distance);
 
 	if(key == KEY_UP) m_camera.lookUp(theta);
 	if(key == KEY_DOWN) m_camera.lookUp(-theta);
@@ -62,5 +62,20 @@ void AppTest::mouseDown(ApplicationData &app, MouseButtonType button)
 
 void AppTest::mouseMove(ApplicationData &app)
 {
+	const float distance = 0.025f;
+	const float theta = 0.5f;
 
+	vec2i mouseDelta = app.input.mouse.pos - app.input.prevMouse.pos;
+
+	if(app.input.mouse.buttons[MouseButtonLeft])
+	{
+		m_camera.strafe(distance * mouseDelta.x);
+		m_camera.jump(distance * -mouseDelta.y);
+	}
+
+	if(app.input.mouse.buttons[MouseButtonRight])
+	{
+		m_camera.lookRight(theta * -mouseDelta.x);
+		m_camera.lookUp(theta * -mouseDelta.y);
+	}
 }

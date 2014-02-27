@@ -55,6 +55,7 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
     case WM_LBUTTONDOWN:
 		parent.data().input.mouse.buttons[MouseButtonLeft] = true;
+		parent.callback().mouseDown(parent.data(), MouseButtonLeft);
         break;
 
     case WM_LBUTTONUP:
@@ -63,6 +64,7 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
     case WM_RBUTTONDOWN:
         parent.data().input.mouse.buttons[MouseButtonRight] = true;
+		parent.callback().mouseDown(parent.data(), MouseButtonRight);
         break;
 
     case WM_RBUTTONUP:
@@ -72,7 +74,10 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
     case WM_MOUSEMOVE:
         {
             POINTS p = MAKEPOINTS(lParam);
+			parent.data().input.prevMouse = parent.data().input.mouse;
             parent.data().input.mouse.pos = vec2i(p.x, p.y);
+			parent.callback().mouseMove(parent.data());
+
         }
         break;
 
