@@ -37,7 +37,7 @@ int main()
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-	CalibratedSensorData data;	data.m_ColorImageWidth = 500;
+	/*CalibratedSensorData data;	data.m_ColorImageWidth = 500;
 	BinaryDataStreamFile streamOut("test.out", true);
 	streamOut << data;
 	streamOut.closeStream();
@@ -45,7 +45,7 @@ int main()
 	BinaryDataStreamFile streamIn("test.out", false);
 	streamIn >> reRead;
 
-	int a = 5;
+	int a = 5;*/
 
 
 	//std::string s = "hello.exe";
@@ -67,8 +67,8 @@ int main()
 	//m2 = m2 * m2.getInverse();
 	//std::cout << m2 << std::endl;
 
-	//App a;
-	//a.go();
+	App a;
+	a.go();
 
 	getchar();
 	return 0;

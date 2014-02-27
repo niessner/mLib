@@ -15,6 +15,7 @@
 //
 // core-util headers (these are required by matrices)
 //
+#include "core-util/utility.h"
 #include "core-util/binaryDataBuffer.h"
 #include "core-util/binaryDataSerialize.h"
 #include "core-util/binaryDataStream.h"
@@ -39,7 +40,6 @@
 // core-util headers
 //
 #include "core-util/stringUtil.h"
-#include "core-util/utility.h"
 #include "core-util/directory.h"
 #include "core-util/clock.h"
 #include "core-util/nearestNeighborSearch.h"
