@@ -41,7 +41,9 @@
 
 #if defined (LINUX)
 #define __FUNCTION__ __func__
+#ifndef __LINE__
 #define __LINE__
+#endif
 #endif
 
 #define FUNCTION_LINE_STRING (std::string(__FUNCTION__) + ":" + std::to_string(__LINE__))

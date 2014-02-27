@@ -251,7 +251,7 @@ public:
 	}
 	//! multiply operand with matrix b
 	Matrix3x3& operator*= (const Matrix3x3& other) {
-		Matrix<FloatType> prod = (*this)*other;
+		Matrix3x3<FloatType> prod = (*this)*other;
 		*this = prod;
 		return *this;
 	}
