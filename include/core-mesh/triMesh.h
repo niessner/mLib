@@ -19,6 +19,16 @@ class TriMesh {
     m_vertices = _vertices;
     m_indices = _indices;
   }
+  TriMesh(TriMesh &&t)
+  {
+	  m_vertices = std::move(t.m_vertices);
+	  m_indices = std::move(t.m_indices);
+  }
+  void operator=(TriMesh &&t)
+  {
+	  m_vertices = std::move(t.m_vertices);
+	  m_indices = std::move(t.m_indices);
+  }
 
   const Vector<MeshVertex>& vertices() const { return m_vertices; }
 

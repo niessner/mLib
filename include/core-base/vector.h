@@ -98,7 +98,6 @@ public:
 		}
 	}
 
-
 	void resize(UINT64 size)
 	{
 		if(size == 0) clear();
@@ -118,6 +117,11 @@ public:
 		}
 	}
 
+	void resize(UINT64 size, const T &clearValue)
+	{
+		resize(size);
+		clear(clearValue);
+	}
 
 	void reserve(UINT64 size)
 	{

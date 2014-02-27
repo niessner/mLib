@@ -41,7 +41,7 @@ namespace StringUtil {
 	}
 
 	//TODO TEST
-	inline std::string findAndReplace(const std::string& str, const std::string& find, const std::string& replace) {
+	inline std::string replace(const std::string& str, const std::string& find, const std::string& replace) {
 		std::string result;
 		for (size_t i = 0; i < str.length(); i++) {
 			if (exactMatchAtOffset(str, find, i)) {
@@ -53,8 +53,8 @@ namespace StringUtil {
 		return result;
 	}
 
-	inline std::string findAndReplace(const std::string& str, char find, char replace) {
-		return findAndReplace(str, std::to_string(find), std::to_string(replace));
+	inline std::string replace(const std::string& str, char find, char replace) {
+		return StringUtil::replace(str, std::to_string(find), std::to_string(replace));
 	}
 
 

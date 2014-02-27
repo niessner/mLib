@@ -42,7 +42,12 @@ public:
 		return (m_args.findFirstIndex([prefix](const std::string &s) { return StringUtil::startsWith(s, prefix); }) != -1);
 	}
 
-
+	std::string argWithPrefix(const std::string &prefix) const
+	{
+		int index = m_args.findFirstIndex([prefix](const std::string &s) { return StringUtil::startsWith(s, prefix); });
+		if(index == -1) return "";
+		else return StringUtil::replace(m_args[index], prefix, "");
+	}
 
 private:
 	Vector<std::string> m_args;
