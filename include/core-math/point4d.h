@@ -14,212 +14,260 @@
 template <class T>
 class point4d
 {
-public:
-	point4d(T v) {
-		array[0] = array[1] = array[2] = array[3] = v;
-	}
+    public:
+        point4d(T v)
+        {
+            array[0] = array[1] = array[2] = array[3] = v;
+        }
 
-	point4d() {
-		array[0] = array[1] = array[2] = array[3] = 0;
-	}
+        point4d()
+        {
+            array[0] = array[1] = array[2] = array[3] = 0;
+        }
 
-	point4d(T x, T y, T z, T w) {
-		array[0] = x;
-		array[1] = y;
-		array[2] = z;
-		array[3] = w;
-	}
+        point4d(T x, T y, T z, T w)
+        {
+            array[0] = x;
+            array[1] = y;
+            array[2] = z;
+            array[3] = w;
+        }
 
-	point4d(const point3d<T>& other, T w = (T)1) {
-		array[0] = other.array[0];
-		array[1] = other.array[1];
-		array[2] = other.array[2];
-		array[3] = w;
-	}
+        point4d(const point3d<T>& other, T w = (T)1)
+        {
+            array[0] = other.array[0];
+            array[1] = other.array[1];
+            array[2] = other.array[2];
+            array[3] = w;
+        }
 
-	point4d(const point4d& other) {
-		array[0] = other.array[0];
-		array[1] = other.array[1];
-		array[2] = other.array[2];
-		array[3] = other.array[3];
-	}
+        point4d(const point4d& other)
+        {
+            array[0] = other.array[0];
+            array[1] = other.array[1];
+            array[2] = other.array[2];
+            array[3] = other.array[3];
+        }
 
-	inline const point4d<T>& operator=(const point4d& other) {
-		array[0] = other.array[0];
-		array[1] = other.array[1];
-		array[2] = other.array[2];
-		array[3] = other.array[3];
-		return *this;
-	}
+        inline const point4d<T>& operator=(const point4d& other)
+        {
+            array[0] = other.array[0];
+            array[1] = other.array[1];
+            array[2] = other.array[2];
+            array[3] = other.array[3];
+            return *this;
+        }
 
-	inline const point4d<T>& operator=(T other) {
-		array[0] = other;
-		array[1] = other;
-		array[2] = other;
-		array[3] = other;
-		return *this;
-	}
-
-
-	inline point4d<T> operator-() const {
-		return point4d<T>(-array[0], -array[1], -array[2], -array[3]);
-	}
-
-	inline point4d<T> operator+(const point4d& other) const {
-		return point4d<T>(array[0]+other.array[0], array[1]+other.array[1], array[2]+other.array[2], array[3]+other.array[3]);
-	}
-
-	inline void operator+=(const point4d& other) {
-		array[0] += other.array[0];
-		array[1] += other.array[1];
-		array[2] += other.array[2];
-		array[3] += other.array[3];
-	}
-
-	inline void operator-=(const point4d& other) {
-		array[0] -= other.array[0];
-		array[1] -= other.array[1];
-		array[2] -= other.array[2];
-		array[3] -= other.array[3];
-	}
-
-	inline void operator*=(T val) {
-		array[0] *= val;
-		array[1] *= val;
-		array[2] *= val;
-		array[3] *= val;
-	}
-
-	inline void operator/=(T val) {
-		T inv = (T)1/inv;
-		array[0] *= inv;
-		array[1] *= inv;
-		array[2] *= inv;
-		array[3] *= inv;
-	}
-
-	inline point4d<T> operator*(T val) const {
-		return point4d<T>(array[0]*val, array[1]*val, array[2]*val, array[3]*val);
-	}
-
-	inline point4d<T> operator/(T val) const {
-		T inv = (T)1/val;
-		return point4d<T>(array[0]*inv, array[1]*inv, array[2]*inv, array[3]*inv);
-	}
-
-	//! cross product (of .xyz)
-	inline point4d<T> operator^(const point4d& other) const {
-		return point4d<T>(array[1]*other.array[2] - array[2]*other.array[1], array[2]*other.array[0] - array[0]*other.array[2], array[0]*other.array[1] - array[1]*other.array[0], T(1));
-	}
-
-	//! dot product
-	inline T operator|(const point4d& other) const {
-		return (array[0]*other.array[0] + array[1]*other.array[1] + array[2]*other.array[2] + array[3]*other.array[3]);
-	}
-
-	inline point4d<T> operator-(const point4d& other) const {
-		return point4d<T>(array[0]-other.array[0], array[1]-other.array[1], array[2]-other.array[2], array[3]-other.array[3]);
-	}
-
-	inline bool operator==(const point4d& other) const {
-		if ((array[0] == other.array[0]) && (array[1] == other.array[1]) && (array[2] == other.array[2]) && (array[3] == other.array[3]))
-			return true;
-
-		return false;
-	}
-
-	//! opposite of ==
-	inline bool operator!=(const point4d& other) const {
-		return !(*this == other);
-	}
+        inline const point4d<T>& operator=(T other)
+        {
+            array[0] = other;
+            array[1] = other;
+            array[2] = other;
+            array[3] = other;
+            return *this;
+        }
 
 
-	inline T lengthSq() const {
-		return (array[0]*array[0] + array[1]*array[1] + array[2]*array[2] + array[3]*array[3]);
-	}
+        inline point4d<T> operator-() const
+        {
+            return point4d<T>(-array[0], -array[1], -array[2], -array[3]);
+        }
 
-	inline T length() const {
-		return sqrt(lengthSq());
-	}
+        inline point4d<T> operator+(const point4d& other) const
+        {
+            return point4d<T>(array[0] + other.array[0], array[1] + other.array[1],
+                              array[2] + other.array[2], array[3] + other.array[3]);
+        }
 
-	static T distSq(const point4d& v0, const point4d& v1) {
-		return (
-			(v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) +
-			(v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]) +
-			(v0.array[2]-v1.array[2])*(v0.array[2]-v1.array[2]) +
-			(v0.array[3]-v1.array[3])*(v0.array[3]-v1.array[3])
-			);
-	}
+        inline void operator+=(const point4d& other)
+        {
+            array[0] += other.array[0];
+            array[1] += other.array[1];
+            array[2] += other.array[2];
+            array[3] += other.array[3];
+        }
 
-	static T dist(const point4d& v0, const point4d& v1) {
-		return (v0 - v1).length();
-	}
+        inline void operator-=(const point4d& other)
+        {
+            array[0] -= other.array[0];
+            array[1] -= other.array[1];
+            array[2] -= other.array[2];
+            array[3] -= other.array[3];
+        }
 
-	~point4d(void) {};
+        inline void operator*=(T val)
+        {
+            array[0] *= val;
+            array[1] *= val;
+            array[2] *= val;
+            array[3] *= val;
+        }
 
-	void print() const {
-		Console::log() << "(" << array[0] << " / " << array[1] << " / " << array[2] << " / " << array[3] << " ) " << std::endl;
-	}
+        inline void operator/=(T val)
+        {
+            T inv = (T)1 / inv;
+            array[0] *= inv;
+            array[1] *= inv;
+            array[2] *= inv;
+            array[3] *= inv;
+        }
 
-	inline const T& operator[](int i) const {
-		assert(i < 4);
-		return array[i];
-	}
+        inline point4d<T> operator*(T val) const
+        {
+            return point4d<T>(array[0] * val, array[1] * val, array[2] * val,
+                              array[3] * val);
+        }
 
-	inline T& operator[](int i) {
-		assert(i < 4);
-		return array[i];
-	}
+        inline point4d<T> operator/(T val) const
+        {
+            T inv = (T)1 / val;
+            return point4d<T>(array[0] * inv, array[1] * inv, array[2] * inv,
+                              array[3] * inv);
+        }
 
-	inline void normalizeInPlace() {
-		T val = (T)1.0 / length();
-		array[0] *= val;
-		array[1] *= val;
-		array[2] *= val;
-		array[3] *= val;
-	}
+        //! cross product (of .xyz)
+        inline point4d<T> operator^(const point4d& other) const
+        {
+            return point4d<T>(array[1] * other.array[2] - array[2] * other.array[1],
+                              array[2] * other.array[0] - array[0] * other.array[2],
+                              array[0] * other.array[1] - array[1] * other.array[0], T(1));
+        }
 
-	inline point4d<T> normalize() const {
-		T val = (T)1.0 / length();
-		return point4d<T>(array[0] * val, array[1] * val, array[2] * val, array[3] * val);
-	}
+        //! dot product
+        inline T operator|(const point4d& other) const
+        {
+            return (array[0] * other.array[0] + array[1] * other.array[1] + array[2] *
+                    other.array[2] + array[3] * other.array[3]);
+        }
 
-	inline void dehomogenize() {
-		array[0] /= array[3];
-		array[1] /= array[3];
-		array[2] /= array[3];
-		array[3] /= array[3];
-	}
+        inline point4d<T> operator-(const point4d& other) const
+        {
+            return point4d<T>(array[0] - other.array[0], array[1] - other.array[1],
+                              array[2] - other.array[2], array[3] - other.array[3]);
+        }
+
+        inline bool operator==(const point4d& other) const
+        {
+            if ((array[0] == other.array[0]) && (array[1] == other.array[1]) &&
+                    (array[2] == other.array[2]) && (array[3] == other.array[3]))
+            { return true; }
+
+            return false;
+        }
+
+        //! opposite of ==
+        inline bool operator!=(const point4d& other) const
+        {
+            return !(*this == other);
+        }
 
 
-	inline bool isLinearDependent(const point4d& other) const {
-		T factor = x/other.x;
+        inline T lengthSq() const
+        {
+            return (array[0] * array[0] + array[1] * array[1] + array[2] * array[2] +
+                    array[3] * array[3]);
+        }
 
-		if ((std::fabs(x/factor - other.x) + std::fabs(y/factor - other.y) + std::fabs(z/factor - other.z) + std::fabs(w/factor - other.w)) < 0.00001)
-			return true;
-		else
-			return false;
-	}
+        inline T length() const
+        {
+            return sqrt(lengthSq());
+        }
 
-	union {
-		struct {
-			T x,y,z,w;  // standard names for components
-		};
-		//struct {
-		//	T r,g,b,w;	// colors
-		//};
-		T array[4];     // array access
-	};
+        static T distSq(const point4d& v0, const point4d& v1)
+        {
+            return (
+                       (v0.array[0] - v1.array[0]) * (v0.array[0] - v1.array[0]) +
+                       (v0.array[1] - v1.array[1]) * (v0.array[1] - v1.array[1]) +
+                       (v0.array[2] - v1.array[2]) * (v0.array[2] - v1.array[2]) +
+                       (v0.array[3] - v1.array[3]) * (v0.array[3] - v1.array[3])
+                   );
+        }
+
+        static T dist(const point4d& v0, const point4d& v1)
+        {
+            return (v0 - v1).length();
+        }
+
+        ~point4d(void) {};
+
+        void print() const
+        {
+            Console::log() << "(" << array[0] << " / " << array[1] << " / " << array[2] <<
+                           " / " << array[3] << " ) " << std::endl;
+        }
+
+        inline const T& operator[](int i) const
+        {
+            assert(i < 4);
+            return array[i];
+        }
+
+        inline T& operator[](int i)
+        {
+            assert(i < 4);
+            return array[i];
+        }
+
+        inline void normalizeInPlace()
+        {
+            T val = (T)1.0 / length();
+            array[0] *= val;
+            array[1] *= val;
+            array[2] *= val;
+            array[3] *= val;
+        }
+
+        static const point4d<T> origin;
+
+        inline point4d<T> normalize() const
+        {
+            T val = (T)1.0 / length();
+            return point4d<T>(array[0] * val, array[1] * val, array[2] * val,
+                              array[3] * val);
+        }
+
+        inline void dehomogenize()
+        {
+            array[0] /= array[3];
+            array[1] /= array[3];
+            array[2] /= array[3];
+            array[3] /= array[3];
+        }
+
+
+        inline bool isLinearDependent(const point4d& other) const
+        {
+            T factor = x / other.x;
+
+            if ((std::fabs(x / factor - other.x) + std::fabs(y / factor - other.y) +
+                    std::fabs(z / factor - other.z) + std::fabs(w / factor - other.w)) < 0.00001)
+            { return true; }
+            else
+            { return false; }
+        }
+
+        union
+        {
+            struct
+            {
+                T x, y, z, w; // standard names for components
+            };
+            //struct {
+            //  T r,g,b,w;  // colors
+            //};
+            T array[4];     // array access
+        };
 };
 
 //! operator for scalar * vector
 template <class T>
-inline point4d<T> operator*(T s, const point4d<T>& v) {
-	return v * s;
+inline point4d<T> operator*(T s, const point4d<T>& v)
+{
+    return v * s;
 }
 
 //! write a point4d to a stream (should be the inverse of read operator; with " ")
-template <class T> 
+template <class T>
 inline std::ostream& operator<<(std::ostream& s, const point4d<T>& v)
 { return (s << v[0] << " / " << v[1] << " / " << v[2] << " / " << v[3]);}
 

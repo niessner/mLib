@@ -25,6 +25,9 @@
     <Filter Include="mLibHeader\ext-openmesh">
       <UniqueIdentifier>{128df902-dd3b-472d-90b7-9ed764e1cf76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{c2dfb375-dc19-4a1f-95f6-5efd47b40c6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\mLibCore.h">
@@ -175,6 +178,11 @@
     <Text Include="console.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\test.shader" />
+    <None Include="shaders\pointCloud.shader">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\test.shader">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

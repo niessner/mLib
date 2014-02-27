@@ -8,7 +8,7 @@ void AppTest::init(ApplicationData &app)
     m_mesh.load(app.graphics, triMesh);
 
     Vector<vec3f> points(5, [](UINT64 i) {return vec3f((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
-    m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(OpenMeshLoader::load(testPLY), points));
+    m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(MeshShapes::box(0.1f), points));
 
     m_vsColor.load(app.graphics, "shaders/test.shader");
     m_psColor.load(app.graphics, "shaders/test.shader");
