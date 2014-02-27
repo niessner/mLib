@@ -220,7 +220,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationX(FloatType angle) {
-		FloatType angleRad = (FloatType)Math::PI*angle/(FloatType)180.0;
+		FloatType anglerad = Math::degreesToRadians(angle);
 		FloatType sinAngle = sin(angleRad);
 		FloatType cosAngle = cos(angleRad);
 
@@ -236,7 +236,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationY(FloatType angle) {
-		FloatType angleRad = (FloatType)Math::PI*angle/(FloatType)180.0;
+		FloatType anglerad = Math::degreesToRadians(angle);
 		FloatType sinAngle = sin(angleRad);
 		FloatType cosAngle = cos(angleRad);
 
@@ -252,7 +252,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationZ(FloatType angle) {
-		FloatType angleRad = (FloatType)Math::PI*angle/(FloatType)180.0;
+		FloatType anglerad = Math::degreesToRadians(angle);
 		FloatType sinAngle = sin(angleRad);
 		FloatType cosAngle = cos(angleRad);
 
