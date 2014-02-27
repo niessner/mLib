@@ -15,7 +15,7 @@ ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT wi
 	}
 	m_graphics->init(m_window);
 
-	m_data = new ApplicationData(&m_window, m_graphics);
+	m_data = new ApplicationData(&m_window, m_graphics, &m_input);
 
 	m_callback.init(*m_data);
 }
@@ -45,6 +45,9 @@ void ApplicationWin32::messageLoop()
 		}
 		else
 		{
+			for(int i = 0; i < m_input.keyCount; i++)
+				if(m_input.keys[i]) m_callback.keyPressed(*m_data, i);
+
 			m_graphics->renderBeginFrame();
 			m_callback.render(*m_data);
 			m_graphics->renderEndFrame();

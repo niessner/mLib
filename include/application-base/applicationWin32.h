@@ -1,20 +1,43 @@
 
+enum MouseButtonState
+{
+	MouseButtonNone,
+	MouseButtonLeft,
+	MouseButtonRight,
+};
+
+struct InputState
+{
+public:
+	InputState()
+	{
+		for(bool &b : keys) b = false;
+		mouseX = mouseY = prevMouseX = prevMouseY = 0;
+		mouseState = prevMouseState = MouseButtonNone;
+	}
+
+	static const UINT keyCount = 256;
+	bool keys[keyCount];
+	
+	int mouseX, mouseY;
+	MouseButtonState mouseState;
+
+	int prevMouseX, prevMouseY;
+	MouseButtonState prevMouseState;
+};
+
 struct ApplicationData
 {
-	ApplicationData(WindowWin32 *window_ptr, GraphicsDevice *graphics_ptr) :
+	ApplicationData(WindowWin32 *window_ptr, GraphicsDevice *graphics_ptr, InputState *input_ptr) :
 		window(*window_ptr),
-		graphics(*graphics_ptr)
+		graphics(*graphics_ptr),
+		input(*input_ptr)
 	{
 
 	}
 	WindowWin32 &window;
 	GraphicsDevice &graphics;
-};
-
-enum MouseState
-{
-	MouseNone,
-	//Mouse
+	InputState &input;
 };
 
 class ApplicationCallback
@@ -52,6 +75,7 @@ private:
 	ApplicationData *m_data;
 	
 	WindowWin32 m_window;
+	InputState m_input;
 	GraphicsDevice *m_graphics;
 
 	HINSTANCE m_instance;
