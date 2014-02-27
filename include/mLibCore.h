@@ -20,6 +20,7 @@
 #include "core-math/point3d.h"
 #include "core-math/point4d.h"
 #include "core-math/point6d.h"
+#include "core-math/matrix2x2.h"
 #include "core-math/matrix3x3.h"
 #include "core-math/matrix4x4.h"
 #include "core-math/sparseMatrix.h"

@@ -263,30 +263,21 @@ public:
 
 	//! return the inverse matrix; but does not change the current matrix
 	Matrix2x2 getInverse() const {
-		FloatType inv[9];
+		FloatType inv[4];
 
-		inv[0] = matrix[4]*matrix[8] - matrix[5]*matrix[7];
-		inv[1] = -matrix[1]*matrix[8] + matrix[2]*matrix[7];
-		inv[2] = matrix[1]*matrix[5] - matrix[2]*matrix[4];
+		inv[0] = matrix[3];
+		inv[1] = -matrix[1];
+		inv[2] = -matrix[2];
+		inv[3] = matrix[0];
 
-		inv[3] = -matrix[3]*matrix[8] + matrix[5]*matrix[6];
-		inv[4] = matrix[0]*matrix[8] - matrix[2]*matrix[6];
-		inv[5] = -matrix[0]*matrix[5] + matrix[2]*matrix[3];
-
-		inv[6] = matrix[3]*matrix[7] - matrix[4]*matrix[6];
-		inv[7] = -matrix[0]*matrix[7] + matrix[1]*matrix[6];
-		inv[8] = matrix[0]*matrix[4] - matrix[1]*matrix[3];
-
-		FloatType matrixDet = det();
-		
+		FloatType matrixDet = det();		
 		FloatType matrixDetr= (FloatType)1.0 / matrixDet;
 
 		Matrix2x2<FloatType> res;
-		for (unsigned int i = 0; i < 9; i++) {
+		for (unsigned int i = 0; i < 4; i++) {
 			res.matrix[i] = inv[i] * matrixDetr;
 		}
 		return res;
-
 	}
 
 	//! overwrite the current matrix with its inverse
@@ -296,10 +287,9 @@ public:
 	//! return the transposed matrix
 	Matrix2x2 getTranspose() const {
 		Matrix2x2<FloatType> result;
-		for(unsigned char x = 0; x < 3; x++) {
+		for(unsigned char x = 0; x < 2; x++) {
 			result.at(x,0) = at(0,x);
 			result.at(x,1) = at(1,x);
-			result.at(x,2) = at(2,x);
 		}
 		return result;
 	}
@@ -314,20 +304,19 @@ public:
 	}
 
 	//! computes the tensor product between two vectors
-	static Matrix2x2 tensorProduct(const point3d<FloatType> &v0, const point3d<FloatType> &v1) {
+	static Matrix2x2 tensorProduct(const point2d<FloatType> &v0, const point2d<FloatType> &v1) {
 		Matrix2x2 ret;
-		ret._m00 = v0.x * v1.x;		ret._m01 = v0.x * v1.y;		ret._m02 = v0.x * v1.z;
-		ret._m10 = v0.y * v1.x;		ret._m11 = v0.y * v1.y;		ret._m12 = v0.y * v1.z;
-		ret._m20 = v0.z * v1.x;		ret._m21 = v0.z * v1.y;		ret._m22 = v0.z * v1.z;
+		ret._m00 = v0.x * v1.x;		ret._m01 = v0.x * v1.y;
+		ret._m10 = v0.y * v1.x;		ret._m11 = v0.y * v1.y;
 		return ret;
 	}
 
 	//! save matrix to .mat file
 	void saveMatrixToFile(const std::string &name) const {
 		std::ofstream out(name.c_str());
-		out << 3 << " " << 3 << std::endl;
-		for (unsigned int i = 0; i < 3; i++) {
-			for (unsigned int j = 0; j < 3; j++) {
+		out << 2 << " " << 2 << std::endl;
+		for (unsigned int i = 0; i < 2; i++) {
+			for (unsigned int j = 0; j < 2; j++) {
 				out << matrix2[i][j] << " ";
 			}
 			out << std::endl;
@@ -339,9 +328,9 @@ public:
 		if (!in.is_open()) throw std::ifstream::failure(std::string("Could not open matrix file").append(name));
 		unsigned int height, width;
 		in >> height >> width;
-		assert(height == width && height == 3);
-		for(unsigned int i = 0; i < 3; i++) {
-			for(unsigned int j = 0; j < 3; j++) {
+		assert(height == width && height == 2);
+		for(unsigned int i = 0; i < 2; i++) {
+			for(unsigned int j = 0; j < 2; j++) {
 				in >> matrix2[i][j];
 			}
 		}
@@ -349,8 +338,8 @@ public:
 
 	//! prints the matrix
 	void print() {
-		for (unsigned int i = 0; i < 3; i++) {
-			for (unsigned int j = 0; j < 3; j++) {
+		for (unsigned int i = 0; i < 2; i++) {
+			for (unsigned int j = 0; j < 2; j++) {
 				std::cout << at(i,j) << " ";
 			}
 			std::cout << std::endl;
@@ -452,29 +441,18 @@ public:
 
 
 protected:
-	//! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns
-	FloatType det3x3(unsigned int i0 = 0, unsigned int i1 = 1, unsigned int i2 = 2, unsigned int j0 = 0, unsigned int j1 = 1, unsigned int j2 = 2) const {
-		return
-			  (matrix2[i0][j0]*matrix2[i1][j1]*matrix2[i2][j2])
-			+ (matrix2[i0][j1]*matrix2[i1][j2]*matrix2[i2][j0])
-			+ (matrix2[i0][j2]*matrix2[i1][j0]*matrix2[i2][j1])
-			- (matrix2[i2][j0]*matrix2[i1][j1]*matrix2[i0][j2])
-			- (matrix2[i2][j1]*matrix2[i1][j2]*matrix2[i0][j0])
-			- (matrix2[i2][j2]*matrix2[i1][j0]*matrix2[i0][j1]);
-	}
 
 private:
 	union {
 		//! access matrix using a single array
-		FloatType matrix[9];
+		FloatType matrix[4];
 		//! access matrix using a two-dimensional array
-		FloatType matrix2[3][3];
+		FloatType matrix2[2][2];
 		//! access matrix using single elements
 		struct { 
 			FloatType
-				_m00, _m01, _m02,
-				_m10, _m11, _m12,
-				_m20, _m21, _m22;
+				_m00, _m01,
+				_m10, _m11;
 		};
 	};
 };
@@ -485,9 +463,8 @@ __forceinline std::ostream& operator<<(std::ostream& s, const Matrix2x2<FloatTyp
 { 
 	return (
 		s << 
-		m(0,0) << " " << m(0,1) << " " << m(0,2) << std::endl <<
-		m(1,0) << " " << m(1,1) << " " << m(1,2) << std::endl <<
-		m(2,0) << " " << m(2,1) << " " << m(2,2) << std::endl
+		m(0,0) << " " << m(0,1) << " " << std::endl <<
+		m(1,0) << " " << m(1,1) << " " << std::endl
 		);
 }
 
@@ -498,16 +475,15 @@ __forceinline std::istream& operator>>(std::istream& s, const Matrix2x2<FloatTyp
 	return (
 		s >> 
 		m(0,0) >> m(0,1) >> m(0,2) >>
-		m(1,0) >> m(1,1) >> m(1,2) >>
-		m(2,0) >> m(2,1) >> m(2,2)
+		m(1,0) >> m(1,1) >> m(1,2)
 		);
 }
 
 
-typedef Matrix2x2<int> mat3i;
-typedef Matrix2x2<int> mat3u;
-typedef Matrix2x2<float> mat3f;
-typedef Matrix2x2<double> mat3d;
+typedef Matrix2x2<int> mat2i;
+typedef Matrix2x2<int> mat2u;
+typedef Matrix2x2<float> mat2f;
+typedef Matrix2x2<double> mat2d;
 
 
 #endif

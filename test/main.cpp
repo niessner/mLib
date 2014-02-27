@@ -52,6 +52,11 @@ int main()
 	mat4f m4;
 	std::cout << mat4f::rotation(0, 0, 45) << std::endl;
 
+	mat2f m2 = mat2f::identity();
+	m2(0,0) = 4;
+	m2.invert();
+	std::cout << m2 << std::endl;
+
 	//App a;
 	//a.go();
 
