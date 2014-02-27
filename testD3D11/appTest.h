@@ -11,7 +11,9 @@ public:
 	void render(ApplicationData &app);
 	void keyDown(ApplicationData &app, UINT key);
 	void keyPressed(ApplicationData &app, UINT key);
-	void mouse(ApplicationData &app, int x, int y, int prevX, int prevY);
+	void mouseDown(ApplicationData &app, MouseButtonType button);
+	void mouseMove(ApplicationData &app);
+	void resize(ApplicationData &app);
 
 private:
 	D3D11TriMesh m_mesh;

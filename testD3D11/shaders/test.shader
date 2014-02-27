@@ -7,9 +7,10 @@ cbuffer ConstantBuffer : register( b0 )
 struct VertexShaderOutput
 {
     float4 pos : SV_POSITION;
+	float2 tex : TEXCOORD0;
 };
 
-VertexShaderOutput vertexShaderMain( float4 pos : position ) : SV_POSITION
+VertexShaderOutput vertexShaderMain( float4 pos : position )
 {
     VertexShaderOutput output;
     output.pos = mul( pos, worldViewProj );

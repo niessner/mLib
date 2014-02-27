@@ -86,5 +86,5 @@ void D3D11GraphicsDevice::renderBeginFrame()
 
 void D3D11GraphicsDevice::renderEndFrame()
 {
-	m_swapChain->Present( 0, 0 );
+	m_swapChain->Present( 1, 0 );
 }

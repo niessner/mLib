@@ -6,6 +6,7 @@ public:
 	Camera() {}
 	Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float fieldOfView, float aspect, float zNear, float zFar);
 
+	void updateAspectRatio(float newAspect);
 	void lookRight(float theta);
 	void lookUp(float theta);
 	void roll(float theta);
@@ -40,4 +41,6 @@ private:
 	mat4f m_camera;
 	mat4f m_perspective;
 	mat4f m_cameraPerspective;
+
+	float m_fieldOfView, m_aspect, m_zNear, m_zFar;
 };

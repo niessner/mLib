@@ -13,7 +13,7 @@ void AppTest::init(ApplicationData &app)
 	//vec3f eye(1.0f, 2.0f, 3.0f);
 	vec3f eye(0.0f, 0.0f, 0.0f);
 	vec3f worldUp(0.0f, 0.0f, 1.0f);
-	m_camera = Camera(eye, worldUp, worldUp ^ (vec3f::eX - eye), 60.0f, (float)app.window.height() / app.window.width(), 0.01f, 1000.0f);
+	m_camera = Camera(eye, worldUp, worldUp ^ (vec3f::eX - eye), 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
 }
 
 void AppTest::render(ApplicationData &app)
@@ -27,6 +27,11 @@ void AppTest::render(ApplicationData &app)
 	m_constants.bindVertexShader(app.graphics, 0);
 
 	m_mesh.render(app.graphics);
+}
+
+void AppTest::resize(ApplicationData &app)
+{
+	m_camera.updateAspectRatio((float)app.window.width() / app.window.height());
 }
 
 void AppTest::keyDown(ApplicationData &app, UINT key)
@@ -50,7 +55,12 @@ void AppTest::keyPressed(ApplicationData &app, UINT key)
 	if(key == KEY_RIGHT) m_camera.lookRight(-theta);
 }
 
-void AppTest::mouse(ApplicationData &app, int x, int y, int prevX, int prevY)
+void AppTest::mouseDown(ApplicationData &app, MouseButtonType button)
+{
+
+}
+
+void AppTest::mouseMove(ApplicationData &app)
 {
 
 }

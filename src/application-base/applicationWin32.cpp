@@ -3,6 +3,7 @@ ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT wi
 	m_callback(callback),
 	m_window(*this)
 {
+	m_initialized = false;
 	m_window.init(instance, windowWidth, windowHeight, name);
 
 	switch(graphicsType)
@@ -32,6 +33,8 @@ void ApplicationWin32::messageLoop()
 	MSG msg;
 	msg.message = WM_NULL;
 	PeekMessage( &msg, NULL, 0U, 0U, PM_NOREMOVE );
+
+	m_initialized = true;
 
 	while( WM_QUIT != msg.message )
 	{

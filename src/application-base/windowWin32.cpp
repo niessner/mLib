@@ -7,7 +7,10 @@ WindowWin32* s_mainWindow = NULL;
 
 LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	if(s_mainWindow == NULL) return DefWindowProc( hWnd, msg, wParam, lParam );
+	if(s_mainWindow == NULL || !s_mainWindow->parent().initialized()) return DefWindowProc( hWnd, msg, wParam, lParam );
+
+	auto &parent = s_mainWindow->parent();
+
     switch( msg )
     {
     case WM_SYSCOMMAND:
@@ -33,52 +36,49 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
             break;
         default:
 			UINT keyIndex = (UINT)wParam;
-            s_mainWindow->parent().callback().keyDown(s_mainWindow->parent().data(), (UINT)wParam);
-			if(keyIndex < InputState::keyCount) s_mainWindow->parent().data().input.keys[keyIndex] = true;
+            parent.callback().keyDown(parent.data(), (UINT)wParam);
+			if(keyIndex < InputState::keyCount) parent.data().input.keys[keyIndex] = true;
             break;
         }
         break;
 
     case WM_KEYUP:
-		UINT keyIndex = (UINT)wParam;
-        if(keyIndex < InputState::keyCount) s_mainWindow->parent().data().input.keys[keyIndex] = false;
+		{
+			UINT keyIndex = (UINT)wParam;
+			if(keyIndex < InputState::keyCount) parent.data().input.keys[keyIndex] = false;
+		}
         break;
 
-    /*case WM_LBUTTONDOWN:
-        g_WndProcContext->SetMouseState(MouseButtonLeft, true);
+	case WM_SIZE:
+		parent.callback().resize(parent.data());
+		break;
+
+    case WM_LBUTTONDOWN:
+		parent.data().input.mouse.buttons[MouseButtonLeft] = true;
         break;
 
     case WM_LBUTTONUP:
-        g_WndProcContext->SetMouseState(MouseButtonLeft, false);
+        parent.data().input.mouse.buttons[MouseButtonLeft] = false;
         break;
 
     case WM_RBUTTONDOWN:
-        g_WndProcContext->SetMouseState(MouseButtonRight, true);
+        parent.data().input.mouse.buttons[MouseButtonRight] = true;
         break;
 
     case WM_RBUTTONUP:
-        g_WndProcContext->SetMouseState(MouseButtonRight, false);
-        break;
-
-    case WM_MBUTTONDOWN:
-        g_WndProcContext->SetMouseState(MouseButtonMiddle, true);
-        break;
-
-    case WM_MBUTTONUP:
-        g_WndProcContext->SetMouseState(MouseButtonMiddle, false);
+        parent.data().input.mouse.buttons[MouseButtonRight] = false;
         break;
 
     case WM_MOUSEMOVE:
         {
-            POINTS P = MAKEPOINTS(lParam);
-            Vec2i NewPos(P.x, P.y);
-            g_WndProcContext->UpdateMousePos(NewPos);
+            POINTS p = MAKEPOINTS(lParam);
+            parent.data().input.mouse.pos = vec2i(p.x, p.y);
         }
         break;
 
     case WM_MOUSEWHEEL:
-        g_WndProcContext->UpdateWheelState(GET_WHEEL_DELTA_WPARAM(wParam));
-        break;*/
+		parent.data().input.mouse.mouseWheel += GET_WHEEL_DELTA_WPARAM(wParam);
+        break;
     }
 
     return DefWindowProc( hWnd, msg, wParam, lParam );

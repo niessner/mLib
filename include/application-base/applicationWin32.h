@@ -1,9 +1,22 @@
 
-enum MouseButtonState
+enum MouseButtonType
 {
-	MouseButtonNone,
 	MouseButtonLeft,
 	MouseButtonRight,
+	MouseButtonCount
+};
+
+struct MouseState
+{
+	MouseState()
+	{
+		mouseWheel = 0;
+		buttons[MouseButtonLeft] = false;
+		buttons[MouseButtonRight] = false;
+	}
+	vec2i pos;
+	int mouseWheel;
+	bool buttons[MouseButtonCount];
 };
 
 struct InputState
@@ -12,18 +25,13 @@ public:
 	InputState()
 	{
 		for(bool &b : keys) b = false;
-		mouseX = mouseY = prevMouseX = prevMouseY = 0;
-		mouseState = prevMouseState = MouseButtonNone;
 	}
 
 	static const UINT keyCount = 256;
 	bool keys[keyCount];
 	
-	int mouseX, mouseY;
-	MouseButtonState mouseState;
-
-	int prevMouseX, prevMouseY;
-	MouseButtonState prevMouseState;
+	MouseState mouse;
+	MouseState prevMouse;
 };
 
 struct ApplicationData
@@ -47,7 +55,9 @@ public:
 	virtual void render(ApplicationData &app) = 0;
 	virtual void keyDown(ApplicationData &app, UINT key) = 0;
 	virtual void keyPressed(ApplicationData &app, UINT key) = 0;
-	virtual void mouse(ApplicationData &app, int x, int y, int prevX, int prevY) = 0;
+	virtual void mouseDown(ApplicationData &app, MouseButtonType button) = 0;
+	virtual void mouseMove(ApplicationData &app) = 0;
+	virtual void resize(ApplicationData &app) = 0;
 };
 
 class ApplicationWin32
@@ -66,12 +76,17 @@ public:
 	{
 		return m_callback;
 	}
+	inline bool initialized()
+	{
+		return m_initialized;
+	}
 
 private:
 	//
 	// m_data is just a view to encapsulate all externally-visible application
 	// components. THe actual data is owned by m_window, m_device, etc.
 	//
+	bool m_initialized;
 	ApplicationData *m_data;
 	
 	WindowWin32 m_window;

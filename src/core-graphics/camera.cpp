@@ -7,9 +7,20 @@ Camera::Camera(const vec3f &eye, const vec3f &worldUp, const vec3f &right, float
 	m_look = (m_worldUp ^ m_right).normalize();
 	m_up = (m_right ^ m_look).normalize();
 
-	m_perspective = perspectiveFov(fieldOfView, aspect, zNear, zFar);
+	m_fieldOfView = fieldOfView;
+	m_aspect = aspect;
+	m_zNear = zNear;
+	m_zFar = zFar;
+
+	m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);
 
 	update();
+}
+
+void Camera::updateAspectRatio(float newAspect)
+{
+	m_aspect = newAspect;
+	m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);
 }
 
 void Camera::update()
