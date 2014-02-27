@@ -32,7 +32,7 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
             PostQuitMessage(0);        //if escape pressed, exit
             break;
         default:
-            s_mainWindow->parent().callback().keyPress(s_mainWindow->parent().data(), (UINT)wParam);
+            s_mainWindow->parent().callback().keyDown(s_mainWindow->parent().data(), (UINT)wParam);
             break;
         }
         break;

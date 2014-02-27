@@ -1,7 +1,7 @@
 
 struct ConstantBuffer
 {
-	Matrix4f worldViewProj;
+	mat4f worldViewProj;
 };
 
 class AppTest : public ApplicationCallback
@@ -9,7 +9,9 @@ class AppTest : public ApplicationCallback
 public:
 	void init(ApplicationData &app);
 	void render(ApplicationData &app);
-	void keyPress(ApplicationData &app, UINT key);
+	void keyDown(ApplicationData &app, UINT key);
+	void keyPressed(ApplicationData &app, UINT key);
+	void mouse(ApplicationData &app, int x, int y, int prevX, int prevY);
 
 private:
 	D3D11TriMesh m_mesh;

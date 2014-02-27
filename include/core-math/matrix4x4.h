@@ -277,7 +277,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotation(const point3d<FloatType> &axis, FloatType angle) {
-		*this = Matrix3x3::rotation(axis, angle);
+		*this = Matrix3x3<FloatType>::rotation(axis, angle);
 	}
 	static Matrix4x4 rotation(const point3d<FloatType> &axis, FloatType angle) {
 		Matrix4x4 res;	res.setRotation(axis, angle);

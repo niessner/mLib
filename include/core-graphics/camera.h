@@ -1,4 +1,4 @@
-/*
+
 class Camera
 {
 public:
@@ -32,6 +32,8 @@ public:
 private:
 	void applyTransform(const mat4f &transform);
 	void update();
+	mat4f perspectiveFov(float fieldOfView, float aspectRatio, float zNear, float zFar);
+	mat4f viewMatrix(const vec3f &eye, const vec3f &look, const vec3f &up, const vec3f &right);
 
 	vec3f m_eye, m_right, m_look, m_up;
 	vec3f m_worldUp;
@@ -39,4 +41,3 @@ private:
 	mat4f m_perspective;
 	mat4f m_cameraPerspective;
 };
-*/

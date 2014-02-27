@@ -11,12 +11,20 @@ struct ApplicationData
 	GraphicsDevice &graphics;
 };
 
+enum MouseState
+{
+	MouseNone,
+	//Mouse
+};
+
 class ApplicationCallback
 {
 public:
 	virtual void init(ApplicationData &app) = 0;
 	virtual void render(ApplicationData &app) = 0;
-	virtual void keyPress(ApplicationData &app, UINT key) = 0;
+	virtual void keyDown(ApplicationData &app, UINT key) = 0;
+	virtual void keyPressed(ApplicationData &app, UINT key) = 0;
+	virtual void mouse(ApplicationData &app, int x, int y, int prevX, int prevY) = 0;
 };
 
 class ApplicationWin32
