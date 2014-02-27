@@ -14,3 +14,4 @@
 #include "mLibANN.h"
 #include "mLibEigen.h"
 #include "mLibLodePNG.h"
+#include "mLibZLib.h"

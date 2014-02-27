@@ -31,7 +31,7 @@ public:
 	}
 
 	//start compression after that byte size (only if compression is enabled)
-#define COMPRESSION_THRESHOLD_ 0 
+#define COMPRESSION_THRESHOLD_ 1024 
 	void writeData(const BYTE* t, size_t size) {
 		const bool useCompression = !std::is_same<BinaryDataCompressorNone, BinaryDataCompressor>::value;
 		if (useCompression && size > COMPRESSION_THRESHOLD_) {
@@ -101,8 +101,8 @@ private:
 
 typedef BinaryDataStream<BinaryDataBufferVector, BinaryDataCompressorNone> BinaryDataStreamVector;
 typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorNone> BinaryDataStreamFile;
-typedef BinaryDataStream<BinaryDataBufferVector, BinaryDataCompressorDefault> BinaryDataStreamCompressedVector;
-typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorDefault> BinaryDataStreamCompressedFile;
+//typedef BinaryDataStream<BinaryDataBufferVector, BinaryDataCompressorDefault> BinaryDataStreamCompressedVector; (see zlib for instance)
+//typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorDefault> BinaryDataStreamCompressedFile; (see zlib for instance)
 
 //////////////////////////////////////////////////////
 /////////write stream operators for base types ///////

@@ -10,6 +10,7 @@ public:
 	virtual void compressStreamToMemory(const BYTE *decompressedStream, UINT64 decompressedStreamLength, std::vector<BYTE> &compressedStream) const = 0;
 	virtual void decompressStreamFromMemory(const BYTE *compressedStream, UINT64 compressedStreamLength, BYTE *decompressedStream, UINT64 decompressedStreamLength) const = 0;
 
+	virtual std::string getTypename() const = 0;
 };
 
 //! interface to compress data
@@ -20,6 +21,10 @@ public:
 	}
 	void decompressStreamFromMemory(const BYTE *compressedStream, UINT64 compressedStreamLength, BYTE *decompressedStream, UINT64 decompressedStreamLength) const {
 		MLIB_ASSERT(false); //just a dummy; should never come here
+	}
+
+	std::string getTypename() const {
+		return "no compression";
 	}
 
 };
@@ -34,6 +39,10 @@ public:
 
 	void decompressStreamFromMemory(const BYTE *compressedStream, UINT64 compressedStreamLength, BYTE *decompressedStream, UINT64 decompressedStreamLength) const {
 		memcpy(decompressedStream, compressedStream, compressedStreamLength);
+	}
+
+	std::string getTypename() const {
+		return "stupid copying - should not be used";
 	}
 };
 

@@ -28,6 +28,9 @@
     <Filter Include="mLibHeader\core-graphics">
       <UniqueIdentifier>{89597fa9-63ab-451e-a2da-cced69cc82ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\ext-zlib">
+      <UniqueIdentifier>{f41f6b9b-583f-4a7e-9d1f-c5adb408ec03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -152,6 +155,24 @@
     </ClInclude>
     <ClInclude Include="..\include\core-math\matrix4x4.h">
       <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\binaryDataCompressor.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\binaryDataSerialize.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\binaryDataStream.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\calibratedSensorData.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\binaryDataBuffer.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-zlib\ZLibWrapper.h">
+      <Filter>mLibHeader\ext-zlib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
