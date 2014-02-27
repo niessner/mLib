@@ -12,6 +12,7 @@ private:
 	TestMath m_math;
 	TestANN m_ANN;
 	TestLodePNG m_lodePNG;
+	TestBinaryStream m_binaryStream;
 };
 
 void App::go()
@@ -22,6 +23,7 @@ void App::go()
 	m_math.run();
 	m_ANN.run();
 	m_lodePNG.run();
+	m_binaryStream.run();
 
 	Console::log("All tests completed");
 	std::cin.get();
@@ -36,16 +38,6 @@ int main()
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
-
-	CalibratedSensorData data;	data.m_ColorImageWidth = 500;
-	BinaryDataStreamCompressedZLibFile streamOut("test.out", true);
-	streamOut << data;
-	streamOut.closeStream();
-	CalibratedSensorData reRead;
-	BinaryDataStreamCompressedZLibFile streamIn("test.out", false);
-	streamIn >> reRead;
-
-	int c = 5;
 
 	 
 

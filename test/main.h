@@ -8,3 +8,4 @@
 #include "testMath.h"
 #include "testANN.h"
 #include "testLodePNG.h"
+#include "testBinaryStream.h"
