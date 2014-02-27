@@ -13,14 +13,14 @@ public:
 	}
 };
 
-template<class BinaryDataBuffer, bool useCompression, class ChildClass>
-__forceinline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<< (BinaryDataStream<BinaryDataBuffer, useCompression>& s, const BinaryDataSerialize<ChildClass>& o) {		
+template<class BinaryDataBuffer, class BinaryDataCompressor, class ChildClass>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<< (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BinaryDataSerialize<ChildClass>& o) {		
 	s.writeData(*(const ChildClass*)&o);	//cast it to the child class to get the right size
 	return s;
 } 
 
-template<class BinaryDataBuffer, bool useCompression, class ChildClass>
-__forceinline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>> (BinaryDataStream<BinaryDataBuffer, useCompression>& s, BinaryDataSerialize<ChildClass> &o) {
+template<class BinaryDataBuffer, class BinaryDataCompressor, class ChildClass>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>> (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BinaryDataSerialize<ChildClass> &o) {
 	s.readData((ChildClass*)&o);
 	return s;
 }

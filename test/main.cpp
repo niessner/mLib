@@ -38,11 +38,11 @@ int main()
 #endif
 
 	/*CalibratedSensorData data;	data.m_ColorImageWidth = 500;
-	BinaryDataStreamFile streamOut("test.out", true);
+	BinaryDataStreamCompressedFile streamOut("test.out", true);
 	streamOut << data;
 	streamOut.closeStream();
 	CalibratedSensorData reRead;
-	BinaryDataStreamFile streamIn("test.out", false);
+	BinaryDataStreamCompressedFile streamIn("test.out", false);
 	streamIn >> reRead;
 
 	int a = 5;*/

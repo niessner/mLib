@@ -15,6 +15,8 @@
 //
 // core-util headers (these are required by matrices)
 //
+
+#include "core-util/binaryDataCompressor.h"
 #include "core-util/utility.h"
 #include "core-util/binaryDataBuffer.h"
 #include "core-util/binaryDataSerialize.h"

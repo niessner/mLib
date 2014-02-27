@@ -9,11 +9,10 @@
 // BinaryDataStream (uses BINARY_DATA_BUFFER) //
 ////////////////////////////////////////////////
 
-template<class BinaryDataBuffer, bool useCompression>
+template<class BinaryDataBuffer, class BinaryDataCompressor>
 class BinaryDataStream {
 public:
-	BinaryDataStream() {
-	}
+	BinaryDataStream() {}
 	BinaryDataStream(const std::string& filename, bool clearStream) {
 		m_DataBuffer.openBufferStream(filename, clearStream);
 	}
@@ -31,20 +30,18 @@ public:
 		writeData((const BYTE*)&t, sizeof(T));
 	}
 
-	//start compression after that byte value (only if compression is enabled)
-#define COMPRESSION_THRESHOLD_ 1024
+	//start compression after that byte size (only if compression is enabled)
+#define COMPRESSION_THRESHOLD_ 0 
 	void writeData(const BYTE* t, size_t size) {
-/*
-		//TODO FIX COMPRESSION
+		const bool useCompression = !std::is_same<BinaryDataCompressorNone, BinaryDataCompressor>::value;
 		if (useCompression && size > COMPRESSION_THRESHOLD_) {
 			std::vector<BYTE> compressedT;
-			ZLibWrapper::CompressStreamToMemory(t, size, compressedT, false);
+			//ZLibWrapper::CompressStreamToMemory(t, size, compressedT, false);
+			m_DataCompressor.compressStreamToMemory(t, size, compressedT);
 			UINT64 compressedSize = compressedT.size();
 			m_DataBuffer.writeData((const BYTE*)&compressedSize, sizeof(compressedSize));
 			m_DataBuffer.writeData(&compressedT[0], compressedSize);
-		} else 
-*/
-		{
+		} else 	{
 			m_DataBuffer.writeData(t, size);
 		}
 
@@ -56,14 +53,15 @@ public:
 	}
 
 	void readData(BYTE* result, size_t size) {
-		//TODO FIX COMPRESSION
-		//if (useCompression && size > COMPRESSION_THRESHOLD_) {
-		//	UINT64 compressedSize;
-		//	m_DataBuffer.readData((BYTE*)&compressedSize, sizeof(UINT64));
-		//	std::vector<BYTE> compressedT;	compressedT.resize(compressedSize);
-		//	m_DataBuffer.readData(&compressedT[0], compressedSize);
-		//	ZLibWrapper::DecompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
-		//} else 
+		const bool useCompression = !std::is_same<BinaryDataCompressorNone, BinaryDataCompressor>::value;
+		if (useCompression && size > COMPRESSION_THRESHOLD_) {
+			UINT64 compressedSize;
+			m_DataBuffer.readData((BYTE*)&compressedSize, sizeof(UINT64));
+			std::vector<BYTE> compressedT;	compressedT.resize(compressedSize);
+			m_DataBuffer.readData(&compressedT[0], compressedSize);
+			//ZLibWrapper::DecompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
+			m_DataCompressor.decompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
+		} else 
 		{
 			m_DataBuffer.readData(result, size);
 		}
@@ -97,14 +95,14 @@ public:
 		m_DataBuffer.flushBufferStream();
 	}
 private:
-	BinaryDataBuffer m_DataBuffer;
-
+	BinaryDataBuffer		m_DataBuffer;
+	BinaryDataCompressor	m_DataCompressor;
 };
 
-typedef BinaryDataStream<BinaryDataBufferVector, false> BinaryDataStreamVector;
-typedef BinaryDataStream<BinaryDataBufferFile, false> BinaryDataStreamFile;
-typedef BinaryDataStream<BinaryDataBufferVector, true> BinaryDataStreamCompressedVector;
-typedef BinaryDataStream<BinaryDataBufferFile, true> BinaryDataStreamCompressedFile;
+typedef BinaryDataStream<BinaryDataBufferVector, BinaryDataCompressorNone> BinaryDataStreamVector;
+typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorNone> BinaryDataStreamFile;
+typedef BinaryDataStream<BinaryDataBufferVector, BinaryDataCompressorDefault> BinaryDataStreamCompressedVector;
+typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorDefault> BinaryDataStreamCompressedFile;
 
 //////////////////////////////////////////////////////
 /////////write stream operators for base types ///////
@@ -112,54 +110,54 @@ typedef BinaryDataStream<BinaryDataBufferFile, true> BinaryDataStreamCompressedF
 
 //cannot overload via template since it is not supposed to work for complex types
 
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, UINT64 i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, UINT64 i) {
 	s.writeData(i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, int i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, int i) {
 	s.writeData(i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, unsigned int i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, unsigned int i) {
 	s.writeData(i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, short i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, short i) {
 	s.writeData(i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, unsigned short i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, unsigned short i) {
 	s.writeData(i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, char i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, char i) {
 	s.writeData(i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, unsigned char i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, unsigned char i) {
 	s.writeData(i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, float i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, float i) {
 	s.writeData(i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, double i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, double i) {
 	s.writeData(i);
 	return s;
 }
 
-template<class BinaryDataBuffer, bool useCompression, class T>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, const std::vector<T>& v) {
+template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::vector<T>& v) {
 	s << (UINT64)v.size();
 	s.reserve(sizeof(T)*v.size());
 	for (size_t i = 0; i < v.size(); i++) {
@@ -167,8 +165,8 @@ inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryData
 	}
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression, class T>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, const std::list<T>& l) {
+template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::list<T>& l) {
 	s << (UINT64)l.size();
 	s.reserve(sizeof(T)*l.size());
 	for (std::list<T>::const_iterator iter = l.begin(); iter != l.end(); iter++) {
@@ -176,8 +174,8 @@ inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryData
 	}
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, const std::string& l) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::string& l) {
 	s << (UINT64)l.size();
 	s.reserve(sizeof(char)*l.size());
 	for (size_t i = 0; i < l.size(); i++) {
@@ -195,54 +193,54 @@ inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryData
 //////////////////////////////////////////////////////
 
 //cannot overload via template since it is not supposed to work for complex types
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, UINT64& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, UINT64& i) {
 	s.readData(&i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, int& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, int& i) {
 	s.readData(&i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, unsigned int& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, unsigned int& i) {
 	s.readData(&i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, short& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, short& i) {
 	s.readData(&i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, unsigned short& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, unsigned short& i) {
 	s.readData(&i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, char& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, char& i) {
 	s.readData(&i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, unsigned char& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, unsigned char& i) {
 	s.readData(&i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, float& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, float& i) {
 	s.readData(&i);
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, double& i) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, double& i) {
 	s.readData(&i);
 	return s;
 }
 
-template<class BinaryDataBuffer, bool useCompression, class T>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, std::vector<T>& v) {
+template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, std::vector<T>& v) {
 	UINT64 size;
 	s >> size;
 	v.resize(size);
@@ -251,8 +249,8 @@ inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryData
 	}
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression, class T>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, const std::list<T>& l) {
+template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::list<T>& l) {
 	UINT64 size;
 	s >> size;
 	l.clear();
@@ -263,8 +261,8 @@ inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryData
 	}
 	return s;
 }
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, std::string& v) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, std::string& v) {
 	UINT64 size;
 	s >> size;
 	v.resize(size);

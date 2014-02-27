@@ -38,8 +38,8 @@ public:
 };
 
 //! write to binary stream overload
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, const CalibrationData& calibrationData) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const CalibrationData& calibrationData) {
 	s << calibrationData.m_Intrinsic;
 	s << calibrationData.m_IntrinsicInverse;
 	s << calibrationData.m_Extrinsic;
@@ -48,8 +48,8 @@ inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryData
 }
 
 //! read from binary stream overload
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, CalibrationData& calibrationData) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, CalibrationData& calibrationData) {
 	s >> calibrationData.m_Intrinsic;
 	s >> calibrationData.m_IntrinsicInverse;
 	s >> calibrationData.m_Extrinsic;
@@ -137,8 +137,8 @@ inline std::ostream& operator<<(std::ostream& s, const CalibratedSensorData& sen
 
 
 //! write to binary stream overload
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, const CalibratedSensorData& sensorData) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const CalibratedSensorData& sensorData) {
 	s << sensorData.m_VersionNumber;
 	s << sensorData.m_SensorName;
 	s << sensorData.m_DepthNumFrames;
@@ -168,8 +168,8 @@ inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryData
 
 
 //! read from binary stream overload
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s, CalibratedSensorData& sensorData) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, CalibratedSensorData& sensorData) {
 
 	sensorData.deleteData();
 	s >> sensorData.m_VersionNumber;
@@ -234,8 +234,8 @@ public:
 
 
 //! write to binary stream overload
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryDataStream<BinaryDataBuffer, useCompression>& s, const CalibratedSensorData& sensorData) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const CalibratedSensorData& sensorData) {
 	s << sensorData.m_VersionNumber;
 	s << sensorData.m_ColorNumFrames;
 	s << sensorData.m_ColorNumCameras;
@@ -265,8 +265,8 @@ inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator<<(BinaryData
 }
 
 //! read from binary stream overload
-template<class BinaryDataBuffer, bool useCompression>
-inline BinaryDataStream<BinaryDataBuffer, useCompression>& operator>>(BinaryDataStream<BinaryDataBuffer, useCompression>& s,CalibratedSensorData& sensorData) {
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s,CalibratedSensorData& sensorData) {
 
 	sensorData.deleteData();
 	s >> sensorData.m_VersionNumber;
