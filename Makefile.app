@@ -9,6 +9,7 @@
 #   $(CCSRCS) should list C++ source files
 #   $(CSRCS) should list C source files
 #   $(MLIB_RELATIVE_PATH) should be the (relative) location of mLib
+#   $(MLIB_EXTERNAL_RELATIVE_PATH) should be the (relative) location of the external libs
 #
 # For example ...
 #   NAME=foo
@@ -38,7 +39,7 @@ ARCH=$(shell uname -m)
 #
 
 CC=clang++
-BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall -I$(MLIB_RELATIVE_PATH)/include -I$(MLIB_RELATIVE_PATH)/external/include
+BASE_CFLAGS=-std=c++11 -stdlib=libc++ -U__STRICT_ANSI__ $(USER_CFLAGS) $(OS_CFLAGS) -Wall -I$(MLIB_RELATIVE_PATH)/include  -I$(MLIB_EXTERNAL_RELATIVE_PATH)/include
 DEBUG_CFLAGS=$(BASE_CFLAGS) -g
 OPT_CFLAGS=$(BASE_CFLAGS) -O3 -DNDEBUG
 CFLAGS=$(DEBUG_CFLAGS)
@@ -49,7 +50,8 @@ CFLAGS=$(DEBUG_CFLAGS)
 
 RELEASE_DIR=release
 EXE_DIR=bin
-LIB_DIR=$(MLIB_RELATIVE_PATH)/external/lib64
+#LIB_DIR=$(MLIB_RELATIVE_PATH)/external/lib64
+LIB_DIR=$(MLIB_EXTERNAL_RELATIVE_PATH)/libsLinux
 
 #
 # default rules
