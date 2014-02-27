@@ -113,6 +113,8 @@
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-math\sparseMatrix.h" />
+    <ClInclude Include="..\include\core-mesh\meshShapes.h" />
+    <ClInclude Include="..\include\core-mesh\meshUtil.h" />
     <ClInclude Include="..\include\core-mesh\triMesh.h" />
     <ClInclude Include="..\include\core-util\binaryDataBuffer.h" />
     <ClInclude Include="..\include\core-util\binaryDataSerialize.h" />

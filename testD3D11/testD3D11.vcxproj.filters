@@ -159,6 +159,12 @@
     <ClInclude Include="..\include\ext-openmesh\loader.h">
       <Filter>mLibHeader\ext-openmesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-mesh\meshUtil.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\meshShapes.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
