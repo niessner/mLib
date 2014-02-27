@@ -5,11 +5,22 @@
 
 #ifdef WIN32
 
+#ifndef _SCL_SECURE_NO_WARNINGS
 #define _SCL_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
+#endif
 
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#if _SECURE_SCL
+#undef _SECURE_SCL
 #define _SECURE_SCL 0
-#define _HAS_ITERATOR_DEBUGGING 0
+#endif
+
+#ifndef _ITERATOR_DEBUG_LEVEL
+#define _ITERATOR_DEBUG_LEVEL 0
+#endif
 
 #define MLIB_OPENMP
 
