@@ -734,17 +734,7 @@ public:
 		}
 	}
 protected:
-	//! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns
-	/*! used to calculate the complete 4x4 determinant */
-	FloatType det3x3(unsigned int i0, unsigned int i1, unsigned int i2, unsigned int j0, unsigned int j1, unsigned int j2) const {
-		return
-			  (matrix2[i0][j0]*matrix2[i1][j1]*matrix2[i2][j2])
-			+ (matrix2[i0][j1]*matrix2[i1][j2]*matrix2[i2][j0])
-			+ (matrix2[i0][j2]*matrix2[i1][j0]*matrix2[i2][j1])
-			- (matrix2[i2][j0]*matrix2[i1][j1]*matrix2[i0][j2])
-			- (matrix2[i2][j1]*matrix2[i1][j2]*matrix2[i0][j0])
-			- (matrix2[i2][j2]*matrix2[i1][j0]*matrix2[i0][j1]);
-	}
+
 
 private:
 	union {
