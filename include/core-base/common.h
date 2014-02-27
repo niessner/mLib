@@ -46,6 +46,12 @@
 #endif
 #endif
 
+#ifndef _MSC_VER
+#define NOEXCEPT noexcept
+#else
+#define NOEXCEPT
+#endif
+
 class MLibException : public std::exception {
 public:
 	MLibException(const std::string& what) : std::exception() {
@@ -54,7 +60,7 @@ public:
 	MLibException(const char* what) : std::exception() {
 		m_msg = std::string(what);
 	}
-	const char* what() const {
+	const char* what() const NOEXCEPT {
 		return m_msg.c_str();
 	}
 private:
