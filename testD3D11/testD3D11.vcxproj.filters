@@ -19,6 +19,9 @@
     <Filter Include="mLibHeader\core-util">
       <UniqueIdentifier>{7c48a95c-3305-4d98-8712-c184c644a4a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-mesh">
+      <UniqueIdentifier>{bbc9449b-610f-4c73-be00-b2765a505770}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\mLibCore.h">
@@ -146,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="..\include\core-math\matrix2x2.h">
       <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMesh.h">
+      <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
