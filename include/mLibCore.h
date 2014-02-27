@@ -53,3 +53,8 @@
 //
 #include "core-graphics/RGBColor.h"
 #include "core-graphics/camera.h"
+
+//
+// core-mesh headers
+//
+#include "core-mesh/triMesh.h"

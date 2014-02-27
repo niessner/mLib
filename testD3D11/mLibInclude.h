@@ -12,3 +12,4 @@
 
 #include "mLibCore.h"
 #include "mLibD3D11.h"
+#include "mLibOpenMesh.h"

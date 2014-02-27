@@ -27,7 +27,7 @@ void D3D11VertexShader::reset(GraphicsDevice &g)
 	
 	D3D_VALIDATE(device.CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), NULL, &m_shader));
 
-	device.CreateInputLayout( MeshVertex::layout, MeshVertex::layoutElementCount, m_blob->GetBufferPointer(), m_blob->GetBufferSize(), &m_standardLayout );
+	device.CreateInputLayout( D3D11TriMesh::layout, D3D11TriMesh::layoutElementCount, m_blob->GetBufferPointer(), m_blob->GetBufferSize(), &m_standardLayout );
 }
 
 void D3D11VertexShader::bind(GraphicsDevice &g)

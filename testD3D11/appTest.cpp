@@ -3,17 +3,9 @@
 
 void AppTest::init(ApplicationData &app)
 {
-	Vector<MeshVertex> vertices;
-	vertices.pushBack(MeshVertex(vec3f(0.0f, 0.5f, 0.5f)));
-	vertices.pushBack(MeshVertex(vec3f(0.5f, -0.5f, 0.5f)));
-	vertices.pushBack(MeshVertex(vec3f(-0.5f, -0.5f, 0.5f)));
-
-	Vector<UINT> indices;
-	indices.pushBack(0);
-	indices.pushBack(1);
-	indices.pushBack(2);
-
-	m_mesh.load(app.graphics, vertices, indices);
+  const std::string testPLY = "scans/gates381.ply";
+  const TriMesh triMesh = OpenMeshLoader::load(testPLY);
+	m_mesh.load(app.graphics, triMesh);
 	m_vertexShader.load(app.graphics, "shaders/test.shader");
 	m_pixelShader.load(app.graphics, "shaders/test.shader");
 	m_constants.init(app.graphics);
@@ -52,10 +44,10 @@ void AppTest::keyPressed(ApplicationData &app, UINT key)
 	if(key == KEY_A) m_camera.strafe(-delta);
 	if(key == KEY_D) m_camera.strafe(delta);
 
-	if(key == KEY_NUMPAD2) m_camera.lookUp(theta);
-	if(key == KEY_NUMPAD8) m_camera.lookUp(-theta);
-	if(key == KEY_NUMPAD4) m_camera.lookRight(-theta);
-	if(key == KEY_NUMPAD6) m_camera.lookRight(theta);
+	if(key == KEY_UP) m_camera.lookUp(theta);
+	if(key == KEY_DOWN) m_camera.lookUp(-theta);
+	if(key == KEY_LEFT) m_camera.lookRight(-theta);
+	if(key == KEY_RIGHT) m_camera.lookRight(theta);
 }
 
 void AppTest::mouse(ApplicationData &app, int x, int y, int prevX, int prevY)

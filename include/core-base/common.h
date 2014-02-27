@@ -9,7 +9,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #define _SECURE_SCL 0
-#define _HAS_ITERATOR_DEBUGGING 0
+//#define _HAS_ITERATOR_DEBUGGING 0  // Temporarily disabled due to linking against pre-compiled OpenMesh debugging binaries
 
 #define MLIB_OPENMP
 
