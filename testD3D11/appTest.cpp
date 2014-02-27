@@ -10,8 +10,12 @@ void AppTest::init(ApplicationData &app)
     Vector<vec3f> points(5, [](UINT64 i) {return vec3f((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
     m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(OpenMeshLoader::load(testPLY), points));
 
-    m_vertexShader.load(app.graphics, "shaders/test.shader");
-    m_pixelShader.load(app.graphics, "shaders/test.shader");
+    m_vsColor.load(app.graphics, "shaders/test.shader");
+    m_psColor.load(app.graphics, "shaders/test.shader");
+
+    m_vsPointCloud.load(app.graphics, "shaders/pointCloud.shader");
+    m_psPointCloud.load(app.graphics, "shaders/pointCloud.shader");
+
     m_constants.init(app.graphics);
 
     //vec3f eye(1.0f, 2.0f, 3.0f);
@@ -22,15 +26,20 @@ void AppTest::init(ApplicationData &app)
 
 void AppTest::render(ApplicationData &app)
 {
-    m_vertexShader.bind(app.graphics);
-    m_pixelShader.bind(app.graphics);
-
     ConstantBuffer constants;
     constants.worldViewProj = m_camera.cameraPerspective();
     m_constants.update(app.graphics, constants);
+
+    m_vsColor.bind(app.graphics);
+    m_psColor.bind(app.graphics);
     m_constants.bindVertexShader(app.graphics, 0);
 
     m_mesh.render(app.graphics);
+
+    m_vsPointCloud.bind(app.graphics);
+    m_psPointCloud.bind(app.graphics);
+    m_constants.bindVertexShader(app.graphics, 0);
+
     m_pointCloud.render(app.graphics);
 }
 
@@ -46,8 +55,8 @@ void AppTest::keyDown(ApplicationData &app, UINT key)
 
 void AppTest::keyPressed(ApplicationData &app, UINT key)
 {
-    const float distance = 0.05f;
-    const float theta = 2.0f;
+    const float distance = 0.3f;
+    const float theta = 5.0f;
 
     if(key == KEY_W) m_camera.move(-distance);
     if(key == KEY_S) m_camera.move(distance);

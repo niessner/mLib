@@ -18,8 +18,12 @@ public:
 
 private:
 	D3D11TriMesh m_mesh, m_pointCloud;
-	D3D11VertexShader m_vertexShader;
-	D3D11PixelShader m_pixelShader;
+	
+    D3D11VertexShader m_vsColor;
+	D3D11PixelShader m_psColor;
+    D3D11VertexShader m_vsPointCloud;
+    D3D11PixelShader m_psPointCloud;
+
 	D3D11ConstantBuffer<ConstantBuffer> m_constants;
 	Camera m_camera;
 };
