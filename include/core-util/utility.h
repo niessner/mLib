@@ -28,12 +28,11 @@ namespace Math
 		return x * (180.0 / PI);
 	}
 
-	template<class T>
-	inline T abs(T x)
-	{
-		if(x < 0) return -x;
-		return x;
+	template<class T> 
+	inline bool floatEqual(const T &v0, const T &v1, T eps = (T)0.000001) {
+		return (std::abs(v0 - v1) <= eps);
 	}
+	
 
 	template<class T>
 	inline T linearMap(T s1, T e1, T s2, T e2, T start)
@@ -52,28 +51,7 @@ namespace Math
         if(x >= 0) return (x % M);
         else return ((x + (x / int(M) + 2) * int(M)) % M);
     }
-
-	template<class T>
-    inline int floor(T x)
-    {
-        if(x >= 0) return int(x);
-        else return int(x) - 1;
-    }
-
-	template<class T>
-    inline int ceiling(T x)
-    {
-        int floorX = floor(x);
-        if(x == float(floorX)) return floorX;
-        else return floorX + 1;
-    }
-
-	template<class T>
-    inline int round(T x)
-    {
-        return int(x + (T)0.5);
-    }
-
+	
     template <class T> inline T square(T x)
     {
         return x * x;
@@ -105,12 +83,88 @@ namespace Math
         else return C;
     }
 
-	template <class T> inline T bound(T value, T low, T high)
-	{
-		if(value < low) value = low;
-		if(value > high) value = high;
-		return value;
+
+
+	//! clamps between min and max (default between 0 and 1)
+	template<class T>
+	inline void clamp(T &x, T pMin = T(0.0), T pMax = T(1.0)){
+		if (x < pMin)	x = pMin;
+		if (x > pMax)	x = pMax;
 	}
+
+	template<class T>
+	inline T abs(T x)
+	{
+		if(x < 0) return -x;
+		return x;
+	}
+
+	template<class T> 
+	inline T round( const T &f ) 
+	{
+		return (f > (T)0.0) ? floor(f + (T)0.5) : ceil(f - (T)0.5);
+	}
+
+	template<class T>
+	inline bool isPower2(const T &x)
+	{
+		return (x & (x-1)) == 0;
+	}
+
+	template<class T> 
+	inline T nextLargeestPow2(T x)
+	{
+		x |= (x >> 1);
+		x |= (x >> 2);
+		x |= (x >> 4);
+		x |= (x >> 8);
+		x |= (x >> 16);
+		return(x+1);
+	}
+
+	template<class T>
+	inline T log2Integer(T x) 
+	{
+		T r = 0;
+		while (x >>= 1)	r++;
+		return r;
+	}
+
+
+	//! non-zero 32-bit integer value to compute the log base 10 of 
+	template<class T>
+	inline T log10Integer(T x) {
+		T r;  // result goes here
+
+		const unsigned int PowersOf10[] = 
+		{1, 10, 100, 1000, 10000, 100000,
+		1000000, 10000000, 100000000, 1000000000};
+
+		T t = (log2Integer(x) + 1) * 1233 >> 12; // (use a lg2 method from above)
+		r = t - (x < PowersOf10[t]);
+		return r;
+	}
+
+	//! returns -1 if negative, 0 if 0, +1 if positive
+	template <typename T> 
+	inline int sign(T val) {
+		return (T(0) < val) - (val < T(0));
+	}
+
+	//! returns -1 if negative; +1 otherwise (includes 0)
+	template <typename T>
+	inline int sgn(T val) {
+		return val < 0 ? -1 : 1;
+	}
+
+	//! solves a^2 + bx + c = 0
+	template<typename T>
+	inline void quadraticFormula(T a, T b, T c, T& x0, T& x1) {
+		T tmp = (T)-0.5 * (b + (T)sgn(b) * sqrt(b*b - (T)4 * a * c));
+		x0 = tmp / a;
+		x1 = c / tmp;
+	}
+
 }
 
 namespace Utility
@@ -203,6 +257,28 @@ namespace Utility
         int result = fseek(file, offset, SEEK_SET);
         MLIB_ASSERT_STR(!ferror(file) && result == 0, "fseek failed");
     }
+
+
+
+	//! uses the <, >  and = operator of the key type
+	template<typename Iterator, typename T>
+	inline Iterator binarySearch(Iterator& begin, Iterator& end, const T& key) {
+		while(begin < end) {
+			Iterator middle = begin + (std::distance(begin, end) / 2);
+
+			if (*middle == key)	{	// in that case we exactly found the value
+				return middle;
+			} else if(*middle > key) {
+				end = middle;
+			} else {
+				begin = middle + 1;
+			}
+		}
+
+		// if the value is not found return the lower interval
+		if (begin < end)	return begin;
+		else				return end;
+	}
 }
 
 #endif // _UTILITY_H_
