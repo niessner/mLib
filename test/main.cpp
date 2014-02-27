@@ -39,7 +39,11 @@ int main()
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-	 
+	try {
+		throw MLIB_EXCEPTION("bla");
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+	}
 
 	App a;
 	a.go();

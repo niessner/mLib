@@ -52,12 +52,12 @@ class TestBinaryStream : public Test {
 	{
 
 		//for an output stream, 'clearBuffer' should be set to true to reset it
-		BinaryDataStreamCompressedZLibFile streamOut("testBinaryStream.out", true);
+		BinaryDataStreamZLibFile streamOut("testBinaryStream.out", true);
 		TestBinaryStreamTestData data;	data.init();
 		streamOut << data;
 		streamOut.closeStream();	//must call this here to make sure everything has been written to disk
 		TestBinaryStreamTestData reRead;
-		BinaryDataStreamCompressedZLibFile streamIn("testBinaryStream.out", false);
+		BinaryDataStreamZLibFile streamIn("testBinaryStream.out", false);
 		streamIn >> reRead;
 
 		MLIB_ASSERT(data == reRead);

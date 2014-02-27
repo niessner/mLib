@@ -46,11 +46,27 @@
 #endif
 #endif
 
+class MLibException : public std::exception {
+public:
+	MLibException(const std::string& what) : std::exception() {
+		m_msg = what;
+	}
+	MLibException(const char* what) : std::exception() {
+		m_msg = std::string(what);
+	}
+	const char* what() const {
+		return m_msg.c_str();
+	}
+private:
+	std::string m_msg;
+};
+
+
 #define FUNCTION_LINE_STRING (std::string(__FUNCTION__) + ":" + std::to_string(__LINE__))
 //#define FUNCTION_LINE_STRING (std::string(__FUNCTION__))
 
 //#define MLIB_EXCEPTION(s) std::exception(((FUNCTION_LINE_STRING) + ": " + std::string(s)).ptr())
-#define MLIB_EXCEPTION(s) std::exception(std::string(__FUNCTION__).append(": ").append(s).c_str())
+#define MLIB_EXCEPTION(s) MLibException(std::string(__FUNCTION__).append(": ").append(s).c_str())
 
 #ifdef MLIB_ERROR_CHECK
 

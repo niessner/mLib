@@ -125,7 +125,7 @@ public:
 
 
 
-typedef BinaryDataStream<BinaryDataBufferMemory, BinaryDataCompressorZLib> BinaryDataStreamCompressedZLibVector;
-typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorZLib> BinaryDataStreamCompressedZLibFile;
+typedef BinaryDataStream<BinaryDataBufferMemory, BinaryDataCompressorZLib> BinaryDataStreamZLibVector;
+typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorZLib> BinaryDataStreamZLibFile;
 
 #endif
