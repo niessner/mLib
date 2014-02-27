@@ -124,6 +124,7 @@
     <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
     <ClInclude Include="..\include\core-util\parameterFile.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
+    <ClInclude Include="..\include\ext-openmesh\loader.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="..\include\mLibD3D11.h" />
     <ClInclude Include="appTest.h" />

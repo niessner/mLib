@@ -27,7 +27,7 @@ static TriMesh load(const std::string& filename) {
     const Mesh::Color& c = mesh.color(*vIt);
     mv.position = p.data();
     mv.normal = n.data();
-    mv.attributeA = vec4f(c[0], c[1], c[2], 255);  // c is of type vec3uc
+    mv.attributeA = vec4f(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f, 0.0f);  // c is of type vec3uc
     vertices[currVertIdx] = mv;
   }
   UINT currIndexIdx = 0;

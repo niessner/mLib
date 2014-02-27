@@ -147,7 +147,7 @@ namespace StringUtil {
 			if (s == "false" || s == "0")	return false;
 			else return true;		
 		}
-		template<class U> inline point2d<U> toPoint2D(const std::string& s) {
+		/*template<class U> inline point2d<U> toPoint2D(const std::string& s) {
 			point3d<U> ret;
 			std::stringstream ss(removeChar(s,'f'));
 			ss >> ret.x >> ret.y;
@@ -164,7 +164,7 @@ namespace StringUtil {
 			std::stringstream ss(removeChar(s,'f'));
 			ss >> ret.x >> ret.y >> ret.z >> ret.w;
 			return ret;
-		}
+		}*/
 		
 
 		template<class T>	inline void to(const std::string& s, T& res);
@@ -190,7 +190,7 @@ namespace StringUtil {
 		template<> inline void to<bool>(const std::string& s, bool& res) {
 			res = toBool(s);
 		}
-		template<class U> inline void to(const std::string& s, point2d<U>& res) {
+		/*template<class U> inline void to(const std::string& s, point2d<U>& res) {
 			std::stringstream ss(removeChar(s,'f'));
 			ss >> res.x >> res.y;
 		}
@@ -201,7 +201,7 @@ namespace StringUtil {
 		template<class U> inline void to(const std::string& s, point4d<U>& res) {
 			std::stringstream ss(removeChar(s,'f'));
 			ss >> res.x >> res.y >> res.z >> res.w;
-		}
+		}*/
 
 	};
 	

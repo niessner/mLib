@@ -22,6 +22,9 @@
     <Filter Include="mLibHeader\core-mesh">
       <UniqueIdentifier>{bbc9449b-610f-4c73-be00-b2765a505770}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\ext-openmesh">
+      <UniqueIdentifier>{128df902-dd3b-472d-90b7-9ed764e1cf76}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\mLibCore.h">
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="..\include\core-mesh\triMesh.h">
       <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-openmesh\loader.h">
+      <Filter>mLibHeader\ext-openmesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
