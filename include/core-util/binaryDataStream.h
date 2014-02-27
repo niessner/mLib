@@ -180,7 +180,7 @@ template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::list<T>& l) {
 	s << (UINT64)l.size();
 	s.reserve(sizeof(T)*l.size());
-	for (std::list<T>::const_iterator iter = l.begin(); iter != l.end(); iter++) {
+	for (typename std::list<T>::const_iterator iter = l.begin(); iter != l.end(); iter++) {
 		s << *l;
 	}
 	return s;
