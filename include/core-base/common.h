@@ -57,8 +57,8 @@
 
 #define MLIB_WARNING(s) warningFunctionMLIB(std::string(FUNCTION_LINE_STRING) + std::string() + ": " + std::string(s))
 #define MLIB_ERROR(s) errorFunctionMLIB(std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
-#define MLIB_ASSERT_STR(b,s) assertFunctionMLIB(b, std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
-#define MLIB_ASSERT(b) assertFunctionMLIB(b, FUNCTION_LINE_STRING);
+#define MLIB_ASSERT_STR(b,s) { if(!(b)) assertFunctionMLIB(b, std::string(FUNCTION_LINE_STRING) + ": " + std::string(s)); }
+#define MLIB_ASSERT(b) { if(!(b)) assertFunctionMLIB(b, FUNCTION_LINE_STRING); }
 
 void warningFunctionMLIB(const std::string &description);
 void errorFunctionMLIB(const std::string &description);
