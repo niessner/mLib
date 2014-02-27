@@ -55,7 +55,7 @@ public:
 		for(UINT y = 0; y < g.rows(); y++)
 			for(UINT x = 0; x < g.cols(); x++)
 				//g(y, x) = g(y, x).findAndReplace("aaa", "bbb");
-				g(y, x) = StringUtil::findAndReplace(g(y, x), "aaa", "bbb");
+				g(y, x) = StringUtil::replace(g(y, x), "aaa", "bbb");
 
 		MLIB_ASSERT_STR(g(6, 3) == "bbb", "grid test0 failed");
 		MLIB_ASSERT_STR(g.minIndex().first == 6 && g.minIndex().second == 3, "grid test1 failed");

@@ -102,7 +102,7 @@ public:
 				for(UINT col = 0; col < values.size(); col++)
 				{
 					//(*this)(row, col) = (D)values[col].findAndReplace("{","").findAndReplace("}","").toDOUBLE();
-					const std::string s = StringUtil::findAndReplace(StringUtil::findAndReplace(values[col], "{",""), "}","");
+					const std::string s = StringUtil::replace(StringUtil::replace(values[col], "{",""), "}","");
 					(*this)(row, col) = (D)std::stod(s);
 				}
 			}
