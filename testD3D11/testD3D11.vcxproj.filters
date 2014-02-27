@@ -84,9 +84,6 @@
     <ClInclude Include="..\include\core-math\linearSolver.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-math\matrix4.h">
-      <Filter>mLibHeader\core-math</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-math\point1d.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
@@ -140,6 +137,15 @@
     </ClInclude>
     <ClInclude Include="..\include\core-util\utility.h">
       <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\matrix3x3.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\matrix4x4.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\matrix2x2.h">
+      <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

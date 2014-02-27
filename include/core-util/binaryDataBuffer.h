@@ -3,7 +3,6 @@
 #ifndef _BINARY_DATA_BUFFER_H_
 #define _BINARY_DATA_BUFFER_H_
 
-#include "mLibBasic.h"
 
 #include <vector>
 #include <list>
@@ -13,6 +12,7 @@
 /////////////////////////////////////////////////////////////
 // BinaryDataBuffers (class used by BINARY_DATA_STREAM)    //
 /////////////////////////////////////////////////////////////
+
 
 /////////////////////////////////////////////////////////////
 // BinaryDataBuffers (one for file, one for system memory) //
@@ -64,7 +64,7 @@ public:
 		closeFileStream();
 		remove(m_FileName.c_str());
 		openFileStream();
-		assert(m_FileSize == 0);
+		MLIB_ASSERT(m_FileSize == 0);
 		m_ReadOffset = 0;
 	}
 
@@ -81,7 +81,7 @@ public:
 			openFileStream();
 			m_FileStream.write((char*)&oldData[0], oldData.size());
 			m_ReadOffset = 0;
-			assert(m_FileSize == oldData.size());
+			MLIB_ASSERT(m_FileSize == oldData.size());
 		}
 	}
 
@@ -113,7 +113,7 @@ public:
 
 		clearBuffer();	//clear the old values
 		m_FileStream.write((char*)data, sizeof(BYTE)*inputFileSize);
-		assert(m_FileSize == inputFileSize);
+		MLIB_ASSERT(m_FileSize == inputFileSize);
 		m_ReadOffset = 0;
 	}
 
@@ -152,7 +152,7 @@ private:
 			m_FileStream.open(m_FileName.c_str(), std::ios::binary | std::ios::out);
 			m_FileStream.close();
 			m_FileStream.open(m_FileName.c_str(), std::ios::binary | std::ios::out | std::ios::in);
-			if (!m_FileStream.is_open()) throw EXCEPTION(m_FileName);
+			if (!m_FileStream.is_open()) throw MLIB_EXCEPTION(m_FileName);
 		} 
 	}
 
@@ -178,12 +178,12 @@ public:
 		m_ReadOffset = 0;
 	}
 	void openBufferStream(const std::string& filename, bool clearBuffer = false) {
-		assert(false);
+		MLIB_ASSERT(false);
 		//dummy just needed for file stream
 		return;
 	}
 	void closeBufferStream() {
-		assert(false);
+		MLIB_ASSERT(false);
 		//dummy just needed for file stream
 		return;
 	}
@@ -195,7 +195,7 @@ public:
 	}
 
 	void readData(BYTE* result, size_t size) {
-		assert(m_ReadOffset + size <= m_Data.size());
+		MLIB_ASSERT(m_ReadOffset + size <= m_Data.size());
 
 		memcpy(result, &m_Data[0] + m_ReadOffset, size);
 		m_ReadOffset += size;
@@ -231,7 +231,7 @@ public:
 	void saveToFile(const std::string &filename) {
 		std::ofstream output(filename, std::ios::binary);
 		output.write((char*)&m_Data[0], sizeof(BYTE)*m_Data.size());
-		if (!output.is_open())	throw EXCEPTION(filename);
+		if (!output.is_open())	throw MLIB_EXCEPTION(filename);
 		output.close();
 	}
 
@@ -250,7 +250,7 @@ public:
 		size_t inputFileSize = getFileSizeInBytes(filename);
 		m_Data.resize(inputFileSize);
 		std::ifstream input(filename, std::ios::binary);
-		if (!input.is_open())	throw EXCEPTION(filename);
+		if (!input.is_open())	throw MLIB_EXCEPTION(filename);
 		input.read((char*)&m_Data[0], sizeof(BYTE)*inputFileSize);
 		input.close();
 		m_ReadOffset = 0;

@@ -13,7 +13,7 @@
 	   6  7  8
     </pre>
 */
-template <class FloatType> class Matrix3x3
+template <class FloatType> class Matrix3x3 : public BinaryDataSerialize< Matrix3x3<FloatType> >
 {
 public:
 	//! An uninitialized matrix

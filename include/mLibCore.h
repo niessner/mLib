@@ -13,6 +13,13 @@
 #include "core-base/grid.h"
 
 //
+// core-util headers (these are required by matrices)
+//
+#include "core-util/binaryDataBuffer.h"
+#include "core-util/binaryDataSerialize.h"
+#include "core-util/binaryDataStream.h"
+
+//
 // core-math headers
 //
 #include "core-math/point1d.h"
@@ -39,6 +46,7 @@
 #include "core-util/commandLineReader.h"
 #include "core-util/parameterFile.h"
 #include "core-util/keycodes.h"
+#include "core-util/calibratedSensorData.h"
 
 //
 // core-multithreading headers

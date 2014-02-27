@@ -12,7 +12,7 @@
        2  3
     </pre>
 */
-template <class FloatType> class Matrix2x2
+template <class FloatType> class Matrix2x2 : public BinaryDataSerialize< Matrix2x2<FloatType> >
 {
 public:
 	//! An uninitialized matrix
