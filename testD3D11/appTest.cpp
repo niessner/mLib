@@ -6,6 +6,10 @@ void AppTest::init(ApplicationData &app)
     const std::string testPLY = "scans/gates381.ply";
     const TriMesh triMesh = OpenMeshLoader::load(testPLY);
     m_mesh.load(app.graphics, triMesh);
+
+    Vector<vec3f> points(5, [](UINT64 i) {return vec3f((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
+    m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(OpenMeshLoader::load(testPLY), points));
+
     m_vertexShader.load(app.graphics, "shaders/test.shader");
     m_pixelShader.load(app.graphics, "shaders/test.shader");
     m_constants.init(app.graphics);
@@ -27,6 +31,7 @@ void AppTest::render(ApplicationData &app)
     m_constants.bindVertexShader(app.graphics, 0);
 
     m_mesh.render(app.graphics);
+    m_pointCloud.render(app.graphics);
 }
 
 void AppTest::resize(ApplicationData &app)

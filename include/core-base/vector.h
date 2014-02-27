@@ -32,6 +32,20 @@ public:
 		clear(clearValue);
 	}
 
+    //
+    // map constructor usage:
+    // Vector<std::string> v(10, [](UINT64 i) {return std::to_string(i);});
+    //
+    template<class mapFunction>
+    Vector(UINT64 size, mapFunction function)
+    {
+        m_data = new T[size];
+        m_length = size;
+        m_capacity = size;
+        for(UINT64 index = 0; index < size; index++)
+            m_data[index] = function(index);
+    }
+
 	Vector(const Vector<T> &V)
 	{
 		m_length = V.m_length;
