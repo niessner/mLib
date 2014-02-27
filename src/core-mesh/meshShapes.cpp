@@ -15,7 +15,7 @@ int CubeIData[12][3] =
     {6, 5, 4}, {6, 4, 7}
 };
 
-TriMesh box(float xDim, float yDim, float zDim)
+TriMesh box(float xDim, float yDim, float zDim, const vec4f& color)
 {
     Vector<MeshVertex> V(8);
     Vector<UINT> I(12*3);
@@ -25,7 +25,7 @@ TriMesh box(float xDim, float yDim, float zDim)
     {
         V[i].position = vec3f(CubeVData[i][0], CubeVData[i][1], CubeVData[i][2]);
         V[i].normal = vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): Set correct cube normal
-        V[i].attributeA = vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+        V[i].attributeA = color;
     }
 
     // Triangles
