@@ -7,8 +7,8 @@ void AppTest::init(ApplicationData &app)
     const TriMesh triMesh = OpenMeshLoader::load(testPLY);
     m_mesh.load(app.graphics, triMesh);
 
-    Vector<vec3f> points(5, [](UINT64 i) {return vec3f((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
-    m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(MeshShapes::box(0.1f), points));
+    Vector<vec3f> points(5000, [](UINT64 i) {return vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
+    m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(MeshShapes::box(0.01f), points));
 
     m_vsColor.load(app.graphics, "shaders/test.shader");
     m_psColor.load(app.graphics, "shaders/test.shader");

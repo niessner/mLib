@@ -24,7 +24,7 @@ TriMesh box(float xDim, float yDim, float zDim)
     for (int i = 0; i < 8; i++)
     {
         V[i].position = vec3f(CubeVData[i][0], CubeVData[i][1], CubeVData[i][2]);
-        V[i].normal = vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): Set correct normal
+        V[i].normal = vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): Set correct cube normal
         V[i].attributeA = vec4f(1.0f, 0.0f, 0.0f, 1.0f);
     }
 
