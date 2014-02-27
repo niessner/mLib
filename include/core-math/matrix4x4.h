@@ -19,10 +19,6 @@ public:
 	//! An uninitialized matrix
 	Matrix4x4() {}
 
-	Matrix4x4(const std::string& filename) {
-		loadMatrixFromFile(filename);
-	}
-
 	//! Initialize with values stored in an array
 	Matrix4x4(const FloatType* values) {
 		for (unsigned int i = 0; i < 16; i++) {
@@ -220,7 +216,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationX(FloatType angle) {
-		FloatType anglerad = Math::degreesToRadians(angle);
+		FloatType angleRad = Math::degreesToRadians(angle);
 		FloatType sinAngle = sin(angleRad);
 		FloatType cosAngle = cos(angleRad);
 
@@ -236,7 +232,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationY(FloatType angle) {
-		FloatType anglerad = Math::degreesToRadians(angle);
+		FloatType angleRad = Math::degreesToRadians(angle);
 		FloatType sinAngle = sin(angleRad);
 		FloatType cosAngle = cos(angleRad);
 
@@ -252,7 +248,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationZ(FloatType angle) {
-		FloatType anglerad = Math::degreesToRadians(angle);
+		FloatType angleRad = Math::degreesToRadians(angle);
 		FloatType sinAngle = sin(angleRad);
 		FloatType cosAngle = cos(angleRad);
 
@@ -664,75 +660,6 @@ public:
 				return false;
 	}
 
-	//! save matrix array to .matArray
-	static void saveMatrixArrayToFile(const std::string& name, const Matrix4x4<FloatType>* matrixArray, unsigned int numMatrices) {
-		assert(false);	//UNTESTED
-		std::ofstream out(name.c_str());
-		out << numMatrices << "\n";
-		out << 4 << " " << 4 << "\n";
-		for (unsigned int h = 0; h < numMatrices; h++) {
-			for (unsigned int i = 0; i < 4; i++) {
-				for (unsigned int j = 0; j < 4; j++) {
-					out << matrixArray[h](i,j) << " ";
-				}
-				out << "\n";
-			}
-		}
-	}
-	
-	//! load matrix array from .matArray
-	static void loadMatrixArrayFromFile(const std::string &name, std::vector<Matrix4x4<FloatType>>& matrices) {
-		assert(false);		//UNTESTED
-		std::ifstream in(name.c_str());
-		unsigned int numMatrices, height, width;;
-		in >> numMatrices >> height >> width;
-		assert(height == width && height == 4);
-		matrices.resize(numMatrices);
-		for (unsigned int k = 0; k < numMatrices; k++) {
-			Matrix4x4<FloatType> &curr = matrices[k];
-			for (unsigned int i = 0; i < 4; i++) {
-				for (unsigned int j = 0; j < 4; j++) {
-					in >> curr.matrix2[i][j];
-				}
-			}
-		}
-
-	}
-	
-
-	//! save matrix to .mat file
-	void saveMatrixToFile(const std::string &name) const {
-		std::ofstream out(name.c_str());
-		out << 4 << " " << 4 << "\n";
-		for (unsigned int i = 0; i < 4; i++) {
-			for (unsigned int j = 0; j < 4; j++) {
-				out << (*this)(i,j) << " ";
-			}
-			out << "\n";
-		}
-	}
-	//! load matrix from .mat file
-	void loadMatrixFromFile(const std::string &name) {
-		std::ifstream in(name.c_str());
-		unsigned int height, width;
-		in >> height >> width;
-		assert(height == width && height == 4);
-		for (unsigned int i = 0; i < 4; i++) {
-			for (unsigned int j = 0; j < 4; j++) {
-				in >> matrix2[i][j];
-			}
-		}
-	}
-
-	//! prints the matrix
-	void print() {
-		for (unsigned int i = 0; i < 4; i++) {
-			for (unsigned int j = 0; j < 4; j++) {
-				std::cout << at(i,j) << " ";
-			}
-			std::cout << std::endl;
-		}
-	}
 protected:
 
 	//! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns

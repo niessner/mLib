@@ -18,11 +18,6 @@ public:
 	//! An uninitialized matrix
 	Matrix2x2() {}
 
-	//! Initializes a matrix from file
-	Matrix2x2(const std::string& filename) {
-		loadMatrixFromFile(filename);
-	}
-
 	//! Initialize with values stored in an array
 	Matrix2x2(const FloatType* values) {
 		for (unsigned int i = 0; i < 4; i++) {
@@ -309,41 +304,6 @@ public:
 		ret._m00 = v0.x * v1.x;		ret._m01 = v0.x * v1.y;
 		ret._m10 = v0.y * v1.x;		ret._m11 = v0.y * v1.y;
 		return ret;
-	}
-
-	//! save matrix to .mat file
-	void saveMatrixToFile(const std::string &name) const {
-		std::ofstream out(name.c_str());
-		out << 2 << " " << 2 << std::endl;
-		for (unsigned int i = 0; i < 2; i++) {
-			for (unsigned int j = 0; j < 2; j++) {
-				out << matrix2[i][j] << " ";
-			}
-			out << std::endl;
-		}
-	}
-	//! load matrix from .mat file
-	void loadMatrixFromFile(const std::string &name) {
-		std::ifstream in(name.c_str());
-		if (!in.is_open()) throw std::ifstream::failure(std::string("Could not open matrix file").append(name));
-		unsigned int height, width;
-		in >> height >> width;
-		assert(height == width && height == 2);
-		for(unsigned int i = 0; i < 2; i++) {
-			for(unsigned int j = 0; j < 2; j++) {
-				in >> matrix2[i][j];
-			}
-		}
-	}
-
-	//! prints the matrix
-	void print() {
-		for (unsigned int i = 0; i < 2; i++) {
-			for (unsigned int j = 0; j < 2; j++) {
-				std::cout << at(i,j) << " ";
-			}
-			std::cout << std::endl;
-		}
 	}
 
 	/*
