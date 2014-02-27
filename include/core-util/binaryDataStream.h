@@ -99,7 +99,7 @@ private:
 	BinaryDataCompressor	m_DataCompressor;
 };
 
-typedef BinaryDataStream<BinaryDataBufferVector, BinaryDataCompressorNone> BinaryDataStreamVector;
+typedef BinaryDataStream<BinaryDataBufferMemory, BinaryDataCompressorNone> BinaryDataStreamVector;
 typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorNone> BinaryDataStreamFile;
 //typedef BinaryDataStream<BinaryDataBufferVector, BinaryDataCompressorDefault> BinaryDataStreamCompressedVector; (see zlib for instance)
 //typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorDefault> BinaryDataStreamCompressedFile; (see zlib for instance)

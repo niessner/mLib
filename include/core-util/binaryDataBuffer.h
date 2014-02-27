@@ -172,9 +172,9 @@ private:
 
 
 
-class BinaryDataBufferVector {
+class BinaryDataBufferMemory {
 public:
-	BinaryDataBufferVector() {
+	BinaryDataBufferMemory() {
 		m_ReadOffset = 0;
 	}
 	void openBufferStream(const std::string& filename, bool clearBuffer = false) {
