@@ -2,9 +2,9 @@
 class TestBinaryStreamTestData {
 public:
 	TestBinaryStreamTestData() { m_Data = NULL; m_Size = 0;}
-	~TestBinaryStreamTestData() { deleteMemory(); }
+	~TestBinaryStreamTestData() { clear(); }
 
-	void deleteMemory() {
+	void clear() {
 		SAFE_DELETE_ARRAY(m_Data);	
 		m_Size = 0;
 	}
@@ -32,7 +32,7 @@ public:
 //! read from binary stream overload
 template<class BinaryDataBuffer, class BinaryDataCompressor>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, TestBinaryStreamTestData& data) {
-	data.deleteMemory();
+	data.clear();
 	s >> data.m_Size;
 	data.m_Data = new int[data.m_Size];
 	s.readData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
@@ -50,15 +50,30 @@ class TestBinaryStream : public Test {
 
 	void test0()
 	{
+		const std::string filenameCompressed = "testStreamCompressed.out";
+		const std::string filename = "testStream.out";
+
+		std::vector<int> v(10000, 0);
 
 		//for an output stream, 'clearBuffer' should be set to true to reset it
-		BinaryDataStreamZLibFile streamOut("testBinaryStream.out", true);
+		BinaryDataStreamZLibFile streamOut(filenameCompressed, true);
 		TestBinaryStreamTestData data;	data.init();
-		streamOut << data;
+		streamOut << data << v;
 		streamOut.closeStream();	//must call this here to make sure everything has been written to disk
+
+		BinaryDataStreamFile streamOutComp(filename, true);
+		TestBinaryStreamTestData data2;	data2.init();
+		streamOutComp << data2 << v;
+		streamOutComp.closeStream();	//must call this here to make sure everything has been written to disk
+		
+
+		UINT64 dataSize = Utility::getFileData(filename).size();
+		UINT64 dataSizeCompressed = Utility::getFileData(filenameCompressed).size();
+
 		TestBinaryStreamTestData reRead;
-		BinaryDataStreamZLibFile streamIn("testBinaryStream.out", false);
+		BinaryDataStreamZLibFile streamIn(filenameCompressed, false);
 		streamIn >> reRead;
+		streamIn >> v;
 
 		MLIB_ASSERT(data == reRead);
 
