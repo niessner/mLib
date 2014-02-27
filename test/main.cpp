@@ -54,7 +54,7 @@ int main()
 
 	mat2f m2 = mat2f::identity();
 	m2(0,0) = 4;
-	m2.invert();
+	m2 = m2 * m2.getInverse();
 	std::cout << m2 << std::endl;
 
 	//App a;

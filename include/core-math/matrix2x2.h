@@ -158,7 +158,7 @@ public:
 			for (unsigned char j = 0; j < 2; j++) {
 				result.at(i,j) = 
 					this->at(i,0) * other.at(0,j) + 
-					this->at(i,1) * other.at(1,j) + 
+					this->at(i,1) * other.at(1,j);
 			}
 		}
 		return result;
