@@ -651,10 +651,10 @@ public:
 
 	//! returns true if the matrix is affine (i.e., projective part is zero)
 	bool isAffine(FloatType eps = (FloatType)0.000001) const {
-		if (floatEqual<FloatType>(matrix[12],0) && 
-			floatEqual<FloatType>(matrix[13],0) && 
-			floatEqual<FloatType>(matrix[14],0) && 
-			floatEqual<FloatType>(matrix[15],1))	
+		if (Math::floatEqual<FloatType>(matrix[12],0) && 
+			Math::floatEqual<FloatType>(matrix[13],0) && 
+			Math::floatEqual<FloatType>(matrix[14],0) && 
+			Math::floatEqual<FloatType>(matrix[15],1))	
 				return true;
 		else 
 				return false;
