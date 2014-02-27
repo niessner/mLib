@@ -34,16 +34,18 @@ void D3D11GraphicsDevice::init(const WindowWin32 &window)
 	D3D_VALIDATE(D3D11CreateDeviceAndSwapChain( NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevels, numFeatureLevels,
 				 D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, &m_featureLevel, &m_context ));
 
+    //
 	// Create a render target view
+    //
 	ID3D11Texture2D* backBuffer = NULL;
 	D3D_VALIDATE(m_swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&backBuffer ));
 	
-	D3D_VALIDATE(m_device->CreateRenderTargetView( backBuffer, NULL, &m_view ));
+	D3D_VALIDATE(m_device->CreateRenderTargetView( backBuffer, NULL, &m_renderView ));
 	backBuffer->Release();
 
-	m_context->OMSetRenderTargets( 1, &m_view, NULL );
-
+    //
 	// Setup the viewport
+    //
 	D3D11_VIEWPORT viewport;
 	viewport.Width = (FLOAT)width;
 	viewport.Height = (FLOAT)height;
@@ -53,7 +55,9 @@ void D3D11GraphicsDevice::init(const WindowWin32 &window)
 	viewport.TopLeftY = 0;
 	m_context->RSSetViewports( 1, &viewport );
 
+    //
 	// Setup the rasterizer state
+    //
 	m_rasterDesc.AntialiasedLineEnable = false;
 	m_rasterDesc.CullMode = D3D11_CULL_NONE;
 	m_rasterDesc.DepthBias = 0;
@@ -68,6 +72,48 @@ void D3D11GraphicsDevice::init(const WindowWin32 &window)
 	D3D_VALIDATE(m_device->CreateRasterizerState(&m_rasterDesc, &m_rasterState));
 	m_context->RSSetState(m_rasterState);
 
+    //
+    // Create the depth buffer
+    //
+    D3D11_TEXTURE2D_DESC depthDesc;
+    depthDesc.Width = width;
+    depthDesc.Height = height;
+    depthDesc.MipLevels = 1;
+    depthDesc.ArraySize = 1;
+    depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    depthDesc.SampleDesc.Count = 1;
+    depthDesc.SampleDesc.Quality = 0;
+    depthDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthDesc.CPUAccessFlags = 0;
+    depthDesc.MiscFlags = 0;
+    D3D_VALIDATE(m_device->CreateTexture2D( &depthDesc, NULL, &m_depthBuffer ));
+
+    //
+    // Setup the depth state
+    //
+    D3D11_DEPTH_STENCIL_DESC depthStateDesc;
+    depthStateDesc.DepthEnable = true;
+    depthStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    depthStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    depthStateDesc.StencilEnable = false;
+    D3D_VALIDATE(m_device->CreateDepthStencilState(&depthStateDesc, &m_depthState));
+    m_context->OMSetDepthStencilState(m_depthState, 1);
+
+    //
+    // Setup the depth view
+    //
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc;
+    depthViewDesc.Flags = 0;
+    depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    depthViewDesc.Texture2D.MipSlice = 0;
+
+    // Create the depth stencil view
+    D3D_VALIDATE(m_device->CreateDepthStencilView( m_depthBuffer, &depthViewDesc, &m_depthView ));
+
+    m_context->OMSetRenderTargets( 1, &m_renderView, m_depthView );
+
 #ifdef _DEBUG
 	m_device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_debug));
 #endif
@@ -81,7 +127,8 @@ void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)
 void D3D11GraphicsDevice::renderBeginFrame()
 {
 	float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	m_context->ClearRenderTargetView( m_view, clearColor );
+	m_context->ClearRenderTargetView( m_renderView, clearColor );
+    m_context->ClearDepthStencilView( m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void D3D11GraphicsDevice::renderEndFrame()
