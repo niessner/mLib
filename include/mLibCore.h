@@ -64,7 +64,7 @@
 #include "core-graphics/RGBColor.h"
 #include "core-graphics/camera.h"
 
-#include "core-graphics/boundingBox.h"
+#include "core-graphics/boundingBox3d.h"
 
 //
 // core-mesh headers

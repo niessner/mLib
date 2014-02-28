@@ -30,7 +30,7 @@ public:
 
     static void CompressStreamToMemory(const Vector<BYTE> &decompressedStream, Vector<BYTE> &compressedStream, bool writeHeader)
     {
-        CompressStreamToMemory(CArray(decompressedStream), decompressedStream.size(), compressedStream, writeHeader);
+        CompressStreamToMemory(decompressedStream.ptr(), decompressedStream.size(), compressedStream, writeHeader);
     }
 
     static void CompressStreamToMemory(const BYTE *decompressedStream, UINT64 decompressedStreamLength, Vector<BYTE> &compressedStream, bool writeHeader)
@@ -52,7 +52,7 @@ public:
 
 		int headerOffset = sizeof(UINT64);
 		if (!writeHeader)	headerOffset = 0;
-		zstream.next_out = CArray(compressedStream) + headerOffset;
+		zstream.next_out = compressedStream.ptr() + headerOffset;
 
         const int Level = 7; // 1 (fastest speed) to 9 (best compression)
         int result = deflateInit2(&zstream, Level, Z_DEFLATED, 15, 8, Z_DEFAULT_STRATEGY);
@@ -79,9 +79,9 @@ public:
 
     static void DecompressStreamFromMemory(const Vector<BYTE> &compressedStream, Vector<BYTE> &decompressedStream)
     {
-        UINT decompressedByteCount = ((UINT*)CArray(compressedStream))[0];
+        UINT decompressedByteCount = ((UINT*)compressedStream.ptr())[0];
         decompressedStream.resize(decompressedByteCount);
-        DecompressStreamFromMemory(CArray(compressedStream) + sizeof(UINT64), compressedStream.size() - sizeof(UINT64), CArray(decompressedStream), decompressedStream.size());
+        DecompressStreamFromMemory(compressedStream.ptr() + sizeof(UINT64), compressedStream.size() - sizeof(UINT64), decompressedStream.ptr(), decompressedStream.size());
     }
 
     static void DecompressStreamFromMemory(const BYTE *compressedStream, UINT64 compressedStreamLength, BYTE *decompressedStream, UINT64 decompressedStreamLength)
@@ -92,16 +92,6 @@ public:
         int result = uncompress(decompressedStream, &finalByteCount, compressedStream, (uLong)compressedStreamLength);
         if(result != Z_OK) throw MLIB_EXCEPTION("uncompress failed");
         if(finalByteCount != decompressedStreamLength) throw MLIB_EXCEPTION("Decompression returned invalid length");
-    }
-
-private:
-    static const BYTE* CArray(const Vector<BYTE> &v)
-    {
-        return &v[0];
-    }
-    static BYTE* CArray(Vector<BYTE> &v)
-    {
-        return &v[0];
     }
 };
 
