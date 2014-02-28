@@ -98,7 +98,7 @@ public:
 
 	void cluster(const Vector<T> &elements, const Vector<float> &weights, UINT clusterCount, UINT maxIterations = 0, bool verbose = true, double maxDelta = 0.0)
 	{
-		if(verbose) Console::log(std::string("k-means clustering, ") + std::string(elements.size()) + std::string(" points, ") + std::string(clusterCount) + std::string(" clusters"));
+		if(verbose) Console::log(std::string("k-means clustering, ") + std::to_string(elements.size()) + std::string(" points, ") + std::to_string(clusterCount) + std::string(" clusters"));
 
 		MLIB_ASSERT_STR(elements.size() >= clusterCount, "Too many clusters");
 		MLIB_ASSERT_STR(elements.size() == weights.size(), "Incorrect number of weights");
@@ -129,7 +129,7 @@ public:
 				delta += Metric::Dist(previousClusterCenters[clusterIndex], m_clusters[clusterIndex].center);
 
 			converged = (delta <= maxDelta || pass == maxIterations);
-			if(verbose) Console::log(std::string("pass ") + std::string(pass) + std::string(", ") + std::string("delta=") + std::string(delta));
+			if(verbose) Console::log(std::string("pass ") + std::to_string(pass) + std::string(", ") + std::string("delta=") + std::string(delta));
 		}
 	}
 
