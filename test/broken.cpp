@@ -13,14 +13,12 @@ public:
 
 	static const p3d<T> origin;
 	
-	union {
-		T x;
-	};
+	T x;
 };
 
 typedef p3d<float> p3df;
 
-int main()
+int main2()
 {
 	p3df p = p3df::origin;
 	return 0;

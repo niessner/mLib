@@ -21,13 +21,13 @@
 class BinaryDataBufferFile {
 public:
 	BinaryDataBufferFile() {
-		m_ReadOffset = 0;
-		m_FileSize = 0;
+		m_readOffset = 0;
+		m_fileSize = 0;
 	}
 
 	void openBufferStream(const std::string& filename, bool clearBuffer = false) {
-		m_FileName = filename;
-		if (clearBuffer)	remove(m_FileName.c_str());
+		m_filename = filename;
+		if (clearBuffer)	remove(m_filename.c_str());
 		closeFileStream();
 		openFileStream();
 	}
@@ -37,39 +37,39 @@ public:
 
 	~BinaryDataBufferFile() {
 		closeFileStream();
-		if (m_ReadOffset == 0 && m_FileSize == 0) {
-			remove(m_FileName.c_str());
+		if (m_readOffset == 0 && m_fileSize == 0) {
+			remove(m_filename.c_str());
 		}
 	}
 
 	void writeData(const BYTE* t, size_t size) {
-		//std::cout << "tellp() " << m_FileStream.tellp() << std::endl;
-		m_FileStream.seekp(m_FileSize);	//always append at the end
-		m_FileStream.write((char*)t, size);
-		m_FileSize += size;
+		//std::cout << "tellp() " << m_fileStream.tellp() << std::endl;
+		m_fileStream.seekp(m_fileSize);	//always append at the end
+		m_fileStream.write((char*)t, size);
+		m_fileSize += size;
 	}
 
 	void readData(BYTE* result, size_t size) {
-		//std::cout << "tellg() " << m_FileStream.tellg() << std::endl;
-		//assert(m_ReadOffset + size <= m_FileSize);
-		if (m_ReadOffset + size > m_FileSize) throw MLIB_EXCEPTION("invalid read; probably wrong file name (" + m_FileName + ")?");
-		m_FileStream.seekg(m_ReadOffset);
-		m_FileStream.read((char*)result, size);
-		m_ReadOffset += size;
+		//std::cout << "tellg() " << m_fileStream.tellg() << std::endl;
+		//assert(m_readOffset + size <= m_fileSize);
+		if (m_readOffset + size > m_fileSize) throw MLIB_EXCEPTION("invalid read; probably wrong file name (" + m_filename + ")?");
+		m_fileStream.seekg(m_readOffset);
+		m_fileStream.read((char*)result, size);
+		m_readOffset += size;
 	}
 
 
 	//! destroys all the data in the stream
 	void clearBuffer() {
 		closeFileStream();
-		remove(m_FileName.c_str());
+		remove(m_filename.c_str());
 		openFileStream();
-		MLIB_ASSERT(m_FileSize == 0);
-		m_ReadOffset = 0;
+		MLIB_ASSERT_STR(m_fileSize == 0, "file buffer not cleared correctly");
+		m_readOffset = 0;
 	}
 
 	void clearReadOffset() {
-		size_t len = m_FileSize - m_ReadOffset;
+		size_t len = m_fileSize - m_readOffset;
 		if (len == 0) {  //if there is no data left, clear the buffer
 			clearBuffer();
 		} else {
@@ -77,11 +77,11 @@ public:
 			copyDataToMemory(oldData);
 
 			closeFileStream();
-			remove(m_FileName.c_str());
+			remove(m_filename.c_str());
 			openFileStream();
-			m_FileStream.write((char*)&oldData[0], oldData.size());
-			m_ReadOffset = 0;
-			MLIB_ASSERT(m_FileSize == oldData.size());
+			m_fileStream.write((char*)&oldData[0], oldData.size());
+			m_readOffset = 0;
+			MLIB_ASSERT_STR(m_fileSize == oldData.size(), "");
 		}
 	}
 
@@ -102,9 +102,11 @@ public:
 
 	//! loads a binary stream from file; destorys all previous data in the stream
 	void loadFromFile(const std::string &filename) {
-		m_FileStream.close();
+		m_fileStream.close();
 
+        // TODO: replace this with a utility function
 		size_t inputFileSize = getFileSizeInBytes(filename);
+
 		BYTE* data = new BYTE[inputFileSize];
 		std::ifstream input(filename, std::ios::binary);
 		if (!input.is_open())	throw MLIB_EXCEPTION(filename);
@@ -112,24 +114,24 @@ public:
 		input.close();
 
 		clearBuffer();	//clear the old values
-		m_FileStream.write((char*)data, sizeof(BYTE)*inputFileSize);
-		MLIB_ASSERT(m_FileSize == inputFileSize);
-		m_ReadOffset = 0;
+		m_fileStream.write((char*)data, sizeof(BYTE)*inputFileSize);
+		MLIB_ASSERT(m_fileSize == inputFileSize);
+		m_readOffset = 0;
 	}
 
 	//! flushes the stream
 	void flushBufferStream() {
-		m_FileStream.flush();
+		m_fileStream.flush();
 	}
 private:
 
 
 	//! reads all the 'active' file data to system memory
 	void copyDataToMemory(std::vector<BYTE>& data) {
-		size_t len = m_FileSize - m_ReadOffset;
+		size_t len = m_fileSize - m_readOffset;
 		data.resize(len);
-		m_FileStream.seekg(m_ReadOffset);
-		m_FileStream.read((char*)&data[0], sizeof(BYTE)*len);
+		m_fileStream.seekg(m_readOffset);
+		m_fileStream.read((char*)&data[0], sizeof(BYTE)*len);
 	}
 
 	//! returns the file size; if the file cannot be opened returns -1 (e.g., the file does not exist)
@@ -143,28 +145,28 @@ private:
 
 	//! opens the file stream
 	void openFileStream() {
-		if (m_FileStream.is_open())	m_FileStream.close();
-		m_FileSize = getFileSizeInBytes(m_FileName);
-		if (m_FileSize == -1)	m_FileSize = 0;	//in case there was no file before
+		if (m_fileStream.is_open())	m_fileStream.close();
+		m_fileSize = getFileSizeInBytes(m_filename);
+		if (m_fileSize == -1)	m_fileSize = 0;	//in case there was no file before
 
-		m_FileStream.open(m_FileName.c_str(), std::ios::binary | std::ios::out | std::ios::in);
-		if (!m_FileStream.is_open()) {
-			m_FileStream.open(m_FileName.c_str(), std::ios::binary | std::ios::out);
-			m_FileStream.close();
-			m_FileStream.open(m_FileName.c_str(), std::ios::binary | std::ios::out | std::ios::in);
-			if (!m_FileStream.is_open()) throw MLIB_EXCEPTION(m_FileName);
+		m_fileStream.open(m_filename.c_str(), std::ios::binary | std::ios::out | std::ios::in);
+		if (!m_fileStream.is_open()) {
+			m_fileStream.open(m_filename.c_str(), std::ios::binary | std::ios::out);
+			m_fileStream.close();
+			m_fileStream.open(m_filename.c_str(), std::ios::binary | std::ios::out | std::ios::in);
+			if (!m_fileStream.is_open()) throw MLIB_EXCEPTION(m_filename);
 		} 
 	}
 
 	//! closes the file stream; data is automatically saved...
 	void closeFileStream() {
-		if (m_FileStream.is_open())	m_FileStream.close();
+		if (m_fileStream.is_open())	m_fileStream.close();
 	}
 
-	std::string		m_FileName;
-	std::fstream	m_FileStream;
-	size_t			m_ReadOffset;
-	size_t			m_FileSize;
+	std::string		m_filename;
+	std::fstream	m_fileStream;
+	size_t			m_readOffset;
+	size_t			m_fileSize;
 };
 
 
@@ -175,7 +177,7 @@ private:
 class BinaryDataBufferMemory {
 public:
 	BinaryDataBufferMemory() {
-		m_ReadOffset = 0;
+		m_readOffset = 0;
 	}
 	void openBufferStream(const std::string& filename, bool clearBuffer = false) {
 		MLIB_ASSERT(false);
@@ -195,15 +197,15 @@ public:
 	}
 
 	void readData(BYTE* result, size_t size) {
-		MLIB_ASSERT(m_ReadOffset + size <= m_Data.size());
+		MLIB_ASSERT(m_readOffset + size <= m_Data.size());
 
-		memcpy(result, &m_Data[0] + m_ReadOffset, size);
-		m_ReadOffset += size;
+		memcpy(result, &m_Data[0] + m_readOffset, size);
+		m_readOffset += size;
 
 		//free memory if we reached the end of the stream
-		if (m_ReadOffset == m_Data.size()) {
+		if (m_readOffset == m_Data.size()) {
 			m_Data.resize(0);
-			m_ReadOffset = 0;
+			m_readOffset = 0;
 		}
 	}
 
@@ -211,16 +213,16 @@ public:
 	//! destroys all the data in the stream
 	void clearBuffer() {
 		m_Data.clear();
-		m_ReadOffset = 0;
+		m_readOffset = 0;
 	}
 
 	void clearReadOffset() {
-		size_t len = m_Data.size() - m_ReadOffset;
+		size_t len = m_Data.size() - m_readOffset;
 		for (unsigned int i = 0; i < len; i++) {
-			m_Data[i] = m_Data[i + m_ReadOffset];
+			m_Data[i] = m_Data[i + m_readOffset];
 		}
 		m_Data.resize(len);
-		m_ReadOffset = 0;
+		m_readOffset = 0;
 	}
 
 	void reserve(size_t size) {
@@ -253,7 +255,7 @@ public:
 		if (!input.is_open())	throw MLIB_EXCEPTION(filename);
 		input.read((char*)&m_Data[0], sizeof(BYTE)*inputFileSize);
 		input.close();
-		m_ReadOffset = 0;
+		m_readOffset = 0;
 	} 
 
 	//! since all writes are immediate, there is nothing to do
@@ -262,7 +264,7 @@ public:
 	}
 private:
 	std::vector<BYTE>	m_Data;
-	size_t				m_ReadOffset;
+	size_t				m_readOffset;
 };
 
 
