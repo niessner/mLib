@@ -35,7 +35,7 @@ public:
 	void writeData(const BYTE* t, size_t size) {
 		const bool useCompression = !std::is_same<BinaryDataCompressorNone, BinaryDataCompressor>::value;
 		if (useCompression && size > COMPRESSION_THRESHOLD_) {
-			std::vector<BYTE> compressedT;
+			Vector<BYTE> compressedT;
 			//ZLibWrapper::CompressStreamToMemory(t, size, compressedT, false);
 			m_DataCompressor.compressStreamToMemory(t, size, compressedT);
 			UINT64 compressedSize = compressedT.size();
@@ -57,7 +57,7 @@ public:
 		if (useCompression && size > COMPRESSION_THRESHOLD_) {
 			UINT64 compressedSize;
 			m_DataBuffer.readData((BYTE*)&compressedSize, sizeof(UINT64));
-			std::vector<BYTE> compressedT;	compressedT.resize(compressedSize);
+			Vector<BYTE> compressedT;	compressedT.resize(compressedSize);
 			m_DataBuffer.readData(&compressedT[0], compressedSize);
 			//ZLibWrapper::DecompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
 			m_DataCompressor.decompressStreamFromMemory(&compressedT[0], compressedSize, result, size);

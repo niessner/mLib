@@ -109,8 +109,8 @@ public:
 	Vector<float*>		m_DepthImages;	//in meters
 	Vector<vec4uc*>	m_ColorImages;	//in [0,255]^4
 
-	std::vector<UINT64>	m_DepthImagesTimeStamps;
-	std::vector<UINT64>	m_ColorImagesTimeStamps;
+	Vector<UINT64>	m_DepthImagesTimeStamps;
+	Vector<UINT64>	m_ColorImagesTimeStamps;
 };
 
 
@@ -225,7 +225,7 @@ public:
 
 	unsigned int m_VersionNumber;
 	unsigned int m_NumSensors;
-	std::vector<CalibratedSensorData>	m_CalibratedSensorData;
+	Vector<CalibratedSensorData>	m_CalibratedSensorData;
 };
 
 

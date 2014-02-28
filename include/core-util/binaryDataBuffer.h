@@ -73,7 +73,7 @@ public:
 		if (len == 0) {  //if there is no data left, clear the buffer
 			clearBuffer();
 		} else {
-			std::vector<BYTE> oldData;
+			Vector<BYTE> oldData;
 			copyDataToMemory(oldData);
 
 			closeFileStream();
@@ -90,7 +90,7 @@ public:
 	}
 
 	void saveToFile(const std::string &filename) {
-		std::vector<BYTE> oldData;
+		Vector<BYTE> oldData;
 		copyDataToMemory(oldData);
 
 		std::ofstream output(filename, std::ios::binary);
@@ -127,7 +127,7 @@ private:
 
 
 	//! reads all the 'active' file data to system memory
-	void copyDataToMemory(std::vector<BYTE>& data) {
+	void copyDataToMemory(Vector<BYTE>& data) {
 		size_t len = m_fileSize - m_readOffset;
 		data.resize(len);
 		m_fileStream.seekg(m_readOffset);
@@ -263,7 +263,7 @@ public:
 		return;
 	}
 private:
-	std::vector<BYTE>	m_Data;
+	Vector<BYTE>	m_Data;
 	size_t				m_readOffset;
 };
 

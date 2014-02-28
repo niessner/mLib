@@ -57,13 +57,13 @@ struct MeshData {
 		return bb;
 	}
 
-	std::vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
-	std::vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below)
-	std::vector<point2d<FloatType>>	m_TextureCoords;	//tex coords are indexed (see below)
-	std::vector<point3d<FloatType>>	m_Colors;			//colors are not indexed (exclusive per vertex) 
-	std::vector<std::vector<unsigned int>>	m_FaceIndicesVertices;		//indices in face array
-	std::vector<std::vector<unsigned int>>	m_FaceIndicesNormals;		//indices in normal array
-	std::vector<std::vector<unsigned int>>	m_FaceIndicesTextureCoords;	//indices in texture array
+	Vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
+	Vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below)
+	Vector<point2d<FloatType>>	m_TextureCoords;	//tex coords are indexed (see below)
+	Vector<point3d<FloatType>>	m_Colors;			//colors are not indexed (exclusive per vertex) 
+	Vector<Vector<unsigned int>>	m_FaceIndicesVertices;		//indices in face array
+	Vector<Vector<unsigned int>>	m_FaceIndicesNormals;		//indices in normal array
+	Vector<Vector<unsigned int>>	m_FaceIndicesTextureCoords;	//indices in texture array
 };
 
 typedef MeshData<float>		MeshDataf;

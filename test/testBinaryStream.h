@@ -53,7 +53,7 @@ class TestBinaryStream : public Test {
 		const std::string filenameCompressed = "testStreamCompressed.out";
 		const std::string filename = "testStream.out";
 
-		std::vector<int> v(10000, 0);
+		Vector<int> v(10000, 0);
 
 		//for an output stream, 'clearBuffer' should be set to true to reset it
 		BinaryDataStreamZLibFile streamOut(filenameCompressed, true);
