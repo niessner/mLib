@@ -77,7 +77,7 @@ public:
 	template<class U>
 	Matrix4x4(const Matrix4x4<U>& other) {
 		for (unsigned int i = 0; i < 16; i++) {
-			getRawData()[i] = (FloatType)other.getRawData()[i];
+			ptr()[i] = (FloatType)other.ptr()[i];
 		}
 	}
 

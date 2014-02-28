@@ -286,7 +286,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	UINT64 rows, cols;
 	s >> rows >> cols;
 	g.allocate(rows, cols);
-	or (UINT64 row = 0; row < g.rows(); row++)
+	for (UINT64 row = 0; row < g.rows(); row++)
 		for (UINT64 col = 0; col < g.cols(); col++)
 			s << g(row, col);
 	return s;

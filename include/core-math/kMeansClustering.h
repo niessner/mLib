@@ -129,7 +129,7 @@ public:
 				delta += Metric::Dist(previousClusterCenters[clusterIndex], m_clusters[clusterIndex].center);
 
 			converged = (delta <= maxDelta || pass == maxIterations);
-			if(verbose) Console::log(std::string("pass ") + std::to_string(pass) + std::string(", ") + std::string("delta=") + std::string(delta));
+			if(verbose) Console::log(std::string("pass ") + std::to_string(pass) + std::string(", ") + std::string("delta=") + std::to_string(delta));
 		}
 	}
 

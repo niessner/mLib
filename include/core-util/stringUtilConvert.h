@@ -37,19 +37,19 @@ namespace Convert {
 	}
 	template<class U> inline point2d<U> toPoint2D(const std::string& s) {
 		point3d<U> ret;
-		std::stringstream ss(removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s,'f'));
 		ss >> ret.x >> ret.y;
 		return ret;
 	}
 	template<class U> inline point3d<U> toPoint3D(const std::string& s) {
 		point3d<U> ret;
-		std::stringstream ss(removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s,'f'));
 		ss >> ret.x >> ret.y >> ret.z;
 		return ret;
 	}
 	template<class U> inline point4d<U> toPoint4D(const std::string& s) {
 		point4d<U> ret;
-		std::stringstream ss(removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s,'f'));
 		ss >> ret.x >> ret.y >> ret.z >> ret.w;
 		return ret;
 	}
@@ -79,15 +79,15 @@ namespace Convert {
 		res = toBool(s);
 	}
 	template<class U> inline void to(const std::string& s, point2d<U>& res) {
-		std::stringstream ss(removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s,'f'));
 		ss >> res.x >> res.y;
 	}
 	template<class U> inline void to(const std::string& s, point3d<U>& res) {
-		std::stringstream ss(removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s,'f'));
 		ss >> res.x >> res.y >> res.z;
 	}
 	template<class U> inline void to(const std::string& s, point4d<U>& res) {
-		std::stringstream ss(removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s,'f'));
 		ss >> res.x >> res.y >> res.z >> res.w;
 	}
 
