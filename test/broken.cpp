@@ -27,6 +27,6 @@ template<> const p3d<float> p3d<float>::origin(0.0f, 0.0f, 0.0f);
 
 int main()
 {
-	p3d p = vec3f::origin;
+	p3d<float> p = p3d<float>::origin;
 	return 0;
 }
