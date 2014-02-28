@@ -44,3 +44,30 @@ private:
 	Clock m_clock;
 	bool m_terminated;
 };
+
+class FrameTimer
+{
+public:
+    FrameTimer()
+    {
+        m_secondsPerFrame = 1.0 / 60.0;
+    }
+    void frame()
+    {
+        double elapsed = m_clock.elapsed();
+        m_clock.start();
+        m_secondsPerFrame = elapsed * 0.2 + m_secondsPerFrame * 0.8;
+    }
+    float framesPerSecond()
+    {
+        return 1.0f / (float)m_secondsPerFrame;
+    }
+    float secondsPerFrame()
+    {
+        return (float)m_secondsPerFrame;
+    }
+
+private:
+    Clock m_clock;
+    double m_secondsPerFrame;
+};

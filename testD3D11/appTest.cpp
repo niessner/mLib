@@ -22,10 +22,14 @@ void AppTest::init(ApplicationData &app)
     vec3f eye(-0.5f, -0.5f, 1.5f);
     vec3f worldUp(0.0f, 0.0f, 1.0f);
     m_camera = Camera(eye, worldUp, vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
+
+    m_font.init(app.graphics, "Calibri");
 }
 
 void AppTest::render(ApplicationData &app)
 {
+    m_timer.frame();
+
     ConstantBuffer constants;
     constants.worldViewProj = m_camera.cameraPerspective();
     m_constants.update(app.graphics, constants);
@@ -41,6 +45,8 @@ void AppTest::render(ApplicationData &app)
     m_constants.bindVertexShader(app.graphics, 0);
 
     m_pointCloud.render(app.graphics);
+
+    m_font.drawString(app.graphics, "FPS: " + Convert::toString(m_timer.framesPerSecond()), vec2i(10, 5), 24.0f, RGBColor::Red);
 }
 
 void AppTest::resize(ApplicationData &app)
