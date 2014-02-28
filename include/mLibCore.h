@@ -48,7 +48,7 @@
 #include "core-util/commandLineReader.h"
 #include "core-util/parameterFile.h"
 #include "core-util/keycodes.h"
-#include "core-util/calibratedSensorData.h"
+#include "core-util/pipe.h"
 
 //
 // core-multithreading headers

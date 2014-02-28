@@ -11,16 +11,16 @@
 #include <iostream>
 
 template<class FloatType>
-class BoundingBox
+class BoundingBox3d
 {
 public:
 
-	BoundingBox(void)
+	BoundingBox3d(void)
 	{
 		reset();
 	}
 
-	BoundingBox(const std::vector<point3d<FloatType>>& verts) 
+	BoundingBox3d(const std::vector<point3d<FloatType>>& verts) 
 	{
 		reset();
 		for (unsigned int i = 0; i < verts.size(); i++) {
@@ -28,7 +28,7 @@ public:
 		}
 	}
 
-	BoundingBox(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) 
+	BoundingBox3d(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) 
 	{
 		reset();
 		minB = minBound;
@@ -36,7 +36,7 @@ public:
 	}
 
 
-	~BoundingBox(void)
+	~BoundingBox3d(void)
 	{
 
 	}
@@ -48,7 +48,7 @@ public:
 		maxX = maxY = maxZ = -std::numeric_limits<FloatType>::max();
 	}
 
-	void include(const BoundingBox &other)
+	void include(const BoundingBox3d &other)
 	{
 		if (other.minX < minX)	minX = other.minX;
 		if (other.minY < minY)	minY = other.minY;
@@ -178,8 +178,8 @@ public:
 	}
 
 	//! scales the bounding box (see scale)
-	BoundingBox<FloatType> operator*(FloatType t) const {
-		BoundingBox<FloatType> res = *this;
+	BoundingBox3d<FloatType> operator*(FloatType t) const {
+		BoundingBox3d<FloatType> res = *this;
 		res.scale(t);
 		return res;
 	}
@@ -199,13 +199,13 @@ protected:
 };
 
 template<class FloatType>
-std::ostream& operator<< (std::ostream& s, const BoundingBox<FloatType>& bb) {
+std::ostream& operator<< (std::ostream& s, const BoundingBox3d<FloatType>& bb) {
 	s << bb.getMin() << std::endl << bb.getMax() << std::endl;
 	return s;
 }
 
 
-typedef BoundingBox<float> BoundingBoxf;
-typedef BoundingBox<double> BoundingBoxd;
+typedef BoundingBox3d<float> bbox3f;
+typedef BoundingBox3d<double> bbox3d;
 
 #endif

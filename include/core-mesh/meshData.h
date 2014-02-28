@@ -49,8 +49,8 @@ struct MeshData {
 		}
 	}
 
-	BoundingBox<FloatType> getBoundingBox() {
-		BoundingBox<FloatType> bb;
+	BoundingBox3d<FloatType> getBoundingBox() {
+		BoundingBox3d<FloatType> bb;
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			bb.include(m_Vertices[i]);
 		}
