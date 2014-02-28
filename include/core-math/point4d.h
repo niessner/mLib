@@ -284,4 +284,6 @@ typedef point4d<unsigned int> vec4ui;
 typedef point4d<unsigned char> vec4uc;
 
 
+template<> const vec4f vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);
+
 #endif

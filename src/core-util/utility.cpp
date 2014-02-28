@@ -276,7 +276,7 @@ namespace Utility
 
 	void makeDirectory(const std::string &directory)
 	{
-		mkdir(directory.ptr(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}
 #endif
 }
