@@ -23,10 +23,12 @@ public:
 	};
 };
 
-template<> const p3d<float> p3d<float>::origin(0.0f, 0.0f, 0.0f);
+typedef p3d<float> p3df;
 
 int main()
 {
-	p3d<float> p = p3d<float>::origin;
+	p3df p = p3df::origin;
 	return 0;
 }
+
+template<> const p3df p3df::origin(0.0f, 0.0f, 0.0f);
