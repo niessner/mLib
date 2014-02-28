@@ -1,22 +1,42 @@
 #ifndef INCLUDE_CORE_MESH_TRIMESH_H_
 #define INCLUDE_CORE_MESH_TRIMESH_H_
 
-struct MeshVertex
-{
-    MeshVertex() : position(vec3f::origin), normal(vec3f::origin), attributeA(vec4f::origin), attributeB(vec4f::origin) { }
-    explicit MeshVertex(const vec3f& _position) : position(_position) {}
-    MeshVertex(const vec3f& _p, const vec3f& _n, const vec4f& _a, const vec4f& _b) : position(_p), normal(_n), attributeA(_a), attributeB(_b) { }
-    vec3f position;
-    vec3f normal;
-    vec4f attributeA;
-    vec4f attributeB;
-};
+
 
 class TriMesh
 {
     public:
+		struct TriMeshVertex
+		{
+			TriMeshVertex() : position(vec3f::origin), normal(vec3f::origin), attributeA(vec4f::origin), attributeB(vec4f::origin) { }
+			explicit TriMeshVertex(const vec3f& _position) : position(_position) {}
+			TriMeshVertex(const vec3f& _p, const vec3f& _n, const vec4f& _a, const vec4f& _b) : position(_p), normal(_n), attributeA(_a), attributeB(_b) { }
+			vec3f position;
+			vec3f normal;
+			vec4f attributeA;
+			vec4f attributeB;
+		};
+
         TriMesh() : m_vertices(), m_indices() { }
-        TriMesh(const Vector<MeshVertex>& _vertices, const Vector<UINT>& _indices)
+		TriMesh(const MeshDataf& meshData) {
+			m_vertices.resize(meshData.m_Vertices.size());
+			bool hasNormals = meshData.m_Normals.size() > 0;
+			bool hasColors = meshData.m_Colors.size() > 0;
+			for (unsigned int i = 0; i < m_vertices.size(); i++) {
+				m_vertices[i].position = meshData.m_Vertices[i];
+				if (hasColors)	m_vertices[i].attributeA = meshData.m_Colors[i];
+			}
+
+			for (size_t i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
+				if (meshData.m_FaceIndicesVertices[i].size() == 3) {
+					for (size_t k = 0; k < meshData.m_FaceIndicesVertices[i].size(); k++) 
+					m_indices.pushBack(meshData.m_FaceIndicesVertices[i][k]);
+				} else {
+					MLIB_WARNING("non triangle face found - ignoring it");
+				}
+			}
+		}
+        TriMesh(const Vector<TriMeshVertex>& _vertices, const Vector<UINT>& _indices)
         {
             m_vertices = _vertices;
             m_indices = _indices;
@@ -33,22 +53,22 @@ class TriMesh
         }
         void applyTransform(const mat4f& m)
         {
-            for (MeshVertex& v : m_vertices) { v.position = m * v.position; }
+            for (TriMeshVertex& v : m_vertices) { v.position = m * v.position; }
         }
 
         void stretch(float s) { stretch(vec3f(s, s, s)); }
 
         void stretch(const vec3f& v)
         {
-            for (MeshVertex& mv : m_vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
+            for (TriMeshVertex& mv : m_vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
         }
 
-        const Vector<MeshVertex>& vertices() const { return m_vertices; }
+        const Vector<TriMeshVertex>& vertices() const { return m_vertices; }
 
         const Vector<UINT>& indices() const { return m_indices; }
 
     private:
-        Vector<MeshVertex> m_vertices;
+        Vector<TriMeshVertex> m_vertices;
         Vector<UINT> m_indices;
 };
 

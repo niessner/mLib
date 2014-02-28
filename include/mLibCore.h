@@ -64,9 +64,14 @@
 #include "core-graphics/RGBColor.h"
 #include "core-graphics/camera.h"
 
+#include "core-graphics/boundingBox.h"
+
 //
 // core-mesh headers
 //
+#include "core-mesh/meshData.h"
+#include "core-mesh/meshIO.h"
+
 #include "core-mesh/triMesh.h"
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"

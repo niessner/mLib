@@ -17,7 +17,7 @@ int CubeIData[12][3] =
 
 TriMesh box(float xDim, float yDim, float zDim, const vec4f& color)
 {
-    Vector<MeshVertex> V(8);
+    Vector<TriMesh::TriMeshVertex> V(8);
     Vector<UINT> I(12*3);
 
     // Vertices

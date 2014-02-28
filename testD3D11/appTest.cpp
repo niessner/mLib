@@ -3,9 +3,15 @@
 
 void AppTest::init(ApplicationData &app)
 {
-    const std::string testPLY = "scans/gates381.ply";
-    const TriMesh triMesh = OpenMeshLoader::load(testPLY);
-    m_mesh.load(app.graphics, triMesh);
+    //const std::string testPLY = "scans/gates381.ply";
+    //const TriMesh triMesh = OpenMeshLoader::load(testPLY);
+    //m_mesh.load(app.graphics, triMesh);
+
+	//const std::string testFilename = "scans/gates381.off";
+	const std::string testFilename = "scans/gates381.obj";
+	MeshDataf meshData = MeshIOf::loadFromFile(testFilename);
+	const TriMesh triMesh(meshData);
+	m_mesh.load(app.graphics, triMesh);
 
     Vector<vec3f> points(5000, [](UINT64 i) {return vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
     m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(MeshShapes::box(0.01f), points));

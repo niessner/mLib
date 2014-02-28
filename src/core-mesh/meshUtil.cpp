@@ -5,7 +5,7 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const Ve
     const UINT64 tVertices = templateMesh.vertices().size();
     const UINT64 tIndices = templateMesh.indices().size();
 
-    Vector<MeshVertex> vertices(pointCount * tVertices);
+    Vector<TriMesh::TriMeshVertex> vertices(pointCount * tVertices);
     Vector<UINT> indices(pointCount * tIndices);
 
     for (UINT pointIndex = 0; pointIndex < points.size(); pointIndex++)
@@ -15,7 +15,7 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const Ve
 
         for (UINT vertexIndex = 0; vertexIndex < tVertices; vertexIndex++)
         {
-            MeshVertex& v = vertices[baseVertexIndex + vertexIndex];
+            TriMesh::TriMeshVertex& v = vertices[baseVertexIndex + vertexIndex];
             v = templateMesh.vertices()[vertexIndex];
             v.position += p;
         }

@@ -122,6 +122,15 @@ namespace StringUtil {
 		str.erase(std::remove(str.begin(), str.end(), c), str.end());
 		return str;
 	}
+
+	//! gets the file extension (ignoring case)
+	inline std::string getFileExtension(const std::string& filename) {
+		std::string extension = filename.substr(filename.find_last_of(".")+1);
+		for (unsigned int i = 0; i < extension.size(); i++) {
+			extension[i] = tolower(extension[i]);
+		}
+		return extension;
+	}
 }
 
 #endif

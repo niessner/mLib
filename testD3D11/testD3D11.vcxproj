@@ -106,6 +106,7 @@
     <ClInclude Include="..\include\core-base\string.h" />
     <ClInclude Include="..\include\core-base\vector.h" />
     <ClInclude Include="..\include\core-graphics\camera.h" />
+    <ClInclude Include="..\include\core-graphics\RGBColor.h" />
     <ClInclude Include="..\include\core-math\denseMatrix.h" />
     <ClInclude Include="..\include\core-math\kMeansClustering.h" />
     <ClInclude Include="..\include\core-math\linearSolver.h" />
@@ -118,6 +119,8 @@
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-math\sparseMatrix.h" />
+    <ClInclude Include="..\include\core-mesh\meshData.h" />
+    <ClInclude Include="..\include\core-mesh\meshIO.h" />
     <ClInclude Include="..\include\core-mesh\meshShapes.h" />
     <ClInclude Include="..\include\core-mesh\meshUtil.h" />
     <ClInclude Include="..\include\core-mesh\triMesh.h" />
@@ -130,6 +133,8 @@
     <ClInclude Include="..\include\core-util\keycodes.h" />
     <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
     <ClInclude Include="..\include\core-util\parameterFile.h" />
+    <ClInclude Include="..\include\core-util\stringUtil.h" />
+    <ClInclude Include="..\include\core-util\stringUtilConvert.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
     <ClInclude Include="..\include\ext-openmesh\loader.h" />
     <ClInclude Include="..\include\mLibCore.h" />

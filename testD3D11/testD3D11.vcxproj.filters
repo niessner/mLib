@@ -168,6 +168,21 @@
     <ClInclude Include="..\include\core-mesh\meshShapes.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-graphics\RGBColor.h">
+      <Filter>mLibHeader\core-graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\stringUtilConvert.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\stringUtil.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\meshIO.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\meshData.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
