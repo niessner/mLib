@@ -1,10 +1,6 @@
-/*#include <Windows.h>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <aclapi.h>
 
-#include "pipe.h"*/
+#include <AccCtrl.h>
+#include <Aclapi.h>
 
 Pipe::Pipe()
 {
@@ -13,7 +9,7 @@ Pipe::Pipe()
 
 Pipe::~Pipe()
 {
-    ClosePipe();
+    closePipe();
 }
 
 void Pipe::closePipe()
@@ -27,7 +23,7 @@ void Pipe::closePipe()
     }
 }
 
-void Pipe::createPipe(const string &pipeName, bool block)
+void Pipe::createPipe(const std::string &pipeName, bool block)
 {
 	Console::log() << "creating pipe " << pipeName << std::endl;
 
@@ -49,7 +45,7 @@ void Pipe::createPipe(const string &pipeName, bool block)
                                             SECURITY_WORLD_RID,
                                             0, 0, 0, 0, 0, 0, 0,
                                             &pEveryoneSID);
-    Assert(success != FALSE, "AllocateAndInitializeSid failed in Pipe::CreatePipe");
+    MLIB_ASSERT_STR(success != FALSE, "AllocateAndInitializeSid failed in Pipe::CreatePipe");
 
     // Initialize an EXPLICIT_ACCESS structure for an ACE.
     // The ACE will allow Everyone read access to the key.
@@ -63,14 +59,14 @@ void Pipe::createPipe(const string &pipeName, bool block)
 
     // Create a new ACL that contains the new ACEs.
     dwRes = SetEntriesInAcl(1, ea, NULL, &pACL);
-    Assert(dwRes == ERROR_SUCCESS, "SetEntriesInAcl failed in Pipe::CreatePipe");
+    MLIB_ASSERT_STR(dwRes == ERROR_SUCCESS, "SetEntriesInAcl failed in Pipe::CreatePipe");
 
     // Initialize a security descriptor.  
     pSD = (PSECURITY_DESCRIPTOR) LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
-    Assert(pSD != NULL, "LocalAlloc failed in Pipe::CreatePipe");
+    MLIB_ASSERT_STR(pSD != NULL, "LocalAlloc failed in Pipe::CreatePipe");
     
     success = InitializeSecurityDescriptor(pSD, SECURITY_DESCRIPTOR_REVISION);
-    Assert(success != FALSE, "InitializeSecurityDescriptor failed in Pipe::CreatePipe");
+    MLIB_ASSERT_STR(success != FALSE, "InitializeSecurityDescriptor failed in Pipe::CreatePipe");
     
     // Add the ACL to the security descriptor. 
     success = SetSecurityDescriptorDacl(pSD, 
@@ -84,7 +80,7 @@ void Pipe::createPipe(const string &pipeName, bool block)
     attributes.lpSecurityDescriptor = pSD;
     attributes.bInheritHandle = FALSE;
 
-    string fullPipeName = string("\\\\.\\pipe\\") + pipeName;
+    std::string fullPipeName = std::string("\\\\.\\pipe\\") + pipeName;
     m_handle = CreateNamedPipeA( 
 		fullPipeName.c_str(),		// pipe name
 		PIPE_ACCESS_DUPLEX,         // read/write access
@@ -96,7 +92,7 @@ void Pipe::createPipe(const string &pipeName, bool block)
         PipeBufferSize,             // input buffer size 
         NMPWAIT_USE_DEFAULT_WAIT,   // client time-out 
         &attributes);               // default security attribute
-    Assert(m_handle != INVALID_HANDLE_VALUE, "CreateNamedPipe failed in Pipe::CreatePipe");
+    MLIB_ASSERT_STR(m_handle != INVALID_HANDLE_VALUE, "CreateNamedPipe failed in Pipe::CreatePipe");
 
     //
     // Block until a connection comes in
@@ -104,10 +100,10 @@ void Pipe::createPipe(const string &pipeName, bool block)
 	
     if(block)
     {
-		cout << "Pipe created, waiting for connection" << endl;
+		Console::log("Pipe created, waiting for connection");
         BOOL Connected = (ConnectNamedPipe(m_handle, NULL) != 0);
-        Assert(Connected != FALSE, "ConnectNamedPipe failed in Pipe::CreatePipe");
-		cout << "Connected" << endl;
+        MLIB_ASSERT_STR(Connected != FALSE, "ConnectNamedPipe failed in Pipe::CreatePipe");
+		Console::log("Connected");
     }
 	else
 	{
@@ -115,15 +111,15 @@ void Pipe::createPipe(const string &pipeName, bool block)
 	}
 }
 
-void Pipe::ConnectToLocalPipe(const string &pipeName)
+void Pipe::connectToLocalPipe(const std::string &pipeName)
 {
-    ConnectToPipe(string("\\\\.\\pipe\\") + pipeName);
+    connectToPipe(std::string("\\\\.\\pipe\\") + pipeName);
 }
 
-void Pipe::ConnectToPipe(const string &pipeName)
+void Pipe::connectToPipe(const std::string &pipeName)
 {
-	cout << "Connecting to " << pipeName << endl;
-    ClosePipe();
+	Console::log("Connecting to " + pipeName);
+    closePipe();
     bool done = false;
     while(!done)
     {
@@ -151,12 +147,12 @@ void Pipe::ConnectToPipe(const string &pipeName)
         &mode,    // new pipe mode 
         NULL,     // don't set maximum bytes 
         NULL);    // don't set maximum time 
-    Assert(success != FALSE, "SetNamedPipeHandleState failed in Pipe::ConnectToPipe");
+    MLIB_ASSERT_STR(success != FALSE, "SetNamedPipeHandleState failed in Pipe::ConnectToPipe");
 }
 
-bool Pipe::MessagePresent()
+bool Pipe::messagePresent()
 {
-	Assert(m_handle != NULL, "Pipe invalid in Pipe::MessagePresent");
+	MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::MessagePresent");
     DWORD BytesReady  = 0;
 	DWORD BytesLeft   = 0;
     BOOL success = PeekNamedPipe(
@@ -166,13 +162,13 @@ bool Pipe::MessagePresent()
         NULL,
         &BytesReady,
         &BytesLeft);
-    //Assert(success != FALSE, "PeekNamedPipe failed in Pipe::MessagePresent");
+    //MLIB_ASSERT_STR(success != FALSE, "PeekNamedPipe failed in Pipe::MessagePresent");
     return (BytesReady > 0);
 }
 
-bool Pipe::ReadMessage(vector<BYTE> &Message)
+bool Pipe::readMessage(Vector<BYTE> &Message)
 {
-    Assert(m_handle != NULL, "Pipe invalid in Pipe::ReadMessage");
+    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::ReadMessage");
     DWORD BytesReady  = 0;
     BOOL success = PeekNamedPipe(
         m_handle,
@@ -181,7 +177,7 @@ bool Pipe::ReadMessage(vector<BYTE> &Message)
         NULL,
         &BytesReady,
         NULL);
-    Assert(success != FALSE, "PeekNamedPipe failed in Pipe::ReadMessage");
+    MLIB_ASSERT_STR(success != FALSE, "PeekNamedPipe failed in Pipe::ReadMessage");
     Message.resize(BytesReady);
     if(BytesReady == 0)
     {
@@ -195,28 +191,28 @@ bool Pipe::ReadMessage(vector<BYTE> &Message)
         (DWORD)Message.size(),  // size of buffer 
         &BytesRead,             // number of bytes read 
         NULL);                  // not overlapped I/O 
-    Assert(success != FALSE && BytesRead > 0, "ReadFile failed in Pipe::ReadMessage");
+    MLIB_ASSERT_STR(success != FALSE && BytesRead > 0, "ReadFile failed in Pipe::ReadMessage");
     return true;
 }
 
-void Pipe::SendMessage(const vector<BYTE> &Message)
+void Pipe::sendMessage(const Vector<BYTE> &Message)
 {
-    SendMessage(&Message[0], (UINT)Message.size());
+    sendMessage(&Message[0], (UINT)Message.size());
 }
 
-void Pipe::SendMessage(const string &message)
+void Pipe::sendMessage(const std::string &message)
 {
-	SendMessage((const BYTE *)message.c_str(), (UINT)message.size());
+	sendMessage((const BYTE *)message.c_str(), (UINT)message.size());
 
-	string endLine;
+	std::string endLine;
 	endLine.push_back('\n');
-	SendMessage((const BYTE *)endLine.c_str(), 1);
+	sendMessage((const BYTE *)endLine.c_str(), 1);
 }
 
-void Pipe::SendMessage(const BYTE *Message, UINT MessageLength)
+void Pipe::sendMessage(const BYTE *Message, UINT MessageLength)
 {
 	if(Message == NULL || MessageLength == 0) return;
-    Assert(m_handle != NULL, "Pipe invalid in Pipe::SendMessage");
+    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::SendMessage");
 
     DWORD BytesWritten;
     BOOL success = WriteFile( 
@@ -225,13 +221,13 @@ void Pipe::SendMessage(const BYTE *Message, UINT MessageLength)
         MessageLength,         // message length
         &BytesWritten,         // bytes written
         NULL);                 // not overlapped
-    Assert(success != FALSE, "WriteFile failed in Pipe::ReadMessage");
-    Assert(BytesWritten == MessageLength, "WriteFile failed to send entire message in Pipe::ReadMessage");
+    MLIB_ASSERT_STR(success != FALSE, "WriteFile failed in Pipe::ReadMessage");
+    MLIB_ASSERT_STR(BytesWritten == MessageLength, "WriteFile failed to send entire message in Pipe::ReadMessage");
 }
 
-UINT Pipe::ActiveInstances()
+UINT Pipe::activeInstances()
 {
-    Assert(m_handle != NULL, "Pipe invalid in Pipe::ActiveInstances");
+    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::ActiveInstances");
     DWORD Instances;
     BOOL success = GetNamedPipeHandleState(
         m_handle,
@@ -241,13 +237,13 @@ UINT Pipe::ActiveInstances()
         NULL,
         NULL,
         0);
-    Assert(success != FALSE, "GetNamedPipeHandleState failed in Pipe::ActiveInstances");
+    MLIB_ASSERT_STR(success != FALSE, "GetNamedPipeHandleState failed in Pipe::ActiveInstances");
     return Instances;
 }
 
-string Pipe::UserName()
+std::string Pipe::userName()
 {
-    Assert(m_handle != NULL, "Pipe invalid in Pipe::UserName");
+    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::UserName");
     char buffer[512];
     BOOL success = GetNamedPipeHandleStateA(
         m_handle,
@@ -257,6 +253,6 @@ string Pipe::UserName()
         NULL,
         buffer,
         512);
-    Assert(success != FALSE, "GetNamedPipeHandleState failed in Pipe::UserName");
-    return string(buffer);
+    MLIB_ASSERT_STR(success != FALSE, "GetNamedPipeHandleState failed in Pipe::UserName");
+    return std::string(buffer);
 }
