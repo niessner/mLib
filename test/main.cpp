@@ -42,7 +42,7 @@ int main()
 	try {
 		throw MLIB_EXCEPTION("bla");
 	} catch (std::exception& e) {
-		std::cout << e.what() << std::endl;
+		Console::log() << e.what() << std::endl;
 	}
 
 	App a;
