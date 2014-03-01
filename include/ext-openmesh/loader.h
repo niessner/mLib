@@ -10,6 +10,8 @@ typedef OpenMesh::TriMesh_ArrayKernelT<OpenMesh::DefaultTraits> Mesh;
 
 static TriMesh load(const std::string& filename)
 {
+    MLIB_ASSERT_STR(Utility::fileExists(filename), "File not found: " + filename);
+
     namespace io = OpenMesh::IO;
     io::Options opts = io::Options::VertexColor | io::Options::VertexNormal;
 

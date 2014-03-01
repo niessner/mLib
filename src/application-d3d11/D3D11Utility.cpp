@@ -12,7 +12,7 @@ ID3DBlob* D3D11Utility::CompileShader(const std::string &filename, const std::st
 
 	ID3DBlob* blob = NULL;
 	ID3DBlob* errorBlob = NULL;
-	HRESULT hr = D3DX11CompileFromFile( filename.c_str(), NULL, NULL, entryPoint.c_str(), shaderModel.c_str(), 
+	HRESULT hr = D3DX11CompileFromFile( std::wstring(filename.begin(), filename.end()).c_str(), NULL, NULL, entryPoint.c_str(), shaderModel.c_str(), 
 		shaderFlags, 0, NULL, &blob, &errorBlob, NULL );
 	if( FAILED(hr) )
 	{

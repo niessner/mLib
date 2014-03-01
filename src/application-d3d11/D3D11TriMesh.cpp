@@ -45,6 +45,7 @@ void D3D11TriMesh::reset(GraphicsDevice &g)
 
 void D3D11TriMesh::initVB(GraphicsDevice &g)
 {
+    if (m_MeshVertices.size() == 0) return;
 	auto &device = g.castD3D11().device();
 
 	D3D11_BUFFER_DESC bufferDesc;
@@ -70,6 +71,7 @@ void D3D11TriMesh::initVB(GraphicsDevice &g)
 
 void D3D11TriMesh::initIB(GraphicsDevice &g)
 {
+    if (m_MeshIndices.size() == 0) return;
 	auto &device = g.castD3D11().device();
 
 	D3D11_BUFFER_DESC bufferDesc;
@@ -88,6 +90,7 @@ void D3D11TriMesh::initIB(GraphicsDevice &g)
 
 void D3D11TriMesh::render(GraphicsDevice &g)
 {
+    if (m_MeshIndices.size() == 0) return;
 	auto &context = g.castD3D11().context();
 
 	context.IASetIndexBuffer( m_indexBuffer, DXGI_FORMAT_R32_UINT, 0 );

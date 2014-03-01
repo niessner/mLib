@@ -1,7 +1,9 @@
+#ifndef _MLIB_CORE_H
+#define _MLIB_CORE_H
+
 #ifndef WIN32
 #define LINUX
 #endif
-
 
 //
 // core-base headers
@@ -75,3 +77,5 @@
 #include "core-mesh/triMesh.h"
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"
+
+#endif  // _MLIB_CORE_H
