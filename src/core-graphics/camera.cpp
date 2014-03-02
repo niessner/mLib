@@ -21,6 +21,7 @@ void Camera::updateAspectRatio(float newAspect)
 {
 	m_aspect = newAspect;
 	m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);
+    update();
 }
 
 void Camera::update()
