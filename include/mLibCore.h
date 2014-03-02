@@ -51,6 +51,7 @@
 #include "core-util/parameterFile.h"
 #include "core-util/keycodes.h"
 #include "core-util/pipe.h"
+#include "core-util/UIConnection.h"
 
 //
 // core-multithreading headers

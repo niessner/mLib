@@ -26,6 +26,7 @@
 #include "../src/core-util/directory.cpp"
 #include "../src/core-util/clock.cpp"
 #include "../src/core-util/pipe.cpp"
+#include "../src/core-util/UIConnection.cpp"
 
 //
 // core-multithreading source files
