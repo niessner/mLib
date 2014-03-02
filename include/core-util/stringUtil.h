@@ -54,7 +54,8 @@ namespace StringUtil {
 	}
 
 	inline std::string replace(const std::string& str, char find, char replace) {
-		return StringUtil::replace(str, std::to_string(find), std::to_string(replace));
+        // NOTE: to_string(char) gives unexpected conversion to number so use std::string operator+
+		return StringUtil::replace(str, std::string("") + find, std::string("") + replace);
 	}
 
 
