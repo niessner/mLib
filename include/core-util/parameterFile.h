@@ -70,7 +70,7 @@ public:
 	}
 
 	template<class T>
-	bool getParameterForValue(const std::string& name, T& value) const {
+	bool readParameter(const std::string& name, T& value) const {
 		if (m_CaseSensitive) {
 			const auto s = m_Values.find(name);
 			if (s == m_Values.end()) {
@@ -91,7 +91,7 @@ public:
 		}
 	} 
 	template<class U>
-	bool getParameterForValue(const std::string& name, Vector<U>& value) const {
+	bool readParameter(const std::string& name, Vector<U>& value) const {
 		value.clear();
 		for (size_t i = 0;; i++) {
 			std::stringstream ss;	ss << i;
@@ -109,7 +109,7 @@ public:
 	}
 
 	template<class U>
-	bool getParameterForValue(const std::string& name, std::list<U>& value) const {
+	bool readParameter(const std::string& name, std::list<U>& value) const {
 		value.clear();
 		for (size_t i = 0;; i++) {
 			std::stringstream ss;	ss << i;
