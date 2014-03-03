@@ -9,6 +9,7 @@ class GraphicsDevice
 public:
 	virtual ~GraphicsDevice() {}
 	virtual void init(const WindowWin32 &window) = 0;
+    virtual void resize(UINT width, UINT height) = 0;
 	virtual void renderBeginFrame() = 0;
 	virtual void renderEndFrame() = 0;
 

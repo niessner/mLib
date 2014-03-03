@@ -23,7 +23,7 @@ public:
 		SAFE_RELEASE(m_indexBuffer);
 	}
 	void load(GraphicsDevice &g, const TriMesh& mesh);
-	//void load(GraphicsDevice &g, TriMesh&& mesh);
+	void load(GraphicsDevice &g, TriMesh&& mesh);
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
@@ -38,13 +38,8 @@ private:
 	void initVB(GraphicsDevice &g);
 	void initIB(GraphicsDevice &g);
 
-	//
-	// These are CPU copies of the data buffers. They should be replaced by a non-D3D mesh structure.
-	//
-	Vector<D3D11TriMeshVertex>	m_MeshVertices;
-	Vector<unsigned int>		m_MeshIndices;
-
 	ID3D11InputLayout *m_layout;
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;
+    TriMesh m_mesh;
 };

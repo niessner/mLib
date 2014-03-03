@@ -47,18 +47,6 @@ void D3D11GraphicsDevice::init(const WindowWin32 &window)
 	backBuffer->Release();
 
     //
-	// Setup the viewport
-    //
-	D3D11_VIEWPORT viewport;
-	viewport.Width = (FLOAT)width;
-	viewport.Height = (FLOAT)height;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	m_context->RSSetViewports( 1, &viewport );
-
-    //
 	// Setup the rasterizer state
     //
 	m_rasterDesc.AntialiasedLineEnable = false;
@@ -117,9 +105,26 @@ void D3D11GraphicsDevice::init(const WindowWin32 &window)
 
     m_context->OMSetRenderTargets( 1, &m_renderView, m_depthView );
 
+    //
+    // Setup the viewport
+    //
+    D3D11_VIEWPORT viewport;
+    viewport.Width = (FLOAT)width;
+    viewport.Height = (FLOAT)height;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    m_context->RSSetViewports( 1, &viewport );
+
 #ifdef _DEBUG
 	m_device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_debug));
 #endif
+}
+
+void D3D11GraphicsDevice::resize(UINT width, UINT height)
+{
+    
 }
 
 void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)

@@ -40,6 +40,7 @@ public:
 		SAFE_RELEASE(m_debug);
 	}
 	void init(const WindowWin32 &window);
+    void resize(UINT width, UINT height);
 	void renderBeginFrame();
 	void renderEndFrame();
 	void registerAsset(GraphicsAsset *asset);

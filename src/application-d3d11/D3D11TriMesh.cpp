@@ -11,24 +11,16 @@ const D3D11_INPUT_ELEMENT_DESC D3D11TriMesh::layout[layoutElementCount] =
 void D3D11TriMesh::load(GraphicsDevice &g, const TriMesh& mesh)
 {
 	g.castD3D11().registerAsset(this);
-	m_MeshVertices.clear();	m_MeshVertices.resize(mesh.vertices().size());
-	for (unsigned int i = 0; i < mesh.vertices().size(); i++) {
-		m_MeshVertices[i].position = mesh.vertices()[i].position;
-		m_MeshVertices[i].normal = mesh.vertices()[i].normal;
-		m_MeshVertices[i].attributeA = mesh.vertices()[i].attributeA;
-		m_MeshVertices[i].attributeB = mesh.vertices()[i].attributeB;
-	}
-	m_MeshIndices = mesh.indices();
+    m_mesh = mesh;
 	reset(g);
 }
 
-//void D3D11TriMesh::load(GraphicsDevice &g, TriMesh&& mesh)
-//{
-//	g.castD3D11().registerAsset(this);
-//	//TODO(ms): Debug into here to check move semantics are working
-//	m_mesh = mesh;
-//	reset(g);
-//}
+void D3D11TriMesh::load(GraphicsDevice &g, TriMesh&& mesh)
+{
+	g.castD3D11().registerAsset(this);
+	m_mesh = mesh;
+	reset(g);
+}
 
 void D3D11TriMesh::release(GraphicsDevice &g)
 {
@@ -45,19 +37,19 @@ void D3D11TriMesh::reset(GraphicsDevice &g)
 
 void D3D11TriMesh::initVB(GraphicsDevice &g)
 {
-    if (m_MeshVertices.size() == 0) return;
+    if (m_mesh.vertices().size() == 0) return;
 	auto &device = g.castD3D11().device();
 
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesc.ByteWidth = sizeof( D3D11TriMeshVertex ) * (UINT)m_MeshVertices.size();
+	bufferDesc.ByteWidth = sizeof( D3D11TriMeshVertex ) * (UINT)m_mesh.vertices().size();
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory( &data, sizeof(data) );
-	data.pSysMem = m_MeshVertices.ptr();
+	data.pSysMem = m_mesh.vertices().ptr();
 
 
 	const bool randomizeColor = true;
@@ -71,26 +63,26 @@ void D3D11TriMesh::initVB(GraphicsDevice &g)
 
 void D3D11TriMesh::initIB(GraphicsDevice &g)
 {
-    if (m_MeshIndices.size() == 0) return;
+    if (m_mesh.indices().size() == 0) return;
 	auto &device = g.castD3D11().device();
 
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesc.ByteWidth = sizeof( UINT ) * (UINT)m_MeshIndices.size();
+	bufferDesc.ByteWidth = sizeof( UINT ) * (UINT)m_mesh.indices().size();
 	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory( &data, sizeof(data) );
-	data.pSysMem = m_MeshIndices.ptr();
+	data.pSysMem = m_mesh.indices().ptr();
 
 	D3D_VALIDATE(device.CreateBuffer( &bufferDesc, &data, &m_indexBuffer ));
 }
 
 void D3D11TriMesh::render(GraphicsDevice &g)
 {
-    if (m_MeshIndices.size() == 0) return;
+    if (m_mesh.indices().size() == 0) return;
 	auto &context = g.castD3D11().context();
 
 	context.IASetIndexBuffer( m_indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
@@ -101,5 +93,5 @@ void D3D11TriMesh::render(GraphicsDevice &g)
 
 	context.IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
-	context.DrawIndexed( (UINT)m_MeshIndices.size(), 0, 0 );
+	context.DrawIndexed( (UINT)m_mesh.indices().size(), 0, 0 );
 }
