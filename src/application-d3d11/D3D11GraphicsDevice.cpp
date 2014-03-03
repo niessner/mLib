@@ -1,8 +1,11 @@
 
 void D3D11GraphicsDevice::init(const WindowWin32 &window)
 {
-	UINT width = window.width();
-	UINT height = window.height();
+    //
+    // Instead of reconstructing the backbuffer everytime the window is resized, we construct a generic, large backbuffer.
+    //
+	UINT width = 2560;
+	UINT height = width * window.height() / window.width();
 
 	UINT createDeviceFlags = 0;
 #ifdef _DEBUG
