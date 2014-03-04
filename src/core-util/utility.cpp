@@ -250,6 +250,13 @@ namespace Utility
     {
         CreateDirectoryA(directory.c_str(), NULL);
     }
+
+    std::string workingDirectory()
+    {
+        char buffer[2048];
+        GetCurrentDirectoryA(2048, buffer);
+        return std::string(buffer);
+    }
 #endif
 
 #ifdef LINUX

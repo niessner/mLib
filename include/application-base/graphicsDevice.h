@@ -12,6 +12,7 @@ public:
     virtual void resize(UINT width, UINT height) = 0;
 	virtual void renderBeginFrame() = 0;
 	virtual void renderEndFrame() = 0;
+    virtual void captureBackBuffer(Bitmap &result) = 0;
 
 	GraphicsDeviceType type() const
 	{

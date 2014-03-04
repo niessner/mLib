@@ -217,6 +217,7 @@ namespace Utility
 	std::string loadStringFromClipboard();
 	int runCommand(const std::string &executablePath, const std::string &commandLine, bool Blocking);
 	void makeDirectory(const std::string &directory);
+    std::string workingDirectory();
     
     //
     // Returns the next line in the given file

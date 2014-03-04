@@ -20,6 +20,7 @@ public:
         m_depthState = NULL;
         m_rasterState = NULL;
         m_depthView = NULL;
+        m_captureBuffer = NULL;
 		m_featureLevel = D3D_FEATURE_LEVEL_9_1;
 	}
 	~D3D11GraphicsDevice()
@@ -32,6 +33,7 @@ public:
         SAFE_RELEASE(m_depthBuffer);
         SAFE_RELEASE(m_depthState);
         SAFE_RELEASE(m_depthView);
+        SAFE_RELEASE(m_captureBuffer);
 
 		if(m_debug)
 		{
@@ -44,6 +46,7 @@ public:
 	void renderBeginFrame();
 	void renderEndFrame();
 	void registerAsset(GraphicsAsset *asset);
+    void captureBackBuffer(Bitmap &result);
 
 	ID3D11Device& device()
 	{
@@ -68,6 +71,8 @@ private:
     ID3D11Texture2D *m_depthBuffer;
     ID3D11DepthStencilState *m_depthState;
     ID3D11DepthStencilView *m_depthView;
+
+    ID3D11Texture2D *m_captureBuffer;
 
 	D3D_FEATURE_LEVEL m_featureLevel;
 

@@ -143,3 +143,38 @@ void D3D11GraphicsDevice::renderEndFrame()
 {
 	m_swapChain->Present( 1, 0 );
 }
+
+void D3D11GraphicsDevice::captureBackBuffer(Bitmap &result)
+{
+    ID3D11Texture2D* frameBuffer;
+
+    D3D_VALIDATE(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&frameBuffer));
+
+    D3D11_TEXTURE2D_DESC desc;
+    frameBuffer->GetDesc(&desc);
+
+    if(m_captureBuffer == NULL)
+    {
+        desc.BindFlags = 0;
+        desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+        desc.Usage = D3D11_USAGE_STAGING;
+        D3D_VALIDATE(m_device->CreateTexture2D(&desc, NULL, &m_captureBuffer));
+    }
+
+    m_context->CopyResource( m_captureBuffer, frameBuffer );
+
+    result.allocate(desc.Height, desc.Width);
+    
+    D3D11_MAPPED_SUBRESOURCE resource;
+    UINT subresource = D3D11CalcSubresource( 0, 0, 0 );
+    HRESULT hr = m_context->Map( m_captureBuffer, subresource, D3D11_MAP_READ_WRITE, 0, &resource );
+    const BYTE *data = (BYTE *)resource.pData;
+    //resource.pData; // TEXTURE DATA IS HERE
+
+    for( UINT row = 0; row < desc.Height; row++ )
+    {
+        memcpy( &result(row, 0), data + resource.RowPitch * row, desc.Width * sizeof(RGBColor) );
+    }
+
+    m_context->Unmap(m_captureBuffer, subresource);
+}

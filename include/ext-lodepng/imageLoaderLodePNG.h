@@ -1,6 +1,4 @@
 
-typedef Grid<RGBColor> Bitmap;
-
 class LodePNG
 {
 public:
