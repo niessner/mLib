@@ -60,6 +60,23 @@ public:
 			result[i] = m_indices[i];
 	}
 
+    void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, Vector<UINT> &result) const
+    {
+        for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
+            m_queryPt[elementIndex] = query[elementIndex];
+        int count = m_tree->annkFRSearch(  // search
+            m_queryPt,       // query point
+            radiusSq,
+            k,               // number of near neighbors
+            m_indices,       // nearest neighbors (returned)
+            m_dists,         // distance (returned)
+            epsilon);        // error bound
+
+        result.resize(Math::min(count, (int)k));
+        for(int i = 0; i < count; i++)
+            result[i] = m_indices[i];
+    }
+
 private:
 	UINT                 m_maxK;        // Maximum value of k
 	UINT                 m_dimension;   // dimensionality of KDTree

@@ -44,9 +44,24 @@ public:
 		return result;
 	}
 
+    Vector<UINT> fixedRadius(const Vector<D> &query, UINT k, D radiusSq) const
+	{
+		Vector<UINT> result;
+		fixedRadiusInternal(query.ptr(), k, radiusSq, 0.0f, result);
+		return result;
+	}
+
+    Vector<UINT> fixedRadius(const D *query, UINT k, D radiusSq) const
+    {
+        Vector<UINT> result;
+        fixedRadiusInternal(query, k, radiusSq, 0.0f, result);
+        return result;
+    }
+
 private:
 	virtual void initInternal(const Vector< const D* > &points, UINT dimension, UINT maxK) = 0;
 	virtual void kNearestInternal(const D *query, UINT k, D epsilon, Vector<UINT> &result) const = 0;
+    virtual void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, Vector<UINT> &result) const = 0;
 };
 
 template<class D>
@@ -148,6 +163,11 @@ public:
 			result[resultIndex++] = e.index;
 		}
 	}
+
+    void fixedRadiusInternal(const D *query, UINT k, D epsilon, Vector<UINT> &result) const
+{
+
+}
 
 private:
 	UINT m_dimension;

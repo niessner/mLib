@@ -30,6 +30,13 @@ public:
 
 	void render(GraphicsDevice &g);
 
+    void updateAttributeA(GraphicsDevice &g, const Vector<vec4f> &vertexColors);
+
+    const TriMesh& triMesh() const
+    {
+        return m_mesh;
+    }
+
 	static const UINT layoutElementCount = 4;
 	static const D3D11_INPUT_ELEMENT_DESC layout[layoutElementCount];
 

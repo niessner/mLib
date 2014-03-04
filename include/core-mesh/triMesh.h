@@ -63,6 +63,10 @@ class TriMesh
             for (TriMeshVertex& mv : m_vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
         }
 
+        Vector<TriMeshVertex>& vertices() { return m_vertices; }
+
+        Vector<UINT>& indices() { return m_indices; }
+
         const Vector<TriMeshVertex>& vertices() const { return m_vertices; }
 
         const Vector<UINT>& indices() const { return m_indices; }

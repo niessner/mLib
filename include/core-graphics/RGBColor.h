@@ -58,6 +58,11 @@ struct RGBColor
 		const float scale = 1.0f / 255.0f;
 		return vec3f(r * scale, g * scale, b * scale);
 	}
+    operator vec4f() const
+    {
+        const float scale = 1.0f / 255.0f;
+        return vec4f(r * scale, g * scale, b * scale, 0.0f);
+    }
 
     static const RGBColor White;
     static const RGBColor Red;

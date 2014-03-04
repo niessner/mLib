@@ -29,8 +29,8 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const Ve
 }
 
 TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
-                                           const std::vector<vec3f>& points,
-                                           const std::vector<vec4f>& colors)
+                                           const Vector<vec3f>& points,
+                                           const Vector<vec4f>& colors)
 {
     MLIB_ASSERT_STR(points.size() == colors.size(), "Mismatch in size of point and color vectors");
     
