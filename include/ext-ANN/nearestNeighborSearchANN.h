@@ -77,6 +77,25 @@ public:
             result[i] = m_indices[i];
     }
 
+    void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, Vector< std::pair<UINT, D> > &result) const
+    {
+        for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
+            m_queryPt[elementIndex] = query[elementIndex];
+        int count = m_tree->annkFRSearch(  // search
+            m_queryPt,       // query point
+            radiusSq,
+            k,               // number of near neighbors
+            m_indices,       // nearest neighbors (returned)
+            m_dists,         // distance (returned)
+            epsilon);        // error bound
+
+        result.resize(Math::min(count, (int)k));
+        for(int i = 0; i < result.size(); i++)
+        {
+            result[i] = std::make_pair(m_indices[i], (D)m_dists[i]);
+        }
+    }
+
 private:
 	UINT                 m_maxK;        // Maximum value of k
 	UINT                 m_dimension;   // dimensionality of KDTree

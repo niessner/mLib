@@ -58,10 +58,18 @@ public:
         return result;
     }
 
+    Vector< std::pair<UINT, D> > fixedRadiusDist(const D *query, UINT k, D radiusSq) const
+    {
+        Vector< std::pair<UINT, D> > result;
+        fixedRadiusInternalDist(query, k, radiusSq, 0.0f, result);
+        return result;
+    }
+
 private:
 	virtual void initInternal(const Vector< const D* > &points, UINT dimension, UINT maxK) = 0;
 	virtual void kNearestInternal(const D *query, UINT k, D epsilon, Vector<UINT> &result) const = 0;
     virtual void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, Vector<UINT> &result) const = 0;
+    virtual void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, Vector< std::pair<UINT, D> > &result) const = 0;
 };
 
 template<class D>
