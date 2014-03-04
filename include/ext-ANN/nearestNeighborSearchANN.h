@@ -73,7 +73,7 @@ public:
             epsilon);        // error bound
 
         result.resize(Math::min(count, (int)k));
-        for(int i = 0; i < count; i++)
+        for(int i = 0; i < result.size(); i++)
             result[i] = m_indices[i];
     }
 
