@@ -1,4 +1,6 @@
 
+#ifdef _WIN32
+
 #include <AccCtrl.h>
 #include <Aclapi.h>
 
@@ -256,3 +258,5 @@ std::string Pipe::userName()
     MLIB_ASSERT_STR(success != FALSE, "GetNamedPipeHandleState failed in Pipe::UserName");
     return std::string(buffer);
 }
+
+#endif
