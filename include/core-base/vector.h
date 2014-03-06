@@ -331,7 +331,7 @@ public:
     auto sum(sumFunction function) const -> decltype(function(std::declval<T>()))
     {
         decltype(function(std::declval<T>())) result;
-        memset(&result, 0, sizeof(T));
+        memset(&result, 0, sizeof(result));
         for(UINT64 i = 0; i < m_length; i++)
             result += function(m_data[i]);
         return result;

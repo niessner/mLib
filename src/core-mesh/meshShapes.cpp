@@ -45,14 +45,14 @@ namespace MeshShapes
 
     TriMesh cylinder(float radius, float height, UINT stacks, UINT slices, const vec4f& color)
     {
-        Vector<TriMesh::TriMeshVertex> V(8);
-        Vector<UINT> I(12*3);
+        Vector<TriMesh::TriMeshVertex> vertices((stacks + 1) * slices);
+        Vector<UINT> indices(stacks * slices * 6);
         
         UINT vIndex = 0;
         for(UINT i = 0; i <= stacks; i++)
             for(UINT i2 = 0; i2 < slices; i2++)
             {
-                auto &vtx = V[vIndex++];
+                auto &vtx = vertices[vIndex++];
                 float theta = float(i2) * 2.0f * Math::PIf / float(slices);
                 vtx.position = vec3f(radius * cosf(theta), radius * sinf(theta), height * float(i) / float(stacks));
                 vtx.normal = vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): write and call generateNormals() function
@@ -66,18 +66,26 @@ namespace MeshShapes
             {
                 int i2p1 = (i2 + 1) % slices;
 
-                I[iIndex++] = (i + 1) * slices + i2;
-                I[iIndex++] = i * slices + i2;
-                I[iIndex++] = i * slices + i2p1;
+                indices[iIndex++] = (i + 1) * slices + i2;
+                indices[iIndex++] = i * slices + i2;
+                indices[iIndex++] = i * slices + i2p1;
 
 
-                I[iIndex++] = (i + 1) * slices + i2;
-                I[iIndex++] = i * slices + i2p1;
-                I[iIndex++] = (i + 1) * slices + i2p1;
+                indices[iIndex++] = (i + 1) * slices + i2;
+                indices[iIndex++] = i * slices + i2p1;
+                indices[iIndex++] = (i + 1) * slices + i2p1;
             }
         }
 
-        return TriMesh(V, I);
+        return TriMesh(vertices, indices);
     }
 
+    TriMesh cylinder(const vec3f &p0, const vec3f &p1, float radius, UINT stacks, UINT slices, const vec4f& color)
+    {
+        float height = (p1 - p0).length();
+
+        TriMesh result = MeshShapes::cylinder(radius, height, stacks, slices, color);
+        result.applyTransform(mat4f::translation(p1) * mat4f::face(vec3f::eZ, p1 - p0));
+        return result;
+    }
 }  // namespace MeshShapes

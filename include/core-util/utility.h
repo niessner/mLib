@@ -83,7 +83,7 @@ namespace Math
         else return C;
     }
 
-	//! clamps between min and max (default between 0 and 1)
+	//! returns the clamped value between min and max
 	template<class T>
 	inline T clamp(T x, T pMin, T pMax)
     {

@@ -310,6 +310,19 @@ public:
 		return res;
 	}
 
+    static Matrix4x4 face(const point3d<FloatType>& vA, const point3d<FloatType>& vB)
+    {
+        auto a = vA.normalize();
+        auto b = vB.normalize();
+        auto axis = a ^ b;
+        float angle = point3d<FloatType>::angleBetween(a, b);
+
+        if(angle == 0.0f || axis.lengthSq() == 0.0f)
+            return identity();
+        
+        return rotation(axis, angle);
+    }
+
 	//! overwrite the matrix with a diagonal matrix
 	void setDiag(FloatType x, FloatType y, FloatType z, FloatType w) {
 		setScale(x,y,z);	matrix[15] = w;
