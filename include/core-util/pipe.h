@@ -27,12 +27,8 @@ public:
     //
     UINT activeInstances();
     std::string userName();
-    __forceinline bool valid()
-    {
-        return (m_handle != NULL);
-    }
+    bool valid();
     
-
 private:
 
 #ifdef _WIN32
