@@ -39,6 +39,7 @@
 #include "core-math/sparseMatrix.h"
 #include "core-math/denseMatrix.h"
 #include "core-math/linearSolver.h"
+#include "core-math/rng.h"
 #include "core-math/kMeansClustering.h"
 
 //

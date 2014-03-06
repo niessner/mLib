@@ -184,6 +184,9 @@
     <ClInclude Include="..\include\core-util\sparseGrid3d.h">
       <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-math\rng.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
