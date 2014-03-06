@@ -190,12 +190,12 @@ public:
 
     inline T& operator [] (unsigned long k) 
     {
-        MLIB_ASSERT_STR(k >= 0 && k < (int)m_length, "Out-of-bounds vector access");
+        MLIB_ASSERT_STR(k >= 0 && k < m_length, "Out-of-bounds vector access");
         return m_data[k];
     }
     inline const T& operator [] (unsigned long k) const
     {
-        MLIB_ASSERT_STR(k >= 0 && k < (int)m_length, "Out-of-bounds vector access");
+        MLIB_ASSERT_STR(k >= 0 && k < m_length, "Out-of-bounds vector access");
         return m_data[k];
     }
 

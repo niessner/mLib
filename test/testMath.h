@@ -95,7 +95,7 @@ public:
 		const UINT maxIterations = 25;
 
 		Vector<vec3f> points(pointCount);
-		for(int i = 0; i < pointCount; i++)
+		for(UINT i = 0; i < pointCount; i++)
 			points[i] = vec3f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
 
 		for(UINT iteration = 0; iteration < 2; iteration++)

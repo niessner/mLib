@@ -5,7 +5,7 @@ namespace Utility
 	// These hash functions are taken from http://www.burtleburtle.net/bob/hash/doobs.html
 	//
 
-	__forceinline void hashMix(UINT &a, UINT &b, UINT &c)
+	inline void hashMix(UINT &a, UINT &b, UINT &c)
 	{
 		a -= b; a -= c; a ^= (c>>13);
 		b -= c; b -= a; b ^= (a<<8);

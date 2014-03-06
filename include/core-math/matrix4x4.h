@@ -707,7 +707,7 @@ private:
 
 //! writes to a stream
 template <class FloatType> 
-__forceinline std::ostream& operator<<(std::ostream& s, const Matrix4x4<FloatType>& m)
+inline std::ostream& operator<<(std::ostream& s, const Matrix4x4<FloatType>& m)
 { 
 	return (
 		s << 
@@ -720,7 +720,7 @@ __forceinline std::ostream& operator<<(std::ostream& s, const Matrix4x4<FloatTyp
 
 //! reads from a stream
 template <class FloatType> 
-__forceinline std::istream& operator>>(std::istream& s, const Matrix4x4<FloatType>& m)
+inline std::istream& operator>>(std::istream& s, const Matrix4x4<FloatType>& m)
 { 
 	return (
 		s >> 
