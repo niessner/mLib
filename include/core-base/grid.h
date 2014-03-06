@@ -165,4 +165,4 @@ template <class T> inline bool operator != (const Grid<T> &a, const Grid<T> &b)
 	return !(a == b);
 }
 
-#include "../../src/core-base/grid.cpp"
+#include "grid.cpp"
