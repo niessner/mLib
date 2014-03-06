@@ -57,6 +57,27 @@ void Directory::load(const std::string &path)
 #ifdef LINUX
 void Directory::load(const std::string &path)
 {
+	m_path = path + "\\";
+	m_files.clear();
+	m_directories.clear();
+
+	auto dir = opendir(path.c_str());
+	if (dir == NULL) return; // could not open directory
+
+	auto entity = readdir(dir);
+
+	while (entity != NULL) {
+		auto entity = readdir(dir);
+		if (entity->d_type == DT_DIR) {
+			// don't process  '..' & '.' directories
+			if(entity->d_name[0] != '.')
+				m_directories.pushBack(std::string(entity->d_name));
+		}
+		else if (entity->d_type == DT_REG) {
+			m_files.pushBack(std::string(entity->d_name));
+		}
+	}
 	
+	closedir(dir);
 }
 #endif

@@ -111,7 +111,7 @@ template <class T> void Grid3D<T>::allocate(UINT rows, UINT cols, UINT slices, c
 
 template <class T> void Grid3D<T>::clear(const T &clearValue)
 {
-	const UINT totalEntries = getNumTotalEntries()
+	const UINT totalEntries = getNumTotalEntries();
 	for(UINT i = 0; i < totalEntries; i++) m_data[i] = clearValue;
 }
 

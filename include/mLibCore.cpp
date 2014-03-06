@@ -6,6 +6,7 @@
 #ifdef LINUX
 #define _POSIX_SOURCE
 #include <sys/stat.h>
+#include <dirent.h>
 #endif
 
 //
