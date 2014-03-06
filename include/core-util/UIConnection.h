@@ -1,4 +1,6 @@
 
+#ifdef _WIN32
+
 class UIConnection
 {
 public:
@@ -18,3 +20,5 @@ private:
 	Pipe m_writeToUIPipe;
 	Pipe m_readFromUIPipe;
 };
+
+#endif
