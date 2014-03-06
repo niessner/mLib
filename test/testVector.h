@@ -44,7 +44,7 @@ public:
 
 	void test1()
 	{
-		Grid<std::string> g(10, 20);
+		Grid2D<std::string> g(10, 20);
 
 		g.clear("cde");
 

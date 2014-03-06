@@ -100,7 +100,8 @@
   <ItemGroup>
     <ClInclude Include="..\include\core-base\classList.h" />
     <ClInclude Include="..\include\core-base\common.h" />
-    <ClInclude Include="..\include\core-base\grid.h" />
+    <ClInclude Include="..\include\core-base\grid2d.h" />
+    <ClInclude Include="..\include\core-base\grid3d.h" />
     <ClInclude Include="..\include\core-base\vector.h" />
     <ClInclude Include="..\include\core-graphics\RGBColor.h" />
     <ClInclude Include="..\include\core-math\denseMatrix.h" />

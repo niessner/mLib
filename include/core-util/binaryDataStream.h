@@ -177,7 +177,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 }
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Grid<T>& g) {
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Grid2D<T>& g) {
 	s << (UINT64)g.rows() << (UINT64)g.cols();
 	s.reserve(sizeof(T) * g.rows() * g.cols());
 	for (UINT64 row = 0; row < g.rows(); row++)
@@ -282,7 +282,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 }
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Grid<T>& g) {
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Grid2D<T>& g) {
 	UINT64 rows, cols;
 	s >> rows >> cols;
 	g.allocate(rows, cols);

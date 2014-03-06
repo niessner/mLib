@@ -1,34 +1,29 @@
-/*
-Grid.h
-Written by Matthew Fisher
 
-Arbitrary-T grid structure.
-*/
 
 #pragma once
 
-template <class T> class Grid
+template <class T> class Grid3D
 {
 public:
-	Grid();
-	Grid(UINT rows, UINT cols);
-	Grid(UINT rows, UINT cols, const T &clearValue);
-	Grid(const Grid<T> &G);
-	Grid(Grid<T> &&G);
+	Grid3D();
+	Grid3D(UINT rows, UINT cols);
+	Grid3D(UINT rows, UINT cols, const T &clearValue);
+	Grid3D(const Grid3D<T> &G);
+	Grid3D(Grid3D<T> &&G);
 
-	~Grid();
+	~Grid3D();
 
 	//
 	// Memory
 	//
 	void deleteMemory();
-	Grid<T>& operator = (const Grid<T> &G);
-	Grid<T>& operator = (Grid<T> &&G);
+	Grid3D<T>& operator = (const Grid3D<T> &G);
+	Grid3D<T>& operator = (Grid3D<T> &&G);
 
 	void allocate(UINT rows, UINT cols);
 	void allocate(UINT rows, UINT cols, const T &clearValue);
 
-	inline Grid<T>& operator += (const Grid<T> &right)
+	inline Grid3D<T>& operator += (const Grid3D<T> &right)
 	{
 		MLIB_ASSERT_STR(m_rows == right.m_rows && m_cols == right.m_cols, "grid dimensions must be equal");
 		for (UINT r = 0; r < m_rows; r++)
@@ -36,7 +31,7 @@ public:
 				m_data[r * m_cols + c] += right(r,c);
 		return *this;
 	}
-	inline Grid<T>& operator *= (T right)
+	inline Grid3D<T>& operator *= (T right)
 	{
 		for (UINT r = 0; r < m_rows; r++)
 			for (UINT c = 0; c < m_cols; c++)
@@ -44,9 +39,9 @@ public:
 		return *this;
 	}
 
-	inline Grid<T> operator * (T x)
+	inline Grid3D<T> operator * (T x)
 	{
-		Grid<T> result(m_rows, m_cols);
+		Grid3D<T> result(m_rows, m_cols);
 		for (UINT r = 0; r < m_rows; r++)
 			for (UINT c = 0; c < m_cols; c++)
 				result(r,c) = m_data[r * m_cols + c] * x;
@@ -150,7 +145,7 @@ protected:
 	UINT m_rows, m_cols;
 };
 
-template <class T> inline bool operator == (const Grid<T> &a, const Grid<T> &b)
+template <class T> inline bool operator == (const Grid3D<T> &a, const Grid3D<T> &b)
 {
 	if(a.rows() != b.rows() || a.cols() != b.cols()) return false;
 	for(UINT row = 0; row < a.rows(); row++)
@@ -160,9 +155,9 @@ template <class T> inline bool operator == (const Grid<T> &a, const Grid<T> &b)
 	return true;
 }
 
-template <class T> inline bool operator != (const Grid<T> &a, const Grid<T> &b)
+template <class T> inline bool operator != (const Grid3D<T> &a, const Grid3D<T> &b)
 {
 	return !(a == b);
 }
 
-#include "grid.cpp"
+#include "grid3d.cpp"

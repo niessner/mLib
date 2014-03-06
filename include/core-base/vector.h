@@ -405,7 +405,7 @@ template <class T> inline bool operator != (const Vector<T> &a, const Vector<T> 
 	return false;
 }
 
-#include "../../src/core-base/vector.cpp"
+#include "vector.cpp"
 
 
 #endif // _VECTOR_H_
