@@ -85,7 +85,7 @@ namespace MeshShapes
         float height = (p1 - p0).length();
 
         TriMesh result = MeshShapes::cylinder(radius, height, stacks, slices, color);
-        result.applyTransform(mat4f::translation(p1) * mat4f::face(vec3f::eZ, p1 - p0));
+        result.applyTransform(mat4f::translation(p0) * mat4f::face(vec3f::eZ, p1 - p0));
         return result;
     }
 }  // namespace MeshShapes

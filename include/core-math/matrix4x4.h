@@ -314,7 +314,7 @@ public:
     {
         auto a = vA.normalize();
         auto b = vB.normalize();
-        auto axis = a ^ b;
+        auto axis = b ^ a;
         float angle = point3d<FloatType>::angleBetween(a, b);
 
         if(angle == 0.0f || axis.lengthSq() == 0.0f)

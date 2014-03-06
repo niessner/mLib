@@ -74,6 +74,7 @@ public:
 		if (m_CaseSensitive) {
 			const auto s = m_Values.find(name);
 			if (s == m_Values.end()) {
+                MLIB_WARNING("parameter not found: " + name);
 				return false; 
 			} else {
 				StringUtil::convertTo<T>(s->second, value);
@@ -83,6 +84,7 @@ public:
 			std::string lname(name);	lname = StringUtil::toLower(lname);
 			const auto s = m_Values.find(name);
 			if (s == m_Values.end()) {
+                MLIB_WARNING("parameter not found: " + name);
 				return false; 
 			} else {
 				StringUtil::convertTo<T>(s->second, value);
