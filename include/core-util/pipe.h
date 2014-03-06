@@ -34,5 +34,8 @@ public:
     
 
 private:
+
+#ifdef _WIN32
     HANDLE m_handle;
+#endif
 };
