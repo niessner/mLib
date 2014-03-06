@@ -83,13 +83,13 @@ namespace Math
         else return C;
     }
 
-
-
 	//! clamps between min and max (default between 0 and 1)
 	template<class T>
-	inline void clamp(T &x, T pMin = T(0.0), T pMax = T(1.0)){
-		if (x < pMin)	x = pMin;
-		if (x > pMax)	x = pMax;
+	inline T clamp(T x, T pMin, T pMax)
+    {
+		if (x < pMin) return pMin;
+		if (x > pMax) return pMax;
+        return x;
 	}
 
 	template<class T>

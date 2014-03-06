@@ -172,10 +172,15 @@ public:
 		}
 	}
 
-    void fixedRadiusInternal(const D *query, UINT k, D epsilon, Vector<UINT> &result) const
-{
+    void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, Vector<UINT> &result) const
+    {
+        throw MLIB_EXCEPTION("fixedRadiusInternal not implemented");
+    }
 
-}
+    void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, Vector< std::pair<UINT, D> > &result) const
+    {
+        throw MLIB_EXCEPTION("fixedRadiusInternalDist not implemented");
+    }
 
 private:
 	UINT m_dimension;

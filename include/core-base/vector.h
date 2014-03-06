@@ -323,6 +323,20 @@ public:
 	T sum() const;
 	T product() const;
 
+    //
+    // sum usage:
+    // v.sum([](T n) {return n.size();});
+    //
+    template<class sumFunction>
+    auto sum(sumFunction function) const -> decltype(function(std::declval<T>()))
+    {
+        decltype(function(std::declval<T>())) result;
+        memset(&result, 0, sizeof(T));
+        for(UINT64 i = 0; i < m_length; i++)
+            result += function(m_data[i]);
+        return result;
+    }
+
 	const T& maxValue() const;
 	const T& minValue() const;
 

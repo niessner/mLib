@@ -190,6 +190,19 @@ public:
 		return point3d<T>(array[0] * val, array[1] * val, array[2] * val);
 	}
 
+    inline T angleBetween(const point3d<T> &v0, const point3d<T> &v1) const {
+        T l0 = v0.length();
+        T l1 = v1.length();
+        if(l0 > 0.0f && l1 > 0.0f)
+        {
+            return acosf(Utility::clamp(point3d<T>::dot(v0, v1) / l0 / l1, -1.0f, 1.0f));
+        }
+        else
+        {
+            return 0.0f;
+        }
+    }
+
 	static const point3d<T> origin;
 	static const point3d<T> eX;
 	static const point3d<T> eY;
