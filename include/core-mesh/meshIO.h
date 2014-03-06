@@ -160,7 +160,7 @@ public:
 				case 't':
 					//texcoord, 2 or 3 components
 					val[2] = 0.0f;  //default r coordinate
-					match = fscanf( fp, "%f %f %f %f", &val[0], &val[1], &val[2]);
+					match = fscanf( fp, "%f %f %f %f", &val[0], &val[1], &val[2], &val[3]);
 					mesh.m_TextureCoords.push_back(point2d<FloatType>(val[0], val[1]));
 
 					assert( match > 1 && match < 4);

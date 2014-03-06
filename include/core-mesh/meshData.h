@@ -43,7 +43,7 @@ struct MeshData {
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i] *= t;
 		}
-		mat4f invTrans = m.getInverse().getTranspose();
+		mat4f invTrans = t.getInverse().getTranspose();
 		for (size_t i = 0; i < m_Normals.size(); i++) {
 			m_Normals[i] *= invTrans;
 		}

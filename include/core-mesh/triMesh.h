@@ -20,7 +20,7 @@ class TriMesh
         TriMesh() : m_vertices(), m_indices() { }
 		TriMesh(const MeshDataf& meshData) {
 			m_vertices.resize(meshData.m_Vertices.size());
-			bool hasNormals = meshData.m_Normals.size() > 0;
+			//bool hasNormals = meshData.m_Normals.size() > 0;
 			bool hasColors = meshData.m_Colors.size() > 0;
 			for (unsigned int i = 0; i < m_vertices.size(); i++) {
 				m_vertices[i].position = meshData.m_Vertices[i];
