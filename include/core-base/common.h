@@ -47,6 +47,7 @@
 #include <memory>
 #include <thread>
 #include <mutex>
+#include <unordered_map>
 
 #ifndef NOMINMAX
 #define NOMINMAX

@@ -10,7 +10,7 @@
 
 //! 1D vector (I know it's a joke, but we need it for compatibility reasons)
 template <class T>
-class point1d
+class point1d : public BinaryDataSerialize< point1d<T> >
 {
 public:
 	point1d(T v) {

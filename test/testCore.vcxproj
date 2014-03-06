@@ -48,7 +48,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>../include/;../../mLibExternal/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../mLibExternal/lib64/;$(LibraryPath)</LibraryPath>
+    <LibraryPath>../../mLibExternal/libsWindows/lib64/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -84,12 +84,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ANN64.lib;kernel32.lib;user32.lib;zlib64.lib</AdditionalDependencies>
+      <AdditionalDependencies>ANN64.lib;kernel32.lib;user32.lib;zlib64.lib;Advapi32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="broken.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -129,6 +130,7 @@
     <ClInclude Include="..\include\core-util\commandLineReader.h" />
     <ClInclude Include="..\include\core-util\directory.h" />
     <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
+    <ClInclude Include="..\include\core-util\sparseGrid3d.h" />
     <ClInclude Include="..\include\core-util\stringUtil.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
     <ClInclude Include="..\include\ext-ANN\nearestNeighborSearchANN.h" />

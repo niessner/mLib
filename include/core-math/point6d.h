@@ -13,7 +13,7 @@
 
 //! 6D vector.
 template <class T>
-class point6d
+class point6d : public BinaryDataSerialize< point6d<T> >
 {
 public:
 	point6d(T v) {

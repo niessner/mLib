@@ -53,6 +53,7 @@
 #include "core-util/keycodes.h"
 #include "core-util/pipe.h"
 #include "core-util/UIConnection.h"
+#include "core-util/sparseGrid3d.h"
 
 //
 // core-multithreading headers

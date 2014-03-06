@@ -13,7 +13,7 @@
 
 //! 2D vector
 template <class T>
-class point2d	
+class point2d : public BinaryDataSerialize< point2d<T> >
 {
 public:
 	point2d(T v) {

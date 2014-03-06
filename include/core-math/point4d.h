@@ -12,7 +12,7 @@
 
 //! 4D vector.
 template <class T>
-class point4d
+class point4d : public BinaryDataSerialize< point4d<T> >
 {
     public:
         point4d(T v)
