@@ -65,7 +65,7 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
 
 TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
                                            const std::vector<vec3f>& points,
-                                           const vec4f& color)
+                                           const std::vector<vec4f>& colors)
 {
     const UINT64 pointCount = points.size();
     const UINT64 tVertices = templateMesh.vertices().size();
@@ -77,6 +77,7 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
     for (UINT pointIndex = 0; pointIndex < points.size(); pointIndex++)
     {
         const vec3f& p = points[pointIndex];
+        const vec4f& c = colors[pointIndex];
         const UINT64 baseVertexIndex = pointIndex * tVertices;
 
         for (UINT vertexIndex = 0; vertexIndex < tVertices; vertexIndex++)
@@ -84,7 +85,7 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
             TriMesh::TriMeshVertex& v = vertices[baseVertexIndex + vertexIndex];
             v = templateMesh.vertices()[vertexIndex];
             v.position += p;
-            v.attributeA = color;
+            v.attributeA = c;
         }
         for (UINT indexIndex = 0; indexIndex < tIndices; indexIndex++)
         {

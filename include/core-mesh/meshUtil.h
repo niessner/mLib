@@ -9,7 +9,7 @@ namespace MeshUtil
     TriMesh createPointCloudTemplate(const TriMesh& templateMesh, const Vector<vec3f>& points,
                                      const Vector<vec4f>& colors);
     TriMesh createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<vec3f>& points,
-                                     const vec4f& color);  // Same color for all points
+                                     const std::vector<vec4f>& colors);
 }
 
 #endif  // INCLUDE_CORE_MESH_MESHUTIL_H_
