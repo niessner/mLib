@@ -15,7 +15,8 @@ class ColorUtils
     template <typename RGB, typename T>
     static RGB hslToRgb(const T& hsl)
     {
-        static_assert(std::is_same(hsl[0], float), "hslToRgb assumes float 0-1 range");
+        auto test = hsl[0];
+        static_assert(static_cast<bool>(std::is_same<decltype(test),float>::value), "hslToRgb assumes float 0-1 range");
 
         // Helper for hsl to rgb conversion
         auto hue2rgb = [] (float p, float q, float t)
