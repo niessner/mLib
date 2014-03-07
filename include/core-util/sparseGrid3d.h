@@ -15,6 +15,12 @@ struct std::hash<vec3i> : public std::unary_function<vec3i, size_t> {
 template<class T>
 class SparseGrid3D {
 public:
+	typedef typename std::unordered_map<vec3i, T, std::hash<vec3i>>::iterator iterator;
+	typedef typename std::unordered_map<vec3i, T, std::hash<vec3i>>::const_iterator const_iterator;
+	iterator begin() {return m_Data.begin();}
+	iterator end() {return m_Data.end();}
+	const_iterator begin() const {return m_Data.begin();}
+	const_iterator end() const {return m_Data.end();}
 	
 	SparseGrid3D(float maxLoadFactor = 0.6, size_t reserveBuckets = 64) {
 		m_Data.reserve(reserveBuckets);

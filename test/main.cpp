@@ -62,10 +62,15 @@ int main()
 		grid(coord) = entry;
 		const VoxelEntry &res = grid(coord);
 		const VoxelEntry &res1 = (*(const SparseGrid3D<VoxelEntry>*)&grid)(coord);
-		std::cout << res << std::endl;
+		//std::cout << res << std::endl;
 	}
+
 	std::cout << grid << std::endl;
 	std::cout << "time elapsed: " << timer.elapsed() << std::endl;
+
+	for (auto &a : grid ) {
+		a.second.print();
+	}
 	//unsigned int check = 0;
 	//Clock timer;
 	//std::unordered_map<vec3i, VoxelEntry, std::hash<vec3i>> map;
