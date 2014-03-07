@@ -40,10 +40,10 @@ namespace Math
         return ((start-s1)*(e2-s2)/(e1-s1)+s2);
     }
 
-	template<class T>
-    inline T lerp(T Left, T Right, T s)
+	template<class T, class U>
+    inline T lerp(T left, T right, U s)
     {
-        return (Left + s * (Right - Left));
+        return static_cast<T>(left + s * (right - left));
     }
 
     inline int mod(int x, UINT M)

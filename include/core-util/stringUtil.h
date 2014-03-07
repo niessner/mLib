@@ -92,7 +92,7 @@ namespace StringUtil {
 	}
 
 	inline Vector<std::string> split(const std::string& str, const char seperator, bool pushEmptyStrings = false) {
-		return split(str, std::to_string(seperator), pushEmptyStrings);
+		return split(str, std::string(1, seperator), pushEmptyStrings);
 	}
 
 
