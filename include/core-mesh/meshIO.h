@@ -300,9 +300,9 @@ public:
 					assert(n > 2);
 
 					//create face
-					std::vector<unsigned int> currFaceIndicesVertices;
-					std::vector<unsigned int> currFaceIndicesNormals;
-					std::vector<unsigned int> currFaceIndicesTextureCoords;
+					Vector<unsigned int> currFaceIndicesVertices;
+					Vector<unsigned int> currFaceIndicesNormals;
+					Vector<unsigned int> currFaceIndicesTextureCoords;
 
 					for (unsigned int i = 0; i < n; i++) {	
 						currFaceIndicesVertices.push_back(idx[i][0]);

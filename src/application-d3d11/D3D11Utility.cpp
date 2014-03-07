@@ -13,7 +13,12 @@ ID3DBlob* D3D11Utility::CompileShader(const std::string &filename, const std::st
 	ID3DBlob* blob = NULL;
 	ID3DBlob* errorBlob = NULL;
     MLIB_ASSERT_STR(Utility::fileExists(filename), "File not found: " + filename);
-	HRESULT hr = D3DX11CompileFromFile( std::wstring(filename.begin(), filename.end()).c_str(), NULL, NULL, entryPoint.c_str(), shaderModel.c_str(), 
+#ifdef UNICODE
+	std::wstring s(filename.begin(), filename.end());
+#else
+	std::string s(filename.begin(), filename.end());
+#endif
+	HRESULT hr = D3DX11CompileFromFile( s.c_str(), NULL, NULL, entryPoint.c_str(), shaderModel.c_str(), 
 		shaderFlags, 0, NULL, &blob, &errorBlob, NULL );
 	if( FAILED(hr) )
 	{

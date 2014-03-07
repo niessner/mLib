@@ -63,9 +63,6 @@
     <ClInclude Include="..\include\core-base\grid.h">
       <Filter>mLibHeader\core-base</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-base\string.h">
-      <Filter>mLibHeader\core-base</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-base\vector.h">
       <Filter>mLibHeader\core-base</Filter>
     </ClInclude>

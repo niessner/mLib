@@ -273,6 +273,9 @@ public:
 	void pushBack(T &&t);
 	void pushBack();
 	void popBack();
+	void push_back(const T& t) {pushBack(t);}	//make compliant with std syntax
+	void push_back(T&& t) {pushBack(t);}		//make compliant with std syntax
+	void pop_back() {popBack();}				//make compliant with std syntax
 	void removeCopy(UINT64 i);
 	void removeSwap(UINT64 i);
 	void sort();
