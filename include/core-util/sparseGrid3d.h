@@ -16,8 +16,9 @@ template<class T>
 class SparseGrid3D {
 public:
 	
-	SparseGrid3D() {
-
+	SparseGrid3D(float maxLoadFactor = 0.6, size_t reserveBuckets = 64) {
+		m_Data.reserve(reserveBuckets);
+		m_Data.max_load_factor(maxLoadFactor);
 	}
 	~SparseGrid3D() {
 
@@ -30,6 +31,7 @@ public:
 	const T& operator()(const vec3i& i) const {
 		return m_Data.find(i)->second;
 	}
+
 	//! if the element does not exist, it will be created with its default constructor
 	T& operator()(const vec3i& i) {
 		return m_Data[i];
