@@ -354,6 +354,10 @@ public:
 	UINT64 maxIndex() const;
 	UINT64 minIndex() const;
 
+    //
+    // min/maxIndex usage:
+    // v.maxIndex([o](const T& n) { return (n - o).length(); });
+    //
 	UINT64 maxIndex(const std::function<double(const T&)> &valueFunction) const;
 	UINT64 minIndex(const std::function<double(const T&)> &valueFunction) const;
 
