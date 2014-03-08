@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _VECTOR_H_
-#define _VECTOR_H_
+#ifndef _MATH_VECTOR_H_
+#define _MATH_VECTOR_H_
 
 
 /************************************************************************/
@@ -10,43 +10,43 @@
 
 
 template<class T>
-class Vector : public std::vector<T>
+class MathVector : public std::vector<T>
 {
 public:
-	Vector() {}
-	Vector(size_t size) {
+	MathVector() {}
+	MathVector(size_t size) {
 		std::vector<T>::resize(size);
 	}
-	Vector(size_t size, const T& val) {
+	MathVector(size_t size, const T& val) {
 		std::vector<T>::resize(size, val);
 	}
-	Vector(const Vector& v) : std::vector<T>(v) {
+	MathVector(const MathVector& v) : std::vector<T>(v) {
 	}
-	Vector(Vector&& v) : std::vector<T>(v) {
+	MathVector(MathVector&& v) : std::vector<T>(v) {
 	}
-	void operator=(const Vector& v) {
+	void operator=(const MathVector& v) {
 		std::vector<T>::operator =(v);
 	}
-	void operator=(Vector&& v) {
+	void operator=(MathVector&& v) {
 		std::vector<T>::operator =(v);
 	}
 
-	void operator+=(const Vector& other) {
+	void operator+=(const MathVector& other) {
 		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] += other[i];
 		}
 	}
-	void operator-=(const Vector& other) {
+	void operator-=(const MathVector& other) {
 		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] -= other[i];
 		}
 	}
-	void operator*=(const Vector& other) {
+	void operator*=(const MathVector& other) {
 		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] *= other[i];
 		}
 	}
-	void operator/=(const Vector& other) {
+	void operator/=(const MathVector& other) {
 		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] /= other[i];
 		}
@@ -63,43 +63,43 @@ public:
 	}
 
 
-	Vector operator+(const Vector& other) const {
-		Vector res(this->size());
+	MathVector operator+(const MathVector& other) const {
+		MathVector res(this->size());
 		for (size_t i = 0; i < res.size(); i++) {
 			res[i] = (*this)[i] + other[i];
 		}
 		return res;
 	}
-	Vector operator-(const Vector& other) const {
-		Vector res(this->size());
+	MathVector operator-(const MathVector& other) const {
+		MathVector res(this->size());
 		for (size_t i = 0; i < res.size(); i++) {
 			res[i] = (*this)[i] - other[i];
 		}
 		return res;
 	}
-	Vector operator*(const Vector& other) const {
-		Vector res(this->size());
+	MathVector operator*(const MathVector& other) const {
+		MathVector res(this->size());
 		for (size_t i = 0; i < res.size(); i++) {
 			res[i] = (*this)[i] * other[i];
 		}
 		return res;
 	}
-	Vector operator/(const Vector& other) const {
-		Vector res(this->size());
+	MathVector operator/(const MathVector& other) const {
+		MathVector res(this->size());
 		for (size_t i = 0; i < res.size(); i++) {
 			res[i] = (*this)[i] / other[i];
 		}
 		return res;
 	}
-	Vector operator*(const T& other) const {
-		Vector res(this->size());
+	MathVector operator*(const T& other) const {
+		MathVector res(this->size());
 		for (size_t i = 0; i < res.size(); i++) {
 			res[i] = (*this)[i] * other;
 		}
 		return res;
 	}
-	Vector operator/(const T& other) const {
-		Vector res(this->size());
+	MathVector operator/(const T& other) const {
+		MathVector res(this->size());
 		for (size_t i = 0; i < res.size(); i++) {
 			res[i] = (*this)[i] / other;
 		}
@@ -109,11 +109,11 @@ public:
 
 
 	//! dot product
-	T operator|(const Vector& other) const {
+	T operator|(const MathVector& other) const {
 		return dot(*this, other);
 	} 
 
-	static T dot(const Vector& v0, const Vector& v1) {
+	static T dot(const MathVector& v0, const MathVector& v1) {
 		T res = (T)0;
 		for (size_t i = 0; i < v0.size(); i++) {
 			res += v0[i] * v1[i];
@@ -124,8 +124,8 @@ public:
 
 
 template<class T>
-inline Vector<T> operator*(const T& v, const Vector<T>& other)  {
-	Vector<T> res(other.size());
+inline MathVector<T> operator*(const T& v, const MathVector<T>& other)  {
+	MathVector<T> res(other.size());
 	for (size_t i = 0; i < res.size(); i++) {
 		res[i] = other[i] * v;
 	}
@@ -133,8 +133,8 @@ inline Vector<T> operator*(const T& v, const Vector<T>& other)  {
 }
 
 template<class T>
-inline Vector<T> operator/(const T& v, const Vector<T>& other)  {
-	Vector<T> res(other.size());
+inline MathVector<T> operator/(const T& v, const MathVector<T>& other)  {
+	MathVector<T> res(other.size());
 	for (size_t i = 0; i < res.size(); i++) {
 		res[i] = other[i] * v;
 	}

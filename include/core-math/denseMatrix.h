@@ -38,7 +38,7 @@ public:
 		m_dataPtr = m_data.ptr();
 	}
 
-	explicit DenseMatrix(const Vector<D> &diagonal)
+	explicit DenseMatrix(const MathVector<D> &diagonal)
 	{
 		m_rows = (UINT)diagonal.size();
 		m_cols = (UINT)diagonal.size();
@@ -163,7 +163,7 @@ public:
 	//
 	static DenseMatrix<D> identity(int n)
 	{
-		return DenseMatrix<D>(Vector<D>(n, (D)1.0));
+		return DenseMatrix<D>(MathVector<D>(n, (D)1.0));
 	}
 
 private:
@@ -191,7 +191,7 @@ DenseMatrix<D> operator * (const DenseMatrix<D> &A, const DenseMatrix<D> &B)
 }
 
 template<class D>
-std::vector<D> operator * (const DenseMatrix<D> &A, const Vector<D> &B)
+std::vector<D> operator * (const DenseMatrix<D> &A, const MathVector<D> &B)
 {
 	return DenseMatrix<D>::multiply(A, B);
 }

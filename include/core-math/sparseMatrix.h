@@ -39,7 +39,7 @@ template <class D> struct SparseRow
 		}
 		return 0.0;
 	}
-	Vector< SparseRowEntry<D> > entries;
+	MathVector< SparseRowEntry<D> > entries;
 };
 
 template <class D> class SparseMatrix
@@ -149,24 +149,24 @@ public:
 	{
 		return m_data[row];
 	}
-	const Vector<D> denseRow(UINT row) const
+	const MathVector<D> denseRow(UINT row) const
 	{
-		Vector<D> result(m_cols);
+		MathVector<D> result(m_cols);
 		for(UINT col = 0; col < m_cols; col++)
 			result[col] = (*this)(row, col);
 		return result;
 	}
-	const Vector<D> denseCol(UINT col) const
+	const MathVector<D> denseCol(UINT col) const
 	{
-		Vector<D> result(m_rows);
+		MathVector<D> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = (*this)(row, col);
 		return result;
 	}
-	Vector<D> diagonal() const
+	MathVector<D> diagonal() const
 	{
 		MLIB_ASSERT_STR(square(), "diagonal called on non-square matrix");
-		Vector<D> result(m_rows);
+		MathVector<D> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = m_data[row](row);
 		return result;
@@ -189,18 +189,18 @@ public:
 	static SparseMatrix<D> add(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
 	static SparseMatrix<D> subtract(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
 	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, D c);
-	static Vector<D> multiply(const SparseMatrix<D> &A, const Vector<D> &v);
+	static MathVector<D> multiply(const SparseMatrix<D> &A, const MathVector<D> &v);
 	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
 	
 	// returns the scalar v^T A v
-	static D quadratic(const SparseMatrix<D> &A, const Vector<D> &v)
+	static D quadratic(const SparseMatrix<D> &A, const MathVector<D> &v)
 	{
-		return Vector<D>::dot(v, multiply(A, v));
+		return MathVector<D>::dot(v, multiply(A, v));
 	}
 
 private:
 	UINT m_rows, m_cols;
-    Vector< SparseRow<D> > m_data;
+    MathVector< SparseRow<D> > m_data;
 
 	// set is a more efficient version of operator() that assumes the entry
 	// does not exist.
@@ -229,7 +229,7 @@ SparseMatrix<D> operator * (const SparseMatrix<D> &A, const SparseMatrix<D> &B)
 }
 
 template<class D>
-Vector<D> operator * (const SparseMatrix<D> &A, const Vector<D> &B)
+MathVector<D> operator * (const SparseMatrix<D> &A, const MathVector<D> &B)
 {
 	return SparseMatrix<D>::multiply(A, B);
 }

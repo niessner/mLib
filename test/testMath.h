@@ -18,8 +18,8 @@ public:
 		MLIB_ASSERT_STR(sumError == 0.0, "matrix sum test failed");
 
 		LinearSolverConjugateGradient<double> solver;
-		Vector<double> rhs = SparseMatrix<double>("{{3,6,-1}}", MatrixStringFormatMathematica).denseRow(0);
-		Vector<double> x = solver.solve(b.transpose() * b, rhs);
+		MathVector<double> rhs = SparseMatrix<double>("{{3,6,-1}}", MatrixStringFormatMathematica).denseRow(0);
+		MathVector<double> x = solver.solve(b.transpose() * b, rhs);
 		double solveError = solver.solveError(b.transpose() * b, x, rhs);
 
 		MLIB_ASSERT_STR(solveError <= 1e-5, "solve failed");
@@ -54,7 +54,7 @@ public:
 	void test2()
 	{
 		SparseMatrix<double> A(100, 10);
-		Vector<double> b(100);
+		MathVector<double> b(100);
 
 		for(UINT row = 0; row < A.rows(); row++)
 			for(UINT col = 0; col < A.cols(); col++)
@@ -63,17 +63,17 @@ public:
 		for(UINT val = 0; val < b.size(); val++)
 			b[val] = ((double)rand() / (double)RAND_MAX - 0.5) * 100.0;
 
-		Vector<double> bSquare = A.transpose() * b;
+		MathVector<double> bSquare = A.transpose() * b;
 
 		SparseMatrix<double> ASquare = A.transpose() * A;
 
 		LinearSolverConjugateGradient<double> linearSolver;
 		LinearSolverEigen<double> eigenSolver(LinearSolverEigen<double>::ConjugateGradient_Diag);
 
-		Vector<double> x0 = linearSolver.solve(ASquare, bSquare);
-		Vector<double> x1 = eigenSolver.solve(ASquare, bSquare);
-		Vector<double> x2 = linearSolver.solveLeastSquares(A, b);
-		Vector<double> x3 = eigenSolver.solveLeastSquares(A, b);
+		MathVector<double> x0 = linearSolver.solve(ASquare, bSquare);
+		MathVector<double> x1 = eigenSolver.solve(ASquare, bSquare);
+		MathVector<double> x2 = linearSolver.solveLeastSquares(A, b);
+		MathVector<double> x3 = eigenSolver.solveLeastSquares(A, b);
 
 		double solveError0 = LinearSolver<double>::solveError(ASquare, x0, bSquare);
 		double solveError1 = LinearSolver<double>::solveError(ASquare, x1, bSquare);

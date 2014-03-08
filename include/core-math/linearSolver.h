@@ -6,9 +6,9 @@
 template<class D> class LinearSolver
 {
 public:
-	virtual Vector<D> solve(const SparseMatrix<D> &A, const Vector<D> &b) = 0;
-	virtual Vector<D> solveLeastSquares(const SparseMatrix<D> &A, const Vector<D> &b) = 0;
-	static D solveError(const SparseMatrix<D> &A, const Vector<D> &x, const Vector<D> &b)
+	virtual MathVector<D> solve(const SparseMatrix<D> &A, const MathVector<D> &b) = 0;
+	virtual MathVector<D> solveLeastSquares(const SparseMatrix<D> &A, const MathVector<D> &b) = 0;
+	static D solveError(const SparseMatrix<D> &A, const MathVector<D> &x, const MathVector<D> &b)
 	{
 		//.map([](T n) {return std::string(n);})
 		//return (A * x - b).map([](D x) {return fabs(x);}).maxValue();
@@ -30,20 +30,20 @@ public:
 		m_tolerance = tolerance;
 	}
 
-	Vector<D> solve(const SparseMatrix<D> &A, const Vector<D> &b)
+	MathVector<D> solve(const SparseMatrix<D> &A, const MathVector<D> &b)
 	{
 		MLIB_ASSERT_STR(A.square() && b.size() == A.rows(), "invalid solve dimensions");
 		const UINT n = (UINT)b.size();
 
 		//std::vector<D> dInverse = A.diagonal().map([](D x) {return (D)1.0 / x;});
-		Vector<D> dInverse = A.diagonal();
+		MathVector<D> dInverse = A.diagonal();
 		auto invert = [=] (D& x) { x = (D)1.0/x; };
 		for_each(dInverse.begin(), dInverse.end(), invert);
 
-		Vector<D> x(n, 0.0);
-		Vector<D> r = b - A * x;
-		Vector<D> z = dInverse * r;
-		Vector<D> p = z;
+		MathVector<D> x(n, 0.0);
+		MathVector<D> r = b - A * x;
+		MathVector<D> z = dInverse * r;
+		MathVector<D> p = z;
 
 		for(UINT iteration = 0; iteration < m_maxIterations; iteration++)
 		{
@@ -62,7 +62,7 @@ public:
 		return x;
 	}
 
-	Vector<D> solveLeastSquares(const SparseMatrix<D> &A, const Vector<D> &b)
+	MathVector<D> solveLeastSquares(const SparseMatrix<D> &A, const MathVector<D> &b)
 	{
 		auto Atranspose = A.transpose();
 		return solve(Atranspose * A, Atranspose * b);

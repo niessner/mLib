@@ -62,7 +62,9 @@ public:
 		return (*this)(i);
 	}
 
-	//template<class U>
+#ifdef _WIN32
+	template<class U>
+#endif
 	friend std::ostream& operator<< <> (std::ostream& s, const SparseGrid3D<T>& g);
 private:
 	std::unordered_map<vec3i, T, std::hash<vec3i>> m_Data;

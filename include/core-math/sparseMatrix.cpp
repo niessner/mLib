@@ -58,11 +58,11 @@ SparseMatrix<D> SparseMatrix<D>::subtract(const SparseMatrix<D> &A, const Sparse
 }
 
 template<class D>
-Vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Vector<D> &B)
+MathVector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const MathVector<D> &B)
 {
 	MLIB_ASSERT_STR(A.cols() == B.size(), "invalid dimensions");
 	const int rows = A.m_rows;
-	Vector<D> result(rows);
+	MathVector<D> result(rows);
 
 	const D* BPtr = &B[0];
 	D* resultPtr = &result[0];
