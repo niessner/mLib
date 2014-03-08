@@ -1,7 +1,9 @@
 #pragma once
 
-#ifndef _STRING_UTIL_CONVERT_H_
-#define _STRING_UTIL_CONVERT_H_
+#ifndef INCLUDE_CORE_UTIL_STRINGUTILCONVERT_H_
+#define INCLUDE_CORE_UTIL_STRINGUTILCONVERT_H_
+
+#include <string>
 
 /////////////////////////////////////////////////////////////////////
 // StringUtil is already used before; THIS must be included after  //
@@ -28,8 +30,8 @@ namespace Convert {
 		return s[0];
 	}
 	inline bool toBool(const std::string& s) {
-		if (s == "false" || s == "0")	return false;
-		else return true;		
+		if (s == "false" || s == "0") { return false; }
+		else { return true; }
 	}
 	template<class T>
 	inline std::string toString(const T& val) {
@@ -37,64 +39,64 @@ namespace Convert {
 	}
 	template<class U> inline point2d<U> toPoint2D(const std::string& s) {
 		point3d<U> ret;
-		std::stringstream ss(StringUtil::removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s, 'f'));
 		ss >> ret.x >> ret.y;
 		return ret;
 	}
 	template<class U> inline point3d<U> toPoint3D(const std::string& s) {
 		point3d<U> ret;
-		std::stringstream ss(StringUtil::removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s, 'f'));
 		ss >> ret.x >> ret.y >> ret.z;
 		return ret;
 	}
 	template<class U> inline point4d<U> toPoint4D(const std::string& s) {
 		point4d<U> ret;
-		std::stringstream ss(StringUtil::removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s, 'f'));
 		ss >> ret.x >> ret.y >> ret.z >> ret.w;
 		return ret;
 	}
 
 
-	template<class T>	inline void to(const std::string& s, T& res);
+	template<class T> inline void to(const std::string& s, T& res);
 
-	template<>	inline void to<int>(const std::string& s, int& res) {
+	template<>  inline void to<int>(const std::string& s, int& res) {
 		res = toInt(s);
 	}
-	template<>	inline void to<unsigned int>(const std::string& s, unsigned int& res) {
+	template<>  inline void to<unsigned int>(const std::string& s, unsigned int& res) {
 		res = toUInt(s);
 	}
-	template<>	inline void to<double>(const std::string& s, double& res) {
+	template<>  inline void to<double>(const std::string& s, double& res) {
 		res = toDouble(s);
 	}
-	template<>	inline void to<float>(const std::string& s, float& res) {
+	template<>  inline void to<float>(const std::string& s, float& res) {
 		res = toFloat(s);
 	}
-	template<>	inline void to<std::string>(const std::string& s, std::string& res) {
+	template<>  inline void to<std::string>(const std::string& s, std::string& res) {
 		res = s;
 	}
-	template<>	inline void to<char>(const std::string& s, char& res) {
+	template<>  inline void to<char>(const std::string& s, char& res) {
 		res = toChar(s);
 	}
 	template<> inline void to<bool>(const std::string& s, bool& res) {
 		res = toBool(s);
 	}
 	template<class U> inline void to(const std::string& s, point2d<U>& res) {
-		std::stringstream ss(StringUtil::removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s, 'f'));
 		ss >> res.x >> res.y;
 	}
 	template<class U> inline void to(const std::string& s, point3d<U>& res) {
-		std::stringstream ss(StringUtil::removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s, 'f'));
 		ss >> res.x >> res.y >> res.z;
 	}
 	template<class U> inline void to(const std::string& s, point4d<U>& res) {
-		std::stringstream ss(StringUtil::removeChar(s,'f'));
+		std::stringstream ss(StringUtil::removeChar(s, 'f'));
 		ss >> res.x >> res.y >> res.z >> res.w;
 	}
 
-};
+}  // namespace Convert
 
 namespace StringUtil {
-	
+
 	////////////////////////
 	// template overloads //
 	////////////////////////
@@ -107,7 +109,7 @@ namespace StringUtil {
 	template<class T> inline void convertTo(const std::string& s, T& res) {
 		Convert::to<T>(s, res);
 	}
-}
+}  // namespace StringUtil
 
 //! stringstream functionality
 template<class T>
@@ -118,4 +120,4 @@ inline std::string& operator<<(std::string& s, const T& in) {
 
 
 
-#endif
+#endif  // INCLUDE_CORE_UTIL_STRINGUTILCONVERT_H_

@@ -129,6 +129,13 @@ namespace Utility
 		return result;
 	}
 
+	void saveLinesToFile(const std::vector<std::string>& lines, const std::string& filename) {
+		std::ofstream file;
+		file.open(filename, std::ios::out);
+		for (const std::string line : lines) { file << line << std::endl; }
+		file.close();
+	}
+
 	std::vector<std::string> getFileLines(const std::string &filename, UINT minLineLength)
 	{
 		std::ifstream file(filename);
@@ -275,7 +282,7 @@ namespace Utility
 		struct stat statbuf;
 		int success = stat(filename.c_str(), &statbuf);
 		MLIB_ASSERT_STR(success == 0, std::string("stat failed on ") + filename);
-        return statbuf.st_size;
+		return statbuf.st_size;
 	}
 
 	// Create a process with the given command line, and wait until it returns
