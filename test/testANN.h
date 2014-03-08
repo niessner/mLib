@@ -9,12 +9,12 @@ public:
 		const UINT dimension = 5;
 		const UINT maxK = 20;
 
-		Vector< Vector<double> > points;
+		std::vector< std::vector<double> > points;
 		for(UINT p = 0; p < 1000; p++)
 		{
-			points.pushBack();
+			points.push_back( std::vector<double>() );
 			for(UINT d = 0; d < dimension; d++)
-				points.back().pushBack((double)rand() / (double)RAND_MAX);
+				points.back().push_back((double)rand() / (double)RAND_MAX);
 		}
 
 		bruteForce.init(points, maxK);
@@ -22,12 +22,12 @@ public:
 
 		for(UINT queryIndex = 0; queryIndex < 100; queryIndex++)
 		{
-			Vector<double> randomPt;
+			std::vector<double> randomPt;
 			for(UINT d = 0; d < dimension; d++)
-				randomPt.pushBack((double)rand() / (double)RAND_MAX);
+				randomPt.push_back((double)rand() / (double)RAND_MAX);
 
-			Vector<UINT> resultA = bruteForce.kNearest(randomPt, maxK, 0.0);
-			Vector<UINT> resultB = ANN.kNearest(randomPt, maxK, 0.0);
+			std::vector<UINT> resultA = bruteForce.kNearest(randomPt, maxK, 0.0);
+			std::vector<UINT> resultB = ANN.kNearest(randomPt, maxK, 0.0);
 
 			MLIB_ASSERT_STR(resultA == resultB, "NN search inconsistent");
 		}

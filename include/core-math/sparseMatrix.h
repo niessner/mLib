@@ -28,7 +28,7 @@ template <class D> struct SparseRow
 		{
 			if(e.col == col) return e.val;
 		}
-		entries.pushBack(SparseRowEntry<D>(col, 0.0));
+		entries.push_back(SparseRowEntry<D>(col, 0.0));
 		return entries.back().val;
 	}
 	D operator()(UINT col) const
@@ -39,7 +39,7 @@ template <class D> struct SparseRow
 		}
 		return 0.0;
 	}
-	std::vector< SparseRowEntry<D> > entries;
+	Vector< SparseRowEntry<D> > entries;
 };
 
 template <class D> class SparseMatrix
@@ -99,7 +99,6 @@ public:
 				std::vector<std::string> values = StringUtil::split(data[row], ",");
 				for(UINT col = 0; col < values.size(); col++)
 				{
-					//(*this)(row, col) = (D)values[col].findAndReplace("{","").findAndReplace("}","").toDOUBLE();
 					const std::string s = StringUtil::replace(StringUtil::replace(values[col], "{",""), "}","");
 					(*this)(row, col) = (D)std::stod(s);
 				}
@@ -150,24 +149,24 @@ public:
 	{
 		return m_data[row];
 	}
-	const std::vector<D> denseRow(UINT row) const
+	const Vector<D> denseRow(UINT row) const
 	{
-		std::vector<D> result(m_cols);
+		Vector<D> result(m_cols);
 		for(UINT col = 0; col < m_cols; col++)
 			result[col] = (*this)(row, col);
 		return result;
 	}
-	const std::vector<D> denseCol(UINT col) const
+	const Vector<D> denseCol(UINT col) const
 	{
-		std::vector<D> result(m_rows);
+		Vector<D> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = (*this)(row, col);
 		return result;
 	}
-	std::vector<D> diagonal() const
+	Vector<D> diagonal() const
 	{
 		MLIB_ASSERT_STR(square(), "diagonal called on non-square matrix");
-		std::vector<D> result(m_rows);
+		Vector<D> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = m_data[row](row);
 		return result;
@@ -190,24 +189,24 @@ public:
 	static SparseMatrix<D> add(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
 	static SparseMatrix<D> subtract(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
 	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, D c);
-	static std::vector<D> multiply(const SparseMatrix<D> &A, const std::vector<D> &v);
+	static Vector<D> multiply(const SparseMatrix<D> &A, const Vector<D> &v);
 	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
 	
 	// returns the scalar v^T A v
-	static D quadratic(const SparseMatrix<D> &A, const std::vector<D> &v)
+	static D quadratic(const SparseMatrix<D> &A, const Vector<D> &v)
 	{
-		return std::vector<D>::dotProduct(v, multiply(A, v));
+		return Vector<D>::dot(v, multiply(A, v));
 	}
 
 private:
 	UINT m_rows, m_cols;
-    std::vector< SparseRow<D> > m_data;
+    Vector< SparseRow<D> > m_data;
 
 	// set is a more efficient version of operator() that assumes the entry
 	// does not exist.
 	void insert(UINT row, UINT col, double val)
 	{
-		m_data[row].entries.pushBack(SparseRowEntry<D>(col, val));
+		m_data[row].entries.push_back(SparseRowEntry<D>(col, val));
 	}
 };
 
@@ -230,7 +229,7 @@ SparseMatrix<D> operator * (const SparseMatrix<D> &A, const SparseMatrix<D> &B)
 }
 
 template<class D>
-std::vector<D> operator * (const SparseMatrix<D> &A, const std::vector<D> &B)
+Vector<D> operator * (const SparseMatrix<D> &A, const Vector<D> &B)
 {
 	return SparseMatrix<D>::multiply(A, B);
 }

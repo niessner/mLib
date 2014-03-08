@@ -53,7 +53,7 @@ public:
 	}
 	void addEntry(const T &entry)
 	{
-		entries.pushBack( std::pair<T, float>(entry, 1.0f) );
+		entries.push_back( std::pair<T, float>(entry, 1.0f) );
 	}
 
 	T center;
@@ -72,7 +72,7 @@ public:
 
 		m_clusters.resize(clusterCount);
 		for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
-			m_clusters[clusterIndex].init(elements.randomElement());
+			m_clusters[clusterIndex].init(elements[rand() & elements.size()]);
 
 		std::vector<UINT> storage(elements.size());
 
@@ -82,9 +82,9 @@ public:
 		while(!converged)
 		{
 			pass++;
-			for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
+			for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++) {
 				previousClusterCenters[clusterIndex] = m_clusters[clusterIndex].center;
-
+			}
 			iterate(elements, storage);
 
 			double delta = 0.0;
@@ -197,7 +197,7 @@ private:
 			clustersPtr[storage[elementIndex]].addEntry(elementPtr[elementIndex]);
 
 		for(int clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
-			clustersPtr[clusterIndex].finalizeIteration(elements.randomElement());
+			clustersPtr[clusterIndex].finalizeIteration(elements[rand()%elements.size()]);
 	}
 
 	void iterate(const std::vector<T> &elements, const std::vector<T> &weightedElements, const std::vector<float> &weights, std::vector<UINT> &storage)

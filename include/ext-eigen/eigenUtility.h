@@ -10,9 +10,9 @@ namespace EigenUtility
 	// be converted to a proper iterator.
 	//
 	template<class D>
-	static std::vector< Eigen::Triplet<D> > makeEigenTriplets(const SparseMatrix<D> &M)
+	static Vector< Eigen::Triplet<D> > makeEigenTriplets(const SparseMatrix<D> &M)
 	{
-		std::vector< Eigen::Triplet<D> > triplets;
+		Vector< Eigen::Triplet<D> > triplets;
 		for(UINT rowIndex = 0; rowIndex < M.rows(); rowIndex++)
 		{
 			const SparseRow<D> &row = M.sparseRow(rowIndex);
@@ -34,7 +34,7 @@ namespace EigenUtility
 	}
 
 	template<class D>
-	Eigen::VectorXd makeEigenVector(const std::vector<D> &v)
+	Eigen::VectorXd makeEigenVector(const Vector<D> &v)
 	{
 		const UINT n = (UINT)v.size();
 		Eigen::VectorXd result(n);
@@ -43,10 +43,10 @@ namespace EigenUtility
 	}
 
 	template<class D>
-	std::vector<D> dumpEigenVector(const Eigen::VectorXd &v)
+	Vector<D> dumpEigenVector(const Eigen::VectorXd &v)
 	{
 		const UINT n = (UINT)v.size();
-		std::vector<double> result(n);
+		Vector<double> result(n);
 		for(UINT i = 0; i < n; i++) result[i] = v[i];
 		return result;
 	}

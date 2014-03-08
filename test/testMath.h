@@ -94,7 +94,7 @@ public:
 		const UINT clusterCount = 10;
 		const UINT maxIterations = 25;
 
-		Vector<vec3f> points(pointCount);
+		std::vector<vec3f> points(pointCount);
 		for(UINT i = 0; i < pointCount; i++)
 			points[i] = vec3f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
 

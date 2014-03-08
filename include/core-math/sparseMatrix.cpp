@@ -58,14 +58,14 @@ SparseMatrix<D> SparseMatrix<D>::subtract(const SparseMatrix<D> &A, const Sparse
 }
 
 template<class D>
-std::vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const std::vector<D> &B)
+Vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Vector<D> &B)
 {
 	MLIB_ASSERT_STR(A.cols() == B.size(), "invalid dimensions");
 	const int rows = A.m_rows;
-	std::vector<D> result(rows);
+	Vector<D> result(rows);
 
-	const D* BPtr = B.ptr();
-	D* resultPtr = result.ptr();
+	const D* BPtr = &B[0];
+	D* resultPtr = &result[0];
 
 #ifdef MLIB_OPENMP
 #pragma omp parallel for
@@ -73,8 +73,9 @@ std::vector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const std::ve
 	for(int row = 0; row < rows; row++)
 	{
 		D val = 0.0;
-		for(const SparseRowEntry<D> &e : A.m_data[row].entries)
+		for(const SparseRowEntry<D> &e : A.m_data[row].entries) {
 			val += e.val * BPtr[e.col];
+		}
 		resultPtr[row] = val;
 	}
 	return result;

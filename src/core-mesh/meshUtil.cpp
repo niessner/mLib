@@ -1,4 +1,6 @@
 
+
+
 TriMesh MeshUtil::createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f> > &meshes)
 {
     //const UINT totalPoints = meshes.sum([](const std::pair<TriMesh, mat4f> &t) { return (UINT)t.first.vertices().size(); });

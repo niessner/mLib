@@ -23,7 +23,7 @@ public:
 		m_method = method;
 	}
 
-	std::vector<D> solve(const SparseMatrix<D> &A, const std::vector<D> &b)
+	Vector<D> solve(const SparseMatrix<D> &A, const Vector<D> &b)
 	{
 		MLIB_ASSERT_STR(A.square() && b.size() == A.rows(), "invalid solve dimensions");
 		Eigen::SparseMatrix<D> eigenMatrix;
@@ -31,12 +31,12 @@ public:
 		return solve(eigenMatrix, b);
 	}
 
-	std::vector<D> solve(const Eigen::SparseMatrix<D> &A, const std::vector<D> &b)
+	Vector<D> solve(const Eigen::SparseMatrix<D> &A, const Vector<D> &b)
 	{
 		return solveUsingMethod(A, b, m_method);
 	}
 
-	std::vector<D> solveLeastSquares(const SparseMatrix<D> &A, const std::vector<D> &b)
+	Vector<D> solveLeastSquares(const SparseMatrix<D> &A, const Vector<D> &b)
 	{
 		//return solve(A.transpose() * A, b);
 
@@ -45,7 +45,7 @@ public:
 		return solveLeastSquares(eigenMatrix, b);
 	}
 
-	std::vector<D> solveLeastSquares(const Eigen::SparseMatrix<D> &A, const std::vector<D> &b)
+	Vector<D> solveLeastSquares(const Eigen::SparseMatrix<D> &A, const Vector<D> &b)
 	{
 		Console::log("Solving least-squares problem using QR");
 
@@ -57,7 +57,7 @@ public:
 	}
 
 private:
-	std::vector<D> solveUsingMethod(const Eigen::SparseMatrix<D> &A, const std::vector<D> &b, Method method)
+	Vector<D> solveUsingMethod(const Eigen::SparseMatrix<D> &A, const Vector<D> &b, Method method)
 	{
 		ComponentTimer timer("Solving using method: " + getMethodName(method));
 		
@@ -115,7 +115,7 @@ private:
 		{
 			Console::log("Profiling all eigen linear solvers");
 			const int methodCount = (int)Profile;
-			std::vector< std::vector<D> > results(methodCount);
+			std::vector< Vector<D> > results(methodCount);
 			for(int methodIndex = 0; methodIndex < methodCount; methodIndex++)
 			{
 				results[methodIndex] = solveUsingMethod(A, b, (Method)methodIndex);

@@ -17,7 +17,7 @@ public:
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
 		m_data = s.m_data;
-		m_dataPtr = m_data.ptr();
+		m_dataPtr = &m_data[0];
 	}
 
 	DenseMatrix(DenseMatrix &&s)
@@ -27,7 +27,7 @@ public:
 		s.m_rows = 0;
 		s.m_cols = 0;
 		m_data = std::move(s.m_data);
-		m_dataPtr = m_data.ptr();
+		m_dataPtr = &m_data[0];
 	}
 
 	explicit DenseMatrix(UINT squareDimension)
@@ -38,12 +38,12 @@ public:
 		m_dataPtr = m_data.ptr();
 	}
 
-	explicit DenseMatrix(const std::vector<D> &diagonal)
+	explicit DenseMatrix(const Vector<D> &diagonal)
 	{
 		m_rows = (UINT)diagonal.size();
 		m_cols = (UINT)diagonal.size();
 		m_data.resize(m_rows * m_cols);
-		m_dataPtr = m_data.ptr();
+		m_dataPtr = &m_data[0];
 		for(UINT row = 0; row < m_rows; row++)
 		{
 			for(UINT col = 0; col < m_cols; col++)
@@ -58,7 +58,7 @@ public:
 		m_rows = rows;
 		m_cols = cols;
 		m_data.resize(m_rows * m_cols);
-		m_dataPtr = m_data.ptr();
+		m_dataPtr = &m_data[0];
 	}
 
 	DenseMatrix(const std::string &s, MatrixStringFormat format)
@@ -70,17 +70,15 @@ public:
 			//
 			std::vector<std::string> data = StringUtil::split(s,"},{");
 			m_rows = (UINT)data.size();
-			//m_cols = (UINT)data[0].split(",").size();
 			m_cols = (UINT)StringUtil::split(data[0], ",").size();
 			m_data.resize(m_rows * m_cols);
-			m_dataPtr = m_data.ptr();
+			m_dataPtr = &m_data[0];
 
 			for(UINT row = 0; row < m_rows; row++)
 			{
 				std::vector<std::string> values = StringUtil::split(data[row], ",");
 				for(UINT col = 0; col < values.size(); col++)
 				{
-					//(*this)(row, col) = (D)values[col].findAndReplace("{","").findAndReplace("}","").toDOUBLE();
 					const std::string s = StringUtil::replace(StringUtil::replace(values[col], "{",""), "}","");
 					(*this)(row, col) = (D)std::stod(s);
 				}
@@ -165,7 +163,7 @@ public:
 	//
 	static DenseMatrix<D> identity(int n)
 	{
-		return DenseMatrix<D>(std::vector<D>(n, (D)1.0));
+		return DenseMatrix<D>(Vector<D>(n, (D)1.0));
 	}
 
 private:
@@ -193,7 +191,7 @@ DenseMatrix<D> operator * (const DenseMatrix<D> &A, const DenseMatrix<D> &B)
 }
 
 template<class D>
-std::vector<D> operator * (const DenseMatrix<D> &A, const std::vector<D> &B)
+std::vector<D> operator * (const DenseMatrix<D> &A, const Vector<D> &B)
 {
 	return DenseMatrix<D>::multiply(A, B);
 }

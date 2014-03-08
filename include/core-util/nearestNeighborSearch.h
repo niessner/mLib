@@ -96,7 +96,7 @@ public:
 
 	void clear(D clearValue)
 	{
-		m_queue.clear(NeighborEntry(-1, clearValue));
+		m_queue.assign(m_queue.size(), NeighborEntry(-1, clearValue));
 		m_farthestDist = clearValue;
 	}
 
