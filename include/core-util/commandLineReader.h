@@ -52,7 +52,7 @@ public:
 		if (it == prefix.end())	{
 			return "";
 		} else {
-			StringUtil::replace(m_args[it - prefix.begin()], prefix, "");
+			return StringUtil::replace(m_args[it - prefix.begin()], prefix, "");
 		}
 		//int index = m_args.findFirstIndex([prefix](const std::string &s) { return StringUtil::startsWith(s, prefix); });
 		//if(index == -1) return "";

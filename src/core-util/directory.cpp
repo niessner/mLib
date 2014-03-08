@@ -71,10 +71,10 @@ void Directory::load(const std::string &path)
 		if (entity->d_type == DT_DIR) {
 			// don't process  '..' & '.' directories
 			if(entity->d_name[0] != '.')
-				m_directories.pushBack(std::string(entity->d_name));
+				m_directories.push_back(std::string(entity->d_name));
 		}
 		else if (entity->d_type == DT_REG) {
-			m_files.pushBack(std::string(entity->d_name));
+			m_files.push_back(std::string(entity->d_name));
 		}
 	}
 	

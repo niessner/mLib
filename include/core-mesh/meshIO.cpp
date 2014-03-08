@@ -13,7 +13,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	std::getline(file, line);
 
 	std::string t = std::string("end_header");
-	int i1 = 0;
+	//int i1 = 0;
 	while (line.find("end_header") == std::string::npos) {
 		PlyHeaderLine(line, header);
 		std::getline(file, line);
