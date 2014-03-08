@@ -63,13 +63,13 @@ public:
 	/* Read Functions													    */
 	/************************************************************************/
 
-
-
 	static void loadFromPLY(const std::string& filename, MeshData<FloatType>& mesh);
 
 	static void loadFromFileOFF(const std::string& filename, MeshData<FloatType>& mesh);
 
 	static void loadFromFileOBJ(const std::string& filename, MeshData<FloatType>& mesh);
+
+
 private:
 
 

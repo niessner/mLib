@@ -46,9 +46,6 @@
     </ClInclude>
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="testVector.h">
-      <Filter>tests</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-base\common.h">
       <Filter>mLibHeader\core-base</Filter>
     </ClInclude>

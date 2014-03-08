@@ -149,7 +149,6 @@
     <ClInclude Include="testLodePNG.h" />
     <ClInclude Include="testMath.h" />
     <ClInclude Include="testUtility.h" />
-    <ClInclude Include="testVector.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="console.txt" />

@@ -7,7 +7,6 @@ public:
 	void go();
 
 private:
-	TestVector m_vector;
 	TestUtility m_utility;
 	TestMath m_math;
 	TestANN m_ANN;
@@ -18,7 +17,6 @@ private:
 void App::go()
 {
 	Console::openLogFile("console.txt");
-	m_vector.run();
 	m_utility.run();
 	m_math.run();
 	m_ANN.run();

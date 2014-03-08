@@ -8,8 +8,8 @@ void AppTest::init(ApplicationData &app)
     //m_mesh.load(app.graphics, triMesh);
 
 	//const std::string testFilename = "scans/gates381.off";
-	const std::string testFilename = "scans/gates381.obj";
-	//const std::string testFilename = "scans/gates381.ply";
+	//const std::string testFilename = "scans/gates381.obj";
+	const std::string testFilename = "scans/gates381.ply";
 	MeshDataf meshData = MeshIOf::loadFromFile(testFilename);
 	const TriMesh triMesh(meshData);
 	m_mesh.load(app.graphics, triMesh);
