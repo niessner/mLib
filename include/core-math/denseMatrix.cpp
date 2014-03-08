@@ -81,12 +81,12 @@ DenseMatrix<D> DenseMatrix<D>::subtract(const DenseMatrix<D> &A, const DenseMatr
 }
 
 template<class D>
-Vector<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const Vector<D> &B)
+std::vector<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const std::vector<D> &B)
 {
 	MLIB_ASSERT_STR(A.cols() == B.size(), "invalid dimensions");
 	const int rows = A.m_rows;
 	const UINT cols = A.m_cols;
-	Vector<D> result(rows);
+	std::vector<D> result(rows);
 //#ifdef MLIB_OPENMP
 //#pragma omp parallel for
 //#endif

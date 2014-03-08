@@ -12,12 +12,12 @@ class UIConnection
     void readMessages();
     void sendMessage(const std::string &message);
 
-    inline Vector<std::string>& messages()
+    inline std::vector<std::string>& messages()
     {
         return m_messages;
     }
  private:
-    Vector<std::string> m_messages;
+    std::vector<std::string> m_messages;
     Pipe m_writeToUIPipe;
     Pipe m_readFromUIPipe;
 };

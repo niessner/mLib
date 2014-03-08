@@ -60,9 +60,9 @@ namespace StringUtil {
 
 
 	//TODO TEST
-	inline Vector<std::string> split(const std::string& str, const std::string& seperator, bool pushEmptyStrings = false) {
+	inline std::vector<std::string> split(const std::string& str, const std::string& seperator, bool pushEmptyStrings = false) {
 		MLIB_ASSERT_STR(seperator.length() >= 1, "empty seperator");
-		Vector<std::string> result;
+		std::vector<std::string> result;
 		std::string entry;
 		for (size_t i = 0; i < str.length(); i++) {
 			bool isSeperator = true;
@@ -77,7 +77,7 @@ namespace StringUtil {
 			{
 				if(entry.length() > 0 || pushEmptyStrings)
 				{
-					result.pushBack(entry);
+					result.push_back(entry);
 					entry.clear();
 				}
 				i += seperator.size() - 1;
@@ -87,11 +87,11 @@ namespace StringUtil {
 				entry.push_back(str[i]);
 			}
 		}
-		if (entry.length() > 0) result.pushBack(entry);
+		if (entry.length() > 0) result.push_back(entry);
 		return result;
 	}
 
-	inline Vector<std::string> split(const std::string& str, const char seperator, bool pushEmptyStrings = false) {
+	inline std::vector<std::string> split(const std::string& str, const char seperator, bool pushEmptyStrings = false) {
 		return split(str, std::string(1, seperator), pushEmptyStrings);
 	}
 

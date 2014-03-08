@@ -97,19 +97,19 @@ public:
 		return (row >= 0 && row < int(m_rows) && col >= 0 && col < int(m_cols));
 	}
 
-	void setRow(UINT row, const Vector<T> &values)
+	void setRow(UINT row, const std::vector<T> &values)
 	{
 		for(UINT col = 0; col < m_cols; col++) m_data[row * m_cols + col] = values[col];
 	}
 
-	void setCol(UINT col, const Vector<T> &values)
+	void setCol(UINT col, const std::vector<T> &values)
 	{
 		for(UINT row = 0; row < m_rows; row++) m_data[row * m_cols + col] = values[row];
 	}
 
-	Vector<T> getRow(UINT row) const
+	std::vector<T> getRow(UINT row) const
 	{
-		Vector<T> result(m_cols);
+		std::vector<T> result(m_cols);
 		const T *CPtr = m_data;
 		for(UINT col = 0; col < m_cols; col++)
 		{
@@ -118,9 +118,9 @@ public:
 		return result;
 	}
 
-	Vector<T> getCol(UINT col) const
+	std::vector<T> getCol(UINT col) const
 	{
-		Vector<T> result(m_rows);
+		std::vector<T> result(m_rows);
 		const T *CPtr = m_data;
 		for(UINT row = 0; row < m_rows; row++)
 		{

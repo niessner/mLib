@@ -7,69 +7,69 @@ template<class D>
 class NearestNeighborSearch
 {
 public:
-	void init(const Vector< const D* > &points, UINT dimension, UINT maxK)
+	void init(const std::vector< const D* > &points, UINT dimension, UINT maxK)
 	{
 		initInternal(points, dimension, maxK);
 	}
-	void kNearest(const D *query, UINT k, D epsilon, Vector<UINT> &result) const
+	void kNearest(const D *query, UINT k, D epsilon, std::vector<UINT> &result) const
 	{
 		kNearestInternal(query, k, epsilon, result);
 	}
 	
-	void init(const Vector< Vector<D> > &points, UINT maxK)
+	void init(const std::vector< std::vector<D> > &points, UINT maxK)
 	{
 		//Vector< const D* > v = points.map([](const Vector<D> &x) {return x.ptr();});
-		Vector< const D* > v(points.size());
+		std::vector< const D* > v(points.size());
 		for(UINT i = 0; i < points.size(); i++)
 			v[i] = points[i].ptr();
 		init(v, (UINT)points[0].size(), maxK);
 	}
 
-	void kNearest(const Vector<D> &query, UINT k, D epsilon, Vector<UINT> &result) const
+	void kNearest(const std::vector<D> &query, UINT k, D epsilon, std::vector<UINT> &result) const
 	{
 		kNearestInternal(query.ptr(), k, epsilon, result);
 	}
 
-	Vector<UINT> kNearest(const Vector<D> &query, UINT k, D epsilon) const
+	std::vector<UINT> kNearest(const std::vector<D> &query, UINT k, D epsilon) const
 	{
-		Vector<UINT> result;
+		std::vector<UINT> result;
 		kNearestInternal(query.ptr(), k, epsilon, result);
 		return result;
 	}
 
-	Vector<UINT> kNearest(const D *query, UINT k, D epsilon) const
+	std::vector<UINT> kNearest(const D *query, UINT k, D epsilon) const
 	{
-		Vector<UINT> result;
+		std::vector<UINT> result;
 		kNearestInternal(query, k, epsilon, result);
 		return result;
 	}
 
-    Vector<UINT> fixedRadius(const Vector<D> &query, UINT k, D radiusSq) const
+    std::vector<UINT> fixedRadius(const std::vector<D> &query, UINT k, D radiusSq) const
 	{
-		Vector<UINT> result;
+		std::vector<UINT> result;
 		fixedRadiusInternal(query.ptr(), k, radiusSq, 0.0f, result);
 		return result;
 	}
 
-    Vector<UINT> fixedRadius(const D *query, UINT k, D radiusSq) const
+    std::vector<UINT> fixedRadius(const D *query, UINT k, D radiusSq) const
     {
-        Vector<UINT> result;
+        std::vector<UINT> result;
         fixedRadiusInternal(query, k, radiusSq, 0.0f, result);
         return result;
     }
 
-    Vector< std::pair<UINT, D> > fixedRadiusDist(const D *query, UINT k, D radiusSq) const
+    std::vector< std::pair<UINT, D> > fixedRadiusDist(const D *query, UINT k, D radiusSq) const
     {
-        Vector< std::pair<UINT, D> > result;
+        std::vector< std::pair<UINT, D> > result;
         fixedRadiusInternalDist(query, k, radiusSq, 0.0f, result);
         return result;
     }
 
 private:
-	virtual void initInternal(const Vector< const D* > &points, UINT dimension, UINT maxK) = 0;
-	virtual void kNearestInternal(const D *query, UINT k, D epsilon, Vector<UINT> &result) const = 0;
-    virtual void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, Vector<UINT> &result) const = 0;
-    virtual void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, Vector< std::pair<UINT, D> > &result) const = 0;
+	virtual void initInternal(const std::vector< const D* > &points, UINT dimension, UINT maxK) = 0;
+	virtual void kNearestInternal(const D *query, UINT k, D epsilon, std::vector<UINT> &result) const = 0;
+    virtual void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, std::vector<UINT> &result) const = 0;
+    virtual void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, std::vector< std::pair<UINT, D> > &result) const = 0;
 };
 
 template<class D>
@@ -121,21 +121,21 @@ public:
 		}
 	}
 
-	const Vector<NeighborEntry>& queue() const
+	const std::vector<NeighborEntry>& queue() const
 	{
 		return m_queue;
 	}
 
 private:
 	D m_farthestDist;
-	Vector<NeighborEntry> m_queue;
+	std::vector<NeighborEntry> m_queue;
 };
 
 template<class D>
 class NearestNeighborSearchBruteForce : public NearestNeighborSearch<D>
 {
 public:
-	void initInternal(const Vector< const D* > &points, UINT dimension, UINT maxK)
+	void initInternal(const std::vector< const D* > &points, UINT dimension, UINT maxK)
 	{
 		m_dimension = dimension;
 		m_pointData.resize(points.size() * dimension);
@@ -148,7 +148,7 @@ public:
 		}
 	}
 
-	void kNearestInternal(const D *query, UINT k, D epsilon, Vector<UINT> &result) const
+	void kNearestInternal(const D *query, UINT k, D epsilon, std::vector<UINT> &result) const
 	{
 		m_queue.init(k, std::numeric_limits<D>::max());
 		
@@ -172,20 +172,20 @@ public:
 		}
 	}
 
-    void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, Vector<UINT> &result) const
+    void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, std::vector<UINT> &result) const
     {
         throw MLIB_EXCEPTION("fixedRadiusInternal not implemented");
     }
 
-    void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, Vector< std::pair<UINT, D> > &result) const
+    void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, std::vector< std::pair<UINT, D> > &result) const
     {
         throw MLIB_EXCEPTION("fixedRadiusInternalDist not implemented");
     }
 
 private:
 	UINT m_dimension;
-	Vector<D> m_pointData;
-	Vector< const D* > m_points;
+	std::vector<D> m_pointData;
+	std::vector< const D* > m_points;
 	mutable KNearestNeighborQueue<D> m_queue;
 };
 

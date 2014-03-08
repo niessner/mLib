@@ -35,7 +35,7 @@ public:
 	void writeData(const BYTE* t, size_t size) {
 		const bool useCompression = !std::is_same<BinaryDataCompressorNone, BinaryDataCompressor>::value;
 		if (useCompression && size > COMPRESSION_THRESHOLD_) {
-			Vector<BYTE> compressedT;
+			std::vector<BYTE> compressedT;
 			//ZLibWrapper::CompressStreamToMemory(t, size, compressedT, false);
 			m_DataCompressor.compressStreamToMemory(t, size, compressedT);
 			UINT64 compressedSize = compressedT.size();
@@ -166,15 +166,15 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 	return s;
 }
 
-template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Vector<T>& v) {
-	s << (UINT64)v.size();
-	s.reserve(sizeof(T)*v.size());
-	for (size_t i = 0; i < v.size(); i++) {
-		s << v[i];
-	}
-	return s;
-}
+//template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+//inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Vector<T>& v) {
+//	s << (UINT64)v.size();
+//	s.reserve(sizeof(T)*v.size());
+//	for (size_t i = 0; i < v.size(); i++) {
+//		s << v[i];
+//	}
+//	return s;
+//}
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Grid2D<T>& g) {
@@ -271,15 +271,15 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	return s;
 }
 
-template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Vector<T>& v) {
-	UINT64 size;
-	s >> size;
-	v.resize(size);
-	for (size_t i = 0; i < v.size(); i++)
-		s >> v[i];
-	return s;
-}
+//template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+//inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Vector<T>& v) {
+//	UINT64 size;
+//	s >> size;
+//	v.resize(size);
+//	for (size_t i = 0; i < v.size(); i++)
+//		s >> v[i];
+//	return s;
+//}
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Grid2D<T>& g) {

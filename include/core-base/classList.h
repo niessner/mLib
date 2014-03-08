@@ -5,7 +5,7 @@
 //
 // core-base
 //
-template<class T> class Vector;
+
 
 //
 // core-math

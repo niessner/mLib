@@ -17,13 +17,13 @@ void UIConnection::readMessages()
 {
 	while(m_readFromUIPipe.messagePresent())
 	{
-		Vector<BYTE> message;
+		std::vector<BYTE> message;
 		m_readFromUIPipe.readMessage(message);
-		message.pushBack(0);
+		message.push_back(0);
 		std::string s = std::string((const char *)&message[0]);
 		if(s.size() > 0)
 		{
-			m_messages.pushBack(s);
+			m_messages.push_back(s);
 		}
 	}
 }

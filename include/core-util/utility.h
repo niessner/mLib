@@ -223,13 +223,13 @@ namespace Utility
     // Returns the next line in the given file
     //
     std::string getNextLine(std::ifstream &file);
-    Vector<BYTE> getFileData(const std::string &filename);
+    std::vector<BYTE> getFileData(const std::string &filename);
 
     //
     // Returns the set of all lines in the given file
     //
-    Vector<std::string> getFileLines(std::ifstream &file, UINT minLineLength = 0);
-    Vector<std::string> getFileLines(const std::string &filename, UINT minLineLength = 0);
+    std::vector<std::string> getFileLines(std::ifstream &file, UINT minLineLength = 0);
+    std::vector<std::string> getFileLines(const std::string &filename, UINT minLineLength = 0);
 
     //
 	// FILE wrappers

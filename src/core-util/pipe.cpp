@@ -168,7 +168,7 @@ bool Pipe::messagePresent()
     return (BytesReady > 0);
 }
 
-bool Pipe::readMessage(Vector<BYTE> &Message)
+bool Pipe::readMessage(std::vector<BYTE> &Message)
 {
     MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::ReadMessage");
     DWORD BytesReady  = 0;
@@ -197,7 +197,7 @@ bool Pipe::readMessage(Vector<BYTE> &Message)
     return true;
 }
 
-void Pipe::sendMessage(const Vector<BYTE> &Message)
+void Pipe::sendMessage(const std::vector<BYTE> &Message)
 {
     sendMessage(&Message[0], (UINT)Message.size());
 }

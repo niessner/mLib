@@ -6,7 +6,7 @@ void ThreadPool::init(UINT threadCount)
 		m_threads[threadIndex].init(threadIndex, NULL);
 }
 
-void ThreadPool::init(UINT threadCount, const Vector<ThreadLocalStorage*> &threadLocalStorage)
+void ThreadPool::init(UINT threadCount, const std::vector<ThreadLocalStorage*> &threadLocalStorage)
 {
 	m_threads.resize(threadCount);
 	for(UINT threadIndex = 0; threadIndex < threadCount; threadIndex++)

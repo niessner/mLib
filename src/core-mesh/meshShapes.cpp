@@ -18,8 +18,8 @@ namespace MeshShapes
 
     TriMesh box(float xDim, float yDim, float zDim, const vec4f& color)
     {
-        Vector<TriMesh::TriMeshVertex> V(8);
-        Vector<UINT> I(12*3);
+        std::vector<TriMesh::TriMeshVertex> V(8);
+        std::vector<UINT> I(12*3);
 
         // Vertices
         for (int i = 0; i < 8; i++)
@@ -45,8 +45,8 @@ namespace MeshShapes
 
     TriMesh cylinder(float radius, float height, UINT stacks, UINT slices, const vec4f& color)
     {
-        Vector<TriMesh::TriMeshVertex> vertices((stacks + 1) * slices);
-        Vector<UINT> indices(stacks * slices * 6);
+        std::vector<TriMesh::TriMeshVertex> vertices((stacks + 1) * slices);
+        std::vector<UINT> indices(stacks * slices * 6);
         
         UINT vIndex = 0;
         for(UINT i = 0; i <= stacks; i++)

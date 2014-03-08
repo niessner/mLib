@@ -17,9 +17,9 @@ public:
     // Messaging
     //
     bool messagePresent();
-    bool readMessage(Vector<BYTE> &message);
+    bool readMessage(std::vector<BYTE> &message);
     void sendMessage(const BYTE *message, UINT messageLength);
-    void sendMessage(const Vector<BYTE> &message);
+    void sendMessage(const std::vector<BYTE> &message);
 	void sendMessage(const std::string &message);
 
     //

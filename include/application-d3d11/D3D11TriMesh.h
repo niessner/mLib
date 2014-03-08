@@ -30,7 +30,7 @@ public:
 
 	void render(GraphicsDevice &g);
 
-    void updateAttributeA(GraphicsDevice &g, const Vector<vec4f> &vertexColors);
+    void updateAttributeA(GraphicsDevice &g, const std::vector<vec4f> &vertexColors);
 
     const TriMesh& triMesh() const
     {

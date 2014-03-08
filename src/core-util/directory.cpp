@@ -4,15 +4,15 @@ Directory::Directory(const std::string &path)
     load(path);
 }
 
-Vector<std::string> Directory::filesWithSuffix(const std::string &suffix) const
+std::vector<std::string> Directory::filesWithSuffix(const std::string &suffix) const
 {
-    Vector<std::string> result;
+    std::vector<std::string> result;
     for(UINT fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
     {
         const std::string &filename = m_files[fileIndex];
         if(StringUtil::endsWith(filename, suffix))
         {
-            result.pushBack(filename);
+            result.push_back(filename);
         }
     }
     return result;
@@ -38,14 +38,14 @@ void Directory::load(const std::string &path)
 			std::string directoryName(findResult.cFileName);
 			if(!StringUtil::startsWith(directoryName, "."))
 			{
-				m_directories.pushBack(directoryName);
+				m_directories.push_back(directoryName);
 			}
 		}
 		else
 		{
 			//FileSize.LowPart = findResult.nFileSizeLow;
 			//FileSize.HighPart = findResult.nFileSizeHigh;
-			m_files.pushBack(std::string(findResult.cFileName));
+			m_files.push_back(std::string(findResult.cFileName));
 		}
 	}
 	while (FindNextFileA(hFind, &findResult) != 0);

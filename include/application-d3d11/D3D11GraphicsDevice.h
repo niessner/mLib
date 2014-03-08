@@ -77,7 +77,7 @@ private:
 	D3D_FEATURE_LEVEL m_featureLevel;
 
 	
-	Vector<GraphicsAsset*> m_assets;
+	std::set<GraphicsAsset*> m_assets;
 };
 
 

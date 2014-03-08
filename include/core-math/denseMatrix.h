@@ -38,7 +38,7 @@ public:
 		m_dataPtr = m_data.ptr();
 	}
 
-	explicit DenseMatrix(const Vector<D> &diagonal)
+	explicit DenseMatrix(const std::vector<D> &diagonal)
 	{
 		m_rows = (UINT)diagonal.size();
 		m_cols = (UINT)diagonal.size();
@@ -68,8 +68,7 @@ public:
 			//
 			// this is really a dense format and should be loaded as such, then cast into a SparseMatrix
 			//
-			//Vector<std::string> data = s.split("},{");
-			Vector<std::string> data = StringUtil::split(s,"},{");
+			std::vector<std::string> data = StringUtil::split(s,"},{");
 			m_rows = (UINT)data.size();
 			//m_cols = (UINT)data[0].split(",").size();
 			m_cols = (UINT)StringUtil::split(data[0], ",").size();
@@ -78,8 +77,7 @@ public:
 
 			for(UINT row = 0; row < m_rows; row++)
 			{
-				//Vector<std::string> values = data[row].split(",");
-				Vector<std::string> values = StringUtil::split(data[row], ",");
+				std::vector<std::string> values = StringUtil::split(data[row], ",");
 				for(UINT col = 0; col < values.size(); col++)
 				{
 					//(*this)(row, col) = (D)values[col].findAndReplace("{","").findAndReplace("}","").toDOUBLE();
@@ -135,10 +133,10 @@ public:
 	{
 		return (m_rows == m_cols);
 	}
-	Vector<D> diagonal() const
+	std::vector<D> diagonal() const
 	{
 		MLIB_ASSERT_STR(square(), "diagonal called on non-square matrix");
-		Vector<D> result(m_rows);
+		std::vector<D> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = m_data[row * m_cols + row];
 		return result;
@@ -159,7 +157,7 @@ public:
 	static DenseMatrix<D> add(const DenseMatrix<D> &A, const DenseMatrix<D> &B);
 	static DenseMatrix<D> subtract(const DenseMatrix<D> &A, const DenseMatrix<D> &B);
 	static DenseMatrix<D> multiply(const DenseMatrix<D> &A, D c);
-	static Vector<D> multiply(const DenseMatrix<D> &A, const Vector<D> &v);
+	static std::vector<D> multiply(const DenseMatrix<D> &A, const std::vector<D> &v);
 	static DenseMatrix<D> multiply(const DenseMatrix<D> &A, const DenseMatrix<D> &B);
 
 	//
@@ -167,13 +165,13 @@ public:
 	//
 	static DenseMatrix<D> identity(int n)
 	{
-		return DenseMatrix<D>(Vector<D>(n, (D)1.0));
+		return DenseMatrix<D>(std::vector<D>(n, (D)1.0));
 	}
 
 private:
 	UINT m_rows, m_cols;
 	D* m_dataPtr;
-    Vector< D > m_data;
+    std::vector< D > m_data;
 };
 
 template<class D>
@@ -195,7 +193,7 @@ DenseMatrix<D> operator * (const DenseMatrix<D> &A, const DenseMatrix<D> &B)
 }
 
 template<class D>
-Vector<D> operator * (const DenseMatrix<D> &A, const Vector<D> &B)
+std::vector<D> operator * (const DenseMatrix<D> &A, const std::vector<D> &B)
 {
 	return DenseMatrix<D>::multiply(A, B);
 }

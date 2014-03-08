@@ -20,7 +20,7 @@ public:
 		reset();
 	}
 
-	BoundingBox3d(const Vector< point3d<FloatType> >& verts) 
+	BoundingBox3d(const std::vector< point3d<FloatType> >& verts) 
 	{
 		reset();
 		for (unsigned int i = 0; i < verts.size(); i++) {

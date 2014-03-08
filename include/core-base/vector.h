@@ -3,6 +3,9 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
+#define Vector std::vector
+
+/*
 template <class T> class Vector
 {
 public:
@@ -438,6 +441,6 @@ template <class T> inline bool operator != (const Vector<T> &a, const Vector<T> 
 }
 
 #include "vector.cpp"
-
+*/
 
 #endif // _VECTOR_H_

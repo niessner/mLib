@@ -129,7 +129,8 @@ void D3D11GraphicsDevice::resize(UINT width, UINT height)
 
 void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)
 {
-	if(!m_assets.contains(asset)) m_assets.pushBack(asset);
+	m_assets.insert(asset);
+	//if (std::find(m_assets.begin(), m_assets.end(), asset) != m_assets.end()) m_assets.push_back(asset);
 }
 
 void D3D11GraphicsDevice::renderBeginFrame()

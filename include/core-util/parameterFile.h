@@ -93,7 +93,7 @@ public:
 		}
 	} 
 	template<class U>
-	bool readParameter(const std::string& name, Vector<U>& value) const {
+	bool readParameter(const std::string& name, std::vector<U>& value) const {
 		value.clear();
 		for (size_t i = 0;; i++) {
 			std::stringstream ss;	ss << i;

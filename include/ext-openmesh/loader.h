@@ -26,8 +26,8 @@ static TriMesh load(const std::string& filename)
 
     const size_t nVertices = mesh.n_vertices();
     const size_t nIndices = mesh.n_faces() * 3;  // Should always be tri meshes
-    Vector<TriMesh::TriMeshVertex> vertices(nVertices);
-    Vector<UINT> indices(nIndices);
+    std::vector<TriMesh::TriMeshVertex> vertices(nVertices);
+    std::vector<UINT> indices(nIndices);
 
     TriMesh::TriMeshVertex mv;
     UINT currVertIdx = 0;

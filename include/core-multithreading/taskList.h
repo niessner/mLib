@@ -35,12 +35,12 @@ public:
         }
 
         nextTask = m_tasks.back();
-        m_tasks.popBack();
+        m_tasks.pop_back();
         m_mutex.release();
         return true;
     }
 
 private:
     Mutex m_mutex;
-    Vector<T> m_tasks;
+    std::vector<T> m_tasks;
 };

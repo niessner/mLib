@@ -57,14 +57,14 @@ public:
 	}
 
 	T center;
-	Vector< std::pair<T, float> > entries;
+	std::vector< std::pair<T, float> > entries;
 };
 
 template<class T, class Metric>
 class KMeansClustering
 {
 public:
-	void cluster(const Vector<T> &elements, UINT clusterCount, UINT maxIterations = 0, bool verbose = true, double maxDelta = 0.0)
+	void cluster(const std::vector<T> &elements, UINT clusterCount, UINT maxIterations = 0, bool verbose = true, double maxDelta = 0.0)
 	{
 		if(verbose) Console::log(std::string("k-means clustering, ") + std::to_string(elements.size()) + std::string(" points, ") + std::to_string(clusterCount) + std::string(" clusters"));
 
@@ -74,10 +74,10 @@ public:
 		for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
 			m_clusters[clusterIndex].init(elements.randomElement());
 
-		Vector<UINT> storage(elements.size());
+		std::vector<UINT> storage(elements.size());
 
 		UINT pass = 0;
-		Vector<T> previousClusterCenters(m_clusters.size());
+		std::vector<T> previousClusterCenters(m_clusters.size());
 		bool converged = false;
 		while(!converged)
 		{
@@ -96,7 +96,7 @@ public:
 		}
 	}
 
-	void cluster(const Vector<T> &elements, const Vector<float> &weights, UINT clusterCount, UINT maxIterations = 0, bool verbose = true, double maxDelta = 0.0)
+	void cluster(const std::vector<T> &elements, const std::vector<float> &weights, UINT clusterCount, UINT maxIterations = 0, bool verbose = true, double maxDelta = 0.0)
 	{
 		if(verbose) Console::log(std::string("k-means clustering, ") + std::to_string(elements.size()) + std::string(" points, ") + std::to_string(clusterCount) + std::string(" clusters"));
 
@@ -107,14 +107,14 @@ public:
 		for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
 			m_clusters[clusterIndex].init(elements.randomElement());
 
-		Vector<T> weightedElements = elements;
+		std::vector<T> weightedElements = elements;
 		for(UINT elementIndex = 0; elementIndex < elements.size(); elementIndex++)
 			weightedElements[elementIndex] *= weights[elementIndex];
 
-		Vector<UINT> storage(elements.size());
+		std::vector<UINT> storage(elements.size());
 
 		UINT pass = 0;
-		Vector<T> previousClusterCenters(m_clusters.size());
+		std::vector<T> previousClusterCenters(m_clusters.size());
 		bool converged = false;
 		while(!converged)
 		{
@@ -166,7 +166,7 @@ public:
 
 private:
 
-	void iterate(const Vector<T> &elements, Vector<UINT> &storage)
+	void iterate(const std::vector<T> &elements, std::vector<UINT> &storage)
 	{
 		const int elementCount = (int)elements.size();
 		const T* elementPtr = elements.ptr();
@@ -200,7 +200,7 @@ private:
 			clustersPtr[clusterIndex].finalizeIteration(elements.randomElement());
 	}
 
-	void iterate(const Vector<T> &elements, const Vector<T> &weightedElements, const Vector<float> &weights, Vector<UINT> &storage)
+	void iterate(const std::vector<T> &elements, const std::vector<T> &weightedElements, const std::vector<float> &weights, std::vector<UINT> &storage)
 	{
 		const int elementCount = (int)elements.size();
 		const T* elementPtr = elements.ptr();
@@ -235,5 +235,5 @@ private:
 			clustersPtr[clusterIndex].finalizeIteration(elements.randomElement());
 	}
 
-	Vector< KMeansCluster<T> > m_clusters;
+	std::vector< KMeansCluster<T> > m_clusters;
 };

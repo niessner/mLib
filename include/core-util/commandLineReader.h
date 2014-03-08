@@ -20,7 +20,7 @@ public:
 		m_usage = usage;
 	}
 
-	const Vector<std::string>& args() const
+	const std::vector<std::string>& args() const
 	{
 		return m_args;
 	}
@@ -39,18 +39,28 @@ public:
 
 	bool hasArgWithPrefix(const std::string &prefix) const
 	{
-		return (m_args.findFirstIndex([prefix](const std::string &s) { return StringUtil::startsWith(s, prefix); }) != -1);
+		auto startsWith = [=] (const char s) { return StringUtil::startsWith(std::string(1,s), prefix); };
+		const auto it = std::find_if(prefix.begin(), prefix.end(), startsWith);
+		return (it != prefix.end());
+		//return (m_args.findFirstIndex([prefix](const std::string &s) { return StringUtil::startsWith(s, prefix); }) != -1);
 	}
 
 	std::string argWithPrefix(const std::string &prefix) const
 	{
-		int index = m_args.findFirstIndex([prefix](const std::string &s) { return StringUtil::startsWith(s, prefix); });
-		if(index == -1) return "";
-		else return StringUtil::replace(m_args[index], prefix, "");
+		auto startsWith = [=] (const char s) { return StringUtil::startsWith(std::string(1,s), prefix); };
+		const auto it = std::find_if(prefix.begin(), prefix.end(), startsWith);
+		if (it == prefix.end())	{
+			return "";
+		} else {
+			StringUtil::replace(m_args[it - prefix.begin()], prefix, "");
+		}
+		//int index = m_args.findFirstIndex([prefix](const std::string &s) { return StringUtil::startsWith(s, prefix); });
+		//if(index == -1) return "";
+		//else return StringUtil::replace(m_args[index], prefix, "");
 	}
 
 private:
-	Vector<std::string> m_args;
+	std::vector<std::string> m_args;
 	std::string m_commandLine;
 	std::string m_usage;
 };

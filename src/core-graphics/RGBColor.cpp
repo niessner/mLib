@@ -17,7 +17,7 @@ RGBColor::RGBColor(const std::string &hex)
 	size_t offset = hex.length() - 6;
 	const char* carray = hex.c_str();
 	char channel[3];
-	Vector<BYTE> color(3);
+	std::vector<BYTE> color(3);
 
 	for (UINT c = 0; c < 3; c++)
 	{

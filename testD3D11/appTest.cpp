@@ -9,11 +9,16 @@ void AppTest::init(ApplicationData &app)
 
 	//const std::string testFilename = "scans/gates381.off";
 	const std::string testFilename = "scans/gates381.obj";
+	//const std::string testFilename = "scans/gates381.ply";
 	MeshDataf meshData = MeshIOf::loadFromFile(testFilename);
 	const TriMesh triMesh(meshData);
 	m_mesh.load(app.graphics, triMesh);
 
-    Vector<vec3f> points(5000, [](UINT64 i) {return vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
+   // Vector<vec3f> points(5000, [](UINT64 i) {return vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
+	auto lambdaPoints = [=] (vec3f& v) { v = vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);};
+	std::vector<vec3f> points(5000);
+	for_each(points.begin(), points.end(), lambdaPoints);
+
     m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(MeshShapes::box(0.01f), points));
 
     m_vsColor.load(app.graphics, "shaders/test.shader");
@@ -112,6 +117,5 @@ void AppTest::mouseMove(ApplicationData &app)
         m_camera.lookRight(theta * -posDelta.x);
         m_camera.lookUp(theta * -posDelta.y);
     }
-
 
 }

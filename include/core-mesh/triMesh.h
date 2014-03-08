@@ -30,13 +30,13 @@ class TriMesh
 			for (size_t i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
 				if (meshData.m_FaceIndicesVertices[i].size() == 3) {
 					for (size_t k = 0; k < meshData.m_FaceIndicesVertices[i].size(); k++) 
-					m_indices.pushBack(meshData.m_FaceIndicesVertices[i][k]);
+					m_indices.push_back(meshData.m_FaceIndicesVertices[i][k]);
 				} else {
 					MLIB_WARNING("non triangle face found - ignoring it");
 				}
 			}
 		}
-        TriMesh(const Vector<TriMeshVertex>& _vertices, const Vector<UINT>& _indices)
+        TriMesh(const std::vector<TriMeshVertex>& _vertices, const std::vector<UINT>& _indices)
         {
             m_vertices = _vertices;
             m_indices = _indices;
@@ -63,17 +63,17 @@ class TriMesh
             for (TriMeshVertex& mv : m_vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
         }
 
-        Vector<TriMeshVertex>& vertices() { return m_vertices; }
+        std::vector<TriMeshVertex>& vertices() { return m_vertices; }
 
-        Vector<UINT>& indices() { return m_indices; }
+        std::vector<UINT>& indices() { return m_indices; }
 
-        const Vector<TriMeshVertex>& vertices() const { return m_vertices; }
+        const std::vector<TriMeshVertex>& vertices() const { return m_vertices; }
 
-        const Vector<UINT>& indices() const { return m_indices; }
+        const std::vector<UINT>& indices() const { return m_indices; }
 
     private:
-        Vector<TriMeshVertex> m_vertices;
-        Vector<UINT> m_indices;
+        std::vector<TriMeshVertex> m_vertices;
+        std::vector<UINT> m_indices;
 };
 
 #endif  // INCLUDE_CORE_MESH_TRIMESH_H_
