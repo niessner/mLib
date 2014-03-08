@@ -272,7 +272,10 @@ namespace Utility
 
 	UINT getFileSize(const std::string &filename)
 	{
-		return 0;
+		struct stat statbuf;
+		int success = stat(filename.c_str(), &statbuf);
+		MLIB_ASSERT_STR(success == 0, std::string("stat failed on ") + filename);
+        return statbuf.st_size;
 	}
 
 	// Create a process with the given command line, and wait until it returns

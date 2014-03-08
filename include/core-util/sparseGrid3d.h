@@ -1,4 +1,6 @@
-#pragma  once
+#pragma once
+#ifndef _SPARSE_GRID_3D_H_
+#define _SPARSE_GRID_3D_H_
 
 template<>
 struct std::hash<vec3i> : public std::unary_function<vec3i, size_t> {
@@ -70,3 +72,5 @@ inline std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g) {
 	}
 	return s;
 }
+
+#endif

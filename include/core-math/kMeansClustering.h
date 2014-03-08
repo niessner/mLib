@@ -169,9 +169,9 @@ private:
 	void iterate(const std::vector<T> &elements, std::vector<UINT> &storage)
 	{
 		const int elementCount = (int)elements.size();
-		const T* elementPtr = elements.ptr();
+		const T* elementPtr = &elements[0];
 		const int clusterCount = (int)m_clusters.size();
-		KMeansCluster<T> *clustersPtr = m_clusters.ptr();
+		KMeansCluster<T> *clustersPtr = &m_clusters[0];
 
 #ifdef MLIB_OPENMP
 #pragma omp parallel for
@@ -204,7 +204,7 @@ private:
 	{
 		const int elementCount = (int)elements.size();
 		const T* elementPtr = elements.ptr();
-		const float* weightsPtr = weights.ptr();
+		const float* weightsPtr = &weights[0];
 		const UINT clusterCount = (UINT)m_clusters.size();
 		KMeansCluster<T> *clustersPtr = m_clusters.ptr();
 

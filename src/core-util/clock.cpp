@@ -26,16 +26,21 @@ double Clock::elapsed()
 #ifdef LINUX
 Clock::Clock()
 {
-	
+
 }
 
 void Clock::start()
 {
-	
+	struct timeval timevalue;
+	gettimeofday(&timevalue, NULL);
+	m_startTime = (UINT64)timevalue.tv_sec * 1000000ULL + (UINT64)timevalue.tv_usec;
 }
 
 double Clock::elapsed()
 {
-	return 0.0;
+	struct timeval timevalue;
+	gettimeofday(&timevalue, NULL);
+	UINT64 endtime = (UINT64)timevalue.tv_sec * 1000000ULL + (UINT64)timevalue.tv_usec;
+	return double(endtime - m_startTime) / double(1000000);
 }
 #endif
