@@ -9,11 +9,15 @@
 /************************************************************************/
 
 
+template<class T, class = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
+class MathVector;
+
 template<class T>
-class MathVector : public std::vector<T>
+class MathVector<T> : public std::vector<T>
 {
 public:
-	MathVector() {}
+	MathVector() {
+	}
 	MathVector(size_t size) {
 		std::vector<T>::resize(size);
 	}
@@ -24,6 +28,8 @@ public:
 	}
 	MathVector(MathVector&& v) : std::vector<T>(v) {
 	}
+
+
 	void operator=(const MathVector& v) {
 		std::vector<T>::operator =(v);
 	}

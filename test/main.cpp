@@ -41,13 +41,13 @@ inline std::ostream& operator<<(std::ostream& s, const VoxelEntry& e) {
 	return s;
 }
 
-
 int main()
 {
 	// Enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
+
 
 	SparseGrid3D<VoxelEntry> grid;
 	unsigned int check = 0;

@@ -49,6 +49,7 @@
 #include <mutex>
 #include <unordered_map>
 #include <numeric>
+#include <type_traits>
 
 #ifndef NOMINMAX
 #define NOMINMAX

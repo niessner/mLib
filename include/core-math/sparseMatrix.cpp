@@ -1,11 +1,7 @@
-/*
-SparseMatrix.cpp
-Written by Matthew Fisher
-*/
 
 #pragma once
 
-template<class D>
+template <class D>
 D SparseMatrix<D>::maxMagnitude() const
 {
 	double result = 0.0;
@@ -15,7 +11,7 @@ D SparseMatrix<D>::maxMagnitude() const
 	return result;
 }
 
-template<class D>
+template <class D> 
 SparseMatrix<D> SparseMatrix<D>::transpose() const
 {
     SparseMatrix<D> result(m_cols, m_rows);
@@ -25,7 +21,7 @@ SparseMatrix<D> SparseMatrix<D>::transpose() const
     return result;
 }
 
-template<class D>
+template <class D> 
 SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, D val)
 {
 	SparseMatrix<D> result = A;
@@ -35,7 +31,7 @@ SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, D val)
 	return result;
 }
 
-template<class D>
+template <class D> 
 SparseMatrix<D> SparseMatrix<D>::add(const SparseMatrix<D> &A, const SparseMatrix<D> &B)
 {
 	MLIB_ASSERT_STR(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
@@ -46,7 +42,7 @@ SparseMatrix<D> SparseMatrix<D>::add(const SparseMatrix<D> &A, const SparseMatri
 	return result;
 }
 
-template<class D>
+template <class D> 
 SparseMatrix<D> SparseMatrix<D>::subtract(const SparseMatrix<D> &A, const SparseMatrix<D> &B)
 {
 	MLIB_ASSERT_STR(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
@@ -57,7 +53,7 @@ SparseMatrix<D> SparseMatrix<D>::subtract(const SparseMatrix<D> &A, const Sparse
 	return result;
 }
 
-template<class D>
+template <class D> 
 MathVector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const MathVector<D> &B)
 {
 	MLIB_ASSERT_STR(A.cols() == B.size(), "invalid dimensions");
@@ -81,7 +77,7 @@ MathVector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const MathVect
 	return result;
 }
 
-template<class D>
+template <class D> 
 SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const SparseMatrix<D> &B)
 {
 	MLIB_ASSERT_STR(A.cols() == B.rows(), "invalid dimensions");
@@ -102,7 +98,7 @@ SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Sparse
 	return result;
 }
 
-template<class D>
+template <class D> 
 void SparseMatrix<D>::invertInPlace()
 {
 	MLIB_ASSERT_STR(square(), "SparseMatrix<D>::invertInPlace called on non-square matrix");

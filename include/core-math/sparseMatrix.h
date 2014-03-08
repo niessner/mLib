@@ -8,7 +8,8 @@ enum MatrixStringFormat
 	MatrixStringFormatMathematica,
 };
 
-template <class D> struct SparseRowEntry
+template <class D> 
+struct SparseRowEntry
 {
 	SparseRowEntry() {}
 	SparseRowEntry(UINT _col, D _val)
@@ -20,7 +21,8 @@ template <class D> struct SparseRowEntry
 	D val;
 };
 
-template <class D> struct SparseRow
+template <class D>
+struct SparseRow
 {
 	D& operator()(UINT col)
 	{
@@ -39,10 +41,14 @@ template <class D> struct SparseRow
 		}
 		return 0.0;
 	}
-	MathVector< SparseRowEntry<D> > entries;
+	std::vector< SparseRowEntry<D> > entries;
 };
 
-template <class D> class SparseMatrix
+template<class D, class = typename std::enable_if<std::is_arithmetic<D>::value, D>::type>
+class SparseMatrix;
+
+template<class D>
+class SparseMatrix<D>
 {
 public:
 	SparseMatrix()
@@ -200,7 +206,7 @@ public:
 
 private:
 	UINT m_rows, m_cols;
-    MathVector< SparseRow<D> > m_data;
+    std::vector< SparseRow<D> > m_data;
 
 	// set is a more efficient version of operator() that assumes the entry
 	// does not exist.
