@@ -14,6 +14,9 @@ struct std::hash<vec3i> : public std::unary_function<vec3i, size_t> {
 	}
 };
 
+template<class T> class SparseGrid3D;
+template<class T> std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g);
+
 template<class T>
 class SparseGrid3D {
 public:
@@ -59,8 +62,8 @@ public:
 		return (*this)(i);
 	}
 
-	template<class U>
-	friend std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g);
+	//template<class U>
+	friend std::ostream& operator<< <> (std::ostream& s, const SparseGrid3D<T>& g);
 private:
 	std::unordered_map<vec3i, T, std::hash<vec3i>> m_Data;
 };

@@ -15,44 +15,49 @@ class Vector : public std::vector<T>
 public:
 	Vector() {}
 	Vector(size_t size) {
-		resize(size);
+		std::vector<T>::resize(size);
 	}
 	Vector(size_t size, const T& val) {
-		resize(size, val);
+		std::vector<T>::resize(size, val);
+	}
+	Vector(const Vector& v) : std::vector<T>(v) {
 	}
 	Vector(Vector&& v) : std::vector<T>(v) {
+	}
+	void operator=(const Vector& v) {
+		std::vector<T>::operator =(v);
 	}
 	void operator=(Vector&& v) {
 		std::vector<T>::operator =(v);
 	}
 
 	void operator+=(const Vector& other) {
-		for (size_t i = 0; i < res.size(); i++) {
+		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] += other[i];
 		}
 	}
 	void operator-=(const Vector& other) {
-		for (size_t i = 0; i < res.size(); i++) {
+		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] -= other[i];
 		}
 	}
 	void operator*=(const Vector& other) {
-		for (size_t i = 0; i < res.size(); i++) {
+		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] *= other[i];
 		}
 	}
 	void operator/=(const Vector& other) {
-		for (size_t i = 0; i < res.size(); i++) {
+		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] /= other[i];
 		}
 	}
 	void operator*=(const T& other) {
-		for (size_t i = 0; i < res.size(); i++) {
+		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] *= other;
 		}
 	}
 	void operator/=(const T& other) {
-		for (size_t i = 0; i < res.size(); i++) {
+		for (size_t i = 0; i < std::vector<T>::size(); i++) {
 			(*this)[i] /= other;
 		}
 	}
