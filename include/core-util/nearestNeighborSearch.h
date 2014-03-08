@@ -21,19 +21,19 @@ public:
 		//Vector< const D* > v = points.map([](const Vector<D> &x) {return x.ptr();});
 		std::vector< const D* > v(points.size());
 		for(UINT i = 0; i < points.size(); i++)
-			v[i] = points[i].ptr();
+			v[i] = &points[i][0];
 		init(v, (UINT)points[0].size(), maxK);
 	}
 
 	void kNearest(const std::vector<D> &query, UINT k, D epsilon, std::vector<UINT> &result) const
 	{
-		kNearestInternal(query.ptr(), k, epsilon, result);
+		kNearestInternal(&query[0], k, epsilon, result);
 	}
 
 	std::vector<UINT> kNearest(const std::vector<D> &query, UINT k, D epsilon) const
 	{
 		std::vector<UINT> result;
-		kNearestInternal(query.ptr(), k, epsilon, result);
+		kNearestInternal(&query[0], k, epsilon, result);
 		return result;
 	}
 
@@ -47,7 +47,7 @@ public:
     std::vector<UINT> fixedRadius(const std::vector<D> &query, UINT k, D radiusSq) const
 	{
 		std::vector<UINT> result;
-		fixedRadiusInternal(query.ptr(), k, radiusSq, 0.0f, result);
+		fixedRadiusInternal(&query[0], k, radiusSq, 0.0f, result);
 		return result;
 	}
 
@@ -108,7 +108,7 @@ public:
 			const int queueLength = (int)m_queue.size();
 			if(queueLength > 1)
 			{
-				NeighborEntry *data = m_queue.ptr();
+				NeighborEntry *data = &m_queue[0];
 				for(int index = queueLength - 2; index >= 0; index--)
 				{
 					if(data[index].dist > data[index + 1].dist)
@@ -142,7 +142,7 @@ public:
 		int pointIndex = 0;
 		for(auto p : points)
 		{
-			m_points.pushBack(m_pointData.ptr() + pointIndex);
+			m_points.push_back(&m_pointData[0] + pointIndex);
 			for(UINT d = 0; d < m_dimension; d++)
 				m_pointData[pointIndex++] = p[d];
 		}

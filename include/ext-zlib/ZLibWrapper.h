@@ -10,30 +10,30 @@ class ZLibWrapper
 {
 public:
 
-    //static void CompressStreamToFile(const Vector<BYTE> &stream, const String &filename)
+    //static void CompressStreamToFile(const std::vector<BYTE> &stream, const String &filename)
     //static void CompressStreamToFile(const BYTE *stream, UINT byteCount, const String &filename)
-    //static void DecompressStreamFromFile(const String &filename, Vector<BYTE> &stream);
+    //static void DecompressStreamFromFile(const String &filename, std::vector<BYTE> &stream);
 
-    static Vector<BYTE> CompressStreamToMemory(const Vector<BYTE> &decompressedStream, bool writeHeader)
+    static std::vector<BYTE> CompressStreamToMemory(const std::vector<BYTE> &decompressedStream, bool writeHeader)
     {
-        Vector<BYTE> result;
+        std::vector<BYTE> result;
         CompressStreamToMemory(decompressedStream, result, writeHeader);
         return result;
     }
 
-    static Vector<BYTE> CompressStreamToMemory(const BYTE *decompressedStream, UINT64 decompressedStreamLength, bool writeHeader)
+    static std::vector<BYTE> CompressStreamToMemory(const BYTE *decompressedStream, UINT64 decompressedStreamLength, bool writeHeader)
     {
-        Vector<BYTE> result;
+        std::vector<BYTE> result;
         CompressStreamToMemory(decompressedStream, decompressedStreamLength, result, writeHeader);
         return result;
     }
 
-    static void CompressStreamToMemory(const Vector<BYTE> &decompressedStream, Vector<BYTE> &compressedStream, bool writeHeader)
+    static void CompressStreamToMemory(const std::vector<BYTE> &decompressedStream, std::vector<BYTE> &compressedStream, bool writeHeader)
     {
-        CompressStreamToMemory(decompressedStream.ptr(), decompressedStream.size(), compressedStream, writeHeader);
+        CompressStreamToMemory(&decompressedStream[0], decompressedStream.size(), compressedStream, writeHeader);
     }
 
-    static void CompressStreamToMemory(const BYTE *decompressedStream, UINT64 decompressedStreamLength, Vector<BYTE> &compressedStream, bool writeHeader)
+    static void CompressStreamToMemory(const BYTE *decompressedStream, UINT64 decompressedStreamLength, std::vector<BYTE> &compressedStream, bool writeHeader)
     {
         compressedStream.resize(decompressedStreamLength + 64);
 
@@ -52,7 +52,7 @@ public:
 
 		int headerOffset = sizeof(UINT64);
 		if (!writeHeader)	headerOffset = 0;
-		zstream.next_out = compressedStream.ptr() + headerOffset;
+		zstream.next_out = &compressedStream[0] + headerOffset;
 
         const int Level = 7; // 1 (fastest speed) to 9 (best compression)
         int result = deflateInit2(&zstream, Level, Z_DEFLATED, 15, 8, Z_DEFAULT_STRATEGY);
@@ -70,18 +70,18 @@ public:
         compressedStream.resize(zstream.total_out + sizeof(UINT64));
     }
     
-    static Vector<BYTE> DecompressStreamFromMemory(const Vector<BYTE> &compressedStream)
+    static std::vector<BYTE> DecompressStreamFromMemory(const std::vector<BYTE> &compressedStream)
     {
-        Vector<BYTE> result;
+        std::vector<BYTE> result;
         DecompressStreamFromMemory(compressedStream, result);
         return result;
     }
 
-    static void DecompressStreamFromMemory(const Vector<BYTE> &compressedStream, Vector<BYTE> &decompressedStream)
+    static void DecompressStreamFromMemory(const std::vector<BYTE> &compressedStream, std::vector<BYTE> &decompressedStream)
     {
-        UINT decompressedByteCount = ((UINT*)compressedStream.ptr())[0];
+        UINT decompressedByteCount = ((UINT*)&compressedStream[0])[0];
         decompressedStream.resize(decompressedByteCount);
-        DecompressStreamFromMemory(compressedStream.ptr() + sizeof(UINT64), compressedStream.size() - sizeof(UINT64), decompressedStream.ptr(), decompressedStream.size());
+        DecompressStreamFromMemory(&compressedStream[0] + sizeof(UINT64), compressedStream.size() - sizeof(UINT64), &decompressedStream[0], decompressedStream.size());
     }
 
     static void DecompressStreamFromMemory(const BYTE *compressedStream, UINT64 compressedStreamLength, BYTE *decompressedStream, UINT64 decompressedStreamLength)
@@ -99,7 +99,7 @@ public:
 //! interface to compress data
 class BinaryDataCompressorZLib : public BinaryDataCompressorInterface {
 public:
-	void compressStreamToMemory(const BYTE *decompressedStream, UINT64 decompressedStreamLength, Vector<BYTE> &compressedStream) const {
+	void compressStreamToMemory(const BYTE *decompressedStream, UINT64 decompressedStreamLength, std::vector<BYTE> &compressedStream) const {
 		ZLibWrapper::CompressStreamToMemory(decompressedStream, decompressedStreamLength, compressedStream, false);
 	}
 

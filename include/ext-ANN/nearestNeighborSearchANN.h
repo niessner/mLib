@@ -26,7 +26,7 @@ public:
 		if(m_points) annDeallocPts(m_points);
 	}
 
-	void initInternal(const Vector< const D* > &points, UINT dimension, UINT maxK)
+	void initInternal(const std::vector< const D* > &points, UINT dimension, UINT maxK)
 	{
 		const UINT pointCount = (UINT)points.size();
 		m_dimension = dimension;
@@ -44,7 +44,7 @@ public:
 		else m_tree = new ANNkd_tree(m_points, pointCount, m_dimension);
 	}
 
-	void kNearestInternal(const D *query, UINT k, D epsilon, Vector<UINT> &result) const
+	void kNearestInternal(const D *query, UINT k, D epsilon, std::vector<UINT> &result) const
 	{
 		for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
 			m_queryPt[elementIndex] = query[elementIndex];
@@ -60,7 +60,7 @@ public:
 			result[i] = m_indices[i];
 	}
 
-    void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, Vector<UINT> &result) const
+    void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, std::vector<UINT> &result) const
     {
         for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
             m_queryPt[elementIndex] = query[elementIndex];
@@ -77,7 +77,7 @@ public:
             result[i] = m_indices[i];
     }
 
-    void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, Vector< std::pair<UINT, D> > &result) const
+    void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, std::vector< std::pair<UINT, D> > &result) const
     {
         for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
             m_queryPt[elementIndex] = query[elementIndex];

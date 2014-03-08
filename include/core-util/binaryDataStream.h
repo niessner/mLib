@@ -57,7 +57,7 @@ public:
 		if (useCompression && size > COMPRESSION_THRESHOLD_) {
 			UINT64 compressedSize;
 			m_DataBuffer.readData((BYTE*)&compressedSize, sizeof(UINT64));
-			Vector<BYTE> compressedT;	compressedT.resize(compressedSize);
+			std::vector<BYTE> compressedT;	compressedT.resize(compressedSize);
 			m_DataBuffer.readData(&compressedT[0], compressedSize);
 			//ZLibWrapper::DecompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
 			m_DataCompressor.decompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
@@ -166,16 +166,6 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 	return s;
 }
 
-//template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-//inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Vector<T>& v) {
-//	s << (UINT64)v.size();
-//	s.reserve(sizeof(T)*v.size());
-//	for (size_t i = 0; i < v.size(); i++) {
-//		s << v[i];
-//	}
-//	return s;
-//}
-
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Grid2D<T>& g) {
 	s << (UINT64)g.rows() << (UINT64)g.cols();
@@ -270,16 +260,6 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	}
 	return s;
 }
-
-//template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-//inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Vector<T>& v) {
-//	UINT64 size;
-//	s >> size;
-//	v.resize(size);
-//	for (size_t i = 0; i < v.size(); i++)
-//		s >> v[i];
-//	return s;
-//}
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Grid2D<T>& g) {
