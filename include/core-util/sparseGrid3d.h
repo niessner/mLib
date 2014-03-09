@@ -35,6 +35,10 @@ public:
 
 	}
 
+	void clear() {
+		m_Data.clear();
+	}
+
 	bool exists(const vec3i& i) {
 		return (m_Data.find(i) != m_Data.end());
 	}

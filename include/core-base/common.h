@@ -50,6 +50,7 @@
 #include <unordered_map>
 #include <numeric>
 #include <type_traits>
+#include <array>
 
 #ifndef NOMINMAX
 #define NOMINMAX
