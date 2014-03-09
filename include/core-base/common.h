@@ -3,7 +3,7 @@
 #ifndef _MLIBCOMMON_H_
 #define _MLIBCOMMON_H_
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #ifndef _SCL_SECURE_NO_WARNINGS
 #define _SCL_SECURE_NO_WARNINGS

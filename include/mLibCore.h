@@ -1,7 +1,7 @@
 #ifndef _MLIB_CORE_H
 #define _MLIB_CORE_H
 
-#ifndef WIN32
+#ifndef _WIN32
 #define LINUX
 #endif
 
