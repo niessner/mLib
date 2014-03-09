@@ -60,13 +60,6 @@ void D3D11TriMesh::initVB(GraphicsDevice &g)
 	ZeroMemory( &data, sizeof(data) );
 	data.pSysMem = &m_mesh.vertices()[0];
 
-
-	const bool randomizeColor = true;
-	if(randomizeColor)
-	{
-		
-	}
-
 	D3D_VALIDATE(device.CreateBuffer( &bufferDesc, &data, &m_vertexBuffer ));
 }
 
