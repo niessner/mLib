@@ -24,9 +24,6 @@
 #endif
 #endif
 
-namespace ml
-{
-
 #define MLIB_OPENMP
 
 #define DEBUG_BREAK __debugbreak()
@@ -54,11 +51,12 @@ namespace ml
 #include <type_traits>
 #include <array>
 
+namespace ml
+{
+
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-
-
 
 #if defined (LINUX)
 #define __FUNCTION__ __func__

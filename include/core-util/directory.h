@@ -1,5 +1,5 @@
-#ifndef CORE_UTIL_DIRECTORY_H__
-#define CORE_UTIL_DIRECTORY_H__
+#ifndef CORE_UTIL_DIRECTORY_H_
+#define CORE_UTIL_DIRECTORY_H_
 
 namespace ml
 {
@@ -33,4 +33,4 @@ private:
 
 }  // namespace ml
 
-#endif  // CORE_UTIL_DIRECTORY_H__
+#endif  // CORE_UTIL_DIRECTORY_H_

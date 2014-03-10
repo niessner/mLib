@@ -95,7 +95,6 @@
     <ClCompile Include="mLibSource.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\core-base\classList.h" />
     <ClInclude Include="..\include\core-base\common.h" />
     <ClInclude Include="..\include\core-base\grid2d.h" />
     <ClInclude Include="..\include\core-base\grid3d.h" />
@@ -114,7 +113,6 @@
     <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-math\rng.h" />
     <ClInclude Include="..\include\core-math\sparseMatrix.h" />
-    <ClInclude Include="..\include\core-multithreading\mutex.h" />
     <ClInclude Include="..\include\core-multithreading\taskList.h" />
     <ClInclude Include="..\include\core-multithreading\threadPool.h" />
     <ClInclude Include="..\include\core-multithreading\workerThread.h" />
@@ -122,7 +120,6 @@
     <ClInclude Include="..\include\core-util\binaryDataCompressor.h" />
     <ClInclude Include="..\include\core-util\binaryDataSerialize.h" />
     <ClInclude Include="..\include\core-util\binaryDataStream.h" />
-    <ClInclude Include="..\include\core-util\calibratedSensorData.h" />
     <ClInclude Include="..\include\core-util\clock.h" />
     <ClInclude Include="..\include\core-util\commandLineReader.h" />
     <ClInclude Include="..\include\core-util\directory.h" />

@@ -37,9 +37,6 @@
     <ClCompile Include="mLibSource.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\core-base\classList.h">
-      <Filter>mLibHeader\core-base</Filter>
-    </ClInclude>
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="..\include\core-base\common.h">
@@ -117,9 +114,6 @@
     <ClInclude Include="..\include\core-multithreading\workerThread.h">
       <Filter>mLibHeader\core-multithreading</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-multithreading\mutex.h">
-      <Filter>mLibHeader\core-multithreading</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-math\kMeansClustering.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
@@ -154,9 +148,6 @@
       <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
     <ClInclude Include="..\include\core-util\binaryDataStream.h">
-      <Filter>mLibHeader\core-util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\core-util\calibratedSensorData.h">
       <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
     <ClInclude Include="..\include\core-util\binaryDataBuffer.h">

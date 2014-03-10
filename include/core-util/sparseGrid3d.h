@@ -1,6 +1,6 @@
 
-#ifndef CORE_UTIL_SPARSEGRID3D_H__
-#define CORE_UTIL_SPARSEGRID3D_H__
+#ifndef CORE_UTIL_SPARSEGRID3D_H_
+#define CORE_UTIL_SPARSEGRID3D_H_
 
 namespace ml
 {
@@ -87,4 +87,4 @@ inline std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g) {
 
 }  // namespace ml
 
-#endif  // CORE_UTIL_SPARSEGRID3D_H__
+#endif  // CORE_UTIL_SPARSEGRID3D_H_

@@ -58,7 +58,6 @@
 //
 // core-multithreading headers
 //
-#include "core-multithreading/mutex.h"
 #include "core-multithreading/taskList.h"
 #include "core-multithreading/workerThread.h"
 #include "core-multithreading/threadPool.h"
