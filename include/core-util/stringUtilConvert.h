@@ -1,9 +1,11 @@
-#pragma once
 
-#ifndef INCLUDE_CORE_UTIL_STRINGUTILCONVERT_H_
-#define INCLUDE_CORE_UTIL_STRINGUTILCONVERT_H_
+#ifndef CORE_UTIL_STRINGUTIL_H_
+#define CORE_UTIL_STRINGUTIL_H_
 
 #include <string>
+
+namespace ml
+{
 
 /////////////////////////////////////////////////////////////////////
 // StringUtil is already used before; THIS must be included after  //
@@ -118,6 +120,6 @@ inline std::string& operator<<(std::string& s, const T& in) {
 	return s;
 }
 
+}  // namespace ml
 
-
-#endif  // INCLUDE_CORE_UTIL_STRINGUTILCONVERT_H_
+#endif  // CORE_UTIL_STRINGUTIL_H_

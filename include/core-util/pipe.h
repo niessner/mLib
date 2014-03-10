@@ -1,4 +1,10 @@
 
+#ifndef CORE_UTIL_PIPE_H_
+#define CORE_UTIL_PIPE_H_
+
+namespace ml
+{
+
 class Pipe
 {
 public:
@@ -35,3 +41,7 @@ private:
     HANDLE m_handle;
 #endif
 };
+
+}  // namespace ml
+
+#endif  // CORE_UTIL_PIPE_H_

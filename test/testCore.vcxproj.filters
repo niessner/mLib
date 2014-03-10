@@ -177,6 +177,12 @@
     <ClInclude Include="..\include\core-base\console.h">
       <Filter>mLibHeader\core-base</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-util\stringUtilConvert.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\pipe.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
