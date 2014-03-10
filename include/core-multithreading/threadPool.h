@@ -1,3 +1,9 @@
+#ifndef CORE_MULTITHREADING_THREADPOOL_H_
+#define CORE_MULTITHREADING_THREADPOOL_H_
+
+namespace ml
+{
+
 class ThreadPool
 {
 public:
@@ -10,3 +16,7 @@ public:
 private:
     std::vector<WorkerThread> m_threads;
 };
+
+}  // namespace ml
+
+#endif  // CORE_MULTITHREADING_THREADPOOL_H_

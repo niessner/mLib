@@ -1,7 +1,9 @@
 
-#pragma once
-#ifndef _EIGEN_SOLVER_H_
-#define _EIGEN_SOLVER_H_
+#ifndef EXT_EIGEN_EIGENSOLVER_H_
+#define EXT_EIGEN_EIGENSOLVER_H_
+
+namespace ml
+{
 
 template<class D> class LinearSolverEigen : public LinearSolver<D>
 {
@@ -156,4 +158,6 @@ private:
 	Method m_method;
 };
 
-#endif // _EIGEN_SOLVER_H_
+}  // namespace ml
+
+#endif  // EXT_EIGEN_EIGENSOLVER_H_

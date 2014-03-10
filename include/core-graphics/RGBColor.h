@@ -1,3 +1,8 @@
+#ifndef CORE_GRAPHICS_RGBCOLOR_H_
+#define CORE_GRAPHICS_RGBCOLOR_H_
+
+namespace ml
+{
 
 struct RGBColor
 {
@@ -93,3 +98,7 @@ inline bool operator != (RGBColor left, RGBColor right)
 }
 
 typedef Grid2D<RGBColor> Bitmap;
+
+}  // namespace ml
+
+#endif  // CORE_GRAPHICS_RGBCOLOR_H_

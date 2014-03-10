@@ -1,12 +1,14 @@
-#pragma once
-
-#ifndef INCLUDE_CORE_UTIL_STRINGUTIL_H_
-#define INCLUDE_CORE_UTIL_STRINGUTIL_H_
+#ifndef CORE_UTIL_STRINGUTIL_H_
+#define CORE_UTIL_STRINGUTIL_H_
 
 #include <string>
 #include <vector>
 
-namespace StringUtil {
+namespace ml
+{
+
+namespace util
+{
 	//TODO TEST
 	inline bool startsWith(const std::string& str, const std::string& startCandidate) {
 		if (str.length() < startCandidate.length()) { return false; }
@@ -139,6 +141,8 @@ namespace StringUtil {
 		return trimmed.erase(str.find_last_not_of(" \n\r\t") + 1);
 	}
 
-}  // namespace StringUtil
+}  // namespace util
 
-#endif  // INCLUDE_CORE_UTIL_STRINGUTIL_H_
+}  // namespace ml
+
+#endif  // CORE_UTIL_STRINGUTIL_H__

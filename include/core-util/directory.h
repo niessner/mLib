@@ -1,7 +1,8 @@
-/*
-Directory.h
-Written by Matthew Fisher
-*/
+#ifndef CORE_UTIL_DIRECTORY_H__
+#define CORE_UTIL_DIRECTORY_H__
+
+namespace ml
+{
 
 class Directory
 {
@@ -30,3 +31,6 @@ private:
     std::vector<std::string> m_directories;
 };
 
+}  // namespace ml
+
+#endif  // CORE_UTIL_DIRECTORY_H__

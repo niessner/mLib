@@ -1,8 +1,9 @@
-#pragma once
 
-#ifndef _BINARY_DATA_BUFFER_H_
-#define _BINARY_DATA_BUFFER_H_
+#ifndef CORE_UTIL_BINARYDATABUFFER_H_
+#define CORE_UTIL_BINARYDATABUFFER_H_
 
+namespace ml
+{
 
 #include <vector>
 #include <list>
@@ -267,6 +268,6 @@ private:
 	size_t				m_readOffset;
 };
 
+}  // namespace ml
 
-
-#endif
+#endif  // CORE_UTIL_BINARYDATABUFFER_H_

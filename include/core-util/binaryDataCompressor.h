@@ -1,7 +1,9 @@
 
-#pragma once
-#ifndef _BINARY_DATA_COMPRESSOR_
-#define _BINARY_DATA_COMPRESSOR_
+#ifndef CORE_UTIL_BINARYDATACOMPRESSOR_H_
+#define CORE_UTIL_BINARYDATACOMPRESSOR_H_
+
+namespace ml
+{
 
 
 //! interface to compress data
@@ -46,4 +48,6 @@ public:
 	}
 };
 
-#endif //  _BINARY_DATA_COMPRESSOR_
+}  // namespace ml
+
+#endif  // CORE_UTIL_BINARYDATACOMPRESSOR_H_

@@ -1,7 +1,8 @@
+#ifndef EXT_EIGENUTILITY_H_
+#define EXT_EIGENUTILITY_H_
 
-#pragma once
-#ifndef _EIGEN_UTILITY_H_
-#define _EIGEN_UTILITY_H_
+namespace ml
+{
 
 namespace EigenUtility
 {
@@ -52,4 +53,6 @@ namespace EigenUtility
 	}
 }
 
-#endif // _EIGEN_UTILITY_H_
+}  // namespace ml
+
+#endif  // EXT_EIGENUTILITY_H_

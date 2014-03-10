@@ -1,13 +1,16 @@
 
-#pragma once
-#ifndef INCLUDE_CORE_UTIL_UTILITY_H_
-#define INCLUDE_CORE_UTIL_UTILITY_H_
+#ifndef CORE_UTIL_UTILITY_H_
+#define CORE_UTIL_UTILITY_H_
 
 #include <string>
 #include <algorithm>
 #include <vector>
 
-namespace Math {
+namespace ml
+{
+
+namespace util
+{
 	const double PI = 3.1415926535897932384626433832795028842;
 	const float PIf = 3.14159265358979323846f;
 
@@ -151,9 +154,10 @@ namespace Math {
 		x1 = c / tmp;
 	}
 
-}  // namespace Math
+}  // namespace math
 
-namespace Utility {
+namespace utility
+{
 	//
 	// Hashing
 	//
@@ -260,6 +264,8 @@ namespace Utility {
 		if (begin < end)    { return begin; }
 		else                { return end; }
 	}
-}  // namespace Utility
+}  // namespace utility
 
-#endif  // INCLUDE_CORE_UTIL_UTILITY_H_
+}  // namespace ml
+
+#endif  // CORE_UTIL_UTILITY_H_

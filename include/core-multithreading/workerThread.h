@@ -1,3 +1,8 @@
+#ifndef CORE_MULTITHREADING_WORKERTHREAD_H_
+#define CORE_MULTITHREADING_WORKERTHREAD_H_
+
+namespace ml
+{
 
 //
 // abstract base class for thread local storage
@@ -50,3 +55,7 @@ private:
 
     TaskList<WorkerThreadTask*> *m_tasks;
 };
+
+}  // namespace ml
+
+#endif  // CORE_MULTITHREADING_WORKERTHREAD_H_

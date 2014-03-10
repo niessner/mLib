@@ -1,6 +1,9 @@
-#pragma once
-#ifndef _SPARSE_GRID_3D_H_
-#define _SPARSE_GRID_3D_H_
+
+#ifndef CORE_UTIL_SPARSEGRID3D_H__
+#define CORE_UTIL_SPARSEGRID3D_H__
+
+namespace ml
+{
 
 template<>
 struct std::hash<vec3i> : public std::unary_function<vec3i, size_t> {
@@ -82,4 +85,6 @@ inline std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g) {
 	return s;
 }
 
-#endif
+}  // namespace ml
+
+#endif  // CORE_UTIL_SPARSEGRID3D_H__

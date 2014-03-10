@@ -1,7 +1,9 @@
 
-#pragma once
-#ifndef NEAREST_NEIGHBOR_SEARCH_ANN_H
-#define NEAREST_NEIGHBOR_SEARCH_ANN_H
+#ifndef EXT_ANN_NEARESTNEIGHBORSEARCHANN_H_
+#define EXT_ANN_NEARESTNEIGHBORSEARCHANN_H_
+
+namespace ml
+{
 
 template<class D>
 class NearestNeighborSearchANN : public NearestNeighborSearch<D>
@@ -106,4 +108,6 @@ private:
 	ANNpointSet*         m_tree;        // search structure
 };
 
-#endif // NEAREST_NEIGHBOR_SEARCH_ANN_H
+}  // namespace ml
+
+#endif  // EXT_ANN_NEARESTNEIGHBORSEARCHANN_H_

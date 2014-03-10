@@ -1,6 +1,9 @@
 
+#ifndef CORE_BASE_GRID3D_H__
+#define CORE_BASE_GRID3D_H__
 
-#pragma once
+namespace ml
+{
 
 template <class T> class Grid3D
 {
@@ -125,5 +128,7 @@ template <class T> inline bool operator != (const Grid3D<T> &a, const Grid3D<T> 
 {
 	return !(a == b);
 }
+
+}  // namespace ml
 
 #include "grid3d.cpp"

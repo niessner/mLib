@@ -1,4 +1,10 @@
 
+#ifndef CORE_UTIL_CLOCK_H_
+#define CORE_UTIL_CLOCK_H_
+
+namespace ml
+{
+
 class Clock
 {
 public:
@@ -71,3 +77,7 @@ private:
     Clock m_clock;
     double m_secondsPerFrame;
 };
+
+}  // namespace ml
+
+#endif  // CORE_UTIL_CLOCK_H_

@@ -1,4 +1,10 @@
 
+#ifndef CORE_MULTITHREADING_TASKLIST_H_
+#define CORE_MULTITHREADING_TASKLIST_H_
+
+namespace ml
+{
+
 template <class T> class TaskList
 {
 public:
@@ -44,3 +50,7 @@ private:
     Mutex m_mutex;
     std::vector<T> m_tasks;
 };
+
+}  // namespace ml
+
+#endif  // CORE_MULTITHREADING_TASKLIST_H_

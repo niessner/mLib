@@ -1,6 +1,6 @@
 
-#ifndef MLIBCOMMON_H__
-#define MLIBCOMMON_H__
+#ifndef CORE_BASE_GRID2D_H_
+#define CORE_BASE_GRID2D_H_
 
 namespace ml
 {
@@ -167,4 +167,4 @@ template <class T> inline bool operator != (const Grid2D<T> &a, const Grid2D<T> 
 
 #include "grid2d.cpp"
 
-#endif  // MLIBCOMMON_H__
+#endif  // CORE_BASE_GRID2D_H_

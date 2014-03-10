@@ -1,7 +1,8 @@
-#pragma once
+#ifndef CORE_UTIL_BINARYDATASERIALIZE_H__
+#define CORE_UTIL_BINARYDATASERIALIZE_H__
 
-#ifndef _BINARY_DATA_SERIALIZE_
-#define _BINARY_DATA_SERIALIZE_
+namespace ml
+{
 
 #include "BinaryDataStream.h"
 
@@ -25,5 +26,6 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>> (Bin
 	return s;
 }
 
-#endif
+}  // namespace ml
 
+#endif  // CORE_UTIL_BINARYDATASERIALIZE_H__

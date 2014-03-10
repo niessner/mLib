@@ -1,13 +1,9 @@
-#pragma once
 
-#ifndef _BINARY_DATA_STREAM_H_
-#define _BINARY_DATA_STREAM_H_
+#ifndef CORE_UTIL_BINARYDATASTREAM_H_
+#define CORE_UTIL_BINARYDATASTREAM_H_
 
-
-
-////////////////////////////////////////////////
-// BinaryDataStream (uses BINARY_DATA_BUFFER) //
-////////////////////////////////////////////////
+namespace ml
+{
 
 template<class BinaryDataBuffer, class BinaryDataCompressor>
 class BinaryDataStream {
@@ -295,5 +291,6 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	return s;
 }
 
+}  // namespace ml
 
-#endif
+#endif  // CORE_UTIL_BINARYDATASTREAM_H_

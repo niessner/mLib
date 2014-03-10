@@ -1,7 +1,9 @@
 
-#pragma once
-#ifndef _NEAREST_NEIGHBOR_SEARCH_H_
-#define _NEAREST_NEIGHBOR_SEARCH_H_
+#ifndef CORE_UTIL_NEARESTNEIGHBORSEARCH_H__
+#define CORE_UTIL_NEARESTNEIGHBORSEARCH_H__
+
+namespace ml
+{
 
 template<class D>
 class NearestNeighborSearch
@@ -189,4 +191,6 @@ private:
 	mutable KNearestNeighborQueue<D> m_queue;
 };
 
-#endif // _NEAREST_NEIGHBOR_SEARCH_H_
+}  // namespace ml
+
+#endif  // CORE_UTIL_NEARESTNEIGHBORSEARCH_H__

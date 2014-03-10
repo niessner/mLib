@@ -1,6 +1,6 @@
 
-#ifndef _MLIBCOMMON_H_
-#define _MLIBCOMMON_H_
+#ifndef CORE_BASE_COMMON_H_
+#define CORE_BASE_COMMON_H_
 
 #ifdef _WIN32
 
@@ -23,6 +23,9 @@
 #define _ITERATOR_DEBUG_LEVEL 0
 #endif
 #endif
+
+namespace ml
+{
 
 #define MLIB_OPENMP
 
@@ -189,4 +192,6 @@ typedef unsigned char BYTE;
 typedef unsigned short USHORT;
 #endif
 
-#endif
+}  // namespace ml
+
+#endif  // CORE_BASE_COMMON_H_

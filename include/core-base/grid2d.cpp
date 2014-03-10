@@ -1,4 +1,10 @@
 
+#ifndef CORE_BASE_GRID2D_H_INL_
+#define CORE_BASE_GRID2D_H_INL_
+
+namespace ml
+{
+
 template <class T> Grid2D<T>::Grid2D()
 {
 	m_rows = 0;
@@ -149,3 +155,7 @@ template <class T> const T& Grid2D<T>::minValue() const
 	std::pair<UINT, UINT> index = minIndex();
 	return m_data[index.first * m_cols + index.second];
 }
+
+}  // namespace ml
+
+#endif  // CORE_BASE_GRID2D_H_INL_

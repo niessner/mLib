@@ -1,4 +1,10 @@
 
+#ifndef CORE_BASE_GRID3D_INL_H_
+#define CORE_BASE_GRID3D_INL_H_
+
+namespace ml
+{
+
 template <class T> Grid3D<T>::Grid3D()
 {
 	m_rows = 0;
@@ -115,3 +121,6 @@ template <class T> void Grid3D<T>::clear(const T &clearValue)
 	for(UINT i = 0; i < totalEntries; i++) m_data[i] = clearValue;
 }
 
+}  // namespace ml
+
+#endif  // CORE_BASE_GRID3D_INL_H_

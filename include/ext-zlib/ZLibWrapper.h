@@ -1,10 +1,9 @@
 
-#pragma once
+#ifndef EXT_ZLIB_ZLIBWRAPPER_H_
+#define EXT_ZLIB_ZLIBWRAPPER_H_
 
-
-#ifndef _ZLIB_WRAPPER_
-#define _ZLIB_WRAPPER_
-
+namespace ml
+{
 
 class ZLibWrapper
 {
@@ -112,10 +111,9 @@ public:
 	}
 };
 
-
-
-
 typedef BinaryDataStream<BinaryDataBufferMemory, BinaryDataCompressorZLib> BinaryDataStreamZLibVector;
 typedef BinaryDataStream<BinaryDataBufferFile, BinaryDataCompressorZLib> BinaryDataStreamZLibFile;
 
-#endif
+}  // namespace ml
+
+#endif  // EXT_ZLIB_ZLIBWRAPPER_H_

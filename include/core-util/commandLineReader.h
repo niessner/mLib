@@ -1,4 +1,10 @@
 
+#ifndef CORE_UTIL_COMMANDLINEREADER_H_
+#define CORE_UTIL_COMMANDLINEREADER_H_
+
+namespace ml
+{
+
 class CommandLineReader
 {
 public:
@@ -64,3 +70,7 @@ private:
 	std::string m_commandLine;
 	std::string m_usage;
 };
+
+}  // namespace ml
+
+#endif  // CORE_UTIL_COMMANDLINEREADER_H_
