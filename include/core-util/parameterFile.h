@@ -1,9 +1,9 @@
-#pragma once
 
+#ifndef CORE_UTIL_PARAMETERFILE_H_
+#define CORE_UTIL_PARAMETERFILE_H_
 
-#ifndef _PARAMETER_FILE_H_
-#define _PARAMETER_FILE_H_
-
+namespace ml
+{
 
 #include <sstream>
 #include <string>
@@ -169,7 +169,6 @@ private:
 	std::list<std::string> m_Filenames;
 };
 
+}  // namespace ml
 
-
-
-#endif
+#endif  // CORE_UTIL_PARAMETERFILE_H_
