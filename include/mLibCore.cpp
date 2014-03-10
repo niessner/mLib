@@ -21,7 +21,6 @@
 //
 // core-math source files
 //
-#include "../src/core-math/point.cpp"
 #include "../src/core-math/rng.cpp"
 
 //
