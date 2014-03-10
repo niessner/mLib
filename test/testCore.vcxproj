@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core-base\common.h" />
+    <ClInclude Include="..\include\core-base\console.h" />
     <ClInclude Include="..\include\core-base\grid2d.h" />
     <ClInclude Include="..\include\core-base\grid3d.h" />
     <ClInclude Include="..\include\core-graphics\RGBColor.h" />

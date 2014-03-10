@@ -1,4 +1,10 @@
 
+#ifndef CORE_BASE_CONSOLE_H_
+#define CORE_BASE_CONSOLE_H_
+
+namespace ml
+{
+
 //
 // see http://stackoverflow.com/questions/1760726/how-can-i-compose-output-streams-so-output-goes-multiple-places-at-once
 //
@@ -71,3 +77,7 @@ private:
 	static MultiStream s_stream;
 	static std::ofstream s_logFile;
 };
+
+}  // namespace ml
+
+#endif  // CORE_BASE_CONSOLE_H_
