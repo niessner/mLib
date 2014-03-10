@@ -5,7 +5,7 @@
 namespace ml {
 
 /************************************************************************/
-/* Math vector class (used for instance with sparse matrices)           */
+/* math vector class (used for instance with sparse matrices)           */
 /************************************************************************/
 
 template<class T, class = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>

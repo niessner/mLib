@@ -197,7 +197,7 @@ public:
         if(l0 <= 0.0f || l1 <= 0.0f)
             return 0.0f;
         else
-            return Math::radiansToDegrees(acosf(Math::clamp(point3d<T>::dot(v0, v1) / l0 / l1, -1.0f, 1.0f)));
+            return math::radiansToDegrees(acosf(math::clamp(point3d<T>::dot(v0, v1) / l0 / l1, -1.0f, 1.0f)));
     }
 
 	static const point3d<T> origin;
@@ -234,16 +234,16 @@ inline std::istream& operator>>(std::istream& s, point3d<T>& v)
 
 
 typedef point3d<double> vec3d;
-typedef point3d<float> vec3f;
+typedef point3d<float> Vec3f;
 typedef point3d<int> vec3i;
 typedef point3d<short> vec3s;
 typedef point3d<unsigned int> vec3ui;
 typedef point3d<unsigned char> vec3uc;
 
-template<> const vec3f vec3f::origin(0.0f, 0.0f, 0.0f);
-template<> const vec3f vec3f::eX(1.0f, 0.0f, 0.0f);
-template<> const vec3f vec3f::eY(0.0f, 1.0f, 0.0f);
-template<> const vec3f vec3f::eZ(0.0f, 0.0f, 1.0f);
+template<> const Vec3f Vec3f::origin(0.0f, 0.0f, 0.0f);
+template<> const Vec3f Vec3f::eX(1.0f, 0.0f, 0.0f);
+template<> const Vec3f Vec3f::eY(0.0f, 1.0f, 0.0f);
+template<> const Vec3f Vec3f::eZ(0.0f, 0.0f, 1.0f);
 
 }  // namespace ml
 

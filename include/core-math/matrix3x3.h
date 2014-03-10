@@ -110,7 +110,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationX(FloatType angle) {
-		FloatType anglerad = Math::degreesToRadians(angle);
+		FloatType anglerad = math::degreesToRadians(angle);
 		FloatType sinangle = sin(anglerad);
 		FloatType cosangle = cos(anglerad);
 
@@ -125,7 +125,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationY(FloatType angle) {
-		FloatType anglerad = Math::degreesToRadians(angle);
+		FloatType anglerad = math::degreesToRadians(angle);
 		FloatType sinangle = sin(anglerad);
 		FloatType cosangle = cos(anglerad);
 
@@ -140,7 +140,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotationZ(FloatType angle) {
-		FloatType anglerad = Math::degreesToRadians(angle);
+		FloatType anglerad = math::degreesToRadians(angle);
 		FloatType sinangle = sin(anglerad);
 		FloatType cosangle = cos(anglerad);
 
@@ -164,7 +164,7 @@ public:
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotation(const point3d<FloatType> &axis, FloatType angle) {
-		FloatType anglerad = Math::degreesToRadians(angle);
+		FloatType anglerad = math::degreesToRadians(angle);
 		FloatType c = cosf(anglerad);
 		FloatType s = sinf(anglerad);
 		FloatType t = (FloatType)1.0f - c;
@@ -565,7 +565,7 @@ inline std::istream& operator>>(std::istream& s, const Matrix3x3<FloatType>& m)
 
 typedef Matrix3x3<int> mat3i;
 typedef Matrix3x3<int> mat3u;
-typedef Matrix3x3<float> mat3f;
+typedef Matrix3x3<float> Mat3f;
 typedef Matrix3x3<double> mat3d;
 
 }  // namespace ml

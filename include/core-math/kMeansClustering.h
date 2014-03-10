@@ -16,9 +16,9 @@ public:
 class Vec3fKMeansMetric
 {
 public:
-	static float Dist(const vec3f &L, const vec3f &R)
+	static float Dist(const Vec3f &L, const Vec3f &R)
 	{
-		return vec3f::distSq(L, R);
+		return Vec3f::distSq(L, R);
 	}
 };
 

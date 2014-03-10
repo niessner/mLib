@@ -279,13 +279,13 @@ inline std::istream& operator>>(std::istream& s, point4d<T>& v)
 
 
 typedef point4d<double> vec4d;
-typedef point4d<float> vec4f;
+typedef point4d<float> Vec4f;
 typedef point4d<int> vec4i;
 typedef point4d<unsigned int> vec4ui;
 typedef point4d<unsigned char> vec4uc;
 
 
-template<> const vec4f vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);
+template<> const Vec4f Vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);
 
 }  // namespace ml
 

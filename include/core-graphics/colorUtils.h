@@ -47,9 +47,9 @@ class ColorUtils
     template<typename RGBA>
     static RGBA colorById(const int id)
     {
-        float h = std::fmod(-3.88f * id, 2.0f * Math::PIf);
-        if (h < 0) { h += 2.0f * Math::PIf; }
-        h /= 2.0f * Math::PIf;
+        float h = std::fmod(-3.88f * id, 2.0f * math::PIf);
+        if (h < 0) { h += 2.0f * math::PIf; }
+        h /= 2.0f * math::PIf;
 
         float hsl[4] = {h, 0.6f + 0.4f * std::sin(0.42f * id), 0.5f};
 

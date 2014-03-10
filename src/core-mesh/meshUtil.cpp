@@ -1,13 +1,13 @@
 
 
 
-TriMesh MeshUtil::createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f> > &meshes)
+TriMesh MeshUtil::createUnifiedMesh(const std::vector< std::pair<TriMesh, Mat4f> > &meshes)
 {
-    //const UINT totalPoints = meshes.sum([](const std::pair<TriMesh, mat4f> &t) { return (UINT)t.first.vertices().size(); });
-    //const UINT totalIndices = meshes.sum([](const std::pair<TriMesh, mat4f> &t) { return (UINT)t.first.indices().size(); });
-	auto lambdaVertices = [=](size_t total, const std::pair<TriMesh, mat4f> &t) { return t.first.vertices().size() + total; };
+    //const UINT totalPoints = meshes.sum([](const std::pair<TriMesh, Mat4f> &t) { return (UINT)t.first.vertices().size(); });
+    //const UINT totalIndices = meshes.sum([](const std::pair<TriMesh, Mat4f> &t) { return (UINT)t.first.indices().size(); });
+	auto lambdaVertices = [=](size_t total, const std::pair<TriMesh, Mat4f> &t) { return t.first.vertices().size() + total; };
 	const size_t totalPoints = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaVertices);
-	auto lambdaIndices = [=](size_t total, const std::pair<TriMesh, mat4f> &t) { return t.first.indices().size() + total; };
+	auto lambdaIndices = [=](size_t total, const std::pair<TriMesh, Mat4f> &t) { return t.first.indices().size() + total; };
 	const size_t totalIndices = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaIndices);
     
     std::vector<TriMesh::TriMeshVertex> vertices(totalPoints);
@@ -33,7 +33,7 @@ TriMesh MeshUtil::createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f>
     return TriMesh(vertices, indices);
 }
 
-TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<vec3f>& points)
+TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<Vec3f>& points)
 {
     const UINT64 pointCount = points.size();
     const UINT64 tVertices = templateMesh.vertices().size();
@@ -44,7 +44,7 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const st
 
     for (UINT pointIndex = 0; pointIndex < points.size(); pointIndex++)
     {
-        const vec3f& p = points[pointIndex];
+        const Vec3f& p = points[pointIndex];
         const UINT baseVertexIndex = pointIndex * (UINT)tVertices;
 
         for (UINT vertexIndex = 0; vertexIndex < tVertices; vertexIndex++)
@@ -64,8 +64,8 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const st
 
 
 TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
-                                           const std::vector<vec3f>& points,
-                                           const std::vector<vec4f>& colors)
+                                           const std::vector<Vec3f>& points,
+                                           const std::vector<Vec4f>& colors)
 {
     const UINT64 pointCount = points.size();
     const UINT64 tVertices = templateMesh.vertices().size();
@@ -76,8 +76,8 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
 
     for (UINT pointIndex = 0; pointIndex < points.size(); pointIndex++)
     {
-        const vec3f& p = points[pointIndex];
-        const vec4f& c = colors[pointIndex];
+        const Vec3f& p = points[pointIndex];
+        const Vec4f& c = colors[pointIndex];
         const UINT64 baseVertexIndex = pointIndex * tVertices;
 
         for (UINT vertexIndex = 0; vertexIndex < tVertices; vertexIndex++)

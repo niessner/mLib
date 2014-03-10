@@ -17,7 +17,7 @@ public:
 		m_ExtrinsicInverse.setIdentity();
 	}
 
-	void setMatrices(const mat4f& intrinsic, const mat4f& extrinsic) {
+	void setMatrices(const Mat4f& intrinsic, const Mat4f& extrinsic) {
 		m_Intrinsic = intrinsic;
 		m_Extrinsic = extrinsic;
 		m_IntrinsicInverse = m_Intrinsic.getInverse();
@@ -25,16 +25,16 @@ public:
 	}
 
 	//! Camera-to-Proj matrix
-	mat4f m_Intrinsic;
+	Mat4f m_Intrinsic;
 
 	//! Proj-to-Camera matrix
-	mat4f m_IntrinsicInverse;
+	Mat4f m_IntrinsicInverse;
 
 	//! World-to-Camera matrix
-	mat4f m_Extrinsic;
+	Mat4f m_Extrinsic;
 
 	//! Camera-to-World matrix
-	mat4f m_ExtrinsicInverse;
+	Mat4f m_ExtrinsicInverse;
 };
 
 //! write to binary stream overload

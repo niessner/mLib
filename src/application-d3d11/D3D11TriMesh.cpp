@@ -15,7 +15,7 @@ void D3D11TriMesh::load(GraphicsDevice &g, const TriMesh& mesh)
 	reset(g);
 }
 
-void D3D11TriMesh::updateAttributeA(GraphicsDevice &g, const std::vector<vec4f> &newValues)
+void D3D11TriMesh::updateAttributeA(GraphicsDevice &g, const std::vector<Vec4f> &newValues)
 {
     for(UINT vertexIndex = 0; vertexIndex < m_mesh.vertices().size(); vertexIndex++)
     {

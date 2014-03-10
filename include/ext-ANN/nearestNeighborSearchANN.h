@@ -74,7 +74,7 @@ public:
             m_dists,         // distance (returned)
             epsilon);        // error bound
 
-        result.resize(Math::min(count, (int)k));
+        result.resize(math::min(count, (int)k));
         for(int i = 0; i < result.size(); i++)
             result[i] = m_indices[i];
     }
@@ -91,7 +91,7 @@ public:
             m_dists,         // distance (returned)
             epsilon);        // error bound
 
-        result.resize(Math::min(count, (int)k));
+        result.resize(math::min(count, (int)k));
         for(int i = 0; i < result.size(); i++)
         {
             result[i] = std::make_pair(m_indices[i], (D)m_dists[i]);

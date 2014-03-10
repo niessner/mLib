@@ -3,9 +3,9 @@
 
 namespace MeshUtil
 {
-    TriMesh createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<vec3f>& points);
-    TriMesh createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<vec3f>& points, const std::vector<vec4f>& colors);
-    TriMesh createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f> > &meshes);
+    TriMesh createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<Vec3f>& points);
+    TriMesh createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<Vec3f>& points, const std::vector<Vec4f>& colors);
+    TriMesh createUnifiedMesh(const std::vector< std::pair<TriMesh, Mat4f> > &meshes);
 }
 
 #endif  // INCLUDE_CORE_MESH_MESHUTIL_H_

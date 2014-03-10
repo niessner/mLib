@@ -1,5 +1,5 @@
 
-Camera::Camera(const vec3f& eye, const vec3f& worldUp, const vec3f& right, float fieldOfView, float aspect, float zNear, float zFar) {
+Camera::Camera(const Vec3f& eye, const Vec3f& worldUp, const Vec3f& right, float fieldOfView, float aspect, float zNear, float zFar) {
 	m_eye = eye;
 	m_worldUp = worldUp.normalize();
 	m_right = right.normalize();
@@ -16,10 +16,10 @@ Camera::Camera(const vec3f& eye, const vec3f& worldUp, const vec3f& right, float
 	update();
 }
 
-Camera::Camera(const mat4f& m, float fieldOfView, float aspect, float zNear, float zFar) {
-	m_eye = vec3f(m(0, 3), m(1, 3), m(2, 3));
-	m_worldUp = vec3f(m(0, 1), m(1, 1), m(2, 1));
-	m_right = vec3f(m(0, 0), m(1, 0), m(2, 0));
+Camera::Camera(const Mat4f& m, float fieldOfView, float aspect, float zNear, float zFar) {
+	m_eye = Vec3f(m(0, 3), m(1, 3), m(2, 3));
+	m_worldUp = Vec3f(m(0, 1), m(1, 1), m(2, 1));
+	m_right = Vec3f(m(0, 0), m(1, 0), m(2, 0));
 	m_look = (m_worldUp ^ m_right).normalize();
 	m_up = (m_right ^ m_look).normalize();
 
@@ -46,18 +46,18 @@ void Camera::update() {
 }
 
 void Camera::lookRight(float theta) {
-	applyTransform(mat4f::rotation(m_worldUp, theta));
+	applyTransform(Mat4f::rotation(m_worldUp, theta));
 }
 
 void Camera::lookUp(float theta) {
-	applyTransform(mat4f::rotation(m_right, theta));
+	applyTransform(Mat4f::rotation(m_right, theta));
 }
 
 void Camera::roll(float theta) {
-	applyTransform(mat4f::rotation(m_look, theta));
+	applyTransform(Mat4f::rotation(m_look, theta));
 }
 
-void Camera::applyTransform(const mat4f& transform) {
+void Camera::applyTransform(const Mat4f& transform) {
 	m_up = transform * m_up;
 	m_right = transform * m_right;
 	m_look = transform * m_look;
@@ -80,23 +80,23 @@ void Camera::move(float delta) {
 }
 
 // field of view is in degrees
-mat4f Camera::perspectiveFov(float fieldOfView, float aspectRatio, float zNear, float zFar) {
-	float width = 1.0f / tanf(Math::degreesToRadians(fieldOfView) * 0.5f);
-	float height = aspectRatio / tanf(Math::degreesToRadians(fieldOfView) * 0.5f);
+Mat4f Camera::perspectiveFov(float fieldOfView, float aspectRatio, float zNear, float zFar) {
+	float width = 1.0f / tanf(math::degreesToRadians(fieldOfView) * 0.5f);
+	float height = aspectRatio / tanf(math::degreesToRadians(fieldOfView) * 0.5f);
 
-	return mat4f(width, 0.0f, 0.0f, 0.0f,
+	return Mat4f(width, 0.0f, 0.0f, 0.0f,
 	             0.0f, height, 0.0f, 0.0f,
 	             0.0f, 0.0f, zFar / (zNear - zFar), zFar * zNear / (zNear - zFar),
 	             0.0f, 0.0f, -1.0f, 0.0f);
 }
 
-mat4f Camera::viewMatrix(const vec3f& eye, const vec3f& look, const vec3f& up, const vec3f& right) {
-	vec3f l = look.normalize();
-	vec3f r = right.normalize();
-	vec3f u = up.normalize();
+Mat4f Camera::viewMatrix(const Vec3f& eye, const Vec3f& look, const Vec3f& up, const Vec3f& right) {
+	Vec3f l = look.normalize();
+	Vec3f r = right.normalize();
+	Vec3f u = up.normalize();
 
-	return mat4f(r.x, r.y, r.z, -vec3f::dot(r, eye),
-	             u.x, u.y, u.z, -vec3f::dot(u, eye),
-	             l.x, l.y, l.z, -vec3f::dot(l, eye),
+	return Mat4f(r.x, r.y, r.z, -Vec3f::dot(r, eye),
+	             u.x, u.y, u.z, -Vec3f::dot(u, eye),
+	             l.x, l.y, l.z, -Vec3f::dot(l, eye),
 	             0.0f, 0.0f, 0.0f, 1.0f);
 }
