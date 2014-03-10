@@ -1,8 +1,9 @@
-#pragma once
 
-#ifndef _CALIBRATED_SENSOR_DATA_H_
-#define _CALIBRATED_SENSOR_DATA_H_
+#ifndef EXT_DEPTHCAMERA_CALIBRATEDSENSORDATA_H_
+#define EXT_DEPTHCAMERA_CALIBRATEDSENSORDATA_H_
 
+namespace ml
+{
 
 class CalibrationData {
 public:
@@ -329,4 +330,6 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 }
 */
 
-#endif
+}  // namespace ml
+
+#endif  // EXT_DEPTHCAMERA_CALIBRATEDSENSORDATA_H_

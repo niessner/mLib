@@ -1,4 +1,7 @@
 
+namespace ml
+{
+
 Bitmap LodePNG::load(const std::string &filename)
 {
 	Bitmap result;
@@ -31,3 +34,5 @@ void LodePNG::save(const Bitmap &bmp, const std::string &filename)
 	lodepng::encode(filename, (const BYTE *)copy, bmp.cols(), bmp.rows(), LodePNGColorType::LCT_RGBA);
 	delete[] copy;
 }
+
+}  // namespace ml
