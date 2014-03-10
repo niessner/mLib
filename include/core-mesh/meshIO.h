@@ -1,6 +1,8 @@
-#ifndef _MESH_IO_H_
-#define _MESH_IO_H_
 
+#ifndef CORE_MESH_MESHIO_H_
+#define CORE_MESH_MESHIO_H_
+
+namespace ml {
 
 template <class FloatType>
 class MeshIO {
@@ -121,7 +123,8 @@ private:
 typedef MeshIO<float>	MeshIOf;
 typedef MeshIO<double>	MeshIOd;
 
+}  // namespace ml
 
 #include "meshIO.cpp"
 
-#endif
+#endif  // CORE_MESH_MESHIO_H_

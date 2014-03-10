@@ -67,8 +67,8 @@ class TestBinaryStream : public Test {
 		streamOutComp.closeStream();	//must call this here to make sure everything has been written to disk
 		
 
-		UINT64 dataSize = Utility::getFileData(filename).size();
-		UINT64 dataSizeCompressed = Utility::getFileData(filenameCompressed).size();
+		UINT64 dataSize = util::getFileData(filename).size();
+		UINT64 dataSizeCompressed = util::getFileData(filenameCompressed).size();
 
 		TestBinaryStreamTestData reRead;
 		BinaryDataStreamZLibFile streamIn(filenameCompressed, false);

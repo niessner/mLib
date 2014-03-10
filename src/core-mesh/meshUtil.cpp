@@ -2,7 +2,7 @@
 namespace ml
 {
 
-TriMesh MeshUtil::createUnifiedMesh(const std::vector< std::pair<TriMesh, Mat4f> > &meshes)
+TriMesh meshutil::createUnifiedMesh(const std::vector< std::pair<TriMesh, Mat4f> > &meshes)
 {
     //const UINT totalPoints = meshes.sum([](const std::pair<TriMesh, Mat4f> &t) { return (UINT)t.first.vertices().size(); });
     //const UINT totalIndices = meshes.sum([](const std::pair<TriMesh, Mat4f> &t) { return (UINT)t.first.indices().size(); });
@@ -34,7 +34,7 @@ TriMesh MeshUtil::createUnifiedMesh(const std::vector< std::pair<TriMesh, Mat4f>
     return TriMesh(vertices, indices);
 }
 
-TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<Vec3f>& points)
+TriMesh meshutil::createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<Vec3f>& points)
 {
     const UINT64 pointCount = points.size();
     const UINT64 tVertices = templateMesh.vertices().size();
@@ -64,7 +64,7 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh, const st
 }
 
 
-TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
+TriMesh meshutil::createPointCloudTemplate(const TriMesh& templateMesh,
                                            const std::vector<Vec3f>& points,
                                            const std::vector<Vec4f>& colors)
 {

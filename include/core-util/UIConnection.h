@@ -1,9 +1,11 @@
-#ifndef INCLUDE_CORE_UTIL_UICONNECTION_H_
-#define INCLUDE_CORE_UTIL_UICONNECTION_H_
+#ifndef CORE_UTIL_UICONNECTION_H_
+#define CORE_UTIL_UICONNECTION_H_
 
 #ifdef _WIN32
 
 #include <string>
+
+namespace ml {
 
 class UIConnection
 {
@@ -22,6 +24,8 @@ class UIConnection
     Pipe m_readFromUIPipe;
 };
 
-#endif
+}  // namespace ml
 
-#endif  // INCLUDE_CORE_UTIL_UICONNECTION_H_
+#endif  // _WIN32
+
+#endif  // CORE_UTIL_UICONNECTION_H_

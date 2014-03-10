@@ -1,6 +1,7 @@
-#ifndef _MESH_DATA_H_
-#define _MESH_DATA_H_
+#ifndef CORE_MESH_MESHDATA_H_
+#define CORE_MESH_MESHDATA_H_
 
+namespace ml {
 
 template <class FloatType>
 struct MeshData {
@@ -69,4 +70,6 @@ struct MeshData {
 typedef MeshData<float>		MeshDataf;
 typedef MeshData<double>	MeshDatad;
 
-#endif
+}  // namespace ml
+
+#endif  // CORE_MESH_MESHDATA_H_

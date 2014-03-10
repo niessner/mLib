@@ -1,4 +1,9 @@
 
+#ifndef CORE_MESH_MESHIO_INL_H_
+#define CORE_MESH_MESHIO_INL_H_
+
+namespace ml {
+
 template <class FloatType>
 void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<FloatType>& mesh )
 {
@@ -359,3 +364,6 @@ void MeshIO<FloatType>::loadFromFileOBJ( const std::string& filename, MeshData<F
 	fclose(fp);
 }
 
+}  // namespace ml
+
+#endif  // CORE_MESH_MESHIO_INL_H_

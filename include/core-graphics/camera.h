@@ -1,6 +1,8 @@
-#pragma once
-#ifndef INCLUDE_CORE_GRAPHICS_CAMERA_H_
-#define INCLUDE_CORE_GRAPHICS_CAMERA_H_
+
+#ifndef CORE_GRAPHICS_CAMERA_H_
+#define CORE_GRAPHICS_CAMERA_H_
+
+namespace ml {
 
 class Camera {
 public:
@@ -46,4 +48,6 @@ private:
 	float m_fieldOfView, m_aspect, m_zNear, m_zFar;
 };
 
-#endif  // INCLUDE_CORE_GRAPHICS_CAMERA_H_
+}  // namespace ml
+
+#endif  // CORE_GRAPHICS_CAMERA_H_

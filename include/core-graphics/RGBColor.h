@@ -38,9 +38,9 @@ struct RGBColor
 
 	static UINT distL1(RGBColor a, RGBColor b)
 	{
-		return math::abs(int(a.r) - int(b.r)) +
-			math::abs(int(a.g) - int(b.g)) +
-			math::abs(int(a.b) - int(b.b));
+		return std::abs(int(a.r) - int(b.r)) +
+			std::abs(int(a.g) - int(b.g)) +
+			std::abs(int(a.b) - int(b.b));
 	}
 
 	static UINT distL2(RGBColor a, RGBColor b)

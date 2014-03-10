@@ -1,8 +1,8 @@
-#pragma once
 
-#ifndef _RAY_H_
-#define _RAY_H_
+#ifndef CORE_GRAPHICS_RAY_H_
+#define CORE_GRAPHICS_RAY_H_
 
+namespace ml {
 
 template<class FloatType>
 class Triangle;
@@ -81,4 +81,6 @@ private:
 typedef Ray<float> Rayf;
 typedef Ray<double> Rayd;
 
-#endif
+}  // namespace ml
+
+#endif  // CORE_GRAPHICS_RAY_H_

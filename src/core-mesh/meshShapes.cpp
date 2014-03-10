@@ -1,5 +1,5 @@
 
-namespace MeshShapes
+namespace shapes
 {
 
     float cubeVData[8][3] =
@@ -84,8 +84,8 @@ namespace MeshShapes
     {
         float height = (p1 - p0).length();
 
-        TriMesh result = MeshShapes::cylinder(radius, height, stacks, slices, color);
+        TriMesh result = shapes::cylinder(radius, height, stacks, slices, color);
         result.applyTransform(Mat4f::translation(p0) * Mat4f::face(Vec3f::eZ, p1 - p0));
         return result;
     }
-}  // namespace MeshShapes
+}  // namespace shapes

@@ -1,7 +1,7 @@
-#ifndef INCLUDE_CORE_MESH_TRIMESH_H_
-#define INCLUDE_CORE_MESH_TRIMESH_H_
+#ifndef CORE_MESH_TRIMESH_H_
+#define CORE_MESH_TRIMESH_H_
 
-
+namespace ml {
 
 class TriMesh
 {
@@ -75,5 +75,7 @@ class TriMesh
         std::vector<TriMeshVertex> m_vertices;
         std::vector<UINT> m_indices;
 };
+
+}  // namespace ml
 
 #endif  // INCLUDE_CORE_MESH_TRIMESH_H_

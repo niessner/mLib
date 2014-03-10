@@ -1,7 +1,6 @@
-#pragma once
 
-#ifndef _BOUNDINGBOX_H_
-#define _BOUNDINGBOX_H_
+#ifndef CORE_GRAPHICS_BOUNDINGBOX3D_H_
+#define CORE_GRAPHICS_BOUNDINGBOX3D_H_
 
 #include "Ray.h"
 
@@ -9,6 +8,8 @@
 #include <vector>
 #include <cmath>
 #include <iostream>
+
+namespace ml {
 
 template<class FloatType>
 class BoundingBox3d
@@ -208,4 +209,6 @@ std::ostream& operator<< (std::ostream& s, const BoundingBox3d<FloatType>& bb) {
 typedef BoundingBox3d<float> bbox3f;
 typedef BoundingBox3d<double> bbox3d;
 
-#endif
+}  // namespace ml
+
+#endif  // CORE_GRAPHICS_BOUNDINGBOX3D_H_

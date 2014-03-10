@@ -2,15 +2,14 @@
 #ifndef CORE_UTIL_PARAMETERFILE_H_
 #define CORE_UTIL_PARAMETERFILE_H_
 
-namespace ml
-{
-
 #include <sstream>
 #include <string>
 #include <map>
 #include <set>
 #include <fstream>
 #include <list>
+
+namespace ml {
 
 class ParameterFile {
 public:
@@ -49,7 +48,7 @@ public:
 				MLIB_WARNING("Invalid attribute or value");
 				continue;
 			}
-			if (!m_CaseSensitive)	attr_name = StringUtil::toLower(attr_name);
+			if (!m_CaseSensitive)	attr_name = util::toLower(attr_name);
 			m_Values[attr_name] = attr_value;
 		}
 		file.close();
@@ -77,17 +76,17 @@ public:
                 MLIB_WARNING("parameter not found: " + name);
 				return false; 
 			} else {
-				StringUtil::convertTo<T>(s->second, value);
+				util::convertTo<T>(s->second, value);
 				return true;
 			}
 		} else {
-			std::string lname(name);	lname = StringUtil::toLower(lname);
+			std::string lname(name);	lname = util::toLower(lname);
 			const auto s = m_Values.find(name);
 			if (s == m_Values.end()) {
                 MLIB_WARNING("parameter not found: " + name);
 				return false; 
 			} else {
-				StringUtil::convertTo<T>(s->second, value);
+				util::convertTo<T>(s->second, value);
 				return true;
 			}
 		}

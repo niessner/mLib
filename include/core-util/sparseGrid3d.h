@@ -2,12 +2,9 @@
 #ifndef CORE_UTIL_SPARSEGRID3D_H_
 #define CORE_UTIL_SPARSEGRID3D_H_
 
-namespace ml
-{
-
 template<>
-struct std::hash<vec3i> : public std::unary_function<vec3i, size_t> {
-	size_t operator()(const vec3i& v) const {
+struct std::hash<ml::vec3i> : public std::unary_function<ml::vec3i, size_t> {
+	size_t operator()(const ml::vec3i& v) const {
 		//TODO larger prime number (64 bit) to match size_t
 		const size_t p0 = 73856093;
 		const size_t p1 = 19349669;
@@ -16,6 +13,8 @@ struct std::hash<vec3i> : public std::unary_function<vec3i, size_t> {
 		return res;
 	}
 };
+
+namespace ml {
 
 template<class T> class SparseGrid3D;
 template<class T> std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g);
