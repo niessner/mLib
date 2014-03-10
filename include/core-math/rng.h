@@ -1,7 +1,6 @@
-#pragma once
 
-#ifndef RNG_H
-#define RNG_H
+#ifndef CORE_MATH_RNG_H_
+#define CORE_MATH_RNG_H_
 
 // __________________________________________________________________________
 // rng.h - a Random Number Generator Class
@@ -62,6 +61,8 @@
 #include <cmath>
 #include <climits>
 #include <vector>
+
+namespace ml {
 
 using std::vector;
 
@@ -250,5 +251,7 @@ class RNG
 
 }; // class RNG
 
-#endif // RNG_H
+}  // namespace ml
+
+#endif  // CORE_MATH_RNG_H_
 

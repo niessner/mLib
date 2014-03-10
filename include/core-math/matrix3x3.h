@@ -1,8 +1,8 @@
-#pragma once 
 
-#ifndef _MATRIX3X3_H
-#define _MATRIX3X3_H
+#ifndef CORE_MATH_MATRIX3X3_H_
+#define CORE_MATH_MATRIX3X3_H_
 
+namespace ml {
 
 //! This class provides functions to handle 3-dimensional matrices
 /*! The arrangement of the matrix is row-like.
@@ -568,5 +568,6 @@ typedef Matrix3x3<int> mat3u;
 typedef Matrix3x3<float> mat3f;
 typedef Matrix3x3<double> mat3d;
 
+}  // namespace ml
 
-#endif
+#endif  // CORE_MATH_MATRIX3X3_H_

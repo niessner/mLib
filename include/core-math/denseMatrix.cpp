@@ -1,11 +1,8 @@
-/*
-DenseMatrix.cpp
-Written by Matthew Fisher
-*/
 
-#pragma once
+#ifndef CORE_MATH_DENSEMATRIX_INL_H_
+#define CORE_MATH_DENSEMATRIX_INL_H_
 
-//m_dataPtr[row * m_cols + col]
+namespace ml {
 
 template<class D>
 D DenseMatrix<D>::maxMagnitude() const
@@ -239,3 +236,7 @@ void DenseMatrix<D>::invertInPlace()
 			}
 			//Assert(ElementsValid(), "Degenerate Matrix inversion.");
 }
+
+}  // namespace ml
+
+#endif  // CORE_MATH_DENSEMATRIX_INL_H_

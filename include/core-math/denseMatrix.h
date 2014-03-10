@@ -1,7 +1,8 @@
 
-#pragma once
-#ifndef DENSE_MATRIX_H
-#define DENSE_MATRIX_H
+#ifndef CORE_MATH_DENSEMATRIX_H_
+#define CORE_MATH_DENSEMATRIX_H_
+
+namespace ml {
 
 template <class D> class DenseMatrix
 {
@@ -202,6 +203,8 @@ DenseMatrix<D> operator * (const DenseMatrix<D> &A, D val)
 	return DenseMatrix<D>::multiply(A, val);
 }
 
+}  // namespace ml
+
 #include "denseMatrix.cpp"
 
-#endif // SPARSE_MATRIX_H
+#endif  // CORE_MATH_DENSEMATRIX_H_

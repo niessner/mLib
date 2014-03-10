@@ -1,7 +1,6 @@
 
-#pragma once
-#ifndef _POINT2D_H_
-#define _POINT2D_H_
+#ifndef CORE_MATH_POINT2D_H_
+#define CORE_MATH_POINT2D_H_
 
 #include "point1d.h"
 
@@ -10,6 +9,7 @@
 #include <iostream>
 #include <cassert>
 
+namespace ml {
 
 //! 2D vector
 template <class T>
@@ -189,6 +189,6 @@ typedef point2d<int> vec2i;
 typedef point2d<unsigned int> vec2ui;
 typedef point2d<unsigned char> vec2uc;
 
+}  // namespace ml
 
-#endif
-
+#endif  // CORE_MATH_POINT2D_H_

@@ -1,7 +1,6 @@
 
-#pragma once
-#ifndef _POINT6D_H_
-#define _POINT6D_H_
+#ifndef CORE_MATH_POINT6D_H_
+#define CORE_MATH_POINT6D_H_
 
 #include "point4d.h"
 
@@ -10,6 +9,7 @@
 #include <cstdlib>
 #include <cassert>
 
+namespace ml {
 
 //! 6D vector.
 template <class T>
@@ -204,6 +204,6 @@ typedef point6d<int> vec6i;
 typedef point6d<unsigned int> vec6ui;
 typedef point6d<unsigned char> vec6uc;
 
+}  // namespace ml
 
-#endif
-
+#endif  // CORE_MATH_POINT6D_H_

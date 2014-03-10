@@ -1,7 +1,8 @@
 
-#pragma once
-#ifndef SPARSE_MATRIX_H
-#define SPARSE_MATRIX_H
+#ifndef CORE_MATH_SPARSEMATRIX_H_
+#define CORE_MATH_SPARSEMATRIX_H_
+
+namespace ml {
 
 enum MatrixStringFormat
 {
@@ -249,6 +250,8 @@ SparseMatrix<D> operator * (const SparseMatrix<D> &A, D val)
 //typedef SparseMatrix<float> SparseMatrixf;
 //typedef SparseMatrix<double> SparseMatrixd;
 
+}  // namespace ml
+
 #include "sparseMatrix.cpp"
 
-#endif // SPARSE_MATRIX_H
+#endif  // CORE_MATH_SPARSEMATRIX_H_

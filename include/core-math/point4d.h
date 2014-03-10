@@ -1,7 +1,6 @@
 
-#pragma once
-#ifndef _POINT4D_H_
-#define _POINT4D_H_
+#ifndef CORE_MATH_POINT4D_H_
+#define CORE_MATH_POINT4D_H_
 
 #include "point3d.h"
 
@@ -9,6 +8,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <cassert>
+
+namespace ml {
 
 //! 4D vector.
 template <class T>
@@ -286,4 +287,6 @@ typedef point4d<unsigned char> vec4uc;
 
 template<> const vec4f vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);
 
-#endif
+}  // namespace ml
+
+#endif  // CORE_MATH_POINT4D_H_

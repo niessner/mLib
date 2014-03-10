@@ -1,4 +1,9 @@
 
+#ifndef CORE_MATH_KMEANSCLUSTERING_H_
+#define CORE_MATH_KMEANSCLUSTERING_H_
+
+namespace ml {
+
 class Vec2fKMeansMetric
 {
 public:
@@ -237,3 +242,7 @@ private:
 
 	std::vector< KMeansCluster<T> > m_clusters;
 };
+
+}  // namespace ml
+
+#endif  // CORE_MATH_KMEANSCLUSTERING_H_

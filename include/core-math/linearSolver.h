@@ -1,7 +1,8 @@
 
-#pragma once
-#ifndef _LINEAR_SOLVER_H_
-#define _LINEAR_SOLVER_H_
+#ifndef CORE_MATH_LINEARSOLVER_H_
+#define CORE_MATH_LINEARSOLVER_H_
+
+namespace ml {
 
 template<class D> class LinearSolver
 {
@@ -73,4 +74,6 @@ private:
 	D m_tolerance;
 };
 
-#endif // _LINEAR_SOLVER_H_
+}  // namespace ml
+
+#endif  // CORE_MATH_LINEARSOLVER_H_

@@ -1,13 +1,12 @@
-#pragma once
 
-#ifndef _MATH_VECTOR_H_
-#define _MATH_VECTOR_H_
+#ifndef CORE_MATH_MATHVECTOR_H_
+#define CORE_MATH_MATHVECTOR_H_
 
+namespace ml {
 
 /************************************************************************/
 /* Math vector class (used for instance with sparse matrices)           */
 /************************************************************************/
-
 
 template<class T, class = typename std::enable_if<std::is_arithmetic<T>::value, T>::type>
 class MathVector;
@@ -147,4 +146,6 @@ inline MathVector<T> operator/(const T& v, const MathVector<T>& other)  {
 	return res;
 }
 
-#endif
+}  // namespace ml
+
+#endif  // CORE_MATH_MATHVECTOR_H_

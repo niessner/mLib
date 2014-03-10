@@ -1,7 +1,8 @@
-#pragma once 
 
-#ifndef _MATRIX4X4_H
-#define _MATRIX4X4_H
+#ifndef CORE_MATH_MATRIX4X4_H_
+#define CORE_MATH_MATRIX4X4_H_
+
+namespace ml {
 
 //! This class provides functions to handle 4-dimensional matrices
 /*! The arrangement of the matrix is row-like.
@@ -738,5 +739,6 @@ typedef Matrix4x4<int> mat4u;
 typedef Matrix4x4<float> mat4f;
 typedef Matrix4x4<double> mat4d;
 
+}  // namespace ml
 
-#endif
+#endif  // CORE_MATH_MATRIX4X4_H_

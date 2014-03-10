@@ -1,5 +1,8 @@
 
-#pragma once
+#ifndef CORE_MATH_SPARSEMATRIX_INL_H_
+#define CORE_MATH_SPARSEMATRIX_INL_H_
+
+namespace ml {
 
 template <class D>
 D SparseMatrix<D>::maxMagnitude() const
@@ -206,3 +209,7 @@ void SparseMatrix<D>::invertInPlace()
 			}
 			//Assert(ElementsValid(), "Degenerate Matrix inversion.");
 }
+
+}  // namespace ml
+
+#endif  // CORE_MATH_SPARSEMATRIX_INL_H_

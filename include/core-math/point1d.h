@@ -1,12 +1,13 @@
 
-#pragma once
-#ifndef _POINT1D_H_
-#define _POINT1D_H_
+#ifndef CORE_MATH_POINT1D_H_
+#define CORE_MATH_POINT1D_H_
 
 #include <iostream>
 #include <cmath>
 #include <iostream>
 #include <cassert>
+
+namespace ml {
 
 //! 1D vector (I know it's a joke, but we need it for compatibility reasons)
 template <class T>
@@ -149,4 +150,6 @@ typedef point1d<double> vec1d;
 typedef point1d<float> vec1f;
 typedef point1d<int> vec1i;
 
-#endif
+}  // namespace ml
+
+#endif  // CORE_MATH_POINT2D_H_

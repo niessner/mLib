@@ -1,7 +1,6 @@
 
-#pragma once
-#ifndef _POINT3D_H_
-#define _POINT3D_H_
+#ifndef CORE_MATH_POINT3D_H_
+#define CORE_MATH_POINT3D_H_
 
 
 #include <iostream>
@@ -9,6 +8,7 @@
 
 #include "point2d.h"
 
+namespace ml {
 
 //! 3D vector.
 template <class T>
@@ -245,5 +245,6 @@ template<> const vec3f vec3f::eX(1.0f, 0.0f, 0.0f);
 template<> const vec3f vec3f::eY(0.0f, 1.0f, 0.0f);
 template<> const vec3f vec3f::eZ(0.0f, 0.0f, 1.0f);
 
+}  // namespace ml
 
-#endif
+#endif  // CORE_MATH_POINT3D_H_
