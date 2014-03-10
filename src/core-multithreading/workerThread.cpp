@@ -1,9 +1,6 @@
 
-/*void WorkerThreadEntry( LPVOID context )
+namespace ml
 {
-	WorkerThread *thread = (WorkerThread *)context;
-	thread->beginTaskLoop();
-}*/
 
 void WorkerThread::init(UINT threadIndex, ThreadLocalStorage *storage)
 {
@@ -33,3 +30,5 @@ void WorkerThread::enterThreadTaskLoop()
 	}
 	m_done = true;
 }
+
+}  // namespace ml

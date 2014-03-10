@@ -1,4 +1,7 @@
 
+namespace ml
+{
+
 void ThreadPool::init(UINT threadCount)
 {
 	m_threads.resize(threadCount);
@@ -46,3 +49,5 @@ void ThreadPool::runTasks(TaskList<WorkerThreadTask*> &tasks, bool useConsole)
 	}
 	if(useConsole) Console::log("all tasks completed");
 }
+
+}  // namespace ml
