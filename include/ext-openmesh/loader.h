@@ -10,7 +10,7 @@ typedef OpenMesh::TriMesh_ArrayKernelT<OpenMesh::DefaultTraits> Mesh;
 
 static TriMesh load(const std::string& filename)
 {
-    MLIB_ASSERT_STR(Utility::fileExists(filename), "File not found: " + filename + "\nWorking directory: " + Utility::workingDirectory());
+    MLIB_ASSERT_STR(util::fileExists(filename), "File not found: " + filename + "\nWorking directory: " + util::workingDirectory());
 
     namespace io = OpenMesh::IO;
     io::Options opts = io::Options::VertexColor | io::Options::VertexNormal;
@@ -33,12 +33,12 @@ static TriMesh load(const std::string& filename)
     UINT currVertIdx = 0;
     for (Mesh::VertexIter vIt = mesh.vertices_begin(); vIt != mesh.vertices_end(); ++vIt, currVertIdx++)
     {
-        const Mesh::Point& p = mesh.point(*vIt);    // p is vec3f
-        const Mesh::Normal& n = mesh.normal(*vIt);  // n is vec3f
+        const Mesh::Point& p = mesh.point(*vIt);    // p is Vec3f
+        const Mesh::Normal& n = mesh.normal(*vIt);  // n is Vec3f
         const Mesh::Color& c = mesh.color(*vIt);    // c is vec3uc
         mv.position = p.data();
         mv.normal = n.data();
-        mv.attributeA = vec4f(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f, 1.0f);
+        mv.attributeA = Vec4f(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f, 1.0f);
         vertices[currVertIdx] = mv;
     }
     UINT currIndexIdx = 0;

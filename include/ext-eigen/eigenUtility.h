@@ -4,7 +4,7 @@
 namespace ml
 {
 
-namespace EigenUtility
+namespace eigenutil
 {
 	//
 	// this doesn't actually need to make a separate copy, but this is much simpler to write. It should eventually

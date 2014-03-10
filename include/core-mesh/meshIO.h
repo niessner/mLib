@@ -15,7 +15,7 @@ public:
 
 	static void loadFromFile(const std::string& filename, MeshData<FloatType>& mesh) {
 		mesh.clear();
-		std::string extension = StringUtil::getFileExtension(filename);
+		std::string extension = util::getFileExtension(filename);
 
 		if (extension == "off") {
 			loadFromFileOFF(filename, mesh);
@@ -38,7 +38,7 @@ public:
 			throw MLIB_EXCEPTION("inconsistent mesh data: " + filename);
 		}
 
-		std::string extension = StringUtil::getFileExtension(filename);
+		std::string extension = util::getFileExtension(filename);
 
 		if (extension == "off") {
 

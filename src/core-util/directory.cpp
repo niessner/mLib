@@ -10,7 +10,7 @@ std::vector<std::string> Directory::filesWithSuffix(const std::string &suffix) c
     for(UINT fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
     {
         const std::string &filename = m_files[fileIndex];
-        if(StringUtil::endsWith(filename, suffix))
+        if(util::endsWith(filename, suffix))
         {
             result.push_back(filename);
         }
@@ -36,7 +36,7 @@ void Directory::load(const std::string &path)
 		if (findResult.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
 			std::string directoryName(findResult.cFileName);
-			if(!StringUtil::startsWith(directoryName, "."))
+			if(!util::startsWith(directoryName, "."))
 			{
 				m_directories.push_back(directoryName);
 			}

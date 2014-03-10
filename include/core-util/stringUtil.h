@@ -52,7 +52,7 @@ namespace util
 	}
 
 	inline std::string replace(const std::string& str, char find, char replace) {
-		return StringUtil::replace(str, std::string(1, find), std::string(1, replace));
+		return util::replace(str, std::string(1, find), std::string(1, replace));
 	}
 
 

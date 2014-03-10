@@ -12,7 +12,7 @@ ID3DBlob* D3D11Utility::CompileShader(const std::string &filename, const std::st
 
 	ID3DBlob* blob = NULL;
 	ID3DBlob* errorBlob = NULL;
-    MLIB_ASSERT_STR(Utility::fileExists(filename), "File not found: " + filename);
+    MLIB_ASSERT_STR(util::fileExists(filename), "File not found: " + filename);
 #ifdef UNICODE
 	std::wstring s(filename.begin(), filename.end());
 #else

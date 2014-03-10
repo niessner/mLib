@@ -3,7 +3,7 @@
 
 void UIConnection::init(const std::string &executableFile, const std::string &pipeBaseName)
 {
-	if(Utility::runCommand(executableFile, "", false) != 0)
+	if(util::runCommand(executableFile, "", false) != 0)
 	{
 		Console::log("Failed to launch UI");
 		return;

@@ -1,5 +1,5 @@
 
-namespace Utility
+namespace util
 {
 	//
 	// These hash functions are taken from http://www.burtleburtle.net/bob/hash/doobs.html
@@ -145,10 +145,10 @@ namespace Utility
 
 	std::vector<BYTE> getFileData(const std::string &filename)
 	{
-		FILE *inputFile = Utility::checkedFOpen(filename.c_str(), "rb");
-		UINT fileSize = Utility::getFileSize(filename);
+		FILE *inputFile = util::checkedFOpen(filename.c_str(), "rb");
+		UINT fileSize = util::getFileSize(filename);
 		std::vector<BYTE> result(fileSize);
-		Utility::checkedFRead(&result[0], sizeof(BYTE), fileSize, inputFile);
+		util::checkedFRead(&result[0], sizeof(BYTE), fileSize, inputFile);
 		fclose(inputFile);
 		return result;
 	}
@@ -156,8 +156,8 @@ namespace Utility
 	void copyFile(const std::string &sourceFile, const std::string &destFile)
 	{
 		std::vector<BYTE> data = getFileData(sourceFile);
-		FILE *file = Utility::checkedFOpen(destFile.c_str(), "wb");
-		Utility::checkedFWrite(&data[0], sizeof(BYTE), data.size(), file);
+		FILE *file = util::checkedFOpen(destFile.c_str(), "wb");
+		util::checkedFWrite(&data[0], sizeof(BYTE), data.size(), file);
 		fclose(file);
 	}
 

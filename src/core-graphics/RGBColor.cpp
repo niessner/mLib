@@ -32,26 +32,26 @@ RGBColor::RGBColor(const std::string &hex)
 	b = color[2];
 }
 
-RGBColor::RGBColor(const vec3f &V)
+RGBColor::RGBColor(const Vec3f &V)
 {
-    r = Utility::boundToByte(V.x * 255.0f);
-    g = Utility::boundToByte(V.y * 255.0f);
-    b = Utility::boundToByte(V.z * 255.0f);
+    r = util::boundToByte(V.x * 255.0f);
+    g = util::boundToByte(V.y * 255.0f);
+    b = util::boundToByte(V.z * 255.0f);
 	a = 0;
 }
 
-RGBColor::RGBColor(const vec4f &V)
+RGBColor::RGBColor(const Vec4f &V)
 {
-    r = Utility::boundToByte(V.x * 255.0f);
-    g = Utility::boundToByte(V.y * 255.0f);
-    b = Utility::boundToByte(V.z * 255.0f);
-    a = Utility::boundToByte(V.w * 255.0f);
+    r = util::boundToByte(V.x * 255.0f);
+    g = util::boundToByte(V.y * 255.0f);
+    b = util::boundToByte(V.z * 255.0f);
+    a = util::boundToByte(V.w * 255.0f);
 }
 
 RGBColor RGBColor::interpolate(RGBColor L, RGBColor R, float s)
 {
-    return RGBColor(Utility::boundToByte(int(int(L.r) + s * float(int(R.r) - int(L.r)))),
-                    Utility::boundToByte(int(int(L.g) + s * float(int(R.g) - int(L.g)))),
-                    Utility::boundToByte(int(int(L.b) + s * float(int(R.b) - int(L.b)))),
-                    Utility::boundToByte(int(int(L.a) + s * float(int(R.a) - int(L.a)))));
+    return RGBColor(util::boundToByte(int(int(L.r) + s * float(int(R.r) - int(L.r)))),
+                    util::boundToByte(int(int(L.g) + s * float(int(R.g) - int(L.g)))),
+                    util::boundToByte(int(int(L.b) + s * float(int(R.b) - int(L.b)))),
+                    util::boundToByte(int(int(L.a) + s * float(int(R.a) - int(L.a)))));
 }

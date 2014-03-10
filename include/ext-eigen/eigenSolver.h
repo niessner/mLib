@@ -29,7 +29,7 @@ public:
 	{
 		MLIB_ASSERT_STR(A.square() && b.size() == A.rows(), "invalid solve dimensions");
 		Eigen::SparseMatrix<D> eigenMatrix;
-		EigenUtility::makeEigenMatrix(A, eigenMatrix);
+		eigenutil::makeEigenMatrix(A, eigenMatrix);
 		return solve(eigenMatrix, b);
 	}
 
@@ -43,7 +43,7 @@ public:
 		//return solve(A.transpose() * A, b);
 
 		Eigen::SparseMatrix<D> eigenMatrix;
-		EigenUtility::makeEigenMatrix(A, eigenMatrix);
+		eigenutil::makeEigenMatrix(A, eigenMatrix);
 		return solveLeastSquares(eigenMatrix, b);
 	}
 
@@ -51,11 +51,11 @@ public:
 	{
 		Console::log("Solving least-squares problem using QR");
 
-		const Eigen::VectorXd bEigen = EigenUtility::makeEigenVector(b);
+		const Eigen::VectorXd bEigen = eigenutil::makeEigenVector(b);
 		Eigen::SparseQR< Eigen::SparseMatrix<D>, Eigen::COLAMDOrdering<int> > factorization(A);
 		Eigen::VectorXd x = factorization.solve(bEigen);
 
-		return EigenUtility::dumpEigenVector<D>(x);
+		return eigenutil::dumpEigenVector<D>(x);
 	}
 
 private:
@@ -63,7 +63,7 @@ private:
 	{
 		ComponentTimer timer("Solving using method: " + getMethodName(method));
 		
-		const Eigen::VectorXd bEigen = EigenUtility::makeEigenVector(b);
+		const Eigen::VectorXd bEigen = eigenutil::makeEigenVector(b);
 		Eigen::VectorXd x;
 
 		if(method == LLT)
@@ -136,7 +136,7 @@ private:
 			MLIB_ERROR("Unknown method");
 		}
 
-		return EigenUtility::dumpEigenVector<D>(x);
+		return eigenutil::dumpEigenVector<D>(x);
 	}
 
 	static std::string getMethodName(Method m)
