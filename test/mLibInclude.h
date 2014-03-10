@@ -1,12 +1,5 @@
 
 //
-// mLib config options
-//
-
-#define MLIB_ERROR_CHECK
-#define MLIB_BOUNDS_CHECK
-
-//
 // mLib includes
 //
 
