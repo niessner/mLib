@@ -1,5 +1,5 @@
-#ifndef _MLIB_CORE_H
-#define _MLIB_CORE_H
+#ifndef MLIBCORE_H_
+#define MLIBCORE_H_
 
 #ifndef _WIN32
 #define LINUX
@@ -8,7 +8,6 @@
 //
 // core-base headers
 //
-#include "core-base/classList.h"
 #include "core-base/common.h"
 #include "core-base/console.h"
 #include "core-base/grid2d.h"
@@ -83,4 +82,4 @@
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"
 
-#endif  // _MLIB_CORE_H
+#endif  // MLIBCORE_H_

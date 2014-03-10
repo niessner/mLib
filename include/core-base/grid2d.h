@@ -1,5 +1,9 @@
 
-#pragma once
+#ifndef MLIBCOMMON_H__
+#define MLIBCOMMON_H__
+
+namespace ml
+{
 
 template <class T> class Grid2D
 {
@@ -159,4 +163,8 @@ template <class T> inline bool operator != (const Grid2D<T> &a, const Grid2D<T> 
 	return !(a == b);
 }
 
+}
+
 #include "grid2d.cpp"
+
+#endif  // MLIBCOMMON_H__

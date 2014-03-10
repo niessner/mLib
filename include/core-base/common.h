@@ -1,4 +1,3 @@
-#pragma once
 
 #ifndef _MLIBCOMMON_H_
 #define _MLIBCOMMON_H_
