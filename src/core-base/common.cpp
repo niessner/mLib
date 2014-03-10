@@ -1,4 +1,7 @@
 
+namespace ml
+{
+
 
 void warningFunctionMLIB(const std::string &description)
 {
@@ -20,3 +23,5 @@ void assertFunctionMLIB(bool statement, const std::string &description)
 		DEBUG_BREAK;
 	}
 }
+
+}  // namespace ml

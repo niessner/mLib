@@ -1,4 +1,7 @@
 
+namespace ml
+{
+
 const RGBColor RGBColor::White(255, 255, 255);
 const RGBColor RGBColor::Gray(128, 128, 128);
 const RGBColor RGBColor::Red(255, 0, 0);
@@ -55,3 +58,5 @@ RGBColor RGBColor::interpolate(RGBColor L, RGBColor R, float s)
                     util::boundToByte(int(int(L.b) + s * float(int(R.b) - int(L.b)))),
                     util::boundToByte(int(int(L.a) + s * float(int(R.a) - int(L.a)))));
 }
+
+}  // namespace ml

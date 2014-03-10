@@ -1,5 +1,6 @@
 
-
+namespace ml
+{
 
 TriMesh MeshUtil::createUnifiedMesh(const std::vector< std::pair<TriMesh, Mat4f> > &meshes)
 {
@@ -94,4 +95,6 @@ TriMesh MeshUtil::createPointCloudTemplate(const TriMesh& templateMesh,
     }
 
     return TriMesh(vertices, indices);
+}
+
 }
