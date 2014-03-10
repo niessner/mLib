@@ -35,7 +35,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mLibSource.cpp" />
-    <ClCompile Include="broken.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\core-base\classList.h">
