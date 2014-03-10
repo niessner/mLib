@@ -1,3 +1,4 @@
+namespace ml {
 
 namespace util
 {
@@ -296,4 +297,6 @@ namespace util
 		mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	}
 #endif
-}
+}  // namespace util
+
+}  // namespace ml

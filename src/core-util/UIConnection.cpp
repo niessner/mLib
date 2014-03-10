@@ -1,6 +1,8 @@
 
 #ifdef _WIN32
 
+namespace ml {
+
 void UIConnection::init(const std::string &executableFile, const std::string &pipeBaseName)
 {
 	if(util::runCommand(executableFile, "", false) != 0)
@@ -33,4 +35,6 @@ void UIConnection::sendMessage(const std::string &message)
 	m_writeToUIPipe.sendMessage(message);
 }
 
-#endif
+}  // namespace ml
+
+#endif  // _WIN32

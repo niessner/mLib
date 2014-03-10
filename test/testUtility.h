@@ -3,6 +3,7 @@ class TestUtility : public Test
 public:
 	void test0()
 	{
+		using namespace ml;
 		std::ofstream file("fileTest.txt");
 		file << "01234" << std::endl << "56789" << std::endl;
 		file.close();

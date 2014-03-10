@@ -1,3 +1,4 @@
+namespace ml {
 
 namespace shapes
 {
@@ -89,3 +90,5 @@ namespace shapes
         return result;
     }
 }  // namespace shapes
+
+}  // namespace ml

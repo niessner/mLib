@@ -1,5 +1,6 @@
+namespace ml {
 
-#ifdef WIN32
+#ifdef _WIN32
 Clock::Clock()
 {
 	LARGE_INTEGER ticksPerSecond;
@@ -21,7 +22,7 @@ double Clock::elapsed()
 	QueryPerformanceCounter( &time );
 	return double(time.QuadPart - m_startTime) / double(m_ticksPerSecond);
 }
-#endif
+#endif  // _WIN32
 
 #ifdef LINUX
 Clock::Clock()
@@ -43,4 +44,6 @@ double Clock::elapsed()
 	UINT64 endtime = (UINT64)timevalue.tv_sec * 1000000ULL + (UINT64)timevalue.tv_usec;
 	return double(endtime - m_startTime) / double(1000000);
 }
-#endif
+#endif  // LINUX
+
+}  // namespace ml

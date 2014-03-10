@@ -9,7 +9,7 @@
 namespace ml
 {
 
-namespace util
+namespace math
 {
 	const double PI = 3.1415926535897932384626433832795028842;
 	const float PIf = 3.14159265358979323846f;
@@ -156,7 +156,7 @@ namespace util
 
 }  // namespace math
 
-namespace utility
+namespace util
 {
 	//
 	// Hashing

@@ -2,8 +2,6 @@
 namespace ml
 {
 
-}
-
 //________________________________________________________________________
 // See the header file rng.h for a description of the contents of this
 // file as well as references and credits.
@@ -475,8 +473,5 @@ void RNG::multinom(uint size, const double* probs, uint num_probs, uint* samp)
     samp[num_probs - 1] = size;
 
 } // RNG::multinomial
-
-// __________________________________________________________________________
-// rng.C
 
 }  // namespace ml

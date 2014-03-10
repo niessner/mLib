@@ -3,6 +3,7 @@ class TestLodePNG : public Test
 public:
 	void test0()
 	{
+		using namespace ml;
 		Bitmap bmp(41, 17);
 		bmp.clear(RGBColor::Magenta);
 		bmp(1, 1) = RGBColor::Blue;

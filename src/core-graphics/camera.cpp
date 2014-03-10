@@ -1,4 +1,6 @@
 
+namespace ml {
+
 Camera::Camera(const Vec3f& eye, const Vec3f& worldUp, const Vec3f& right, float fieldOfView, float aspect, float zNear, float zFar) {
 	m_eye = eye;
 	m_worldUp = worldUp.normalize();
@@ -100,3 +102,5 @@ Mat4f Camera::viewMatrix(const Vec3f& eye, const Vec3f& look, const Vec3f& up, c
 	             l.x, l.y, l.z, -Vec3f::dot(l, eye),
 	             0.0f, 0.0f, 0.0f, 1.0f);
 }
+
+}  // namespace ml

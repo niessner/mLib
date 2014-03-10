@@ -3,6 +3,7 @@ class TestANN : public Test
 public:
 	void test0()
 	{
+		using namespace ml;
 		NearestNeighborSearchBruteForce<double> bruteForce;
 		NearestNeighborSearchANN<double> ANN;
 

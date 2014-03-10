@@ -31,18 +31,18 @@ public:
 
 //! read from binary stream overload
 template<class BinaryDataBuffer, class BinaryDataCompressor>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, TestBinaryStreamTestData& data) {
+inline ml::BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(ml::BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, TestBinaryStreamTestData& data) {
 	data.clear();
 	s >> data.m_Size;
 	data.m_Data = new int[data.m_Size];
-	s.readData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
+	s.readData((ml::BYTE*)data.m_Data, sizeof(int)*data.m_Size);
 	return s;
 }
 //! write to binary stream overload
 template<class BinaryDataBuffer, class BinaryDataCompressor>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const TestBinaryStreamTestData& data) {
+inline ml::BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(ml::BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const TestBinaryStreamTestData& data) {
 	s << data.m_Size;
-	s.writeData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
+	s.writeData((ml::BYTE*)data.m_Data, sizeof(int)*data.m_Size);
 	return s;
 }
 
@@ -50,6 +50,7 @@ class TestBinaryStream : public Test {
 
 	void test0()
 	{
+		using namespace ml;
 		const std::string filenameCompressed = "testStreamCompressed.out";
 		const std::string filename = "testStream.out";
 

@@ -3,6 +3,7 @@ class TestMath : public Test
 public:
 	void test0()
 	{
+		using namespace ml;
 		SparseMatrix<double> a("{{2,6,-1},{-9,-7,3}}", MatrixStringFormatMathematica);
 		SparseMatrix<double> b("{{3,4,1},{2,5,0},{-6,6,-1},{8,7,-2}}", MatrixStringFormatMathematica);
 		SparseMatrix<double> correctProduct("{{29,34,25,60},{-52,-53,9,-127}}", MatrixStringFormatMathematica);
@@ -29,6 +30,7 @@ public:
 
 	void test1()
 	{
+		using namespace ml;
 		DenseMatrix<double> a("{{2,6,-1},{-9,-7,3}}", MatrixStringFormatMathematica);
 		DenseMatrix<double> b("{{3,4,1},{2,5,0},{-6,6,-1},{8,7,-2}}", MatrixStringFormatMathematica);
 		DenseMatrix<double> correctProduct("{{29,34,25,60},{-52,-53,9,-127}}", MatrixStringFormatMathematica);
@@ -53,6 +55,7 @@ public:
 
 	void test2()
 	{
+		using namespace ml;
 		SparseMatrix<double> A(100, 10);
 		MathVector<double> b(100);
 
@@ -90,18 +93,19 @@ public:
 
 	void test3()
 	{
+		using namespace ml;
 		const UINT pointCount = 1000;
 		const UINT clusterCount = 10;
 		const UINT maxIterations = 25;
 
-		std::vector<vec3f> points(pointCount);
+		std::vector<Vec3f> points(pointCount);
 		for(UINT i = 0; i < pointCount; i++)
-			points[i] = vec3f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
+			points[i] = Vec3f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
 
 		for(UINT iteration = 0; iteration < 2; iteration++)
 		{
 			Clock timer;
-			KMeansClustering<vec3f, Vec3fKMeansMetric> clustering;
+			KMeansClustering<Vec3f, Vec3fKMeansMetric> clustering;
 			clustering.cluster(points, clusterCount, maxIterations, false);
 			Console::log() << "iteration " << iteration << ": " << timer.elapsed() << std::endl;
 		}

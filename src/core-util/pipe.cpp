@@ -4,6 +4,8 @@
 #include <AccCtrl.h>
 #include <Aclapi.h>
 
+namespace ml {
+
 Pipe::Pipe()
 {
     m_handle = NULL;
@@ -264,4 +266,6 @@ bool Pipe::valid()
     return (m_handle != NULL);
 }
 
-#endif
+#endif  // _WIN32
+
+}  // namespace ml

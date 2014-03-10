@@ -1,4 +1,6 @@
 
+namespace ml {
+
 Directory::Directory(const std::string &path)
 {
     load(path);
@@ -52,7 +54,7 @@ void Directory::load(const std::string &path)
 
 	FindClose(hFind);
 }
-#endif
+#endif  // _WIN32
 
 #ifdef LINUX
 void Directory::load(const std::string &path)
@@ -80,4 +82,6 @@ void Directory::load(const std::string &path)
 	
 	closedir(dir);
 }
-#endif
+#endif  // LINUX
+
+}  // namespace ml

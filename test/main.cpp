@@ -16,14 +16,14 @@ private:
 
 void App::go()
 {
-	Console::openLogFile("console.txt");
+	ml::Console::openLogFile("console.txt");
 	m_utility.run();
 	m_math.run();
 	m_ANN.run();
 	m_lodePNG.run();
 	m_binaryStream.run();
 
-	Console::log("All tests completed");
+	ml::Console::log("All tests completed");
 	std::cin.get();
 }
 
