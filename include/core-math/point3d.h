@@ -233,12 +233,12 @@ inline std::istream& operator>>(std::istream& s, point3d<T>& v)
 { return (s >> v[0] >> v[1] >> v[2]); }
 
 
-typedef point3d<double> vec3d;
+typedef point3d<double> Vec3d;
 typedef point3d<float> Vec3f;
-typedef point3d<int> vec3i;
-typedef point3d<short> vec3s;
-typedef point3d<unsigned int> vec3ui;
-typedef point3d<unsigned char> vec3uc;
+typedef point3d<int> Vec3i;
+typedef point3d<short> Vec3s;
+typedef point3d<unsigned int> Vec3ui;
+typedef point3d<unsigned char> Vec3uc;
 
 template<> const Vec3f Vec3f::origin(0.0f, 0.0f, 0.0f);
 template<> const Vec3f Vec3f::eX(1.0f, 0.0f, 0.0f);

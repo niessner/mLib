@@ -7,9 +7,9 @@ namespace ml {
 class Vec2fKMeansMetric
 {
 public:
-	static float Dist(const vec2f &L, const vec2f &R)
+	static float Dist(const Vec2f &L, const Vec2f &R)
 	{
-		return vec2f::distSq(L, R);
+		return Vec2f::distSq(L, R);
 	}
 };
 

@@ -183,11 +183,11 @@ template <class T> inline std::istream& operator>>(std::istream& s, point2d<T>& 
 { return (s >> v[0] >> v[1]); }
 
 
-typedef point2d<double> vec2d;
-typedef point2d<float> vec2f;
-typedef point2d<int> vec2i;
-typedef point2d<unsigned int> vec2ui;
-typedef point2d<unsigned char> vec2uc;
+typedef point2d<double> Vec2d;
+typedef point2d<float> Vec2f;
+typedef point2d<int> Vec2i;
+typedef point2d<unsigned int> Vec2ui;
+typedef point2d<unsigned char> Vec2uc;
 
 }  // namespace ml
 

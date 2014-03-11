@@ -108,7 +108,7 @@ public:
 	CalibrationData m_CalibrationColor;
 
 	std::vector<float*>		m_DepthImages;	//in meters
-	std::vector<vec4uc*>	m_ColorImages;	//in [0,255]^4
+	std::vector<Vec4uc*>	m_ColorImages;	//in [0,255]^4
 
 	std::vector<UINT64>	m_DepthImagesTimeStamps;
 	std::vector<UINT64>	m_ColorImagesTimeStamps;

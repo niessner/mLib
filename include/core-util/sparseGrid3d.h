@@ -3,8 +3,8 @@
 #define CORE_UTIL_SPARSEGRID3D_H_
 
 template<>
-struct std::hash<ml::vec3i> : public std::unary_function<ml::vec3i, size_t> {
-	size_t operator()(const ml::vec3i& v) const {
+struct std::hash<ml::Vec3i> : public std::unary_function<ml::Vec3i, size_t> {
+	size_t operator()(const ml::Vec3i& v) const {
 		//TODO larger prime number (64 bit) to match size_t
 		const size_t p0 = 73856093;
 		const size_t p1 = 19349669;
@@ -22,8 +22,8 @@ template<class T> std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T
 template<class T>
 class SparseGrid3D {
 public:
-	typedef typename std::unordered_map<vec3i, T, std::hash<vec3i>>::iterator iterator;
-	typedef typename std::unordered_map<vec3i, T, std::hash<vec3i>>::const_iterator const_iterator;
+	typedef typename std::unordered_map<Vec3i, T, std::hash<Vec3i>>::iterator iterator;
+	typedef typename std::unordered_map<Vec3i, T, std::hash<Vec3i>>::const_iterator const_iterator;
 	iterator begin() {return m_Data.begin();}
 	iterator end() {return m_Data.end();}
 	const_iterator begin() const {return m_Data.begin();}
@@ -41,30 +41,30 @@ public:
 		m_Data.clear();
 	}
 
-	bool exists(const vec3i& i) {
+	bool exists(const Vec3i& i) {
 		return (m_Data.find(i) != m_Data.end());
 	}
 
-	const T& operator()(const vec3i& i) const {
+	const T& operator()(const Vec3i& i) const {
 		return m_Data.find(i)->second;
 	}
 
 	//! if the element does not exist, it will be created with its default constructor
-	T& operator()(const vec3i& i) {
+	T& operator()(const Vec3i& i) {
 		return m_Data[i];
 	}
 
 	const T& operator()(int x, int y, int z) const {
-		return (*this)(vec3i(x,y,z));
+		return (*this)(Vec3i(x,y,z));
 	}
 	T& operator()(int x, int y, int z) {
-		return (*this)(vec3i(x,y,z));
+		return (*this)(Vec3i(x,y,z));
 	}
 
-	const T& operator[](const vec3i& i) const {
+	const T& operator[](const Vec3i& i) const {
 		return (*this)(i);
 	}
-	T& operator[](const vec3i& i) {
+	T& operator[](const Vec3i& i) {
 		return (*this)(i);
 	}
 
@@ -73,7 +73,7 @@ public:
 #endif
 	friend std::ostream& operator<< <> (std::ostream& s, const SparseGrid3D<T>& g);
 private:
-	std::unordered_map<vec3i, T, std::hash<vec3i>> m_Data;
+	std::unordered_map<Vec3i, T, std::hash<Vec3i>> m_Data;
 };
 
 template<class T>
