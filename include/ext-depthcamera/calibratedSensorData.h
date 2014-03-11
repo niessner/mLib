@@ -158,7 +158,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 		s.writeData((BYTE*)sensorData.m_DepthImages[i], sizeof(float)*sensorData.m_DepthImageWidth*sensorData.m_DepthImageHeight);
 	}
 	for (unsigned int i = 0; i < sensorData.m_ColorImages.size(); i++) {
-		s.writeData((BYTE*)sensorData.m_ColorImages[i], sizeof(vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
+		s.writeData((BYTE*)sensorData.m_ColorImages[i], sizeof(Vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
 	}
 
 	s << sensorData.m_ColorImagesTimeStamps;
@@ -194,8 +194,8 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 			s.readData((BYTE*)sensorData.m_DepthImages[i], sizeof(float)*sensorData.m_DepthImageWidth*sensorData.m_DepthImageHeight);
 		}
 		for (size_t i = 0; i < sensorData.m_ColorImages.size(); i++) {
-			sensorData.m_ColorImages[i] = new vec4uc[sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight];
-			s.readData((BYTE*)sensorData.m_ColorImages[i], sizeof(vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
+			sensorData.m_ColorImages[i] = new Vec4uc[sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight];
+			s.readData((BYTE*)sensorData.m_ColorImages[i], sizeof(Vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
 		}
 
 		s >> sensorData.m_ColorImagesTimeStamps;

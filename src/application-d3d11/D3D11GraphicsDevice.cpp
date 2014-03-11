@@ -1,5 +1,5 @@
 
-void D3D11GraphicsDevice::init(const WindowWin32 &window)
+void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
 {
     //
     // Instead of reconstructing the backbuffer everytime the window is resized, we construct a generic, large backbuffer.
@@ -122,30 +122,30 @@ void D3D11GraphicsDevice::init(const WindowWin32 &window)
 #endif
 }
 
-void D3D11GraphicsDevice::resize(UINT width, UINT height)
+void ml::D3D11GraphicsDevice::resize(UINT width, UINT height)
 {
     
 }
 
-void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)
+void ml::D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)
 {
 	m_assets.insert(asset);
 	//if (std::find(m_assets.begin(), m_assets.end(), asset) != m_assets.end()) m_assets.push_back(asset);
 }
 
-void D3D11GraphicsDevice::renderBeginFrame()
+void ml::D3D11GraphicsDevice::renderBeginFrame()
 {
 	float clearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	m_context->ClearRenderTargetView( m_renderView, clearColor );
     m_context->ClearDepthStencilView( m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void D3D11GraphicsDevice::renderEndFrame()
+void ml::D3D11GraphicsDevice::renderEndFrame()
 {
 	m_swapChain->Present( 1, 0 );
 }
 
-void D3D11GraphicsDevice::captureBackBuffer(Bitmap &result)
+void ml::D3D11GraphicsDevice::captureBackBuffer(Bitmap &result)
 {
     ID3D11Texture2D* frameBuffer;
 

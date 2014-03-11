@@ -1,3 +1,9 @@
+
+#ifndef APPLICATION_D3D11_D3D11TRIMESH_H_
+#define APPLICATION_D3D11_D3D11TRIMESH_H_
+
+namespace ml {
+
 class D3D11TriMesh : public GraphicsAsset
 {
 public:
@@ -30,12 +36,12 @@ public:
 
 	void render(GraphicsDevice &g);
 
-    void updateAttributeA(GraphicsDevice &g, const std::vector<Vec4f> &vertexColors);
+	void updateAttributeA(GraphicsDevice &g, const std::vector<Vec4f> &vertexColors);
 
-    const TriMesh& triMesh() const
-    {
-        return m_mesh;
-    }
+	const TriMesh& triMesh() const
+	{
+		return m_mesh;
+	}
 
 	static const UINT layoutElementCount = 4;
 	static const D3D11_INPUT_ELEMENT_DESC layout[layoutElementCount];
@@ -48,5 +54,9 @@ private:
 	ID3D11InputLayout *m_layout;
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;
-    TriMesh m_mesh;
+	TriMesh m_mesh;
 };
+
+}  // namespace ml
+
+#endif  // APPLICATION_D3D11_D3D11TRIMESH_H_

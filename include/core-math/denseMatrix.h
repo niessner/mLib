@@ -69,18 +69,18 @@ public:
 			//
 			// this is really a dense format and should be loaded as such, then cast into a SparseMatrix
 			//
-			std::vector<std::string> data = util::split(s,"},{");
+			std::vector<std::string> data = ml::util::split(s,"},{");
 			m_rows = (UINT)data.size();
-			m_cols = (UINT)util::split(data[0], ",").size();
+			m_cols = (UINT)ml::util::split(data[0], ",").size();
 			m_data.resize(m_rows * m_cols);
 			m_dataPtr = &m_data[0];
 
 			for(UINT row = 0; row < m_rows; row++)
 			{
-				std::vector<std::string> values = util::split(data[row], ",");
+				std::vector<std::string> values = ml::util::split(data[row], ",");
 				for(UINT col = 0; col < values.size(); col++)
 				{
-					const std::string s = util::replace(util::replace(values[col], "{",""), "}","");
+					const std::string s = ml::util::replace(ml::util::replace(values[col], "{",""), "}","");
 					(*this)(row, col) = (D)std::stod(s);
 				}
 			}

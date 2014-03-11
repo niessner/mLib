@@ -1,7 +1,7 @@
 
 #include "main.h"
 
-void AppTest::init(ApplicationData &app)
+void AppTest::init(ml::ApplicationData &app)
 {
     //const std::string testPLY = "scans/gates381.ply";
     //const TriMesh triMesh = OpenMeshLoader::load(testPLY);
@@ -10,16 +10,16 @@ void AppTest::init(ApplicationData &app)
 	//const std::string testFilename = "scans/gates381.off";
 	//const std::string testFilename = "scans/gates381.obj";
 	const std::string testFilename = "scans/gates381.ply";
-	MeshDataf meshData = MeshIOf::loadFromFile(testFilename);
-	const TriMesh triMesh(meshData);
+	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
+	const ml::TriMesh triMesh(meshData);
 	m_mesh.load(app.graphics, triMesh);
 
    // Vector<vec3f> points(5000, [](UINT64 i) {return vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
-	auto lambdaPoints = [=] (vec3f& v) { v = vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);};
-	std::vector<vec3f> points(5000);
+	auto lambdaPoints = [=] (ml::Vec3f& v) { v = ml::Vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);};
+	std::vector<ml::Vec3f> points(5000);
 	for_each(points.begin(), points.end(), lambdaPoints);
 
-    m_pointCloud.load(app.graphics, MeshUtil::createPointCloudTemplate(MeshShapes::box(0.01f), points));
+    m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::shapes::box(0.01f), points));
 
     m_vsColor.load(app.graphics, "shaders/test.shader");
     m_psColor.load(app.graphics, "shaders/test.shader");
@@ -30,14 +30,14 @@ void AppTest::init(ApplicationData &app)
     m_constants.init(app.graphics);
 
     //vec3f eye(1.0f, 2.0f, 3.0f);
-    vec3f eye(-0.5f, -0.5f, 1.5f);
-    vec3f worldUp(0.0f, 0.0f, 1.0f);
-    m_camera = Camera(eye, worldUp, vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
+    ml::Vec3f eye(-0.5f, -0.5f, 1.5f);
+    ml::Vec3f worldUp(0.0f, 0.0f, 1.0f);
+    m_camera = ml::Camera(eye, worldUp, ml::Vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
 
     m_font.init(app.graphics, "Calibri");
 }
 
-void AppTest::render(ApplicationData &app)
+void AppTest::render(ml::ApplicationData &app)
 {
     m_timer.frame();
 
@@ -57,20 +57,20 @@ void AppTest::render(ApplicationData &app)
 
     m_pointCloud.render(app.graphics);
 
-    m_font.drawString(app.graphics, "FPS: " + Convert::toString(m_timer.framesPerSecond()), vec2i(10, 5), 24.0f, RGBColor::Red);
+    m_font.drawString(app.graphics, "FPS: " + ml::Convert::toString(m_timer.framesPerSecond()), ml::Vec2i(10, 5), 24.0f, ml::RGBColor::Red);
 }
 
-void AppTest::resize(ApplicationData &app)
+void AppTest::resize(ml::ApplicationData &app)
 {
     m_camera.updateAspectRatio((float)app.window.width() / app.window.height());
 }
 
-void AppTest::keyDown(ApplicationData &app, UINT key)
+void AppTest::keyDown(ml::ApplicationData &app, UINT key)
 {
 
 }
 
-void AppTest::keyPressed(ApplicationData &app, UINT key)
+void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 {
     const float distance = 0.2f;
     const float theta = 5.0f;
@@ -88,31 +88,31 @@ void AppTest::keyPressed(ApplicationData &app, UINT key)
     if(key == KEY_RIGHT) m_camera.lookRight(-theta);
 }
 
-void AppTest::mouseDown(ApplicationData &app, MouseButtonType button)
+void AppTest::mouseDown(ml::ApplicationData &app, ml::MouseButtonType button)
 {
 
 }
 
-void AppTest::mouseWheel(ApplicationData &app, int wheelDelta)
+void AppTest::mouseWheel(ml::ApplicationData &app, int wheelDelta)
 {
     const float distance = 0.002f;
     m_camera.move(distance * -wheelDelta);
 }
 
-void AppTest::mouseMove(ApplicationData &app)
+void AppTest::mouseMove(ml::ApplicationData &app)
 {
     const float distance = 0.01f;
     const float theta = 0.5f;
 
-    vec2i posDelta = app.input.mouse.pos - app.input.prevMouse.pos;
+    ml::Vec2i posDelta = app.input.mouse.pos - app.input.prevMouse.pos;
 
-    if(app.input.mouse.buttons[MouseButtonRight])
+    if(app.input.mouse.buttons[ml::MouseButtonRight])
     {
         m_camera.strafe(distance * posDelta.x);
         m_camera.jump(distance * -posDelta.y);
     }
 
-    if(app.input.mouse.buttons[MouseButtonLeft])
+    if(app.input.mouse.buttons[ml::MouseButtonLeft])
     {
         m_camera.lookRight(theta * -posDelta.x);
         m_camera.lookUp(theta * -posDelta.y);

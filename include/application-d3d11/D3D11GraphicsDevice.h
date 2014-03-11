@@ -1,9 +1,14 @@
 
+#ifndef APPLICATION_D3D11_D3D11GRAPHICSDEVICE_H_
+#define APPLICATION_D3D11_D3D11GRAPHICSDEVICE_H_
+
 #pragma warning ( disable : 4005)
 
 #include <d3d11.h>
 #include <d3dx11.h>
 #include <d3dcompiler.h>
+
+namespace ml {
 
 class D3D11GraphicsDevice : public GraphicsDevice
 {
@@ -80,5 +85,6 @@ private:
 	std::set<GraphicsAsset*> m_assets;
 };
 
+}  // namespace ml
 
-
+#endif  // APPLICATION_D3D11_D3D11GRAPHICSDEVICE_H_

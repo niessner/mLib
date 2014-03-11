@@ -1,5 +1,5 @@
 
-const D3D11_INPUT_ELEMENT_DESC D3D11TriMesh::layout[layoutElementCount] =
+const D3D11_INPUT_ELEMENT_DESC ml::D3D11TriMesh::layout[layoutElementCount] =
 {
 	{ "position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	{ "normal", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -8,14 +8,14 @@ const D3D11_INPUT_ELEMENT_DESC D3D11TriMesh::layout[layoutElementCount] =
 };
 
 //TODO load from arbitrary meshes ;)
-void D3D11TriMesh::load(GraphicsDevice &g, const TriMesh& mesh)
+void ml::D3D11TriMesh::load(GraphicsDevice &g, const TriMesh& mesh)
 {
 	g.castD3D11().registerAsset(this);
     m_mesh = mesh;
 	reset(g);
 }
 
-void D3D11TriMesh::updateAttributeA(GraphicsDevice &g, const std::vector<Vec4f> &newValues)
+void ml::D3D11TriMesh::updateAttributeA(GraphicsDevice &g, const std::vector<Vec4f> &newValues)
 {
     for(UINT vertexIndex = 0; vertexIndex < m_mesh.vertices().size(); vertexIndex++)
     {
@@ -24,27 +24,27 @@ void D3D11TriMesh::updateAttributeA(GraphicsDevice &g, const std::vector<Vec4f> 
     reset(g);
 }
 
-void D3D11TriMesh::load(GraphicsDevice &g, TriMesh&& mesh)
+void ml::D3D11TriMesh::load(GraphicsDevice &g, TriMesh&& mesh)
 {
 	g.castD3D11().registerAsset(this);
 	m_mesh = mesh;
 	reset(g);
 }
 
-void D3D11TriMesh::release(GraphicsDevice &g)
+void ml::D3D11TriMesh::release(GraphicsDevice &g)
 {
 	SAFE_RELEASE(m_vertexBuffer);
 	SAFE_RELEASE(m_indexBuffer);
 }
 
-void D3D11TriMesh::reset(GraphicsDevice &g)
+void ml::D3D11TriMesh::reset(GraphicsDevice &g)
 {
 	release(g);
 	initVB(g);
 	initIB(g);
 }
 
-void D3D11TriMesh::initVB(GraphicsDevice &g)
+void ml::D3D11TriMesh::initVB(GraphicsDevice &g)
 {
     if (m_mesh.vertices().size() == 0) return;
 	auto &device = g.castD3D11().device();
@@ -63,7 +63,7 @@ void D3D11TriMesh::initVB(GraphicsDevice &g)
 	D3D_VALIDATE(device.CreateBuffer( &bufferDesc, &data, &m_vertexBuffer ));
 }
 
-void D3D11TriMesh::initIB(GraphicsDevice &g)
+void ml::D3D11TriMesh::initIB(GraphicsDevice &g)
 {
     if (m_mesh.indices().size() == 0) return;
 	auto &device = g.castD3D11().device();
@@ -82,7 +82,7 @@ void D3D11TriMesh::initIB(GraphicsDevice &g)
 	D3D_VALIDATE(device.CreateBuffer( &bufferDesc, &data, &m_indexBuffer ));
 }
 
-void D3D11TriMesh::render(GraphicsDevice &g)
+void ml::D3D11TriMesh::render(GraphicsDevice &g)
 {
     if (m_mesh.indices().size() == 0) return;
 	auto &context = g.castD3D11().context();

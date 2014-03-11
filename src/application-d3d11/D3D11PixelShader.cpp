@@ -1,5 +1,5 @@
 
-void D3D11PixelShader::load(GraphicsDevice &g, const std::string &filename)
+void ml::D3D11PixelShader::load(GraphicsDevice &g, const std::string &filename)
 {
 	release(g);
 	SAFE_RELEASE(m_blob);
@@ -13,12 +13,12 @@ void D3D11PixelShader::load(GraphicsDevice &g, const std::string &filename)
 	reset(g);
 }
 
-void D3D11PixelShader::release(GraphicsDevice &g)
+void ml::D3D11PixelShader::release(GraphicsDevice &g)
 {
 	SAFE_RELEASE(m_shader);
 }
 
-void D3D11PixelShader::reset(GraphicsDevice &g)
+void ml::D3D11PixelShader::reset(GraphicsDevice &g)
 {
 	release(g);
 
@@ -27,7 +27,7 @@ void D3D11PixelShader::reset(GraphicsDevice &g)
 	D3D_VALIDATE(device.CreatePixelShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), NULL, &m_shader));
 }
 
-void D3D11PixelShader::bind(GraphicsDevice &g)
+void ml::D3D11PixelShader::bind(GraphicsDevice &g)
 {
 	auto &context = g.castD3D11().context();
 	context.PSSetShader( m_shader, NULL, 0 );

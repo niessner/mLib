@@ -1,7 +1,9 @@
-#ifndef INCLUDE_EXT_OPENMESH_LOADER_H_
-#define INCLUDE_EXT_OPENMESH_LOADER_H_
+#ifndef EXT_OPENMESH_LOADER_H_
+#define EXT_OPENMESH_LOADER_H_
 
 #include <string>
+
+namespace ml {
 
 namespace OpenMeshLoader
 {
@@ -59,4 +61,6 @@ static TriMesh load(const std::string& filename)
 
 }  // namespace OpenMeshLoader
 
-#endif  // INCLUDE_EXT_OPENMESH_LOADER_H_
+}  // namespace ml
+
+#endif  // EXT_OPENMESH_LOADER_H_

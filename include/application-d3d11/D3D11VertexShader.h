@@ -1,4 +1,9 @@
 
+#ifndef APPLICATION_D3D11_D3D11VERTEXSHADER_H_
+#define APPLICATION_D3D11_D3D11VERTEXSHADER_H_
+
+namespace ml {
+
 class D3D11VertexShader : public GraphicsAsset
 {
 public:
@@ -28,3 +33,7 @@ private:
 
 	ID3D11InputLayout *m_standardLayout;
 };
+
+}  // namespace ml
+
+#endif  // APPLICATION_D3D11_D3D11VERTEXSHADER_H_

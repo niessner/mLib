@@ -1,5 +1,10 @@
 
+#ifndef EXT_D3D11FONT_D3D11FONT_H_
+#define EXT_D3D11FONT_D3D11FONT_H_
+
 #include "FW1FontWrapper/FW1FontWrapper.h"
+
+namespace ml {
 
 class D3D11Font : GraphicsAsset
 {
@@ -22,7 +27,7 @@ public:
         reset(g);
     }
 
-    void drawString(GraphicsDevice &g, const std::string &text, const vec2i &pos, const float fontHeight, RGBColor color)
+    void drawString(GraphicsDevice &g, const std::string &text, const ml::Vec2i &pos, const float fontHeight, RGBColor color)
     {
         std::wstring wText(text.begin(), text.end());
         m_fontWrapper->DrawString(
@@ -54,3 +59,7 @@ private:
     IFW1FontWrapper *m_fontWrapper;
     std::wstring m_fontName;
 };
+
+}  // namespace ml
+
+#endif  // EXT_D3D11FONT_D3D11FONT_H_

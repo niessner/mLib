@@ -1,11 +1,8 @@
 
-#ifndef CORE_UTIL_STRINGUTIL_H_
-#define CORE_UTIL_STRINGUTIL_H_
+#ifndef CORE_UTIL_STRINGUTILCONVERT_H_
+#define CORE_UTIL_STRINGUTILCONVERT_H_
 
 #include <string>
-
-namespace ml
-{
 
 /////////////////////////////////////////////////////////////////////
 // util is already used before; THIS must be included after  //
@@ -15,6 +12,8 @@ namespace ml
 //////////////////////
 // native functions //
 //////////////////////
+namespace ml {
+
 namespace Convert {
 	inline int toInt(const std::string& s) {
 		return std::stoi(s);
@@ -122,4 +121,4 @@ inline std::string& operator<<(std::string& s, const T& in) {
 
 }  // namespace ml
 
-#endif  // CORE_UTIL_STRINGUTIL_H_
+#endif  // CORE_UTIL_STRINGUTILCONVERT_H_

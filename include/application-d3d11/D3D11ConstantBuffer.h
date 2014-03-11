@@ -1,4 +1,9 @@
 
+#ifndef APPLICATION_D3D11_D3D11CONSTANTBUFFER_H_
+#define APPLICATION_D3D11_D3D11CONSTANTBUFFER_H_
+
+namespace ml {
+
 template<class T>
 class D3D11ConstantBuffer : public GraphicsAsset
 {
@@ -52,3 +57,7 @@ public:
 private:
 	ID3D11Buffer *m_buffer;
 };
+
+}  // namespace ml
+
+#endif  // APPLICATION_D3D11_D3D11CONSTANTBUFFER_H_

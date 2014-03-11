@@ -1,5 +1,5 @@
 
-ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const std::string &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback) :
+ml::ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const std::string &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback) :
 	m_callback(callback),
 	m_window(*this)
 {
@@ -21,13 +21,13 @@ ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT wi
 	m_callback.init(*m_data);
 }
 
-ApplicationWin32::~ApplicationWin32()
+ml::ApplicationWin32::~ApplicationWin32()
 {
 	delete m_graphics;
 	delete m_data;
 }
 
-void ApplicationWin32::messageLoop()
+void ml::ApplicationWin32::messageLoop()
 {
 	bool messageReceived;
 	MSG msg;

@@ -90,15 +90,15 @@ private:
 #define FUNCTION_LINE_STRING (std::string(__FUNCTION__) + ":" + std::to_string(__LINE__))
 //#define FUNCTION_LINE_STRING (std::string(__FUNCTION__))
 
-#define MLIB_EXCEPTION(s) MLibException(std::string(__FUNCTION__).append(": ").append(s).c_str())
+#define MLIB_EXCEPTION(s) ml::MLibException(std::string(__FUNCTION__).append(": ").append(s).c_str())
 
 #ifdef MLIB_ERROR_CHECK
 
 
-#define MLIB_WARNING(s) warningFunctionMLIB(std::string(FUNCTION_LINE_STRING) + std::string() + ": " + std::string(s))
-#define MLIB_ERROR(s) errorFunctionMLIB(std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
-#define MLIB_ASSERT_STR(b,s) { if(!(b)) assertFunctionMLIB(b, std::string(FUNCTION_LINE_STRING) + ": " + std::string(s)); }
-#define MLIB_ASSERT(b) { if(!(b)) assertFunctionMLIB(b, FUNCTION_LINE_STRING); }
+#define MLIB_WARNING(s) ml::warningFunctionMLIB(std::string(FUNCTION_LINE_STRING) + std::string() + ": " + std::string(s))
+#define MLIB_ERROR(s) ml::errorFunctionMLIB(std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
+#define MLIB_ASSERT_STR(b,s) { if(!(b)) ml::assertFunctionMLIB(b, std::string(FUNCTION_LINE_STRING) + ": " + std::string(s)); }
+#define MLIB_ASSERT(b) { if(!(b)) ml::assertFunctionMLIB(b, FUNCTION_LINE_STRING); }
 
 void warningFunctionMLIB(const std::string &description);
 void errorFunctionMLIB(const std::string &description);

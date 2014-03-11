@@ -1,4 +1,9 @@
 
+#ifndef APPLICATION_D3D11_D3D11PIXELSHADER_H_
+#define APPLICATION_D3D11_D3D11PIXELSHADER_H_
+
+namespace ml {
+
 class D3D11PixelShader : public GraphicsAsset
 {
 public:
@@ -26,3 +31,7 @@ private:
 	ID3DBlob *m_blob;
 	std::string m_filename;
 };
+
+}  // namespace ml
+
+#endif  // APPLICATION_D3D11_D3D11PIXELSHADER_H_

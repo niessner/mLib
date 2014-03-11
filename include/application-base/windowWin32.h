@@ -1,8 +1,13 @@
 
+#ifndef APPLICATION_BASE_WINDOWWIN32_H_
+#define APPLICATION_BASE_WINDOWWIN32_H_
+
 #include <windows.h>
 
-class WindowWin32
-{
+namespace ml {
+
+class ApplicationWin32;
+class WindowWin32 {
 public:
 	WindowWin32(ApplicationWin32 &parent) :
 		m_parent(parent)
@@ -36,3 +41,7 @@ private:
 	WNDCLASSA m_class;
 	HWND      m_handle;
 };
+
+}  // namespace ml
+
+#endif  // APPLICATION_BASE_WINDOWWIN32_H_

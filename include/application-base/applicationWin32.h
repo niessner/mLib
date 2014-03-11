@@ -1,4 +1,9 @@
 
+#ifndef APPLICATION_BASE_APPLICATIONWIN32_H_
+#define APPLICATION_BASE_APPLICATIONWIN32_H_
+
+namespace ml {
+
 enum MouseButtonType
 {
 	MouseButtonLeft,
@@ -13,7 +18,7 @@ struct MouseState
 		buttons[MouseButtonLeft] = false;
 		buttons[MouseButtonRight] = false;
 	}
-	vec2i pos;
+	ml::Vec2i pos;
 	bool buttons[MouseButtonCount];
 };
 
@@ -96,3 +101,7 @@ private:
 
 	ApplicationCallback &m_callback;
 };
+
+}  // namespace ml
+
+#endif  // APPLICATION_BASE_APPLICATIONWIN32_H_

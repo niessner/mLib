@@ -1,9 +1,15 @@
 
+#ifndef APPLICATION_BASE_GRAPHICSDEVICE_H_
+#define APPLICATION_BASE_GRAPHICSDEVICE_H_
+
+namespace ml {
+
 enum GraphicsDeviceType
 {
 	GraphicsDeviceTypeD3D11,
 };
 
+class D3D11GraphicsDevice;
 class GraphicsDevice
 {
 public:
@@ -26,3 +32,7 @@ public:
 protected:
 	GraphicsDeviceType m_type;
 };
+
+}  // namespace ml
+
+#endif  // APPLICATION_BASE_GRAPHICSDEVICE_H_
