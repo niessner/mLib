@@ -23,8 +23,8 @@ struct RGBColor
 	}
 	
 	RGBColor(const std::string &hex);
-    explicit RGBColor(const Vec3f &v);
-    explicit RGBColor(const Vec4f &v);
+    explicit RGBColor(const vec3f &v);
+    explicit RGBColor(const vec4f &v);
 
     RGBColor flipBlueAndRed() const
     {
@@ -58,15 +58,15 @@ struct RGBColor
 
     static RGBColor interpolate(RGBColor LowColor, RGBColor HighColor, float s);
 
-	operator Vec3f() const
+	operator vec3f() const
 	{
 		const float scale = 1.0f / 255.0f;
-		return Vec3f(r * scale, g * scale, b * scale);
+		return vec3f(r * scale, g * scale, b * scale);
 	}
-    operator Vec4f() const
+    operator vec4f() const
     {
         const float scale = 1.0f / 255.0f;
-        return Vec4f(r * scale, g * scale, b * scale, 0.0f);
+        return vec4f(r * scale, g * scale, b * scale, 0.0f);
     }
 
     static const RGBColor White;

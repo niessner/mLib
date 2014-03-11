@@ -198,11 +198,11 @@ inline std::istream& operator>>(std::istream& s, point6d<T>& v)
 { return (s >> v[0] >> v[1] >> v[2] >> v[3] >> v[4] >> v[5]); }
 
 
-typedef point6d<double> Vec6d;
-typedef point6d<float> Vec6f;
-typedef point6d<int> Vec6i;
-typedef point6d<unsigned int> Vec6ui;
-typedef point6d<unsigned char> Vec6uc;
+typedef point6d<double> vec6d;
+typedef point6d<float> vec6f;
+typedef point6d<int> vec6i;
+typedef point6d<unsigned int> vec6ui;
+typedef point6d<unsigned char> vec6uc;
 
 }  // namespace ml
 

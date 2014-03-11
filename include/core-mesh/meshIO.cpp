@@ -105,7 +105,7 @@ void MeshIO<FloatType>::loadFromFileOFF( const std::string& filename, MeshData<F
 			point3d<FloatType> v;
 			file >> v.x >> v.y >> v.z;
 			mesh.m_Vertices[i] = v;
-			mesh.m_Colors[i] = Vec3f(0.0f, 0.0f, 0.0f);
+			mesh.m_Colors[i] = vec3f(0.0f, 0.0f, 0.0f);
 		}
 	}
 	else

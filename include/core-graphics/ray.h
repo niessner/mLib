@@ -62,7 +62,7 @@ public:
 		return m_InverseDirection;
 	}
 
-	const Vec3i& sign() const
+	const vec3i& sign() const
 	{
 		return m_Sign;
 	}
@@ -75,7 +75,7 @@ private:
 	point3d<FloatType> m_InverseDirection;
 	point3d<FloatType> m_Origin;
 
-	Vec3i m_Sign;
+	vec3i m_Sign;
 };
 
 typedef Ray<float> Rayf;

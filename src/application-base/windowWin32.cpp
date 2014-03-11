@@ -75,7 +75,7 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         {
             POINTS p = MAKEPOINTS(lParam);
 			parent.data().input.prevMouse.pos = parent.data().input.mouse.pos;
-            parent.data().input.mouse.pos = ml::Vec2i(p.x, p.y);
+            parent.data().input.mouse.pos = ml::vec2i(p.x, p.y);
 			parent.callback().mouseMove(parent.data());
 
         }

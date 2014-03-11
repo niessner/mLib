@@ -18,7 +18,7 @@ struct MouseState
 		buttons[MouseButtonLeft] = false;
 		buttons[MouseButtonRight] = false;
 	}
-	ml::Vec2i pos;
+	ml::vec2i pos;
 	bool buttons[MouseButtonCount];
 };
 

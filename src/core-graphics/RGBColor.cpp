@@ -35,7 +35,7 @@ RGBColor::RGBColor(const std::string &hex)
 	b = color[2];
 }
 
-RGBColor::RGBColor(const Vec3f &V)
+RGBColor::RGBColor(const vec3f &V)
 {
     r = util::boundToByte(V.x * 255.0f);
     g = util::boundToByte(V.y * 255.0f);
@@ -43,7 +43,7 @@ RGBColor::RGBColor(const Vec3f &V)
 	a = 0;
 }
 
-RGBColor::RGBColor(const Vec4f &V)
+RGBColor::RGBColor(const vec4f &V)
 {
     r = util::boundToByte(V.x * 255.0f);
     g = util::boundToByte(V.y * 255.0f);

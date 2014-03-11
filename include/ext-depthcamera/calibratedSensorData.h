@@ -18,7 +18,7 @@ public:
 		m_ExtrinsicInverse.setIdentity();
 	}
 
-	void setMatrices(const Mat4f& intrinsic, const Mat4f& extrinsic) {
+	void setMatrices(const mat4f& intrinsic, const mat4f& extrinsic) {
 		m_Intrinsic = intrinsic;
 		m_Extrinsic = extrinsic;
 		m_IntrinsicInverse = m_Intrinsic.getInverse();
@@ -26,16 +26,16 @@ public:
 	}
 
 	//! Camera-to-Proj matrix
-	Mat4f m_Intrinsic;
+	mat4f m_Intrinsic;
 
 	//! Proj-to-Camera matrix
-	Mat4f m_IntrinsicInverse;
+	mat4f m_IntrinsicInverse;
 
 	//! World-to-Camera matrix
-	Mat4f m_Extrinsic;
+	mat4f m_Extrinsic;
 
 	//! Camera-to-World matrix
-	Mat4f m_ExtrinsicInverse;
+	mat4f m_ExtrinsicInverse;
 };
 
 //! write to binary stream overload
@@ -108,7 +108,7 @@ public:
 	CalibrationData m_CalibrationColor;
 
 	std::vector<float*>		m_DepthImages;	//in meters
-	std::vector<Vec4uc*>	m_ColorImages;	//in [0,255]^4
+	std::vector<vec4uc*>	m_ColorImages;	//in [0,255]^4
 
 	std::vector<UINT64>	m_DepthImagesTimeStamps;
 	std::vector<UINT64>	m_ColorImagesTimeStamps;
@@ -158,7 +158,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 		s.writeData((BYTE*)sensorData.m_DepthImages[i], sizeof(float)*sensorData.m_DepthImageWidth*sensorData.m_DepthImageHeight);
 	}
 	for (unsigned int i = 0; i < sensorData.m_ColorImages.size(); i++) {
-		s.writeData((BYTE*)sensorData.m_ColorImages[i], sizeof(Vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
+		s.writeData((BYTE*)sensorData.m_ColorImages[i], sizeof(vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
 	}
 
 	s << sensorData.m_ColorImagesTimeStamps;
@@ -194,8 +194,8 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 			s.readData((BYTE*)sensorData.m_DepthImages[i], sizeof(float)*sensorData.m_DepthImageWidth*sensorData.m_DepthImageHeight);
 		}
 		for (size_t i = 0; i < sensorData.m_ColorImages.size(); i++) {
-			sensorData.m_ColorImages[i] = new Vec4uc[sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight];
-			s.readData((BYTE*)sensorData.m_ColorImages[i], sizeof(Vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
+			sensorData.m_ColorImages[i] = new vec4uc[sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight];
+			s.readData((BYTE*)sensorData.m_ColorImages[i], sizeof(vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
 		}
 
 		s >> sensorData.m_ColorImagesTimeStamps;

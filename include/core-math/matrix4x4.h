@@ -736,7 +736,7 @@ inline std::istream& operator>>(std::istream& s, const Matrix4x4<FloatType>& m)
 
 typedef Matrix4x4<int> mat4i;
 typedef Matrix4x4<int> mat4u;
-typedef Matrix4x4<float> Mat4f;
+typedef Matrix4x4<float> mat4f;
 typedef Matrix4x4<double> mat4d;
 
 }  // namespace ml

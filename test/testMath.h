@@ -98,14 +98,14 @@ public:
 		const UINT clusterCount = 10;
 		const UINT maxIterations = 25;
 
-		std::vector<Vec3f> points(pointCount);
+		std::vector<vec3f> points(pointCount);
 		for(UINT i = 0; i < pointCount; i++)
-			points[i] = Vec3f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
+			points[i] = vec3f(rand() / (float)RAND_MAX, rand() / (float)RAND_MAX, rand() / (float)RAND_MAX);
 
 		for(UINT iteration = 0; iteration < 2; iteration++)
 		{
 			Clock timer;
-			KMeansClustering<Vec3f, Vec3fKMeansMetric> clustering;
+			KMeansClustering<vec3f, vec3fKMeansMetric> clustering;
 			clustering.cluster(points, clusterCount, maxIterations, false);
 			Console::log() << "iteration " << iteration << ": " << timer.elapsed() << std::endl;
 		}

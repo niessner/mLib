@@ -15,8 +15,8 @@ void AppTest::init(ml::ApplicationData &app)
 	m_mesh.load(app.graphics, triMesh);
 
    // Vector<vec3f> points(5000, [](UINT64 i) {return vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
-	auto lambdaPoints = [=] (ml::Vec3f& v) { v = ml::Vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);};
-	std::vector<ml::Vec3f> points(5000);
+	auto lambdaPoints = [=] (ml::vec3f& v) { v = ml::vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);};
+	std::vector<ml::vec3f> points(5000);
 	for_each(points.begin(), points.end(), lambdaPoints);
 
     m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::shapes::box(0.01f), points));
@@ -30,9 +30,9 @@ void AppTest::init(ml::ApplicationData &app)
     m_constants.init(app.graphics);
 
     //vec3f eye(1.0f, 2.0f, 3.0f);
-    ml::Vec3f eye(-0.5f, -0.5f, 1.5f);
-    ml::Vec3f worldUp(0.0f, 0.0f, 1.0f);
-    m_camera = ml::Camera(eye, worldUp, ml::Vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
+    ml::vec3f eye(-0.5f, -0.5f, 1.5f);
+    ml::vec3f worldUp(0.0f, 0.0f, 1.0f);
+    m_camera = ml::Camera(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
 
     m_font.init(app.graphics, "Calibri");
 }
@@ -57,7 +57,7 @@ void AppTest::render(ml::ApplicationData &app)
 
     m_pointCloud.render(app.graphics);
 
-    m_font.drawString(app.graphics, "FPS: " + ml::Convert::toString(m_timer.framesPerSecond()), ml::Vec2i(10, 5), 24.0f, ml::RGBColor::Red);
+    m_font.drawString(app.graphics, "FPS: " + ml::Convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
 }
 
 void AppTest::resize(ml::ApplicationData &app)
@@ -104,7 +104,7 @@ void AppTest::mouseMove(ml::ApplicationData &app)
     const float distance = 0.01f;
     const float theta = 0.5f;
 
-    ml::Vec2i posDelta = app.input.mouse.pos - app.input.prevMouse.pos;
+    ml::vec2i posDelta = app.input.mouse.pos - app.input.prevMouse.pos;
 
     if(app.input.mouse.buttons[ml::MouseButtonRight])
     {

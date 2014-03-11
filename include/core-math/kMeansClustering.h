@@ -4,21 +4,21 @@
 
 namespace ml {
 
-class Vec2fKMeansMetric
+class vec2fKMeansMetric
 {
 public:
-	static float Dist(const Vec2f &L, const Vec2f &R)
+	static float Dist(const vec2f &L, const vec2f &R)
 	{
-		return Vec2f::distSq(L, R);
+		return vec2f::distSq(L, R);
 	}
 };
 
-class Vec3fKMeansMetric
+class vec3fKMeansMetric
 {
 public:
-	static float Dist(const Vec3f &L, const Vec3f &R)
+	static float Dist(const vec3f &L, const vec3f &R)
 	{
-		return Vec3f::distSq(L, R);
+		return vec3f::distSq(L, R);
 	}
 };
 

@@ -40,11 +40,11 @@ struct MeshData {
 		return consistent;
 	}
 
-	void applyTransform(const Mat4f& t) {
+	void applyTransform(const mat4f& t) {
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i] *= t;
 		}
-		Mat4f invTrans = t.getInverse().getTranspose();
+		mat4f invTrans = t.getInverse().getTranspose();
 		for (size_t i = 0; i < m_Normals.size(); i++) {
 			m_Normals[i] *= invTrans;
 		}

@@ -8,13 +8,13 @@ class D3D11TriMesh : public GraphicsAsset
 {
 public:
 	struct D3D11TriMeshVertex {
-		D3D11TriMeshVertex() : position(Vec3f::origin), normal(Vec3f::origin), attributeA(Vec4f::origin), attributeB(Vec4f::origin) { }
-		explicit D3D11TriMeshVertex(const Vec3f& _position) : position(_position) {}
-		D3D11TriMeshVertex(const Vec3f& _p, const Vec3f& _n, const Vec4f& _a, const Vec4f& _b) : position(_p), normal(_n), attributeA(_a), attributeB(_b) { }
-		Vec3f position;
-		Vec3f normal;
-		Vec4f attributeA;
-		Vec4f attributeB;
+		D3D11TriMeshVertex() : position(vec3f::origin), normal(vec3f::origin), attributeA(vec4f::origin), attributeB(vec4f::origin) { }
+		explicit D3D11TriMeshVertex(const vec3f& _position) : position(_position) {}
+		D3D11TriMeshVertex(const vec3f& _p, const vec3f& _n, const vec4f& _a, const vec4f& _b) : position(_p), normal(_n), attributeA(_a), attributeB(_b) { }
+		vec3f position;
+		vec3f normal;
+		vec4f attributeA;
+		vec4f attributeB;
 	};
 	D3D11TriMesh()
 	{
@@ -36,7 +36,7 @@ public:
 
 	void render(GraphicsDevice &g);
 
-	void updateAttributeA(GraphicsDevice &g, const std::vector<Vec4f> &vertexColors);
+	void updateAttributeA(GraphicsDevice &g, const std::vector<vec4f> &vertexColors);
 
 	const TriMesh& triMesh() const
 	{

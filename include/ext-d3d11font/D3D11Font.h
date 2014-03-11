@@ -27,7 +27,7 @@ public:
         reset(g);
     }
 
-    void drawString(GraphicsDevice &g, const std::string &text, const ml::Vec2i &pos, const float fontHeight, RGBColor color)
+    void drawString(GraphicsDevice &g, const std::string &text, const ml::vec2i &pos, const float fontHeight, RGBColor color)
     {
         std::wstring wText(text.begin(), text.end());
         m_fontWrapper->DrawString(

@@ -8,13 +8,13 @@ class TriMesh
     public:
 		struct TriMeshVertex
 		{
-			TriMeshVertex() : position(Vec3f::origin), normal(Vec3f::origin), attributeA(Vec4f::origin), attributeB(Vec4f::origin) { }
-			explicit TriMeshVertex(const Vec3f& _position) : position(_position) {}
-			TriMeshVertex(const Vec3f& _p, const Vec3f& _n, const Vec4f& _a, const Vec4f& _b) : position(_p), normal(_n), attributeA(_a), attributeB(_b) { }
-			Vec3f position;
-			Vec3f normal;
-			Vec4f attributeA;
-			Vec4f attributeB;
+			TriMeshVertex() : position(vec3f::origin), normal(vec3f::origin), attributeA(vec4f::origin), attributeB(vec4f::origin) { }
+			explicit TriMeshVertex(const vec3f& _position) : position(_position) {}
+			TriMeshVertex(const vec3f& _p, const vec3f& _n, const vec4f& _a, const vec4f& _b) : position(_p), normal(_n), attributeA(_a), attributeB(_b) { }
+			vec3f position;
+			vec3f normal;
+			vec4f attributeA;
+			vec4f attributeB;
 		};
 
         TriMesh() : m_vertices(), m_indices() { }
@@ -51,14 +51,14 @@ class TriMesh
             m_vertices = std::move(t.m_vertices);
             m_indices = std::move(t.m_indices);
         }
-        void applyTransform(const Mat4f& m)
+        void applyTransform(const mat4f& m)
         {
             for (TriMeshVertex& v : m_vertices) { v.position = m * v.position; }
         }
 
-        void stretch(float s) { stretch(Vec3f(s, s, s)); }
+        void stretch(float s) { stretch(vec3f(s, s, s)); }
 
-        void stretch(const Vec3f& v)
+        void stretch(const vec3f& v)
         {
             for (TriMeshVertex& mv : m_vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
         }

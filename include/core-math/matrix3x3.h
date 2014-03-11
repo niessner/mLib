@@ -565,7 +565,7 @@ inline std::istream& operator>>(std::istream& s, const Matrix3x3<FloatType>& m)
 
 typedef Matrix3x3<int> mat3i;
 typedef Matrix3x3<int> mat3u;
-typedef Matrix3x3<float> Mat3f;
+typedef Matrix3x3<float> mat3f;
 typedef Matrix3x3<double> mat3d;
 
 }  // namespace ml

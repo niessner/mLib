@@ -17,7 +17,7 @@ namespace shapes
         {6, 5, 4}, {6, 4, 7}
     };
 
-    TriMesh box(float xDim, float yDim, float zDim, const Vec4f& color)
+    TriMesh box(float xDim, float yDim, float zDim, const vec4f& color)
     {
         std::vector<TriMesh::TriMeshVertex> V(8);
         std::vector<UINT> I(12*3);
@@ -25,8 +25,8 @@ namespace shapes
         // Vertices
         for (int i = 0; i < 8; i++)
         {
-            V[i].position = Vec3f(cubeVData[i][0], cubeVData[i][1], cubeVData[i][2]);
-            V[i].normal = Vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): write and call generateNormals() function
+            V[i].position = vec3f(cubeVData[i][0], cubeVData[i][1], cubeVData[i][2]);
+            V[i].normal = vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): write and call generateNormals() function
             V[i].attributeA = color;
         }
 
@@ -39,12 +39,12 @@ namespace shapes
         }
 
         TriMesh mesh(V, I);
-        mesh.stretch(Vec3f(0.5f * xDim, 0.5f * yDim, 0.5f * zDim));
+        mesh.stretch(vec3f(0.5f * xDim, 0.5f * yDim, 0.5f * zDim));
 
         return mesh;
     }
 
-    TriMesh cylinder(float radius, float height, UINT stacks, UINT slices, const Vec4f& color)
+    TriMesh cylinder(float radius, float height, UINT stacks, UINT slices, const vec4f& color)
     {
         std::vector<TriMesh::TriMeshVertex> vertices((stacks + 1) * slices);
         std::vector<UINT> indices(stacks * slices * 6);
@@ -55,8 +55,8 @@ namespace shapes
             {
                 auto &vtx = vertices[vIndex++];
                 float theta = float(i2) * 2.0f * math::PIf / float(slices);
-                vtx.position = Vec3f(radius * cosf(theta), radius * sinf(theta), height * float(i) / float(stacks));
-                vtx.normal = Vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): write and call generateNormals() function
+                vtx.position = vec3f(radius * cosf(theta), radius * sinf(theta), height * float(i) / float(stacks));
+                vtx.normal = vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): write and call generateNormals() function
                 vtx.attributeA = color;
             }
 
@@ -81,12 +81,12 @@ namespace shapes
         return TriMesh(vertices, indices);
     }
 
-    TriMesh cylinder(const Vec3f &p0, const Vec3f &p1, float radius, UINT stacks, UINT slices, const Vec4f& color)
+    TriMesh cylinder(const vec3f &p0, const vec3f &p1, float radius, UINT stacks, UINT slices, const vec4f& color)
     {
         float height = (p1 - p0).length();
 
         TriMesh result = shapes::cylinder(radius, height, stacks, slices, color);
-        result.applyTransform(Mat4f::translation(p0) * Mat4f::face(Vec3f::eZ, p1 - p0));
+        result.applyTransform(mat4f::translation(p0) * mat4f::face(vec3f::eZ, p1 - p0));
         return result;
     }
 }  // namespace shapes

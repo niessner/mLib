@@ -1,7 +1,7 @@
 
 struct ConstantBuffer
 {
-	ml::Mat4f worldViewProj;
+	ml::mat4f worldViewProj;
 };
 
 class AppTest : public ml::ApplicationCallback
