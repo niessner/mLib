@@ -1,6 +1,9 @@
 #ifndef EXT_BOOST_SERIALIZATION_H_
 #define EXT_BOOST_SERIALIZATION_H_
 
+// Get rid of warning due to ambiguity in pre-XP vs XP and later Windows versions
+#define _WIN32_WINNT 0x0501
+
 #include <boost/serialization/utility.hpp>
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/vector.hpp>
@@ -30,7 +33,7 @@ inline void serialize(Archive& ar, ml::Matrix4x4<T>& m, const unsigned int versi
 	ar & m.matrix;
 }
 
-}  // namespace boost
 }  // namespace serialization
+}  // namespace boost
 
 #endif  // EXT_BOOST_SERIALIZATION_H_
