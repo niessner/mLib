@@ -1,8 +1,11 @@
 #ifndef MLIBBOOST_H_
 #define MLIBBOOST_H_
 
+// Get rid of warning due to ambiguity in pre-XP vs XP and later Windows versions
+#define _WIN32_WINNT 0x0501
+
 //
-// external globally required boost headers
+// external boost headers
 //
 #include <boost/assign.hpp>
 
@@ -12,5 +15,6 @@
 // ext-boost headers
 //
 #include "ext-boost/serialization.h"
+#include "ext-boost/options.h"
 
 #endif  // MLIBBOOST_H_
