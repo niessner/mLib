@@ -65,4 +65,150 @@ inline void serialize(Archive& ar, ml::Matrix4x4<T>& m, const unsigned int versi
 }  // namespace serialization
 }  // namespace boost
 
+// TODO: Move this to an appropriate test file
+static void testBoostSerialization() {
+	namespace io = boost::iostreams;
+	namespace arc = boost::archive;
+
+	// Make objects
+	const int N = 10000;
+	std::vector<ml::vec3f> ps;
+	for (int i = 0; i < N; i++) { ps.push_back(ml::vec3f(i, 2, 3)); }
+	const ml::vec3uc v(0, 255, 0);
+
+	// TEXT ARCHIVE TEST
+	std::string txt_file("demofile.txt");
+	// save to file
+	{
+		std::ofstream ofs(txt_file);
+		arc::text_oarchive oa(ofs);
+		oa << ps;
+		oa << v;
+	}
+	// load from file
+	std::vector<ml::vec3f> ps2;
+	ml::vec3uc v2;
+	{
+		std::ifstream ifs(txt_file);
+		arc::text_iarchive ia(ifs);
+		ia >> ps2;
+		ia >> v2;
+	}
+
+	// IN-MEMORY BUFFER TEST
+	boost::asio::streambuf buf;
+	std::vector<ml::vec3f> ps3;
+	ml::vec3uc v3;
+	// save to buf
+	{
+		std::ostream os(&buf, std::ios::binary);
+		arc::binary_oarchive oa(os);
+		oa << ps;
+		oa << v;
+	}
+	// load from buf
+	{
+		std::istream is(&buf, std::ios::binary);
+		arc::binary_iarchive ia(is);
+		ia >> ps3;
+		ia >> v3;
+	}
+
+	// IN-MEMORY SAVE-LOAD BUFFER TEST
+	boost::asio::streambuf buf2;
+	std::vector<ml::vec3f> ps7;
+	ml::vec3uc v7;
+	{
+		std::ostream os(&buf2, std::ios::binary);
+		arc::binary_oarchive oa(os);
+		std::istream is(&buf2, std::ios::binary);
+		arc::binary_iarchive ia(is);
+		oa << ps;
+		ia >> ps7;
+		oa << v;
+		ia >> v7;
+	}
+
+	// IN-MEMORY COMPRESSED BUFFER
+	boost::asio::streambuf buf3;
+	io::filtering_ostreambuf out;
+	out.push(io::zlib_compressor());
+	out.push(buf3);
+	{
+		arc::binary_oarchive oa(out);
+		oa << ps;
+	}
+	io::close(out);
+
+	io::filtering_istreambuf in;
+	in.push(io::zlib_decompressor());
+	in.push(buf3);
+	{
+		ps.clear();
+		arc::binary_iarchive ia(in);
+		ia >> ps;
+	}
+	io::close(in);
+
+	// BINARY FILE TEST
+	std::vector<ml::vec3f> ps4;
+	ml::vec3uc v4;
+	std::string bin_file("demofile.bin");
+	// Write out to binary file
+	std::ofstream ofs(bin_file, std::ios::binary);
+	{
+		arc::binary_oarchive oa(ofs);
+		oa << ps;
+		oa << v;
+	}
+	ofs.close();
+
+	// load back from binary file
+	std::ifstream ifs(bin_file, std::ios::binary);
+	{
+		arc::binary_iarchive ia(ifs);
+		ia >> ps4;
+		ia >> v4;
+	}
+	ifs.close();
+
+	// COMPRESSED BINARY FILE TEST
+	std::vector<ml::vec3f> ps5;
+	ml::vec3uc v5;
+	std::string binz_file("demofile.bin.z");
+	// Write out to binary file
+	std::ofstream ofsz(binz_file, std::ios::out | std::ios::binary);
+	{
+		io::filtering_streambuf<io::output> out;
+		out.push(io::zlib_compressor(io::zlib::best_compression));
+		out.push(ofsz);
+		arc::binary_oarchive oa(out);
+		oa << ps;
+		oa << v;
+	}
+	ofsz.close();
+
+	// load back from binary file
+	std::ifstream ifsz(binz_file, std::ios::in | std::ios::binary);
+	{
+		io::filtering_streambuf<io::input> in;
+		in.push(io::zlib_decompressor());
+		in.push(ifsz);
+		arc::binary_iarchive ia(in);
+		ia >> ps5;
+		ia >> v5;
+	}
+	ifsz.close();
+
+	// Custom in-out archive test
+	ml::InOutArchive inout;
+	inout << ps;
+	inout << v;
+	ps.clear();
+	v2.y = 0;
+	inout >> ps;
+	inout >> v2;
+	return 0;
+}
+
 #endif  // EXT_BOOST_SERIALIZATION_H_

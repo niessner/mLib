@@ -57,6 +57,15 @@ class ColorUtils
         rgba[3] = 1;
         return rgba;
     }
+
+	template <typename RGBA, size_t N>
+	static std::array<RGBA, N> colorArrayByIdSeq(const int start) {
+		std::array<RGBA, N> out;
+		for (int i = start, ii = 0; i < start + N; i++, ii++) {
+			out[ii] = colorById<RGBA>(i);
+		}
+		return out;
+	}
 };
 
 }  // namespace ml
