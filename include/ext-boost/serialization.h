@@ -73,7 +73,7 @@ static void testBoostSerialization() {
 	// Make objects
 	const int N = 10000;
 	std::vector<ml::vec3f> ps;
-	for (int i = 0; i < N; i++) { ps.push_back(ml::vec3f(i, 2, 3)); }
+	for (int i = 0; i < N; i++) { ps.push_back(ml::vec3f(static_cast<float>(i), 2, 3)); }
 	const ml::vec3uc v(0, 255, 0);
 
 	// TEXT ARCHIVE TEST
@@ -208,7 +208,6 @@ static void testBoostSerialization() {
 	v2.y = 0;
 	inout >> ps;
 	inout >> v2;
-	return 0;
 }
 
 #endif  // EXT_BOOST_SERIALIZATION_H_
