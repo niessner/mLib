@@ -266,6 +266,6 @@ bool Pipe::valid()
     return (m_handle != NULL);
 }
 
-#endif  // _WIN32
-
 }  // namespace ml
+
+#endif  // _WIN32

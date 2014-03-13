@@ -2,13 +2,13 @@
 #ifndef CORE_UTIL_BINARYDATABUFFER_H_
 #define CORE_UTIL_BINARYDATABUFFER_H_
 
-namespace ml
-{
-
 #include <vector>
 #include <list>
 #include <fstream>
 #include <string>
+
+namespace ml
+{
 
 /////////////////////////////////////////////////////////////
 // BinaryDataBuffers (class used by BINARY_DATA_STREAM)    //
