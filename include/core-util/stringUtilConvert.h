@@ -31,7 +31,7 @@ namespace Convert {
 		return s[0];
 	}
 	inline bool toBool(const std::string& s) {
-		if (s == "false" || s == "0") { return false; }
+		if (s == "false" || s == "False" || s == "0") { return false; }
 		else { return true; }
 	}
 	template<class T>
