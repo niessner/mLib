@@ -158,8 +158,20 @@ namespace math
 
 namespace util
 {
+    //
+    // iterator helpers
+    //
+    template<class container, class assignFunction>
+    void fill(container &c, assignFunction func) {
+        int i = 0;
+        for(auto &x : c) {
+            x = func(i++);
+        }
+    }
+
+
 	//
-	// Hashing
+	// hashing
 	//
 	UINT32 hash32(const BYTE* start, UINT length);
 	UINT64 hash64(const BYTE* start, UINT length);
@@ -173,7 +185,7 @@ namespace util
 	}
 
 	//
-	// Casting
+	// casting
 	//
 	inline UINT castBoolToUINT(bool b) {
 		if (b) { return 1; }
