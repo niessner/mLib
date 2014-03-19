@@ -21,7 +21,7 @@ Camera::Camera(const vec3f& eye, const vec3f& worldUp, const vec3f& right, float
 Camera::Camera(const mat4f& m, float fieldOfView, float aspect, float zNear, float zFar) {
 	m_eye = vec3f(m(0, 3), m(1, 3), m(2, 3));
 	m_worldUp = vec3f(m(0, 1), m(1, 1), m(2, 1));
-	m_right = vec3f(m(0, 0), m(1, 0), m(2, 0));
+	m_right = -vec3f(m(0, 0), m(1, 0), m(2, 0));  // NOTE: Negation to compensate for sensor horizontal flip
 	m_look = (m_worldUp ^ m_right).normalize();
 	m_up = (m_right ^ m_look).normalize();
 
@@ -52,7 +52,7 @@ void Camera::lookRight(float theta) {
 }
 
 void Camera::lookUp(float theta) {
-	applyTransform(mat4f::rotation(m_right, theta));
+	applyTransform(mat4f::rotation(m_right, -theta));
 }
 
 void Camera::roll(float theta) {
@@ -99,7 +99,8 @@ mat4f Camera::viewMatrix(const vec3f& eye, const vec3f& look, const vec3f& up, c
 
 	return mat4f(r.x, r.y, r.z, -vec3f::dot(r, eye),
 	             u.x, u.y, u.z, -vec3f::dot(u, eye),
-	             l.x, l.y, l.z, -vec3f::dot(l, eye),
+	             //l.x, l.y, l.z, -vec3f::dot(l, eye),
+				 -l.x, -l.y, -l.z, vec3f::dot(l, eye),  // Negation of look to create right-handed view matrix
 	             0.0f, 0.0f, 0.0f, 1.0f);
 }
 

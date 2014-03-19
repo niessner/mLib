@@ -9,7 +9,7 @@ public:
 	Camera() {}
 	Camera(const vec3f& eye, const vec3f& worldUp, const vec3f& right, float fieldOfView, float aspect, float zNear, float zFar);
 
-	//! Construct camera from extrinsics matrix m (columns are x, y, z vectors and origin of camera in that order)
+	//! Construct camera from extrinsics matrix m (columns are -x, y, z vectors and origin of camera in that order) NOTE: -x due to sensor horizontal flipping
 	Camera(const mat4f& m, const float fieldOfView, const float aspect, const float zNear, const float zFar);
 
 	void updateAspectRatio(float newAspect);
