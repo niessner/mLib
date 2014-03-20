@@ -82,7 +82,7 @@ void ml::D3D11TriMesh::initIB(GraphicsDevice &g)
 	D3D_VALIDATE(device.CreateBuffer( &bufferDesc, &data, &m_indexBuffer ));
 }
 
-void ml::D3D11TriMesh::render(GraphicsDevice &g)
+void ml::D3D11TriMesh::render(GraphicsDevice &g) const
 {
     if (m_mesh.indices().size() == 0) return;
 	auto &context = g.castD3D11().context();
