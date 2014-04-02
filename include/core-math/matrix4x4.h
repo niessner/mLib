@@ -663,30 +663,6 @@ public:
 				return false;
 	}
 
-private:
-
-    //! Access element of Matrix at row x and column y for constant access
-    inline FloatType at(unsigned char x, unsigned char y) const {
-        assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char
-        return matrix2[x][y]; 
-    }
-    //! Access element of Matrix at row x and column y
-    inline FloatType& at(unsigned char x, unsigned char y) {
-        assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char
-        return matrix2[x][y]; 
-    }
-
-	//! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns
-	FloatType det3x3(unsigned int i0 = 0, unsigned int i1 = 1, unsigned int i2 = 2, unsigned int j0 = 0, unsigned int j1 = 1, unsigned int j2 = 2) const {
-		return
-			(matrix2[i0][j0]*matrix2[i1][j1]*matrix2[i2][j2])
-			+ (matrix2[i0][j1]*matrix2[i1][j2]*matrix2[i2][j0])
-			+ (matrix2[i0][j2]*matrix2[i1][j0]*matrix2[i2][j1])
-			- (matrix2[i2][j0]*matrix2[i1][j1]*matrix2[i0][j2])
-			- (matrix2[i2][j1]*matrix2[i1][j2]*matrix2[i0][j0])
-			- (matrix2[i2][j2]*matrix2[i1][j0]*matrix2[i0][j1]);
-	}
-
 	union {
 		//! access matrix using a single array
 		FloatType matrix[16];
@@ -702,6 +678,28 @@ private:
 		};
 	};
 
+  private:
+    //! Access element of Matrix at row x and column y for constant access
+    inline FloatType at(unsigned char x, unsigned char y) const {
+      assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char
+      return matrix2[x][y]; 
+    }
+    //! Access element of Matrix at row x and column y
+    inline FloatType& at(unsigned char x, unsigned char y) {
+      assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char
+      return matrix2[x][y]; 
+    }
+
+    //! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns
+    FloatType det3x3(unsigned int i0 = 0, unsigned int i1 = 1, unsigned int i2 = 2, unsigned int j0 = 0, unsigned int j1 = 1, unsigned int j2 = 2) const {
+      return
+        (matrix2[i0][j0]*matrix2[i1][j1]*matrix2[i2][j2])
+        + (matrix2[i0][j1]*matrix2[i1][j2]*matrix2[i2][j0])
+        + (matrix2[i0][j2]*matrix2[i1][j0]*matrix2[i2][j1])
+        - (matrix2[i2][j0]*matrix2[i1][j1]*matrix2[i0][j2])
+        - (matrix2[i2][j1]*matrix2[i1][j2]*matrix2[i0][j0])
+        - (matrix2[i2][j2]*matrix2[i1][j0]*matrix2[i0][j1]);
+    }
 	////! quaternion is a friend, because it should be able to instance an uninitialized matrix (Matrix4x4 Quaternion::matrix())
 	//friend class Quaternion<FloatType>;
 };
