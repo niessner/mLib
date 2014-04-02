@@ -17,7 +17,7 @@ void ml::D3D11TriMesh::load(GraphicsDevice &g, const TriMesh& mesh)
 
 void ml::D3D11TriMesh::updateAttributeA(GraphicsDevice &g, const std::vector<vec4f> &newValues)
 {
-    for(UINT vertexIndex = 0; vertexIndex < m_mesh.vertices().size(); vertexIndex++)
+    for(UINT vertexIndex = 0; vertexIndex < newValues.size(); vertexIndex++)
     {
         m_mesh.vertices()[vertexIndex].attributeA = newValues[vertexIndex];
     }
