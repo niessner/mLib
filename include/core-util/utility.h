@@ -77,6 +77,12 @@ namespace math
 		else { return C; }
 	}
 
+    template <class T> inline unsigned int maxIndex(T A, T B, T C) {
+        if (A > B && A > C) { return 0; }
+        else if (B > C) { return 1; }
+        else { return 2; }
+    }
+
 	//! returns the clamped value between min and max
 	template<class T>
 	inline T clamp(T x, T pMin, T pMax) {

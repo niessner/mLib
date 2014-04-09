@@ -18,6 +18,10 @@ namespace Convert {
 	inline int toInt(const std::string& s) {
 		return std::stoi(s);
 	}
+    inline int toInt(bool b) {
+        if(b) return 1;
+        return 0;
+    }
 	inline unsigned int toUInt(const std::string& s) {
 		return (unsigned int)toInt(s);
 	}
