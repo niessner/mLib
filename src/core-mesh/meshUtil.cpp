@@ -34,7 +34,7 @@ TriMesh meshutil::createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f>
 
 TriMesh meshutil::createPointCloudTemplate(const TriMesh& templateMesh,
                                            const std::vector<vec3f>& points,
-                                           const std::vector<vec4f>& colors = std::vector<vec4f>())
+                                           const std::vector<vec4f>& colors)
 {
     const UINT64 pointCount = points.size();
     const UINT64 tVertices = templateMesh.vertices().size();

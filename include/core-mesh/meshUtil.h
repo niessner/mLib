@@ -4,7 +4,7 @@
 namespace ml {
 
 namespace meshutil {
-    TriMesh createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<vec3f>& points, const std::vector<vec4f>& colors);
+    TriMesh createPointCloudTemplate(const TriMesh& templateMesh, const std::vector<vec3f>& points, const std::vector<vec4f>& colors = std::vector<vec4f>());
     TriMesh createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f> > &meshes);
 } // namespace meshutil
 

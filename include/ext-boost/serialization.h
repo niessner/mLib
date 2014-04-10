@@ -1,6 +1,11 @@
 #ifndef EXT_BOOST_SERIALIZATION_H_
 #define EXT_BOOST_SERIALIZATION_H_
 
+// Get rid of warning due to ambiguity in pre-XP vs XP and later Windows versions
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501
+#endif
+
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/array.hpp>
