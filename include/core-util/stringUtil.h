@@ -51,6 +51,11 @@ namespace util
 		return result;
 	}
 
+    //TODO TEST
+    inline std::string remove(const std::string& str, const std::string& find) {
+        return replace(str, find, "");
+    }
+
 	inline std::string replace(const std::string& str, char find, char replace) {
 		return util::replace(str, std::string(1, find), std::string(1, replace));
 	}
