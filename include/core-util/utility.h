@@ -261,7 +261,15 @@ namespace util
 		MLIB_ASSERT_STR(!ferror(file) && result == 0, "fseek failed");
 	}
 
-
+    //Usage: auto mappedVector = map(v, [](int a) { return a * 2.0; });
+    template<class mapFunction, class T>
+    auto map(const std::vector<T> &v, mapFunction function) -> std::vector<decltype(function(std::declval<T>()))>
+    {
+        size_t size = v.size();
+        std::vector<decltype(function(std::declval<T>()))> result(1);
+        for(size_t i = 0; i < size; i++) result[i] = function(v[i]);
+        return result;
+    }
 
 	//! uses the <, >  and = operator of the key type
 	template<typename Iterator, typename T>
