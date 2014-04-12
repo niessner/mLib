@@ -266,7 +266,7 @@ namespace util
     auto map(const std::vector<T> &v, mapFunction function) -> std::vector<decltype(function(std::declval<T>()))>
     {
         size_t size = v.size();
-        std::vector<decltype(function(std::declval<T>()))> result(1);
+        std::vector<decltype(function(std::declval<T>()))> result(size);
         for(size_t i = 0; i < size; i++) result[i] = function(v[i]);
         return result;
     }
