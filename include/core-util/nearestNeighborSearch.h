@@ -90,6 +90,11 @@ public:
 		D dist;
 	};
 
+    KNearestNeighborQueue(UINT k, D clearValue)
+    {
+        init(k, clearValue);
+    }
+
 	void init(UINT k, D clearValue)
 	{
 		if(m_queue.size() != k) m_queue.resize(k);
@@ -101,6 +106,11 @@ public:
 		m_queue.assign(m_queue.size(), NeighborEntry(-1, clearValue));
 		m_farthestDist = clearValue;
 	}
+
+    inline void insert(int index, D dist)
+    {
+        insert(NeighborEntry(index, dist));
+    }
 
 	inline void insert(const NeighborEntry &entry)
 	{
