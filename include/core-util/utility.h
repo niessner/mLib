@@ -261,6 +261,12 @@ namespace util
 		MLIB_ASSERT_STR(!ferror(file) && result == 0, "fseek failed");
 	}
 
+    template<class T, class U>
+    void insert(T &vec, const U &iterable)
+    {
+        vec.insert(iterable.begin(), iterable.end());
+    }
+
     //Usage: auto mappedVector = map(v, [](int a) { return a * 2.0; });
     template<class mapFunction, class T>
     auto map(const std::vector<T> &v, mapFunction function) -> std::vector<decltype(function(std::declval<T>()))>
