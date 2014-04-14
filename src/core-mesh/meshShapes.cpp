@@ -97,8 +97,11 @@ TriMesh wireframeBox(float dim, const vec4f& color) {
 TriMesh wireframeBox(const mat4f& xf, const vec4f& color) {
   std::vector<ml::TriMesh> meshes;
   ml::vec3f v[8];  std::memmove(v, cubeVData, sizeof(v[0]) * 8);
+  for (uint i = 0; i < 8; i++) { v[i] = xf * v[i]; }
   for (uint i = 0; i < 12; i++) {
-    meshes.push_back(line(xf * v[cubeEData[i][0]], xf * v[cubeEData[i][1]], color));
+    const ml::vec3f& p0 = v[cubeEData[i][0]];
+    const ml::vec3f& p1 = v[cubeEData[i][1]];
+    meshes.push_back(line(p0, p1, color));
   }
   return meshutil::createUnifiedMesh(meshes);
 }
