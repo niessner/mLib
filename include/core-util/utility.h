@@ -267,6 +267,22 @@ namespace util
         vec.insert(iterable.begin(), iterable.end());
     }
 
+    template<class T, class U>
+    void push_back(T &vec, const U &iterable)
+    {
+        for(const auto &e : iterable)
+            vec.push_back(e);
+    }
+
+    template<class T>
+    bool contains(const std::vector<T> &vec, const T &element)
+    {
+        for(const T &e : vec)
+            if(e == element)
+                return true;
+        return false;
+    }
+
     //Usage: auto mappedVector = map(v, [](int a) { return a * 2.0; });
     template<class mapFunction, class T>
     auto map(const std::vector<T> &v, mapFunction function) -> std::vector<decltype(function(std::declval<T>()))>
