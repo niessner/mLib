@@ -129,7 +129,7 @@ public:
 					}
 				}
 			} else {
-				throw EXCEPTION("Unknown image format");
+				throw MLIB_EXCEPTION("Unknown image format");
 			}
 
 
@@ -142,7 +142,7 @@ public:
 			}
 			FreeImage_Unload(dib);
 		} else {
-			throw EXCEPTION("Unknown file format");
+			throw MLIB_EXCEPTION("Unknown file format");
 		}
 
 		std::cout << __FUNCTION__ << ":" << filename << " (width=" << width << ";height=" << height << "; " << image.getNumChannels() << "; " << image.getNumBytesPerChannel() <<  ")" << std::endl;

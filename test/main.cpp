@@ -34,8 +34,9 @@ int main()
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-	ml::BaseImage<ml::vec3f> test;
-	ml::FreeImageWrapper::loadImage("test.png", test);
+	//ml::ColorImageR8G8B8 test;
+	//ml::FreeImageWrapper::loadImage("test1.png", test);
+	//ml::FreeImageWrapper::saveImage("out1.jpg", test);
 
 	App a;
 	a.go();
