@@ -117,6 +117,7 @@
     <ClInclude Include="..\include\core-multithreading\taskList.h" />
     <ClInclude Include="..\include\core-multithreading\threadPool.h" />
     <ClInclude Include="..\include\core-multithreading\workerThread.h" />
+    <ClInclude Include="..\include\core-util\baseImage.h" />
     <ClInclude Include="..\include\core-util\binaryDataBuffer.h" />
     <ClInclude Include="..\include\core-util\binaryDataCompressor.h" />
     <ClInclude Include="..\include\core-util\binaryDataSerialize.h" />
@@ -133,6 +134,8 @@
     <ClInclude Include="..\include\ext-ANN\nearestNeighborSearchANN.h" />
     <ClInclude Include="..\include\ext-eigen\eigenSolver.h" />
     <ClInclude Include="..\include\ext-eigen\eigenUtility.h" />
+    <ClInclude Include="..\include\ext-freeimage\freeImageWrapper.h" />
+    <ClInclude Include="..\include\ext-freeimage\freeImageWrapperHelper.h" />
     <ClInclude Include="..\include\ext-zlib\ZLibWrapper.h" />
     <ClInclude Include="..\include\mLibANN.h" />
     <ClInclude Include="..\include\mLibCore.h" />

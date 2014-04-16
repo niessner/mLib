@@ -26,13 +26,17 @@ void App::go()
 	ml::Console::log("All tests completed");
 	std::cin.get();
 }
-
+  
 int main()
 {
 	// Enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
+
+	ml::BaseImage<ml::vec3f> test;
+	ml::FreeImageWrapper::loadImage("test.png", test);
+
 	App a;
 	a.go();
 

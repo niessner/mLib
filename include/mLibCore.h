@@ -54,6 +54,7 @@
 #include "core-util/pipe.h"
 #include "core-util/UIConnection.h"
 #include "core-util/sparseGrid3d.h"
+#include "core-util/baseImage.h"
 
 //
 // core-multithreading headers

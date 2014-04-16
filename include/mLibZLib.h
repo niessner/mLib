@@ -1,10 +1,10 @@
 
 //
-// external ANN headers
+// external ZLib headers
 //
 #include "zlib/zlib.h"
 
 //
-// ext-ANN headers
+// ext-ZLib headers
 //
 #include "ext-zlib/ZLibWrapper.h"

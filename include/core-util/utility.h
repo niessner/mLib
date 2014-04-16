@@ -85,7 +85,7 @@ namespace math
 
 	//! returns the clamped value between min and max
 	template<class T>
-	inline T clamp(T x, T pMin, T pMax) {
+	inline T clamp(T x, T pMin = (T)0.0, T pMax = (T)0.0) {
 		if (x < pMin) { return pMin; }
 		if (x > pMax) { return pMax; }
 		return x;

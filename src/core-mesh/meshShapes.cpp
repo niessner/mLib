@@ -21,24 +21,24 @@ int cubeEData[12][2] = {
 };
 
 TriMesh box(float xDim, float yDim, float zDim, const vec4f& color) {
-  std::vector<TriMesh::TriMeshVertex> V(8);
-  std::vector<UINT> I(12 * 3);
+  std::vector<TriMesh::TriMeshVertex> vv(8);
+  std::vector<UINT> vi(12 * 3);
 
   // Vertices
   for (int i = 0; i < 8; i++) {
-    V[i].position = vec3f(cubeVData[i][0], cubeVData[i][1], cubeVData[i][2]);
-    V[i].normal = vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): write and call generateNormals() function
-    V[i].attributeA = color;
+    vv[i].position = vec3f(cubeVData[i][0], cubeVData[i][1], cubeVData[i][2]);
+    vv[i].normal = vec3f(1.0f, 0.0f, 0.0f);  // TODO(ms): write and call generateNormals() function
+    vv[i].attributeA = color;
   }
 
   // Triangles
   for (int i = 0; i < 12; i++) {
-    I[i * 3 + 0] = cubeIData[i][0];
-    I[i * 3 + 1] = cubeIData[i][1];
-    I[i * 3 + 2] = cubeIData[i][2];
+    vi[i * 3 + 0] = cubeIData[i][0];
+    vi[i * 3 + 1] = cubeIData[i][1];
+    vi[i * 3 + 2] = cubeIData[i][2];
   }
 
-  TriMesh mesh(V, I);
+  TriMesh mesh(vv, vi);
   mesh.stretch(vec3f(0.5f * xDim, 0.5f * yDim, 0.5f * zDim));
 
   return mesh;

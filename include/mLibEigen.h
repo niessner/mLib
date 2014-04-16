@@ -3,7 +3,7 @@
 #ifndef _MLIB_EIGEN_H_
 #define _MLIB_EIGEN_H_
 
-#include "Eigen3_2/Sparse"
+#include "Eigen/Sparse"
 
 //
 // ext-eigen headers

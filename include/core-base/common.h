@@ -142,6 +142,9 @@ void assertFunctionMLIB(bool statement, const std::string &description);
 #define D3D_VALIDATE(statement) { HRESULT hr = statement;  if(FAILED(hr)) { MLIB_ERROR(#statement); } }
 #endif
 
+}  // namespace ml
+
+
 #ifndef UINT
 typedef unsigned int UINT;
 #endif
@@ -152,25 +155,25 @@ typedef unsigned char UCHAR;
 
 #ifndef INT64
 #ifdef WIN32
-	typedef __int64 INT64;
+typedef __int64 INT64;
 #else
-	typedef int64_t INT64;
+typedef int64_t INT64;
 #endif
 #endif
 
 #ifndef UINT32
 #ifdef WIN32
-	typedef unsigned __int32 UINT32;
+typedef unsigned __int32 UINT32;
 #else
-	typedef uint32_t UINT32;
+typedef uint32_t UINT32;
 #endif
 #endif
 
 #ifndef UINT64
 #ifdef WIN32
-	typedef unsigned __int64 UINT64;
+typedef unsigned __int64 UINT64;
 #else
-	typedef uint64_t UINT64;
+typedef uint64_t UINT64;
 #endif
 #endif
 
@@ -189,7 +192,5 @@ typedef unsigned char BYTE;
 #ifndef USHORT
 typedef unsigned short USHORT;
 #endif
-
-}  // namespace ml
 
 #endif  // CORE_BASE_COMMON_H_

@@ -35,14 +35,14 @@ inline ml::BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(
 	data.clear();
 	s >> data.m_Size;
 	data.m_Data = new int[data.m_Size];
-	s.readData((ml::BYTE*)data.m_Data, sizeof(int)*data.m_Size);
+	s.readData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
 	return s;
 }
 //! write to binary stream overload
 template<class BinaryDataBuffer, class BinaryDataCompressor>
 inline ml::BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(ml::BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const TestBinaryStreamTestData& data) {
 	s << data.m_Size;
-	s.writeData((ml::BYTE*)data.m_Data, sizeof(int)*data.m_Size);
+	s.writeData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
 	return s;
 }
 

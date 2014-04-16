@@ -9,3 +9,4 @@
 #include "mLibEigen.h"
 #include "mLibLodePNG.h"
 #include "mLibZLib.h"
+#include "mLibFreeImage.h"

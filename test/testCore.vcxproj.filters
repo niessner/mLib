@@ -31,6 +31,9 @@
     <Filter Include="mLibHeader\ext-zlib">
       <UniqueIdentifier>{f41f6b9b-583f-4a7e-9d1f-c5adb408ec03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\ext-freeimage">
+      <UniqueIdentifier>{1d841e69-4bae-4331-a2d9-9c055afc13e7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -182,6 +185,15 @@
     </ClInclude>
     <ClInclude Include="..\include\core-util\pipe.h">
       <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\baseImage.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-freeimage\freeImageWrapper.h">
+      <Filter>mLibHeader\ext-freeimage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-freeimage\freeImageWrapperHelper.h">
+      <Filter>mLibHeader\ext-freeimage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

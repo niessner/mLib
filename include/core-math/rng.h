@@ -62,6 +62,12 @@
 #include <climits>
 #include <vector>
 
+//TODO rewrite to use UINT INT etc. (these typedefs are redundant)
+typedef signed int sint;
+typedef unsigned int uint;
+typedef signed long slong;
+typedef unsigned long ulong;
+
 namespace ml {
 
 using std::vector;
@@ -77,10 +83,7 @@ static const double AD_B =  3.3468106480569850;
 static const double AD_H =  0.0026106723602095;
 static const double AD_D =  0.0857864376269050;
 
-typedef signed int sint;
-typedef unsigned int uint;
-typedef signed long slong;
-typedef unsigned long ulong;
+
 #if ULONG_MAX == 4294967295ul
 inline ulong RNG_ULONG32(slong x) { return (ulong(x)); }
 inline ulong RNG_ULONG32(ulong x) { return (ulong(x)); }

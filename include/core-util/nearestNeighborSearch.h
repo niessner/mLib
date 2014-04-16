@@ -78,6 +78,9 @@ template<class D>
 class KNearestNeighborQueue
 {
 public:
+	KNearestNeighborQueue() {}
+	~KNearestNeighborQueue() {}
+
 	struct NeighborEntry
 	{
 		NeighborEntry() {}
@@ -147,6 +150,9 @@ template<class D>
 class NearestNeighborSearchBruteForce : public NearestNeighborSearch<D>
 {
 public:
+	NearestNeighborSearchBruteForce() {}
+	~NearestNeighborSearchBruteForce() {}
+
 	void initInternal(const std::vector< const D* > &points, UINT dimension, UINT maxK)
 	{
 		m_dimension = dimension;
