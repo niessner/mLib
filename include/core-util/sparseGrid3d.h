@@ -72,6 +72,17 @@ public:
 	template<class U>
 #endif
 	friend std::ostream& operator<< <> (std::ostream& s, const SparseGrid3D<T>& g);
+
+
+#ifdef _WIN32
+	template<class U, class V, class W>
+#endif
+	friend BinaryDataStream<U,V>& operator>> <>(BinaryDataStream<U,V>& s, SparseGrid3D<T>& g);
+#ifdef _WIN32
+	template<class U, class V, class W>
+#endif
+	friend BinaryDataStream<U,V>& operator<< <>(BinaryDataStream<U,V>& s, const SparseGrid3D<T>& g);
+
 private:
 	std::unordered_map<vec3i, T, std::hash<vec3i>> m_Data;
 };
@@ -83,6 +94,37 @@ inline std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g) {
 	}
 	return s;
 }
+
+
+//! read from binary stream overload
+template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, SparseGrid3D<T>& g) {
+	g.clear();
+	size_t size;	float maxLoadFactor;
+	s >> size >> maxLoadFactor;
+	g.m_Data.max_load_factor(maxLoadFactor);
+	for (size_t i = 0; i < size; i++) {
+		vec3i first;	T second;
+		s >> first >> second;
+		g[first] = second;
+	}
+	//s.readData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
+	return s;
+}
+//! write to binary stream overload
+template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const SparseGrid3D<T>& g) {
+	s << g.m_Data.size();
+	s << g.m_Data.max_load_factor();
+	for (auto iter = g.begin(); iter != g.end(); iter++) {
+		s << iter->first << iter->second;
+	}
+	//s.writeData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
+	return s;
+}
+
+
+
 
 }  // namespace ml
 

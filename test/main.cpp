@@ -38,6 +38,16 @@ int main()
 	//ml::FreeImageWrapper::loadImage("test1.png", test);
 	//ml::FreeImageWrapper::saveImage("out1.jpg", test);
 
+	ml::BinaryDataStreamFile s("test.out", true);
+	ml::SparseGrid3D<float> signedDistanceField, in;
+	for (unsigned int i = 0; i < 5; i++) {
+		ml::vec3i c(i, 2*i, 3*i);
+		signedDistanceField(c) = (float)i+5.0f; 
+	}
+	s << signedDistanceField;
+	s >> in;
+	std::cout << signedDistanceField << std::endl << std::endl << in << std::endl;
+
 	App a;
 	a.go();
 
