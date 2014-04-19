@@ -72,11 +72,11 @@ void AppTest::keyDown(ml::ApplicationData &app, UINT key)
 
 void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 {
-    const float distance = 0.2f;
+    const float distance = 0.1f;
     const float theta = 5.0f;
 
-    if(key == KEY_W) m_camera.move(-distance);
-    if(key == KEY_S) m_camera.move(distance);
+    if(key == KEY_S) m_camera.move(-distance);
+    if(key == KEY_W) m_camera.move(distance);
     if(key == KEY_A) m_camera.strafe(-distance);
     if(key == KEY_D) m_camera.strafe(distance);
 	if(key == KEY_E) m_camera.jump(distance);
@@ -114,7 +114,7 @@ void AppTest::mouseMove(ml::ApplicationData &app)
 
     if(app.input.mouse.buttons[ml::MouseButtonLeft])
     {
-        m_camera.lookRight(theta * -posDelta.x);
+        m_camera.lookRight(theta * posDelta.x);
         m_camera.lookUp(theta * -posDelta.y);
     }
 

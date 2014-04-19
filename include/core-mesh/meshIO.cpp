@@ -8,7 +8,7 @@ template <class FloatType>
 void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<FloatType>& mesh )
 {
 	mesh.clear();
-	std::ifstream file(filename);
+	std::ifstream file(filename, std::ios::binary);
 	if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file " + filename);			
 
 	// read header
@@ -16,9 +16,6 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 
 	std::string line;
 	std::getline(file, line);
-
-	std::string t = std::string("end_header");
-	//int i1 = 0;
 	while (line.find("end_header") == std::string::npos) {
 		PlyHeaderLine(line, header);
 		std::getline(file, line);
@@ -29,33 +26,90 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 
 	mesh.m_Vertices.resize(header.m_NumVertices);
 	mesh.m_FaceIndicesVertices.resize(header.m_NumFaces);
+	if (header.m_bHasNormals) mesh.m_Normals.resize(header.m_NumVertices);
+	if (header.m_bHasColors) mesh.m_Colors.resize(header.m_NumVertices);
 
-	if(header.m_binary)
+	if(header.m_bBinary)
 	{
-		unsigned int size = 3*4+3*4+3+11*4;
+		//unsigned int size = 3*4+3*4+3+11*4;
+		unsigned int size = 0;
+		for (unsigned int i = 0; i < header.m_Properties.size(); i++) {
+			size += header.m_Properties[i].byteSize;
+		}
+		//size = 3*4+3*4+3+11*4;
 		char* data = new char[size*header.m_NumVertices];
-
 		file.read(data, size*header.m_NumVertices);
 		for (unsigned int i = 0; i < header.m_NumVertices; i++) {
+			unsigned int byteOffset = 0;
+			for (unsigned int j = 0; j < header.m_Properties.size(); j++) {
+				if (header.m_Properties[j].name == "x") {
+					mesh.m_Vertices[i].x = ((float*)&data[i*size + byteOffset])[0];
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "y") {
+					mesh.m_Vertices[i].y = ((float*)&data[i*size + byteOffset])[0];
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "z") {
+					mesh.m_Vertices[i].z = ((float*)&data[i*size + byteOffset])[0];
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "nx") {
+					mesh.m_Normals[i].x = ((float*)&data[i*size + byteOffset])[0];
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "ny") {
+					mesh.m_Normals[i].y = ((float*)&data[i*size + byteOffset])[0];
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "nz") {
+					mesh.m_Normals[i].z = ((float*)&data[i*size + byteOffset])[0];
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "red") {
+					mesh.m_Colors[i].x = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].x/=255.0f;
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "green") {
+					mesh.m_Colors[i].y = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].y/=255.0f;
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "blue") {
+					mesh.m_Colors[i].z = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].z/=255.0f;
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+				else if (header.m_Properties[j].name == "alpha") {
+					//mesh.m_Colors[i].z = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].z/=255.0f;
+					byteOffset += header.m_Properties[j].byteSize;
+				}
+			}
+			assert(byteOffset == size);
 
-			mesh.m_Vertices[i].x = ((float*)&data[i*size])[0];
-			mesh.m_Vertices[i].y = ((float*)&data[i*size])[1];
-			mesh.m_Vertices[i].z = ((float*)&data[i*size])[2];
-		}
+		}	
+
 		delete [] data;
 
-		size = 1+3*4;
+		size = 1+3*4;	//tyiically 1 uchar for numVertices per triangle, 3 * int for indeices
 		data = new char[size*header.m_NumFaces];
 		file.read(data, size*header.m_NumFaces);
-		for (unsigned int i = 0; i < header.m_NumFaces; i++)
-		{	
+		for (unsigned int i = 0; i < header.m_NumFaces; i++) {	
 			mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[0]);
 			mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[1]);
 			mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[2]);
 		}
+
+		//if (mesh.m_Colors.size() == 0) {
+		//	mesh.m_Colors.resize(header.m_NumVertices);
+		//	for (size_t i = 0; i < mesh.m_Colors.size(); i++) {
+		//		mesh.m_Colors[i] = vec3f(0.5f, 0.5f, 0.5f);
+		//	}
+		//}
+		delete [] data;
+
 	}
 	else
 	{
+		//TODO fis this ;)
 		for (unsigned int i = 0; i < header.m_NumVertices; i++) {
 			std::getline(file, line);
 			std::stringstream ss(line);
@@ -73,6 +127,14 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 				mesh.m_FaceIndicesVertices[i].push_back(idx);
 			}
 		}
+
+		if (mesh.m_Colors.size() == 0) {
+			mesh.m_Colors.resize(header.m_NumVertices);
+			for (size_t i = 0; i < mesh.m_Colors.size(); i++) {
+				mesh.m_Colors[i] = vec3f(0.5f, 0.5f, 0.5f);
+			}
+		}
+
 	}
 }
 

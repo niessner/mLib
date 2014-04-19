@@ -9,8 +9,8 @@ class AppTest : public ml::ApplicationCallback
 public:
 	void init(ml::ApplicationData &app);
 	void render(ml::ApplicationData &app);
-	void keyDown(ml::ApplicationData &app, ml::UINT key);
-	void keyPressed(ml::ApplicationData &app, ml::UINT key);
+	void keyDown(ml::ApplicationData &app, UINT key);
+	void keyPressed(ml::ApplicationData &app, UINT key);
 	void mouseDown(ml::ApplicationData &app, ml::MouseButtonType button);
 	void mouseMove(ml::ApplicationData &app);
 	void mouseWheel(ml::ApplicationData &app, int wheelDelta);
