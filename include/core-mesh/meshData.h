@@ -33,7 +33,7 @@ struct MeshData {
 		m_FaceIndicesTextureCoords.clear();
 	}
 
-	bool isConsistent() {
+	bool isConsistent() const {
 		bool consistent = true;
 		if (m_FaceIndicesNormals.size() > 0			&& m_FaceIndicesVertices.size() != m_FaceIndicesNormals.size())			consistent = false;
 		if (m_FaceIndicesTextureCoords.size() > 0	&& m_FaceIndicesVertices.size() != m_FaceIndicesTextureCoords.size())	consistent = false;
@@ -50,7 +50,7 @@ struct MeshData {
 		}
 	}
 
-	BoundingBox3d<FloatType> getBoundingBox() {
+	BoundingBox3d<FloatType> getBoundingBox() const {
 		BoundingBox3d<FloatType> bb;
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			bb.include(m_Vertices[i]);

@@ -20,11 +20,11 @@ public:
 		std::string extension = util::getFileExtension(filename);
 
 		if (extension == "off") {
-			loadFromFileOFF(filename, mesh);
+			loadFromOFF(filename, mesh);
 		} else if (extension == "ply") {
 			loadFromPLY(filename, mesh);
 		} else if (extension == "obj") {
-			loadFromFileOBJ(filename, mesh);
+			loadFromOBJ(filename, mesh);
 		} else 	{
 			throw MLIB_EXCEPTION("unknown file format: " + filename);
 		}
@@ -43,22 +43,15 @@ public:
 		std::string extension = util::getFileExtension(filename);
 
 		if (extension == "off") {
-
+			writeToOFF(filename, mesh);
 		} else if (extension == "ply") {
-
+			writeToPLY(filename, mesh);
 		} else if (extension == "obj") {
-
+			writeToOBJ(filename, mesh);
 		} else {
 			throw MLIB_EXCEPTION("unknown file format: " + filename);
 		}
 	}
-
-
-
-	/************************************************************************/
-	/* Write Functions													    */
-	/************************************************************************/
-
 
 
 	/************************************************************************/
@@ -67,13 +60,22 @@ public:
 
 	static void loadFromPLY(const std::string& filename, MeshData<FloatType>& mesh);
 
-	static void loadFromFileOFF(const std::string& filename, MeshData<FloatType>& mesh);
+	static void loadFromOFF(const std::string& filename, MeshData<FloatType>& mesh);
 
-	static void loadFromFileOBJ(const std::string& filename, MeshData<FloatType>& mesh);
+	static void loadFromOBJ(const std::string& filename, MeshData<FloatType>& mesh);
 
+
+	/************************************************************************/
+	/* Write Functions													    */
+	/************************************************************************/
+
+	static void writeToPLY(const std::string& filename, const MeshData<FloatType>& mesh);
+
+	static void writeToOFF(const std::string& filename, const MeshData<FloatType>& mesh);
+
+	static void writeToOBJ(const std::string& filename, const MeshData<FloatType>& mesh);
 
 private:
-
 
 #define OBJ_LINE_BUF_SIZE 256
 	static void skipLine(char * buf, int size, FILE * fp)

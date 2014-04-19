@@ -89,7 +89,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 
 		delete [] data;
 
-		size = 1+3*4;	//tyiically 1 uchar for numVertices per triangle, 3 * int for indeices
+		size = 1+3*4;	//typically 1 uchar for numVertices per triangle, 3 * int for indeices
 		data = new char[size*header.m_NumFaces];
 		file.read(data, size*header.m_NumFaces);
 		for (unsigned int i = 0; i < header.m_NumFaces; i++) {	
@@ -109,11 +109,14 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	}
 	else
 	{
-		//TODO fis this ;)
 		for (unsigned int i = 0; i < header.m_NumVertices; i++) {
 			std::getline(file, line);
 			std::stringstream ss(line);
 			ss >> mesh.m_Vertices[i].x >> mesh.m_Vertices[i].y >> mesh.m_Vertices[i].z;
+			if (header.m_bHasColors) {
+				ss >> mesh.m_Colors[i].x >> mesh.m_Colors[i].y >> mesh.m_Colors[i].z;
+				mesh.m_Colors[i] /= (FloatType)255.0;
+			}
 		}
 
 		for (unsigned int i = 0; i < header.m_NumFaces; i++) {
@@ -128,18 +131,18 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 			}
 		}
 
-		if (mesh.m_Colors.size() == 0) {
-			mesh.m_Colors.resize(header.m_NumVertices);
-			for (size_t i = 0; i < mesh.m_Colors.size(); i++) {
-				mesh.m_Colors[i] = vec3f(0.5f, 0.5f, 0.5f);
-			}
-		}
+		//if (mesh.m_Colors.size() == 0) {
+		//	mesh.m_Colors.resize(header.m_NumVertices);
+		//	for (size_t i = 0; i < mesh.m_Colors.size(); i++) {
+		//		mesh.m_Colors[i] = vec3f(0.5f, 0.5f, 0.5f);
+		//	}
+		//}
 
 	}
 }
 
 template <class FloatType>
-void MeshIO<FloatType>::loadFromFileOFF( const std::string& filename, MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<FloatType>& mesh )
 {
 	mesh.clear();
 
@@ -197,7 +200,7 @@ void MeshIO<FloatType>::loadFromFileOFF( const std::string& filename, MeshData<F
 }
 
 template <class FloatType>
-void MeshIO<FloatType>::loadFromFileOBJ( const std::string& filename, MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<FloatType>& mesh )
 {
 	mesh.clear();
 
@@ -424,6 +427,145 @@ void MeshIO<FloatType>::loadFromFileOBJ( const std::string& filename, MeshData<F
 	}
 
 	fclose(fp);
+}
+
+
+
+
+template <class FloatType>
+void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<FloatType>& mesh )
+{
+	if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float not for double");
+
+	std::ofstream file(filename, std::ios::binary);
+	if (!file.is_open()) throw MLIB_EXCEPTION("Could not open file for writing " + filename);
+	file << "ply\n";
+	file << "format binary_little_endian 1.0\n";
+	file << "comment MLIB generated\n";
+	file << "element vertex " << mesh.m_Vertices.size() << "\n";
+	file << "property float x\n";
+	file << "property float y\n";
+	file << "property float z\n";
+	if (mesh.m_Colors.size() > 0) {
+		file << "property uchar red\n";
+		file << "property uchar green\n";
+		file << "property uchar blue\n";
+		file << "property uchar alpha\n";
+	}
+	file << "element face " << mesh.m_FaceIndicesVertices.size() << "\n";
+	file << "property list uchar int vertex_indices\n";
+	file << "end_header\n";
+
+	if (mesh.m_Colors.size() > 0) {
+		for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
+			file.write((const char*)&mesh.m_Vertices[i], sizeof(float)*3);
+			vec4uc c(mesh.m_Colors[i]*255);	c.w = 255;
+			file.write((const char*)&c, sizeof(unsigned char)*4);
+		}
+	} else {
+		file.write((const char*)&mesh.m_Vertices[0], sizeof(float)*3*mesh.m_Vertices.size());
+	}
+	for (size_t i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
+		unsigned char numFaceIndices = (unsigned char)mesh.m_FaceIndicesVertices[i].size();
+		file.write((const char*)&numFaceIndices, sizeof(unsigned char));
+		file.write((const char*)&mesh.m_FaceIndicesVertices[i][0], numFaceIndices*sizeof(unsigned int));
+	}
+	file.close();
+}
+
+
+template <class FloatType>
+void MeshIO<FloatType>::writeToOFF( const std::string& filename, const MeshData<FloatType>& mesh )
+{
+	std::ofstream file(filename);
+	if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file for writing " + filename);		
+
+	// first line should say 'COFF'
+	file << "COFF\n";
+
+	// write header (verts, faces, edges)
+	file << mesh.m_Vertices.size() << " " << mesh.m_FaceIndicesVertices.size() << " " << 0 << "\n";
+
+	// write points
+	for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
+		file << mesh.m_Vertices[i].x << " " << mesh.m_Vertices[i].y << " " << mesh.m_Vertices[i].z;
+		if (mesh.m_Colors.size() > 0) {
+			file << " " << 
+				(unsigned int)(mesh.m_Colors[i].x*255) << " " << 
+				(unsigned int)(mesh.m_Colors[i].y*255) << " " << 
+				(unsigned int)(mesh.m_Colors[i].z*255) << " " << 
+				(unsigned int)255;
+		}
+		file << "\n";
+	}
+
+	// write faces
+	for (size_t i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
+		file << mesh.m_FaceIndicesVertices[i].size();
+		for (size_t j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
+			file << " " << mesh.m_FaceIndicesVertices[i][j];
+		}
+		file << "\n";
+	}
+
+	file.close();
+}
+
+
+template <class FloatType>
+void MeshIO<FloatType>::writeToOBJ( const std::string& filename, const MeshData<FloatType>& mesh )
+{
+	std::ofstream file(filename);
+	if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file for writing " + filename);
+
+	file << "####\n";
+	file << "#\n";
+	file << "# OBJ file Generated by MLIB\n";
+	file << "#\n";
+	file << "####\n";
+	file << "# Object " << filename << "\n";
+	file << "#\n";
+	file << "# Vertices: " << mesh.m_Vertices.size() << "\n";
+	file << "# Faces: " << mesh.m_FaceIndicesVertices.size() << "\n";
+	file << "#\n";
+	file << "####\n";
+
+	for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
+		file << "v ";
+		file << mesh.m_Vertices[i].x << " " << mesh.m_Vertices[i].y << " " << mesh.m_Vertices[i].z;
+		if (mesh.m_Colors.size() > 0) {
+			file << " " << mesh.m_Colors[i].x << " " << mesh.m_Colors[i].y << " " << mesh.m_Colors[i].z;
+		}
+		file << "\n";
+	}
+	for (size_t i = 0; i < mesh.m_Normals.size(); i++) {
+		file << "vn ";
+		file << mesh.m_Normals[i].x << " " << mesh.m_Normals[i].y << " " << mesh.m_Normals[i].z << "\n";
+	}
+	for (size_t i = 0; i < mesh.m_TextureCoords.size(); i++) {
+		file << "vt ";
+		file << mesh.m_TextureCoords[i].x << " " << mesh.m_TextureCoords[i].y << "\n";
+	}
+	for (size_t i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
+		file << "f ";
+		for (size_t j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
+			file << mesh.m_FaceIndicesVertices[i][j]+1;
+			if (mesh.m_FaceIndicesTextureCoords.size() > 0 || mesh.m_FaceIndicesNormals.size() > 0) {
+				file << "//";
+				if (mesh.m_FaceIndicesTextureCoords.size() > 0) {
+					file << mesh.m_FaceIndicesTextureCoords[i][j]+1;
+				}
+				file << "//";
+				if (mesh.m_FaceIndicesNormals.size() > 0) {
+					file << mesh.m_FaceIndicesNormals[i][j]+1;
+				}
+			}
+			file << " ";
+		}
+		file << "\n";
+	}
+
+	file.close();
 }
 
 }  // namespace ml
