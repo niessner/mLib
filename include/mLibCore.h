@@ -78,7 +78,7 @@
 #include "core-mesh/meshData.h"
 #include "core-mesh/meshIO.h"
 
-#include "core-mesh/triMesh.h"
+#include "core-mesh/triMeshOld.h"
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"
 

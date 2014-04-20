@@ -9,7 +9,7 @@ namespace OpenMeshLoader {
 
 typedef OpenMesh::TriMesh_ArrayKernelT<OpenMesh::DefaultTraits> Mesh;
 
-static TriMesh load(const std::string& filename) {
+static TriMeshOld load(const std::string& filename) {
 	MLIB_ASSERT_STR(util::fileExists(filename), "File not found: " + filename + "\nWorking directory: " + util::workingDirectory());
 
 	namespace io = OpenMesh::IO;
@@ -25,10 +25,10 @@ static TriMesh load(const std::string& filename) {
 
 	const size_t nVertices = mesh.n_vertices();
 	const size_t nIndices = mesh.n_faces() * 3;  // Should always be tri meshes
-	std::vector<TriMesh::TriMeshVertex> vertices(nVertices);
+	std::vector<TriMeshOld::TriMeshOldVertex> vertices(nVertices);
 	std::vector<UINT> indices(nIndices);
 
-	TriMesh::TriMeshVertex mv;
+	TriMeshOld::TriMeshOldVertex mv;
 	UINT currVertIdx = 0;
 	for (Mesh::VertexIter vIt = mesh.vertices_begin(); vIt != mesh.vertices_end(); ++vIt, currVertIdx++) {
 		const Mesh::Point& p = mesh.point(*vIt);                 // p is vec3f
@@ -50,7 +50,7 @@ static TriMesh load(const std::string& filename) {
 	MLIB_ASSERT_STR(currVertIdx == nVertices, "nVertices != vertices parsed");
 	MLIB_ASSERT_STR(currIndexIdx == nIndices, "nIndices != indices parsed");
 
-	return TriMesh(vertices, indices);
+	return TriMeshOld(vertices, indices);
 }
 
 }  // namespace OpenMeshLoader

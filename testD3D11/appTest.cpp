@@ -16,15 +16,17 @@ void AppTest::init(ml::ApplicationData &app)
 	ml::MeshIOf::writeToFile("outtest.off", meshData);
 	ml::MeshIOf::writeToFile("outtest.obj", meshData);
 
-	const ml::TriMesh triMesh(meshData);
-	m_mesh.load(app.graphics, triMesh);
+	//const ml::TriMesh triMesh(meshData);
+	//m_mesh.load(app.graphics, triMesh);
+	m_mesh.load(app.graphics, meshData);
+	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));
+	//m_mesh.updateAttributeA(app.graphics, color);
 
-   // Vector<vec3f> points(5000, [](UINT64 i) {return vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);});
 	auto lambdaPoints = [=] (ml::vec3f& v) { v = ml::vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX);};
 	std::vector<ml::vec3f> points(5000);
-	for_each(points.begin(), points.end(), lambdaPoints);
+	std::for_each(points.begin(), points.end(), lambdaPoints);
 
-    m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::shapes::box(0.01f), points));
+    //m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::shapes::box(0.01f), points));
 
     m_vsColor.load(app.graphics, "shaders/test.shader");
     m_psColor.load(app.graphics, "shaders/test.shader");
@@ -101,7 +103,7 @@ void AppTest::mouseDown(ml::ApplicationData &app, ml::MouseButtonType button)
 void AppTest::mouseWheel(ml::ApplicationData &app, int wheelDelta)
 {
     const float distance = 0.002f;
-    m_camera.move(distance * -wheelDelta);
+    m_camera.move(distance * wheelDelta);
 }
 
 void AppTest::mouseMove(ml::ApplicationData &app)

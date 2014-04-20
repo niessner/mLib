@@ -20,8 +20,8 @@ int cubeEData[12][2] = {
   {0, 4}, {1, 5}, {2, 6}, {3, 7}
 };
 
-TriMesh box(float xDim, float yDim, float zDim, const vec4f& color) {
-  std::vector<TriMesh::TriMeshVertex> vv(8);
+TriMeshOld box(float xDim, float yDim, float zDim, const vec4f& color) {
+  std::vector<TriMeshOld::TriMeshOldVertex> vv(8);
   std::vector<UINT> vi(12 * 3);
 
   // Vertices
@@ -38,14 +38,14 @@ TriMesh box(float xDim, float yDim, float zDim, const vec4f& color) {
     vi[i * 3 + 2] = cubeIData[i][2];
   }
 
-  TriMesh mesh(vv, vi);
+  TriMeshOld mesh(vv, vi);
   mesh.stretch(vec3f(0.5f * xDim, 0.5f * yDim, 0.5f * zDim));
 
   return mesh;
 }
 
-TriMesh cylinder(float radius, float height, UINT stacks, UINT slices, const vec4f& color) {
-  std::vector<TriMesh::TriMeshVertex> vertices((stacks + 1) * slices);
+TriMeshOld cylinder(float radius, float height, UINT stacks, UINT slices, const vec4f& color) {
+  std::vector<TriMeshOld::TriMeshOldVertex> vertices((stacks + 1) * slices);
   std::vector<UINT> indices(stacks * slices * 6);
 
   UINT vIndex = 0;
@@ -74,19 +74,19 @@ TriMesh cylinder(float radius, float height, UINT stacks, UINT slices, const vec
     }
   }
 
-  return TriMesh(vertices, indices);
+  return TriMeshOld(vertices, indices);
 }
 
-TriMesh cylinder(const vec3f& p0, const vec3f& p1, float radius, UINT stacks, UINT slices, const vec4f& color) {
+TriMeshOld cylinder(const vec3f& p0, const vec3f& p1, float radius, UINT stacks, UINT slices, const vec4f& color) {
   float height = (p1 - p0).length();
 
-  TriMesh result = shapes::cylinder(radius, height, stacks, slices, color);
+  TriMeshOld result = shapes::cylinder(radius, height, stacks, slices, color);
   result.applyTransform(mat4f::translation(p0) * mat4f::face(vec3f::eZ, p1 - p0));
   return result;
 }
 
-TriMesh wireframeBox(float dim, const vec4f& color) {
-  std::vector<ml::TriMesh> meshes;
+TriMeshOld wireframeBox(float dim, const vec4f& color) {
+  std::vector<ml::TriMeshOld> meshes;
   ml::vec3f v[8];  std::memmove(v, cubeVData, sizeof(v[0]) * 8);
   for (uint i = 0; i < 12; i++) {
     meshes.push_back(line(dim * v[cubeEData[i][0]], dim * v[cubeEData[i][1]], color));
@@ -94,11 +94,11 @@ TriMesh wireframeBox(float dim, const vec4f& color) {
   return meshutil::createUnifiedMesh(meshes);
 }
 
-TriMesh wireframeBox(const mat4f& xf, const vec4f& color) {
-  std::vector<ml::TriMesh> meshes;
+TriMeshOld wireframeBox(const mat4f& xf, const vec4f& color) {
+  std::vector<ml::TriMeshOld> meshes;
   ml::vec3f v[8];  std::memmove(v, cubeVData, sizeof(v[0]) * 8);
   for (uint i = 0; i < 8; i++) { v[i] = xf * v[i]; }
-  for (uint i = 0; i < 12; i++) {
+  for (unsigned int i = 0; i < 12; i++) {
     const ml::vec3f& p0 = v[cubeEData[i][0]];
     const ml::vec3f& p1 = v[cubeEData[i][1]];
     meshes.push_back(line(p0, p1, color));

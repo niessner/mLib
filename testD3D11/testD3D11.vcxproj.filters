@@ -150,9 +150,6 @@
     <ClInclude Include="..\include\core-math\matrix2x2.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-mesh\triMesh.h">
-      <Filter>mLibHeader\core-mesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\ext-openmesh\loader.h">
       <Filter>mLibHeader\ext-openmesh</Filter>
     </ClInclude>
@@ -175,6 +172,9 @@
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\include\core-mesh\meshData.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshOld.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
   </ItemGroup>

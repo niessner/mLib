@@ -3,6 +3,7 @@
 
 namespace ml {
 
+//! raw mesh data could be also a point cloud
 template <class FloatType>
 struct MeshData {
 	MeshData() {}

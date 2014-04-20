@@ -22,26 +22,53 @@ public:
 		m_vertexBuffer = NULL;
 		m_indexBuffer = NULL;
 	}
+	template<class T>
+	D3D11TriMesh(GraphicsDevice &g, const MeshData<T>& meshData) {
+		m_layout = NULL;
+		m_vertexBuffer = NULL;
+		m_indexBuffer = NULL;
+		load(g, meshData);
+	}
 	~D3D11TriMesh()
 	{
 		SAFE_RELEASE(m_layout);
 		SAFE_RELEASE(m_vertexBuffer);
 		SAFE_RELEASE(m_indexBuffer);
 	}
-	void load(GraphicsDevice &g, const TriMesh& mesh);
-	void load(GraphicsDevice &g, TriMesh&& mesh);
+	//void load(GraphicsDevice &g, const TriMesh& mesh);
+	//void load(GraphicsDevice &g, TriMesh&& mesh);
+
+
+	template<class T>
+	void load(GraphicsDevice &g, const MeshData<T>& meshData) {
+		m_Vertices.resize(meshData.m_Vertices.size());
+		//bool hasNormals = meshData.m_Normals.size() > 0;
+		bool hasColors = meshData.m_Colors.size() > 0;
+		for (unsigned int i = 0; i < m_Vertices.size(); i++) {
+			m_Vertices[i].position = meshData.m_Vertices[i];
+			if (hasColors)	m_Vertices[i].attributeA = meshData.m_Colors[i];
+		}
+
+		m_Indices.clear();
+		for (size_t i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
+			if (meshData.m_FaceIndicesVertices[i].size() == 3) {
+				for (size_t k = 0; k < meshData.m_FaceIndicesVertices[i].size(); k++) 
+					m_Indices.push_back(meshData.m_FaceIndicesVertices[i][k]);
+			} else {
+				MLIB_WARNING("non triangle face found - ignoring it");
+			}
+		}
+		reset(g);
+	}
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
 
 	void render(GraphicsDevice &g) const;
 
+	//! updates the first attribute which is typically color
 	void updateAttributeA(GraphicsDevice &g, const std::vector<vec4f> &vertexColors);
 
-	const TriMesh& triMesh() const
-	{
-		return m_mesh;
-	}
 
 	static const UINT layoutElementCount = 4;
 	static const D3D11_INPUT_ELEMENT_DESC layout[layoutElementCount];
@@ -54,7 +81,9 @@ private:
 	ID3D11InputLayout *m_layout;
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;
-	TriMesh m_mesh;
+	
+	std::vector<D3D11TriMeshVertex> m_Vertices;
+	std::vector<unsigned int>		m_Indices;
 };
 
 }  // namespace ml

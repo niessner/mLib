@@ -1,13 +1,13 @@
 
 namespace ml {
 
-TriMesh meshutil::createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f> >& meshes) {
-  auto lambdaVertices = [ = ](size_t total, const std::pair<TriMesh, mat4f>& t) { return t.first.vertices().size() + total; };
+TriMeshOld meshutil::createUnifiedMesh(const std::vector< std::pair<TriMeshOld, mat4f> >& meshes) {
+  auto lambdaVertices = [ = ](size_t total, const std::pair<TriMeshOld, mat4f>& t) { return t.first.vertices().size() + total; };
   const size_t totalPoints = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaVertices);
-  auto lambdaIndices = [ = ](size_t total, const std::pair<TriMesh, mat4f>& t) { return t.first.indices().size() + total; };
+  auto lambdaIndices = [ = ](size_t total, const std::pair<TriMeshOld, mat4f>& t) { return t.first.indices().size() + total; };
   const size_t totalIndices = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaIndices);
 
-  std::vector<TriMesh::TriMeshVertex> vertices(totalPoints);
+  std::vector<TriMeshOld::TriMeshOldVertex> vertices(totalPoints);
   std::vector<UINT> indices(totalIndices);
 
   UINT vIndex = 0, iIndex = 0;
@@ -15,7 +15,7 @@ TriMesh meshutil::createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f>
     const UINT baseVertexIndex = vIndex;
 
     for (UINT vertexIndex = 0; vertexIndex < m.first.vertices().size(); vertexIndex++) {
-      TriMesh::TriMeshVertex& v = vertices[vIndex++];
+      TriMeshOld::TriMeshOldVertex& v = vertices[vIndex++];
       v = m.first.vertices()[vertexIndex];
       v.position =  m.second * v.position;
     }
@@ -24,16 +24,16 @@ TriMesh meshutil::createUnifiedMesh(const std::vector< std::pair<TriMesh, mat4f>
     }
   }
 
-  return TriMesh(vertices, indices);
+  return TriMeshOld(vertices, indices);
 }
 
-TriMesh meshutil::createUnifiedMesh(const std::vector<TriMesh>& meshes) {
-  auto lambdaVertices = [=](size_t total, const TriMesh& t) { return t.vertices().size() + total; };
+TriMeshOld meshutil::createUnifiedMesh(const std::vector<TriMeshOld>& meshes) {
+  auto lambdaVertices = [=](size_t total, const TriMeshOld& t) { return t.vertices().size() + total; };
   const size_t totalPoints = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaVertices);
-  auto lambdaIndices = [=](size_t total, const TriMesh& t) { return t.indices().size() + total; };
+  auto lambdaIndices = [=](size_t total, const TriMeshOld& t) { return t.indices().size() + total; };
   const size_t totalIndices = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaIndices);
 
-  std::vector<TriMesh::TriMeshVertex> vertices(totalPoints);
+  std::vector<TriMeshOld::TriMeshOldVertex> vertices(totalPoints);
   std::vector<UINT> indices(totalIndices);
 
   UINT vIndex = 0, iIndex = 0;
@@ -41,7 +41,7 @@ TriMesh meshutil::createUnifiedMesh(const std::vector<TriMesh>& meshes) {
     const UINT baseVertexIndex = vIndex;
 
     for (UINT vertexIndex = 0; vertexIndex < m.vertices().size(); vertexIndex++) {
-      TriMesh::TriMeshVertex& v = vertices[vIndex++];
+      TriMeshOld::TriMeshOldVertex& v = vertices[vIndex++];
       v = m.vertices()[vertexIndex];
     }
     for (UINT indexIndex = 0; indexIndex < m.indices().size(); indexIndex++) {
@@ -49,10 +49,10 @@ TriMesh meshutil::createUnifiedMesh(const std::vector<TriMesh>& meshes) {
     }
   }
 
-  return TriMesh(vertices, indices);
+  return TriMeshOld(vertices, indices);
 }
 
-TriMesh meshutil::createPointCloudTemplate(const TriMesh& templateMesh,
+TriMeshOld meshutil::createPointCloudTemplate(const TriMeshOld& templateMesh,
                                            const std::vector<vec3f>& points,
                                            const std::vector<vec4f>& colors) {
   const UINT64 pointCount = points.size();
@@ -60,7 +60,7 @@ TriMesh meshutil::createPointCloudTemplate(const TriMesh& templateMesh,
   const UINT64 tIndices = templateMesh.indices().size();
   const vec4f defaultColor(1.f, 0.f, 0.f, 1.f);
 
-  std::vector<TriMesh::TriMeshVertex> vertices(pointCount * tVertices);
+  std::vector<TriMeshOld::TriMeshOldVertex> vertices(pointCount * tVertices);
   std::vector<UINT> indices(pointCount * tIndices);
 
   for (UINT pointIndex = 0; pointIndex < points.size(); pointIndex++) {
@@ -69,7 +69,7 @@ TriMesh meshutil::createPointCloudTemplate(const TriMesh& templateMesh,
     const UINT64 baseVertexIndex = pointIndex * tVertices;
 
     for (UINT vertexIndex = 0; vertexIndex < tVertices; vertexIndex++) {
-      TriMesh::TriMeshVertex& v = vertices[baseVertexIndex + vertexIndex];
+      TriMeshOld::TriMeshOldVertex& v = vertices[baseVertexIndex + vertexIndex];
       v = templateMesh.vertices()[vertexIndex];
       v.position += p;
       v.attributeA = c;
@@ -79,7 +79,7 @@ TriMesh meshutil::createPointCloudTemplate(const TriMesh& templateMesh,
     }
   }
 
-  return TriMesh(vertices, indices);
+  return TriMeshOld(vertices, indices);
 }
 
 }  // namespace ml
