@@ -75,7 +75,7 @@ public:
 	static const D3D11_INPUT_ELEMENT_DESC layout[layoutElementCount];
 
 
-	const std::vector<D3D11TriMeshVertex>& vertices() const {
+	const std::vector<D3D11TriMeshVertex>& getVertices() const {
 		return m_Vertices;
 	}
 private:
