@@ -35,8 +35,9 @@ public:
 		SAFE_RELEASE(m_vertexBuffer);
 		SAFE_RELEASE(m_indexBuffer);
 	}
-	//void load(GraphicsDevice &g, const TriMesh& mesh);
-	//void load(GraphicsDevice &g, TriMesh&& mesh);
+
+	void load(GraphicsDevice &g, const TriMeshOld& mesh);
+	void load(GraphicsDevice &g, TriMeshOld&& mesh);
 
 
 	template<class T>
@@ -73,6 +74,10 @@ public:
 	static const UINT layoutElementCount = 4;
 	static const D3D11_INPUT_ELEMENT_DESC layout[layoutElementCount];
 
+
+	const std::vector<D3D11TriMeshVertex>& vertices() const {
+		return m_Vertices;
+	}
 private:
 
 	void initVB(GraphicsDevice &g);

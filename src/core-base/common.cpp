@@ -6,7 +6,7 @@ namespace ml
 void warningFunctionMLIB(const std::string &description)
 {
 	Console::log() << description << std::endl;
-    DEBUG_BREAK;
+    //DEBUG_BREAK;
 }
 
 void errorFunctionMLIB(const std::string &description)
