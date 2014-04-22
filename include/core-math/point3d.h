@@ -132,7 +132,7 @@ public:
 	}
 
 	inline bool operator!=(const point3d& other) const {
-		return !((*this)==other);
+		return !(*this == other);
 	}
 
 

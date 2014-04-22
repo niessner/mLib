@@ -79,6 +79,10 @@ public:
 		return false;
 	}
 
+	inline bool operator!=(const point1d& other) const {
+		return !(*this == other);
+	}
+
 
 	//! dot product
 	inline T operator|(const point1d& other) const {

@@ -99,11 +99,15 @@ public:
 		return point2d<T>(array[0]-other.array[0], array[1]-other.array[1]);
 	}
 
-	inline bool operator==(const point2d& other) {
+	inline bool operator==(const point2d& other) const {
 		if ((array[0] == other.array[0]) && (array[1] == other.array[1]))
 			return true;
 
 		return false;
+	}
+
+	inline bool operator!=(const point2d& other) const {
+		return !(*this == other);
 	}
 
 	//! dot product

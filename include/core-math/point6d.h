@@ -61,6 +61,10 @@ public:
 		return *this;
 	}
 
+	inline bool operator!=(const point6d& other) const {
+		return !(*this == other);
+	}
+
 	inline point6d<T> operator-() const {
 		return point6d<T>(-array[0], -array[1], -array[2], -array[3], -array[4], -array[5]);
 	}

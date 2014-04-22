@@ -18,6 +18,8 @@ void AppTest::init(ml::ApplicationData &app)
 	//ml::MeshIOf::writeToFile("outtest.obj", meshData);
 
 	ml::TriMeshf triMesh(meshData);
+	ml::MeshDataf out = triMesh.getMeshData();
+	ml::MeshIOf::writeToFile("bla.ply", out);
 
 	//const ml::TriMesh triMesh(meshData);
 	//m_mesh.load(app.graphics, triMesh);

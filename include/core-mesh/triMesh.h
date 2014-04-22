@@ -7,7 +7,7 @@ template<class FloatType>
 class TriMesh
 {
     public:
-
+		// Vertex class of the Tri Mesh
 		template<class FloatType>
 		class Vertex {
 		public:
@@ -21,12 +21,12 @@ class TriMesh
 		private:
 		};
 
+		// Triangle class of the tri Mesh
 		template<class FloatType>
 		class Triangle {
 		public:
 			Triangle(Vertex<FloatType> *v0, Vertex<FloatType> *v1, Vertex<FloatType> *v2) {
 				assert (v0 && v1 && v2);
-
 				this->v0 = v0;
 				this->v1 = v1;
 				this->v2 = v2;
@@ -38,52 +38,70 @@ class TriMesh
 		};
 		
         TriMesh() : m_Vertices(), m_Indices(), m_TrianglePointers {
-			m_bNormalsComputed = false;
+			m_bHasNormals = false;
+			m_bHasTexCoords = false;
+			m_bHasColors = false;
 			m_bTrianglePointersCreated = false;
 		}
-		TriMesh(const MeshData<FloatType>& meshData) {
-			m_bNormalsComputed = false;
-			m_bTrianglePointersCreated = false;
+		TriMesh(const MeshData<FloatType>& meshData);
 
-			m_Vertices.resize(meshData.m_Vertices.size());
+		TriMesh(
+			const std::vector<point3d<FloatType>>& vertices, 
+			const std::vector<unsigned int> indices, 
+			const std::vector<point3d<FloatType>>& colors,
+			const std::vector<point3d<FloatType>>& normals,
+			const std::vector<point3d<FloatType>>& texCoords) :
+				TriMesh(vertices.size(), indices.size(), 
+					&vertices[0], &indices[0],
+					colors.size() > 0 ? &colors[0] : NULL,
+					normals.size() > 0 ? &normals[0] : NULL,
+					texCoords.size() > 0 ? &texCoords[0] : NULL) 
+		{
+		}
+		
+		TriMesh(const std::vector<point3d<FloatType>>& vertices, const std::vector<unsigned int> indices) : TriMesh(vertices.size(), indices.size(), &vertices[0], &indices[0]) {}
 
-			bool hasNormals = meshData.m_Normals.size() > 0;
-			bool hasColors = meshData.m_Colors.size() > 0;
-			bool hasTexCoords = meshData.m_TextureCoords.size() > 0;
+		TriMesh(
+			size_t numVertices, size_t numIndices,
+			const point3d<FloatType>* vertices, 
+			const unsigned int* indices, 
+			const point3d<FloatType>* colors = NULL, 
+			const point3d<FloatType>* normals = NULL, 
+			const point2d<FloatType>* texCoords = NULL) 
+		{
+			if (numIndices % 3 != 0) throw MLIB_EXCEPTION("not a tri mesh");
 
-			for (unsigned int i = 0; i < m_Vertices.size(); i++) {
-				m_Vertices[i].position = meshData.m_Vertices[i];
-				if (hasColors)	m_Vertices[i].color = meshData.m_Colors[i];
+			m_Vertices.resize(numVertices);
+			for (size_t i = 0; i < numVertices; i++) {
+				m_Vertices[i].position = vertices[i];
+				if (colors) m_Vertices[i].color = colors[i];
+				if (normals) m_Vertices[i].normals = normals[i];
+				if (texCoords) m_Vertices[i].texCoord = texCoords[i];
 			}
-
-			for (size_t i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
-				if (meshData.m_FaceIndicesVertices[i].size() == 3) {
-					m_Indices.push_back(vec3ui(meshData.m_FaceIndicesVertices[i][0], meshData.m_FaceIndicesVertices[i][1], meshData.m_FaceIndicesVertices[i][2]));
-					if (hasNormals) {
-						//we are ignoring the fact that sometimes there might be vertex split required (if a vertex has two different normals)
-						m_Vertices[m_Indices[i][0]].normal = meshData.m_Normals[meshData.m_FaceIndicesNormals[i][0]];
-						m_Vertices[m_Indices[i][1]].normal = meshData.m_Normals[meshData.m_FaceIndicesNormals[i][1]];
-						m_Vertices[m_Indices[i][2]].normal = meshData.m_Normals[meshData.m_FaceIndicesNormals[i][2]];
-					}
-					if (hasTexCoords) {
-						//we are ignoring the fact that sometimes there might be vertex split required (if a vertex has two different normals)
-						m_Vertices[m_Indices[i][0]].texCoord = meshData.m_TextureCoords[meshData.m_FaceIndicesTextureCoords[i][0]];
-						m_Vertices[m_Indices[i][1]].texCoord = meshData.m_TextureCoords[meshData.m_FaceIndicesTextureCoords[i][1]];
-						m_Vertices[m_Indices[i][2]].texCoord = meshData.m_TextureCoords[meshData.m_FaceIndicesTextureCoords[i][2]];
-					}
-				} else {
-					MLIB_WARNING("non triangle face found - ignoring it");
-				}
+			m_Indices.resize(numIndices/3);
+			for (size_t i = 0; i < numIndices/3; i++) {
+				m_Indices[i] = vec3ui(indices[3*i+0],indices[3*i+1],indices[3*i+2]);
 			}
-
-			if (!hasNormals)	computeNormals();
 			createTrianglePointers();
 		}
-        TriMesh(TriMesh&& t)
-        {
+
+		TriMesh(const TriMesh& other) {
+			m_Vertices = other.m_Vertices;
+			m_Indices = other.m_Indices;
+			m_bHasNormals = other.m_bHasNormals;
+			m_bHasTexCoords = other.m_bHasTexCoords;
+			m_bHasColors = other.m_bHasColors;
+			m_bTrianglePointersCreated = other.m_bTrianglePointersCreated;
+			createTrianglePointers();
+		}
+        TriMesh(TriMesh&& t) {
             m_Vertices = std::move(t.m_Vertices);
             m_Indices = std::move(t.m_Indices);
 			m_TrianglePointers = std::move(t.m_TrianglePointers);
+			m_bHasNormals = other.m_bHasNormals;
+			m_bHasTexCoords = other.m_bHasTexCoords;
+			m_bHasColors = other.m_bHasColors;
+			m_bTrianglePointersCreated = other.m_bTrianglePointersCreated;
         }
 
 		~TriMesh() {
@@ -96,63 +114,86 @@ class TriMesh
             m_Vertices = std::move(t.m_Vertices);
             m_Indices = std::move(t.m_Indices);
 			m_TrianglePointers = std::move(t.m_TrianglePointers);
+			m_bHasNormals = other.m_bHasNormals;
+			m_bHasTexCoords = other.m_bHasTexCoords;
+			m_bHasColors = other.m_bHasColors;
+			m_bTrianglePointersCreated = other.m_bTrianglePointersCreated;
         }
-		void applyTransform(const mat4f& m) {
-			for (Vertex& v : m_Vertices) { v.position = m * v.position; }
+
+		void operator=(const TriMesh& other) {
+			m_Vertices = other.m_Vertices;
+			m_Indices = other.m_Indices;
+			m_bHasNormals = other.m_bHasNormals;
+			m_bHasTexCoords = other.m_bHasTexCoords;
+			m_bHasColors = other.m_bHasColors;
+			m_bTrianglePointersCreated = other.m_bTrianglePointersCreated;
+			createTrianglePointers();
 		}
 
-        void stretch(float s) { stretch(vec3f(s, s, s)); }
+		void applyTransform(const Matrix4x4<FloatType>& m) {
+			for (Vertex<FloatType>& v : m_Vertices) { v.position = m * v.position; }
+		}
 
-        void stretch(const vec3f& v) {
-            for (Vertex& mv : m_Vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
+        void scale(FloatType s) { scale(point3d<FloatType>(s, s, s)); }
+
+        void scale(const point3d<FloatType>& v) {
+            for (Vertex<FloatType>& mv : m_Vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
         }
+
+
+		//! Computes the vertex normals of the mesh
+		void computeNormals();
+
 
         const std::vector<Vertex<FloatType>>& getVertices() const { return m_Vertices; }
         const std::vector<vec3ui>& getIndices() const { return m_Indices; }
 		const std::vector<Triangle<FloatType>*> getTrianglePointers() const { return m_TrianglePointers; }
 
+		void getMeshData(MeshData<FloatType>& meshData) const {
+			meshData.clear();
+
+			meshData.m_Vertices.resize(m_Vertices.size());
+			meshData.m_FaceIndicesVertices.resize(m_Indices.size());
+			if (m_bHasColors) {
+				meshData.m_Colors.resize(m_Vertices.size());
+			}
+			if (m_bHasNormals)	{
+				meshData.m_Normals.resize(m_Vertices.size());
+				meshData.m_FaceIndicesNormals.resize(m_Indices.size());
+			}
+			if (m_bHasTexCoords) {
+				meshData.m_TextureCoords.resize(m_Vertices.size());
+				meshData.m_FaceIndicesTextureCoords.resize(m_Indices.size());
+			}
+			for (size_t i = 0; i < m_Indices.size(); i++) {
+				std::vector<unsigned int> ci(3);
+				ci[0] = m_Indices[i].x;	ci[1] = m_Indices[i].y;	ci[2] = m_Indices[i].z;
+				meshData.m_FaceIndicesVertices[i] = ci;
+				if (m_bHasNormals)		meshData.m_FaceIndicesNormals[i] = ci;
+				if (m_bHasTexCoords)	meshData.m_FaceIndicesTextureCoords[i] = ci;
+			}
+
+			for (size_t i = 0; i < m_Vertices.size(); i++) {
+				meshData.m_Vertices[i] = m_Vertices[i].position;
+				if (m_bHasColors)		meshData.m_Colors[i] = m_Vertices[i].color;
+				if (m_bHasNormals)		meshData.m_Normals[i] = m_Vertices[i].normal;
+				if (m_bHasTexCoords)	meshData.m_TextureCoords[i] = m_Vertices[i].texCoord;
+			}
+		}
+
+		MeshData<FloatType> getMeshData() const {
+			MeshData<FloatType> meshData;
+			getMeshData(meshData);
+			return meshData;
+		}
     private:
 
-		//! Computes the vertex normals of the mesh
-		void computeNormals() {
-
-			for (int i = 0; i < (int)m_Vertices.size(); i++) {
-				m_Vertices[i].normal = point3d<FloatType>::origin;
-			}
-
-			for (int i = 0; i < (int)m_Indices.size(); i++) {
-				point3d<FloatType> faceNormal = 
-					(m_Vertices[m_Indices[i].y].position - m_Vertices[m_Indices[i].x].position)^(m_Vertices[m_Indices[i].z].position - m_Vertices[m_Indices[i].x].position);
-
-				m_Vertices[m_Indices[i].x].normal += faceNormal;
-				m_Vertices[m_Indices[i].y].normal += faceNormal;
-				m_Vertices[m_Indices[i].z].normal += faceNormal;
-			}
-			for (int i = 0; i < (int)m_Vertices.size(); i++) {
-				m_Vertices[i].normal.normalize();
-			}
-
-			m_bNormalsComputed = true;
-		}
-
-
 		//! generates the triangle pointers (triangle pointer vector)
-		void createTrianglePointers() {
+		void createTrianglePointers();
 
-			for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
-				SAFE_DELETE(m_TrianglePointers[i]);
-			}
-			m_TrianglePointers.resize(m_Indices.size());
-#pragma omp parallel for
-			for (int i = 0; i < (int)m_Indices.size(); i++) {
-				Triangle<FloatType>* tri = new Triangle<FloatType>(&m_Vertices[m_Indices[i].x], &m_Vertices[m_Indices[i].y], &m_Vertices[m_Indices[i].z]);
-				m_TrianglePointers[i] = tri;
-			}
-
-			m_bTrianglePointersCreated = true;
-		}
-
-		bool m_bNormalsComputed;
+		bool m_bHasNormals;
+		bool m_bHasTexCoords;
+		bool m_bHasColors;
 		bool m_bTrianglePointersCreated;
 
         std::vector<Vertex<FloatType>>		m_Vertices;
@@ -164,5 +205,7 @@ typedef TriMesh<float> TriMeshf;
 typedef TriMesh<double> TriMeshd;
 
 }  // namespace ml
+
+#include "triMesh.cpp"
 
 #endif  // INCLUDE_CORE_MESH_TRIMESH_H_

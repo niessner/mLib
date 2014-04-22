@@ -156,12 +156,9 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             return false;
         }
 
-        //! opposite of ==
-        inline bool operator!=(const point4d& other) const
-        {
-            return !(*this == other);
-        }
-
+		inline bool operator!=(const point4d& other) const {
+			return !(*this == other);
+		}
 
         inline T lengthSq() const
         {
