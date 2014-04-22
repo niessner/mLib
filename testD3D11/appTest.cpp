@@ -22,8 +22,7 @@ void AppTest::init(ml::ApplicationData &app)
 	ml::MeshIOf::writeToFile("bla.ply", out);
 
 	//const ml::TriMesh triMesh(meshData);
-	//m_mesh.load(app.graphics, triMesh);
-	m_mesh.load(app.graphics, meshData);
+	m_mesh.load(app.graphics, triMesh);
 	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));
 	//m_mesh.updateAttributeA(app.graphics, color);
 

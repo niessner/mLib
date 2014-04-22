@@ -13,8 +13,8 @@ public:
 		D3D11TriMeshVertex(const vec3f& _p, const vec3f& _n, const vec4f& _a, const vec4f& _b) : position(_p), normal(_n), attributeA(_a), attributeB(_b) { }
 		vec3f position;
 		vec3f normal;
-		vec4f attributeA;
-		vec4f attributeB;
+		vec4f attributeA;	//typically color
+		vec4f attributeB;	//typically tex coord
 	};
 	D3D11TriMesh()
 	{
@@ -29,6 +29,13 @@ public:
 		m_indexBuffer = NULL;
 		load(g, meshData);
 	}
+	template<class T>
+	D3D11TriMesh(GraphicsDevice &g, const TriMesh<T>& triMesh) {
+		m_layout = NULL;
+		m_vertexBuffer = NULL;
+		m_indexBuffer = NULL;
+		load(g, triMesh);
+	}
 	~D3D11TriMesh()
 	{
 		SAFE_RELEASE(m_layout);
@@ -39,6 +46,24 @@ public:
 	void load(GraphicsDevice &g, const TriMeshOld& mesh);
 	void load(GraphicsDevice &g, TriMeshOld&& mesh);
 
+	template<class T>
+	void load(GraphicsDevice &g, const TriMesh<T>& triMesh) {
+		m_Vertices.resize(triMesh.getVertices().size());
+		for (size_t i = 0; i < triMesh.getVertices().size(); i++) {
+			m_Vertices[i].position = vec3f(triMesh.getVertices()[i].position);
+			//m_Vertices[i].normal = vec3f(triMesh.getVertices()[i].normal);
+			m_Vertices[i].attributeA = vec4f(vec3f(triMesh.getVertices()[i].color), 1.0f);
+			m_Vertices[i].attributeB.x = triMesh.getVertices()[i].texCoord.x;
+			m_Vertices[i].attributeB.y = triMesh.getVertices()[i].texCoord.y;
+		}
+		m_Indices.resize(triMesh.getIndices().size()*3);
+		for (size_t i = 0; i < triMesh.getIndices().size(); i++) {
+			m_Indices[3*i+0] = triMesh.getIndices()[i].x;
+			m_Indices[3*i+1] = triMesh.getIndices()[i].y;
+			m_Indices[3*i+2] = triMesh.getIndices()[i].z;
+		}
+		reset(g);
+	}
 
 	template<class T>
 	void load(GraphicsDevice &g, const MeshData<T>& meshData) {
@@ -47,7 +72,7 @@ public:
 		bool hasColors = meshData.m_Colors.size() > 0;
 		for (unsigned int i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i].position = meshData.m_Vertices[i];
-			if (hasColors)	m_Vertices[i].attributeA = meshData.m_Colors[i];
+			if (hasColors)	m_Vertices[i].attributeA = vec3f(meshData.m_Colors[i]);
 		}
 
 		m_Indices.clear();
@@ -78,6 +103,9 @@ public:
 	const std::vector<D3D11TriMeshVertex>& getVertices() const {
 		return m_Vertices;
 	}
+	const std::vector<unsigned int>& getIndices() const {
+		return m_Indices;
+	} 
 private:
 
 	void initVB(GraphicsDevice &g);
