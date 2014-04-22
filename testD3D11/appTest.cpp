@@ -3,6 +3,7 @@
 
 void AppTest::init(ml::ApplicationData &app)
 {
+
     //const std::string testPLY = "scans/gates381.ply";
     //const TriMesh triMesh = OpenMeshLoader::load(testPLY);
     //m_mesh.load(app.graphics, triMesh);
@@ -12,9 +13,11 @@ void AppTest::init(ml::ApplicationData &app)
 	//const std::string testFilename = "scans/gates381.ply";
 	const std::string testFilename = "scans/gates381_ascii.ply";
 	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
-	ml::MeshIOf::writeToFile("outtest.ply", meshData);
-	ml::MeshIOf::writeToFile("outtest.off", meshData);
-	ml::MeshIOf::writeToFile("outtest.obj", meshData);
+	//ml::MeshIOf::writeToFile("outtest.ply", meshData);
+	//ml::MeshIOf::writeToFile("outtest.off", meshData);
+	//ml::MeshIOf::writeToFile("outtest.obj", meshData);
+
+	ml::TriMeshf triMesh(meshData);
 
 	//const ml::TriMesh triMesh(meshData);
 	//m_mesh.load(app.graphics, triMesh);

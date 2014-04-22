@@ -218,8 +218,6 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             array[3] *= val;
         }
 
-        static const point4d<T> origin;
-
         inline point4d<T> normalize() const
         {
             T val = (T)1.0 / length();
@@ -246,6 +244,12 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             else
             { return false; }
         }
+
+		static const point4d<T> origin;
+		static const point4d<T> eX;
+		static const point4d<T> eY;
+		static const point4d<T> eZ;
+		static const point4d<T> eW;
 
         union
         {
@@ -286,6 +290,16 @@ typedef point4d<unsigned char> vec4uc;
 
 
 template<> const vec4f vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);
+template<> const vec4f vec4f::eX(1.0f, 0.0f, 0.0f, 0.0f);
+template<> const vec4f vec4f::eY(0.0f, 1.0f, 0.0f, 0.0f);
+template<> const vec4f vec4f::eZ(0.0f, 0.0f, 1.0f, 0.0f);
+template<> const vec4f vec4f::eW(0.0f, 0.0f, 0.0f, 1.0f);
+
+template<> const vec4d vec4d::origin(0.0, 0.0, 0.0, 0.0);
+template<> const vec4d vec4d::eX(1.0, 0.0, 0.0, 0.0);
+template<> const vec4d vec4d::eY(0.0, 1.0, 0.0, 0.0);
+template<> const vec4d vec4d::eZ(0.0, 0.0, 1.0, 0.0);
+template<> const vec4d vec4d::eW(0.0, 0.0, 0.0, 1.0);
 
 }  // namespace ml
 

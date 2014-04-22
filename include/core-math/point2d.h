@@ -161,6 +161,9 @@ public:
 		Console::log() << "(" << array[0] << " / " << array[1] << ")" << std::endl;
 	}
 
+	static const point2d<T> origin;
+	static const point2d<T> eX;
+	static const point2d<T> eY;
 
 	union {
 		struct {
@@ -188,6 +191,15 @@ typedef point2d<float> vec2f;
 typedef point2d<int> vec2i;
 typedef point2d<unsigned int> vec2ui;
 typedef point2d<unsigned char> vec2uc;
+
+
+template<> const vec2f vec2f::origin(0.0f, 0.0f);
+template<> const vec2f vec2f::eX(1.0f, 0.0f);
+template<> const vec2f vec2f::eY(0.0f, 1.0f);
+					
+template<> const vec2d vec2d::origin(0.0, 0.0);
+template<> const vec2d vec2d::eX(1.0, 0.0);
+template<> const vec2d vec2d::eY(0.0, 1.0);
 
 }  // namespace ml
 

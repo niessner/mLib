@@ -245,6 +245,11 @@ template<> const vec3f vec3f::eX(1.0f, 0.0f, 0.0f);
 template<> const vec3f vec3f::eY(0.0f, 1.0f, 0.0f);
 template<> const vec3f vec3f::eZ(0.0f, 0.0f, 1.0f);
 
+template<> const vec3d vec3d::origin(0.0, 0.0, 0.0);
+template<> const vec3d vec3d::eX(1.0, 0.0, 0.0);
+template<> const vec3d vec3d::eY(0.0, 1.0, 0.0);
+template<> const vec3d vec3d::eZ(0.0, 0.0, 1.0);
+
 }  // namespace ml
 
 #endif  // CORE_MATH_POINT3D_H_
