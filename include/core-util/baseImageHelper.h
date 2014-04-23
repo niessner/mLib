@@ -55,7 +55,11 @@ public:
 
 
 
-
+	template<> __forceinline static void convertBaseImagePixel<vec3uc, vec4uc>(vec3uc& out, const vec4uc& in) {
+		out.x = in.x;
+		out.y = in.y;
+		out.z = in.z;
+	}
 
 
 
