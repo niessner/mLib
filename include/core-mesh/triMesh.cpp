@@ -15,7 +15,7 @@ namespace ml {
 		m_bHasColors = meshData.m_Colors.size() > 0;
 		m_bHasTexCoords = meshData.m_TextureCoords.size() > 0;
 
-		for (unsigned int i = 0; i < m_Vertices.size(); i++) {
+		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i].position = meshData.m_Vertices[i];
 		}
 
