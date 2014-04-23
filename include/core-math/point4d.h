@@ -106,7 +106,7 @@ class point4d : public BinaryDataSerialize< point4d<T> >
 
         inline void operator/=(T val)
         {
-            T inv = (T)1 / inv;
+            T inv = (T)1 / val;
             array[0] *= inv;
             array[1] *= inv;
             array[2] *= inv;

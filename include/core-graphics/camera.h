@@ -21,16 +21,20 @@ public:
 	void jump(float delta);
 	void move(float delta);
 
-	mat4f camera() {
+	mat4f camera() const {
 		return m_camera;
 	}
 
-	mat4f perspective() {
+	mat4f perspective() const {
 		return m_perspective;
 	}
 
-	mat4f cameraPerspective() {
+	mat4f cameraPerspective() const {
 		return m_cameraPerspective;
+	}
+
+	vec3f getEye() const {
+		return m_eye;
 	}
 
 private:

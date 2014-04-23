@@ -68,7 +68,6 @@ struct TriangleBVHNode {
 
 			lChild->split();
 			rChild->split();
-
 		}
 	}
 
@@ -95,6 +94,29 @@ struct TriangleBVHNode {
 
 		return false;
 	}
+
+	unsigned int getTreeDepthRec() const {
+		unsigned int maxDepth = 0;
+		if (lChild)	maxDepth = std::max(maxDepth, lChild->getTreeDepthRec());	
+		if (rChild) maxDepth = std::max(maxDepth, rChild->getTreeDepthRec());
+		return maxDepth+1;
+	}
+
+	unsigned int getNumNodesRec() const {
+		unsigned int numNodes = 1;
+		if (lChild)	numNodes += lChild->getNumNodesRec();	
+		if (rChild) numNodes += rChild->getNumNodesRec();
+		return numNodes;
+	}
+
+	unsigned int getNumLeaves() const {
+		unsigned int numLeaves = 0;
+		if (lChild) numLeaves += lChild->getNumLeaves();
+		if (rChild) numLeaves += rChild->getNumLeaves();
+		if (!lChild && !rChild) numLeaves++;
+		return numLeaves;
+	}
+
 
 	static bool cmpX(Triangle<FloatType> *t0, Triangle<FloatType> *t1) {
 		return t0->getCenter().x < t1->getCenter().x;
@@ -139,7 +161,9 @@ public:
 		m_Root->computeBoundingBox();
 
 		std::cout << "Info: TriangleBVHAccelerator build done ( " << tris.size() << " tris )" << std::endl;
-
+		//std::cout << "Info: Tree depth " << m_Root->getTreeDepthRec() << std::endl;
+		//std::cout << "Info: NumNodes " << m_Root->getNumNodesRec() << std::endl;
+		//std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
 		//TODO parallel build
 	}
 	void destroy() {

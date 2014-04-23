@@ -19,11 +19,11 @@ void AppTest::init(ml::ApplicationData &app)
 	//ml::MeshIOf::writeToFile("outtest.obj", meshData);
 
 	ml::TriMeshf triMesh(meshData);
-	ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
-	ml::Rayf ray(ml::vec3f::origin, ml::vec3f::origin);
-	float u,v,t; 
-	ml::Trianglef* tri;
-	accel.intersect(ray, u, v, t, tri);
+	//ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
+	//ml::Rayf ray(ml::vec3f::origin, ml::vec3f::origin);
+	//float u,v,t; 
+	//ml::Trianglef* tri;
+	//accel.intersect(ray, u, v, t, tri);
 
 
 	ml::MeshDataf out = triMesh.getMeshData();
@@ -106,6 +106,44 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
     if(key == KEY_DOWN) m_camera.lookUp(-theta);
     if(key == KEY_LEFT) m_camera.lookRight(theta);
     if(key == KEY_RIGHT) m_camera.lookRight(-theta);
+
+	if(key == 'R') {
+		const std::string testFilename = "scans/gates381.ply";
+		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
+		ml::TriMeshf triMesh(meshData);
+		ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
+
+		ml::mat4f projToCam = m_camera.perspective().getInverse();
+		ml::mat4f camToWorld = m_camera.camera().getInverse();
+		ml::mat4f trans =  camToWorld * projToCam;
+		ml::ColorImageRGB image(app.window.height(), app.window.width());
+#pragma omp parallel for
+		for (int i_ = 0; i_ < (int)app.window.height(); i_++) {
+			unsigned int i = (unsigned int)i_;
+			for (unsigned int j = 0; j < app.window.width(); j++) {
+				//std::cout << " tyring ray " << i << " " << j << std::endl;
+				ml::vec4f p((float)j, (float)i, 0.5f, 1.0f);
+				p.x /= app.window.height();
+				p.y /= app.window.width();
+				p.x = 2.0f*p.x - 1.0f;
+				p.y = 1.0f-2.0f*p.y;
+
+				p = trans * p;
+				p /= p.w;
+				ml::Rayf r(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).normalize());
+				float t,u,v;	ml::Trianglef* tri;
+				if (accel.intersect(r, t, u, v, tri)) {
+					image(i,j) = tri->getSurfaceColor(u,v);
+				} else {
+					image(i,j) = 0;
+				}
+			
+			}
+		}
+		
+		ml::FreeImageWrapper::saveImage("test.jpg", image);
+
+	}
 }
 
 void AppTest::mouseDown(ml::ApplicationData &app, ml::MouseButtonType button)

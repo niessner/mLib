@@ -265,7 +265,7 @@ class TriMesh
 
         const std::vector<Vertex<FloatType>>& getVertices() const { return m_Vertices; }
         const std::vector<vec3ui>& getIndices() const { return m_Indices; }
-		std::vector<Triangle<FloatType>*> getTrianglePointers()  { return m_TrianglePointers; }
+		std::vector<Triangle<FloatType>*>& getTrianglePointers()  { return m_TrianglePointers; }
 
 		void getMeshData(MeshData<FloatType>& meshData) const {
 			meshData.clear();
