@@ -7,13 +7,15 @@ template<class FloatType>
 class TriMesh
 {
     public:
+		// ********************************
 		// Vertex class of the Tri Mesh
+		// ********************************
 		template<class FloatType>
 		class Vertex {
 		public:
 			Vertex() : position(point3d<FloatType>::origin), normal(point3d<FloatType>::origin), color(point3d<FloatType>::origin), texCoord(point2d<FloatType>::origin) { }
-			explicit Vertex(const vec3f& _position) : position(_position) {}
-			Vertex (const vec3f& _p, const vec3f& _n, const vec3f& _c, const vec2f& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
+			Vertex(const vec3f& _position) : position(_position) { }
+			Vertex(const vec3f& _p, const vec3f& _n, const vec3f& _c, const vec2f& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
 			point3d<FloatType> position;
 			point3d<FloatType> normal;
 			point3d<FloatType> color;
@@ -21,7 +23,11 @@ class TriMesh
 		private:
 		};
 
-		// Triangle class of the tri Mesh
+
+
+		// ********************************
+		// Triangle class of the Tri Mesh
+		// ********************************
 		template<class FloatType>
 		class Triangle {
 		public:
@@ -32,11 +38,33 @@ class TriMesh
 				this->v2 = v2;
 				m_Center = (v0->position + v1->position + v2->position)/(FloatType)3.0;
 			}
+			~Triangle() {
+			}
+
+			bool intersect(Ray<FloatType> &r, bool intersectOnlyFrontFraces = false) const {
+
+			}
+
+
+			void includeInBoundingBox(BoundingBox3d<FloatType> &bb) {
+				bb.include(v0->position);
+				bb.include(v1->position);
+				bb.include(v2->position);
+			}
+
+			const point3d<FloatType>& getCenter() const {
+				return m_Center;
+			}
 		private:
-			Vertex<FloatType> *v0, *v1, *v2;
+			Vertex<FloatType> *v0, *v1, *v2;			
 			point3d<FloatType> m_Center;
 		};
 		
+
+
+		// ********************************
+		// TriMesh itself
+		// ********************************
         TriMesh() : m_Vertices(), m_Indices(), m_TrianglePointers {
 			m_bHasNormals = false;
 			m_bHasTexCoords = false;
