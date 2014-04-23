@@ -10,8 +10,8 @@ void AppTest::init(ml::ApplicationData &app)
 
 	//const std::string testFilename = "scans/gates381.off";
 	//const std::string testFilename = "scans/gates381.obj";
-	//const std::string testFilename = "scans/gates381.ply";
-	const std::string testFilename = "scans/gates381_ascii.ply";
+	const std::string testFilename = "scans/gates381.ply";
+	//const std::string testFilename = "scans/gates381_ascii.ply";
 	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 	//ml::MeshIOf::writeToFile("outtest.ply", meshData);
 	//ml::MeshIOf::writeToFile("outtest.off", meshData);
