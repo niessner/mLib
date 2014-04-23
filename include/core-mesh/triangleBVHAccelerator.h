@@ -73,6 +73,7 @@ struct TriangleBVHNode {
 	}
 
 	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, Triangle<FloatType>* &triangle, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
+		if (t < tmin || t > tmax)	return false;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {
 			bool b = false;
 			if (!lChild && !rChild) {
