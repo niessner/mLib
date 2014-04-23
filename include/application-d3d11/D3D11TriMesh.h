@@ -51,7 +51,7 @@ public:
 		m_Vertices.resize(triMesh.getVertices().size());
 		for (size_t i = 0; i < triMesh.getVertices().size(); i++) {
 			m_Vertices[i].position = vec3f(triMesh.getVertices()[i].position);
-			//m_Vertices[i].normal = vec3f(triMesh.getVertices()[i].normal);
+			m_Vertices[i].normal = vec3f(triMesh.getVertices()[i].normal);
 			m_Vertices[i].attributeA = vec4f(vec3f(triMesh.getVertices()[i].color), 1.0f);
 			m_Vertices[i].attributeB.x = triMesh.getVertices()[i].texCoord.x;
 			m_Vertices[i].attributeB.y = triMesh.getVertices()[i].texCoord.y;
@@ -68,18 +68,17 @@ public:
 	template<class T>
 	void load(GraphicsDevice &g, const MeshData<T>& meshData) {
 		m_Vertices.resize(meshData.m_Vertices.size());
-		//bool hasNormals = meshData.m_Normals.size() > 0;
-		bool hasColors = meshData.m_Colors.size() > 0;
+
 		for (unsigned int i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i].position = meshData.m_Vertices[i];
-			if (hasColors)	m_Vertices[i].attributeA = vec3f(meshData.m_Colors[i]);
+			if (meshData.hasPerVertexColors())	m_Vertices[i].attributeA = vec3f(meshData.m_Colors[i]);
 		}
 
 		m_Indices.clear();
-		for (size_t i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
-			if (meshData.m_FaceIndicesVertices[i].size() == 3) {
-				for (size_t k = 0; k < meshData.m_FaceIndicesVertices[i].size(); k++) 
-					m_Indices.push_back(meshData.m_FaceIndicesVertices[i][k]);
+		for (size_t i = 0; i < meshData.getFaceIndicesVertices().size(); i++) {
+			if (meshData.getFaceIndicesVertices()[i].size() == 3) {
+				for (size_t k = 0; k < meshData.getFaceIndicesVertices()[i].size(); k++) 
+					m_Indices.push_back(meshData.getFaceIndicesVertices()[i][k]);
 			} else {
 				MLIB_WARNING("non triangle face found - ignoring it");
 			}

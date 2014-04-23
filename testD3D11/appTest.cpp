@@ -22,7 +22,7 @@ void AppTest::init(ml::ApplicationData &app)
 	ml::MeshIOf::writeToFile("bla.ply", out);
 
 	//const ml::TriMesh triMesh(meshData);
-	m_mesh.load(app.graphics, triMesh);
+	m_mesh.load(app.graphics, meshData);
 	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));
 	//m_mesh.updateAttributeA(app.graphics, color);
 
@@ -46,6 +46,9 @@ void AppTest::init(ml::ApplicationData &app)
     m_camera = ml::Camera(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
 
     m_font.init(app.graphics, "Calibri");
+
+	ml::TriMeshf::Vertexf v0, v1;
+	v0 *= 0.5f;
 }
 
 void AppTest::render(ml::ApplicationData &app)

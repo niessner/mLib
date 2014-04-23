@@ -90,9 +90,9 @@ struct MeshData {
 	bool hasColors() const { return m_Colors.size() > 0; }
 	bool hasTexCoords() const { return m_TextureCoords.size() > 0; }
 
-	bool perVertexNormals()	const	{ return hasNormals() && m_FaceIndicesNormals.size() == 0; }
-	bool perVertexColors()	const	{ return hasColors() && m_FaceIndicesColors.size() == 0; }
-	bool perVertexTexCoords() const { return hasTexCoords() && m_FaceIndicesTextureCoords.size() == 0; }
+	bool hasPerVertexNormals()	const	{ return hasNormals() && m_FaceIndicesNormals.size() == 0; }
+	bool hasPerVertexColors()	const	{ return hasColors() && m_FaceIndicesColors.size() == 0; }
+	bool hasPerVertexTexCoords() const	{ return hasTexCoords() && m_FaceIndicesTextureCoords.size() == 0; }
 
 	std::vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
 	std::vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below/or per vertex)

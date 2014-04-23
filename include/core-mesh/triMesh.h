@@ -16,15 +16,42 @@ class TriMesh
 			Vertex() : position(point3d<FloatType>::origin), normal(point3d<FloatType>::origin), color(point3d<FloatType>::origin), texCoord(point2d<FloatType>::origin) { }
 			Vertex(const vec3f& _position) : position(_position) { }
 			Vertex(const vec3f& _p, const vec3f& _n, const vec3f& _c, const vec2f& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
+
+			Vertex operator*(FloatType t) const {
+				return Vertex(position*t, normal*t, color*t, texCoord*t);
+			}
+			Vertex operator/(FloatType t) const {
+				return Vertex(position/t, normal/t, color/t, texCoord/t);
+			}
+			Vertex operator+(const Vertex& other) const {
+				return Vertex(position+other.position, normal+other.normal, color+other.color, texCoord+other.texCoord);
+			}
+			Vertex operator-(const Vertex& other) const {
+				return Vertex(position-other.position, normal-other.normal, color-other.color, texCoord-other.texCoord);
+			}
+
+			void operator*=(FloatType t) {
+				*this = *this * t;
+			}
+			void operator/=(FloatType t) const {
+				*this = *this / t;
+			}
+			void operator+=(const Vertex& other) const {
+				*this = *this + other;
+			}
+			void operator-=(const Vertex& other) const {
+				*this = *this - other;
+			}
+
 			point3d<FloatType> position;
 			point3d<FloatType> normal;
 			point3d<FloatType> color;
 			point2d<FloatType> texCoord;
 		private:
 		};
-
-
-
+		typedef Vertex<float> Vertexf;
+		typedef Vertex<double> Vertexd;
+		
 		// ********************************
 		// Triangle class of the Tri Mesh
 		// ********************************
@@ -41,8 +68,63 @@ class TriMesh
 			~Triangle() {
 			}
 
-			bool intersect(Ray<FloatType> &r, bool intersectOnlyFrontFraces = false) const {
+			Vertex<FloatType> getSurfaceVertex(FloatType u, FloatType v) const {
+				return *v0 *((FloatType)1.0 - u - v) + *v1 *u + *v2 *v;
+			}
+			point3d<FloatType> getSurfacePosition(FloatType u, FloatType v) const 	{
+				return v0->position*((FloatType)1.0 - u - v) + v1->position*u + v2->position*v;
+			}
+			point3d<FloatType> getSurfaceColor(FloatType u, FloatType v) const {
+				return v0->color*((FloatType)1.0 - u - v) + v1->color*u + v2->color*v;
+			}
+			point2d<FloatType> getSurfaceNormal(FloatType u, FloatType v) const {
+				return v0->normal*((FloatType)1.0 - u - v) + v1->normal*u + v2->normal*v;
+			}
+			point3d<FloatType> getSurfaceTexCoord(FloatType u, FloatType v) const {
+				return v0->texCoord*((FloatType)1.0 - u - v) + v1->texCoord*u + v2->texCoord*v;
+			}
 
+			bool intersect(const Ray<FloatType> &r, FloatType& _u, FloatType& _v, FloatType& _t, bool intersectOnlyFrontFraces = false) const {
+				const point3d<FloatType> &d = r.direction();
+				const point3d<FloatType> &p = r.origin();
+
+				point3d<FloatType> e1 = *v1 - *v0;
+				point3d<FloatType> e2 = *v2 - *v0;
+
+				if (intersectOnlyFrontFaces) {
+					point3d<FloatType> n = e1^e2; n.normalize();
+					if ((d | n) > 0.0f) return false;
+				}
+
+				point3d<FloatType> h = d^e2;
+				FloatType a = e1 | h;
+
+				//if (a > -0.0000000001 && a < 0.0000000001) return false;
+				if (a == (FloatType)0.0 || a == -(FloatType)0.0)	return false;
+
+				FloatType f = (FloatType)1.0/a;
+				point3d<FloatType> s = p - *v0;
+				FloatType u = f * (s | h);
+
+				if (u < (FloatType)0.0 || u > (FloatType)1.0)	return false;
+
+				point3d<FloatType> q = s^e1;
+				FloatType v = f * (d | q);
+
+				if (v < (FloatType)0.0 || u + v > (FloatType)1.0)	return false;
+
+				// at this stage we can compute t to find out where the intersection point is on the line
+				FloatType t = f * (e2 | q);
+
+				//if (t > 0.0000000001 && t < r.t) {
+				if (t < r.t) {
+					_t = t;
+					_u = u;
+					_v = v;
+					return true;
+				} else {
+					return false;
+				}
 			}
 
 
@@ -59,6 +141,8 @@ class TriMesh
 			Vertex<FloatType> *v0, *v1, *v2;			
 			point3d<FloatType> m_Center;
 		};
+		typedef Triangle<float> Trianglef;
+		typedef Triangle<double> Triangled;
 		
 
 
@@ -187,18 +271,14 @@ class TriMesh
 			}
 			if (m_bHasNormals)	{
 				meshData.m_Normals.resize(m_Vertices.size());
-				//meshData.m_FaceIndicesNormals.resize(m_Indices.size());
 			}
 			if (m_bHasTexCoords) {
 				meshData.m_TextureCoords.resize(m_Vertices.size());
-				//meshData.m_FaceIndicesTextureCoords.resize(m_Indices.size());
 			}
 			for (size_t i = 0; i < m_Indices.size(); i++) {
 				std::vector<unsigned int> ci(3);
 				ci[0] = m_Indices[i].x;	ci[1] = m_Indices[i].y;	ci[2] = m_Indices[i].z;
 				meshData.m_FaceIndicesVertices[i] = ci;
-				//if (m_bHasNormals)		meshData.m_FaceIndicesNormals[i] = ci;
-				//if (m_bHasTexCoords)	meshData.m_FaceIndicesTextureCoords[i] = ci;
 			}
 
 			for (size_t i = 0; i < m_Vertices.size(); i++) {
