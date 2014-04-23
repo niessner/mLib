@@ -82,6 +82,7 @@
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"
 #include "core-mesh/triMesh.h"
+#include "core-mesh/triangleBVHAccelerator.h"
 
 
 #endif  // MLIBCORE_H_

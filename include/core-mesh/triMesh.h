@@ -3,146 +3,152 @@
 
 namespace ml {
 
+	///MOVE VERTEX AND TRIANGLE BACK ONCE WE HAVE TEMPLATE ALIASING !!!! (for triangle BVH Accelerator)
+
+	// ********************************
+	// Vertex class of the Tri Mesh
+	// ********************************
+	template<class FloatType>
+	class Vertex {
+	public:
+		Vertex() : position(point3d<FloatType>::origin), normal(point3d<FloatType>::origin), color(point3d<FloatType>::origin), texCoord(point2d<FloatType>::origin) { }
+		Vertex(const vec3f& _position) : position(_position) { }
+		Vertex(const vec3f& _p, const vec3f& _n, const vec3f& _c, const vec2f& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
+
+		Vertex operator*(FloatType t) const {
+			return Vertex(position*t, normal*t, color*t, texCoord*t);
+		}
+		Vertex operator/(FloatType t) const {
+			return Vertex(position/t, normal/t, color/t, texCoord/t);
+		}
+		Vertex operator+(const Vertex& other) const {
+			return Vertex(position+other.position, normal+other.normal, color+other.color, texCoord+other.texCoord);
+		}
+		Vertex operator-(const Vertex& other) const {
+			return Vertex(position-other.position, normal-other.normal, color-other.color, texCoord-other.texCoord);
+		}
+
+		void operator*=(FloatType t) {
+			*this = *this * t;
+		}
+		void operator/=(FloatType t) const {
+			*this = *this / t;
+		}
+		void operator+=(const Vertex& other) const {
+			*this = *this + other;
+		}
+		void operator-=(const Vertex& other) const {
+			*this = *this - other;
+		}
+
+		point3d<FloatType> position;
+		point3d<FloatType> normal;
+		point3d<FloatType> color;
+		point2d<FloatType> texCoord;
+	private:
+	};
+	typedef Vertex<float> Vertexf;
+	typedef Vertex<double> Vertexd;
+
+	// ********************************
+	// Triangle class of the Tri Mesh
+	// ********************************
+	template<class FloatType>
+	class Triangle {
+	public:
+		Triangle(Vertex<FloatType> *v0, Vertex<FloatType> *v1, Vertex<FloatType> *v2) {
+			assert (v0 && v1 && v2);
+			this->v0 = v0;
+			this->v1 = v1;
+			this->v2 = v2;
+			m_Center = (v0->position + v1->position + v2->position)/(FloatType)3.0;
+		}
+		~Triangle() {
+		}
+
+		Vertex<FloatType> getSurfaceVertex(FloatType u, FloatType v) const {
+			return *v0 *((FloatType)1.0 - u - v) + *v1 *u + *v2 *v;
+		}
+		point3d<FloatType> getSurfacePosition(FloatType u, FloatType v) const 	{
+			return v0->position*((FloatType)1.0 - u - v) + v1->position*u + v2->position*v;
+		}
+		point3d<FloatType> getSurfaceColor(FloatType u, FloatType v) const {
+			return v0->color*((FloatType)1.0 - u - v) + v1->color*u + v2->color*v;
+		}
+		point2d<FloatType> getSurfaceNormal(FloatType u, FloatType v) const {
+			return v0->normal*((FloatType)1.0 - u - v) + v1->normal*u + v2->normal*v;
+		}
+		point3d<FloatType> getSurfaceTexCoord(FloatType u, FloatType v) const {
+			return v0->texCoord*((FloatType)1.0 - u - v) + v1->texCoord*u + v2->texCoord*v;
+		}
+
+		bool intersect(const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
+			const point3d<FloatType> &d = r.direction();
+			const point3d<FloatType> &p = r.origin();
+
+			point3d<FloatType> e1 = v1->position - v0->position;
+			point3d<FloatType> e2 = v2->position - v0->position;
+
+			if (intersectOnlyFrontFaces) {
+				point3d<FloatType> n = e1^e2; n.normalize();
+				if ((d | n) > (FloatType)0.0) return false;
+			}
+
+			point3d<FloatType> h = d^e2;
+			FloatType a = e1 | h;
+
+			//if (a > -0.0000000001 && a < 0.0000000001) return false;
+			if (a == (FloatType)0.0 || a == -(FloatType)0.0)	return false;
+
+			FloatType f = (FloatType)1.0/a;
+			point3d<FloatType> s = p - v0->position;
+			FloatType u = f * (s | h);
+
+			if (u < (FloatType)0.0 || u > (FloatType)1.0)	return false;
+
+			point3d<FloatType> q = s^e1;
+			FloatType v = f * (d | q);
+
+			if (v < (FloatType)0.0 || u + v > (FloatType)1.0)	return false;
+
+			// at this stage we can compute t to find out where the intersection point is on the line
+			FloatType t = f * (e2 | q);
+
+			//if (t > 0.0000000001 && t < r.t) {
+			//if (t < _t) {
+			if (t <= tmax && t >= tmin) {
+				_t = t;
+				_u = u;
+				_v = v;
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+
+		void includeInBoundingBox(BoundingBox3d<FloatType> &bb) {
+			bb.include(v0->position);
+			bb.include(v1->position);
+			bb.include(v2->position);
+		}
+
+		const point3d<FloatType>& getCenter() const {
+			return m_Center;
+		}
+	private:
+		Vertex<FloatType> *v0, *v1, *v2;			
+		point3d<FloatType> m_Center;
+	};
+	typedef Triangle<float> Trianglef;
+	typedef Triangle<double> Triangled;
+
+
 template<class FloatType>
 class TriMesh
 {
     public:
-		// ********************************
-		// Vertex class of the Tri Mesh
-		// ********************************
-		template<class FloatType>
-		class Vertex {
-		public:
-			Vertex() : position(point3d<FloatType>::origin), normal(point3d<FloatType>::origin), color(point3d<FloatType>::origin), texCoord(point2d<FloatType>::origin) { }
-			Vertex(const vec3f& _position) : position(_position) { }
-			Vertex(const vec3f& _p, const vec3f& _n, const vec3f& _c, const vec2f& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
 
-			Vertex operator*(FloatType t) const {
-				return Vertex(position*t, normal*t, color*t, texCoord*t);
-			}
-			Vertex operator/(FloatType t) const {
-				return Vertex(position/t, normal/t, color/t, texCoord/t);
-			}
-			Vertex operator+(const Vertex& other) const {
-				return Vertex(position+other.position, normal+other.normal, color+other.color, texCoord+other.texCoord);
-			}
-			Vertex operator-(const Vertex& other) const {
-				return Vertex(position-other.position, normal-other.normal, color-other.color, texCoord-other.texCoord);
-			}
-
-			void operator*=(FloatType t) {
-				*this = *this * t;
-			}
-			void operator/=(FloatType t) const {
-				*this = *this / t;
-			}
-			void operator+=(const Vertex& other) const {
-				*this = *this + other;
-			}
-			void operator-=(const Vertex& other) const {
-				*this = *this - other;
-			}
-
-			point3d<FloatType> position;
-			point3d<FloatType> normal;
-			point3d<FloatType> color;
-			point2d<FloatType> texCoord;
-		private:
-		};
-		typedef Vertex<float> Vertexf;
-		typedef Vertex<double> Vertexd;
-		
-		// ********************************
-		// Triangle class of the Tri Mesh
-		// ********************************
-		template<class FloatType>
-		class Triangle {
-		public:
-			Triangle(Vertex<FloatType> *v0, Vertex<FloatType> *v1, Vertex<FloatType> *v2) {
-				assert (v0 && v1 && v2);
-				this->v0 = v0;
-				this->v1 = v1;
-				this->v2 = v2;
-				m_Center = (v0->position + v1->position + v2->position)/(FloatType)3.0;
-			}
-			~Triangle() {
-			}
-
-			Vertex<FloatType> getSurfaceVertex(FloatType u, FloatType v) const {
-				return *v0 *((FloatType)1.0 - u - v) + *v1 *u + *v2 *v;
-			}
-			point3d<FloatType> getSurfacePosition(FloatType u, FloatType v) const 	{
-				return v0->position*((FloatType)1.0 - u - v) + v1->position*u + v2->position*v;
-			}
-			point3d<FloatType> getSurfaceColor(FloatType u, FloatType v) const {
-				return v0->color*((FloatType)1.0 - u - v) + v1->color*u + v2->color*v;
-			}
-			point2d<FloatType> getSurfaceNormal(FloatType u, FloatType v) const {
-				return v0->normal*((FloatType)1.0 - u - v) + v1->normal*u + v2->normal*v;
-			}
-			point3d<FloatType> getSurfaceTexCoord(FloatType u, FloatType v) const {
-				return v0->texCoord*((FloatType)1.0 - u - v) + v1->texCoord*u + v2->texCoord*v;
-			}
-
-			bool intersect(const Ray<FloatType> &r, FloatType& _u, FloatType& _v, FloatType& _t, bool intersectOnlyFrontFraces = false) const {
-				const point3d<FloatType> &d = r.direction();
-				const point3d<FloatType> &p = r.origin();
-
-				point3d<FloatType> e1 = *v1 - *v0;
-				point3d<FloatType> e2 = *v2 - *v0;
-
-				if (intersectOnlyFrontFaces) {
-					point3d<FloatType> n = e1^e2; n.normalize();
-					if ((d | n) > 0.0f) return false;
-				}
-
-				point3d<FloatType> h = d^e2;
-				FloatType a = e1 | h;
-
-				//if (a > -0.0000000001 && a < 0.0000000001) return false;
-				if (a == (FloatType)0.0 || a == -(FloatType)0.0)	return false;
-
-				FloatType f = (FloatType)1.0/a;
-				point3d<FloatType> s = p - *v0;
-				FloatType u = f * (s | h);
-
-				if (u < (FloatType)0.0 || u > (FloatType)1.0)	return false;
-
-				point3d<FloatType> q = s^e1;
-				FloatType v = f * (d | q);
-
-				if (v < (FloatType)0.0 || u + v > (FloatType)1.0)	return false;
-
-				// at this stage we can compute t to find out where the intersection point is on the line
-				FloatType t = f * (e2 | q);
-
-				//if (t > 0.0000000001 && t < r.t) {
-				if (t < r.t) {
-					_t = t;
-					_u = u;
-					_v = v;
-					return true;
-				} else {
-					return false;
-				}
-			}
-
-
-			void includeInBoundingBox(BoundingBox3d<FloatType> &bb) {
-				bb.include(v0->position);
-				bb.include(v1->position);
-				bb.include(v2->position);
-			}
-
-			const point3d<FloatType>& getCenter() const {
-				return m_Center;
-			}
-		private:
-			Vertex<FloatType> *v0, *v1, *v2;			
-			point3d<FloatType> m_Center;
-		};
-		typedef Triangle<float> Trianglef;
-		typedef Triangle<double> Triangled;
 		
 
 
@@ -259,7 +265,7 @@ class TriMesh
 
         const std::vector<Vertex<FloatType>>& getVertices() const { return m_Vertices; }
         const std::vector<vec3ui>& getIndices() const { return m_Indices; }
-		const std::vector<Triangle<FloatType>*> getTrianglePointers() const { return m_TrianglePointers; }
+		std::vector<Triangle<FloatType>*> getTrianglePointers()  { return m_TrianglePointers; }
 
 		void getMeshData(MeshData<FloatType>& meshData) const {
 			meshData.clear();

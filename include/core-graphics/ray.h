@@ -13,11 +13,11 @@ public:
 	Ray(const point3d<FloatType> &o, const point3d<FloatType> &d) {
 		m_Origin = o;
 		m_Direction = d;
-		m_InverseDirection = point3d<FloatType>(1.0/d.x, 1.0/d.y, 1.0/d.z);
+		m_InverseDirection = point3d<FloatType>((FloatType)1.0/d.x, (FloatType)1.0/d.y, (FloatType)1.0/d.z);
 
-		m_Sign.x = (m_InverseDirection.x < 0);
-		m_Sign.y = (m_InverseDirection.y < 0);
-		m_Sign.z = (m_InverseDirection.z < 0);
+		m_Sign.x = (m_InverseDirection.x < (FloatType)0);
+		m_Sign.y = (m_InverseDirection.y < (FloatType)0);
+		m_Sign.z = (m_InverseDirection.z < (FloatType)0);
 	}
 
 	~Ray() {

@@ -71,11 +71,13 @@ public:
 		if (v.z > maxZ)	maxZ = v.z;
 	}
 
-	bool intersect(const Ray<FloatType> &r) const
+	bool intersect(const Ray<FloatType> &r, FloatType tmin, FloatType tmax ) const
 	{
+		//const FloatType t0 = 0.0;
+		//const FloatType t1 = r.t;
 
-		const FloatType t0 = 0.0;
-		const FloatType t1 = r.t;
+		const FloatType t0 = tmin;
+		const FloatType t1 = tmax;
 
 		FloatType txmin, txmax, tymin, tymax, tzmin, tzmax;
 
