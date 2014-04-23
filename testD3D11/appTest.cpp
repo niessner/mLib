@@ -1,6 +1,7 @@
 
 #include "main.h"
 
+
 void AppTest::init(ml::ApplicationData &app)
 {
 
@@ -18,6 +19,13 @@ void AppTest::init(ml::ApplicationData &app)
 	//ml::MeshIOf::writeToFile("outtest.obj", meshData);
 
 	ml::TriMeshf triMesh(meshData);
+	ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
+	ml::Rayf ray(ml::vec3f::origin, ml::vec3f::origin);
+	float u,v,t; 
+	ml::Trianglef* tri;
+	accel.intersect(ray, u, v, t, tri);
+
+
 	ml::MeshDataf out = triMesh.getMeshData();
 	ml::MeshIOf::writeToFile("bla.ply", out);
 
@@ -47,8 +55,6 @@ void AppTest::init(ml::ApplicationData &app)
 
     m_font.init(app.graphics, "Calibri");
 
-	ml::TriMeshf::Vertexf v0, v1;
-	v0 *= 0.5f;
 }
 
 void AppTest::render(ml::ApplicationData &app)
