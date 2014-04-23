@@ -117,14 +117,17 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		ml::mat4f camToWorld = m_camera.camera().getInverse();
 		ml::mat4f trans =  camToWorld * projToCam;
 		ml::ColorImageRGB image(app.window.height(), app.window.width());
+
+		ml::Clock c;
+		c.start();
 #pragma omp parallel for
 		for (int i_ = 0; i_ < (int)app.window.height(); i_++) {
 			unsigned int i = (unsigned int)i_;
 			for (unsigned int j = 0; j < app.window.width(); j++) {
 				//std::cout << " tyring ray " << i << " " << j << std::endl;
 				ml::vec4f p((float)j, (float)i, 0.5f, 1.0f);
-				p.x /= app.window.height();
-				p.y /= app.window.width();
+				p.x /= app.window.width();
+				p.y /= app.window.height();
 				p.x = 2.0f*p.x - 1.0f;
 				p.y = 1.0f-2.0f*p.y;
 
@@ -140,7 +143,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 			
 			}
 		}
-		
+		std::cout << "time " << c.elapsed() << std::endl;
 		ml::FreeImageWrapper::saveImage("test.jpg", image);
 
 	}
