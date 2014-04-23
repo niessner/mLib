@@ -187,18 +187,18 @@ class TriMesh
 			}
 			if (m_bHasNormals)	{
 				meshData.m_Normals.resize(m_Vertices.size());
-				meshData.m_FaceIndicesNormals.resize(m_Indices.size());
+				//meshData.m_FaceIndicesNormals.resize(m_Indices.size());
 			}
 			if (m_bHasTexCoords) {
 				meshData.m_TextureCoords.resize(m_Vertices.size());
-				meshData.m_FaceIndicesTextureCoords.resize(m_Indices.size());
+				//meshData.m_FaceIndicesTextureCoords.resize(m_Indices.size());
 			}
 			for (size_t i = 0; i < m_Indices.size(); i++) {
 				std::vector<unsigned int> ci(3);
 				ci[0] = m_Indices[i].x;	ci[1] = m_Indices[i].y;	ci[2] = m_Indices[i].z;
 				meshData.m_FaceIndicesVertices[i] = ci;
-				if (m_bHasNormals)		meshData.m_FaceIndicesNormals[i] = ci;
-				if (m_bHasTexCoords)	meshData.m_FaceIndicesTextureCoords[i] = ci;
+				//if (m_bHasNormals)		meshData.m_FaceIndicesNormals[i] = ci;
+				//if (m_bHasTexCoords)	meshData.m_FaceIndicesTextureCoords[i] = ci;
 			}
 
 			for (size_t i = 0; i < m_Vertices.size(); i++) {

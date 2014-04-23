@@ -17,36 +17,44 @@ namespace ml {
 
 		for (unsigned int i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i].position = meshData.m_Vertices[i];
-			if (m_bHasColors)	m_Vertices[i].color = meshData.m_Colors[i];
 		}
 
 		for (size_t i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
 			if (meshData.m_FaceIndicesVertices[i].size() == 3) {
 				//we need to split vertices if the same vertex has different texcoords and/or normals
-				if (m_bHasNormals || m_bHasTexCoords) {
+				if (m_bHasNormals || m_bHasTexCoords || m_bHasColors) {
 					vec3ui coords = vec3ui(0,0,0);
 					for (unsigned int j = 0; j < 3; j++) {
 						bool vertexSplit = false;
 						if (m_bHasNormals) { //split if normal is different than the one found before
-							const point3d<FloatType>& n = meshData.m_Normals[meshData.m_FaceIndicesNormals[i][j]];
-							if (m_Vertices[i].normal != point3d<FloatType>::origin && m_Vertices[i].normal != n)	vertexSplit = true;
+							const point3d<FloatType>& n = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal != point3d<FloatType>::origin && 
+								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal != n)	vertexSplit = true;
 						}
 						if (m_bHasTexCoords) { //split if texcoord is different than the one found before
-							const point2d<FloatType>& t =meshData.m_TextureCoords[meshData.m_FaceIndicesTextureCoords[i][j]];
-							if (m_Vertices[i].texCoord != point2d<FloatType>::origin && m_Vertices[i].texCoord != t) vertexSplit = true;
+							const point2d<FloatType>& t = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
+							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord != point2d<FloatType>::origin && 
+								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord != t) vertexSplit = true;
+						}
+						if (m_bHasColors) { //split if texcoord is different than the one found before
+							const point3d<FloatType>& c = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
+							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != point3d<FloatType>::origin && 
+								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != c) vertexSplit = true;
 						}
 
 						if (vertexSplit) {
 							MLIB_WARNING("untested");
-							Vertex<FloatType> v = m_Vertices[meshData.m_FaceIndicesVertices[i][j]];
-							if (m_bHasNormals)		v.normal = meshData.m_Normals[meshData.m_FaceIndicesNormals[i][j]];
-							if (m_bHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.m_FaceIndicesTextureCoords[i][j]];
+							Vertex<FloatType> v = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
+							if (m_bHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (m_bHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
+							if (m_bHasColors)		v.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							m_Vertices.push_back(v);
 							coords[j] = (unsigned int)m_Vertices.size() - 1;
 						} else {
-							if (m_bHasNormals)		m_Vertices[m_Indices[i][j]].normal = meshData.m_Normals[meshData.m_FaceIndicesNormals[i][j]];
-							if (m_bHasTexCoords)	m_Vertices[m_Indices[i][j]].texCoord = meshData.m_TextureCoords[meshData.m_FaceIndicesTextureCoords[i][j]];
-							coords[j] = meshData.m_FaceIndicesVertices[i][j];
+							if (m_bHasNormals)		m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (m_bHasTexCoords)	m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
+							if (m_bHasColors)		m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
+							coords[j] = meshData.getFaceIndicesVertices()[i][j];
 						}
 					}
 					m_Indices.push_back(coords);
