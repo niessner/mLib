@@ -155,7 +155,7 @@ namespace ml {
 		// ********************************
 		// TriMesh itself
 		// ********************************
-		TriMesh() : m_Vertices(), m_Indices(), m_TrianglePointers {
+		TriMesh() : m_Vertices(), m_Indices(), m_TrianglePointers() {
 			m_bHasNormals = false;
 			m_bHasTexCoords = false;
 			m_bHasColors = false;
@@ -245,10 +245,10 @@ namespace ml {
 			m_Vertices = std::move(t.m_Vertices);
 			m_Indices = std::move(t.m_Indices);
 			m_TrianglePointers = std::move(t.m_TrianglePointers);
-			m_bHasNormals = other.m_bHasNormals;
-			m_bHasTexCoords = other.m_bHasTexCoords;
-			m_bHasColors = other.m_bHasColors;
-			m_bTrianglePointersCreated = other.m_bTrianglePointersCreated;
+			m_bHasNormals = t.m_bHasNormals;
+			m_bHasTexCoords = t.m_bHasTexCoords;
+			m_bHasColors = t.m_bHasColors;
+			m_bTrianglePointersCreated = t.m_bTrianglePointersCreated;
 		}
 
 		void operator=(const TriMesh& other) {
