@@ -28,7 +28,7 @@
 //
 #include "../src/core-util/utility.cpp"
 #include "../src/core-util/directory.cpp"
-#include "../src/core-util/clock.cpp"
+#include "../src/core-util/timer.cpp"
 #include "../src/core-util/pipe.cpp"
 #include "../src/core-util/UIConnection.cpp"
 

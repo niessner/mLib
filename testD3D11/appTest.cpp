@@ -111,17 +111,17 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		const std::string testFilename = "scans/gates381_full.ply";
 		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 		ml::TriMeshf triMesh(meshData);
-		ml::Clock c0;
+		ml::Timer c0;
 		c0.start();
 		ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
-		std::cout << "time construct " << c0.elapsed() << std::endl;
+		std::cout << "time construct " << c0.getElapsedTimeMS() << std::endl;
 
 		ml::mat4f projToCam = m_camera.perspective().getInverse();
 		ml::mat4f camToWorld = m_camera.camera().getInverse();
 		ml::mat4f trans =  camToWorld * projToCam;
 		ml::ColorImageRGB image(app.window.height(), app.window.width());
 
-		ml::Clock c;
+		ml::Timer c;
 		c.start();
 #pragma omp parallel for
 		for (int i_ = 0; i_ < (int)app.window.height(); i_++) {
@@ -146,7 +146,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 			
 			}
 		}
-		std::cout << "time trace " << c.elapsed() << std::endl;
+		std::cout << "time trace " << c.getElapsedTimeMS() << std::endl;
 		ml::FreeImageWrapper::saveImage("test.jpg", image);
 
 	}

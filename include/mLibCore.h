@@ -46,7 +46,7 @@
 //
 #include "core-util/stringUtilConvert.h"
 #include "core-util/directory.h"
-#include "core-util/clock.h"
+#include "core-util/timer.h"
 #include "core-util/nearestNeighborSearch.h"
 #include "core-util/commandLineReader.h"
 #include "core-util/parameterFile.h"
