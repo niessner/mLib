@@ -18,7 +18,7 @@ struct TriangleBVHNode {
 	//using Triangle = TriMesh::Triangle<T>;
 
 	BoundingBox3d<FloatType> boundingBox;
-	Triangle<FloatType>* leafTri;
+	typename TriMesh<FloatType>::Triangle<FloatType>* leafTri;
 
 
 	TriangleBVHNode<FloatType> *parent;
@@ -43,7 +43,7 @@ struct TriangleBVHNode {
 	}
 
 
-	void split(typename std::vector<Triangle<FloatType>*>::iterator& begin, typename std::vector<Triangle<FloatType>*>::iterator& end, unsigned int lastSortAxis) {
+	void split(typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& end, unsigned int lastSortAxis) {
 		if (end - begin > 1) {
 			if (lastSortAxis == 0)		std::stable_sort(begin, end, cmpX);
 			else if (lastSortAxis == 1)	std::stable_sort(begin, end, cmpY);
@@ -63,7 +63,7 @@ struct TriangleBVHNode {
 		}
 	}
 
-	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, Triangle<FloatType>* &triangle, FloatType& tmin, FloatType& tmax, bool intersectOnlyFrontFaces = false) const {
+	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType& tmin, FloatType& tmax, bool intersectOnlyFrontFaces = false) const {
 		if (t < tmin || t > tmax)	return false;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {
 			bool b = false;
@@ -108,15 +108,15 @@ struct TriangleBVHNode {
 	}
 
 
-	static bool cmpX(Triangle<FloatType> *t0, Triangle<FloatType> *t1) {
+	static bool cmpX(typename TriMesh<FloatType>::Triangle<FloatType> *t0, typename TriMesh<FloatType>::Triangle<FloatType> *t1) {
 		return t0->getCenter().x < t1->getCenter().x;
 	}
 
-	static bool cmpY(Triangle<FloatType> *t0, Triangle<FloatType> *t1) {
+	static bool cmpY(typename TriMesh<FloatType>::Triangle<FloatType> *t0, typename TriMesh<FloatType>::Triangle<FloatType> *t1) {
 		return t0->getCenter().y < t1->getCenter().y;
 	}
 
-	static bool cmpZ(Triangle<FloatType> *t0, Triangle<FloatType> *t1) {
+	static bool cmpZ(typename TriMesh<FloatType>::Triangle<FloatType> *t0, typename TriMesh<FloatType>::Triangle<FloatType> *t1) {
 		return t0->getCenter().z < t1->getCenter().z;
 	}
 };
@@ -129,7 +129,7 @@ public:
 	TriangleBVHAccelerator(void) {
 		m_Root = NULL;
 	}
-	TriangleBVHAccelerator(std::vector<Triangle<FloatType>*>& tris, bool useParallelBuild = true) {
+	TriangleBVHAccelerator(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris, bool useParallelBuild = true) {
 		m_Root = NULL;
 		build(tris, useParallelBuild);
 	}
@@ -138,7 +138,7 @@ public:
 		destroy();
 	}
 
-	void build( std::vector<Triangle<FloatType>*>& tris, bool useParallelBuild = true )
+	void build( std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris, bool useParallelBuild = true )
 	{
 		SAFE_DELETE(m_Root);	//in case there is already a mesh before...
 				
@@ -158,14 +158,14 @@ public:
 	void destroy() {
 			SAFE_DELETE(m_Root);
 	}
-	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, Triangle<FloatType>* &triangle, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
+	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
 		t = u = v = std::numeric_limits<FloatType>::max();
 		triangle = NULL;
 		return m_Root->intersect(r, t, u, v, triangle, tmin, tmax, intersectOnlyFrontFaces);
 	}
 private:
 
-	void buildParallel(std::vector<Triangle<FloatType>*>& tris) {
+	void buildParallel(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris) {
 		struct NodeEntry {
 			size_t begin;
 			size_t end;
@@ -228,7 +228,7 @@ private:
 		m_Root->computeBoundingBox();
 	}
 
-	void buildRecursive(std::vector<Triangle<FloatType>*>& tris) {
+	void buildRecursive(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris) {
 		assert(tris.size() > 2);
 		m_Root = new TriangleBVHNode<FloatType>;
 		m_Root->split(tris.begin(), tris.end(), 0);

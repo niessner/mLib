@@ -5,21 +5,21 @@ namespace ml {
 
 namespace shapes {
 
-TriMeshOld box(float xDim, float yDim, float zDim, const vec4f& color);
+TriMeshf box(float xDim, float yDim, float zDim, const vec3f& color);
 
-inline TriMeshOld box(float dim = 1, const vec4f& color = vec4f(1, 0, 0, 1)) { return box(dim, dim, dim, color); }
+inline TriMeshf box(float dim = 1, const vec3f& color = vec3f(1, 0, 0)) { return box(dim, dim, dim, color); }
 
-TriMeshOld cylinder(float radius, float height, UINT stacks, UINT slices, const vec4f& color);
+TriMeshf cylinder(float radius, float height, UINT stacks, UINT slices, const vec4f& color);
 
-TriMeshOld cylinder(const vec3f &p0, const vec3f &p1, float radius, UINT stacks, UINT slices, const vec4f& color);
+TriMeshf cylinder(const vec3f &p0, const vec3f &p1, float radius, UINT stacks, UINT slices, const vec3f& color);
 
-inline TriMeshOld line(const vec3f& p0, const vec3f& p1, const vec4f& color = vec4f(1, 0, 0, 1), const float thickness = 0.005f) {
+inline TriMeshf line(const vec3f& p0, const vec3f& p1, const vec3f& color = vec3f(1, 0, 0), const float thickness = 0.005f) {
   return cylinder(p0, p1, thickness, 2, 4, color);
 }
 
-TriMeshOld wireframeBox(float dim = 1, const vec4f& color = vec4f(1, 0, 0, 1));
+TriMeshf wireframeBox(float dim = 1, const vec3f& color = vec3f(1, 0, 0));
 
-TriMeshOld wireframeBox(const mat4f& unitCube2world, const vec4f& color = vec4f(1, 0, 0, 1));
+TriMeshf wireframeBox(const mat4f& unitCube2world, const vec3f& color = vec3f(1, 0, 0));
 
 }  // namespace shapes
 

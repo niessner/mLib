@@ -7,45 +7,45 @@ const D3D11_INPUT_ELEMENT_DESC ml::D3D11TriMesh::layout[layoutElementCount] =
 	{ "attributeB", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
-//TODO load from arbitrary meshes ;)
-void ml::D3D11TriMesh::load(GraphicsDevice &g, const TriMeshOld& mesh)
-{
-	//assert(false);	//TODO MATTHIAS
-	MLIB_WARNING("Function not supported anymore...");
-	g.castD3D11().registerAsset(this);
-	m_Vertices.resize(mesh.vertices().size());
-	for (size_t i = 0; i < m_Vertices.size(); i++) {
-		m_Vertices[i].position = mesh.vertices()[i].position;
-		m_Vertices[i].normal = mesh.vertices()[i].normal;
-		m_Vertices[i].attributeA = mesh.vertices()[i].attributeA;
-		m_Vertices[i].attributeB = mesh.vertices()[i].attributeB;
-	}
-	m_Indices.resize(mesh.indices().size());
-	for (size_t i = 0; i < mesh.indices().size(); i++) {
-		m_Indices[i] = mesh.indices()[i];
-	}
-	reset(g);
-}
-
-
-void ml::D3D11TriMesh::load(GraphicsDevice &g, TriMeshOld&& mesh)
-{
-	//assert(false);	//TODO MATTHIAS
-	MLIB_WARNING("Function not supported anymore...");
-	g.castD3D11().registerAsset(this);
-	m_Vertices.resize(mesh.vertices().size());
-	for (size_t i = 0; i < m_Vertices.size(); i++) {
-		m_Vertices[i].position = mesh.vertices()[i].position;
-		m_Vertices[i].normal = mesh.vertices()[i].normal;
-		m_Vertices[i].attributeA = mesh.vertices()[i].attributeA;
-		m_Vertices[i].attributeB = mesh.vertices()[i].attributeB;
-	}
-	m_Indices.resize(mesh.indices().size());
-	for (size_t i = 0; i < mesh.indices().size(); i++) {
-		m_Indices[i] = mesh.indices()[i];
-	}
-	reset(g);
-}
+////TODO load from arbitrary meshes ;)
+//void ml::D3D11TriMesh::load(GraphicsDevice &g, const TriMeshOld& mesh)
+//{
+//	//assert(false);	//TODO MATTHIAS
+//	MLIB_WARNING("Function not supported anymore...");
+//	g.castD3D11().registerAsset(this);
+//	m_Vertices.resize(mesh.vertices().size());
+//	for (size_t i = 0; i < m_Vertices.size(); i++) {
+//		m_Vertices[i].position = mesh.vertices()[i].position;
+//		m_Vertices[i].normal = mesh.vertices()[i].normal;
+//		m_Vertices[i].attributeA = mesh.vertices()[i].attributeA;
+//		m_Vertices[i].attributeB = mesh.vertices()[i].attributeB;
+//	}
+//	m_Indices.resize(mesh.indices().size());
+//	for (size_t i = 0; i < mesh.indices().size(); i++) {
+//		m_Indices[i] = mesh.indices()[i];
+//	}
+//	reset(g);
+//}
+//
+//
+//void ml::D3D11TriMesh::load(GraphicsDevice &g, TriMeshOld&& mesh)
+//{
+//	//assert(false);	//TODO MATTHIAS
+//	MLIB_WARNING("Function not supported anymore...");
+//	g.castD3D11().registerAsset(this);
+//	m_Vertices.resize(mesh.vertices().size());
+//	for (size_t i = 0; i < m_Vertices.size(); i++) {
+//		m_Vertices[i].position = mesh.vertices()[i].position;
+//		m_Vertices[i].normal = mesh.vertices()[i].normal;
+//		m_Vertices[i].attributeA = mesh.vertices()[i].attributeA;
+//		m_Vertices[i].attributeB = mesh.vertices()[i].attributeB;
+//	}
+//	m_Indices.resize(mesh.indices().size());
+//	for (size_t i = 0; i < mesh.indices().size(); i++) {
+//		m_Indices[i] = mesh.indices()[i];
+//	}
+//	reset(g);
+//}
 
 void ml::D3D11TriMesh::updateAttributeA(GraphicsDevice &g, const std::vector<vec4f> &newValues)
 {

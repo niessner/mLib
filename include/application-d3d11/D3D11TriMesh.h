@@ -43,8 +43,8 @@ public:
 		SAFE_RELEASE(m_indexBuffer);
 	}
 
-	void load(GraphicsDevice &g, const TriMeshOld& mesh);
-	void load(GraphicsDevice &g, TriMeshOld&& mesh);
+	//void load(GraphicsDevice &g, const TriMeshOld& mesh);
+	//void load(GraphicsDevice &g, TriMeshOld&& mesh);
 
 	template<class T>
 	void load(GraphicsDevice &g, const TriMesh<T>& triMesh) {

@@ -38,7 +38,7 @@ void AppTest::init(ml::ApplicationData &app)
 	std::vector<ml::vec3f> points(5000);
 	std::for_each(points.begin(), points.end(), lambdaPoints);
 
-    //m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::shapes::box(0.01f), points));
+    m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::shapes::box(0.01f), points));
 
     m_vsColor.load(app.graphics, "shaders/test.shader");
     m_psColor.load(app.graphics, "shaders/test.shader");
@@ -137,7 +137,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				p = trans * p;
 				p /= p.w;
 				ml::Rayf r(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).normalize());
-				float t,u,v;	ml::Trianglef* tri;
+				float t,u,v;	ml::TriMeshf::Trianglef* tri;
 				if (accel.intersect(r, t, u, v, tri)) {
 					image(i,j) = tri->getSurfaceColor(u,v);
 				} else {
