@@ -71,6 +71,14 @@ class TriMeshOld
 
         const std::vector<UINT>& indices() const { return m_indices; }
 
+        bbox3f bbox() const
+        {
+            bbox3f result(m_vertices.front().position, m_vertices.front().position);
+            for(const TriMeshOldVertex &v : m_vertices)
+                result.include(v.position);
+            return result;
+        }
+
     private:
         std::vector<TriMeshOldVertex> m_vertices;
         std::vector<UINT> m_indices;

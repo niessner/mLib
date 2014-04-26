@@ -14,7 +14,7 @@
 //////////////////////
 namespace ml {
 
-namespace Convert {
+namespace convert {
 	inline int toInt(const std::string& s) {
 		return std::stoi(s);
 	}
