@@ -17,6 +17,12 @@ public:
 	{
 		kNearestInternal(query, k, epsilon, result);
 	}
+    UINT nearest(const D *query) const
+    {
+        std::vector<UINT> result;
+        kNearestInternal(query, 1, 0.0f, result);
+        return result[0];
+    }
 	
 	void init(const std::vector< std::vector<D> > &points, UINT maxK)
 	{
