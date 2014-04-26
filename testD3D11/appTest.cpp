@@ -11,7 +11,7 @@ void AppTest::init(ml::ApplicationData &app)
 
 	//const std::string testFilename = "scans/gates381.off";
 	//const std::string testFilename = "scans/gates381.obj";
-	const std::string testFilename = "scans/gates381.ply";
+	const std::string testFilename = "scans/gates381_full.ply";
 	//const std::string testFilename = "scans/gates381_ascii.ply";
 	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 	//ml::MeshIOf::writeToFile("outtest.ply", meshData);
@@ -26,8 +26,8 @@ void AppTest::init(ml::ApplicationData &app)
 	//accel.intersect(ray, u, v, t, tri);
 
 
-	ml::MeshDataf out = triMesh.getMeshData();
-	ml::MeshIOf::writeToFile("bla.ply", out);
+	//ml::MeshDataf out = triMesh.getMeshData();
+	//ml::MeshIOf::writeToFile("bla.ply", out);
 
 	//const ml::TriMesh triMesh(meshData);
 	m_mesh.load(app.graphics, meshData);
@@ -77,7 +77,7 @@ void AppTest::render(ml::ApplicationData &app)
 
     m_pointCloud.render(app.graphics);
 
-    m_font.drawString(app.graphics, "FPS: " + ml::Convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
+    m_font.drawString(app.graphics, "FPS: " + ml::convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
 }
 
 void AppTest::resize(ml::ApplicationData &app)
@@ -108,10 +108,13 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
     if(key == KEY_RIGHT) m_camera.lookRight(-theta);
 
 	if(key == 'R') {
-		const std::string testFilename = "scans/gates381.ply";
+		const std::string testFilename = "scans/gates381_full.ply";
 		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 		ml::TriMeshf triMesh(meshData);
+		ml::Clock c0;
+		c0.start();
 		ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
+		std::cout << "time construct " << c0.elapsed() << std::endl;
 
 		ml::mat4f projToCam = m_camera.perspective().getInverse();
 		ml::mat4f camToWorld = m_camera.camera().getInverse();
@@ -143,7 +146,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 			
 			}
 		}
-		std::cout << "time " << c.elapsed() << std::endl;
+		std::cout << "time trace " << c.elapsed() << std::endl;
 		ml::FreeImageWrapper::saveImage("test.jpg", image);
 
 	}
