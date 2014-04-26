@@ -7,8 +7,9 @@ namespace ml {
 
 class Timer {
 public:
-	Timer() {
+	Timer(bool _start = true) {
 		m_bRunning = false;
+		if (_start) start();
 	}
 
 	void start() {
