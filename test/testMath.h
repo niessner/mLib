@@ -104,10 +104,10 @@ public:
 
 		for(UINT iteration = 0; iteration < 2; iteration++)
 		{
-			Clock timer;
+			Timer timer;
 			KMeansClustering<vec3f, vec3fKMeansMetric> clustering;
 			clustering.cluster(points, clusterCount, maxIterations, false);
-			Console::log() << "iteration " << iteration << ": " << timer.elapsed() << std::endl;
+			Console::log() << "iteration " << iteration << ": " << timer.getElapsedTime() << std::endl;
 		}
 		
 		Console::log() << "clustering test passed" << std::endl;

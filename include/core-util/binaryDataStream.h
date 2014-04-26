@@ -73,7 +73,7 @@ public:
 		m_DataBuffer.clearBuffer();
 	}
 
-	//! saves the  stream to file; does not affect current data
+	//! saves the stream to file; does not affect current data
 	void saveToFile(const std::string &filename) {
 		m_DataBuffer.saveToFile(filename);
 	}

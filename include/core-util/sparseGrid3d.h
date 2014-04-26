@@ -83,7 +83,47 @@ public:
 #endif
 	friend BinaryDataStream<U,V>& operator<< <>(BinaryDataStream<U,V>& s, const SparseGrid3D<T>& g);
 
-private:
+
+
+	void writeBinaryDump(const std::string& s) const {
+		std::ofstream fout(s, std::ios::binary);
+		size_t size = m_Data.size();
+		float maxLoadFactor = m_Data.max_load_factor();
+		fout.write((const char*)&size, sizeof(size_t));
+		fout.write((const char*)&maxLoadFactor, sizeof(float));
+		for (auto iter = begin(); iter != end(); iter++) {
+			const ml::vec3i first = iter->first;
+			const T second = iter->second;
+			fout.write((const char*)&first, sizeof(ml::vec3i));
+			fout.write((const char*)&second, sizeof(T));
+		}
+		fout.close();
+	}
+
+	void readBinaryDump(const std::string& s) {
+		m_Data.clear();
+		std::ifstream fin(s, std::ios::binary);
+		if (!fin.is_open()) throw MLIB_EXCEPTION("file not found " + s);
+		size_t size; float maxLoadFactor;
+		fin.read((char*)&size, sizeof(size_t));
+		fin.read((char*)&maxLoadFactor, sizeof(float));
+		for (size_t i = 0; i < size; i++) {
+			ml::vec3i first; T second;
+			fin.read((char*)&first, sizeof(ml::vec3i));
+			assert(fin.good());
+			fin.read((char*)&second, sizeof(T));
+			assert(fin.good());
+			m_Data[first] = second;
+		}
+		fin.close();
+	}
+
+
+
+
+
+
+protected:
 	std::unordered_map<vec3i, T, std::hash<vec3i>> m_Data;
 };
 
@@ -108,7 +148,6 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 		s >> first >> second;
 		g[first] = second;
 	}
-	//s.readData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
 	return s;
 }
 //! write to binary stream overload
@@ -119,7 +158,6 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 	for (auto iter = g.begin(); iter != g.end(); iter++) {
 		s << iter->first << iter->second;
 	}
-	//s.writeData((BYTE*)data.m_Data, sizeof(int)*data.m_Size);
 	return s;
 }
 

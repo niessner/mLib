@@ -48,6 +48,12 @@ int main()
 	s >> in;
 	std::cout << signedDistanceField << std::endl << std::endl << in << std::endl;
 
+	std::cout << std::endl << std::endl;
+	signedDistanceField.writeBinaryDump("bla.dump");
+	ml::SparseGrid3D<float> reRead;
+	reRead.readBinaryDump("bla.dump");
+	std::cout << reRead << std::endl;
+
 	App a;
 	a.go();
 
