@@ -225,6 +225,7 @@ namespace util
 	//
 	// Returns the next line in the given file
 	//
+    std::string fileNameFromPath(const std::string &path);
 	std::string getNextLine(std::ifstream& file);
 	std::vector<BYTE> getFileData(const std::string& filename);
 

@@ -137,6 +137,10 @@ namespace util
 		file.close();
 	}
 
+    std::string fileNameFromPath(const std::string &path)
+    {
+        return ml::util::split(ml::util::replace(path, '\\', '/'), '/').back();
+    }
 	std::vector<std::string> getFileLines(const std::string &filename, UINT minLineLength)
 	{
 		std::ifstream file(filename);
