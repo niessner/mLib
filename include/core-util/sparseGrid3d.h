@@ -41,7 +41,7 @@ public:
 		m_Data.clear();
 	}
 
-	bool exists(const vec3i& i) {
+	bool exists(const vec3i& i) const {
 		return (m_Data.find(i) != m_Data.end());
 	}
 

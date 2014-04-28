@@ -111,6 +111,9 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		const std::string testFilename = "scans/gates381_full.ply";
 		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 		ml::TriMeshf triMesh(meshData);
+
+		std::cout << triMesh.getBoundingBox() << std::endl;
+
 		ml::Timer c0;
 		c0.start();
 		ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());

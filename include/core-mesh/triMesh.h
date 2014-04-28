@@ -270,7 +270,15 @@ namespace ml {
 		void scale(const point3d<FloatType>& v) {
 			for (Vertex<FloatType>& mv : m_Vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
 		}
-
+		
+		//! Computes the bounding box of the mesh (not cached!)
+		BoundingBox3d<FloatType> getBoundingBox() const {
+			BoundingBox3d<FloatType> bb;
+			for (size_t i = 0; i < m_Vertices.size(); i++) {
+				bb.include(m_Vertices[i].position);
+			}
+			return bb;
+		}
 
 		//! Computes the vertex normals of the mesh
 		void computeNormals();

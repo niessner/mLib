@@ -174,9 +174,6 @@
     <ClInclude Include="..\include\core-mesh\meshData.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-mesh\triMeshOld.h">
-      <Filter>mLibHeader\core-mesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-mesh\triMesh.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
