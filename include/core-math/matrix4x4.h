@@ -673,6 +673,66 @@ public:
 		else 
 				return false;
 	}
+	
+		//! save matrix array to .matArray
+	static void saveMatrixArrayToFile(const std::string& name, const Matrix4x4<FloatType>* matrixArray, unsigned int numMatrices) {
+		assert(false);	//UNTESTED
+		std::ofstream out(name.c_str());
+		out << numMatrices << "\n";
+		out << 4 << " " << 4 << "\n";
+		for (unsigned int h = 0; h < numMatrices; h++) {
+			for (unsigned int i = 0; i < 4; i++) {
+				for (unsigned int j = 0; j < 4; j++) {
+					out << matrixArray[h](i,j) << " ";
+				}
+				out << "\n";
+			}
+		}
+	}
+	
+	//! load matrix array from .matArray
+	static void loadMatrixArrayFromFile(const std::string &name, std::vector<Matrix4x4<FloatType>>& matrices) {
+		assert(false);		//UNTESTED
+		std::ifstream in(name.c_str());
+		unsigned int numMatrices, height, width;;
+		in >> numMatrices >> height >> width;
+		assert(height == width && height == 4);
+		matrices.resize(numMatrices);
+		for (unsigned int k = 0; k < numMatrices; k++) {
+			Matrix4x4<FloatType> &curr = matrices[k];
+			for (unsigned int i = 0; i < 4; i++) {
+				for (unsigned int j = 0; j < 4; j++) {
+					in >> curr.matrix2[i][j];
+				}
+			}
+		}
+
+	}
+	
+
+	//! save matrix to .mat file
+	void saveMatrixToFile(const std::string &name) const {
+		std::ofstream out(name.c_str());
+		out << 4 << " " << 4 << "\n";
+		for (unsigned int i = 0; i < 4; i++) {
+			for (unsigned int j = 0; j < 4; j++) {
+				out << (*this)(i,j) << " ";
+			}
+			out << "\n";
+		}
+	}
+	//! load matrix from .mat file
+	void loadMatrixFromFile(const std::string &name) {
+		std::ifstream in(name.c_str());
+		unsigned int height, width;
+		in >> height >> width;
+		assert(height == width && height == 4);
+		for (unsigned int i = 0; i < 4; i++) {
+			for (unsigned int j = 0; j < 4; j++) {
+				in >> matrix2[i][j];
+			}
+		}
+	}
 
 	union {
 		//! access matrix using a single array
