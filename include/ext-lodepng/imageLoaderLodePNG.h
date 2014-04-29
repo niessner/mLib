@@ -1,3 +1,6 @@
+#ifndef _EXT_LODEPNG_IMAGELOADERLODEPNG_H_
+#define _EXT_LODEPNG_IMAGELOADERLODEPNG_H_
+
 namespace ml {
 
 class LodePNG
@@ -8,3 +11,5 @@ public:
 };
 
 }  // namespace ml
+
+#endif  // _EXT_LODEPNG_IMAGELOADERLODEPNG_H_
