@@ -148,6 +148,27 @@ namespace util
 
 }  // namespace util
 
+template<class T>
+__forceinline std::ostream& operator<<(std::ostream& s, const std::vector<T>& v) {
+	s << "vector size " << v.size() << "\n";
+	for (size_t i = 0; i < v.size(); i++) {
+		s << '\t' << v[i];
+		if (i != v.size() - 1) s << '\n';
+	}
+	return s;
+}
+
+
+template<class T>
+__forceinline std::ostream& operator<<(std::ostream& s, const std::list<T>& l) {
+	s << "list size " << l.size() << "\n";  
+	for (std::list<T>::const_iterator iter = l.begin(); iter != l.end(); iter++) {
+		s << '\t' << *iter;
+		if (iter != --l.end()) s << '\n';
+	}
+	return s;
+}
+
 }  // namespace ml
 
 #endif  // CORE_UTIL_STRINGUTIL_H__

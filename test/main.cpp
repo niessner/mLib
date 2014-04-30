@@ -60,7 +60,9 @@ int main()
 	ml::BinaryDataStreamFile streamIn("test.out", false);
 	for (size_t i = 0; i < numBuckets; i++) {
 		streamIn.readData((BYTE*)&data[0], sizeof(int)*numElements);
-		if (data[50] != 50) std::cout << "i " << i << " error match while read: " << data[50] << std::endl;
+		for (SIZE_T j = 0; j < numElements; j++) {
+			if (data[j] != j) std::cout << "i " << i << " error match while read: " << data[50] << std::endl;
+		}
 	}
 	std::cout << "read done" << std::endl;
 	SAFE_DELETE_ARRAY(data);
