@@ -151,7 +151,7 @@ namespace util
 	std::vector<BYTE> getFileData(const std::string &filename)
 	{
 		FILE *inputFile = util::checkedFOpen(filename.c_str(), "rb");
-		UINT fileSize = util::getFileSize(filename);
+		UINT64 fileSize = util::getFileSize(filename);
 		std::vector<BYTE> result(fileSize);
 		util::checkedFRead(&result[0], sizeof(BYTE), fileSize, inputFile);
 		fclose(inputFile);
@@ -205,13 +205,17 @@ namespace util
 		return result;
 	}
 
-	UINT getFileSize(const std::string &filename)
+	UINT64 getFileSize(const std::string &filename)
 	{
 		BOOL success;
 		WIN32_FILE_ATTRIBUTE_DATA fileInfo;
 		success = GetFileAttributesExA(filename.c_str(), GetFileExInfoStandard, (void*)&fileInfo);
 		MLIB_ASSERT_STR(success && fileInfo.nFileSizeHigh == 0, std::string("GetFileAttributesEx failed on ") + filename);
-		return fileInfo.nFileSizeLow;
+		//return fileInfo.nFileSizeLow + fileInfo.nFileSizeHigh;
+		LARGE_INTEGER size;
+		size.HighPart = fileInfo.nFileSizeHigh;
+		size.LowPart = fileInfo.nFileSizeLow;
+		return size.QuadPart;
 	}
 
 	// Create a process with the given command line, and wait until it returns

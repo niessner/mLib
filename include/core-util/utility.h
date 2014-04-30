@@ -208,7 +208,8 @@ namespace util
 	// file utility
 	//
 	bool fileExists(const std::string& filename);
-	UINT getFileSize(const std::string& filename);
+	//! returns the file size in bytes
+	UINT64 getFileSize(const std::string& filename);
 	void copyFile(const std::string& sourceFile, const std::string& destFile);
 
 	//

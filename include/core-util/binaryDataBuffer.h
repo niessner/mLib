@@ -106,7 +106,7 @@ public:
 		m_fileStream.close();
 
         // TODO: replace this with a utility function
-		size_t inputFileSize = getFileSizeInBytes(filename);
+		size_t inputFileSize = util::getFileSize(filename);
 
 		BYTE* data = new BYTE[inputFileSize];
 		std::ifstream input(filename, std::ios::binary);
@@ -135,28 +135,20 @@ private:
 		m_fileStream.read((char*)&data[0], sizeof(BYTE)*len);
 	}
 
-	//! returns the file size; if the file cannot be opened returns -1 (e.g., the file does not exist)
-	size_t getFileSizeInBytes(const std::string &filename) {
-		std::ifstream file(filename, std::ios::binary | std::ios::ate);
-		if (!file.is_open())	return -1;
-		size_t size = file.tellg();
-		file.close();
-		return size;
-	}
-
 	//! opens the file stream
 	void openFileStream() {
 		if (m_fileStream.is_open())	m_fileStream.close();
-		m_fileSize = getFileSizeInBytes(m_filename);
-		if (m_fileSize == -1)	m_fileSize = 0;	//in case there was no file before
+
+		if (!util::fileExists(m_filename))	m_fileSize = 0;	//in case there was no file before
+		else m_fileSize = util::getFileSize(m_filename);
 
 		m_fileStream.open(m_filename.c_str(), std::ios::binary | std::ios::out | std::ios::in);
 		if (!m_fileStream.is_open()) {
 			m_fileStream.open(m_filename.c_str(), std::ios::binary | std::ios::out);
 			m_fileStream.close();
 			m_fileStream.open(m_filename.c_str(), std::ios::binary | std::ios::out | std::ios::in);
-			if (!m_fileStream.is_open()) throw MLIB_EXCEPTION(m_filename);
 		} 
+		if (!m_fileStream.is_open() || !m_fileStream.good()) throw MLIB_EXCEPTION(m_filename);
 	}
 
 	//! closes the file stream; data is automatically saved...

@@ -38,24 +38,49 @@ int main()
 	//ml::FreeImageWrapper::loadImage("test1.png", test);
 	//ml::FreeImageWrapper::saveImage("out1.jpg", test);
 
-	ml::BinaryDataStreamFile s("test.out", true);
-	ml::SparseGrid3D<float> signedDistanceField, in;
-	for (unsigned int i = 0; i < 5; i++) {
-		ml::vec3i c(i, 2*i, 3*i);
-		signedDistanceField(c) = (float)i+5.0f; 
+	const int numElements = 256*1024;
+	int* data = new int[numElements]; //1024 byte of data
+	const size_t numBuckets = 1024*4 + 1;
+	//const size_t numBuckets = 2;
+	
+	ml::BinaryDataStreamFile streamOut("test.out", true);
+	for (size_t i = 0; i < numElements; i++) {
+		data[i] = (int)i;
 	}
-	s << signedDistanceField;
-	s >> in;
-	std::cout << signedDistanceField << std::endl << std::endl << in << std::endl;
+	//const size_t numBuckets = 10;
+	for (size_t i = 0; i < numBuckets; i++) {
+		streamOut.writeData((const BYTE*)&data[0], sizeof(int)*numElements);
+	}
+	streamOut.flush();
+	streamOut.closeStream();
+	std::cout << "write done" << std::endl;
 
-	std::cout << std::endl << std::endl;
-	signedDistanceField.writeBinaryDump("bla.dump");
-	ml::SparseGrid3D<float> reRead;
-	reRead.readBinaryDump("bla.dump");
-	std::cout << reRead << std::endl;
+	std::cout << "filesize: " << ml::util::getFileSize("test.out") << std::endl;
 
-	App a;
-	a.go();
+	ml::BinaryDataStreamFile streamIn("test.out", false);
+	for (size_t i = 0; i < numBuckets; i++) {
+		streamIn.readData((BYTE*)&data[0], sizeof(int)*numElements);
+		if (data[50] != 50) std::cout << "i " << i << " error match while read: " << data[50] << std::endl;
+	}
+	std::cout << "read done" << std::endl;
+	SAFE_DELETE_ARRAY(data);
+	//ml::SparseGrid3D<float> signedDistanceField, in;
+	//for (unsigned int i = 0; i < 5; i++) {
+	//	ml::vec3i c(i, 2*i, 3*i);
+	//	signedDistanceField(c) = (float)i+5.0f; 
+	//}
+	//s << signedDistanceField;
+	//s >> in;
+	//std::cout << signedDistanceField << std::endl << std::endl << in << std::endl;
+
+	//std::cout << std::endl << std::endl;
+	//signedDistanceField.writeBinaryDump("bla.dump");
+	//ml::SparseGrid3D<float> reRead;
+	//reRead.readBinaryDump("bla.dump");
+	//std::cout << reRead << std::endl;
+
+	//App a;
+	//a.go();
 
 	getchar();
 	return 0;
