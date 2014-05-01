@@ -141,6 +141,12 @@ namespace util
     {
         return ml::util::split(ml::util::replace(path, '\\', '/'), '/').back();
     }
+
+    std::string removeExtensions(const std::string &path)
+    {
+        return ml::util::split(path, '.').front();
+    }
+
 	std::vector<std::string> getFileLines(const std::string &filename, UINT minLineLength)
 	{
 		std::ifstream file(filename);
