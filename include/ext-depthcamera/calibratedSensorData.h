@@ -93,6 +93,39 @@ public:
 		m_ColorImages.clear();
 	}
 
+	vec3f getWorldPos(unsigned int ux, unsigned int uy, unsigned int frame) const {
+		const float depth = m_DepthImages[frame][ux + uy*m_DepthImageWidth];
+		const float fx = m_CalibrationDepth.m_Intrinsic(0,0);
+		const float fy = m_CalibrationDepth.m_Intrinsic(1,1);
+		const float mx = m_CalibrationDepth.m_Intrinsic(2,0);
+		const float my = m_CalibrationDepth.m_Intrinsic(2,1);
+		float x = ((float)ux-mx) / fx;
+		float y = (my-(float)uy) / fy;
+		return vec3f(depth*x, depth*y, depth);
+	}
+
+	void savePointCloud(const std::string& filename, unsigned int frame) const {
+		std::vector<vec3f> points;
+		std::vector<vec3f> colors;
+		for (unsigned int i = 0; i < m_DepthImageWidth*m_DepthImageHeight; i++) {
+			vec3f p = getWorldPos(i%m_DepthImageWidth, i/m_DepthImageWidth, frame);
+			if (p.x != -FLT_MAX && p.x != 0.0f) {
+				points.push_back(p);
+				if (m_ColorImageWidth == m_DepthImageWidth && m_ColorImageHeight == m_DepthImageHeight) {
+					vec4uc c = m_ColorImages[frame][i];
+					colors.push_back(vec3f(c.x,c.y,c.z)/255.0f);
+				}
+			}
+		}
+
+		if (colors.size() > 0) {
+			assert(points.size() == colors.size());
+			PointCloudIOf::saveToFile(filename, &points, NULL, &colors);
+		} else {
+			PointCloudIOf::saveToFile(filename, &points, NULL, NULL);
+		}
+	} 
+
 	unsigned int	m_VersionNumber;
 	std::string		m_SensorName;
 

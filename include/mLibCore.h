@@ -77,6 +77,7 @@
 //
 #include "core-mesh/meshData.h"
 #include "core-mesh/meshIO.h"
+#include "core-mesh/pointCloudIO.h"
 
 //#include "core-mesh/triMeshOld.h"	//TODO remove this
 #include "core-mesh/triMesh.h"
