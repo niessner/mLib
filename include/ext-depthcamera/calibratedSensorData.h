@@ -97,8 +97,8 @@ public:
 		const float depth = m_DepthImages[frame][ux + uy*m_DepthImageWidth];
 		const float fx = m_CalibrationDepth.m_Intrinsic(0,0);
 		const float fy = m_CalibrationDepth.m_Intrinsic(1,1);
-		const float mx = m_CalibrationDepth.m_Intrinsic(2,0);
-		const float my = m_CalibrationDepth.m_Intrinsic(2,1);
+		const float mx = m_CalibrationDepth.m_Intrinsic(0,2);
+		const float my = m_CalibrationDepth.m_Intrinsic(1,2);
 		float x = ((float)ux-mx) / fx;
 		float y = (my-(float)uy) / fy;
 		return vec3f(depth*x, depth*y, depth);
