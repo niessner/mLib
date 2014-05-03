@@ -137,6 +137,11 @@ namespace util
 		file.close();
 	}
 
+    std::string directoryFromPath(const std::string &path)
+    {
+        return replace(path, fileNameFromPath(path), "");
+    }
+
     std::string fileNameFromPath(const std::string &path)
     {
         return ml::util::split(ml::util::replace(path, '\\', '/'), '/').back();
