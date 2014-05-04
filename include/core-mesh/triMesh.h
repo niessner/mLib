@@ -257,7 +257,7 @@ namespace ml {
 		}
 		
 		//! Computes the bounding box of the mesh (not cached!)
-		BoundingBox3d<FloatType> boundingBox() const {
+		BoundingBox3d<FloatType> getBoundingBox() const {
 			BoundingBox3d<FloatType> bb;
 			for (size_t i = 0; i < m_Vertices.size(); i++) {
 				bb.include(m_Vertices[i].position);
