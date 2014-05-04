@@ -155,11 +155,10 @@ namespace ml {
 		// ********************************
 		// TriMesh itself
 		// ********************************
-		TriMesh() : m_Vertices(), m_Indices(), m_TrianglePointers() {
+		TriMesh() : m_Vertices(), m_Indices() {
 			m_bHasNormals = false;
 			m_bHasTexCoords = false;
 			m_bHasColors = false;
-			m_bTrianglePointersCreated = false;
 		}
 		TriMesh(const MeshData<FloatType>& meshData);
 
