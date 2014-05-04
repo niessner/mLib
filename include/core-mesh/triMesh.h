@@ -140,6 +140,12 @@ namespace ml {
 				bb.include(v2->position);
 			}
 
+			BoundingBox3d<FloatType> getBoundingBox() const {
+				BoundingBox3d<FloatType> bb;
+				includeInBoundingBox(bb);
+				return bb;
+			}
+
 			const point3d<FloatType>& getCenter() const {
 				return m_Center;
 			}
@@ -175,7 +181,7 @@ namespace ml {
 
 		TriMesh(
 			const std::vector<point3d<FloatType>>& vertices, 
-			const std::vector<unsigned int> indices, 
+			const std::vector<unsigned int>& indices, 
 			const std::vector<point3d<FloatType>>& colors,
 			const std::vector<point3d<FloatType>>& normals,
 			const std::vector<point3d<FloatType>>& texCoords) :
@@ -187,7 +193,7 @@ namespace ml {
 		{
 		}
 
-		TriMesh(const std::vector<point3d<FloatType>>& vertices, const std::vector<unsigned int> indices) : TriMesh(vertices.size(), indices.size(), &vertices[0], &indices[0]) {}
+		TriMesh(const std::vector<point3d<FloatType>>& vertices, const std::vector<unsigned int>& indices) : TriMesh(vertices.size(), indices.size(), &vertices[0], &indices[0]) {}
 
 		TriMesh(
 			size_t numVertices, size_t numIndices,
