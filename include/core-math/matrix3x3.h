@@ -108,7 +108,7 @@ public:
 		return res;
 	}
 
-	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
+	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees, ccw)
 	void setRotationX(FloatType angle) {
 		FloatType anglerad = math::degreesToRadians(angle);
 		FloatType sinangle = sin(anglerad);
@@ -123,7 +123,7 @@ public:
 		return res;
 	}
 
-	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
+	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees, ccw)
 	void setRotationY(FloatType angle) {
 		FloatType anglerad = math::degreesToRadians(angle);
 		FloatType sinangle = sin(anglerad);
@@ -138,7 +138,7 @@ public:
 		return res;
 	}
 
-	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
+	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees, ccw)
 	void setRotationZ(FloatType angle) {
 		FloatType anglerad = math::degreesToRadians(angle);
 		FloatType sinangle = sin(anglerad);
@@ -153,7 +153,7 @@ public:
 		return res;
 	}
 
-	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
+	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle in degrees, ccw)
 	void setRotation(FloatType yaw, FloatType pitch, FloatType roll) {
 		*this = rotationY(yaw) * rotationX(pitch) * rotationZ(roll);
 	}
@@ -162,11 +162,11 @@ public:
 		return res;
 	}
 
-	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
+	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees, ccw)
 	void setRotation(const point3d<FloatType> &axis, FloatType angle) {
 		FloatType anglerad = math::degreesToRadians(angle);
-		FloatType c = cosf(anglerad);
-		FloatType s = sinf(anglerad);
+		FloatType c = cos(-anglerad);
+		FloatType s = sin(-anglerad);
 		FloatType t = (FloatType)1.0f - c;
 
 		point3d<FloatType> normalizedAxis = axis.getNormalized();
@@ -186,6 +186,8 @@ public:
 		matrix2[2][1] = -x*s+t*y*z;
 		matrix2[2][2] = 1+t*(z*z-1);
 	}
+
+	//! generates a rotation matrix (angle in degree, ccw)
 	static Matrix3x3 rotation(const point3d<FloatType> &axis, FloatType angle) {
 		Matrix3x3 res;	res.setRotation(axis, angle);
 		return res;

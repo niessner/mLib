@@ -665,13 +665,13 @@ public:
 
 	//! returns true if the matrix is affine (i.e., projective part is zero)
 	bool isAffine(FloatType eps = (FloatType)0.000001) const {
-		if (math::floatEqual<FloatType>(matrix[12],0) && 
-			math::floatEqual<FloatType>(matrix[13],0) && 
-			math::floatEqual<FloatType>(matrix[14],0) && 
-			math::floatEqual<FloatType>(matrix[15],1))	
-				return true;
+		if (math::floatEqual<FloatType>(matrix[12], 0, eps) && 
+			math::floatEqual<FloatType>(matrix[13], 0, eps) && 
+			math::floatEqual<FloatType>(matrix[14], 0, eps) && 
+			math::floatEqual<FloatType>(matrix[15], 1, eps))	
+			return true;
 		else 
-				return false;
+			return false;
 	}
 	
 		//! save matrix array to .matArray

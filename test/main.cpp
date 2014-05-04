@@ -35,12 +35,62 @@ int main()
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
+	{
+		vec3f p0(0,1,0);
+		vec3f p1(1,0,0);
+		quatf q(p0, p1);
+		mat3f m0 = q.matrix3x3();
+		mat4f m1 = q.matrix4x4();
 
-	vec3f p0(0,0,1);
-	vec3f p1(0,1,0);
-	quatf q(p0, p1);
-	mat3f m = q.matrix3x3();
+		vec3f res0 = q*p0;
+		vec3f res1 = m0*p0;
+		vec3f res2 = m1*p0;
 
+		quatf re0(m0);
+		quatf re1(m1);
+	}
+	{
+		mat3f m0 = mat3f::rotation(vec3f(0,0,1), 90);
+		vec3f p0(1,0,0);
+		vec3f p1(0,1,0);
+		quatf q(p0, p1);
+		mat3f m1 = q.matrix3x3();
+		std::cout << m0*p0 << std::endl;
+		std::cout << mat3f::rotationZ(90)*p0 << std::endl;
+		std::cout << quatf(vec3f(0,0,1), 90)*p0 << std::endl;
+		std::cout << q*p0 << std::endl;
+		std::cout << q.matrix3x3()*p0 << std::endl;
+		std::cout << quatf(q.matrix3x3())*p0 << std::endl;
+		std::cout << std::endl;
+	}
+	{
+		mat3f m0 = mat3f::rotation(vec3f(0,1,0), 90);
+		vec3f p0(1,0,0);
+		vec3f p1(0,0,-1);
+		quatf q(p0, p1);
+		mat3f m1 = q.matrix3x3();
+		std::cout << m0*p0 << std::endl;
+		std::cout << mat3f::rotationY(90)*p0 << std::endl;
+		std::cout << quatf(vec3f(0,1,0), 90)*p0 << std::endl;
+		std::cout << q*p0 << std::endl;
+		std::cout << q.matrix3x3()*p0 << std::endl;
+		std::cout << quatf(q.matrix3x3())*p0 << std::endl;
+		std::cout << std::endl;
+	}
+	{
+		mat3f m0 = mat3f::rotation(vec3f(1,0,0), 90);
+		vec3f p0(0,1,0);
+		vec3f p1(0,0,1);
+		quatf q(p0, p1);
+		mat3f m1 = q.matrix3x3();
+		std::cout << m0*p0 << std::endl;
+		std::cout << mat3f::rotationX(90)*p0 << std::endl;
+		std::cout << quatf(vec3f(1,0,0), 90)*p0 << std::endl;
+		std::cout << q*p0 << std::endl;
+		std::cout << q.matrix3x3()*p0 << std::endl;
+		std::cout << quatf(q.matrix3x3())*p0 << std::endl;
+		std::cout << std::endl;
+	} 
 
 	int c = 5;
 
