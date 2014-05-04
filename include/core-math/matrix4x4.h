@@ -332,7 +332,7 @@ public:
           axis.normalize();
         }
         
-        return rotation(axis, angle);
+        return rotation(axis, -angle);
     }
 
 	//! overwrite the matrix with a diagonal matrix
