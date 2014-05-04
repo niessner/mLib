@@ -246,7 +246,7 @@ namespace ml {
 			m_bHasColors = other.m_bHasColors;
 		}
 
-		void applyTransform(const Matrix4x4<FloatType>& m) {
+		void transform(const Matrix4x4<FloatType>& m) {
 			for (Vertex<FloatType>& v : m_Vertices) { v.position = m * v.position; }
 		}
 
@@ -257,7 +257,7 @@ namespace ml {
 		}
 		
 		//! Computes the bounding box of the mesh (not cached!)
-		BoundingBox3d<FloatType> getBoundingBox() const {
+		BoundingBox3d<FloatType> boundingBox() const {
 			BoundingBox3d<FloatType> bb;
 			for (size_t i = 0; i < m_Vertices.size(); i++) {
 				bb.include(m_Vertices[i].position);

@@ -2,9 +2,9 @@
 namespace ml {
 
 TriMeshf meshutil::createUnifiedMesh(const std::vector< std::pair<TriMeshf, mat4f> >& meshes) {
-  auto lambdaVertices = [ = ](size_t total, const std::pair<TriMeshf, mat4f>& t) { return t.first.getVertices().size() + total; };
+  auto lambdaVertices = [](size_t total, const std::pair<TriMeshf, mat4f>& t) { return t.first.getVertices().size() + total; };
   const size_t totalPoints = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaVertices);
-  auto lambdaIndices = [ = ](size_t total, const std::pair<TriMeshf, mat4f>& t) { return t.first.getIndices().size() + total; };
+  auto lambdaIndices = [](size_t total, const std::pair<TriMeshf, mat4f>& t) { return t.first.getIndices().size() + total; };
   const size_t totalIndices = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaIndices);
 
   std::vector<TriMeshf::Vertexf> vertices(totalPoints);
@@ -28,9 +28,9 @@ TriMeshf meshutil::createUnifiedMesh(const std::vector< std::pair<TriMeshf, mat4
 }
 
 TriMeshf meshutil::createUnifiedMesh(const std::vector<TriMeshf>& meshes) {
-  auto lambdaVertices = [=](size_t total, const TriMeshf& t) { return t.getVertices().size() + total; };
+  auto lambdaVertices = [](size_t total, const TriMeshf& t) { return t.getVertices().size() + total; };
   const size_t totalPoints = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaVertices);
-  auto lambdaIndices = [=](size_t total, const TriMeshf& t) { return t.getIndices().size() + total; };
+  auto lambdaIndices = [](size_t total, const TriMeshf& t) { return t.getIndices().size() + total; };
   const size_t totalIndices = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaIndices);
 
   std::vector<TriMeshf::Vertexf> vertices(totalPoints);
