@@ -182,6 +182,12 @@ public:
 		array[5] *= inv;
 	}
 
+	inline point6d<T> getNormalized() const
+	{
+		T val = (T)1.0 / length();
+		return point4d<T>(array[0] * val, array[1] * val, array[2] * val, array[3] * val, array[4] * val, array[5] * val);
+	}
+
 	union {
 		struct {
 			T x,y,z, xx, yy, zz;	// standard names for components

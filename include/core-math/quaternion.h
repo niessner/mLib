@@ -6,26 +6,33 @@
 
 namespace ml {
 
-template <class T> class Matrix4x4;
-template <class T> class Matrix3x3;
 
 //! Quaternions are used to describe rotations
 template <class T> class Quaternion {
 	public:
 		//! construct a quaternion that does no rotation
-		Quaternion();
+		Quaternion() : re(1), im(0,0,0) {}
 
 		Quaternion(T r, T i, T j, T k) {
 			re = r;
 			im = point3d<T>(i,j,k);
 		}
+
 		//! construct a quaternion explicitly
-		Quaternion( T real, const point3d<T>& imag );
-		//! construct a quaternion given a rotation-axis and an angle
-		/*! \param angle is specified in degrees */
-		Quaternion( const point3d<T>& axis, T angle );
-		//! Copy-Constructor
-		Quaternion( const Quaternion& b );
+		Quaternion( T real, const point3d<T>& imag ) : re(real), im(imag) {}
+
+		//! construct a quaternion given a rotation-axis and an angle (in degrees)
+		Quaternion( const point3d<T>& axis, T angle ) {
+			T halfAngleRad = ( T ) M_PI * angle / ( T ) 360.0;
+			T axisLength = axis.length();
+			if ( axisLength > Quaternion<T>::EPSILON ) {
+				re = cos( halfAngleRad );
+				im = axis * ( sin( halfAngleRad ) / axisLength );
+			} else {
+				re = 1;
+				im = point3d<T>( 0, 0, 0 );
+			}
+		}
 
 		//! Constructs a quaternion between a start and end point
 		Quaternion(const point3d<T>& from, const point3d<T>& to) {
@@ -33,6 +40,7 @@ template <class T> class Quaternion {
 			re = vecHalf | to;
 			im = vecHalf ^ to;
 		}
+
 
 		inline float sgn(float x) {return (x >= 0.0f) ? +1.0f : -1.0f;}
 
@@ -219,8 +227,6 @@ template <class T> class Quaternion {
 
 //};	// namespace Math
 
-#include "matrix4x4.h"
-#include "matrix3x3.h"
 
 //namespace Math {
 
@@ -230,8 +236,8 @@ template <class T> const T Quaternion<T>::EPSILON = ( T ) 0.00001;
 // INLINE-functions for general use
 // ********************************
 
-//! the absolute-value of a quaternion is its length
-template <class T> inline T abs( const Quaternion<T>& q ) { return q.length(); }
+////! the absolute-value of a quaternion is its length
+//template <class T> inline T abs( const Quaternion<T>& q ) { return q.length(); }
 
 //! The multiplication operator that allows the scalar value to preceed the quaternion
 template <class T> inline Quaternion<T> operator* ( T r, const Quaternion<T>& q ) { return q * r; }
@@ -392,24 +398,7 @@ template <class T> inline void Quaternion<T>::invert() { *this = inverted(); }
 // IMPLEMENTATION of Quaternion
 // ****************************
 
-template <class T> Quaternion<T>::Quaternion() : re( 1 ), im(0, 0, 0) {}
 
-
-template <class T> Quaternion<T>::Quaternion( T real, const point3d<T>& imag ) : re( real ), im( imag ) {}
-
-template <class T> Quaternion<T>::Quaternion( const point3d<T>& axis, T angle ) {
-	T halfAngleRad = ( T ) M_PI * angle / ( T ) 360.0;
-	T axisLength = axis.length();
-	if ( axisLength > Quaternion<T>::EPSILON ) {
-		re = cos( halfAngleRad );
-		im = axis * ( sin( halfAngleRad ) / axisLength );
-		} else {
-		re = 1;
-		im = point3d<T>( 0, 0, 0 );
-		}
-	}
-
-template <class T> Quaternion<T>::Quaternion( const Quaternion<T>& b ) : re( b.re ), im( b.im ) { }
 
 template <class T> point3d<T> Quaternion<T>::axis() const {
 	T halfAngle = acos( re );
@@ -434,7 +423,7 @@ template <class T> Quaternion<T> Quaternion<T>::slerp( const Quaternion<T>& q2, 
 	// scalar product of the two quaternions is the cosine of the angle between them
 	CosOmega = scalarProd( q2 );
 
-	// test if they are exacltly opposite
+	// test if they are exactly opposite
 	if ( ( 1.0 + CosOmega ) > delta ) {
 		// if they are too close together calculate only lerp
 		if ( ( 1.0 - CosOmega ) > delta ) {

@@ -3,10 +3,10 @@ namespace ml {
 
 Camera::Camera(const vec3f& eye, const vec3f& worldUp, const vec3f& right, float fieldOfView, float aspect, float zNear, float zFar) {
 	m_eye = eye;
-	m_worldUp = worldUp.normalize();
-	m_right = right.normalize();
-	m_look = (m_worldUp ^ m_right).normalize();
-	m_up = (m_right ^ m_look).normalize();
+	m_worldUp = worldUp.getNormalized();
+	m_right = right.getNormalized();
+	m_look = (m_worldUp ^ m_right).getNormalized();
+	m_up = (m_right ^ m_look).getNormalized();
 
 	m_fieldOfView = fieldOfView;
 	m_aspect = aspect;
@@ -22,8 +22,8 @@ Camera::Camera(const mat4f& m, float fieldOfView, float aspect, float zNear, flo
 	m_eye = vec3f(m(0, 3), m(1, 3), m(2, 3));
 	m_worldUp = vec3f(m(0, 1), m(1, 1), m(2, 1));
 	m_right = -vec3f(m(0, 0), m(1, 0), m(2, 0));  // NOTE: Negation to compensate for sensor horizontal flip
-	m_look = (m_worldUp ^ m_right).normalize();
-	m_up = (m_right ^ m_look).normalize();
+	m_look = (m_worldUp ^ m_right).getNormalized();
+	m_up = (m_right ^ m_look).getNormalized();
 
 	m_fieldOfView = fieldOfView;
 	m_aspect = aspect;
@@ -93,9 +93,9 @@ mat4f Camera::perspectiveFov(float fieldOfView, float aspectRatio, float zNear, 
 }
 
 mat4f Camera::viewMatrix(const vec3f& eye, const vec3f& look, const vec3f& up, const vec3f& right) {
-	vec3f l = look.normalize();
-	vec3f r = right.normalize();
-	vec3f u = up.normalize();
+	vec3f l = look.getNormalized();
+	vec3f r = right.getNormalized();
+	vec3f u = up.getNormalized();
 
 	return mat4f(r.x, r.y, r.z, -vec3f::dot(r, eye),
 	             u.x, u.y, u.z, -vec3f::dot(u, eye),

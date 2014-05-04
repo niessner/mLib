@@ -169,7 +169,7 @@ public:
 		FloatType s = sinf(anglerad);
 		FloatType t = (FloatType)1.0f - c;
 
-		point3d<FloatType> normalizedAxis = axis.normalize();
+		point3d<FloatType> normalizedAxis = axis.getNormalized();
 		FloatType x = normalizedAxis.x;
 		FloatType y = normalizedAxis.y;
 		FloatType z = normalizedAxis.z;

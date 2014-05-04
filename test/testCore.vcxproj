@@ -112,6 +112,7 @@
     <ClInclude Include="..\include\core-math\point3d.h" />
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
+    <ClInclude Include="..\include\core-math\quaternion.h" />
     <ClInclude Include="..\include\core-math\rng.h" />
     <ClInclude Include="..\include\core-math\sparseMatrix.h" />
     <ClInclude Include="..\include\core-multithreading\taskList.h" />

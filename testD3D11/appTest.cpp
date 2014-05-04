@@ -139,7 +139,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 
 				p = trans * p;
 				p /= p.w;
-				ml::Rayf r(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).normalize());
+				ml::Rayf r(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).getNormalized());
 				float t,u,v;	ml::TriMeshf::Trianglef* tri;
 				if (accel.intersect(r, t, u, v, tri)) {
 					image(i,j) = tri->getSurfaceColor(u,v);

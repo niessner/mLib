@@ -150,13 +150,13 @@ public:
 		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]));
 	}
 
-	inline void normalizeInPlace() {
+	inline void normalize() {
 		T val = (T)1.0 / length();
 		array[0] *= val;
 		array[1] *= val;
 	}
 
-	inline point2d<T> normalize() const {
+	inline point2d<T> getNormalized() const {
 		T val = (T)1.0 / length();
 		return point2d<T>(array[0] * val, array[1] * val);
 	}

@@ -206,7 +206,7 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             return array[i];
         }
 
-        inline void normalizeInPlace()
+        inline void normalize()
         {
             T val = (T)1.0 / length();
             array[0] *= val;
@@ -215,7 +215,7 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             array[3] *= val;
         }
 
-        inline point4d<T> normalize() const
+        inline point4d<T> getNormalized() const
         {
             T val = (T)1.0 / length();
             return point4d<T>(array[0] * val, array[1] * val, array[2] * val,

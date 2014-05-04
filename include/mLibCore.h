@@ -34,6 +34,7 @@
 #include "core-math/matrix2x2.h"
 #include "core-math/matrix3x3.h"
 #include "core-math/matrix4x4.h"
+#include "core-math/quaternion.h"
 #include "core-math/mathVector.h"
 #include "core-math/sparseMatrix.h"
 #include "core-math/denseMatrix.h"

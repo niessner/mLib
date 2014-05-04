@@ -314,8 +314,8 @@ public:
     static Matrix4x4 face(const point3d<FloatType>& vA, const point3d<FloatType>& vB)
     {
         typedef point3d<FloatType> vec3;
-        auto a = vA.normalize();
-        auto b = vB.normalize();
+        auto a = vA.getNormalized();
+        auto b = vB.getNormalized();
         auto axis = b ^ a;
         float angle = vec3::angleBetween(a, b);
 
@@ -324,12 +324,12 @@ public:
         } else if (axis.lengthSq() == 0.0f) {  // Need any perpendicular axis
           
           float dotX = vec3::dot(vec3::eX, a);
-          if (abs(dotX) != 1.0f) {
+          if (abs(dotX) != (FloatType)1.0) {
             axis = vec3::eX - dotX * a;
           } else {
             axis = vec3::eY - vec3::dot(vec3::eY,a) * a;
           }
-          axis.normalizeInPlace();
+          axis.normalize();
         }
         
         return rotation(axis, angle);

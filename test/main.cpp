@@ -1,6 +1,8 @@
 
 #include "main.h"
 
+using namespace ml;
+
 class App
 {
 public:
@@ -34,6 +36,15 @@ int main()
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
+	vec3f p0(0,0,1);
+	vec3f p1(0,1,0);
+	quatf q(p0, p1);
+	mat3f m = q.matrix3x3();
+
+
+	int c = 5;
+
+	/*
 	//ml::ColorImageR8G8B8 test;
 	//ml::FreeImageWrapper::loadImage("test1.png", test);
 	//ml::FreeImageWrapper::saveImage("out1.jpg", test);
@@ -80,9 +91,9 @@ int main()
 	//ml::SparseGrid3D<float> reRead;
 	//reRead.readBinaryDump("bla.dump");
 	//std::cout << reRead << std::endl;
-
-	//App a;
-	//a.go();
+	*/
+	App a;
+	a.go();
 
 	getchar();
 	return 0;

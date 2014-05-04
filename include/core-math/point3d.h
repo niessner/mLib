@@ -178,14 +178,14 @@ public:
 		return array[i];
 	}
 
-	inline void normalizeInPlace() {
+	inline void normalize() {
 		T val = (T)1.0 / length();
 		array[0] *= val;
 		array[1] *= val;
 		array[2] *= val;
 	}
 
-	inline point3d<T> normalize() const {
+	inline point3d<T> getNormalized() const {
 		T val = (T)1.0 / length();
 		return point3d<T>(array[0] * val, array[1] * val, array[2] * val);
 	}
