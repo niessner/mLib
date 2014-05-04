@@ -117,6 +117,7 @@
     <ClInclude Include="..\include\core-math\point3d.h" />
     <ClInclude Include="..\include\core-math\point4d.h" />
     <ClInclude Include="..\include\core-math\point6d.h" />
+    <ClInclude Include="..\include\core-math\quaternion.h" />
     <ClInclude Include="..\include\core-math\sparseMatrix.h" />
     <ClInclude Include="..\include\core-mesh\meshData.h" />
     <ClInclude Include="..\include\core-mesh\meshIO.h" />

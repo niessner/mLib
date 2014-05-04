@@ -129,34 +129,38 @@ public:
 	TriangleBVHAccelerator(void) {
 		m_Root = NULL;
 	}
-	TriangleBVHAccelerator(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris, bool useParallelBuild = true) {
+	TriangleBVHAccelerator( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true) {
 		m_Root = NULL;
-		build(tris, useParallelBuild);
+		build(triMesh, useParallelBuild);
 	}
 
 	~TriangleBVHAccelerator(void) {
 		destroy();
 	}
 
-	void build( std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris, bool useParallelBuild = true )
+	void build( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true )
 	{
 		SAFE_DELETE(m_Root);	//in case there is already a mesh before...
-				
+		
+		createTrianglePointers(triMesh.getVertices(), triMesh.getIndices());
+
 		if (useParallelBuild) {
-			buildParallel(tris);
+			buildParallel(m_TrianglePointers);
 		} else {
-			buildRecursive(tris);
+			buildRecursive(m_TrianglePointers);
 		}
 
-		std::cout << "Info: TriangleBVHAccelerator build done ( " << tris.size() << " tris )" << std::endl;
+		std::cout << "Info: TriangleBVHAccelerator build done ( " << m_TrianglePointers.size() << " tris )" << std::endl;
 		std::cout << "Info: Tree depth " << m_Root->getTreeDepthRec() << std::endl;
 		std::cout << "Info: NumNodes " << m_Root->getNumNodesRec() << std::endl;
 		std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
-		//TODO parallel build
 	}
 
 	void destroy() {
-			SAFE_DELETE(m_Root);
+		SAFE_DELETE(m_Root);
+		for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
+			SAFE_DELETE(m_TrianglePointers[i]);
+		}
 	}
 	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
 		t = u = v = std::numeric_limits<FloatType>::max();
@@ -164,6 +168,17 @@ public:
 		return m_Root->intersect(r, t, u, v, triangle, tmin, tmax, intersectOnlyFrontFaces);
 	}
 private:
+
+	void createTrianglePointers(const std::vector<typename TriMesh<FloatType>::Vertex<FloatType>>& vertices, const std::vector<vec3ui>& indices) {
+		for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
+			SAFE_DELETE(m_TrianglePointers[i]);
+		}
+		m_TrianglePointers.resize(indices.size());
+		for (size_t i = 0; i < indices.size(); i++) {
+			typename TriMesh<FloatType>::Triangle<FloatType>* tri = new typename TriMesh<FloatType>::Triangle<FloatType>(&vertices[indices[i].x], &vertices[indices[i].y], &vertices[indices[i].z]);
+			m_TrianglePointers[i] = tri;
+		}
+	}
 
 	void buildParallel(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris) {
 		struct NodeEntry {
@@ -234,7 +249,12 @@ private:
 		m_Root->split(tris.begin(), tris.end(), 0);
 		m_Root->computeBoundingBox();
 	}
+
+
+	//! private data
 	TriangleBVHNode<FloatType>* m_Root;
+
+	std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*> m_TrianglePointers;
 };
 
 typedef TriangleBVHAccelerator<float> TriangleBVHAcceleratorf;

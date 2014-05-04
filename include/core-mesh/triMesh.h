@@ -63,7 +63,7 @@ namespace ml {
 		template<class FloatType>
 		class Triangle {
 		public:
-			Triangle(Vertex<FloatType> *v0, Vertex<FloatType> *v1, Vertex<FloatType> *v2) {
+			Triangle(const Vertex<FloatType> *v0, const Vertex<FloatType> *v1, const Vertex<FloatType> *v2) {
 				assert (v0 && v1 && v2);
 				this->v0 = v0;
 				this->v1 = v1;
@@ -144,7 +144,7 @@ namespace ml {
 				return m_Center;
 			}
 		private:
-			Vertex<FloatType> *v0, *v1, *v2;			
+			const Vertex<FloatType> *v0, *v1, *v2;			
 			point3d<FloatType> m_Center;
 		};
 		typedef Triangle<float> Trianglef;
@@ -168,12 +168,10 @@ namespace ml {
 			m_Vertices = vertices;
 			m_Indices.resize(indices.size()/3);
 			memcpy(&m_Indices[0], &indices[0], indices.size()*sizeof(unsigned int));
-			createTrianglePointers();
 		}
 		TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<vec3ui>& indices) {
 			m_Vertices = vertices;
 			m_Indices = indices;
-			createTrianglePointers();
 		}
 
 		TriMesh(
@@ -213,7 +211,6 @@ namespace ml {
 			for (size_t i = 0; i < numIndices/3; i++) {
 				m_Indices[i] = vec3ui(indices[3*i+0],indices[3*i+1],indices[3*i+2]);
 			}
-			createTrianglePointers();
 		}
 
 		TriMesh(const TriMesh& other) {
@@ -222,33 +219,24 @@ namespace ml {
 			m_bHasNormals = other.m_bHasNormals;
 			m_bHasTexCoords = other.m_bHasTexCoords;
 			m_bHasColors = other.m_bHasColors;
-			m_bTrianglePointersCreated = other.m_bTrianglePointersCreated;
-			createTrianglePointers();
 		}
 		TriMesh(TriMesh&& t) {
 			m_Vertices = std::move(t.m_Vertices);
 			m_Indices = std::move(t.m_Indices);
-			m_TrianglePointers = std::move(t.m_TrianglePointers);
 			m_bHasNormals = t.m_bHasNormals;
 			m_bHasTexCoords = t.m_bHasTexCoords;
 			m_bHasColors = t.m_bHasColors;
-			m_bTrianglePointersCreated = t.m_bTrianglePointersCreated;
 		}
 
 		~TriMesh() {
-			for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
-				SAFE_DELETE(m_TrianglePointers[i]);
-			}
 		}
 
 		void operator=(TriMesh&& t) {
 			m_Vertices = std::move(t.m_Vertices);
 			m_Indices = std::move(t.m_Indices);
-			m_TrianglePointers = std::move(t.m_TrianglePointers);
 			m_bHasNormals = t.m_bHasNormals;
 			m_bHasTexCoords = t.m_bHasTexCoords;
 			m_bHasColors = t.m_bHasColors;
-			m_bTrianglePointersCreated = t.m_bTrianglePointersCreated;
 		}
 
 		void operator=(const TriMesh& other) {
@@ -257,8 +245,6 @@ namespace ml {
 			m_bHasNormals = other.m_bHasNormals;
 			m_bHasTexCoords = other.m_bHasTexCoords;
 			m_bHasColors = other.m_bHasColors;
-			m_bTrianglePointersCreated = other.m_bTrianglePointersCreated;
-			createTrianglePointers();
 		}
 
 		void applyTransform(const Matrix4x4<FloatType>& m) {
@@ -286,8 +272,7 @@ namespace ml {
 
 		const std::vector<Vertex<FloatType>>& getVertices() const { return m_Vertices; }
 		const std::vector<vec3ui>& getIndices() const { return m_Indices; }
-		std::vector<Triangle<FloatType>*>& getTrianglePointers()  { return m_TrianglePointers; }
-
+		
 		void getMeshData(MeshData<FloatType>& meshData) const {
 			meshData.clear();
 
@@ -322,18 +307,13 @@ namespace ml {
 			return meshData;
 		}
 	private:
-
-		//! generates the triangle pointers (triangle pointer vector)
-		void createTrianglePointers();
-
+		
 		bool m_bHasNormals;
 		bool m_bHasTexCoords;
 		bool m_bHasColors;
-		bool m_bTrianglePointersCreated;
 
 		std::vector<Vertex<FloatType>>		m_Vertices;
 		std::vector<vec3ui>					m_Indices;
-		std::vector<Triangle<FloatType>*>	m_TrianglePointers;
 	};
 
 	typedef TriMesh<float> TriMeshf;

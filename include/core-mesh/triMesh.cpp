@@ -7,7 +7,6 @@ namespace ml {
 	template<class FloatType>
 	TriMesh<FloatType>::TriMesh( const MeshData<FloatType>& meshData )
 	{
-		m_bTrianglePointersCreated = false;
 
 		m_Vertices.resize(meshData.m_Vertices.size());
 
@@ -79,8 +78,6 @@ namespace ml {
 				MLIB_WARNING("non triangle face found - ignoring it");
 			}
 		}
-
-		createTrianglePointers();
 	}
 
 
@@ -106,22 +103,6 @@ namespace ml {
 		m_bHasNormals = true;
 	}
 
-
-	template<class FloatType>
-	void TriMesh<FloatType>::createTrianglePointers()
-	{
-		for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
-			SAFE_DELETE(m_TrianglePointers[i]);
-		}
-		m_TrianglePointers.resize(m_Indices.size());
-#pragma omp parallel for
-		for (int i = 0; i < (int)m_Indices.size(); i++) {
-			Triangle<FloatType>* tri = new Triangle<FloatType>(&m_Vertices[m_Indices[i].x], &m_Vertices[m_Indices[i].y], &m_Vertices[m_Indices[i].z]);
-			m_TrianglePointers[i] = tri;
-		}
-
-		m_bTrianglePointersCreated = true;
-	}
 
 }
 

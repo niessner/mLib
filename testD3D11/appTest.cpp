@@ -116,7 +116,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 
 		ml::Timer c0;
 		c0.start();
-		ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
+		ml::TriangleBVHAcceleratorf accel(triMesh);
 		std::cout << "time construct " << c0.getElapsedTimeMS() << std::endl;
 
 		ml::mat4f projToCam = m_camera.perspective().getInverse();
