@@ -72,6 +72,7 @@
 #include "core-graphics/camera.h"
 #include "core-graphics/ray.h"
 #include "core-graphics/boundingBox3d.h"
+#include "core-util/colorGradient.h"
 
 //
 // core-mesh headers
