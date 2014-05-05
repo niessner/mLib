@@ -12,7 +12,7 @@ public:
 	WindowWin32(ApplicationWin32 &parent) :
 		m_parent(parent)
 	{
-		m_className = "uninitialized";
+		m_className = L"uninitialized";
 		m_handle = NULL;
 		ZeroMemory(&m_class, sizeof(m_class));
 	}
@@ -36,9 +36,9 @@ public:
 	}
 
 private:
-	std::string    m_className;
+	std::wstring     m_className;
 	ApplicationWin32 &m_parent;
-	WNDCLASSA m_class;
+	WNDCLASSW m_class;
 	HWND      m_handle;
 };
 

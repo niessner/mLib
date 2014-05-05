@@ -28,6 +28,7 @@ static TriMeshf load(const std::string& filename) {
     MLIB_ERROR("error reading from " + filename);
   }
   std::cerr.rdbuf(cerrSaved);
+  std::cout << "done loading " << filename << std::endl;
 
   const size_t nVertices = mesh.n_vertices();
   const size_t nIndices = mesh.n_faces() * 3;  // Should always be tri meshes

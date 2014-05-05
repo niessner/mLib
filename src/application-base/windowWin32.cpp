@@ -97,7 +97,7 @@ ml::WindowWin32::~WindowWin32()
 
 void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std::string &name)
 {
-	m_className = name;
+	m_className = std::wstring(name.begin(), name.end());
 	m_class.style = CS_HREDRAW | CS_VREDRAW;
 	m_class.lpfnWndProc = (WNDPROC) WindowCallback; 
 	m_class.cbClsExtra = 0;
@@ -108,10 +108,10 @@ void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std:
 	m_class.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); 
 	m_class.lpszMenuName =  NULL;
 	m_class.lpszClassName = m_className.c_str();
-	RegisterClassA(&m_class);
+	RegisterClassW(&m_class);
 
-	s_mainWindow = this;
-	m_handle = CreateWindowA(
+    s_mainWindow = this;
+	m_handle = CreateWindowW(
 		m_className.c_str(), 
 		m_className.c_str(), 
 		WS_OVERLAPPEDWINDOW, 
@@ -131,7 +131,7 @@ void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std:
 void ml::WindowWin32::destroy()
 {
 	DestroyWindow(m_handle);
-	UnregisterClassA( m_className.c_str(), m_class.hInstance );
+	UnregisterClassW( m_className.c_str(), m_class.hInstance );
 }
 
 UINT ml::WindowWin32::width() const
