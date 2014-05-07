@@ -16,7 +16,7 @@ template <class T>
 class point6d : public BinaryDataSerialize< point6d<T> >
 {
 public:
-	point6d(T v) {
+	explicit point6d(T v) {
 		array[0] = array[1] = array[2] = array[3] = array[4] = array[5] = v;
 	}
 

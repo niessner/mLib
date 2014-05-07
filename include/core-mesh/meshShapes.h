@@ -13,6 +13,8 @@ TriMeshf cylinder(float radius, float height, UINT stacks, UINT slices, const ve
 
 TriMeshf cylinder(const vec3f &p0, const vec3f &p1, float radius, UINT stacks, UINT slices, const vec3f& color);
 
+TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT stacks, UINT slices, const std::function<vec3f(unsigned int)> &stackIndexToColor);
+
 inline TriMeshf line(const vec3f& p0, const vec3f& p1, const vec3f& color = vec3f(1, 0, 0), const float thickness = 0.005f) {
   return cylinder(p0, p1, thickness, 2, 4, color);
 }
