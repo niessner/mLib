@@ -98,8 +98,8 @@ namespace math
 	}
 
 	template<class T>
-	inline T round(const T& f) {
-		return (f > (T)0.0) ? floor(f + (T)0.5) : ceil(f - (T)0.5);
+	inline int round(const T& f) {
+		return (f > (T)0.0) ? (int)floor(f + (T)0.5) : (int)ceil(f - (T)0.5);
 	}
 
 	template<class T>
