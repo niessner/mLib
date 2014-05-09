@@ -23,6 +23,22 @@ public:
 };
 
 template<class T>
+class MathVectorKMeansMetric
+{
+public:
+    static float Dist(const MathVector<T> &L, const MathVector<T> &R)
+    {
+        float sum = 0.0f;
+        for(UINT i = 0; i < L.size(); i++)
+        {
+            T diff = L[i] - R[i];
+            sum += (float)(diff * diff);
+        }
+        return sum;
+    }
+};
+
+template<class T>
 struct KMeansCluster
 {
 public:

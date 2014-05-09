@@ -60,6 +60,11 @@ namespace util
 		return util::replace(str, std::string(1, find), std::string(1, replace));
 	}
 
+    template <class T>
+    inline const T& randomElement(const std::vector<T>& v) {
+        return v[rand() % v.size()];
+    }
+
 
 	//TODO TEST
 	inline std::vector<std::string> split(const std::string& str, const std::string& separator, bool pushEmptyStrings = false) {
