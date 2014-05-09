@@ -93,7 +93,7 @@ public:
 
 		m_clusters.resize(clusterCount);
 		for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
-			m_clusters[clusterIndex].init(elements[rand() & elements.size()]);
+			m_clusters[clusterIndex].init(elements[rand() % elements.size()]);
 
 		std::vector<UINT> storage(elements.size());
 

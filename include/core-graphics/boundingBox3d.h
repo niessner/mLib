@@ -125,7 +125,7 @@ public:
 	}
 
 	point3d<FloatType> getExtent() const {
-		return float3(maxX - minX, maxY - minY, maxZ - minZ);
+		return point3d<FloatType>(maxX - minX, maxY - minY, maxZ - minZ);
 	}
 
 	point3d<FloatType> getMin() const {
