@@ -154,17 +154,27 @@ public:
 		}
 	}
 
-	const T& clusterCenter(UINT clusterIndex)
+	const T& clusterCenter(UINT clusterIndex) const
 	{
 		return m_clusters[clusterIndex].center;
 	}
 
-	const T& quantizeToNearestClusterCenter(const T &element)
+    float quantizationError(const std::vector<T> &elements) const
+    {
+        float sum = 0.0f;
+        for(const T &e : elements)
+        {
+            sum += Metric::Dist(quantizeToNearestClusterCenter(e), e);
+        }
+        return sum / elements.size();
+    }
+
+	const T& quantizeToNearestClusterCenter(const T &element) const
 	{
 		return m_clusters[quantizeToNearestClusterIndex(element)].center;
 	}
 
-	UINT quantizeToNearestClusterIndex(const T &element)
+	UINT quantizeToNearestClusterIndex(const T &element) const
 	{
 		UINT closestClusterIndex = 0;
 		double closestClusterDist = Metric::Dist(element, m_clusters[0].center);
@@ -180,7 +190,7 @@ public:
 		return closestClusterIndex;
 	}
 
-	UINT clusterCount()
+	UINT clusterCount() const
 	{
 		return m_clusters.size();
 	}
