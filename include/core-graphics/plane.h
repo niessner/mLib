@@ -3,7 +3,7 @@
 #ifndef _PLANE_H_
 #define _PLANE_H_
 
-#include "point3d.h"
+namespace ml {
 
 template<class FloatType>
 class Plane {
@@ -60,6 +60,11 @@ private:
 	point3d<FloatType> m_Normal;
 	FloatType m_Distance;
 };
+
+typedef Plane<float> Planef;
+typedef Plane<double> Planed;
+
+} //namespace ml
 
 
 #endif

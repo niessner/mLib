@@ -79,7 +79,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 					byteOffset += header.m_Properties[j].byteSize;
 				}
 				else if (header.m_Properties[j].name == "alpha") {
-					//mesh.m_Colors[i].z = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].z/=255.0f;
+					mesh.m_Colors[i].w = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].w/=255.0f;
 					byteOffset += header.m_Properties[j].byteSize;
 				}
 			}
@@ -170,18 +170,17 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 			point3d<FloatType> v;
 			file >> v.x >> v.y >> v.z;
 			mesh.m_Vertices[i] = v;
-			mesh.m_Colors[i] = vec3f(0.0f, 0.0f, 0.0f);
+			mesh.m_Colors[i] = vec3f::origin;
 		}
 	}
 	else
 	{	// ignore color
-		unsigned int dump;
 		// read points
-		for(unsigned int i = 0; i < numV; i++) {
+		for (unsigned int i = 0; i < numV; i++) {
 			point3d<FloatType> v;
-			point3d<FloatType> c;
+			point4d<FloatType> c;
 			file >> v.x >> v.y >> v.z;
-			file >> c.x >> c.y >> c.z >> dump;
+			file >> c.x >> c.y >> c.z >> c.w;
 			mesh.m_Vertices[i] = v;
 			mesh.m_Colors[i] = c / 255;	//typically colors are stored in RGB \in [0;255]
 		}
@@ -234,7 +233,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 				mesh.m_Vertices.push_back(point3d<FloatType>(val[0], val[1], val[2]));
 
 				if (match == 6) {  //we found color data
-					mesh.m_Colors.push_back(point3d<FloatType>(val[3], val[4], val[5]));
+					mesh.m_Colors.push_back(point4d<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
 				}
 				assert( match == 3 || match == 4 || match == 6);
 				break;
@@ -459,7 +458,7 @@ void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<
 	if (mesh.m_Colors.size() > 0) {
 		for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
 			file.write((const char*)&mesh.m_Vertices[i], sizeof(float)*3);
-			vec4uc c(mesh.m_Colors[i]*255);	c.w = 255;
+			vec4uc c(mesh.m_Colors[i]*255);
 			file.write((const char*)&c, sizeof(unsigned char)*4);
 		}
 	} else {
@@ -494,7 +493,7 @@ void MeshIO<FloatType>::writeToOFF( const std::string& filename, const MeshData<
 				(unsigned int)(mesh.m_Colors[i].x*255) << " " << 
 				(unsigned int)(mesh.m_Colors[i].y*255) << " " << 
 				(unsigned int)(mesh.m_Colors[i].z*255) << " " << 
-				(unsigned int)255;
+				(unsigned int)(mesh.m_Colors[i].w*255) << " ";
 		}
 		file << "\n";
 	}

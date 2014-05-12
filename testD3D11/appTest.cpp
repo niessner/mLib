@@ -11,7 +11,7 @@ void AppTest::init(ml::ApplicationData &app)
 
 	//const std::string testFilename = "scans/gates381.off";
 	//const std::string testFilename = "scans/gates381.obj";
-	const std::string testFilename = "scans/gates381_full.ply";
+	const std::string testFilename = "scans/gates381.ply";
 	//const std::string testFilename = "scans/gates381_ascii.ply";
 	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 	//ml::MeshIOf::writeToFile("outtest.ply", meshData);
@@ -30,7 +30,11 @@ void AppTest::init(ml::ApplicationData &app)
 	//ml::MeshIOf::writeToFile("bla.ply", out);
 
 	//const ml::TriMesh triMesh(meshData);
-	m_mesh.load(app.graphics, meshData);
+	//m_mesh.load(app.graphics, triMesh);
+	std::vector<ml::TriMeshf> meshes;
+	meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
+	meshes.push_back(triMesh);
+	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));
 	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));
 	//m_mesh.updateAttributeA(app.graphics, color);
 
@@ -142,7 +146,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				ml::Rayf r(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).getNormalized());
 				float t,u,v;	ml::TriMeshf::Trianglef* tri;
 				if (accel.intersect(r, t, u, v, tri)) {
-					image(i,j) = tri->getSurfaceColor(u,v);
+					image(i,j) = tri->getSurfaceColor(u,v).getPoint3d();
 				} else {
 					image(i,j) = 0;
 				}

@@ -18,9 +18,9 @@ namespace ml {
 		template<class FloatType>
 		class Vertex {
 		public:
-			Vertex() : position(point3d<FloatType>::origin), normal(point3d<FloatType>::origin), color(point3d<FloatType>::origin), texCoord(point2d<FloatType>::origin) { }
+			Vertex() : position(point3d<FloatType>::origin), normal(point3d<FloatType>::origin), color(point4d<FloatType>::origin), texCoord(point2d<FloatType>::origin) { }
 			Vertex(const vec3f& _position) : position(_position) { }
-			Vertex(const vec3f& _p, const vec3f& _n, const vec3f& _c, const vec2f& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
+			Vertex(const vec3f& _p, const vec3f& _n, const vec4f& _c, const vec2f& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
 
 			Vertex operator*(FloatType t) const {
 				return Vertex(position*t, normal*t, color*t, texCoord*t);
@@ -50,7 +50,7 @@ namespace ml {
 
 			point3d<FloatType> position;
 			point3d<FloatType> normal;
-			point3d<FloatType> color;
+			point4d<FloatType> color;
 			point2d<FloatType> texCoord;
 		private:
 		};
@@ -79,7 +79,7 @@ namespace ml {
 			point3d<FloatType> getSurfacePosition(FloatType u, FloatType v) const 	{
 				return v0->position*((FloatType)1.0 - u - v) + v1->position*u + v2->position*v;
 			}
-			point3d<FloatType> getSurfaceColor(FloatType u, FloatType v) const {
+			point4d<FloatType> getSurfaceColor(FloatType u, FloatType v) const {
 				return v0->color*((FloatType)1.0 - u - v) + v1->color*u + v2->color*v;
 			}
 			point2d<FloatType> getSurfaceNormal(FloatType u, FloatType v) const {
@@ -182,7 +182,7 @@ namespace ml {
 		TriMesh(
 			const std::vector<point3d<FloatType>>& vertices, 
 			const std::vector<unsigned int>& indices, 
-			const std::vector<point3d<FloatType>>& colors,
+			const std::vector<point4d<FloatType>>& colors,
 			const std::vector<point3d<FloatType>>& normals,
 			const std::vector<point3d<FloatType>>& texCoords) :
 		TriMesh(vertices.size(), indices.size(), 
@@ -199,7 +199,7 @@ namespace ml {
 			size_t numVertices, size_t numIndices,
 			const point3d<FloatType>* vertices, 
 			const unsigned int* indices, 
-			const point3d<FloatType>* colors = NULL, 
+			const point4d<FloatType>* colors = NULL, 
 			const point3d<FloatType>* normals = NULL, 
 			const point2d<FloatType>* texCoords = NULL) 
 		{
@@ -216,6 +216,21 @@ namespace ml {
 			for (size_t i = 0; i < numIndices/3; i++) {
 				m_Indices[i] = vec3ui(indices[3*i+0],indices[3*i+1],indices[3*i+2]);
 			}
+		}
+
+		TriMesh(const BoundingBox3d<FloatType>& bbox, const point4d<FloatType>& color = point4d<FloatType>(1.0,1.0,1.0,1.0)) {
+			std::vector<point3d<FloatType>> vertices;
+			std::vector<vec3ui> indices;
+			std::vector<point3d<FloatType>> normals;
+			bbox.makeTriMesh(vertices, indices, normals);
+
+			m_Vertices.resize(vertices.size());
+			for (size_t i = 0; i < vertices.size(); i++) {
+				m_Vertices[i].color = color;
+				m_Vertices[i].position = vertices[i];
+				m_Vertices[i].normal = normals[i];
+			}
+			m_Indices = indices;
 		}
 
 		TriMesh(const TriMesh& other) {

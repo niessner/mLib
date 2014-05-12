@@ -52,9 +52,9 @@ public:
 		for (size_t i = 0; i < triMesh.getVertices().size(); i++) {
 			m_Vertices[i].position = vec3f(triMesh.getVertices()[i].position);
 			m_Vertices[i].normal = vec3f(triMesh.getVertices()[i].normal);
-			m_Vertices[i].attributeA = vec4f(vec3f(triMesh.getVertices()[i].color), 1.0f);
-			m_Vertices[i].attributeB.x = triMesh.getVertices()[i].texCoord.x;
-			m_Vertices[i].attributeB.y = triMesh.getVertices()[i].texCoord.y;
+			m_Vertices[i].attributeA = vec4f(triMesh.getVertices()[i].color);
+			m_Vertices[i].attributeB.x = (float)triMesh.getVertices()[i].texCoord.x;
+			m_Vertices[i].attributeB.y = (float)triMesh.getVertices()[i].texCoord.y;
 		}
 		m_Indices.resize(triMesh.getIndices().size()*3);
 		for (size_t i = 0; i < triMesh.getIndices().size(); i++) {
@@ -71,7 +71,7 @@ public:
 
 		for (unsigned int i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i].position = meshData.m_Vertices[i];
-			if (meshData.hasPerVertexColors())	m_Vertices[i].attributeA = vec3f(meshData.m_Colors[i]);
+			if (meshData.hasPerVertexColors())	m_Vertices[i].attributeA = meshData.m_Colors[i];
 		}
 
 		m_Indices.clear();

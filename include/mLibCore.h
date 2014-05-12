@@ -71,7 +71,9 @@
 #include "core-graphics/colorUtils.h"
 #include "core-graphics/camera.h"
 #include "core-graphics/ray.h"
+#include "core-graphics/plane.h"
 #include "core-graphics/boundingBox3d.h"
+#include "core-graphics/orientedBoundingBox3d.h"
 #include "core-util/colorGradient.h"
 
 //
@@ -81,7 +83,6 @@
 #include "core-mesh/meshIO.h"
 #include "core-mesh/pointCloudIO.h"
 
-//#include "core-mesh/triMeshOld.h"	//TODO remove this
 #include "core-mesh/triMesh.h"
 #include "core-mesh/triangleBVHAccelerator.h"
 #include "core-mesh/meshShapes.h"

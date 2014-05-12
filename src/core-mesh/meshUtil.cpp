@@ -54,18 +54,18 @@ TriMeshf meshutil::createUnifiedMesh(const std::vector<TriMeshf>& meshes) {
 
 TriMeshf meshutil::createPointCloudTemplate(const TriMeshf& templateMesh,
                                            const std::vector<vec3f>& points,
-                                           const std::vector<vec3f>& colors) {
+                                           const std::vector<vec4f>& colors) {
   const UINT64 pointCount = points.size();
   const UINT64 tVertices = templateMesh.getVertices().size();
   const UINT64 tIndices = templateMesh.getIndices().size();
-  const vec3f defaultColor(1.f, 0.f, 0.f);
+  const vec4f defaultColor(1.f, 0.f, 0.f, 1.0f);
 
   std::vector<TriMeshf::Vertexf> vertices(pointCount * tVertices);
   std::vector<vec3ui> indices(pointCount * tIndices);
 
   for (UINT pointIndex = 0; pointIndex < points.size(); pointIndex++) {
     const vec3f& p = points[pointIndex];
-    const vec3f& c = colors.empty() ? defaultColor : colors[pointIndex];
+    const vec4f& c = colors.empty() ? defaultColor : colors[pointIndex];
     const UINT64 baseVertexIndex = pointIndex * tVertices;
 
     for (UINT vertexIndex = 0; vertexIndex < tVertices; vertexIndex++) {

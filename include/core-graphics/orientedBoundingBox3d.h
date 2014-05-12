@@ -3,14 +3,7 @@
 #ifndef OBJECT_ORIENTED_BOUNDIG_BOX_H_
 #define OBJECT_ORIENTED_BOUNDIG_BOX_H_
 
-#include "point3d.h"
-#include "matrix3x3.h"
-#include "matrix4x4.h"
-#include "Plane.h"
-#include "Matrix2D.h"
-
-#include <vector>
-#include <iostream>
+namespace ml {
 
 template <class FloatType>
 class ObjectOrientedBoundingBox {
@@ -858,5 +851,7 @@ ObjectOrientedBoundingBox<FloatType> operator*(const Matrix4x4<FloatType> &mat, 
 
 typedef ObjectOrientedBoundingBox<float> OOBBf;
 typedef ObjectOrientedBoundingBox<double> OOBBd;
+
+} //namespace ml
 
 #endif

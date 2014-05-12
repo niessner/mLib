@@ -20,7 +20,7 @@ int cubeEData[12][2] = {
     {0, 4}, {1, 5}, {2, 6}, {3, 7}
 };
 
-TriMeshf box(float xDim, float yDim, float zDim, const vec3f& color) {
+TriMeshf box(float xDim, float yDim, float zDim, const vec4f& color) {
     std::vector<TriMeshf::Vertexf> vv(8);
     std::vector<UINT> vi(12 * 3);
 
@@ -44,7 +44,7 @@ TriMeshf box(float xDim, float yDim, float zDim, const vec3f& color) {
     return mesh;
 }
 
-TriMeshf cylinder(float radius, float height, UINT stacks, UINT slices, const vec3f& color) {
+TriMeshf cylinder(float radius, float height, UINT stacks, UINT slices, const vec4f& color) {
     std::vector<TriMeshf::Vertexf> vertices((stacks + 1) * slices);
     std::vector<UINT> indices(stacks * slices * 6);
 
@@ -78,7 +78,7 @@ TriMeshf cylinder(float radius, float height, UINT stacks, UINT slices, const ve
     return TriMeshf(vertices, indices);
 }
 
-TriMeshf cylinder(const vec3f& p0, const vec3f& p1, float radius, UINT stacks, UINT slices, const vec3f& color) {
+TriMeshf cylinder(const vec3f& p0, const vec3f& p1, float radius, UINT stacks, UINT slices, const vec4f& color) {
     float height = (p1 - p0).length();
 
     TriMeshf result = shapes::cylinder(radius, height, stacks, slices, color);
@@ -86,7 +86,7 @@ TriMeshf cylinder(const vec3f& p0, const vec3f& p1, float radius, UINT stacks, U
     return result;
 }
 
-TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT stacks, UINT slices, const std::function<vec3f(unsigned int)> &stackIndexToColor)
+TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT stacks, UINT slices, const std::function<vec4f(unsigned int)> &stackIndexToColor)
 {
     std::vector<TriMeshf::Vertexf> vertices(slices * stacks);
     std::vector<UINT> indices(stacks * slices * 6);
@@ -131,7 +131,7 @@ TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT s
     return TriMeshf(vertices, indices);
 }
 
-TriMeshf wireframeBox(float dim, const vec3f& color) {
+TriMeshf wireframeBox(float dim, const vec4f& color) {
     std::vector<ml::TriMeshf> meshes;
     ml::vec3f v[8];  std::memmove(v, cubeVData, sizeof(v[0]) * 8);
     for (uint i = 0; i < 12; i++) {
@@ -140,7 +140,7 @@ TriMeshf wireframeBox(float dim, const vec3f& color) {
     return meshutil::createUnifiedMesh(meshes);
 }
 
-TriMeshf wireframeBox(const mat4f& xf, const vec3f& color) {
+TriMeshf wireframeBox(const mat4f& xf, const vec4f& color) {
     std::vector<ml::TriMeshf> meshes;
     ml::vec3f v[8];  std::memmove(v, cubeVData, sizeof(v[0]) * 8);
     for (uint i = 0; i < 8; i++) { v[i] = xf * v[i]; }

@@ -36,13 +36,13 @@ namespace ml {
 								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord != t) vertexSplit = true;
 						}
 						if (m_bHasColors) { //split if texcoord is different than the one found before
-							const point3d<FloatType>& c = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
-							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != point3d<FloatType>::origin && 
+							const point4d<FloatType>& c = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
+							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != point4d<FloatType>::origin && 
 								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != c) vertexSplit = true;
 						}
 
 						if (vertexSplit) {
-							MLIB_WARNING("untested");
+							MLIB_WARNING("vertex split untested");
 							Vertex<FloatType> v = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
 							if (m_bHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (m_bHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];

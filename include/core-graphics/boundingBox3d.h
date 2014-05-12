@@ -187,6 +187,62 @@ public:
 		return res;
 	}
 
+	//! generates vertices, indices, and normals which can be used to initialize a triMesh
+	void makeTriMesh(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<point3d<FloatType>>& normals) const {
+		//TODO check face and normal orientation
+		vertices.resize(24);
+		normals.resize(24);
+		indices.resize(12);
+		//bottom
+		vertices[0] = point3d<FloatType>(minX, minY, minZ);
+		vertices[1] = point3d<FloatType>(maxX, minY, minZ);
+		vertices[2] = point3d<FloatType>(maxX, maxY, minZ);
+		vertices[3] = point3d<FloatType>(minX, maxY, minZ);
+		indices[0].x = 0;	indices[0].y = 1;	indices[0].z = 2;
+		indices[1].x = 2;	indices[1].y = 3;	indices[5].z = 0;
+		normals[0] = normals[1] = normals[2] = normals[3] = point3d<FloatType>(0,0,-1);
+		//front
+		vertices[4] = point3d<FloatType>(minX, minY, minZ);
+		vertices[5] = point3d<FloatType>(maxX, minY, minZ);
+		vertices[6] = point3d<FloatType>(maxX, minY, maxZ);
+		vertices[7] = point3d<FloatType>(minX, minY, maxZ);
+		indices[2].x = 4;	indices[2].y = 5;	indices[2].z = 6;
+		indices[3].x = 6;	indices[3].y = 7;	indices[3].z = 4;
+		normals[4] = normals[5] = normals[6] = normals[7] = point3d<FloatType>(0,-1,0);
+		//left
+		vertices[8] = point3d<FloatType>(minX, minY, minZ);
+		vertices[9] = point3d<FloatType>(minX, minY, maxZ);
+		vertices[10] = point3d<FloatType>(minX, maxY, maxZ);
+		vertices[11] = point3d<FloatType>(minX, maxY, minZ);
+		indices[4].x = 8;	indices[4].y = 9;	indices[4].z = 10;
+		indices[5].x = 10;	indices[5].y = 11;	indices[5].z = 8;
+		normals[8] = normals[9] = normals[10] = normals[11] = point3d<FloatType>(-1,0,0);
+		//right
+		vertices[12] = point3d<FloatType>(maxX, minY, minZ);
+		vertices[13] = point3d<FloatType>(maxX, minY, maxZ);
+		vertices[14] = point3d<FloatType>(maxX, maxY, maxZ);
+		vertices[15] = point3d<FloatType>(maxX, maxY, minZ);
+		indices[6].x = 12;	indices[6].y = 13;	indices[6].z = 14;
+		indices[7].x = 14;	indices[7].y = 15;	indices[7].z = 12;
+		normals[12] = normals[13] = normals[14] = normals[15] = point3d<FloatType>(1,0,0);
+		//back
+		vertices[16] = point3d<FloatType>(minX, maxY, minZ);
+		vertices[17] = point3d<FloatType>(maxX, maxY, minZ);
+		vertices[18] = point3d<FloatType>(maxX, maxY, maxZ);
+		vertices[19] = point3d<FloatType>(minX, maxY, maxZ);
+		indices[8].x = 16;	indices[8].y = 17;	indices[8].z = 18;
+		indices[9].x = 18;	indices[9].y = 19;	indices[9].z = 16;
+		normals[16] = normals[17] = normals[18] = normals[19] = point3d<FloatType>(0,1,0);
+		//top
+		vertices[20] = point3d<FloatType>(minX, minY, maxZ);
+		vertices[21] = point3d<FloatType>(maxX, minY, maxZ);
+		vertices[22] = point3d<FloatType>(maxX, maxY, maxZ);
+		vertices[23] = point3d<FloatType>(minX, maxY, maxZ);
+		indices[10].x = 20;	indices[10].y = 21;	indices[10].z = 22;
+		indices[11].x = 22;	indices[11].y = 23;	indices[11].z = 20;
+		normals[20] = normals[21] = normals[22] = normals[23] = point3d<FloatType>(0,0,1);
+	}
+
 protected:
 	union {
 		struct {

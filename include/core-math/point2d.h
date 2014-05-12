@@ -169,6 +169,10 @@ public:
 	static const point2d<T> eX;
 	static const point2d<T> eY;
 
+	inline point1d<T> getPoint1d() const {
+		return point1d<T>(x);
+	}
+
 	union {
 		struct {
 			T x,y;      // standard names for components
