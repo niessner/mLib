@@ -190,6 +190,15 @@ public:
 		return closestClusterIndex;
 	}
 
+    std::vector< std::pair<UINT, float> > rankClusterDistances(const T &element) const
+    {
+        std::vector< std::pair<UINT, float> > result;
+        for(UINT clusterIndex = 0; clusterIndex < m_clusters.size(); clusterIndex++)
+            result.push_back( std::make_pair(clusterIndex, Metric::Dist(element, m_clusters[clusterIndex].center) ) );
+        std::sort(result.begin(), result.end(), [](const std::pair<UINT, float> &a, const std::pair<UINT, float> &b) { return a.second < b.second; } );
+        return result;
+    }
+
 	UINT clusterCount() const
 	{
 		return m_clusters.size();
