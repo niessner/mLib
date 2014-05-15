@@ -46,10 +46,14 @@
 #include <memory>
 #include <thread>
 #include <mutex>
+#include <map>
 #include <unordered_map>
 #include <numeric>
 #include <type_traits>
 #include <array>
+#include <set>
+#include <utility>
+#include <limits>
 
 namespace ml
 {

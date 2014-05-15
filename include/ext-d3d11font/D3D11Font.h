@@ -36,7 +36,7 @@ public:
             fontHeight,
             (FLOAT)pos.x,
             (FLOAT)pos.y,
-            0xff0000ff,// Text color, 0xAaBbGgRr
+            0xff000000 + 0x00010000 * color.b + 0x00000100 * color.g + 0x00000001 * color.r,// Text color, 0xAaBbGgRr
             FW1_RESTORESTATE// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
             );
     }
