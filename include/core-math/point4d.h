@@ -33,6 +33,14 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             array[2] = z;
             array[3] = w;
         }
+		
+		template <class U>
+		point4d(const point4d<U>& other) {
+			array[0] = (T)other.array[0];
+			array[1] = (T)other.array[1];
+			array[2] = (T)other.array[2];
+			array[3] = (T)other.array[3];
+		}
 
         point4d(const point3d<T>& other, T w = (T)1)
         {

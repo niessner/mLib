@@ -14,7 +14,10 @@ void AppTest::init(ml::ApplicationData &app)
 	const std::string testFilename = "scans/gates381.ply";
 	//const std::string testFilename = "scans/gates381_ascii.ply";
 	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
-	//ml::MeshIOf::writeToFile("outtest.ply", meshData);
+	//for (size_t i = 0; i < meshData.m_Colors.size(); i++) {
+	//	meshData.m_Colors[i] = ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+	//}
+	ml::MeshIOf::writeToFile("outtest.ply", meshData);
 	//ml::MeshIOf::writeToFile("outtest.off", meshData);
 	//ml::MeshIOf::writeToFile("outtest.obj", meshData);
 
