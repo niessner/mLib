@@ -38,7 +38,7 @@ void AppTest::init(ml::ApplicationData &app)
 	//const ml::TriMesh triMesh(meshData);
 	//m_mesh.load(app.graphics, triMesh);
 	std::vector<ml::TriMeshf> meshes;
-	//meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
+	meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
 	meshes.push_back(triMesh);
 	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));
 	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));
@@ -135,8 +135,6 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		std::cout << "time construct " << c0.getElapsedTimeMS() << std::endl;
 
 
-		std::cout << trans << std::endl;
-
 		ml::Timer c;
 		c.start();
 #pragma omp parallel for
@@ -157,7 +155,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				float t,u,v;	ml::TriMeshf::Trianglef* tri;
 				if (accel.intersect(r, t, u, v, tri)) {
 					image(i,j) = tri->getSurfaceColor(u,v).getPoint3d();
-					std::cout << image(i,j) << std::endl;
+					//std::cout << image(i,j) << std::endl;
 				} else {
 					image(i,j) = 0;
 				}
