@@ -16,18 +16,15 @@ template <class T>
 class point4d : public BinaryDataSerialize< point4d<T> >
 {
     public:
-        explicit point4d(T v)
-        {
+        explicit point4d(T v) {
             array[0] = array[1] = array[2] = array[3] = v;
         }
 
-        point4d()
-        {
+        point4d() {
             array[0] = array[1] = array[2] = array[3] = 0;
         }
 
-        point4d(T x, T y, T z, T w)
-        {
+        point4d(T x, T y, T z, T w) {
             array[0] = x;
             array[1] = y;
             array[2] = z;
@@ -42,24 +39,28 @@ class point4d : public BinaryDataSerialize< point4d<T> >
 			array[3] = (T)other.array[3];
 		}
 
-        point4d(const point3d<T>& other, T w = (T)1)
-        {
+        point4d(const point3d<T>& other, T w = (T)1) {
             array[0] = other.array[0];
             array[1] = other.array[1];
             array[2] = other.array[2];
             array[3] = w;
         }
 
-        point4d(const point4d& other)
-        {
+        point4d(const point4d& other) {
             array[0] = other.array[0];
             array[1] = other.array[1];
             array[2] = other.array[2];
             array[3] = other.array[3];
         }
 
-        inline const point4d<T>& operator=(const point4d& other)
-        {
+		point4d(const T* other) {
+			array[0] = other[0];
+			array[1] = other[1];
+			array[2] = other[2];
+			array[3] = other[3];
+		}
+
+        inline const point4d<T>& operator=(const point4d& other) {
             array[0] = other.array[0];
             array[1] = other.array[1];
             array[2] = other.array[2];
@@ -67,8 +68,7 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             return *this;
         }
 
-        inline const point4d<T>& operator=(T other)
-        {
+        inline const point4d<T>& operator=(T other) {
             array[0] = other;
             array[1] = other;
             array[2] = other;
@@ -77,43 +77,55 @@ class point4d : public BinaryDataSerialize< point4d<T> >
         }
 
 
-        inline point4d<T> operator-() const
-        {
+        inline point4d<T> operator-() const {
             return point4d<T>(-array[0], -array[1], -array[2], -array[3]);
         }
 
-        inline point4d<T> operator+(const point4d& other) const
-        {
+        inline point4d<T> operator+(const point4d& other) const {
             return point4d<T>(array[0] + other.array[0], array[1] + other.array[1],
                               array[2] + other.array[2], array[3] + other.array[3]);
         }
 
-        inline void operator+=(const point4d& other)
-        {
+		inline point4d<T> operator+(T val) const {
+			return point4d<T>(array[0]+val, array[1]+val, array[2]+val, array[3]+val);
+		}
+
+        inline void operator+=(const point4d& other) {
             array[0] += other.array[0];
             array[1] += other.array[1];
             array[2] += other.array[2];
             array[3] += other.array[3];
         }
 
-        inline void operator-=(const point4d& other)
-        {
+        inline void operator-=(const point4d& other) {
             array[0] -= other.array[0];
             array[1] -= other.array[1];
             array[2] -= other.array[2];
             array[3] -= other.array[3];
         }
 
-        inline void operator*=(T val)
-        {
+		inline void operator+=(T val) {
+			array[0] += val;
+			array[1] += val;
+			array[2] += val;
+			array[3] += val;
+		}
+
+		inline void operator-=(T val) {
+			array[0] -= val;
+			array[1] -= val;
+			array[2] -= val;
+			array[3] -= val;
+		}
+
+        inline void operator*=(T val) {
             array[0] *= val;
             array[1] *= val;
             array[2] *= val;
             array[3] *= val;
         }
 
-        inline void operator/=(T val)
-        {
+        inline void operator/=(T val) {
             T inv = (T)1 / val;
             array[0] *= inv;
             array[1] *= inv;
@@ -121,44 +133,39 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             array[3] *= inv;
         }
 
-        inline point4d<T> operator*(T val) const
-        {
-            return point4d<T>(array[0] * val, array[1] * val, array[2] * val,
-                              array[3] * val);
+        inline point4d<T> operator*(T val) const {
+            return point4d<T>(array[0] * val, array[1]*val, array[2]*val, array[3]*val);
         }
 
-        inline point4d<T> operator/(T val) const
-        {
+        inline point4d<T> operator/(T val) const {
             T inv = (T)1 / val;
-            return point4d<T>(array[0] * inv, array[1] * inv, array[2] * inv,
-                              array[3] * inv);
+            return point4d<T>(array[0]*inv, array[1]*inv, array[2]*inv, array[3]*inv);
         }
 
         //! cross product (of .xyz)
-        inline point4d<T> operator^(const point4d& other) const
-        {
+        inline point4d<T> operator^(const point4d& other) const {
             return point4d<T>(array[1] * other.array[2] - array[2] * other.array[1],
                               array[2] * other.array[0] - array[0] * other.array[2],
                               array[0] * other.array[1] - array[1] * other.array[0], T(1));
         }
 
         //! dot product
-        inline T operator|(const point4d& other) const
-        {
+        inline T operator|(const point4d& other) const {
             return (array[0] * other.array[0] + array[1] * other.array[1] + array[2] *
                     other.array[2] + array[3] * other.array[3]);
         }
 
-        inline point4d<T> operator-(const point4d& other) const
-        {
-            return point4d<T>(array[0] - other.array[0], array[1] - other.array[1],
-                              array[2] - other.array[2], array[3] - other.array[3]);
+        inline point4d<T> operator-(const point4d& other) const {
+            return point4d<T>(array[0]-other.array[0], array[1]-other.array[1], array[2]-other.array[2], array[3]-other.array[3]);
         }
 
-        inline bool operator==(const point4d& other) const
-        {
+		inline point4d<T> operator-(T val) const {
+			return point4d<T>(array[0]-val, array[1]-val, array[2]-val, array[3]-val);
+		}
+
+        inline bool operator==(const point4d& other) const {
             if ((array[0] == other.array[0]) && (array[1] == other.array[1]) &&
-                    (array[2] == other.array[2]) && (array[3] == other.array[3]))
+                (array[2] == other.array[2]) && (array[3] == other.array[3]))
             { return true; }
 
             return false;
@@ -168,19 +175,15 @@ class point4d : public BinaryDataSerialize< point4d<T> >
 			return !(*this == other);
 		}
 
-        inline T lengthSq() const
-        {
-            return (array[0] * array[0] + array[1] * array[1] + array[2] * array[2] +
-                    array[3] * array[3]);
+        inline T lengthSq() const {
+            return (array[0]*array[0] + array[1]*array[1] + array[2]*array[2] + array[3]*array[3]);
         }
 
-        inline T length() const
-        {
+        inline T length() const {
             return sqrt(lengthSq());
         }
 
-        static T distSq(const point4d& v0, const point4d& v1)
-        {
+        static T distSq(const point4d& v0, const point4d& v1) {
             return (
                        (v0.array[0] - v1.array[0]) * (v0.array[0] - v1.array[0]) +
                        (v0.array[1] - v1.array[1]) * (v0.array[1] - v1.array[1]) +
@@ -189,8 +192,7 @@ class point4d : public BinaryDataSerialize< point4d<T> >
                    );
         }
 
-        static T dist(const point4d& v0, const point4d& v1)
-        {
+        static T dist(const point4d& v0, const point4d& v1)  {
             return (v0 - v1).length();
         }
 
@@ -284,6 +286,21 @@ template <class T>
 inline point4d<T> operator*(T s, const point4d<T>& v)
 {
     return v * s;
+}
+template <class T>
+inline point4d<T> operator/(T s, const point4d<T>& v)
+{
+	return v / s;
+}
+template <class T>
+inline point4d<T> operator+(T s, const point4d<T>& v)
+{
+	return v + s;
+}
+template <class T>
+inline point4d<T> operator-(T s, const point4d<T>& v)
+{
+	return v - s;
 }
 
 //! write a point4d to a stream (should be the inverse of read operator; with " ")

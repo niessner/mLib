@@ -23,7 +23,7 @@ public:
 		array[0] = array[1] = array[2] = 0;
 	}
 
-	point3d(const T &x, const T &y, const T &z) {
+	point3d(T x, T y, T z) {
 		array[0] = x;
 		array[1] = y;
 		array[2] = z;
@@ -70,6 +70,10 @@ public:
 		return point3d<T>(array[0]+other.array[0], array[1]+other.array[1], array[2]+other.array[2]);
 	}
 
+	inline point3d<T> operator+(T val) const {
+		return point3d<T>(array[0]+val, array[1]+val, array[2]+val);
+	}
+
 	inline void operator+=(const point3d& other) {
 		array[0] += other.array[0];
 		array[1] += other.array[1];
@@ -82,19 +86,29 @@ public:
 		array[2] -= other.array[2];
 	}
 
+	inline void operator+=(T val) {
+		array[0] += val;
+		array[1] += val;
+		array[2] += val;
+	}
+
+	inline void operator-=(T val) {
+		array[0] -= val;
+		array[1] -= val;
+		array[2] -= val;
+	}
+
 	inline void operator*=(T val) {
 		array[0] *= val;
 		array[1] *= val;
 		array[2] *= val;
 	}
 
-	template<class D>
-	inline void operator/=(D val) {
-		T inv_val = ((T)1)/(val);
-
-		array[0] *= inv_val;
-		array[1] *= inv_val;
-		array[2] *= inv_val;
+	inline void operator/=(T val) {
+		T inv = (T)1 / val;
+		array[0] *= inv;
+		array[1] *= inv;
+		array[2] *= inv;
 	}
 
 	inline point3d<T> operator*(T val) const {
@@ -115,13 +129,16 @@ public:
 		return (array[0]*other.array[0] + array[1]*other.array[1] + array[2]*other.array[2]);
 	}
 
-	static inline T dot(const point3d& l, const point3d& r)
-	{
+	static inline T dot(const point3d& l, const point3d& r) {
 		return(l.array[0] * r.array[0] + l.array[1] * r.array[1] + l.array[2] * r.array[2]);
 	}
 
 	inline point3d<T> operator-(const point3d& other) const {
 		return point3d<T>(array[0]-other.array[0], array[1]-other.array[1], array[2]-other.array[2]);
+	}
+
+	inline point3d<T> operator-(T val) const {
+		return point3d<T>(array[0]-val, array[1]-val, array[2]-val);
 	}
 
 	inline bool operator==(const point3d& other) const {
@@ -228,6 +245,22 @@ template <class T>
 inline point3d<T> operator*(T s, const point3d<T>& v) {
 	return v * s;
 }
+template <class T>
+inline point3d<T> operator/(T s, const point3d<T>& v)
+{
+	return v / s;
+}
+template <class T>
+inline point3d<T> operator+(T s, const point3d<T>& v)
+{
+	return v + s;
+}
+template <class T>
+inline point3d<T> operator-(T s, const point3d<T>& v)
+{
+	return v - s;
+}
+
 
 //! write a point3d to a stream (should be the inverse of input operator; with " ")
 template <class T> 

@@ -33,6 +33,16 @@ public:
 		array[5] = zz;
 	}
 
+	template <class U>
+	point6d(const point6d<U>& other) {
+		array[0] = (T)other.array[0];
+		array[1] = (T)other.array[1];
+		array[2] = (T)other.array[2];
+		array[3] = (T)other.array[3];
+		array[4] = (T)other.array[4];
+		array[5] = (T)other.array[5];
+	}
+
 	point6d(const point6d& other) {
 		array[0] = other.array[0];
 		array[1] = other.array[1];
@@ -61,6 +71,16 @@ public:
 		return *this;
 	}
 
+	inline const point6d<T>& operator=(T other) {
+		array[0] = other;
+		array[1] = other;
+		array[2] = other;
+		array[3] = other;
+		array[4] = other;
+		array[5] = other;
+		return *this;
+	}
+
 	inline bool operator!=(const point6d& other) const {
 		return !(*this == other);
 	}
@@ -72,6 +92,10 @@ public:
 	inline point6d<T> operator+(const point6d& other) const {
 		return point6d<T>(array[0]+other.array[0], array[1]+other.array[1], array[2]+other.array[2],
 						  array[3]+other.array[3], array[4]+other.array[4], array[5]+other.array[5]);
+	}
+
+	inline point6d<T> operator+(T val) const {
+		return point6d<T>(array[0]+val, array[1]+val, array[2]+val, array[3]+val, array[4]+val, array[5]+val);
 	}
 
 	inline void operator+=(const point6d& other) {
@@ -90,6 +114,24 @@ public:
 		array[3] -= other.array[3];
 		array[4] -= other.array[4];
 		array[5] -= other.array[5];
+	}
+
+	inline void operator+=(T val) {
+		array[0] += val;
+		array[1] += val;
+		array[2] += val;
+		array[3] += val;
+		array[4] += val;
+		array[5] += val;
+	}
+
+	inline void operator-=(T val) {
+		array[0] -= val;
+		array[1] -= val;
+		array[2] -= val;
+		array[3] -= val;
+		array[4] += val;
+		array[5] += val;
 	}
 
 	inline void operator*=(T val) {
@@ -128,6 +170,10 @@ public:
 
 	inline point6d<T> operator-(const point6d& other) const {
 		return point6d<T>(array[0]-other.array[0], array[1]-other.array[1], array[2]-other.array[2], array[3]-other.array[3], array[4]-other.array[4], array[5]-other.array[5]);
+	}
+
+	inline point6d<T> operator-(T val) const {
+		return point6d<T>(array[0]-val, array[1]-val, array[2]-val, array[3]-val, array[4]-val, array[5]-val);
 	}
 
 	inline bool operator==(const point6d& other) const {
@@ -182,10 +228,9 @@ public:
 		array[5] *= inv;
 	}
 
-	inline point6d<T> getNormalized() const
-	{
+	inline point6d<T> getNormalized() const {
 		T val = (T)1.0 / length();
-		return point4d<T>(array[0] * val, array[1] * val, array[2] * val, array[3] * val, array[4] * val, array[5] * val);
+		return point6d<T>(array[0] * val, array[1] * val, array[2] * val, array[3] * val, array[4] * val, array[5] * val);
 	}
 
 	inline point1d<T> getPoint1d() const {
@@ -208,6 +253,28 @@ public:
 		T array[6];					// array access
 	};
 };
+
+//! operator for scalar * vector
+template <class T>
+inline point6d<T> operator*(T s, const point6d<T>& v)
+{
+	return v * s;
+}
+template <class T>
+inline point6d<T> operator/(T s, const point6d<T>& v)
+{
+	return v / s;
+}
+template <class T>
+inline point6d<T> operator+(T s, const point6d<T>& v)
+{
+	return v + s;
+}
+template <class T>
+inline point6d<T> operator-(T s, const point6d<T>& v)
+{
+	return v - s;
+}
 
 
 //! write a point6d to a stream

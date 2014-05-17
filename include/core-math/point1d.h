@@ -44,12 +44,24 @@ public:
 		return point1d<T>(array[0]+other.array[0]);
 	}
 
+	inline point1d<T> operator+(T val) const {
+		return point1d<T>(array[0]+val);
+	}
+
 	inline void operator+=(const point1d& other) {
 		array[0] += other.array[0];
 	}
 
 	inline void operator-=(const point1d& other) {
 		array[0] -= other.array[0];
+	}
+
+	inline void operator+=(T val) {
+		array[0] += val;
+	}
+
+	inline void operator-=(T val) {
+		array[0] -= val;
 	}
 
 	inline void operator*=(T val) {
@@ -70,6 +82,10 @@ public:
 
 	inline point1d<T> operator-(const point1d& other) const {
 		return point1d<T>(array[0]-other.array[0]);
+	}
+
+	inline point1d<T> operator-(T val) const {
+		return point1d<T>(array[0]-val);
 	}
 
 	inline bool operator==(const point1d& other) const {
@@ -139,6 +155,28 @@ public:
 		T array[1];     // array access
 	};
 };
+
+//! operator for scalar * vector
+template <class T>
+inline point1d<T> operator*(T s, const point1d<T>& v)
+{
+	return v * s;
+}
+template <class T>
+inline point1d<T> operator/(T s, const point1d<T>& v)
+{
+	return v / s;
+}
+template <class T>
+inline point1d<T> operator+(T s, const point1d<T>& v)
+{
+	return v + s;
+}
+template <class T>
+inline point1d<T> operator-(T s, const point1d<T>& v)
+{
+	return v - s;
+}
 
 
 //! write a point1d to a stream

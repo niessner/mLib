@@ -20,11 +20,6 @@ public:
 		array[0] = array[1] = v;
 	}
 
-	point2d(const T* other) {
-		array[0] = other[0];
-		array[1] = other[1];
-	}
-
 	point2d() {
 		array[0] = array[1] = 0;
 	}
@@ -43,6 +38,11 @@ public:
 	point2d(const point2d& other) {
 		array[0] = other.array[0];
 		array[1] = other.array[1];
+	}
+
+	point2d(const T* other) {
+		array[0] = other[0];
+		array[1] = other[1];
 	}
 
 	inline const point2d<T>& operator=(const point2d& other) {
@@ -65,6 +65,10 @@ public:
 		return point2d<T>(array[0]+other.array[0], array[1]+other.array[1]);
 	}
 
+	inline point2d<T> operator+(T val) const {
+		return point2d<T>(array[0]+val, array[1]+val);
+	}
+
 	inline void operator+=(const point2d& other) {
 		array[0] += other.array[0];
 		array[1] += other.array[1];
@@ -73,6 +77,16 @@ public:
 	inline void operator-=(const point2d& other) {
 		array[0] -= other.array[0];
 		array[1] -= other.array[1];
+	}
+
+	inline void operator+=(T val) {
+		array[0] += val;
+		array[1] += val;
+	}
+
+	inline void operator-=(T val) {
+		array[0] -= val;
+		array[1] -= val;
 	}
 
 	inline void operator*=(T val) {
@@ -97,6 +111,10 @@ public:
 
 	inline point2d<T> operator-(const point2d& other) const {
 		return point2d<T>(array[0]-other.array[0], array[1]-other.array[1]);
+	}
+
+	inline point2d<T> operator-(T val) const {
+		return point2d<T>(array[0]-val, array[1]-val);
 	}
 
 	inline bool operator==(const point2d& other) const {
@@ -184,6 +202,27 @@ public:
 	};
 };
 
+//! operator for scalar * vector
+template <class T>
+inline point2d<T> operator*(T s, const point2d<T>& v)
+{
+	return v * s;
+}
+template <class T>
+inline point2d<T> operator/(T s, const point2d<T>& v)
+{
+	return v / s;
+}
+template <class T>
+inline point2d<T> operator+(T s, const point2d<T>& v)
+{
+	return v + s;
+}
+template <class T>
+inline point2d<T> operator-(T s, const point2d<T>& v)
+{
+	return v - s;
+}
 
 //! write a point2d to a stream
 template <class T> inline std::ostream& operator<<(std::ostream& s, const point2d<T>& v)
