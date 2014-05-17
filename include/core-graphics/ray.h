@@ -51,6 +51,12 @@ private:
 	vec3i m_Sign;
 };
 
+template<class FloatType>
+std::ostream& operator<<(std::ostream& os, const Ray<FloatType>& r) {
+	os << r.origin() << " | " << r.direction();
+	return os;
+}
+
 typedef Ray<float> Rayf;
 typedef Ray<double> Rayd;
 

@@ -138,6 +138,7 @@
     <ClInclude Include="..\include\core-util\keycodes.h" />
     <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
     <ClInclude Include="..\include\core-util\parameterFile.h" />
+    <ClInclude Include="..\include\core-util\sparseGrid3d.h" />
     <ClInclude Include="..\include\core-util\stringUtil.h" />
     <ClInclude Include="..\include\core-util\stringUtilConvert.h" />
     <ClInclude Include="..\include\core-util\utility.h" />

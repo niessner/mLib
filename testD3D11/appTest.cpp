@@ -21,7 +21,10 @@ void AppTest::init(ml::ApplicationData &app)
 	//ml::MeshIOf::writeToFile("outtest.off", meshData);
 	//ml::MeshIOf::writeToFile("outtest.obj", meshData);
 
+	//meshData.mergeCloseVertices(0.3f, false);
+	//meshData.mergeCloseVertices(pow(0.3f,3), true);
 	ml::TriMeshf triMesh(meshData);
+
 	//ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
 	//ml::Rayf ray(ml::vec3f::origin, ml::vec3f::origin);
 	//float u,v,t; 
@@ -35,7 +38,7 @@ void AppTest::init(ml::ApplicationData &app)
 	//const ml::TriMesh triMesh(meshData);
 	//m_mesh.load(app.graphics, triMesh);
 	std::vector<ml::TriMeshf> meshes;
-	meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
+	//meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
 	meshes.push_back(triMesh);
 	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));
 	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));
@@ -115,6 +118,11 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
     if(key == KEY_RIGHT) m_camera.lookRight(-theta);
 
 	if(key == 'R') {
+		ml::mat4f projToCam = m_camera.perspective().getInverse();
+		ml::mat4f camToWorld = m_camera.camera().getInverse();
+		ml::mat4f trans =  camToWorld * projToCam;
+		ml::ColorImageRGB image(app.window.height(), app.window.width());
+
 		const std::string testFilename = "scans/gates381_full.ply";
 		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 		ml::TriMeshf triMesh(meshData);
@@ -123,13 +131,11 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 
 		ml::Timer c0;
 		c0.start();
-		ml::TriangleBVHAcceleratorf accel(triMesh);
+		ml::TriangleBVHAcceleratorf accel(triMesh, false);
 		std::cout << "time construct " << c0.getElapsedTimeMS() << std::endl;
 
-		ml::mat4f projToCam = m_camera.perspective().getInverse();
-		ml::mat4f camToWorld = m_camera.camera().getInverse();
-		ml::mat4f trans =  camToWorld * projToCam;
-		ml::ColorImageRGB image(app.window.height(), app.window.width());
+
+		std::cout << trans << std::endl;
 
 		ml::Timer c;
 		c.start();
@@ -147,9 +153,11 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				p = trans * p;
 				p /= p.w;
 				ml::Rayf r(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).getNormalized());
+				//std::cout << r << std::endl;
 				float t,u,v;	ml::TriMeshf::Trianglef* tri;
 				if (accel.intersect(r, t, u, v, tri)) {
 					image(i,j) = tri->getSurfaceColor(u,v).getPoint3d();
+					std::cout << image(i,j) << std::endl;
 				} else {
 					image(i,j) = 0;
 				}

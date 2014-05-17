@@ -5,7 +5,8 @@ namespace ml {
 
 //! raw mesh data could be also a point cloud
 template <class FloatType>
-struct MeshData {
+class MeshData {
+public:
 	MeshData() {}
 	MeshData(MeshData&& d) {
 		m_Vertices = std::move(d.m_Vertices);
@@ -96,6 +97,7 @@ struct MeshData {
 
 	unsigned int removeDuplicateVertices();
 	unsigned int removeDuplicateFaces();
+	unsigned int mergeCloseVertices(FloatType thresh, bool approx = false);
 
 	std::vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
 	std::vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below/or per vertex)
@@ -105,6 +107,16 @@ struct MeshData {
 	std::vector<std::vector<unsigned int>>	m_FaceIndicesNormals;		//indices in normal array (if size==0, indicesVertices is used)
 	std::vector<std::vector<unsigned int>>	m_FaceIndicesTextureCoords;	//indices in texture array (if size==0, indicesVertices is used)
 	std::vector<std::vector<unsigned int>>	m_FaceIndicesColors;		//indices in color array (if size==0, indicesVertices is used)
+
+private:
+	inline vec3i toVirtualVoxelPos(const point3d<FloatType>& v, FloatType voxelSize) {
+		return vec3i(v/voxelSize+(FloatType)0.5*point3d<FloatType>(math::sign(v)));
+	} 
+	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned
+	unsigned int hasNearestNeighbor(const vec3i& coord, SparseGrid3D<std::list<std::pair<point3d<FloatType>,unsigned int>>> &neighborQuery, const point3d<FloatType>& v, FloatType thresh );
+
+	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned (manhattan distance)
+	unsigned int hasNearestNeighborApprox(const vec3i& coord, SparseGrid3D<unsigned int> &neighborQuery, FloatType thresh );
 };
 
 typedef MeshData<float>		MeshDataf;
@@ -227,6 +239,120 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 
 
 
+template <class FloatType>
+unsigned int MeshData<FloatType>::hasNearestNeighbor( const vec3i& coord, SparseGrid3D<std::list<std::pair<point3d<FloatType>,unsigned int>>> &neighborQuery, const point3d<FloatType>& v, FloatType thresh )
+{
+	FloatType threshSq = thresh*thresh;
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
+			for (int k = -1; k <= 1; k++) {
+				vec3i c = coord + vec3i(i,j,k);
+				if (neighborQuery.exists(c)) {
+					for (const std::pair<point3d<FloatType>, unsigned int>& n : neighborQuery[c]) {
+						if (point3d<FloatType>::distSq(v,n.first) < threshSq) {
+							return n.second;
+						}
+					}
+				}
+			}
+		}
+	}
+	return (unsigned int)-1;
+}
+
+template <class FloatType>
+unsigned int MeshData<FloatType>::hasNearestNeighborApprox(const vec3i& coord, SparseGrid3D<unsigned int> &neighborQuery, FloatType thresh ) {
+	FloatType threshSq = thresh*thresh;
+
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
+			for (int k = -1; k <= 1; k++) {
+				vec3i c = coord + vec3i(i,j,k);
+				if (neighborQuery.exists(c)) {
+					return neighborQuery[c];
+				}
+			}
+		}
+	}
+	return (unsigned int)-1;
+}
+
+
+
+template <class FloatType>
+unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool approx)
+{
+	unsigned int numV = (unsigned int)m_Vertices.size();
+
+	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
+	std::vector<point3d<FloatType>> new_verts; new_verts.reserve(numV);
+	std::vector<point4d<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
+	std::vector<point3d<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
+	std::vector<point2d<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
+
+	unsigned int cnt = 0;
+	if (approx) {
+		SparseGrid3D<unsigned int> neighborQuery(0.6f, numV*2);
+		for (unsigned int v = 0; v < numV; v++) {
+
+			const point3d<FloatType>& vert = m_Vertices[v];
+			vec3i coord = toVirtualVoxelPos(vert, thresh);		
+			unsigned int nn = hasNearestNeighborApprox(coord, neighborQuery, thresh);
+
+			if (nn == (unsigned int)-1) {
+				neighborQuery[coord] = cnt;
+				new_verts.push_back(vert);
+				vertexLookUp[v] = cnt;
+				cnt++;
+				if (hasPerVertexColors())		new_color.push_back(m_Colors[v]);
+				if (hasPerVertexNormals())		new_normals.push_back(m_Normals[v]);
+				if (hasPerVertexTexCoords())	new_tex.push_back(m_TextureCoords[v]);
+			} else {
+				vertexLookUp[v] = nn;
+			}
+		}
+	} else {
+		SparseGrid3D<std::list<std::pair<point3d<FloatType>, unsigned int>>> neighborQuery(0.6f, numV*2);
+		for (unsigned int v = 0; v < numV; v++) {
+
+			const point3d<FloatType>& vert = m_Vertices[v];
+			vec3i coord = toVirtualVoxelPos(vert, thresh);		
+			unsigned int nn = hasNearestNeighbor(coord, neighborQuery, vert, thresh);
+
+			if (nn == (unsigned int)-1) {
+				neighborQuery[coord].push_back(std::make_pair(vert,cnt));
+				new_verts.push_back(vert);
+				vertexLookUp[v] = cnt;
+				cnt++;
+				if (hasPerVertexColors())		new_color.push_back(m_Colors[v]);
+				if (hasPerVertexNormals())		new_normals.push_back(m_Normals[v]);
+				if (hasPerVertexTexCoords())	new_tex.push_back(m_TextureCoords[v]);
+			} else {
+				vertexLookUp[v] = nn;
+			}
+		}
+	}
+
+	// Update faces
+	for (std::vector<std::vector<unsigned int>>::iterator it = m_FaceIndicesVertices.begin(); it != m_FaceIndicesVertices.end(); it++) {
+		for (std::vector<unsigned int>::iterator idx = it->begin(); idx != it->end(); idx++) {
+			*idx = vertexLookUp[*idx];
+		}
+	}
+
+	m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
+	if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
+	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
+	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
+
+	std::cout << "Merged " << numV-cnt << " of " << numV << " vertices" << std::endl;
+	return cnt;
+}
+
+
+
+
 }  // namespace ml
 
 #endif  // CORE_MESH_MESHDATA_H_
+
