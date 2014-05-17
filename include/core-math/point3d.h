@@ -260,6 +260,13 @@ inline point3d<T> operator-(T s, const point3d<T>& v)
 {
 	return v - s;
 }
+ 
+namespace math {
+	template<class T>
+	inline point3d<int> sign(const point3d<T>& v) {
+		return point3d<int>(sign(v.x), sign(v.y), sign(v.z));
+	}
+}
 
 
 //! write a point3d to a stream (should be the inverse of input operator; with " ")

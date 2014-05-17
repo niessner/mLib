@@ -178,6 +178,13 @@ inline point1d<T> operator-(T s, const point1d<T>& v)
 	return v - s;
 }
 
+namespace math {
+	template<class T>
+	inline point1d<int> sign(const point1d<T>& v) {
+		return point1d<int>(sign(v.x));
+	}
+}
+
 
 //! write a point1d to a stream
 template <class T> inline std::ostream& operator<<(std::ostream& s, const point1d<T>& v)

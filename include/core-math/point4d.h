@@ -303,6 +303,14 @@ inline point4d<T> operator-(T s, const point4d<T>& v)
 	return v - s;
 }
 
+namespace math {
+	template<class T>
+	inline point4d<int> sign(const point4d<T>& v) {
+		return point4d<int>(sign(v.x), sign(v.y), sign(v.z), sign(v.w));
+	}
+}
+
+
 //! write a point4d to a stream (should be the inverse of read operator; with " ")
 template <class T>
 inline std::ostream& operator<<(std::ostream& s, const point4d<T>& v)

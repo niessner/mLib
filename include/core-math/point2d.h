@@ -224,6 +224,13 @@ inline point2d<T> operator-(T s, const point2d<T>& v)
 	return v - s;
 }
 
+namespace math {
+	template<class T>
+	inline point2d<int> sign(const point2d<T>& v) {
+		return point2d<int>(sign(v.x), sign(v.y));
+	}
+}
+
 //! write a point2d to a stream
 template <class T> inline std::ostream& operator<<(std::ostream& s, const point2d<T>& v)
 { return (s << v[0] << " / " << v[1]);}

@@ -276,6 +276,12 @@ inline point6d<T> operator-(T s, const point6d<T>& v)
 	return v - s;
 }
 
+namespace math {
+	template<class T>
+	inline point6d<int> sign(const point6d<T>& v) {
+		return point6d<int>(sign(v.x), sign(v.y), sign(v.z), sign(v.xx), sign(v.yy), sign(v.zz));
+	}
+}
 
 //! write a point6d to a stream
 template <class T> 
