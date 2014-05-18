@@ -13,7 +13,7 @@ void AppTest::init(ml::ApplicationData &app)
 	for (unsigned int i = 0; i < numSamples; i++) {
 		res_uniformSphere[i] = Samplef::squareToUniformSphere(r.uniform2D());
 		res_uniformHemisphere[i] = Samplef::squareToUniformHemisphere(r.uniform2D());
-		res_cosineHemisphere[i] = Samplef::squareToCosineHemisphere(r.uniform2D());
+		res_cosineHemisphere[i] = mat3f::frame(vec3f(0, 0, -1))*Samplef::squareToCosineHemisphere(r.uniform2D());
 		res_powerCosineSampleHemisphere[i] = Samplef::squareToPowerCosineSampleHemisphere(r.uniform2D(), 100000);
 	}
 	PointCloudIOf::saveToFile("sample_uniformSphere.ply", res_uniformSphere);
