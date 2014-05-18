@@ -163,34 +163,57 @@ static inline bool FaceLess(const std::vector<unsigned int>& t0_, const std::vec
 	return false;
 }
 
+
+
+
 template <class FloatType>
 unsigned int MeshData<FloatType>::removeDuplicateFaces()
 {
-	
-	unsigned int numT = (unsigned int)m_FaceIndicesVertices.size();
- 
-	std::map<std::vector<unsigned int>, unsigned int, bool(*)(const std::vector<unsigned int>&, const std::vector<unsigned int>&)> pts(FaceLess);
-	
-	std::vector<std::vector<unsigned int>> faces_new; faces_new.reserve(numT);
+	//template<>
+	//struct std::hash<std::vector<unsigned int>> : public std::unary_function<vec3i, size_t> {
+	//	size_t operator()(const vec3i& v) const {
+	//		//TODO larger prime number (64 bit) to match size_t
+	//		const size_t p0 = 73856093;
+	//		const size_t p1 = 19349669;
+	//		const size_t p2 = 83492791;
+	//		const size_t res = ((size_t)v.x * p0)^((size_t)v.y * p1)^((size_t)v.z * p2);
+	//		return res;
+	//	}
+	//};
 
-	unsigned int cnt = 0;
-	for (unsigned int i1 = 0; i1 < numT; i1++)	{
+	struct vecHash {
+		size_t operator()(const std::vector<unsigned int>& v) const {
+			//TODO larger prime number (64 bit) to match size_t
+			const size_t p[] = {73856093, 19349669, 83492791};
+			size_t res = 0;
+			for (unsigned int i : v) {
+				res = res ^ (size_t)i * p[i%3];
+			}
+			return res;
+			//const size_t res = ((size_t)v.x * p0)^((size_t)v.y * p1)^((size_t)v.z * p2);
+		}
+	};
 
-		const std::vector<unsigned int>& face = m_FaceIndicesVertices[i1];
-		std::map<std::vector<unsigned int>, unsigned int, bool(*)(const std::vector<unsigned int>&, const std::vector<unsigned int>&)>::iterator it = pts.find(face);
+	size_t numFaces = m_FaceIndicesVertices.size();
+	std::vector<std::vector<unsigned int>> faces_new;
+	faces_new.reserve(numFaces);
 
-		if (it == pts.end()) {
-			pts.insert(std::make_pair(face, cnt));
-			faces_new.push_back(face);
-			cnt++;
+	std::unordered_set<std::vector<unsigned int>, vecHash> _set;
+	for (size_t i = 0; i < numFaces; i++) {
+		std::vector<unsigned int> f = m_FaceIndicesVertices[i];
+		std::sort(f.begin(), f.end());
+		if (_set.find(f) == _set.end()) {
+			//not found yet
+			_set.insert(f);
+			faces_new.push_back(m_FaceIndicesVertices[i]);	//inserted the unsorted one
 		}
 	}
-
+	
 	m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(faces_new.begin(), faces_new.end());
 
-	std::cout << "Removed " << numT-cnt << " duplicate faces of " << numT << " faces" << std::endl;
+	std::cout << "Removed " << numFaces-faces_new.size() << " duplicate faces of " << numFaces << " faces" << std::endl;
 
-	return cnt;
+	return (unsigned int)faces_new.size();
 }
 
 
@@ -363,6 +386,8 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 	}
 
 	m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
+	//m_Vertices = new_verts;
+	
 	if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
 	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
 	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
