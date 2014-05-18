@@ -123,7 +123,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		ml::mat4f trans =  camToWorld * projToCam;
 		ml::ColorImageRGB image(app.window.height(), app.window.width());
 
-		const std::string testFilename = "scans/gates381_full.ply";
+		const std::string testFilename = "scans/gates381.ply";
 		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 		ml::TriMeshf triMesh(meshData);
 
