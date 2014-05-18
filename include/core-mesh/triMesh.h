@@ -149,6 +149,16 @@ namespace ml {
 			const point3d<FloatType>& getCenter() const {
 				return m_Center;
 			}
+      //TODO: Should vertex accessors below exist?
+      const Vertex<FloatType>& getV0() const {
+        return *v0;
+      }
+      const Vertex<FloatType>& getV1() const {
+        return *v1;
+      }
+      const Vertex<FloatType>& getV2() const {
+        return *v2;
+      }
 		private:
 			const Vertex<FloatType> *v0, *v1, *v2;			
 			point3d<FloatType> m_Center;
@@ -292,6 +302,9 @@ namespace ml {
 
 		const std::vector<Vertex<FloatType>>& getVertices() const { return m_Vertices; }
 		const std::vector<vec3ui>& getIndices() const { return m_Indices; }
+
+		//TODO: Confirm that returning non-const reference to vertices is kosher and does not break encapsulation
+		std::vector<Vertex<FloatType>>& getVertices() { return m_Vertices; }
 		
 		void getMeshData(MeshData<FloatType>& meshData) const {
 			meshData.clear();
