@@ -98,6 +98,27 @@ public:
 	unsigned int removeDuplicateVertices();
 	unsigned int removeDuplicateFaces();
 	unsigned int mergeCloseVertices(FloatType thresh, bool approx = false);
+	unsigned int removeDegeneratedFaces() {
+		std::vector<std::vector<unsigned int>> newFacesIndicesVertices;
+
+		for (size_t i = 0; i < m_FaceIndicesVertices.size(); i++) {
+			std::unordered_set<unsigned int> _set(m_FaceIndicesVertices[i].size());
+			bool foundDuplicate = false;
+			for (unsigned int idx : m_FaceIndicesVertices[i]) {
+				if (_set.find(idx) != _set.end()) {
+					foundDuplicate = true;
+					break;
+				} else {
+					_set.insert(idx);
+				}
+			}
+			if (!foundDuplicate) {
+				newFacesIndicesVertices.push_back(m_FaceIndicesVertices[i]);
+			}
+		}
+		m_FaceIndicesVertices = newFacesIndicesVertices;
+		return (unsigned int)m_FaceIndicesVertices.size();
+	}
 
 	std::vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
 	std::vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below/or per vertex)
@@ -282,6 +303,7 @@ unsigned int MeshData<FloatType>::hasNearestNeighborApprox(const vec3i& coord, S
 template <class FloatType>
 unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool approx)
 {
+	if (thresh <= (FloatType)0)	throw MLIB_EXCEPTION("invalid thresh " + std::to_string(thresh));	
 	unsigned int numV = (unsigned int)m_Vertices.size();
 
 	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
@@ -345,6 +367,7 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
 	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
 
+	removeDegeneratedFaces();
 	std::cout << "Merged " << numV-cnt << " of " << numV << " vertices" << std::endl;
 	return cnt;
 }
