@@ -297,6 +297,17 @@ namespace util
         return result;
     }
 
+    //Usage: auto filteredVector = filter(v, [](int a) { return a > 10; });
+    template<class filterFunction, class T>
+    auto filter(const std::vector<T> &v, filterFunction function) -> std::vector<T>
+    {
+        std::vector<T> result;
+        for(const T &e : v)
+            if(function(e))
+                result.push_back(e);
+        return result;
+    }
+
 	//! uses the <, >  and = operator of the key type
 	template<typename Iterator, typename T>
 	inline Iterator binarySearch(Iterator& begin, Iterator& end, const T& key) {
