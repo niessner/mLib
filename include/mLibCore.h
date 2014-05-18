@@ -41,6 +41,7 @@
 #include "core-math/linearSolver.h"
 #include "core-math/rng.h"
 #include "core-math/kMeansClustering.h"
+#include "core-math/sampling.h"
 
 //
 // core-util headers

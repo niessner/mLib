@@ -160,6 +160,18 @@ namespace math
 		x1 = c / tmp;
 	}
 
+	//! computes sin(phi) and cos(phi)
+	template<typename T>
+	inline void sincos(T phi, T& sinPhi, T& cosPhi) {
+		sinPhi = std::sin(phi);
+		cosPhi = std::cos(phi);
+	}
+	//! computes sin(phi) and cos(phi)
+	template<typename T>
+	inline void sincos(T phi, T* sinPhi, T* cosPhi) {
+		sincos(phi, *sinPhi, *cosPhi);
+	}
+
 }  // namespace math
 
 namespace util

@@ -4,6 +4,22 @@
 
 void AppTest::init(ml::ApplicationData &app)
 {
+	unsigned int numSamples = 10000;
+	std::vector<vec3f> res_uniformSphere(numSamples);
+	std::vector<vec3f> res_uniformHemisphere(numSamples);
+	std::vector<vec3f> res_cosineHemisphere(numSamples);
+	std::vector<vec3f> res_powerCosineSampleHemisphere(numSamples);
+	RNG r;
+	for (unsigned int i = 0; i < numSamples; i++) {
+		res_uniformSphere[i] = Samplef::squareToUniformSphere(r.uniform2D());
+		res_uniformHemisphere[i] = Samplef::squareToUniformHemisphere(r.uniform2D());
+		res_cosineHemisphere[i] = Samplef::squareToCosineHemisphere(r.uniform2D());
+		res_powerCosineSampleHemisphere[i] = Samplef::squareToPowerCosineSampleHemisphere(r.uniform2D(), 100000);
+	}
+	PointCloudIOf::saveToFile("sample_uniformSphere.ply", res_uniformSphere);
+	PointCloudIOf::saveToFile("sample_uniformHemisphere.ply", res_uniformHemisphere);
+	PointCloudIOf::saveToFile("sample_cosineHemisphere.ply", res_cosineHemisphere);
+	PointCloudIOf::saveToFile("sample_powerCosineSampleHemisphere.ply", res_powerCosineSampleHemisphere);
 
     //const std::string testPLY = "scans/gates381.ply";
     //const TriMesh triMesh = OpenMeshLoader::load(testPLY);

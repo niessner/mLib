@@ -15,3 +15,5 @@
 #include "mLibD3D11Font.h"
 #include "mLibOpenMesh.h"
 #include "mLibFreeImage.h"
+
+using namespace ml;
