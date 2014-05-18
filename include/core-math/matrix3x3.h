@@ -512,6 +512,77 @@ public:
 	*/
 
 
+	//! save matrix array to .matArray
+	static void saveMatrixArrayToFile(const std::string& name, const Matrix3x3<FloatType>* matrixArray, unsigned int numMatrices) {
+		assert(false);	//UNTESTED
+		std::ofstream out(name.c_str());
+		out << numMatrices << "\n";
+		out << 3 << " " << 3 << "\n";
+		for (unsigned int h = 0; h < numMatrices; h++) {
+			for (unsigned int i = 0; i < 3; i++) {
+				for (unsigned int j = 0; j < 3 j++) {
+					out << matrixArray[h](i,j) << " ";
+				}
+				out << "\n";
+			}
+		}
+	}
+
+	//! load matrix array from .matArray
+	static void loadMatrixArrayFromFile(const std::string &name, std::vector<Matrix3x3<FloatType>>& matrices) {
+		assert(false);		//UNTESTED
+		std::ifstream in(name.c_str());
+		unsigned int numMatrices, height, width;;
+		in >> numMatrices >> height >> width;
+		assert(height == width && height == 3);
+		matrices.resize(numMatrices);
+		for (unsigned int k = 0; k < numMatrices; k++) {
+			Matrix4x4<FloatType> &curr = matrices[k];
+			for (unsigned int i = 0; i < 3; i++) {
+				for (unsigned int j = 0; j < 3; j++) {
+					in >> curr.matrix2[i][j];
+				}
+			}
+		}
+
+	}
+
+
+	//! save matrix to .mat file
+	void saveMatrixToFile(const std::string &name) const {
+		std::ofstream out(name.c_str());
+		out << 3 << " " << 3 << "\n";
+		for (unsigned int i = 0; i < 3; i++) {
+			for (unsigned int j = 0; j < 3; j++) {
+				out << (*this)(i,j) << " ";
+			}
+			out << "\n";
+		}
+	}
+	//! load matrix from .mat file
+	void loadMatrixFromFile(const std::string &name) {
+		std::ifstream in(name.c_str());
+		unsigned int height, width;
+		in >> height >> width;
+		assert(height == width && height == 3);
+		for (unsigned int i = 0; i < 3; i++) {
+			for (unsigned int j = 0; j < 3; j++) {
+				in >> matrix2[i][j];
+			}
+		}
+	}
+
+
+	//! constructs a matrix from a normal vector (TODO check if it is not transposed...)
+	static Matrix3x3 frame(const point3d<FloatType>& n) {
+		point3d<FloatType> dx0 = point3d<FloatType>(1,0,0) ^ n;
+		point3d<FloatType> dx1 = point3d<FloatType>(0,1,0) ^ n;
+		point3d<FloatType> dx = (dx0.lengthSq() > dx1.lengthSq() ? dx0 : dx1).getNormalized();
+		point3d<FloatType> dy = (n^dx).getNormalized();
+		return Matrix3x3(dx,dy,n);
+	}
+
+
 protected:
 	//! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns
 	FloatType det3x3(unsigned int i0 = 0, unsigned int i1 = 1, unsigned int i2 = 2, unsigned int j0 = 0, unsigned int j1 = 1, unsigned int j2 = 2) const {

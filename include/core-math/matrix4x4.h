@@ -734,6 +734,13 @@ public:
 		}
 	}
 
+
+
+	//! constructs a matrix from a normal vector (TODO check if it is not transposed...)
+	static Matrix4x4 frame(const point3d<FloatType>& n) {
+		return Matrix4x4(Matrix3x3<FloatType>::frame(n));
+	}
+
 	union {
 		//! access matrix using a single array
 		FloatType matrix[16];
