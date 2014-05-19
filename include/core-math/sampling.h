@@ -45,10 +45,10 @@ namespace ml {
 		}
 
 
-
-		static inline point3d<FloatType> squareToUniformCone(FloatType cosCutoff, const point2d<FloatType> &sample) {
+		//!cosCutoff in cos(\alpha)
+		static inline point3d<FloatType> squareToUniformCone(const point2d<FloatType>& sample, FloatType cosCutoff) {
 			FloatType cosTheta = (1-sample.x) + sample.x*cosCutoff;
-			FloatType sinTheta = math::safe_sqrt(1 - cosTheta*cosTheta);
+			FloatType sinTheta = std::sqrt(1 - cosTheta*cosTheta);
 
 			FloatType sinPhi, cosPhi;
 			math::sincos(2*(FloatType)math::PI * sample.y, &sinPhi, &cosPhi);

@@ -574,12 +574,12 @@ public:
 
 
 	//! constructs a matrix from a normal vector (TODO check if it is not transposed...)
-	static Matrix3x3 frame(const point3d<FloatType>& n) {
+	static inline Matrix3x3 frame(const point3d<FloatType>& n) {
 		point3d<FloatType> dx0 = point3d<FloatType>(1,0,0) ^ n;
 		point3d<FloatType> dx1 = point3d<FloatType>(0,1,0) ^ n;
 		point3d<FloatType> dx = (dx0.lengthSq() > dx1.lengthSq() ? dx0 : dx1).getNormalized();
 		point3d<FloatType> dy = (n^dx).getNormalized();
-		return Matrix3x3(dx,dy,n);
+		return Matrix3x3(dx,dy,n).getTranspose();
 	}
 
 
