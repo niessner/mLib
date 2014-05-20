@@ -163,7 +163,8 @@ public:
 		}
 	}
 	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
-		t = u = v = std::numeric_limits<FloatType>::max();
+		u = v = std::numeric_limits<FloatType>::max();	
+		t = tmax;	//TODO MATTHIAS: probably we don't have to track tmax since t must always be smaller than the prev
 		triangle = NULL;
 		return m_Root->intersect(r, t, u, v, triangle, tmin, tmax, intersectOnlyFrontFaces);
 	}
