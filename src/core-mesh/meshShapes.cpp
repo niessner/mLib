@@ -152,6 +152,82 @@ TriMeshf wireframeBox(const mat4f& xf, const vec4f& color) {
     return meshutil::createUnifiedMesh(meshes);
 }
 
+TriMeshf sphere(const float radius, const ml::vec3f& pos, const size_t stacks /*= 10*/, const size_t slices /*= 10*/, const ml::vec4f& color /*= ml::vec4f(1,1,1,1) */) {
+  MeshDataf meshdata;
+  auto& V = meshdata.m_Vertices;
+  auto& I = meshdata.m_FaceIndicesVertices;
+  auto& N = meshdata.m_Normals;
+  auto& C = meshdata.m_Colors;
+  for (int t = 0; t < stacks; t++) { // stacks are ELEVATION so they count theta
+    float theta1 = static_cast<float>(t) / stacks * ml::math::PIf;
+    float theta2 = static_cast<float>(t + 1) / stacks * ml::math::PIf;
+
+    for (int p = 0; p < slices; p++) { // slices are ORANGE SLICES so the count azimuth
+      float phi1 = static_cast<float>(p) / slices * 2.0f * ml::math::PIf; // azimuth goes around 0 .. 2*p
+      float phi2 = static_cast<float>(p + 1) / slices * 2.0f * ml::math::PIf;
+
+      const auto sph2xyz = [&](float r, float theta, float phi) {
+        const float sinTheta = sinf(theta), sinPhi = sinf(phi), cosTheta = cosf(theta), cosPhi = cosf(phi);
+        return ml::vec3f(r * sinTheta * cosPhi, r * sinTheta * sinPhi, r * cosTheta);
+      };
+
+      // phi2   phi1
+      //  |      |
+      //  2------1 -- theta1
+      //  |\ _   |
+      //  |    \ |
+      //  3------4 -- theta2
+      const ml::vec3f c1 = pos + sph2xyz(radius, theta1, phi1),
+                      c2 = pos + sph2xyz(radius, theta1, phi2),
+                      c3 = pos + sph2xyz(radius, theta2, phi2),
+                      c4 = pos + sph2xyz(radius, theta2, phi1);
+      V.push_back(c1);
+      V.push_back(c2);
+      V.push_back(c3);
+      V.push_back(c4);
+
+      for (int i = 0; i < 4; i++) {
+        C.push_back(color);
+      }
+
+      // compute the normals
+      N.push_back(c1.getNormalized());
+      N.push_back(c2.getNormalized());
+      N.push_back(c3.getNormalized());
+      N.push_back(c4.getNormalized());
+
+      const UINT baseIdx = static_cast<UINT>(t * slices * 4 + p * 4);
+
+      std::vector<unsigned int> indices;
+      // facing out
+      if ( t == 0 ) {  // top cap  //t1p1, t2p2, t2p1
+        indices.push_back(baseIdx + 0);
+        indices.push_back(baseIdx + 2);
+        indices.push_back(baseIdx + 3);
+        I.push_back(indices);
+      }
+      else if ( t + 1 == stacks ) {  //end cap  //t2p2, t1p1, t1p2
+        indices.push_back(baseIdx + 2);
+        indices.push_back(baseIdx + 0);
+        indices.push_back(baseIdx + 1);
+        I.push_back(indices);
+      }
+      else {
+        indices.push_back(baseIdx + 0);
+        indices.push_back(baseIdx + 1);
+        indices.push_back(baseIdx + 3);
+        I.push_back(indices);
+        indices.clear();
+        indices.push_back(baseIdx + 1);
+        indices.push_back(baseIdx + 2);
+        indices.push_back(baseIdx + 3);
+        I.push_back(indices);
+      }
+    }
+  }
+  return TriMeshf(meshdata);
+}
+
 }  // namespace shapes
 
 }  // namespace ml
