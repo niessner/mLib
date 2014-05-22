@@ -150,10 +150,10 @@ public:
 			buildRecursive(m_TrianglePointers);
 		}
 
-		std::cout << "Info: TriangleBVHAccelerator build done ( " << m_TrianglePointers.size() << " tris )" << std::endl;
-		std::cout << "Info: Tree depth " << m_Root->getTreeDepthRec() << std::endl;
-		std::cout << "Info: NumNodes " << m_Root->getNumNodesRec() << std::endl;
-		std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
+		//std::cout << "Info: TriangleBVHAccelerator build done ( " << m_TrianglePointers.size() << " tris )" << std::endl;
+		//std::cout << "Info: Tree depth " << m_Root->getTreeDepthRec() << std::endl;
+		//std::cout << "Info: NumNodes " << m_Root->getNumNodesRec() << std::endl;
+		//std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
 	}
 
 	void destroy() {

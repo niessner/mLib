@@ -82,7 +82,7 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 		m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(faces_new.begin(), faces_new.end());
 	}
 
-	std::cout << "Removed " << numFaces-faces_new.size() << " duplicate faces of " << numFaces << " faces" << std::endl;
+	//std::cout << "Removed " << numFaces-faces_new.size() << " duplicate faces of " << numFaces << " faces" << std::endl;
 
 	return (unsigned int)faces_new.size();
 }
@@ -143,7 +143,7 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 		//*it = vertexLookUp[*it];
 	}
 
-	std::cout << "Removed " << numV-cnt << " duplicate vertices of " << numV << " vertices" << std::endl;
+	//std::cout << "Removed " << numV-cnt << " duplicate vertices of " << numV << " vertices" << std::endl;
 
 	if (m_Vertices != new_verts) {
 		m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
