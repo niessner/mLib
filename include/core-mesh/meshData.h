@@ -118,6 +118,80 @@ public:
 	bool hasPerVertexColors()	const	{ return hasColors() && m_FaceIndicesColors.size() == 0; }
 	bool hasPerVertexTexCoords() const	{ return hasTexCoords() && m_FaceIndicesTextureCoords.size() == 0; }
 
+	bool hasVertexIndices() const { return m_FaceIndicesVertices.size() > 0; }
+	bool hasColorIndices() const { return m_FaceIndicesColors.size() > 0; }
+	bool hasNormalIndices() const { return m_FaceIndicesNormals.size() > 0; }
+	bool hasTexCoordsIndices() const { return m_FaceIndicesTextureCoords.size() > 0; }
+
+
+	//! merges two meshes (assumes the same memory layout/type)
+	void merge(const MeshData<FloatType>& other) {
+		////TODO just delete if non existent in other mesh
+		//assert(
+		//	hasNormals() == other.hasNormals() &&
+		//	hasColors() == other.hasColors() &&
+		//	hasTexCoords() == other.hasTexCoords() &&
+		//	hasPerVertexNormals() == other.hasPerVertexNormals() &&
+		//	hasPerVertexTexCoords() == other.hasPerVertexTexCoords() &&
+		//	hasPerVertexColors() == other.hasPerVertexColors() &&
+		//	hasVertexIndices() == other.hasVertexIndices() &&
+		//	hasColorIndices() == other.hasColorIndices() &&
+		//	hasTexCoordsIndices() == other.hasTexCoordsIndices()
+		//);
+
+		if (hasVertexIndices() != other.hasVertexIndices()) throw MLIB_EXCEPTION("invalid mesh conversion");
+
+		if (hasNormals() != other.hasNormals() || hasNormalIndices() != other.hasNormalIndices()) {
+			m_Normals.clear();
+			m_FaceIndicesNormals.clear();
+		}
+		if (hasColors() != other.hasColors() || hasColorIndices() != other.hasColorIndices()) {
+			m_Colors.clear();
+			m_FaceIndicesColors.clear();
+		}
+		if (hasTexCoords() != other.hasTexCoords() || hasTexCoordsIndices() != other.hasTexCoordsIndices()) {
+			m_TextureCoords.clear();
+			m_FaceIndicesTextureCoords.clear();
+		}
+
+		size_t vertsBefore = m_Vertices.size();
+		size_t normsBefore = m_Normals.size();
+		size_t colorBefore = m_Colors.size();
+		size_t texCoordsBefore = m_TextureCoords.size();
+		m_Vertices.insert(m_Vertices.end(), other.m_Vertices.begin(), other.m_Vertices.end());
+		if (hasColors())	m_Colors.insert(m_Colors.end(), other.m_Colors.begin(), other.m_Colors.end());
+		if (hasNormals())	m_Normals.insert(m_Normals.end(), other.m_Normals.begin(), other.m_Normals.end());
+		if (hasTexCoords())	m_TextureCoords.insert(m_TextureCoords.end(), other.m_TextureCoords.begin(), other.m_TextureCoords.end());
+
+		if (hasVertexIndices()) {
+			size_t indicesBefore = m_FaceIndicesVertices.size();
+			m_FaceIndicesVertices.insert(m_FaceIndicesVertices.end(), other.m_FaceIndicesVertices.begin(), other.m_FaceIndicesVertices.end());
+			for (size_t i = indicesBefore; i < m_FaceIndicesVertices.size(); i++) {
+				for (auto& idx : m_FaceIndicesVertices[i]) idx += (unsigned int)vertsBefore;
+			}
+		}
+		if (hasNormalIndices()) {
+			size_t indicesBefore = m_FaceIndicesNormals.size();
+			m_FaceIndicesNormals.insert(m_FaceIndicesNormals.end(), other.m_FaceIndicesNormals.begin(), other.m_FaceIndicesNormals.end());
+			for (size_t i = indicesBefore; i < m_FaceIndicesNormals.size(); i++) {
+				for (auto& idx : m_FaceIndicesNormals[i]) idx +=  (unsigned int)normsBefore;
+			}
+		}
+		if (hasColorIndices()) {
+			size_t indicesBefore = m_FaceIndicesColors.size();
+			m_FaceIndicesColors.insert(m_FaceIndicesColors.end(), other.m_FaceIndicesColors.begin(), other.m_FaceIndicesColors.end());
+			for (size_t i = indicesBefore; i < m_FaceIndicesColors.size(); i++) {
+				for (auto& idx : m_FaceIndicesColors[i]) idx +=  (unsigned int)colorBefore;
+			}
+		}
+		if (hasTexCoordsIndices()) {
+			size_t indicesBefore = m_FaceIndicesTextureCoords.size();
+			m_FaceIndicesTextureCoords.insert(m_FaceIndicesTextureCoords.end(), other.m_FaceIndicesTextureCoords.begin(), other.m_FaceIndicesTextureCoords.end());
+			for (size_t i = indicesBefore; i < m_FaceIndicesTextureCoords.size(); i++) {
+				for (auto& idx : m_FaceIndicesTextureCoords[i]) idx +=  (unsigned int)texCoordsBefore;
+			}
+		}
+	}
 	unsigned int removeDuplicateVertices();
 	unsigned int removeDuplicateFaces();
 	unsigned int mergeCloseVertices(FloatType thresh, bool approx = false);

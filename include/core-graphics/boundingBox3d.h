@@ -187,6 +187,14 @@ public:
 		return res;
 	}
 
+	Plane<FloatType> getBottomPlane() const {
+		std::vector<point3d<FloatType>> vertices; vertices.resize(3);
+		vertices[0] = point3d<FloatType>(minX, minY, minZ);
+		vertices[1] = point3d<FloatType>(maxX, minY, minZ);
+		vertices[2] = point3d<FloatType>(maxX, maxY, minZ);
+		return Plane<FloatType>(&vertices[0]);
+	}
+
 	void makeTriMeshBottomPlane(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<point3d<FloatType>>& normals) const {
 		vertices.resize(4);
 		normals.resize(4);

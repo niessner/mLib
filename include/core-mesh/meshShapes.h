@@ -25,7 +25,22 @@ TriMeshf wireframeBox(const mat4f& unitCube2world, const vec4f& color = vec4f(1,
 
 TriMeshf sphere(const float radius, const ml::vec3f& pos, const size_t stacks = 10, const size_t slices = 10, const ml::vec4f& color = ml::vec4f(1,1,1,1));
 
-}  // namespace shapes
+
+template<class FloatType>
+MeshData<FloatType> toMeshData(const BoundingBox3d<FloatType>& s, const point4d<FloatType>& color = vec4f(1,1,1,1)) {
+	MeshData<FloatType> meshData;	std::vector<vec3ui> indices;
+	s.makeTriMesh(meshData.m_Vertices, indices, meshData.m_Normals);
+	meshData.m_FaceIndicesVertices.resize(indices.size(), std::vector<unsigned int>(3));
+	for (size_t i = 0; i < indices.size(); i++) {
+		meshData.m_FaceIndicesVertices[i][0] = indices[i].x;
+		meshData.m_FaceIndicesVertices[i][1] = indices[i].y;
+		meshData.m_FaceIndicesVertices[i][2] = indices[i].z;
+	}
+	meshData.m_Colors.resize(meshData.m_Vertices.size(), color);
+	return meshData;
+}
+
+}	// namespace shapes
 
 }  // namespace ml
 

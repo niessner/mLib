@@ -49,23 +49,22 @@ void AppTest::init(ml::ApplicationData &app)
 
 	//meshData.mergeCloseVertices(0.3f, false);
 	//meshData.mergeCloseVertices(pow(0.3f,3), true);
+	
+	//MeshDataf copy = meshData;
+	//copy.applyTransform(mat4f::translation(vec3f(-2,1,1)));
+	//meshData.merge(copy);
+	meshData.merge(shapes::toMeshData(meshData.getBoundingBox()));
+	assert(meshData.isConsistent());
+
 	ml::TriMeshf triMesh(meshData);
+	//auto p = meshData.getBoundingBox().getBottomPlane();
 
-	//ml::TriangleBVHAcceleratorf accel(triMesh.getTrianglePointers());
-	//ml::Rayf ray(ml::vec3f::origin, ml::vec3f::origin);
-	//float u,v,t; 
-	//ml::Trianglef* tri;
-	//accel.intersect(ray, u, v, t, tri);
-
-
-	//ml::MeshDataf out = triMesh.getMeshData();
-	//ml::MeshIOf::writeToFile("bla.ply", out);
 
 	//const ml::TriMesh triMesh(meshData);
 	std::vector<ml::TriMeshf> meshes;
 	//m_mesh.load(app.graphics, triMesh);
 	//{
-		meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
+	//	meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
 	//}
 	meshes.push_back(triMesh);
 	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));

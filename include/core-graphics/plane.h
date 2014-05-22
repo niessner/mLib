@@ -60,6 +60,7 @@ public:
 	inline static Plane<FloatType> yzPlane() {
 		return Plane<FloatType>(point3d<FloatType>(1,0,0), 0);
 	}
+
 private:
 	void createFromPoints( const point3d<FloatType> * points ) 
 	{
