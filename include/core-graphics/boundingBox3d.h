@@ -187,6 +187,20 @@ public:
 		return res;
 	}
 
+	void makeTriMeshBottomPlane(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<point3d<FloatType>>& normals) const {
+		vertices.resize(4);
+		normals.resize(4);
+		indices.resize(2);
+
+		vertices[0] = point3d<FloatType>(minX, minY, minZ);
+		vertices[1] = point3d<FloatType>(maxX, minY, minZ);
+		vertices[2] = point3d<FloatType>(maxX, maxY, minZ);
+		vertices[3] = point3d<FloatType>(minX, maxY, minZ);
+		indices[0].x = 0;	indices[0].y = 1;	indices[0].z = 2;
+		indices[1].x = 2;	indices[1].y = 3;	indices[1].z = 0;
+		normals[0] = normals[1] = normals[2] = normals[3] = point3d<FloatType>(0,0,-1);
+	}
+
 	//! generates vertices, indices, and normals which can be used to initialize a triMesh
 	void makeTriMesh(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<point3d<FloatType>>& normals) const {
 		//TODO check face and normal orientation
@@ -199,7 +213,7 @@ public:
 		vertices[2] = point3d<FloatType>(maxX, maxY, minZ);
 		vertices[3] = point3d<FloatType>(minX, maxY, minZ);
 		indices[0].x = 0;	indices[0].y = 1;	indices[0].z = 2;
-		indices[1].x = 2;	indices[1].y = 3;	indices[5].z = 0;
+		indices[1].x = 2;	indices[1].y = 3;	indices[1].z = 0;
 		normals[0] = normals[1] = normals[2] = normals[3] = point3d<FloatType>(0,0,-1);
 		//front
 		vertices[4] = point3d<FloatType>(minX, minY, minZ);

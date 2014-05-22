@@ -124,42 +124,10 @@ public:
 	unsigned int removeDegeneratedFaces();
 
 	//! also removes isolated normals, colors, etc.
-	unsigned int removeIsolatedVertices() {
+	unsigned int removeIsolatedVertices();
 
-		unsigned int numV = (unsigned int)m_Vertices.size();
-		std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
-		std::vector<point3d<FloatType>> new_verts; new_verts.reserve(numV);
-		std::vector<point4d<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
-		std::vector<point3d<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
-		std::vector<point2d<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
-
-		std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
-		unsigned int cnt = 0;
-		for (auto& face : m_FaceIndicesVertices) {
-			for (auto& idx : face) {
-				if (_map.find(idx) != _map.end()) {
-					idx = _map[idx];	//set to new idx, which already exists
-				} else {
-					_map[idx] = cnt;
-					new_verts.push_back(m_Vertices[idx]);
-					if (hasPerVertexColors())		new_color.push_back(m_Colors[idx]);
-					if (hasPerVertexNormals())		new_normals.push_back(m_Normals[idx]);
-					if (hasPerVertexTexCoords())	new_tex.push_back(m_TextureCoords[idx]);
-
-					idx = cnt;
-					cnt++;
-				}
-			}
-		}
-
-		m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
-
-		if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
-		if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
-		if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
-
-		return (unsigned int)m_Vertices.size();
-	}
+	//! removes all the vertices that are behind a plane (faces with one or more of those vertices are being deleted as well)
+	unsigned int removeVerticesBehindPlane(const Plane<FloatType>& plane, FloatType thresh);
 
 	std::vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
 	std::vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below/or per vertex)

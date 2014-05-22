@@ -30,6 +30,16 @@ void AppTest::init(ml::ApplicationData &app)
 	const std::string testFilename = "scans/gates381.ply";
 	//const std::string testFilename = "scans/gates381_ascii.ply";
 	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
+	meshData.m_Vertices.push_back(vec3f(1.0f, 2.0f, 3.0f));
+	meshData.m_Colors.push_back(vec4f(1.0f, 0.0f, 0.0f, 1.0f));
+	meshData.m_Normals.push_back(vec3f(1.0f, 0.0f, 0.0f));
+	std::cout << meshData.m_Vertices.size();
+	std::cout << " reduced to " << meshData.removeIsolatedVertices() << std::endl;
+	std::cout << meshData.m_Vertices.size();
+	std::cout << " reduced to " << meshData.removeVerticesBehindPlane(Planef::xyPlane(), 0.1f) << std::endl;
+	 
+	assert(meshData.isConsistent());
+
 	//for (size_t i = 0; i < meshData.m_Colors.size(); i++) {
 	//	meshData.m_Colors[i] = ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f);
 	//}
@@ -52,9 +62,11 @@ void AppTest::init(ml::ApplicationData &app)
 	//ml::MeshIOf::writeToFile("bla.ply", out);
 
 	//const ml::TriMesh triMesh(meshData);
-	//m_mesh.load(app.graphics, triMesh);
 	std::vector<ml::TriMeshf> meshes;
-	meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
+	//m_mesh.load(app.graphics, triMesh);
+	//{
+		meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
+	//}
 	meshes.push_back(triMesh);
 	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));
 	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));

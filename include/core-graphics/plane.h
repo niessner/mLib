@@ -12,6 +12,11 @@ public:
 
 	}
 
+	Plane(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) {
+		const point3d<FloatType>* p[] = {p0,p1,p2};
+		createFromPoints(p);
+	}
+
 	Plane(const point3d<FloatType> *points) {
 		createFromPoints(points);
 	}
@@ -44,6 +49,16 @@ public:
 
 	inline point3d<FloatType> projectPointToPlane(const point3d<FloatType>& point) const {
 		return point - distanceToPoint(point) * getNormal();
+	}
+
+	inline static Plane<FloatType> xyPlane() {
+		return Plane<FloatType>(point3d<FloatType>(0,0,1), 0);
+	}
+	inline static Plane<FloatType> xzPlane() {
+		return Plane<FloatType>(point3d<FloatType>(0,1,0), 0);
+	}
+	inline static Plane<FloatType> yzPlane() {
+		return Plane<FloatType>(point3d<FloatType>(1,0,0), 0);
 	}
 private:
 	void createFromPoints( const point3d<FloatType> * points ) 
