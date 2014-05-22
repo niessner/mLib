@@ -47,6 +47,7 @@
 #include <thread>
 #include <mutex>
 #include <map>
+#include <unordered_set>
 #include <unordered_map>
 #include <numeric>
 #include <type_traits>

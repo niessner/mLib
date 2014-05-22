@@ -154,6 +154,20 @@ public:
 		maxZ = maxValue.z;
 	}
 
+	void setMinX(FloatType v) { minX = v; }
+	void setMinY(FloatType v) { minY = v; }
+	void setMinZ(FloatType v) { minZ = v; }
+	void setMaxX(FloatType v) { maxX = v; }
+	void setMaxY(FloatType v) { maxY = v; }
+	void setMaxZ(FloatType v) { maxZ = v; }
+
+	FloatType getMinX() const { return minX; }
+	FloatType getMinY() const { return minY; }
+	FloatType getMinZ() const { return minZ; }
+	FloatType getMaxX() const { return maxX; }
+	FloatType getMaxY() const { return maxY; }
+	FloatType getMaxZ() const { return maxZ; }
+
 	//! scales the bounding box by the factor t (for t=1 the bb remains unchanged)
 	void scale(FloatType x, FloatType y, FloatType z) {
 
@@ -285,6 +299,8 @@ std::ostream& operator<< (std::ostream& s, const BoundingBox3d<FloatType>& bb) {
 	return s;
 }
 
+typedef BoundingBox3d<float> BoundingBox3df;
+typedef BoundingBox3d<double> BoundingBox3dd;
 
 typedef BoundingBox3d<float> bbox3f;
 typedef BoundingBox3d<double> bbox3d;

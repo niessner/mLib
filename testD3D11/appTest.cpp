@@ -53,7 +53,12 @@ void AppTest::init(ml::ApplicationData &app)
 	//MeshDataf copy = meshData;
 	//copy.applyTransform(mat4f::translation(vec3f(-2,1,1)));
 	//meshData.merge(copy);
-	meshData.merge(shapes::toMeshData(meshData.getBoundingBox(), vec4f(1,1,1,1), true));
+	MeshDataf bbData = shapes::toMeshData(meshData.getBoundingBox(), vec4f(1,1,1,1), true);
+	bbData.subdivideFaces();
+	bbData.subdivideFaces();
+	bbData.print();
+	MeshIOf::writeToFile("outbox.ply", bbData);
+	meshData.merge(bbData);
 	assert(meshData.isConsistent());
 
 	ml::TriMeshf triMesh(meshData);

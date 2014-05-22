@@ -125,73 +125,7 @@ public:
 
 
 	//! merges two meshes (assumes the same memory layout/type)
-	void merge(const MeshData<FloatType>& other) {
-		////TODO just delete if non existent in other mesh
-		//assert(
-		//	hasNormals() == other.hasNormals() &&
-		//	hasColors() == other.hasColors() &&
-		//	hasTexCoords() == other.hasTexCoords() &&
-		//	hasPerVertexNormals() == other.hasPerVertexNormals() &&
-		//	hasPerVertexTexCoords() == other.hasPerVertexTexCoords() &&
-		//	hasPerVertexColors() == other.hasPerVertexColors() &&
-		//	hasVertexIndices() == other.hasVertexIndices() &&
-		//	hasColorIndices() == other.hasColorIndices() &&
-		//	hasTexCoordsIndices() == other.hasTexCoordsIndices()
-		//);
-
-		if (hasVertexIndices() != other.hasVertexIndices()) throw MLIB_EXCEPTION("invalid mesh conversion");
-
-		if (hasNormals() != other.hasNormals() || hasNormalIndices() != other.hasNormalIndices()) {
-			m_Normals.clear();
-			m_FaceIndicesNormals.clear();
-		}
-		if (hasColors() != other.hasColors() || hasColorIndices() != other.hasColorIndices()) {
-			m_Colors.clear();
-			m_FaceIndicesColors.clear();
-		}
-		if (hasTexCoords() != other.hasTexCoords() || hasTexCoordsIndices() != other.hasTexCoordsIndices()) {
-			m_TextureCoords.clear();
-			m_FaceIndicesTextureCoords.clear();
-		}
-
-		size_t vertsBefore = m_Vertices.size();
-		size_t normsBefore = m_Normals.size();
-		size_t colorBefore = m_Colors.size();
-		size_t texCoordsBefore = m_TextureCoords.size();
-		m_Vertices.insert(m_Vertices.end(), other.m_Vertices.begin(), other.m_Vertices.end());
-		if (hasColors())	m_Colors.insert(m_Colors.end(), other.m_Colors.begin(), other.m_Colors.end());
-		if (hasNormals())	m_Normals.insert(m_Normals.end(), other.m_Normals.begin(), other.m_Normals.end());
-		if (hasTexCoords())	m_TextureCoords.insert(m_TextureCoords.end(), other.m_TextureCoords.begin(), other.m_TextureCoords.end());
-
-		if (hasVertexIndices()) {
-			size_t indicesBefore = m_FaceIndicesVertices.size();
-			m_FaceIndicesVertices.insert(m_FaceIndicesVertices.end(), other.m_FaceIndicesVertices.begin(), other.m_FaceIndicesVertices.end());
-			for (size_t i = indicesBefore; i < m_FaceIndicesVertices.size(); i++) {
-				for (auto& idx : m_FaceIndicesVertices[i]) idx += (unsigned int)vertsBefore;
-			}
-		}
-		if (hasNormalIndices()) {
-			size_t indicesBefore = m_FaceIndicesNormals.size();
-			m_FaceIndicesNormals.insert(m_FaceIndicesNormals.end(), other.m_FaceIndicesNormals.begin(), other.m_FaceIndicesNormals.end());
-			for (size_t i = indicesBefore; i < m_FaceIndicesNormals.size(); i++) {
-				for (auto& idx : m_FaceIndicesNormals[i]) idx +=  (unsigned int)normsBefore;
-			}
-		}
-		if (hasColorIndices()) {
-			size_t indicesBefore = m_FaceIndicesColors.size();
-			m_FaceIndicesColors.insert(m_FaceIndicesColors.end(), other.m_FaceIndicesColors.begin(), other.m_FaceIndicesColors.end());
-			for (size_t i = indicesBefore; i < m_FaceIndicesColors.size(); i++) {
-				for (auto& idx : m_FaceIndicesColors[i]) idx +=  (unsigned int)colorBefore;
-			}
-		}
-		if (hasTexCoordsIndices()) {
-			size_t indicesBefore = m_FaceIndicesTextureCoords.size();
-			m_FaceIndicesTextureCoords.insert(m_FaceIndicesTextureCoords.end(), other.m_FaceIndicesTextureCoords.begin(), other.m_FaceIndicesTextureCoords.end());
-			for (size_t i = indicesBefore; i < m_FaceIndicesTextureCoords.size(); i++) {
-				for (auto& idx : m_FaceIndicesTextureCoords[i]) idx +=  (unsigned int)texCoordsBefore;
-			}
-		}
-	}
+	void merge(const MeshData<FloatType>& other);
 	unsigned int removeDuplicateVertices();
 	unsigned int removeDuplicateFaces();
 	unsigned int mergeCloseVertices(FloatType thresh, bool approx = false);
@@ -212,6 +146,67 @@ public:
 	std::vector<std::vector<unsigned int>>	m_FaceIndicesTextureCoords;	//indices in texture array (if size==0, indicesVertices is used)
 	std::vector<std::vector<unsigned int>>	m_FaceIndicesColors;		//indices in color array (if size==0, indicesVertices is used)
 
+	//! Debug print with all details
+	void print() const {
+		std::cout << "Vertices:\n";
+		std::cout << m_Vertices << std::endl;
+		std::cout << "Faces:\n";
+		std::cout << m_FaceIndicesVertices << std::endl;
+	}
+
+	//! inserts a midpoint into every faces; and triangulates the result
+	void subdivideFaces() {
+		m_Vertices.reserve(m_Vertices.size() + m_FaceIndicesVertices.size());	//there will be 1 new vertex per face
+		if (hasPerVertexColors())		m_Colors.reserve(m_Colors.size() + m_FaceIndicesVertices.size());
+		if (hasPerVertexNormals())		m_Normals.reserve(m_Normals.size() + m_FaceIndicesVertices.size());
+		if (hasPerVertexTexCoords())	m_TextureCoords.reserve(m_TextureCoords.size() + m_FaceIndicesVertices.size());
+
+		std::vector<std::vector<unsigned int>> newFaces;
+		for (auto& face : m_FaceIndicesVertices) {
+			point3d<FloatType> centerP = point3d<FloatType>(0,0,0);
+			for (auto& idx : face) {
+				centerP += m_Vertices[idx];
+			}
+			centerP /= (FloatType)face.size();
+			m_Vertices.push_back(centerP);
+
+			if (hasPerVertexColors()) {
+				point4d<FloatType> centerC = point4d<FloatType>(0,0,0,0);
+				for (auto& idx : face) {
+					centerC += m_Colors[idx];
+				}
+				centerC /= (FloatType)face.size();
+				m_Colors.push_back(centerC);
+			}
+			if (hasPerVertexNormals()) {
+				point3d<FloatType> centerN = point3d<FloatType>(0,0,0);
+				for (auto& idx : face) {
+					centerN += m_Normals[idx];
+				}
+				centerN /= (FloatType)face.size();
+				m_Normals.push_back(centerN);
+			}
+			if (hasPerVertexTexCoords()) {
+				point2d<FloatType> centerT = point2d<FloatType>(0,0);
+				for (auto& idx : face) {
+					centerT += m_TextureCoords[idx];
+				}
+				centerT /= (FloatType)face.size();
+				m_TextureCoords.push_back(centerT);
+			}
+			
+
+			unsigned int newIdx = (unsigned int)m_Vertices.size() - 1;
+			for (size_t i = 0; i < face.size(); i++) {
+				newFaces.push_back(std::vector<unsigned int>(3));
+				newFaces[newFaces.size()-1][0] = face[i];
+				newFaces[newFaces.size()-1][1] = face[(i+1)%face.size()];
+				newFaces[newFaces.size()-1][2] = newIdx;
+			}
+		}
+
+		m_FaceIndicesVertices = newFaces;
+	}
 private:
 	inline vec3i toVirtualVoxelPos(const point3d<FloatType>& v, FloatType voxelSize) {
 		return vec3i(v/voxelSize+(FloatType)0.5*point3d<FloatType>(math::sign(v)));
