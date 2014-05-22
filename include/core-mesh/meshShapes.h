@@ -25,11 +25,14 @@ TriMeshf wireframeBox(const mat4f& unitCube2world, const vec4f& color = vec4f(1,
 
 TriMeshf sphere(const float radius, const ml::vec3f& pos, const size_t stacks = 10, const size_t slices = 10, const ml::vec4f& color = ml::vec4f(1,1,1,1));
 
-
 template<class FloatType>
-MeshData<FloatType> toMeshData(const BoundingBox3d<FloatType>& s, const point4d<FloatType>& color = vec4f(1,1,1,1)) {
+MeshData<FloatType> toMeshData(const BoundingBox3d<FloatType>& s, const point4d<FloatType>& color = vec4f(1,1,1,1), bool bottomPlaneOnly = false) {
 	MeshData<FloatType> meshData;	std::vector<vec3ui> indices;
-	s.makeTriMesh(meshData.m_Vertices, indices, meshData.m_Normals);
+	if (bottomPlaneOnly) {
+		s.makeTriMeshBottomPlane(meshData.m_Vertices, indices, meshData.m_Normals);
+	} else {
+		s.makeTriMesh(meshData.m_Vertices, indices, meshData.m_Normals);
+	}
 	meshData.m_FaceIndicesVertices.resize(indices.size(), std::vector<unsigned int>(3));
 	for (size_t i = 0; i < indices.size(); i++) {
 		meshData.m_FaceIndicesVertices[i][0] = indices[i].x;
