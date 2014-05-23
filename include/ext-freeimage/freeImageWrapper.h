@@ -49,7 +49,15 @@ public:
 		} else if (fitype == FIT_BITMAP) {
 			const BYTE* data = (BYTE*)bits;
 			unsigned int bytesPerPixel = nBits/8;
-			if (bytesPerPixel == 3) {
+			if (bytesPerPixel == 1) {
+				#pragma omp parallel for
+				for (int i = 0; i < (int)height; i++) {
+					const BYTE* dataRowStart = data + (height-1-i)*pitch;
+					for (int j = 0; j < (int)width; j++) {						
+						convertFromBYTE(resultImage(i,j), &dataRowStart[j*bytesPerPixel]);
+					}
+				}
+			} else if (bytesPerPixel == 3) {
 				#pragma omp parallel for
 				for (int i = 0; i < (int)height; i++) {
 					const BYTE* dataRowStart = data + (height-1-i)*pitch;

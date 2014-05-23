@@ -406,6 +406,11 @@ unsigned int MeshData<FloatType>::removeVerticesBehindPlane( const Plane<FloatTy
 template <class FloatType>
 void MeshData<FloatType>::merge( const MeshData<FloatType>& other )
 {
+	if (isEmpty()) {
+		*this = other;
+		return;
+	}
+
 	////TODO just delete if non existent in other mesh
 	//assert(
 	//	hasNormals() == other.hasNormals() &&
@@ -422,14 +427,17 @@ void MeshData<FloatType>::merge( const MeshData<FloatType>& other )
 	if (hasVertexIndices() != other.hasVertexIndices()) throw MLIB_EXCEPTION("invalid mesh conversion");
 
 	if (hasNormals() != other.hasNormals() || hasNormalIndices() != other.hasNormalIndices()) {
+		MLIB_WARNING("normals deleted");
 		m_Normals.clear();
 		m_FaceIndicesNormals.clear();
 	}
 	if (hasColors() != other.hasColors() || hasColorIndices() != other.hasColorIndices()) {
+		MLIB_WARNING("colors deleted");
 		m_Colors.clear();
 		m_FaceIndicesColors.clear();
 	}
 	if (hasTexCoords() != other.hasTexCoords() || hasTexCoordsIndices() != other.hasTexCoordsIndices()) {
+		MLIB_WARNING("texcoords deleted");
 		m_TextureCoords.clear();
 		m_FaceIndicesTextureCoords.clear();
 	}

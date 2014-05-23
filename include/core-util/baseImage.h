@@ -99,12 +99,12 @@ public:
 
 	//! Mutator Operator (double)
 	T& operator()(double y, double x) {
-		return (*this)((unsigned int)round(y*(m_Height-1)), (unsigned int)round(x*(m_Width-1)));
+		return (*this)((unsigned int)math::round(y*(m_Height-1)), (unsigned int)math::round(x*(m_Width-1)));
 	}
 
 	//! Mutator Operator (float)
 	T& operator()(float y, float x) {
-		return (*this)((unsigned int)round(y*(m_Height-1)), (unsigned int)round(x*(m_Width-1)));
+		return (*this)((unsigned int)math::round(y*(m_Height-1)), (unsigned int)math::round(x*(m_Width-1)));
 	}
 
 	template <class S>

@@ -13,6 +13,67 @@ namespace ml {
 // Data Read Helper //
 //////////////////////
 
+//BYTE
+template<class T>	__forceinline void convertFromBYTE(T& output, const BYTE* input) {
+	throw EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+template<>	__forceinline void convertFromBYTE<vec3d>(vec3d& output, const BYTE* input) {
+	output.z = input[0]/255.0;	
+	output.y = input[0]/255.0;	
+	output.x = input[0]/255.0;
+}
+template<>	__forceinline void convertFromBYTE<vec4d>(vec4d& output, const BYTE* input) {
+	output.z = input[0]/255.0;
+	output.y = input[0]/255.0;
+	output.x = input[0]/255.0;
+	output.w = 1.0;
+}
+template<>	__forceinline void convertFromBYTE<vec3f>(vec3f& output, const BYTE* input) {
+	output.z = input[0]/255.0f;	
+	output.y = input[0]/255.0f;	
+	output.x = input[0]/255.0f;
+}
+template<>	__forceinline void convertFromBYTE<vec4f>(vec4f& output, const BYTE* input) {
+	output.z = input[0]/255.0f;
+	output.y = input[0]/255.0f;
+	output.x = input[0]/255.0f;
+	output.w = 1.0f;
+}
+template<>	__forceinline void convertFromBYTE<vec3i>(vec3i& output, const BYTE* input) {
+	output.z = input[0];	
+	output.y = input[0];	
+	output.x = input[0];
+}
+template<>	__forceinline void convertFromBYTE<vec4i>(vec4i& output, const BYTE* input) {
+	output.z = input[0];	
+	output.y = input[0];	
+	output.x = input[0];
+	output.w = 255;
+}
+template<>	__forceinline void convertFromBYTE<vec3ui>(vec3ui& output, const BYTE* input) {
+	output.z = input[0];	
+	output.y = input[0];	
+	output.x = input[0];
+}
+template<>	__forceinline void convertFromBYTE<vec4ui>(vec4ui& output, const BYTE* input) {
+	output.z = input[0];	
+	output.y = input[0];	
+	output.x = input[0];
+	output.w = 255;
+}
+template<>	__forceinline void convertFromBYTE<vec3uc>(vec3uc& output, const BYTE* input) {
+	output.z = input[0];	
+	output.y = input[0];	
+	output.x = input[0];
+}
+template<>	__forceinline void convertFromBYTE<vec4uc>(vec4uc& output, const BYTE* input) {
+	output.z = input[0];	
+	output.y = input[0];	
+	output.x = input[0];
+	output.w = 255;
+}
+
 //BYTE3
 template<class T>	__forceinline void convertFromBYTE3(T& output, const BYTE* input) {
 	throw EXCEPTION("Invalid Data Conversion");

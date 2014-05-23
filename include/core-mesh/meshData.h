@@ -123,6 +123,10 @@ public:
 	bool hasNormalIndices() const { return m_FaceIndicesNormals.size() > 0; }
 	bool hasTexCoordsIndices() const { return m_FaceIndicesTextureCoords.size() > 0; }
 
+	//! todo check this
+	bool isEmpty() const {
+		return m_Vertices.size() == 0 && m_FaceIndicesVertices.size() == 0;
+	}
 
 	//! merges two meshes (assumes the same memory layout/type)
 	void merge(const MeshData<FloatType>& other);
