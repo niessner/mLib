@@ -145,6 +145,19 @@ void ml::D3D11GraphicsDevice::renderEndFrame()
 	m_swapChain->Present( 1, 0 );
 }
 
+void ml::D3D11GraphicsDevice::toggleWireframe()
+{
+    m_context->RSGetState(&m_rasterState);
+    m_rasterState->GetDesc(&m_rasterDesc);
+    if(m_rasterDesc.FillMode == D3D11_FILL_SOLID)
+        m_rasterDesc.FillMode = D3D11_FILL_WIREFRAME;
+    else
+        m_rasterDesc.FillMode = D3D11_FILL_SOLID;
+    m_rasterState->Release();
+    D3D_VALIDATE(m_device->CreateRasterizerState(&m_rasterDesc, &m_rasterState));
+    m_context->RSSetState(m_rasterState);
+}
+
 void ml::D3D11GraphicsDevice::captureBackBuffer(Bitmap &result)
 {
     ID3D11Texture2D* frameBuffer;

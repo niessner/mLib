@@ -52,6 +52,8 @@ public:
 	void renderEndFrame();
 	void registerAsset(GraphicsAsset *asset);
     void captureBackBuffer(Bitmap &result);
+    void toggleWireframe();
+
 
 	ID3D11Device& device()
 	{

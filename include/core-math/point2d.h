@@ -183,6 +183,13 @@ public:
 		Console::log() << "(" << array[0] << " / " << array[1] << ")" << std::endl;
 	}
 
+    inline std::vector<T> toStdVector() const {
+        std::vector<T> result(2);
+        result[0] = x;
+        result[1] = y;
+        return result;
+    }
+
 	static const point2d<T> origin;
 	static const point2d<T> eX;
 	static const point2d<T> eY;

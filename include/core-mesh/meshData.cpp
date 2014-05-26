@@ -406,6 +406,9 @@ unsigned int MeshData<FloatType>::removeVerticesBehindPlane( const Plane<FloatTy
 template <class FloatType>
 void MeshData<FloatType>::merge( const MeshData<FloatType>& other )
 {
+    if (other.isEmpty()) {
+        return;
+    }
 	if (isEmpty()) {
 		*this = other;
 		return;
