@@ -9,7 +9,7 @@ class FreeImageWrapper {
 public:
 
 	template<class T>
-	static void loadImage(const std::string &filename, BaseImage<T>& resultImage) {
+	static void loadImage(const std::string &filename, BaseImage<T>& resultImage, bool debugPrint = false) {
 		if (util::getFileExtension(filename) == "mbinRGB" || util::getFileExtension(filename) == "mbindepth") {
 			resultImage.loadFromBinaryMImage(filename);
 			return;
@@ -79,15 +79,16 @@ public:
 		}
 
 		FreeImage_Unload(dib);
-
-		std::cout << __FUNCTION__ << ":" << filename << " (width=" << width << ";height=" << height << "; " << resultImage.getNumChannels() << "; " << resultImage.getNumBytesPerChannel() <<  ")" << std::endl;
+		if (debugPrint) {
+			std::cout << __FUNCTION__ << ":" << filename << " (width=" << width << ";height=" << height << "; " << resultImage.getNumChannels() << "; " << resultImage.getNumBytesPerChannel() <<  ")" << std::endl;
+		}
 		FreeImage_DeInitialise();
 	}
 
 
 
 	template<class T>
-	static void saveImage(const std::string &filename, const BaseImage<T>& image) {
+	static void saveImage(const std::string &filename, const BaseImage<T>& image, bool debugPrint = false) {
 		if (util::getFileExtension(filename) == "mbinRGB" || util::getFileExtension(filename) == "mbindepth") {
 			image.saveAsBinaryMImage(filename);
 			return;
@@ -153,7 +154,9 @@ public:
 			throw MLIB_EXCEPTION("Unknown file format");
 		}
 
-		std::cout << __FUNCTION__ << ":" << filename << " (width=" << width << ";height=" << height << "; " << image.getNumChannels() << "; " << image.getNumBytesPerChannel() <<  ")" << std::endl;
+		if (debugPrint) {
+			std::cout << __FUNCTION__ << ":" << filename << " (width=" << width << ";height=" << height << "; " << image.getNumChannels() << "; " << image.getNumBytesPerChannel() <<  ")" << std::endl;
+		}
 		FreeImage_DeInitialise();
 	}
 
