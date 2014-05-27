@@ -158,6 +158,23 @@ public:
 		std::cout << m_FaceIndicesVertices << std::endl;
 	}
 
+
+	//! computes per vertex normals
+	void computeVertexNormals() {
+		m_Normals.clear();
+		m_FaceIndicesNormals.clear();
+
+		if (m_FaceIndicesVertices.size()) {
+
+			for (const auto& face : m_FaceIndicesVertices) {
+				unsigned int first = face[i];
+				for (auto idx : face) {
+					//TODO MATTHIAS CONTINUE HERE
+					//write function that computes a face normal
+				}
+			}
+		}
+	}
 	//! inserts a midpoint into every faces; and triangulates the result
 	void subdivideFaces() {
 		m_Vertices.reserve(m_Vertices.size() + m_FaceIndicesVertices.size());	//there will be 1 new vertex per face

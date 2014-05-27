@@ -445,6 +445,11 @@ void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<
 	file << "property float x\n";
 	file << "property float y\n";
 	file << "property float z\n";
+	if (mesh.m_Normals.size() > 0) {
+		file << "property float nx\n";
+		file << "property float ny\n";
+		file << "property float nz\n";
+	}
 	if (mesh.m_Colors.size() > 0) {
 		file << "property uchar red\n";
 		file << "property uchar green\n";
@@ -455,11 +460,17 @@ void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<
 	file << "property list uchar int vertex_indices\n";
 	file << "end_header\n";
 
-	if (mesh.m_Colors.size() > 0) {
+	//TODO make this more efficient: i.e., copy first into an array, and then perform just a single write
+	if (mesh.m_Colors.size() > 0 || mesh.m_Normals.size() > 0) {
 		for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
 			file.write((const char*)&mesh.m_Vertices[i], sizeof(float)*3);
-			vec4uc c(mesh.m_Colors[i]*255);
-			file.write((const char*)&c, sizeof(unsigned char)*4);
+			if (mesh.m_Normals.size() > 0) {
+				file.write((const char*)&mesh.m_Normals[i], sizeof(float)*3);
+			}
+			if (mesh.m_Colors.size() > 0) {
+				vec4uc c(mesh.m_Colors[i]*255);
+				file.write((const char*)&c, sizeof(unsigned char)*4);
+			}
 		}
 	} else {
 		file.write((const char*)&mesh.m_Vertices[0], sizeof(float)*3*mesh.m_Vertices.size());
