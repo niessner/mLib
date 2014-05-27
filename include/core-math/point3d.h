@@ -217,6 +217,14 @@ public:
             return math::radiansToDegrees(acosf(math::clamp(point3d<T>::dot(v0, v1) / l0 / l1, -1.0f, 1.0f)));
     }
 
+	inline std::vector<T> toStdVector() const {
+		std::vector<T> result(3);
+		result[0] = x;
+		result[1] = y;
+		result[2] = z;
+		return result;
+	}
+
 	static const point3d<T> origin;
 	static const point3d<T> eX;
 	static const point3d<T> eY;

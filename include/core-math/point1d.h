@@ -145,6 +145,17 @@ public:
 		Console::log() << "(" << array[0] << ")" << std::endl;
 	}
 
+
+	inline std::vector<T> toStdVector() const {
+		std::vector<T> result(1);
+		result[0] = x;
+		return result;
+	}
+
+	static const point1d<T> origin;
+	static const point1d<T> eX;
+	static const point1d<T> eY;
+
 	union {
 		struct {
 			T x;        // standard names for components
@@ -200,6 +211,13 @@ typedef point1d<float> vec1f;
 typedef point1d<int> vec1i;
 typedef point1d<unsigned int> vec1ui;
 typedef point1d<unsigned char> vec1uc;
+
+
+template<> const vec1f vec1f::origin(0.0f);
+template<> const vec1f vec1f::eX(1.0f);
+
+template<> const vec1d vec1d::origin(0.0);
+template<> const vec1d vec1d::eX(1.0);
 
 }  // namespace ml
 

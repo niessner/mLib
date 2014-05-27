@@ -233,6 +233,17 @@ public:
 		return point6d<T>(array[0] * val, array[1] * val, array[2] * val, array[3] * val, array[4] * val, array[5] * val);
 	}
 
+	inline std::vector<T> toStdVector() const {
+		std::vector<T> result(6);
+		result[0] = x;
+		result[1] = y;
+		result[2] = z;
+		result[3] = xx;
+		result[4] = yy;
+		result[5] = zz;
+		return result;
+	}
+
 	inline point1d<T> getPoint1d() const {
 		return point1d<T>(x);
 	}

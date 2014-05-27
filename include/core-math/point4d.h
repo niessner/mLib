@@ -252,6 +252,15 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             { return false; }
         }
 
+		inline std::vector<T> toStdVector() const {
+			std::vector<T> result(4);
+			result[0] = x;
+			result[1] = y;
+			result[2] = z;
+			result[3] = w;
+			return result;
+		}
+
 		static const point4d<T> origin;
 		static const point4d<T> eX;
 		static const point4d<T> eY;
