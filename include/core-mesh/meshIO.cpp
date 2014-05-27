@@ -462,16 +462,36 @@ void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<
 
 	//TODO make this more efficient: i.e., copy first into an array, and then perform just a single write
 	if (mesh.m_Colors.size() > 0 || mesh.m_Normals.size() > 0) {
+		//for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
+		//	file.write((const char*)&mesh.m_Vertices[i], sizeof(float)*3);
+		//	if (mesh.m_Normals.size() > 0) {
+		//		file.write((const char*)&mesh.m_Normals[i], sizeof(float)*3);
+		//	}
+		//	if (mesh.m_Colors.size() > 0) {
+		//		vec4uc c(mesh.m_Colors[i]*255);
+		//		file.write((const char*)&c, sizeof(unsigned char)*4);
+		//	}
+		//}
+
+		size_t vertexByteSize = sizeof(float)*3;
+		if (mesh.m_Normals.size() > 0)	vertexByteSize += sizeof(float)*3;
+		if (mesh.m_Colors.size() > 0)	vertexByteSize += sizeof(unsigned char)*4;
+		BYTE* data = new BYTE[vertexByteSize*mesh.m_Vertices.size()];
+		size_t byteOffset = 0;
 		for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
-			file.write((const char*)&mesh.m_Vertices[i], sizeof(float)*3);
+			memcpy(&data[byteOffset], &mesh.m_Vertices[i], sizeof(float)*3);
+			byteOffset += sizeof(float)*3;
 			if (mesh.m_Normals.size() > 0) {
-				file.write((const char*)&mesh.m_Normals[i], sizeof(float)*3);
+				memcpy(&data[byteOffset], &mesh.m_Normals[i], sizeof(float)*3);
+				byteOffset += sizeof(float)*3;
 			}
 			if (mesh.m_Colors.size() > 0) {
-				vec4uc c(mesh.m_Colors[i]*255);
-				file.write((const char*)&c, sizeof(unsigned char)*4);
+				memcpy(&data[byteOffset], &mesh.m_Colors[i], sizeof(unsigned char)*4);
+				byteOffset += sizeof(unsigned char)*4;
 			}
 		}
+		file.write((const char*)data, byteOffset);
+		SAFE_DELETE_ARRAY(data);
 	} else {
 		file.write((const char*)&mesh.m_Vertices[0], sizeof(float)*3*mesh.m_Vertices.size());
 	}

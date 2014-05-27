@@ -268,7 +268,7 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 	}
 
 	removeDegeneratedFaces();
-	std::cout << "Merged " << numV-cnt << " of " << numV << " vertices" << std::endl;
+	//std::cout << "Merged " << numV-cnt << " of " << numV << " vertices" << std::endl;
 	return cnt;
 }
 
@@ -482,6 +482,223 @@ void MeshData<FloatType>::merge( const MeshData<FloatType>& other )
 			for (auto& idx : m_FaceIndicesTextureCoords[i]) idx +=  (unsigned int)texCoordsBefore;
 		}
 	}
+}
+
+
+template <class FloatType>
+void MeshData<FloatType>::subdivideFacesMidpoint()
+{
+	m_Vertices.reserve(m_Vertices.size() + m_FaceIndicesVertices.size());	//there will be 1 new vertex per face
+	if (hasPerVertexColors())		m_Colors.reserve(m_Colors.size() + m_FaceIndicesVertices.size());
+	if (hasPerVertexNormals())		m_Normals.reserve(m_Normals.size() + m_FaceIndicesVertices.size());
+	if (hasPerVertexTexCoords())	m_TextureCoords.reserve(m_TextureCoords.size() + m_FaceIndicesVertices.size());
+
+	std::vector<std::vector<unsigned int>> newFaces;
+	for (auto& face : m_FaceIndicesVertices) {
+		point3d<FloatType> centerP = point3d<FloatType>(0,0,0);
+		for (auto& idx : face) {
+			centerP += m_Vertices[idx];
+		}
+		centerP /= (FloatType)face.size();
+		m_Vertices.push_back(centerP);
+
+		if (hasPerVertexColors()) {
+			point4d<FloatType> centerC = point4d<FloatType>(0,0,0,0);
+			for (auto& idx : face) {
+				centerC += m_Colors[idx];
+			}
+			centerC /= (FloatType)face.size();
+			m_Colors.push_back(centerC);
+		}
+		if (hasPerVertexNormals()) {
+			point3d<FloatType> centerN = point3d<FloatType>(0,0,0);
+			for (auto& idx : face) {
+				centerN += m_Normals[idx];
+			}
+			centerN /= (FloatType)face.size();
+			m_Normals.push_back(centerN);
+		}
+		if (hasPerVertexTexCoords()) {
+			point2d<FloatType> centerT = point2d<FloatType>(0,0);
+			for (auto& idx : face) {
+				centerT += m_TextureCoords[idx];
+			}
+			centerT /= (FloatType)face.size();
+			m_TextureCoords.push_back(centerT);
+		}
+
+
+		unsigned int newIdx = (unsigned int)m_Vertices.size() - 1;
+		for (size_t i = 0; i < face.size(); i++) {
+			newFaces.push_back(std::vector<unsigned int>(3));
+			newFaces[newFaces.size()-1][0] = face[i];
+			newFaces[newFaces.size()-1][1] = face[(i+1)%face.size()];
+			newFaces[newFaces.size()-1][2] = newIdx;
+		}
+	}
+
+	m_FaceIndicesVertices = newFaces;
+}
+
+
+template <class FloatType>
+FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
+{
+	m_Vertices.reserve(m_Vertices.size() + m_FaceIndicesVertices.size());	//there will be 1 new vertex per face (TODO FIX)
+	if (hasPerVertexColors())		m_Colors.reserve(m_Colors.size() + m_FaceIndicesVertices.size());
+	if (hasPerVertexNormals())		m_Normals.reserve(m_Normals.size() + m_FaceIndicesVertices.size());
+	if (hasPerVertexTexCoords())	m_TextureCoords.reserve(m_TextureCoords.size() + m_FaceIndicesVertices.size());
+
+
+	struct Edge {
+		Edge(unsigned int _v0, unsigned int _v1) {
+			if (_v0 < _v1) {
+				v0 = _v0;
+				v1 = _v1;
+			} else {
+				v1 = _v0;
+				v0 = _v1;
+			}
+		}
+		bool operator==(const Edge& other) const {
+			return v0==other.v0 && v1==other.v1;
+		}
+
+		bool needEdgeVertex(float thresh, const std::vector<point3d<FloatType>>& vertices) const {
+			if (thresh == 0.0f) return true;
+			else {
+				return ((vertices[v0] - vertices[v1]).lengthSq() > thresh*thresh);
+			}
+		}
+
+		float edgeLength(const std::vector<point3d<FloatType>>& vertices) const {
+			return (vertices[v0] - vertices[v1]).length();
+		} 
+
+		unsigned int v0;
+		unsigned int v1;
+	};
+
+	struct EdgeHash {
+		size_t operator()(const Edge& e) const {
+			//TODO larger prime number (64 bit) to match size_t
+			const size_t p[] = {73856093, 19349669};
+			return e.v0*p[0] ^ e.v1*p[1];
+			//const size_t res = ((size_t)v.x * p0)^((size_t)v.y * p1)^((size_t)v.z * p2);
+		}
+	};
+
+	FloatType maxEdgeLen = 0.0f;
+
+	//maps edges to new vertex indices
+	std::unordered_map<Edge, unsigned int, EdgeHash> edgeMap;
+	for (const std::vector<unsigned int>& face : m_FaceIndicesVertices) {
+
+		for (unsigned int i = 0; i < face.size(); i++) {
+			Edge e(face[i], face[(i+1)%face.size()]);
+
+			FloatType edgeLen = e.edgeLength(m_Vertices);
+			if (edgeLen > maxEdgeLen) maxEdgeLen = edgeLen;
+
+			if (e.needEdgeVertex(edgeThresh, m_Vertices)) {
+				if (edgeMap.find(e) == edgeMap.end()) {
+					m_Vertices.push_back((FloatType)0.5*(m_Vertices[e.v0] + m_Vertices[e.v1]));
+					if (hasPerVertexColors()) m_Colors.push_back((FloatType)0.5*(m_Colors[e.v0] + m_Colors[e.v1]));
+					if (hasPerVertexNormals()) m_Normals.push_back((FloatType)0.5*(m_Normals[e.v0] + m_Normals[e.v1]));
+					if (hasPerVertexTexCoords()) m_TextureCoords.push_back((FloatType)0.5*(m_TextureCoords[e.v0] + m_TextureCoords[e.v1]));
+					unsigned int idx = (unsigned int)m_Vertices.size() - 1;
+					edgeMap[e] = idx;
+				}
+			}
+		}
+
+	}
+
+	std::vector<std::vector<unsigned int>> newFaces;    newFaces.reserve(m_FaceIndicesVertices.size() * 4);
+	for (const std::vector<unsigned int>& face : m_FaceIndicesVertices) {
+		bool allEdgesExist = true;
+		bool noneEdgesExist = true;
+		for (unsigned int i = 0; i < face.size(); i++) {
+			Edge e(face[i], face[(i+1)%face.size()]);
+			if (edgeMap.find(e) == edgeMap.end())   {
+				allEdgesExist = false;
+			} else {
+				noneEdgesExist = false;
+			}
+		}
+
+		if (allEdgesExist) {
+			std::vector<unsigned int> centerFace(face.size());
+			for (unsigned int i = 0; i < face.size(); i++) {
+				Edge ePrev(face[i], face[(i+1)%face.size()]);
+				Edge eNext(face[(i+1)%face.size()], face[(i+2)%face.size()]);
+				newFaces.push_back(std::vector<unsigned int>(3));
+				newFaces.back()[0] = edgeMap[ePrev];
+				newFaces.back()[1] = face[(i+1)%face.size()];
+				newFaces.back()[2] = edgeMap[eNext];
+
+				centerFace[i] = newFaces.back()[0];
+			}
+			newFaces.push_back(centerFace);
+
+		} 
+		else if (noneEdgesExist) {
+			newFaces.push_back(face);
+		}
+		else {
+			std::vector<unsigned int> cFace;
+			for (unsigned int i = 0; i < face.size(); i++) {
+				cFace.push_back(face[i]);             
+				Edge e(face[i], face[(i+1)%face.size()]);
+				if (edgeMap.find(e) != edgeMap.end())   cFace.push_back(edgeMap[e]);
+			}
+
+			//centroid based vertex insertion
+			point3d<FloatType> centerP = point3d<FloatType>(0,0,0);
+			for (auto& idx : face) {
+				centerP += m_Vertices[idx];
+			}
+			centerP /= (FloatType)face.size();
+			m_Vertices.push_back(centerP);
+
+			if (hasPerVertexColors()) {
+				point4d<FloatType> centerC = point4d<FloatType>(0,0,0,0);
+				for (auto& idx : face) {
+					centerC += m_Colors[idx];
+				}
+				centerC /= (FloatType)face.size();
+				m_Colors.push_back(centerC);
+			}
+			if (hasPerVertexNormals()) {
+				point3d<FloatType> centerN = point3d<FloatType>(0,0,0);
+				for (auto& idx : face) {
+					centerN += m_Normals[idx];
+				}
+				centerN /= (FloatType)face.size();
+				m_Normals.push_back(centerN);
+			}
+			if (hasPerVertexTexCoords()) {
+				point2d<FloatType> centerT = point2d<FloatType>(0,0);
+				for (auto& idx : face) {
+					centerT += m_TextureCoords[idx];
+				}
+				centerT /= (FloatType)face.size();
+				m_TextureCoords.push_back(centerT);
+			}
+
+
+			unsigned int newIdx = (unsigned int)m_Vertices.size() - 1;
+			for (size_t i = 0; i < cFace.size(); i++) {
+				newFaces.push_back(std::vector<unsigned int>(3));
+				newFaces[newFaces.size()-1][0] = cFace[i];
+				newFaces[newFaces.size()-1][1] = cFace[(i+1)%cFace.size()];
+				newFaces[newFaces.size()-1][2] = newIdx;
+			}
+		} 
+	}
+
+	m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(newFaces.begin(), newFaces.end());
+	return maxEdgeLen;
 }
 
 }  // namespace ml
