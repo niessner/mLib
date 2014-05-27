@@ -201,7 +201,7 @@ public:
 
 	UINT clusterCount() const
 	{
-		return m_clusters.size();
+		return (UINT)m_clusters.size();
 	}
 
 private:
