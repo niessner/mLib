@@ -297,8 +297,6 @@ public:
                 }
             }
 
-            assert(allEdgesExist != noneEdgesExist);
-
             if (allEdgesExist) {
                 std::vector<unsigned int> centerFace(face.size());
                 for (unsigned int i = 0; i < face.size(); i++) {
