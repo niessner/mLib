@@ -61,6 +61,10 @@ public:
 		return Plane<FloatType>(point3d<FloatType>(1,0,0), 0);
 	}
 
+	inline Plane<FloatType> operator-() const {
+		return Plane<FloatType>(-m_Normal, m_Distance);
+	}
+
 private:
 	void createFromPoints( const point3d<FloatType> * points ) 
 	{

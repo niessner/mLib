@@ -139,8 +139,8 @@ public:
 	unsigned int removeIsolatedVertices();
 
 	//! removes all the vertices that are behind a plane (faces with one or more of those vertices are being deleted as well)
-	//! larger thresh removes more faces/vertices
-	unsigned int removeVerticesBeforePlane(const Plane<FloatType>& plane, FloatType thresh = 0.0f);
+	//! larger thresh removes less / negative thresh removes more
+	unsigned int removeVerticesInFrontOfPlane(const Plane<FloatType>& plane, FloatType thresh = 0.0f);
 
 	std::vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
 	std::vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below/or per vertex)

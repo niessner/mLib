@@ -346,7 +346,7 @@ unsigned int MeshData<FloatType>::removeIsolatedVertices()
 
 
 template <class FloatType>
-unsigned int MeshData<FloatType>::removeVerticesBeforePlane( const Plane<FloatType>& plane, FloatType thresh )
+unsigned int MeshData<FloatType>::removeVerticesInFrontOfPlane( const Plane<FloatType>& plane, FloatType thresh )
 {
 	unsigned int numV = (unsigned int)m_Vertices.size();
 	unsigned int numF = (unsigned int)m_FaceIndicesVertices.size();
@@ -363,7 +363,7 @@ unsigned int MeshData<FloatType>::removeVerticesBeforePlane( const Plane<FloatTy
 	for (auto& face : m_FaceIndicesVertices) {
 		bool keepFace = true;
 		for (auto& idx : face) {
-			if (plane.distanceToPoint(m_Vertices[idx]) < thresh) {
+			if (plane.distanceToPoint(m_Vertices[idx]) > thresh) {
 				keepFace = false;
 				break;
 			}
@@ -388,13 +388,12 @@ unsigned int MeshData<FloatType>::removeVerticesBeforePlane( const Plane<FloatTy
 		}
 	}
 
-	if (m_Vertices.size() != new_verts.size()) {
-		m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
+	m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
 
-		if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
-		if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
-		if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
-	}
+	if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
+	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
+	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
+
 	if (m_FaceIndicesVertices.size() != new_faces.size()) {
 		m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(new_faces.begin(), new_faces.end());
 	}
