@@ -204,8 +204,16 @@ public:
 	Plane<FloatType> getBottomPlane() const {
 		std::vector<point3d<FloatType>> vertices; vertices.resize(3);
 		vertices[0] = point3d<FloatType>(minX, minY, minZ);
-		vertices[1] = point3d<FloatType>(maxX, minY, minZ);
-		vertices[2] = point3d<FloatType>(maxX, maxY, minZ);
+		vertices[2] = point3d<FloatType>(maxX, minY, minZ);
+		vertices[1] = point3d<FloatType>(maxX, maxY, minZ);
+		return Plane<FloatType>(&vertices[0]);
+	}
+
+	Plane<FloatType> getTopPlane() const {
+		std::vector<point3d<FloatType>> vertices; vertices.resize(3);
+		vertices[0] = point3d<FloatType>(minX, minY, maxZ);
+		vertices[1] = point3d<FloatType>(maxX, minY, maxZ);
+		vertices[2] = point3d<FloatType>(maxX, maxY, maxZ);
 		return Plane<FloatType>(&vertices[0]);
 	}
 
@@ -277,6 +285,12 @@ public:
 		indices[10].x = 20;	indices[10].y = 21;	indices[10].z = 22;
 		indices[11].x = 22;	indices[11].y = 23;	indices[11].z = 20;
 		normals[20] = normals[21] = normals[22] = normals[23] = point3d<FloatType>(0,0,1);
+	}
+
+
+	void setUnitCube() {
+		minX = minY = minZ = 0;
+		maxX = maxY = maxZ = 1;
 	}
 
 protected:

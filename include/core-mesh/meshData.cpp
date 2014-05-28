@@ -346,7 +346,7 @@ unsigned int MeshData<FloatType>::removeIsolatedVertices()
 
 
 template <class FloatType>
-unsigned int MeshData<FloatType>::removeVerticesBehindPlane( const Plane<FloatType>& plane, FloatType thresh )
+unsigned int MeshData<FloatType>::removeVerticesBeforePlane( const Plane<FloatType>& plane, FloatType thresh )
 {
 	unsigned int numV = (unsigned int)m_Vertices.size();
 	unsigned int numF = (unsigned int)m_FaceIndicesVertices.size();
