@@ -275,7 +275,13 @@ namespace util
 
 	void makeDirectory(const std::string &directory)
 	{
-		CreateDirectoryA(directory.c_str(), NULL);
+    const std::string dir = replace(directory,'\\', '/');
+    const std::vector<std::string> dirParts = split(dir, '/');
+    std::string soFar = "";
+    for (const std::string& part : dirParts) {
+      soFar += part + "/";
+      CreateDirectoryA(soFar.c_str(), NULL);
+    }
 	}
 
 	std::string workingDirectory()
