@@ -31,6 +31,12 @@ struct RGBColor
         return RGBColor(b, g, r, a);
     }
 
+    RGBColor grayscale() const
+    {
+        BYTE avg = BYTE(((int)r + (int)g + (int)b) / 3);
+        return RGBColor(avg, avg, avg, 0);
+    }
+
     RGBColor inverse() const
     {
         return RGBColor(255 - r, 255 - g, 255 - b, 255 - a);

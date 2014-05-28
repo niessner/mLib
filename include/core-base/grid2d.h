@@ -143,6 +143,23 @@ public:
 	//
 	void clear(const T &clearValue);
 
+    const T* begin() const
+    {
+        return m_data;
+    }
+    T* begin()
+    {
+        return m_data;
+    }
+    const T* end() const
+    {
+        return m_data + m_rows * m_cols;
+    }
+    T* end()
+    {
+        return m_data + m_rows * m_cols;
+    }
+
 protected:
 	T *m_data;
 	UINT m_rows, m_cols;
