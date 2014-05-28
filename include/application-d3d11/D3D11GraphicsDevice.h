@@ -51,8 +51,8 @@ public:
 	void renderBeginFrame();
 	void renderEndFrame();
 	void registerAsset(GraphicsAsset *asset);
-    void captureBackBuffer(Bitmap &result);
     void toggleWireframe();
+    void clear(const ml::vec4f &clearColor);
 
 
 	ID3D11Device& device()
@@ -85,6 +85,9 @@ private:
 
 	
 	std::set<GraphicsAsset*> m_assets;
+
+protected:
+    void captureBackBufferInternal(Bitmap &result);
 };
 
 }  // namespace ml

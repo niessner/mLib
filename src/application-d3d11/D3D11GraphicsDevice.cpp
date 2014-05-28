@@ -5,7 +5,8 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
     // Instead of reconstructing the backbuffer everytime the window is resized, we construct a generic, large backbuffer.
     //
 	UINT width = 2560;
-	UINT height = width * window.height() / window.width();
+    UINT height = 2560;
+	//UINT height = width * window.height() / window.width();
 
 	UINT createDeviceFlags = 0;
 #ifdef _DEBUG
@@ -140,6 +141,12 @@ void ml::D3D11GraphicsDevice::renderBeginFrame()
     m_context->ClearDepthStencilView( m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void ml::D3D11GraphicsDevice::clear(const ml::vec4f &clearColor)
+{
+    m_context->ClearRenderTargetView( m_renderView, clearColor.array );
+    m_context->ClearDepthStencilView( m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
 void ml::D3D11GraphicsDevice::renderEndFrame()
 {
 	m_swapChain->Present( 1, 0 );
@@ -158,7 +165,7 @@ void ml::D3D11GraphicsDevice::toggleWireframe()
     m_context->RSSetState(m_rasterState);
 }
 
-void ml::D3D11GraphicsDevice::captureBackBuffer(Bitmap &result)
+void ml::D3D11GraphicsDevice::captureBackBufferInternal(Bitmap &result)
 {
     ID3D11Texture2D* frameBuffer;
 
