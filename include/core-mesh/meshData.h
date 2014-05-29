@@ -142,6 +142,10 @@ public:
 	//! larger thresh removes less / negative thresh removes more
 	unsigned int removeVerticesInFrontOfPlane(const Plane<FloatType>& plane, FloatType thresh = 0.0f);
 
+	//! removes all the faces that are fully behind a plane
+	//! larger thresh removes less / negative thresh removes more
+	unsigned int removeFacesInFrontOfPlane(const Plane<FloatType>& plane, FloatType thresh = 0.0f);
+
 	std::vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
 	std::vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below/or per vertex)
 	std::vector<point2d<FloatType>>	m_TextureCoords;	//tex coords are indexed (see below/or per vertex)
