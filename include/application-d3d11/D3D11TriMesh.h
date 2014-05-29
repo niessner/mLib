@@ -105,6 +105,41 @@ public:
 	const std::vector<unsigned int>& getIndices() const {
 		return m_Indices;
 	} 
+
+	void getMeshData(MeshDataf& meshData) const {
+
+		bool hasColors = true;
+		bool hasNormals = false;
+		bool hasTexCoords = false;
+
+		meshData.clear();
+
+		meshData.m_Vertices.resize(m_Vertices.size());
+		meshData.m_FaceIndicesVertices.resize(m_Indices.size()/3, std::vector<unsigned int>(3));
+
+		if (hasColors)		meshData.m_Colors.resize(m_Vertices.size());
+		if (hasNormals)		meshData.m_Normals.resize(m_Vertices.size());
+		if (hasTexCoords)	meshData.m_TextureCoords.resize(m_Vertices.size());
+
+		for (size_t i = 0; i < m_Indices.size()/3; i++) {
+			meshData.m_FaceIndicesVertices[i][0] = m_Indices[i*3+0];
+			meshData.m_FaceIndicesVertices[i][1] = m_Indices[i*3+1];
+			meshData.m_FaceIndicesVertices[i][2] = m_Indices[i*3+2];
+		}
+
+		for (size_t i = 0; i < m_Vertices.size(); i++) {
+			meshData.m_Vertices[i] = m_Vertices[i].position;
+			if (hasColors)		meshData.m_Colors[i] = m_Vertices[i].attributeA;
+			if (hasNormals)		meshData.m_Normals[i] = m_Vertices[i].normal;
+			if (hasTexCoords)	meshData.m_TextureCoords[i] = vec2f(m_Vertices[i].attributeB.x, m_Vertices[i].attributeB.y);
+		}
+	}
+
+	MeshDataf getMeshData() const {
+		MeshDataf meshData;
+		getMeshData(meshData);
+		return meshData;
+	}
 private:
 
 	void initVB(GraphicsDevice &g);
