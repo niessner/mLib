@@ -197,7 +197,7 @@ private:
 	point3d<FloatType> computeFaceNormal(const std::vector<unsigned int>& face) const {
 		point3d<FloatType> n = point3d<FloatType>(0,0,0);
 		unsigned int first = face[0];
-		for (unsigned int i = 1; i < face.size() - 1) {
+		for (unsigned int i = 1; i < face.size() - 1; i++) {
 			n += (m_Vertices[face[i]] - m_Vertices[first]) ^ (m_Vertices[face[i+1]] - m_Vertices[first]);
 		}
 		return n.getNormalized();
