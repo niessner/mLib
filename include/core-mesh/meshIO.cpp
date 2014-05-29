@@ -486,7 +486,8 @@ void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<
 				byteOffset += sizeof(float)*3;
 			}
 			if (mesh.m_Colors.size() > 0) {
-				memcpy(&data[byteOffset], &mesh.m_Colors[i], sizeof(unsigned char)*4);
+				vec4uc c(mesh.m_Colors[i]*255);
+				memcpy(&data[byteOffset], &c, sizeof(unsigned char)*4);
 				byteOffset += sizeof(unsigned char)*4;
 			}
 		}
