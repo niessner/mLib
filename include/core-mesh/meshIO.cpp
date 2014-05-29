@@ -468,7 +468,7 @@ void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<
 		//		file.write((const char*)&mesh.m_Normals[i], sizeof(float)*3);
 		//	}
 		//	if (mesh.m_Colors.size() > 0) {
-		//		vec4uc c(mesh.m_Colors[i]*255);
+		//		vec4uc c(mesh.m_Colors[i]*255.0f);
 		//		file.write((const char*)&c, sizeof(unsigned char)*4);
 		//	}
 		//}
