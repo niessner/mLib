@@ -171,7 +171,7 @@ public:
 		for (const auto& face : m_FaceIndicesVertices) {
 			point3d<FloatType> faceNormal = computeFaceNormal(face);
 			for (auto idx : face) {
-				m_Normals[i] += faceNormal;
+				m_Normals[idx] += faceNormal;
 			}
 		}
 		for (auto& n : m_Normals) {
