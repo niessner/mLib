@@ -4,6 +4,11 @@ namespace ml
 
 Bitmap LodePNG::load(const std::string &filename)
 {
+    if(!ml::util::fileExists(filename))
+    {
+        Console::log("LodePNG::load file not found: " + filename);
+        return Bitmap();
+    }
 	Bitmap result;
 
 	std::vector<BYTE> image;
