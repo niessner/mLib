@@ -145,6 +145,9 @@ public:
 		Console::log() << "(" << array[0] << ")" << std::endl;
 	}
 
+	inline T* ptr() {
+		return &array[0];
+	}
 
 	inline std::vector<T> toStdVector() const {
 		std::vector<T> result(1);

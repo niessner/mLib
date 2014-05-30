@@ -252,6 +252,10 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             { return false; }
         }
 
+		inline T* ptr() {
+			return &array[0];
+		}
+
 		inline std::vector<T> toStdVector() const {
 			std::vector<T> result(4);
 			result[0] = x;

@@ -217,6 +217,10 @@ public:
             return math::radiansToDegrees(acosf(math::clamp(point3d<T>::dot(v0, v1) / l0 / l1, -1.0f, 1.0f)));
     }
 
+	inline T* ptr() {
+		return &array[0];
+	}
+
 	inline std::vector<T> toStdVector() const {
 		std::vector<T> result(3);
 		result[0] = x;

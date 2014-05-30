@@ -4,6 +4,9 @@
 
 void AppTest::init(ml::ApplicationData &app)
 {
+	vec3f testVec(1.0f, 2.0f, 3.0f);
+	float* f = testVec.ptr();
+
 	unsigned int numSamples = 10000;
 	std::vector<vec3f> res_uniformSphere(numSamples);
 	std::vector<vec3f> res_uniformHemisphere(numSamples);
@@ -36,7 +39,7 @@ void AppTest::init(ml::ApplicationData &app)
 	std::cout << meshData.m_Vertices.size();
 	std::cout << " reduced to " << meshData.removeIsolatedVertices() << std::endl;
 	std::cout << meshData.m_Vertices.size();
-	std::cout << " reduced to " << meshData.removeVerticesBehindPlane(Planef::xyPlane(), 0.1f) << std::endl;
+	std::cout << " reduced to " << meshData.removeFacesInFrontOfPlane(Planef::xyPlane(), 0.1f) << std::endl;
 	 
 	assert(meshData.isConsistent());
 
@@ -54,8 +57,8 @@ void AppTest::init(ml::ApplicationData &app)
 	//copy.applyTransform(mat4f::translation(vec3f(-2,1,1)));
 	//meshData.merge(copy);
 	MeshDataf bbData = shapes::toMeshData(meshData.getBoundingBox(), vec4f(1,1,1,1), true);
-	bbData.subdivideFaces();
-	bbData.subdivideFaces();
+	bbData.subdivideFacesMidpoint();
+	bbData.subdivideFacesLoop();
 	bbData.print();
 	MeshIOf::writeToFile("outbox.ply", bbData);
 	meshData.merge(bbData);
