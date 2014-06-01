@@ -17,6 +17,7 @@ TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT s
 
 inline TriMeshf line(const vec3f& p0, const vec3f& p1, const vec4f& color = vec4f(1, 0, 0, 1), const float thickness = 0.005f) {
   return cylinder(p0, p1, thickness, 2, 4, color);
+    //return cylinder(p0, p1, thickness, 20, 20, color);
 }
 
 TriMeshf wireframeBox(float dim = 1, const vec4f& color = vec4f(1, 0, 0, 1));
