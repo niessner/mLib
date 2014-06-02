@@ -112,7 +112,7 @@ namespace util {
 	}
 
 	template<class T> inline void convertTo(const std::string& s, T& res) {
-		Convert::to<T>(s, res);
+		convert::to<T>(s, res);
 	}
 }  // namespace util
 
