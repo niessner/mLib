@@ -142,6 +142,9 @@ public:
 	}
 private:
 
+    // copying for meshes is not supported
+    void operator = (const D3D11TriMesh& t);
+
 	void initVB(GraphicsDevice &g);
 	void initIB(GraphicsDevice &g);
 
