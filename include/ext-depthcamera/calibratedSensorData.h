@@ -62,7 +62,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 class CalibratedSensorData {
 public:
 	CalibratedSensorData() {
-		#define M_CALIBRATED_SENSOR_DATA_VERSION 1
+		#define M_CALIBRATED_SENSOR_DATA_VERSION 2
 		m_VersionNumber = M_CALIBRATED_SENSOR_DATA_VERSION;
 		m_SensorName = "Unknown";
 
@@ -145,6 +145,8 @@ public:
 
 	std::vector<UINT64>	m_DepthImagesTimeStamps;
 	std::vector<UINT64>	m_ColorImagesTimeStamps;
+
+	std::vector<mat4f> m_trajectory;
 };
 
 
@@ -166,6 +168,7 @@ inline std::ostream& operator<<(std::ostream& s, const CalibratedSensorData& sen
 	s << VAR_STR_LINE(sensorData.m_ColorImages.size());
 	s << VAR_STR_LINE(sensorData.m_DepthImagesTimeStamps.size());
 	s << VAR_STR_LINE(sensorData.m_ColorImagesTimeStamps.size());
+	s << VAR_STR_LINE(sensorData.m_trajectory.size());
 	return s;
 }
 
@@ -186,6 +189,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 
 	assert(sensorData.m_ColorNumFrames == sensorData.m_ColorImages.size());
 	assert(sensorData.m_DepthNumFrames == sensorData.m_DepthImages.size());
+	assert(sensorData.m_DepthNumFrames == sensorData.m_trajectory.size());
 
 	for (unsigned int i = 0; i < sensorData.m_DepthImages.size(); i++) {
 		s.writeData((BYTE*)sensorData.m_DepthImages[i], sizeof(float)*sensorData.m_DepthImageWidth*sensorData.m_DepthImageHeight);
@@ -196,6 +200,8 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 
 	s << sensorData.m_ColorImagesTimeStamps;
 	s << sensorData.m_DepthImagesTimeStamps;
+
+	s << sensorData.m_trajectory;
 
 	return s;
 }
@@ -208,6 +214,32 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	sensorData.deleteData();
 	s >> sensorData.m_VersionNumber;
 
+	if (sensorData.m_VersionNumber == 1) {
+		s >> sensorData.m_SensorName;
+		s >> sensorData.m_DepthNumFrames;
+		s >> sensorData.m_DepthImageWidth;
+		s >> sensorData.m_DepthImageHeight;
+		s >> sensorData.m_ColorNumFrames;
+		s >> sensorData.m_ColorImageWidth;
+		s >> sensorData.m_ColorImageHeight;
+		s >> sensorData.m_CalibrationDepth;
+		s >> sensorData.m_CalibrationColor;
+
+		sensorData.m_DepthImages.resize(sensorData.m_DepthNumFrames);
+		sensorData.m_ColorImages.resize(sensorData.m_ColorNumFrames);
+
+		for (size_t i = 0; i < sensorData.m_DepthImages.size(); i++) {
+			sensorData.m_DepthImages[i] = new float[sensorData.m_DepthImageWidth*sensorData.m_DepthImageHeight];
+			s.readData((BYTE*)sensorData.m_DepthImages[i], sizeof(float)*sensorData.m_DepthImageWidth*sensorData.m_DepthImageHeight);
+		}
+		for (size_t i = 0; i < sensorData.m_ColorImages.size(); i++) {
+			sensorData.m_ColorImages[i] = new vec4uc[sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight];
+			s.readData((BYTE*)sensorData.m_ColorImages[i], sizeof(vec4uc)*sensorData.m_ColorImageWidth*sensorData.m_ColorImageHeight);
+		}
+
+		s >> sensorData.m_ColorImagesTimeStamps;
+		s >> sensorData.m_DepthImagesTimeStamps;
+	}
 	if (sensorData.m_VersionNumber == M_CALIBRATED_SENSOR_DATA_VERSION) {
 		s >> sensorData.m_SensorName;
 		s >> sensorData.m_DepthNumFrames;
@@ -233,6 +265,8 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 
 		s >> sensorData.m_ColorImagesTimeStamps;
 		s >> sensorData.m_DepthImagesTimeStamps;
+
+		s >> sensorData.m_trajectory;
 	} else {
 		throw MLIB_EXCEPTION("Calibrated Sensor Data: Invalid file version");
 	}
