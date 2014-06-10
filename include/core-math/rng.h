@@ -108,6 +108,8 @@ namespace ml {
 		double wn[128], fn[128], we[256],fe[256];
 
 	public:
+        static RNG global;
+
 		RNG() { init(); zigset(); }
 		RNG(ulong x_) :
 			z(x_), w(x_), jsr(x_), jcong(x_) { zigset(); }

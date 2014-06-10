@@ -11,6 +11,7 @@ namespace ml
 // Initialize the static component of RNG
 
 ulong RNG::tm = 1234567;
+RNG RNG::global;
 
 //________________________________________________________________________
 // RNG::RNOR generates normal variates with rejection.
