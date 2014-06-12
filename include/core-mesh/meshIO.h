@@ -36,7 +36,7 @@ public:
 
 	static void writeToFile(const std::string& filename, const MeshData<FloatType>& mesh) {
 
-		if (!mesh.isConsistent()) {
+		if (!mesh.isConsistent() || mesh.isEmpty()) {
 			throw MLIB_EXCEPTION("inconsistent mesh data: " + filename);
 		}
 
