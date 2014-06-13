@@ -9,8 +9,8 @@ template <class T> class Grid2D
 {
 public:
 	Grid2D();
-	Grid2D(UINT rows, UINT cols);
-	Grid2D(UINT rows, UINT cols, const T &clearValue);
+	Grid2D(size_t rows, size_t cols);
+	Grid2D(size_t rows, size_t cols, const T &clearValue);
 	Grid2D(const Grid2D<T> &G);
 	Grid2D(Grid2D<T> &&G);
 
@@ -23,21 +23,21 @@ public:
 	Grid2D<T>& operator = (const Grid2D<T> &G);
 	Grid2D<T>& operator = (Grid2D<T> &&G);
 
-	void allocate(UINT rows, UINT cols);
-	void allocate(UINT rows, UINT cols, const T &clearValue);
+	void allocate(size_t rows, size_t cols);
+	void allocate(size_t rows, size_t cols, const T &clearValue);
 
 	inline Grid2D<T>& operator += (const Grid2D<T> &right)
 	{
 		MLIB_ASSERT_STR(m_rows == right.m_rows && m_cols == right.m_cols, "grid dimensions must be equal");
-		for (UINT r = 0; r < m_rows; r++)
-			for (UINT c = 0; c < m_cols; c++)
+		for (size_t r = 0; r < m_rows; r++)
+			for (size_t c = 0; c < m_cols; c++)
 				m_data[r * m_cols + c] += right(r,c);
 		return *this;
 	}
 	inline Grid2D<T>& operator *= (T right)
 	{
-		for (UINT r = 0; r < m_rows; r++)
-			for (UINT c = 0; c < m_cols; c++)
+		for (size_t r = 0; r < m_rows; r++)
+			for (size_t c = 0; c < m_cols; c++)
 				m_data[r * m_cols + c] *= right;
 		return *this;
 	}
@@ -45,8 +45,8 @@ public:
 	inline Grid2D<T> operator * (T x)
 	{
 		Grid2D<T> result(m_rows, m_cols);
-		for (UINT r = 0; r < m_rows; r++)
-			for (UINT c = 0; c < m_cols; c++)
+		for (size_t r = 0; r < m_rows; r++)
+			for (size_t c = 0; c < m_cols; c++)
 				result(r,c) = m_data[r * m_cols + c] * x;
 		return result;
 	}
@@ -54,29 +54,29 @@ public:
 	//
 	// Accessors
 	//
-	inline T& operator() (UINT row, UINT col)
+	inline T& operator() (size_t row, size_t col)
 	{
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
 		MLIB_ASSERT_STR( (row < m_rows) && (col < m_cols), "Out-of-bounds grid access");
 #endif
 		return m_data[row * m_cols + col];
 	}
-	inline const T& operator() (UINT row, UINT col) const
+	inline const T& operator() (size_t row, size_t col) const
 	{
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
 		MLIB_ASSERT_STR( (row < m_rows) && (col < m_cols), "Out-of-bounds grid access");
 #endif
 		return m_data[row * m_cols + col];
 	}
-	inline UINT rows() const
+	inline size_t rows() const
 	{
 		return m_rows;
 	}
-	inline UINT cols() const
+	inline size_t cols() const
 	{
 		return m_cols;
 	}
-	inline std::pair<UINT, UINT> dimensions() const
+	inline std::pair<size_t, size_t> dimensions() const
 	{
 		return std::make_pair(m_rows, m_cols);
 	}
@@ -101,41 +101,41 @@ public:
 		return (row >= 0 && row < int(m_rows) && col >= 0 && col < int(m_cols));
 	}
 
-	void setRow(UINT row, const std::vector<T> &values)
+	void setRow(size_t row, const std::vector<T> &values)
 	{
-		for(UINT col = 0; col < m_cols; col++) m_data[row * m_cols + col] = values[col];
+		for(size_t col = 0; col < m_cols; col++) m_data[row * m_cols + col] = values[col];
 	}
 
-	void setCol(UINT col, const std::vector<T> &values)
+	void setCol(size_t col, const std::vector<T> &values)
 	{
-		for(UINT row = 0; row < m_rows; row++) m_data[row * m_cols + col] = values[row];
+		for(size_t row = 0; row < m_rows; row++) m_data[row * m_cols + col] = values[row];
 	}
 
-	std::vector<T> getRow(UINT row) const
+	std::vector<T> getRow(size_t row) const
 	{
 		std::vector<T> result(m_cols);
 		const T *CPtr = m_data;
-		for(UINT col = 0; col < m_cols; col++)
+		for(size_t col = 0; col < m_cols; col++)
 		{
 			result[col] = CPtr[row * m_cols + col];
 		}
 		return result;
 	}
 
-	std::vector<T> getCol(UINT col) const
+	std::vector<T> getCol(size_t col) const
 	{
 		std::vector<T> result(m_rows);
 		const T *CPtr = m_data;
-		for(UINT row = 0; row < m_rows; row++)
+		for(size_t row = 0; row < m_rows; row++)
 		{
 			result[col] = CPtr[row * m_cols + col];
 		}
 		return result;
 	}
 
-	std::pair<UINT, UINT> maxIndex() const;
+	std::pair<size_t, size_t> maxIndex() const;
 	const T& maxValue() const;
-	std::pair<UINT, UINT> minIndex() const;
+	std::pair<size_t, size_t> minIndex() const;
 	const T& minValue() const;
 
 	//
@@ -162,14 +162,14 @@ public:
 
 protected:
 	T *m_data;
-	UINT m_rows, m_cols;
+	size_t m_rows, m_cols;
 };
 
 template <class T> inline bool operator == (const Grid2D<T> &a, const Grid2D<T> &b)
 {
 	if(a.rows() != b.rows() || a.cols() != b.cols()) return false;
-	for(UINT row = 0; row < a.rows(); row++)
-		for(UINT col = 0; col < a.cols(); col++)
+	for(size_t row = 0; row < a.rows(); row++)
+		for(size_t col = 0; col < a.cols(); col++)
 			if(a(row, col) != b(row, col))
 				return false;
 	return true;

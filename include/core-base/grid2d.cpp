@@ -12,14 +12,14 @@ template <class T> Grid2D<T>::Grid2D()
 	m_data = NULL;
 }
 
-template <class T> Grid2D<T>::Grid2D(UINT rows, UINT cols)
+template <class T> Grid2D<T>::Grid2D(size_t rows, size_t cols)
 {
 	m_rows = rows;
 	m_cols = cols;
 	m_data = new T[rows * cols];
 }
 
-template <class T> Grid2D<T>::Grid2D(UINT rows, UINT cols, const T &clearValue)
+template <class T> Grid2D<T>::Grid2D(size_t rows, size_t cols, const T &clearValue)
 {
 	m_rows = rows;
 	m_cols = cols;
@@ -32,9 +32,9 @@ template <class T> Grid2D<T>::Grid2D(const Grid2D<T> &G)
 	m_rows = G.m_rows;
 	m_cols = G.m_cols;
 
-	const UINT totalEntries = m_rows * m_cols;
+	const size_t totalEntries = m_rows * m_cols;
 	m_data = new T[totalEntries];
-	for(UINT i = 0; i < totalEntries; i++)
+	for(size_t i = 0; i < totalEntries; i++)
 	{
 		m_data[i] = G.m_data[i];
 	}
@@ -73,9 +73,9 @@ template <class T> Grid2D<T>& Grid2D<T>::operator = (const Grid2D<T> &G)
 	m_rows = G.m_rows;
 	m_cols = G.m_cols;
 
-	const UINT totalEntries = m_rows * m_cols;
+	const size_t totalEntries = m_rows * m_cols;
 	m_data = new T[totalEntries];
-	for(UINT i = 0; i < totalEntries; i++) m_data[i] = G.m_data[i];
+	for(size_t i = 0; i < totalEntries; i++) m_data[i] = G.m_data[i];
 
 	return *this;
 }
@@ -88,7 +88,7 @@ template <class T> Grid2D<T>& Grid2D<T>::operator = (Grid2D<T> &&G)
 	return *this;
 }
 
-template <class T> void Grid2D<T>::allocate(UINT rows, UINT cols)
+template <class T> void Grid2D<T>::allocate(size_t rows, size_t cols)
 {
 	m_rows = rows;
 	m_cols = cols;
@@ -96,7 +96,7 @@ template <class T> void Grid2D<T>::allocate(UINT rows, UINT cols)
 	m_data = new T[rows * cols];
 }
 
-template <class T> void Grid2D<T>::allocate(UINT rows, UINT cols, const T &clearValue)
+template <class T> void Grid2D<T>::allocate(size_t rows, size_t cols, const T &clearValue)
 {
 	allocate(rows, cols);
 	clear(clearValue);
@@ -104,16 +104,16 @@ template <class T> void Grid2D<T>::allocate(UINT rows, UINT cols, const T &clear
 
 template <class T> void Grid2D<T>::clear(const T &clearValue)
 {
-	const UINT totalEntries = m_rows * m_cols;
-	for(UINT i = 0; i < totalEntries; i++) m_data[i] = clearValue;
+	const size_t totalEntries = m_rows * m_cols;
+	for(size_t i = 0; i < totalEntries; i++) m_data[i] = clearValue;
 }
 
-template <class T> std::pair<UINT, UINT> Grid2D<T>::maxIndex() const
+template <class T> std::pair<size_t, size_t> Grid2D<T>::maxIndex() const
 {
-	std::pair<UINT, UINT> maxIndex(0, 0);
+	std::pair<size_t, size_t> maxIndex(0, 0);
 	const T *maxValue = m_data;
-	for(UINT rowIndex = 0; rowIndex < m_rows; rowIndex++)
-		for(UINT colIndex = 0; colIndex < m_cols; colIndex++)
+	for(size_t rowIndex = 0; rowIndex < m_rows; rowIndex++)
+		for(size_t colIndex = 0; colIndex < m_cols; colIndex++)
 		{
 			const T *curValue = &m_data[rowIndex * m_cols + colIndex];
 			if(*curValue > *maxValue)
@@ -127,17 +127,17 @@ template <class T> std::pair<UINT, UINT> Grid2D<T>::maxIndex() const
 
 template <class T> const T& Grid2D<T>::maxValue() const
 {
-	std::pair<UINT, UINT> index = maxIndex();
+	std::pair<size_t, size_t> index = maxIndex();
 	return m_data[index.first * m_cols + index.second];
 }
 
-template <class T> std::pair<UINT, UINT> Grid2D<T>::minIndex() const
+template <class T> std::pair<size_t, size_t> Grid2D<T>::minIndex() const
 {
-	std::pair<UINT, UINT> minIndex(0, 0);
+	std::pair<size_t, size_t> minIndex(0, 0);
 	const T *minValue = &m_data[0];
-	for(UINT rowIndex = 0; rowIndex < m_rows; rowIndex++)
+	for(size_t rowIndex = 0; rowIndex < m_rows; rowIndex++)
 	{
-		for(UINT colIndex = 0; colIndex < m_cols; colIndex++)
+		for(size_t colIndex = 0; colIndex < m_cols; colIndex++)
 		{
 			const T *curValue = &m_data[rowIndex * m_cols + colIndex];
 			if(*curValue < *minValue)
@@ -152,7 +152,7 @@ template <class T> std::pair<UINT, UINT> Grid2D<T>::minIndex() const
 
 template <class T> const T& Grid2D<T>::minValue() const
 {
-	std::pair<UINT, UINT> index = minIndex();
+	std::pair<size_t, size_t> index = minIndex();
 	return m_data[index.first * m_cols + index.second];
 }
 
