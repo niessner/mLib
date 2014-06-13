@@ -26,6 +26,8 @@ public:
 		} else {
 			throw MLIB_EXCEPTION("unknown file extension" + filename);
 		}
+
+		if (!pointCloud.isConsistent()) throw MLIB_EXCEPTION("inconsistent point cloud");
 	}
 
 
@@ -36,7 +38,12 @@ public:
 	}
 
 	static void saveToFile(const std::string& filename, const PointCloud<FloatType>& pointCloud) {
-
+		std::string extension = util::getFileExtension(filename);
+		if (extension == "ply") {
+			writeToPLY(filename, pointCloud);
+		} else {
+			throw MLIB_EXCEPTION("unknown file extension" + filename);
+		}
 	}
 
 
@@ -83,14 +90,14 @@ public:
 			if (pc.m_colors.size() > 0)		vertexByteSize += sizeof(unsigned char)*4;
 			BYTE* data = new BYTE[vertexByteSize*pc.m_points.size()];
 			size_t byteOffset = 0;
-			for (size_t i = 0; i < mesh.m_vertices.size(); i++) {
+			for (size_t i = 0; i < pc.m_points.size(); i++) {
 				memcpy(&data[byteOffset], &pc.m_points[i], sizeof(float)*3);
 				byteOffset += sizeof(float)*3;
 				if (pc.m_normals.size() > 0) {
 					memcpy(&data[byteOffset], &pc.m_normals[i], sizeof(float)*3);
 					byteOffset += sizeof(float)*3;
 				}
-				if (pc.m_Colors.size() > 0) {
+				if (pc.m_colors.size() > 0) {
 					vec4uc c(pc.m_colors[i]*255);
 					memcpy(&data[byteOffset], &c, sizeof(unsigned char)*4);
 					byteOffset += sizeof(unsigned char)*4;
@@ -99,7 +106,7 @@ public:
 			file.write((const char*)data, byteOffset);
 			SAFE_DELETE_ARRAY(data);
 		} else {
-			file.write((const char*)&pc.m_points[0], sizeof(float)*3*mesh.m_points.size());
+			file.write((const char*)&pc.m_points[0], sizeof(float)*3*pc.m_points.size());
 		}
 
 		file.close();
