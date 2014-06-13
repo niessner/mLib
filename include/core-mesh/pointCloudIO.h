@@ -22,7 +22,7 @@ public:
 		std::string extension = util::getFileExtension(filename);
 
 		if (extension == "ply") {
-			loadFromPLY(filename, pc);
+			loadFromPLY(filename, pointCloud);
 		} else {
 			throw MLIB_EXCEPTION("unknown file extension" + filename);
 		}
@@ -44,32 +44,69 @@ public:
 	/* Read Functions													    */
 	/************************************************************************/
 
-	static void loadFromPLY(const std::string& filename, PointCloud<FloatType>& pc) {
-		std::ifstream file(filename, std::ios::binary);
-		if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file " + filename);			
-
-
-		file.close();
-	}
+	static void loadFromPLY(const std::string& filename, PointCloud<FloatType>& pc);
 
 
 	/************************************************************************/
 	/* Write Functions													    */
 	/************************************************************************/
 
+	static void writeToPLY(const std::string& filename, const PointCloud<FloatType>& pc) {
+		MLIB_WARNING("untested");
+		if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float, not for double");
 
-
-	/*
-	static void readFromFile(const std::string &filename, std::vector<point3d<FloatType>> &points) {
-		std::string extension = getFileExtension(filename);
-
-		if (extension == "ply") {
-			ReadFromPLYNoNormals(filename, points);
-		} else {
-			throw MLIB_EXCEPTION("unknown file format " + filename);
+		std::ofstream file(filename, std::ios::binary);
+		if (!file.is_open()) throw MLIB_EXCEPTION("Could not open file for writing " + filename);
+		file << "ply\n";
+		file << "format binary_little_endian 1.0\n";
+		file << "comment MLIB generated\n";
+		file << "element vertex " << pc.m_points.size() << "\n";
+		file << "property float x\n";
+		file << "property float y\n";
+		file << "property float z\n";
+		if (pc.m_normals.size() > 0) {
+			file << "property float nx\n";
+			file << "property float ny\n";
+			file << "property float nz\n";
 		}
+		if (pc.m_colors.size() > 0) {
+			file << "property uchar red\n";
+			file << "property uchar green\n";
+			file << "property uchar blue\n";
+			file << "property uchar alpha\n";
+		}
+		file << "end_header\n";
+
+		if (pc.m_colors.size() > 0 || pc.m_normals.size() > 0) {
+			size_t vertexByteSize = sizeof(float)*3;
+			if (pc.m_normals.size() > 0)	vertexByteSize += sizeof(float)*3;
+			if (pc.m_colors.size() > 0)		vertexByteSize += sizeof(unsigned char)*4;
+			BYTE* data = new BYTE[vertexByteSize*pc.m_points.size()];
+			size_t byteOffset = 0;
+			for (size_t i = 0; i < mesh.m_vertices.size(); i++) {
+				memcpy(&data[byteOffset], &pc.m_points[i], sizeof(float)*3);
+				byteOffset += sizeof(float)*3;
+				if (pc.m_normals.size() > 0) {
+					memcpy(&data[byteOffset], &pc.m_normals[i], sizeof(float)*3);
+					byteOffset += sizeof(float)*3;
+				}
+				if (pc.m_Colors.size() > 0) {
+					vec4uc c(pc.m_colors[i]*255);
+					memcpy(&data[byteOffset], &c, sizeof(unsigned char)*4);
+					byteOffset += sizeof(unsigned char)*4;
+				}
+			}
+			file.write((const char*)data, byteOffset);
+			SAFE_DELETE_ARRAY(data);
+		} else {
+			file.write((const char*)&pc.m_points[0], sizeof(float)*3*mesh.m_points.size());
+		}
+
+		file.close();
 	}
 
+
+/*
 	static void saveToFile(const std::string &filename, const std::vector<point3d<FloatType>> &points) {
 		std::string extension = getFileExtension(filename);
 
@@ -205,76 +242,16 @@ private:
 		
 		file.close();
 	}
+*/
 
-	struct PlyHeader {
-		PlyHeader() {
-			m_NumVertices = -1;
-			m_NumFaces = -1;
-		}
-		unsigned int m_NumVertices;
-		unsigned int m_NumFaces;
-	};
-
-	static void PlyHeaderLine(const std::string& line, PlyHeader& header) {
-
-		std::stringstream ss(line);
-		std::string currWord;
-		ss >> currWord;
-
-		if (currWord == "element") {
-			ss >> currWord;
-			if (currWord == "vertex") {
-				ss >> header.m_NumVertices;
-			} else if (currWord == "face") {
-				ss >> header.m_NumFaces;
-			}
-		} 
-		//else {
-		//	std::cout << __FUNCTION__ << " ignoring header line: " << line << std::endl;
-		//}
-	}
-
-	static void ReadFromPLYNoNormals(const std::string& filename, std::vector<point3d<FloatType>> &points) {
-		std::ifstream file(filename);
-		if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);			
-
-		// read header
-		PlyHeader header;
-
-		std::string line;
-		std::getline(file, line);
-		int i1 = 0;
-		while (line.compare(std::string("end_header"))) {
-			PlyHeaderLine(line, header);
-			std::getline(file, line);
-		}
-
-		assert(header.m_NumFaces == -1 || header.m_NumFaces == 0);	//make sure we got no faces for a point cloud
-		assert(header.m_NumVertices != -1);
-
-		points.resize(header.m_NumVertices);
-
-		for (unsigned int i = 0; i < header.m_NumVertices; i++) {
-			std::getline(file, line);
-			std::stringstream ss(line);
-			ss >> points[i].x >> points[i].y >> points[i].z;
-		}
-	}
-
-	//! Returns the file extension in lower case
-	static std::string getFileExtension(const std::string& filename) {
-		std::string extension = filename.substr(filename.find_last_of(".")+1);
-		for (unsigned int i = 0; i < extension.size(); i++) {
-			extension[i] = (char)tolower(extension[i]);
-		}
-		return extension;
-	}
-	*/
 };
 
 typedef PointCloudIO<float> PointCloudIOf;
 typedef PointCloudIO<double> PointCloudIOd;
 
 } //namespace ml
+
+
+#include "pointCloudIO.cpp"
 
 #endif

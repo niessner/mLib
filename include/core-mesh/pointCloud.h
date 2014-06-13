@@ -31,9 +31,16 @@ public:
 		m_colors.clear();
 	}
 
+	bool isConsistent() const {
+		bool is = true;
+		if (m_normals.size() > 0 && m_normals.size() != m_points.size())	is = false;
+		if (m_colors.size() > 0 && m_colors.size() != m_points.size())		is = false;
+		return is;
+	}
+
 	std::vector<point3d<FloatType>> m_points;
 	std::vector<point3d<FloatType>> m_normals;
-	std::vector<point3d<FloatType>> m_colors;
+	std::vector<point4d<FloatType>> m_colors;
 private:
 };
 
