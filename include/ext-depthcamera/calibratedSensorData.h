@@ -105,25 +105,18 @@ public:
 	}
 
 	void savePointCloud(const std::string& filename, unsigned int frame) const {
-		std::vector<vec3f> points;
-		std::vector<vec3f> colors;
+		PointCloudf pc;
 		for (unsigned int i = 0; i < m_DepthImageWidth*m_DepthImageHeight; i++) {
 			vec3f p = getWorldPos(i%m_DepthImageWidth, i/m_DepthImageWidth, frame);
 			if (p.x != -FLT_MAX && p.x != 0.0f) {
-				points.push_back(p);
+				pc.m_points.push_back(p);
 				if (m_ColorImageWidth == m_DepthImageWidth && m_ColorImageHeight == m_DepthImageHeight) {
 					vec4uc c = m_ColorImages[frame][i];
-					colors.push_back(vec3f(c.x,c.y,c.z)/255.0f);
+					pc.m_colors.push_back(vec3f(c.x,c.y,c.z)/255.0f);
 				}
 			}
 		}
-
-		if (colors.size() > 0) {
-			assert(points.size() == colors.size());
-			PointCloudIOf::saveToFile(filename, &points, NULL, &colors);
-		} else {
-			PointCloudIOf::saveToFile(filename, &points, NULL, NULL);
-		}
+		PointCloudIOf::saveToFile(filename, pc);
 	} 
 
 	unsigned int	m_VersionNumber;

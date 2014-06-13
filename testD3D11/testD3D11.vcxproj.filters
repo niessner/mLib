@@ -201,6 +201,15 @@
     <ClInclude Include="..\include\core-math\mathVector.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-mesh\pointCloud.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\pointCloudIO.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\plyHeader.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />

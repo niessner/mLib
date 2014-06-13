@@ -4,25 +4,29 @@
 
 void AppTest::init(ml::ApplicationData &app)
 {
-	vec3f testVec(1.0f, 2.0f, 3.0f);
-	float* f = testVec.ptr();
+	//PointCloudf pc = PointCloudIOf::loadFromFile("bunny.ply");
 
-	unsigned int numSamples = 10000;
-	std::vector<vec3f> res_uniformSphere(numSamples);
-	std::vector<vec3f> res_uniformHemisphere(numSamples);
-	std::vector<vec3f> res_cosineHemisphere(numSamples);
-	std::vector<vec3f> res_powerCosineSampleHemisphere(numSamples);
-	RNG r;
-	for (unsigned int i = 0; i < numSamples; i++) {
-		res_uniformSphere[i] = Samplef::squareToUniformSphere(r.uniform2D());
-		res_uniformHemisphere[i] = Samplef::squareToUniformHemisphere(r.uniform2D());
-		res_cosineHemisphere[i] = mat3f::frame(vec3f(0, 0, -1))*Samplef::squareToCosineHemisphere(r.uniform2D());
-		res_powerCosineSampleHemisphere[i] = Samplef::squareToPowerCosineSampleHemisphere(r.uniform2D(), 100000);
-	}
-	PointCloudIOf::saveToFile("sample_uniformSphere.ply", res_uniformSphere);
-	PointCloudIOf::saveToFile("sample_uniformHemisphere.ply", res_uniformHemisphere);
-	PointCloudIOf::saveToFile("sample_cosineHemisphere.ply", res_cosineHemisphere);
-	PointCloudIOf::saveToFile("sample_powerCosineSampleHemisphere.ply", res_powerCosineSampleHemisphere);
+	//int a = 5;
+
+	//vec3f testVec(1.0f, 2.0f, 3.0f);
+	//float* f = testVec.ptr();
+
+	//unsigned int numSamples = 10000;
+	//std::vector<vec3f> res_uniformSphere(numSamples);
+	//std::vector<vec3f> res_uniformHemisphere(numSamples);
+	//std::vector<vec3f> res_cosineHemisphere(numSamples);
+	//std::vector<vec3f> res_powerCosineSampleHemisphere(numSamples);
+	//RNG r;
+	//for (unsigned int i = 0; i < numSamples; i++) {
+	//	res_uniformSphere[i] = Samplef::squareToUniformSphere(r.uniform2D());
+	//	res_uniformHemisphere[i] = Samplef::squareToUniformHemisphere(r.uniform2D());
+	//	res_cosineHemisphere[i] = mat3f::frame(vec3f(0, 0, -1))*Samplef::squareToCosineHemisphere(r.uniform2D());
+	//	res_powerCosineSampleHemisphere[i] = Samplef::squareToPowerCosineSampleHemisphere(r.uniform2D(), 100000);
+	//}
+	//PointCloudIOf::saveToFile("sample_uniformSphere.ply", res_uniformSphere);
+	//PointCloudIOf::saveToFile("sample_uniformHemisphere.ply", res_uniformHemisphere);
+	//PointCloudIOf::saveToFile("sample_cosineHemisphere.ply", res_cosineHemisphere);
+	//PointCloudIOf::saveToFile("sample_powerCosineSampleHemisphere.ply", res_powerCosineSampleHemisphere);
 
     //const std::string testPLY = "scans/gates381.ply";
     //const TriMesh triMesh = OpenMeshLoader::load(testPLY);
@@ -33,20 +37,24 @@ void AppTest::init(ml::ApplicationData &app)
 	const std::string testFilename = "scans/gates381.ply";
 	//const std::string testFilename = "scans/gates381_ascii.ply";
 	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
-	meshData.m_Vertices.push_back(vec3f(1.0f, 2.0f, 3.0f));
-	meshData.m_Colors.push_back(vec4f(1.0f, 0.0f, 0.0f, 1.0f));
-	meshData.m_Normals.push_back(vec3f(1.0f, 0.0f, 0.0f));
-	std::cout << meshData.m_Vertices.size();
-	std::cout << " reduced to " << meshData.removeIsolatedVertices() << std::endl;
-	std::cout << meshData.m_Vertices.size();
-	std::cout << " reduced to " << meshData.removeFacesInFrontOfPlane(Planef::xyPlane(), 0.1f) << std::endl;
+	ml::MeshDataf bunny = MeshIOf::loadFromFile("bunny_color.ply");
+
+	//bunny.m_Colors.resize(bunny.m_Vertices.size(), vec4f(0.5f, 0.5f, 0.5f, 1.0f));
+	meshData.merge(bunny);
+	//meshData.m_Vertices.push_back(vec3f(1.0f, 2.0f, 3.0f));
+	//meshData.m_Colors.push_back(vec4f(1.0f, 0.0f, 0.0f, 1.0f));
+	//meshData.m_Normals.push_back(vec3f(1.0f, 0.0f, 0.0f));
+	//std::cout << meshData.m_Vertices.size();
+	//std::cout << " reduced to " << meshData.removeIsolatedVertices() << std::endl;
+	//std::cout << meshData.m_Vertices.size();
+	//std::cout << " reduced to " << meshData.removeFacesInFrontOfPlane(Planef::xyPlane(), 0.1f) << std::endl;
 	 
 	assert(meshData.isConsistent());
 
 	//for (size_t i = 0; i < meshData.m_Colors.size(); i++) {
 	//	meshData.m_Colors[i] = ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f);
 	//}
-	ml::MeshIOf::writeToFile("outtest.ply", meshData);
+	ml::MeshIOf::saveToFile("outtest.ply", meshData);
 	//ml::MeshIOf::writeToFile("outtest.off", meshData);
 	//ml::MeshIOf::writeToFile("outtest.obj", meshData);
 
@@ -60,7 +68,7 @@ void AppTest::init(ml::ApplicationData &app)
 	bbData.subdivideFacesMidpoint();
 	bbData.subdivideFacesLoop();
 	bbData.print();
-	MeshIOf::writeToFile("outbox.ply", bbData);
+	MeshIOf::saveToFile("outbox.ply", bbData);
 	meshData.merge(bbData);
 	assert(meshData.isConsistent());
 
