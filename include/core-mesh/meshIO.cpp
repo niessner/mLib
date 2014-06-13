@@ -12,14 +12,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file " + filename);			
 
 	// read header
-	PlyHeader header;
-
-	std::string line;
-	std::getline(file, line);
-	while (line.find("end_header") == std::string::npos) {
-		PlyHeaderLine(line, header);
-		std::getline(file, line);
-	}
+	PlyHeader header(file);
 
 	assert(header.m_NumFaces != -1);
 	assert(header.m_NumVertices != -1);
@@ -110,6 +103,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	else
 	{
 		for (unsigned int i = 0; i < header.m_NumVertices; i++) {
+			std::string line;
 			std::getline(file, line);
 			std::stringstream ss(line);
 			ss >> mesh.m_Vertices[i].x >> mesh.m_Vertices[i].y >> mesh.m_Vertices[i].z;
@@ -120,6 +114,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 		}
 
 		for (unsigned int i = 0; i < header.m_NumFaces; i++) {
+			std::string line;
 			std::getline(file, line);
 			std::stringstream ss(line);
 			unsigned int num_vs;
@@ -432,7 +427,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 
 
 template <class FloatType>
-void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::saveToPLY( const std::string& filename, const MeshData<FloatType>& mesh )
 {
 	if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float not for double");
 
@@ -506,7 +501,7 @@ void MeshIO<FloatType>::writeToPLY( const std::string& filename, const MeshData<
 
 
 template <class FloatType>
-void MeshIO<FloatType>::writeToOFF( const std::string& filename, const MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::saveToOFF( const std::string& filename, const MeshData<FloatType>& mesh )
 {
 	std::ofstream file(filename);
 	if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file for writing " + filename);		
@@ -544,7 +539,7 @@ void MeshIO<FloatType>::writeToOFF( const std::string& filename, const MeshData<
 
 
 template <class FloatType>
-void MeshIO<FloatType>::writeToOBJ( const std::string& filename, const MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::saveToOBJ( const std::string& filename, const MeshData<FloatType>& mesh )
 {
 	std::ofstream file(filename);
 	if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file for writing " + filename);

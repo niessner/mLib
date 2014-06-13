@@ -1,7 +1,6 @@
 #pragma once
 
 
-//TODO CLEAN UP THIS CLASS!!!
 
 #ifndef _POINT_CLOUD_IO_H_
 #define _POINT_CLOUD_IO_H_
@@ -11,6 +10,56 @@ namespace ml {
 template <class FloatType>
 class PointCloudIO {
 public:
+
+	static PointCloud<FloatType> loadFromFile(const std::string& filename) {
+		PointCloud<FloatType> pc;
+		loadFromFile(filename, pc);
+		return pc;
+	}
+
+	static void loadFromFile(const std::string& filename, PointCloud<FloatType>& pointCloud) {
+		pointCloud.clear();
+		std::string extension = util::getFileExtension(filename);
+
+		if (extension == "ply") {
+			loadFromPLY(filename, pc);
+		} else {
+			throw MLIB_EXCEPTION("unknown file extension" + filename);
+		}
+	}
+
+
+	static void saveToFile(const std::string& filename, const std::vector<point3d<FloatType>> &points) {
+		PointCloud<FloatType> pc;
+		pc.m_points = points;
+		saveToFile(filename, pc);
+	}
+
+	static void saveToFile(const std::string& filename, const PointCloud<FloatType>& pointCloud) {
+
+	}
+
+
+	/************************************************************************/
+	/* Read Functions													    */
+	/************************************************************************/
+
+	static void loadFromPLY(const std::string& filename, PointCloud<FloatType>& pc) {
+		std::ifstream file(filename, std::ios::binary);
+		if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file " + filename);			
+
+
+		file.close();
+	}
+
+
+	/************************************************************************/
+	/* Write Functions													    */
+	/************************************************************************/
+
+
+
+	/*
 	static void readFromFile(const std::string &filename, std::vector<point3d<FloatType>> &points) {
 		std::string extension = getFileExtension(filename);
 
@@ -220,6 +269,7 @@ private:
 		}
 		return extension;
 	}
+	*/
 };
 
 typedef PointCloudIO<float> PointCloudIOf;
