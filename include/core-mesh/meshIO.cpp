@@ -74,6 +74,9 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 				else if (header.m_Properties[j].name == "alpha") {
 					mesh.m_Colors[i].w = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].w/=255.0f;
 					byteOffset += header.m_Properties[j].byteSize;
+				} else {
+					//unknown (ignore)
+					byteOffset += header.m_Properties[j].byteSize;
 				}
 			}
 			assert(byteOffset == size);

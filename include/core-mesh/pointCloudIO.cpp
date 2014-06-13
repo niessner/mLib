@@ -70,7 +70,11 @@ namespace ml {
 					else if (header.m_Properties[j].name == "alpha") {
 						pc.m_colors[i].w = ((unsigned char*)&data[i*size + byteOffset])[0];	pc.m_colors[i].w/=255.0f;
 						byteOffset += header.m_Properties[j].byteSize;
+					} else {
+						//unknown (ignore)
+						byteOffset += header.m_Properties[j].byteSize;
 					}
+
 				}
 				assert(byteOffset == size);
 
