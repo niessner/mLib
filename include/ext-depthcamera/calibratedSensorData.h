@@ -93,8 +93,12 @@ public:
 		m_ColorImages.clear();
 	}
 
+	float getDepth(unsigned int ux, unsigned int uy, unsigned int frame) const {
+		return m_DepthImages[frame][ux + uy*m_DepthImageWidth];
+	}
+
 	vec3f getWorldPos(unsigned int ux, unsigned int uy, unsigned int frame) const {
-		const float depth = m_DepthImages[frame][ux + uy*m_DepthImageWidth];
+		const float depth = getDepth(ux, uy, frame);
 		const float fx = m_CalibrationDepth.m_Intrinsic(0,0);
 		const float fy = m_CalibrationDepth.m_Intrinsic(1,1);
 		const float mx = m_CalibrationDepth.m_Intrinsic(0,2);
@@ -107,12 +111,14 @@ public:
 	void savePointCloud(const std::string& filename, unsigned int frame) const {
 		PointCloudf pc;
 		for (unsigned int i = 0; i < m_DepthImageWidth*m_DepthImageHeight; i++) {
-			vec3f p = getWorldPos(i%m_DepthImageWidth, i/m_DepthImageWidth, frame);
-			if (p.x != -FLT_MAX && p.x != 0.0f) {
+			float depth = getDepth(i%m_DepthImageWidth, i/m_DepthImageWidth, frame);
+			if (depth != -std::numeric_limits<float>::infinity() && depth != -FLT_MAX && depth != 0.0f) {
+
+				vec3f p = getWorldPos(i%m_DepthImageWidth, i/m_DepthImageWidth, frame);
 				pc.m_points.push_back(p);
 				if (m_ColorImageWidth == m_DepthImageWidth && m_ColorImageHeight == m_DepthImageHeight) {
 					vec4uc c = m_ColorImages[frame][i];
-					pc.m_colors.push_back(vec3f(c.x,c.y,c.z)/255.0f);
+					pc.m_colors.push_back(vec4f(c)/255.0f);
 				}
 			}
 		}
