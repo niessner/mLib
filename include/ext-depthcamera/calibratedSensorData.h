@@ -99,13 +99,16 @@ public:
 
 	vec3f getWorldPos(unsigned int ux, unsigned int uy, unsigned int frame) const {
 		const float depth = getDepth(ux, uy, frame);
-		const float fx = m_CalibrationDepth.m_Intrinsic(0,0);
-		const float fy = m_CalibrationDepth.m_Intrinsic(1,1);
-		const float mx = m_CalibrationDepth.m_Intrinsic(0,2);
-		const float my = m_CalibrationDepth.m_Intrinsic(1,2);
-		float x = ((float)ux-mx) / fx;
-		float y = (my-(float)uy) / fy;
-		return vec3f(depth*x, depth*y, depth);
+		vec4f world = m_CalibrationDepth.m_IntrinsicInverse*vec4f((float)ux*depth, (float)uy*depth, depth, 0.0f);
+		return world.getPoint3d();
+
+		//const float fx = m_CalibrationDepth.m_Intrinsic(0,0);
+		//const float fy = m_CalibrationDepth.m_Intrinsic(1,1);
+		//const float mx = m_CalibrationDepth.m_Intrinsic(0,2);
+		//const float my = m_CalibrationDepth.m_Intrinsic(1,2);
+		//float x = ((float)ux-mx) / fx;
+		//float y = (my-(float)uy) / fy;
+		//return vec3f(depth*x, depth*y, depth);
 	}
 
 	void savePointCloud(const std::string& filename, unsigned int frame) const {
