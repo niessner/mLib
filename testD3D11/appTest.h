@@ -28,5 +28,5 @@ private:
     ml::FrameTimer m_timer;
 
 	ml::D3D11ConstantBuffer<ConstantBuffer> m_constants;
-	ml::Camera m_camera;
+	ml::Cameraf m_camera;
 };

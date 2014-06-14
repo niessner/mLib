@@ -104,7 +104,7 @@ void AppTest::init(ml::ApplicationData &app)
     //vec3f eye(1.0f, 2.0f, 3.0f);
     ml::vec3f eye(-0.5f, -0.5f, 1.5f);
     ml::vec3f worldUp(0.0f, 0.0f, 1.0f);
-    m_camera = ml::Camera(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
+    m_camera = ml::Cameraf(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
 
     m_font.init(app.graphics, "Calibri");
 

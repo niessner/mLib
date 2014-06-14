@@ -4,62 +4,68 @@
 
 namespace ml {
 
+template <class FloatType>
 class Camera {
 public:
 	Camera() {}
-	Camera(const vec3f& eye, const vec3f& worldUp, const vec3f& right, float fieldOfView, float aspect, float zNear, float zFar);
+	Camera(const point3d<FloatType>& eye, const point3d<FloatType>& worldUp, const point3d<FloatType>& right, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar);
 
 	//! Construct camera from extrinsics matrix m (columns are -x, y, z vectors and origin of camera in that order) NOTE: -x due to sensor horizontal flipping
-	Camera(const mat4f& m, const float fieldOfView, const float aspect, const float zNear, const float zFar);
+	Camera(const Matrix4x4<FloatType>& m, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar);
 
-	void updateAspectRatio(float newAspect);
-	void lookRight(float theta);
-	void lookUp(float theta);
-	void roll(float theta);
+	void updateAspectRatio(FloatType newAspect);
+	void lookRight(FloatType theta);
+	void lookUp(FloatType theta);
+	void roll(FloatType theta);
 
-	void strafe(float delta);
-	void jump(float delta);
-	void move(float delta);
+	void strafe(FloatType delta);
+	void jump(FloatType delta);
+	void move(FloatType delta);
 
-	mat4f camera() const {
+	Matrix4x4<FloatType> camera() const {
 		return m_camera;
 	}
 
-	mat4f perspective() const {
+	Matrix4x4<FloatType> perspective() const {
 		return m_perspective;
 	}
 
-	mat4f cameraPerspective() const {
+	Matrix4x4<FloatType> cameraPerspective() const {
 		return m_cameraPerspective;
 	}
 
-	vec3f getEye() const {
+	point3d<FloatType> getEye() const {
 		return m_eye;
 	}
 
-	float getFoV() const {
+	FloatType getFoV() const {
 		return m_fieldOfView;
 	}
 
-	float getAspect() const {
+	FloatType getAspect() const {
 		return m_aspect;
 	}
 
 private:
-	void applyTransform(const mat4f& transform);
+	void applyTransform(const Matrix4x4<FloatType>& transform);
 	void update();
-	mat4f perspectiveFov(float fieldOfView, float aspectRatio, float zNear, float zFar);
-	mat4f viewMatrix(const vec3f& eye, const vec3f& look, const vec3f& up, const vec3f& right);
+	Matrix4x4<FloatType> perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar);
+	Matrix4x4<FloatType> viewMatrix(const point3d<FloatType>& eye, const point3d<FloatType>& look, const point3d<FloatType>& up, const point3d<FloatType>& right);
 
-	vec3f m_eye, m_right, m_look, m_up;
-	vec3f m_worldUp;
-	mat4f m_camera;
-	mat4f m_perspective;
-	mat4f m_cameraPerspective;
+	point3d<FloatType> m_eye, m_right, m_look, m_up;
+	point3d<FloatType> m_worldUp;
+	Matrix4x4<FloatType> m_camera;
+	Matrix4x4<FloatType> m_perspective;
+	Matrix4x4<FloatType> m_cameraPerspective;
 
-	float m_fieldOfView, m_aspect, m_zNear, m_zFar;
+	FloatType m_fieldOfView, m_aspect, m_zNear, m_zFar;
 };
 
+typedef Camera<float> Cameraf;
+typedef Camera<double> Camerad;
+
 }  // namespace ml
+
+#include "camera.cpp"
 
 #endif  // CORE_GRAPHICS_CAMERA_H_
