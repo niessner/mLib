@@ -37,6 +37,14 @@ public:
 		return m_eye;
 	}
 
+	float getFoV() const {
+		return m_fieldOfView;
+	}
+
+	float getAspect() const {
+		return m_aspect;
+	}
+
 private:
 	void applyTransform(const mat4f& transform);
 	void update();

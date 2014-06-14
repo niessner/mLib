@@ -40,7 +40,7 @@ void AppTest::init(ml::ApplicationData &app)
 	ml::MeshDataf bunny = MeshIOf::loadFromFile("bunny_color.ply");
 
 	//bunny.m_Colors.resize(bunny.m_Vertices.size(), vec4f(0.5f, 0.5f, 0.5f, 1.0f));
-	meshData.merge(bunny);
+	//meshData.merge(bunny);
 	//meshData.m_Vertices.push_back(vec3f(1.0f, 2.0f, 3.0f));
 	//meshData.m_Colors.push_back(vec4f(1.0f, 0.0f, 0.0f, 1.0f));
 	//meshData.m_Normals.push_back(vec3f(1.0f, 0.0f, 0.0f));
@@ -161,6 +161,18 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
     if(key == KEY_RIGHT) m_camera.lookRight(-theta);
 
 	if(key == 'R') {
+		float fovX = m_camera.getFoV();
+		float fovY = fovX/m_camera.getAspect();
+		float focalLengthX = 0.5f * (float)app.window.width() / tan(0.5f * math::degreesToRadians(fovX));
+		float focalLengthY = 0.5f * (float)app.window.height() / tan(0.5f * math::degreesToRadians(fovY));
+		mat4f intrinsics = 
+			ml::mat4f(
+			focalLengthX, 0.0f, (float)app.window.width()/2.f, 0.0f,
+			0.0f, focalLengthY, (float)app.window.height()/2.f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f);
+		mat4f intrinsicsInverse = intrinsics.getInverse();
+
 		ml::mat4f projToCam = m_camera.perspective().getInverse();
 		ml::mat4f camToWorld = m_camera.camera().getInverse();
 		ml::mat4f trans =  camToWorld * projToCam;
@@ -185,16 +197,29 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 			unsigned int i = (unsigned int)i_;
 			for (unsigned int j = 0; j < app.window.width(); j++) {
 				//std::cout << " tyring ray " << i << " " << j << std::endl;
-				ml::vec4f p((float)j, (float)i, 0.5f, 1.0f);
-				p.x /= app.window.width();
-				p.y /= app.window.height();
-				p.x = 2.0f*p.x - 1.0f;
-				p.y = 1.0f-2.0f*p.y;
 
-				p = trans * p;
-				p /= p.w;
-				ml::Rayf r(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).getNormalized());
+				float depth0 = 0.5f;
+				float depth1 = 1.0f;
+				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-j)*depth0, (float)i*depth0, depth0, 1.0f);
+				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-j)*depth1, (float)i*depth1, depth1, 1.0f);
+
+				vec3f eye = m_camera.getEye();
+				Rayf r(m_camera.getEye(), (p0.getPoint3d()-p1.getPoint3d()).getNormalized());
+
+				//ml::vec4f p((float)j, (float)i, 0.5f, 1.0f);
+				//p.x /= app.window.width();
+				//p.y /= app.window.height();
+				//p.x = 2.0f*p.x - 1.0f;
+				//p.y = 1.0f-2.0f*p.y;
+				//p = trans * p;
+				//p /= p.w;
+				//Rayf r1(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).getNormalized());
+
+
 				//std::cout << r << std::endl;
+				//std::cout << r1 << std::endl;
+				//std::cout << std::endl;
+
 				float t,u,v;	ml::TriMeshf::Trianglef* tri;
 				if (accel.intersect(r, t, u, v, tri)) {
 					image(i,j) = tri->getSurfaceColor(u,v).getPoint3d();
