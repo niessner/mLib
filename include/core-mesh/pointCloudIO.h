@@ -38,6 +38,10 @@ public:
 	}
 
 	static void saveToFile(const std::string& filename, const PointCloud<FloatType>& pointCloud) {
+		if (pointCloud.isEmpty()) {
+			MLIB_WARNING("empty point cloud");
+			return;
+		}
 		std::string extension = util::getFileExtension(filename);
 		if (extension == "ply") {
 			writeToPLY(filename, pointCloud);
@@ -59,7 +63,7 @@ public:
 	/************************************************************************/
 
 	static void writeToPLY(const std::string& filename, const PointCloud<FloatType>& pc) {
-		MLIB_WARNING("untested");
+
 		if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float, not for double");
 
 		std::ofstream file(filename, std::ios::binary);

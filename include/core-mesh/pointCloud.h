@@ -38,6 +38,10 @@ public:
 		return is;
 	}
 
+	bool isEmpty() const {
+		return m_points.size() == 0;
+	}
+
 	std::vector<point3d<FloatType>> m_points;
 	std::vector<point3d<FloatType>> m_normals;
 	std::vector<point4d<FloatType>> m_colors;
