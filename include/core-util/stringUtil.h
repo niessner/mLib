@@ -70,6 +70,13 @@ namespace util
 	inline std::vector<std::string> split(const std::string& str, const std::string& separator, bool pushEmptyStrings = false) {
 		MLIB_ASSERT_STR(separator.length() >= 1, "empty seperator");
 		std::vector<std::string> result;
+
+        if (str.size() == 0)
+        {
+            result.push_back("");
+            return result;
+        }
+
 		std::string entry;
 		for (size_t i = 0; i < str.length(); i++) {
 			bool isSeperator = true;
