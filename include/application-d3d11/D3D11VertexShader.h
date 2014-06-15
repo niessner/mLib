@@ -24,7 +24,7 @@ public:
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
 
-	void bind(GraphicsDevice &g);
+    void bind(GraphicsDevice &g) const;
 
 private:
 	ID3D11VertexShader *m_shader;

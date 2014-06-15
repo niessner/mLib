@@ -30,7 +30,7 @@ void ml::D3D11VertexShader::reset(GraphicsDevice &g)
 	device.CreateInputLayout( D3D11TriMesh::layout, D3D11TriMesh::layoutElementCount, m_blob->GetBufferPointer(), m_blob->GetBufferSize(), &m_standardLayout );
 }
 
-void ml::D3D11VertexShader::bind(GraphicsDevice &g)
+void ml::D3D11VertexShader::bind(GraphicsDevice &g) const
 {
 	auto &context = g.castD3D11().context();
 	context.VSSetShader( m_shader, NULL, 0 );

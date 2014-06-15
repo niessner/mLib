@@ -22,7 +22,7 @@ public:
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
 
-	void bind(GraphicsDevice &g);
+    void bind(GraphicsDevice &g) const;
 
 	UINT64 hash64();
 
