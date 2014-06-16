@@ -136,8 +136,8 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 	}
 
 	// Update faces
-	for (std::vector<std::vector<unsigned int>>::iterator it = m_FaceIndicesVertices.begin(); it != m_FaceIndicesVertices.end(); it++) {
-		for (std::vector<unsigned int>::iterator idx = it->begin(); idx != it->end(); idx++) {
+	for (auto it = m_FaceIndicesVertices.begin(); it != m_FaceIndicesVertices.end(); it++) {
+		for (auto idx = it->begin(); idx != it->end(); idx++) {
 			*idx = vertexLookUp[*idx];
 		}
 		//*it = vertexLookUp[*it];
@@ -353,7 +353,7 @@ unsigned int MeshData<FloatType>::removeVerticesInFrontOfPlane( const Plane<Floa
 
 	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
 	std::vector<point3d<FloatType>> new_verts;	new_verts.reserve(numV);
-	std::vector<std::vector<unsigned int>> new_faces;	new_faces.reserve(numF);
+	Indices new_faces;	new_faces.reserve(numF);
 	std::vector<point4d<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
 	std::vector<point3d<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
 	std::vector<point2d<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
@@ -394,7 +394,7 @@ unsigned int MeshData<FloatType>::removeVerticesInFrontOfPlane( const Plane<Floa
 	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
 	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
 
-	m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(new_faces.begin(), new_faces.end());
+	m_FaceIndicesVertices = new_faces;
 
 	return (unsigned int)m_Vertices.size();
 }
@@ -509,28 +509,32 @@ void MeshData<FloatType>::merge( const MeshData<FloatType>& other )
 
 	if (hasVertexIndices()) {
 		size_t indicesBefore = m_FaceIndicesVertices.size();
-		m_FaceIndicesVertices.insert(m_FaceIndicesVertices.end(), other.m_FaceIndicesVertices.begin(), other.m_FaceIndicesVertices.end());
+		//m_FaceIndicesVertices.insert(m_FaceIndicesVertices.end(), other.m_FaceIndicesVertices.begin(), other.m_FaceIndicesVertices.end());
+		m_FaceIndicesVertices.append(other.m_FaceIndicesVertices);
 		for (size_t i = indicesBefore; i < m_FaceIndicesVertices.size(); i++) {
 			for (auto& idx : m_FaceIndicesVertices[i]) idx += (unsigned int)vertsBefore;
 		}
 	}
 	if (hasNormalIndices()) {
 		size_t indicesBefore = m_FaceIndicesNormals.size();
-		m_FaceIndicesNormals.insert(m_FaceIndicesNormals.end(), other.m_FaceIndicesNormals.begin(), other.m_FaceIndicesNormals.end());
+		//m_FaceIndicesNormals.insert(m_FaceIndicesNormals.end(), other.m_FaceIndicesNormals.begin(), other.m_FaceIndicesNormals.end());
+		m_FaceIndicesNormals.append(other.m_FaceIndicesNormals);
 		for (size_t i = indicesBefore; i < m_FaceIndicesNormals.size(); i++) {
 			for (auto& idx : m_FaceIndicesNormals[i]) idx +=  (unsigned int)normsBefore;
 		}
 	}
 	if (hasColorIndices()) {
 		size_t indicesBefore = m_FaceIndicesColors.size();
-		m_FaceIndicesColors.insert(m_FaceIndicesColors.end(), other.m_FaceIndicesColors.begin(), other.m_FaceIndicesColors.end());
+		//m_FaceIndicesColors.insert(m_FaceIndicesColors.end(), other.m_FaceIndicesColors.begin(), other.m_FaceIndicesColors.end());
+		m_FaceIndicesColors.append(other.m_FaceIndicesColors);
 		for (size_t i = indicesBefore; i < m_FaceIndicesColors.size(); i++) {
 			for (auto& idx : m_FaceIndicesColors[i]) idx +=  (unsigned int)colorBefore;
 		}
 	}
 	if (hasTexCoordsIndices()) {
 		size_t indicesBefore = m_FaceIndicesTextureCoords.size();
-		m_FaceIndicesTextureCoords.insert(m_FaceIndicesTextureCoords.end(), other.m_FaceIndicesTextureCoords.begin(), other.m_FaceIndicesTextureCoords.end());
+		//m_FaceIndicesTextureCoords.insert(m_FaceIndicesTextureCoords.end(), other.m_FaceIndicesTextureCoords.begin(), other.m_FaceIndicesTextureCoords.end());
+		m_FaceIndicesTextureCoords.append(other.m_FaceIndicesTextureCoords);
 		for (size_t i = indicesBefore; i < m_FaceIndicesTextureCoords.size(); i++) {
 			for (auto& idx : m_FaceIndicesTextureCoords[i]) idx +=  (unsigned int)texCoordsBefore;
 		}
@@ -546,7 +550,7 @@ void MeshData<FloatType>::subdivideFacesMidpoint()
 	if (hasPerVertexNormals())		m_Normals.reserve(m_Normals.size() + m_FaceIndicesVertices.size());
 	if (hasPerVertexTexCoords())	m_TextureCoords.reserve(m_TextureCoords.size() + m_FaceIndicesVertices.size());
 
-	std::vector<std::vector<unsigned int>> newFaces;
+	Indices newFaces;
 	for (auto& face : m_FaceIndicesVertices) {
 		point3d<FloatType> centerP = point3d<FloatType>(0,0,0);
 		for (auto& idx : face) {
@@ -582,7 +586,7 @@ void MeshData<FloatType>::subdivideFacesMidpoint()
 
 
 		unsigned int newIdx = (unsigned int)m_Vertices.size() - 1;
-		for (size_t i = 0; i < face.size(); i++) {
+		for (unsigned int i = 0; i < face.size(); i++) {
 			newFaces.push_back(std::vector<unsigned int>(3));
 			newFaces[newFaces.size()-1][0] = face[i];
 			newFaces[newFaces.size()-1][1] = face[(i+1)%face.size()];
@@ -645,7 +649,7 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 
 	//maps edges to new vertex indices
 	std::unordered_map<Edge, unsigned int, EdgeHash> edgeMap;
-	for (const std::vector<unsigned int>& face : m_FaceIndicesVertices) {
+	for (auto& face : m_FaceIndicesVertices) {
 
 		for (unsigned int i = 0; i < face.size(); i++) {
 			Edge e(face[i], face[(i+1)%face.size()]);
@@ -667,8 +671,8 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 
 	}
 
-	std::vector<std::vector<unsigned int>> newFaces;    newFaces.reserve(m_FaceIndicesVertices.size() * 4);
-	for (const std::vector<unsigned int>& face : m_FaceIndicesVertices) {
+	Indices newFaces;    newFaces.reserve(m_FaceIndicesVertices.size() * 4);
+	for (auto& face : m_FaceIndicesVertices) {
 		bool allEdgesExist = true;
 		bool noneEdgesExist = true;
 		for (unsigned int i = 0; i < face.size(); i++) {
@@ -685,12 +689,20 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 			for (unsigned int i = 0; i < face.size(); i++) {
 				Edge ePrev(face[i], face[(i+1)%face.size()]);
 				Edge eNext(face[(i+1)%face.size()], face[(i+2)%face.size()]);
-				newFaces.push_back(std::vector<unsigned int>(3));
-				newFaces.back()[0] = edgeMap[ePrev];
-				newFaces.back()[1] = face[(i+1)%face.size()];
-				newFaces.back()[2] = edgeMap[eNext];
 
-				centerFace[i] = newFaces.back()[0];
+				unsigned int curr[] = {
+					edgeMap[ePrev],
+					face[(i+1)%face.size()],
+					edgeMap[eNext]
+				};
+				newFaces.addFace(curr, 3);
+				centerFace[i] = curr[0];
+				//newFaces.push_back(std::vector<unsigned int>(3));
+				//newFaces.back()[0] = edgeMap[ePrev];
+				//newFaces.back()[1] = face[(i+1)%face.size()];
+				//newFaces.back()[2] = edgeMap[eNext];
+
+				//centerFace[i] = newFaces.back()[0];
 			}
 			newFaces.push_back(centerFace);
 
@@ -750,7 +762,8 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 		} 
 	}
 
-	m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(newFaces.begin(), newFaces.end());
+	//m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(newFaces.begin(), newFaces.end());
+	m_FaceIndicesVertices = newFaces;
 	return maxEdgeLen;
 }
 

@@ -1,2 +1,19 @@
+Matthias:
+MeshIO -> std::vector<std::vector<unsigned int>> -> std::vector<unsigned int> (prefix sum; speed!) (bool flag isTriMesh)
+MeshIO -> material groups (.obj loader -> index faces)
+MeshIO -> conversion to TriMesh
+
+Intersections/Collision: 
+mesh - mesh; ideal std::vector<std::pair<triMesh*, mat4f>> - std::vector<std::pair<triMesh*, mat4f>>
+BVH: Triangle -> Primitive (to support Vertices)
+Mesh - Ray
+Mesh - Line
+Mesh - OBB (get NR eigenvalue computation into matrix3x3)
+
+OnMeshLoad: reduces to lower res mesh for collisison (maybe in quadedge)`
+
+
+
+
 D3D11: Culling + Shading
 Shapes: Cylinder, Torus, Sphere

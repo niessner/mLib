@@ -34,7 +34,8 @@ MeshData<FloatType> toMeshData(const BoundingBox3d<FloatType>& s, const point4d<
 	} else {
 		s.makeTriMesh(meshData.m_Vertices, indices, meshData.m_Normals);
 	}
-	meshData.m_FaceIndicesVertices.resize(indices.size(), std::vector<unsigned int>(3));
+	//meshData.m_FaceIndicesVertices.resize(indices.size(), std::vector<unsigned int>(3));
+	meshData.m_FaceIndicesVertices.resize(indices.size(), 3);
 	for (size_t i = 0; i < indices.size(); i++) {
 		meshData.m_FaceIndicesVertices[i][0] = indices[i].x;
 		meshData.m_FaceIndicesVertices[i][1] = indices[i].y;

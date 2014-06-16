@@ -2,8 +2,80 @@
 #include "main.h"
 
 
+unsigned int test0(unsigned int size) {
+	std::vector<std::vector<unsigned int>> faces(size, std::vector<unsigned int>(3));
+	for (unsigned int i = 0; i < faces.size(); i++) {
+		faces[i][0] = i*3+0;
+		faces[i][1] = i*3+1;
+		faces[i][2] = i*3+2;
+	}
+	unsigned int sum = 0;
+	for (unsigned int i = 0; i < faces.size(); i++) {
+		sum += faces[i][0];
+		sum += faces[i][1];
+		sum += faces[i][2];
+	}
+	return sum;
+}
+
+unsigned int test1(unsigned int size) {
+	std::vector<unsigned int> faces(size*3);
+	for (unsigned int i = 0; i < size; i++) {
+		faces[3*i+0] = i*3+0;
+		faces[3*i+1] = i*3+1;
+		faces[3*i+2] = i*3+2;
+	}
+	unsigned int sum = 0;
+	for (unsigned int i = 0; i < size; i++) {
+		sum += faces[3*i+0];
+		sum += faces[3*i+1];
+		sum += faces[3*i+2];
+	}
+	return sum;
+}
+
+unsigned int test2(unsigned int size) {
+	MeshDataf::Indices faces;
+	faces.reserve(size);
+	for (unsigned int i = 0; i < size; i++) {
+		unsigned int curr[] = {i*3+0, i*3+1, i*3+2};
+		faces.addFace(curr, 3);
+		//faces[3*i+0] = i*3+0;
+		//faces[3*i+1] = i*3+1;
+		//faces[3*i+2] = i*3+2;
+	}
+	unsigned int sum = 0;
+	for (unsigned int i = 0; i < size; i++) {
+		auto f = faces.getFace(i);
+		sum += f[0];
+		sum += f[1];
+		sum += f[2];
+		//sum += faces[3*i+0];
+		//sum += faces[3*i+1];
+		//sum += faces[3*i+2];
+	}
+	return sum;
+}
+
 void AppTest::init(ml::ApplicationData &app)
 {
+	MeshDataf::Indices indices;
+	//for (auto i = indices.begin(); i != indices.end(); i++) {}
+	//for (auto face : indices) {}
+	//for (auto face: indices) {}
+
+
+	unsigned int size = 50000;
+	Timer t;
+	std::cout << test0(size) << std::endl;
+	std::cout << t.getElapsedTimeMS() << std::endl;
+	t.start();
+	std::cout << test1(size) << std::endl;
+	std::cout << t.getElapsedTimeMS() << std::endl;
+	t.start();
+	std::cout << test2(size) << std::endl;
+	std::cout << t.getElapsedTimeMS() << std::endl;
+
 	//PointCloudf pc = PointCloudIOf::loadFromFile("bunny.ply");
 
 	//int a = 5;
@@ -40,7 +112,7 @@ void AppTest::init(ml::ApplicationData &app)
 	ml::MeshDataf bunny = MeshIOf::loadFromFile("bunny_color.ply");
 
 	//bunny.m_Colors.resize(bunny.m_Vertices.size(), vec4f(0.5f, 0.5f, 0.5f, 1.0f));
-	//meshData.merge(bunny);
+	meshData.merge(bunny);
 	//meshData.m_Vertices.push_back(vec3f(1.0f, 2.0f, 3.0f));
 	//meshData.m_Colors.push_back(vec4f(1.0f, 0.0f, 0.0f, 1.0f));
 	//meshData.m_Normals.push_back(vec3f(1.0f, 0.0f, 0.0f));
@@ -67,7 +139,7 @@ void AppTest::init(ml::ApplicationData &app)
 	MeshDataf bbData = shapes::toMeshData(meshData.getBoundingBox(), vec4f(1,1,1,1), true);
 	bbData.subdivideFacesMidpoint();
 	bbData.subdivideFacesLoop();
-	bbData.print();
+	//bbData.print();
 	MeshIOf::saveToFile("outbox.ply", bbData);
 	meshData.merge(bbData);
 	assert(meshData.isConsistent());

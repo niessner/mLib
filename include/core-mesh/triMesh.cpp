@@ -18,7 +18,7 @@ namespace ml {
 			m_Vertices[i].position = meshData.m_Vertices[i];
 		}
 
-		for (size_t i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
+		for (unsigned int i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
 			if (meshData.m_FaceIndicesVertices[i].size() == 3) {
 				//we need to split vertices if the same vertex has different texcoords and/or normals
 				if (m_bHasNormals || m_bHasTexCoords || m_bHasColors) {

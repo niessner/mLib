@@ -18,7 +18,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	if (header.m_NumVertices == -1) throw MLIB_EXCEPTION("no vertices found");
 
 	mesh.m_Vertices.resize(header.m_NumVertices);
-	mesh.m_FaceIndicesVertices.resize(header.m_NumFaces);
+	mesh.m_FaceIndicesVertices.resize(header.m_NumFaces, 3);	//assuming triangles
 	if (header.m_bHasNormals) mesh.m_Normals.resize(header.m_NumVertices);
 	if (header.m_bHasColors) mesh.m_Colors.resize(header.m_NumVertices);
 
@@ -85,13 +85,17 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 
 		delete [] data;
 
-		size = 1+3*4;	//typically 1 uchar for numVertices per triangle, 3 * int for indeices
+		size = 1+3*4;	//typically 1 uchar for numVertices per triangle, 3 * int for indices
 		data = new char[size*header.m_NumFaces];
 		file.read(data, size*header.m_NumFaces);
 		for (unsigned int i = 0; i < header.m_NumFaces; i++) {	
-			mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[0]);
-			mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[1]);
-			mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[2]);
+			mesh.m_FaceIndicesVertices[i][0] = ((int*)&data[i*size+1])[0];
+			mesh.m_FaceIndicesVertices[i][1] = ((int*)&data[i*size+1])[1];
+			mesh.m_FaceIndicesVertices[i][2] = ((int*)&data[i*size+1])[2];
+
+			//mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[0]);
+			//mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[1]);
+			//mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[2]);
 		}
 
 		//if (mesh.m_Colors.size() == 0) {
@@ -122,11 +126,13 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 			std::stringstream ss(line);
 			unsigned int num_vs;
 			ss >> num_vs;
+			std::vector<unsigned int> face;	face.reserve(num_vs);
 			for (unsigned int j = 0; j < num_vs; j++) {
 				unsigned int idx;
 				ss >> idx;
-				mesh.m_FaceIndicesVertices[i].push_back(idx);
+				face.push_back(idx);
 			}
+			mesh.m_FaceIndicesVertices.push_back(face);
 		}
 
 		//if (mesh.m_Colors.size() == 0) {
@@ -188,11 +194,13 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 	for(unsigned int i = 0; i < numP; i++) {
 		unsigned int num_vs;
 		file >> num_vs;
+		std::vector<unsigned int> face(num_vs);
 		for (unsigned int j = 0; j < num_vs; j++) {
 			unsigned int idx;
 			file >> idx;
-			mesh.m_FaceIndicesVertices[i].push_back(idx);
+			face[j] = idx;
 		}
+		mesh.m_FaceIndicesVertices.push_back(face);
 	}
 }
 
@@ -516,7 +524,7 @@ void MeshIO<FloatType>::saveToOFF( const std::string& filename, const MeshData<F
 	file << mesh.m_Vertices.size() << " " << mesh.m_FaceIndicesVertices.size() << " " << 0 << "\n";
 
 	// write points
-	for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
+	for (unsigned int i = 0; i < mesh.m_Vertices.size(); i++) {
 		file << mesh.m_Vertices[i].x << " " << mesh.m_Vertices[i].y << " " << mesh.m_Vertices[i].z;
 		if (mesh.m_Colors.size() > 0) {
 			file << " " << 
@@ -529,9 +537,9 @@ void MeshIO<FloatType>::saveToOFF( const std::string& filename, const MeshData<F
 	}
 
 	// write faces
-	for (size_t i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
+	for (unsigned int i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
 		file << mesh.m_FaceIndicesVertices[i].size();
-		for (size_t j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
+		for (unsigned int j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
 			file << " " << mesh.m_FaceIndicesVertices[i][j];
 		}
 		file << "\n";
@@ -575,9 +583,9 @@ void MeshIO<FloatType>::saveToOBJ( const std::string& filename, const MeshData<F
 		file << "vt ";
 		file << mesh.m_TextureCoords[i].x << " " << mesh.m_TextureCoords[i].y << "\n";
 	}
-	for (size_t i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
+	for (unsigned int i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
 		file << "f ";
-		for (size_t j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
+		for (unsigned int j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
 			file << mesh.m_FaceIndicesVertices[i][j]+1;
 			if (mesh.m_FaceIndicesTextureCoords.size() > 0 || mesh.m_FaceIndicesNormals.size() > 0) {
 				file << "//";
