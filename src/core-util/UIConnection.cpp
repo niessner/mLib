@@ -5,7 +5,7 @@ namespace ml {
 
 void UIConnection::init(const std::string &executableFile, const std::string &pipeBaseName)
 {
-	if(util::runCommand(executableFile, "", false) != 0)
+    if (executableFile.size() > 0 && util::runCommand(executableFile, "", false) != 0)
 	{
 		Console::log("Failed to launch UI");
 		return;

@@ -29,7 +29,7 @@ void Pipe::closePipe()
 
 void Pipe::createPipe(const std::string &pipeName, bool block)
 {
-    Console::log() << "creating pipe " << pipeName << std::endl;
+    //Console::log() << "creating pipe " << pipeName << std::endl;
 
     closePipe();
     const UINT PipeBufferSize = 100000;
@@ -122,7 +122,7 @@ void Pipe::connectToLocalPipe(const std::string &pipeName)
 
 void Pipe::connectToPipe(const std::string &pipeName)
 {
-    Console::log("Connecting to " + pipeName);
+    //Console::log("Connecting to " + pipeName);
     closePipe();
     bool done = false;
     while(!done)
