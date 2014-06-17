@@ -58,6 +58,14 @@
 #include <tuple>
 #include <complex>
 
+namespace boost {
+namespace serialization {
+
+class access;
+
+}
+}
+
 namespace ml
 {
 

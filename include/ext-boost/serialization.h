@@ -59,6 +59,11 @@ namespace boost {
 namespace serialization {
 
 template<class Archive, class T>
+inline void serialize(Archive& ar, ml::point2d<T>& p, const unsigned int version) {
+    ar & p.array;
+}
+
+template<class Archive, class T>
 inline void serialize(Archive& ar, ml::point3d<T>& p, const unsigned int version) {
 	ar & p.array;
 }
@@ -71,6 +76,16 @@ inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version
 template<class Archive, class T>
 inline void serialize(Archive& ar, ml::Matrix4x4<T>& m, const unsigned int version) {
 	ar & m.matrix;
+}
+
+template<class Archive, class T>
+inline void serialize(Archive& ar, ml::TriMesh<T>& m, const unsigned int version) {
+    ar & m.m_vertices & m.m_indices;
+}
+
+template<class Archive, class T>
+inline void serialize(Archive& ar, ml::TriMesh<T>::Vertex<T>& v, const unsigned int version) {
+    ar & v.position & v.normal & v.color & v.texCoord;
 }
 
 }  // namespace serialization
