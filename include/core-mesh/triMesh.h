@@ -300,10 +300,10 @@ public:
 
 	const std::vector<Vertex<FloatType>>& getVertices() const { return m_Vertices; }
 	const std::vector<vec3ui>& getIndices() const { return m_Indices; }
-
-	//TODO: Confirm that returning non-const reference to vertices is kosher and does not break encapsulation
+	
 	std::vector<Vertex<FloatType>>& getVertices() { return m_Vertices; }
-		
+    std::vector<vec3ui>& getIndices() { return m_Indices; }
+
 	void getMeshData(MeshData<FloatType>& meshData) const {
 		meshData.clear();
 

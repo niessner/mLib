@@ -78,14 +78,14 @@ inline void serialize(Archive& ar, ml::Matrix4x4<T>& m, const unsigned int versi
 	ar & m.matrix;
 }
 
-template<class Archive, class T>
-inline void serialize(Archive& ar, ml::TriMesh<T>& m, const unsigned int version) {
-    ar & m.m_vertices & m.m_indices;
+template<class Archive>
+inline void serialize(Archive& ar, ml::TriMesh<float>::Vertex<float>& v, const unsigned int version) {
+    ar & v.position & v.normal & v.color & v.texCoord;
 }
 
 template<class Archive, class T>
-inline void serialize(Archive& ar, ml::TriMesh<T>::Vertex<T>& v, const unsigned int version) {
-    ar & v.position & v.normal & v.color & v.texCoord;
+inline void serialize(Archive& ar, ml::TriMesh<T>& m, const unsigned int version) {
+    ar & m.getVertices() & m.getIndices();
 }
 
 }  // namespace serialization
