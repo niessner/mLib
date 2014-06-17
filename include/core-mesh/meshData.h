@@ -9,6 +9,7 @@ namespace ml {
 template <class FloatType>
 class MeshData {
 public:
+
 	class Indices {
 	public:
 

@@ -57,6 +57,29 @@ unsigned int test2(unsigned int size) {
 	return sum;
 }
 
+//unsigned int test3(unsigned int size) {
+//	MeshDataf::Indices0 faces;
+//	faces.reserve(size);
+//	for (unsigned int i = 0; i < size; i++) {
+//		unsigned int curr[] = {i*3+0, i*3+1, i*3+2};
+//		faces.addFace(curr, 3);
+//		//faces[3*i+0] = i*3+0;
+//		//faces[3*i+1] = i*3+1;
+//		//faces[3*i+2] = i*3+2;
+//	}
+//	unsigned int sum = 0;
+//	for (unsigned int i = 0; i < size; i++) {
+//		auto f = faces.getFace(i);
+//		sum += f[0];
+//		sum += f[1];
+//		sum += f[2];
+//		//sum += faces[3*i+0];
+//		//sum += faces[3*i+1];
+//		//sum += faces[3*i+2];
+//	}
+//	return sum;
+//}
+
 void AppTest::init(ml::ApplicationData &app)
 {
 	MeshDataf::Indices indices;
