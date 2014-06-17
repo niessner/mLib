@@ -5,6 +5,7 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 namespace ml
 {
@@ -297,6 +298,43 @@ namespace util
             if(e == element)
                 return true;
         return false;
+    }
+
+    //
+    // String encoding
+    //
+    inline std::string encodeBytes(const unsigned char *data, const size_t byteCount)
+    {
+        std::ostringstream os;
+        
+        char hexDigits[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+        for (size_t byteIndex = 0; byteIndex < byteCount; byteIndex++)
+        {
+            unsigned char byte = data[byteIndex];
+            os << hexDigits[byte & 0x0f];
+            os << hexDigits[(byte & 0xf0) >> 4];
+        }
+
+        return os.str();
+    }
+
+    inline void decodeBytes(const std::string &str, unsigned char *data)
+    {
+        auto digitToValue = [](char c) {
+            if (c >= '0' && c <= '9')
+                return (int)c - (int)'0';
+            else
+                return (int)c - (int)'a' + 10;
+        };
+        
+        for (size_t byteIndex = 0; byteIndex < str.size() / 2; byteIndex++)
+        {
+            unsigned char c0 = str[byteIndex * 2 + 0];
+            unsigned char c1 = str[byteIndex * 2 + 1];
+
+            data[byteIndex] = digitToValue(c0) + (digitToValue(c1) >> 4);
+        }
     }
 
     //Usage: auto mappedVector = map(v, [](int a) { return a * 2.0; });

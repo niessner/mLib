@@ -113,7 +113,7 @@ public:
 		computeFromPCA(&points[0], points.size());
 	}
 
-	void computeFromPCA(const point3d<FloatType>* points, unsigned int numPoints) {
+	void computeFromPCA(const point3d<FloatType>* points, size_t numPoints) {
 
 		//at least 4 points are required for a valid bounding box
 		if (numPoints < 4)	{
@@ -135,10 +135,14 @@ public:
 		}
 		cov /= (FloatType)(numPoints - 1);
 
-		FloatType lambda[3];
+		//FloatType lambda[3];
 		//bool validEVs = cov.computeEigenvaluesAndEigenvectorsNR(lambda[0], lambda[1], lambda[2], m_AxesScaled[0], m_AxesScaled[1], m_AxesScaled[2]);
 		//assert(validEVs);
-		cov.computeEigenvaluesAndEigenvectorsNR(lambda[0], lambda[1], lambda[2], m_AxesScaled[0], m_AxesScaled[1], m_AxesScaled[2]);
+
+        //
+        // TODO: implement this
+        //
+		//cov.computeEigenvaluesAndEigenvectorsNR(lambda[0], lambda[1], lambda[2], m_AxesScaled[0], m_AxesScaled[1], m_AxesScaled[2]);
 
 		m_AxesScaled[0].normalize();
 		m_AxesScaled[1].normalize();
@@ -147,7 +151,7 @@ public:
 		computeAnchorAndExtentsForGivenNormalizedAxis(points, numPoints);
 	}
 
-	void computeAnchorAndExtentsForGivenNormalizedAxis(const point3d<FloatType>* points,  unsigned int numPoints) 
+	void computeAnchorAndExtentsForGivenNormalizedAxis(const point3d<FloatType>* points,  size_t numPoints) 
 	{
 		assert((m_AxesScaled[0] | m_AxesScaled[1]) < 0.001);
 		assert((m_AxesScaled[1] | m_AxesScaled[2]) < 0.001);
