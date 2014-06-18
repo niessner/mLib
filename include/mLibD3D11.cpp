@@ -13,3 +13,4 @@
 #include "../src/application-d3d11/D3D11VertexShader.cpp"
 #include "../src/application-d3d11/D3D11PixelShader.cpp"
 #include "../src/application-d3d11/D3D11TriMesh.cpp"
+#include "../src/application-d3d11/D3D11Texture.cpp"
