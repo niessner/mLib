@@ -23,13 +23,14 @@ void D3D11Texture::reset(GraphicsDevice &g)
     release(g);
 
     auto &device = g.castD3D11().device();
+    auto &context = g.castD3D11().context();
 
     D3D11_TEXTURE2D_DESC desc;
     desc.Width = (UINT)m_bmp.cols();
     desc.Height = (UINT)m_bmp.rows();
     desc.MipLevels = 0;
     desc.ArraySize = 1;
-    desc.Format = DXGI_FORMAT_R8G8B8A8_UINT;
+    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
     desc.Usage = D3D11_USAGE_DEFAULT;
@@ -39,6 +40,10 @@ void D3D11Texture::reset(GraphicsDevice &g)
 
     D3D_VALIDATE(device.CreateTexture2D(&desc, nullptr, &m_texture));
     D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_view));
+
+    context.UpdateSubresource(m_texture, 0, NULL, m_bmp.ptr(), (UINT)m_bmp.cols() * sizeof(RGBColor), (UINT)m_bmp.cols() * (UINT)m_bmp.rows() * sizeof(RGBColor));
+
+    context.GenerateMips(m_view);
 }
 
 void D3D11Texture::bind(GraphicsDevice &g) const

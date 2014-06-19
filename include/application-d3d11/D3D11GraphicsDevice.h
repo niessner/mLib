@@ -83,7 +83,6 @@ private:
 
 	D3D_FEATURE_LEVEL m_featureLevel;
 
-	
 	std::set<GraphicsAsset*> m_assets;
 
 protected:
