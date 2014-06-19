@@ -76,7 +76,9 @@ public:
                 MLIB_WARNING("parameter not found: " + name);
 				return false; 
 			} else {
-				util::convertTo<T>(s->second, value);
+				//util::convertTo<T>(s->second, value);
+				//value = convert::to<T>(value);
+				//StringUtil::convertStringTo(s->second, value);
 				return true;
 			}
 		} else {
@@ -86,7 +88,7 @@ public:
                 MLIB_WARNING("parameter not found: " + name);
 				return false; 
 			} else {
-				util::convertTo<T>(s->second, value);
+				util::convertTo(s->second, value);
 				return true;
 			}
 		}
@@ -98,7 +100,7 @@ public:
 			std::stringstream ss;	ss << i;
 			std::string currName = name + "[" + ss.str() + "]";
 			U currValue;
-			if (getParameterForValue(currName, currValue)) {
+			if (readParameter(currName, currValue)) {
 				value.resize(i+1);
 				value[i] = currValue;
 			} else {

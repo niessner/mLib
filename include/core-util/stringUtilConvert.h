@@ -96,7 +96,7 @@ namespace convert {
 	template<class U> inline void to(const std::string& s, point4d<U>& res) {
 		std::stringstream ss(util::removeChar(s, 'f'));
 		ss >> res.x >> res.y >> res.z >> res.w;
-	}
+	} 
 
 }  // namespace Convert
 
@@ -107,12 +107,22 @@ namespace util {
 	////////////////////////
 	template<class T> inline T convertTo(const std::string& s) {
 		T res;
-		convert::to<T>(s, res);
+		convert::to(s, res);
 		return res;
 	}
 
 	template<class T> inline void convertTo(const std::string& s, T& res) {
 		convert::to<T>(s, res);
+	}
+
+	template<class U> inline void convertTo(const std::string& s, point2d<U>& res) {
+		convert::to(s, res);
+	}
+	template<class U> inline void convertTo(const std::string& s, point3d<U>& res) {
+		convert::to(s, res);
+	}
+	template<class U> inline void convertTo(const std::string& s, point4d<U>& res) {
+		convert::to(s, res);
 	}
 }  // namespace util
 
