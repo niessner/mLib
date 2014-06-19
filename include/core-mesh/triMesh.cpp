@@ -21,21 +21,25 @@ namespace ml {
 		for (unsigned int i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
 			if (meshData.m_FaceIndicesVertices[i].size() == 3) {
 				//we need to split vertices if the same vertex has different texcoords and/or normals
-				if (m_bHasNormals || m_bHasTexCoords || m_bHasColors) {
+				bool bFaceHasNormals	= m_bHasNormals && meshData.getFaceIndicesNormals()[i].size() > 0;
+				bool bFaceHasTexCoords	= m_bHasTexCoords && meshData.getFaceIndicesTexCoords()[i].size() > 0;
+				bool bFaceHasColors		= m_bHasColors && meshData.getFaceIndicesColors()[i].size() > 0;
+
+				if (bFaceHasNormals || bFaceHasTexCoords || bFaceHasColors) {
 					vec3ui coords = vec3ui(0,0,0);
 					for (unsigned int j = 0; j < 3; j++) {
 						bool vertexSplit = false;
-						if (m_bHasNormals) { //split if normal is different than the one found before
+						if (bFaceHasNormals) { //split if normal is different than the one found before
 							const point3d<FloatType>& n = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal != point3d<FloatType>::origin && 
 								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal != n)	vertexSplit = true;
 						}
-						if (m_bHasTexCoords) { //split if texcoord is different than the one found before
+						if (bFaceHasTexCoords) { //split if texcoord is different than the one found before
 							const point2d<FloatType>& t = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
 							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord != point2d<FloatType>::origin && 
 								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord != t) vertexSplit = true;
 						}
-						if (m_bHasColors) { //split if texcoord is different than the one found before
+						if (bFaceHasColors) { //split if texcoord is different than the one found before
 							const point4d<FloatType>& c = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != point4d<FloatType>::origin && 
 								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != c) vertexSplit = true;
@@ -44,15 +48,15 @@ namespace ml {
 						if (vertexSplit) {
 							MLIB_WARNING("vertex split untested");
 							Vertex<FloatType> v = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
-							if (m_bHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
-							if (m_bHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
-							if (m_bHasColors)		v.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
+							if (bFaceHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (bFaceHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
+							if (bFaceHasColors)		v.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							m_Vertices.push_back(v);
 							coords[j] = (unsigned int)m_Vertices.size() - 1;
 						} else {
-							if (m_bHasNormals)		m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
-							if (m_bHasTexCoords)	m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
-							if (m_bHasColors)		m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
+							if (bFaceHasNormals)		m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (bFaceHasTexCoords)	m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
+							if (bFaceHasColors)		m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							coords[j] = meshData.getFaceIndicesVertices()[i][j];
 						}
 					}
