@@ -293,6 +293,11 @@ public:
 		maxX = maxY = maxZ = 1;
 	}
 
+    mat4f cubeToWorldTransform()
+    {
+        return mat4f::translation(getCenter()) * mat4f::scale(maxB - minB);
+    }
+
 protected:
 	union {
 		struct {

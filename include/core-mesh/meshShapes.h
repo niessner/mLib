@@ -22,7 +22,7 @@ inline TriMeshf line(const vec3f& p0, const vec3f& p1, const vec4f& color = vec4
 
 TriMeshf wireframeBox(float dim = 1, const vec4f& color = vec4f(1, 0, 0, 1));
 
-TriMeshf wireframeBox(const mat4f& unitCube2world, const vec4f& color = vec4f(1, 0, 0, 1));
+TriMeshf wireframeBox(const mat4f& unitCubeToWorld, const vec4f& color = vec4f(1, 0, 0, 1));
 
 TriMeshf sphere(const float radius, const ml::vec3f& pos, const size_t stacks = 10, const size_t slices = 10, const ml::vec4f& color = ml::vec4f(1,1,1,1));
 
