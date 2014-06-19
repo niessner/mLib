@@ -76,9 +76,7 @@ public:
                 MLIB_WARNING("parameter not found: " + name);
 				return false; 
 			} else {
-				//util::convertTo<T>(s->second, value);
-				//value = convert::to<T>(value);
-				//StringUtil::convertStringTo(s->second, value);
+				util::convertTo(s->second, value);
 				return true;
 			}
 		} else {
