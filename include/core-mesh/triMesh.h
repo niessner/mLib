@@ -284,6 +284,13 @@ public:
 	void scale(const point3d<FloatType>& v) {
 		for (Vertex<FloatType>& mv : m_Vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
 	}
+
+	//! overwrites/sets the mesh color
+	void setColor(const point4d<FloatType>& c) {
+		for (auto& v : m_Vertices) {
+			v.color = c;
+		}
+	}
 		
 	//! Computes the bounding box of the mesh (not cached!)
 	BoundingBox3d<FloatType> getBoundingBox() const {

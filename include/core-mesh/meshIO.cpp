@@ -221,217 +221,261 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 
 	unsigned int type = 0;
 
+	bool bHasFaceNormalIndices = false;
+	bool bHasFaceTexCoordIndices = false;
+
+	typename MeshData<FloatType>::MaterialIndex activeMaterial;
+	bool bActiveMaterial = false;
 
 	while ( fscanf( fp, "%s", buf) != EOF ) {
-
-		switch (buf[0]) {
-		case '#':
-			//comment line, eat the remainder
-			skipLine( buf, OBJ_LINE_BUF_SIZE, fp);
-			break;
-		case 'v':
-			switch (buf[1]) {
-
-			case '\0':
-				//vertex, 3 or 4 components
-				val[3] = 1.0f;  //default w coordinate
-				match = fscanf( fp, "%f %f %f %f %f %f", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5]);	//meshlab stores colors right after vertex pos (3 xyz, 3 rgb)
-				mesh.m_Vertices.push_back(point3d<FloatType>(val[0], val[1], val[2]));
-
-				if (match == 6) {  //we found color data
-					mesh.m_Colors.push_back(point4d<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
-				}
-				assert( match == 3 || match == 4 || match == 6);
-				break;
-
-			case 'n':
-				//normal, 3 components
-				match = fscanf( fp, "%f %f %f", &val[0], &val[1], &val[2]);
-				mesh.m_Normals.push_back(point3d<FloatType>(val[0], val[1], val[2]));
-
-				assert( match == 3);
-				break;
-
-			case 't':
-				//texcoord, 2 or 3 components
-				val[2] = 0.0f;  //default r coordinate
-				match = fscanf( fp, "%f %f %f %f", &val[0], &val[1], &val[2], &val[3]);
-				mesh.m_TextureCoords.push_back(point2d<FloatType>(val[0], val[1]));
-
-				assert( match > 1 && match < 4);
-				assert( match == 2);
-				break;
-			}
-			break;
-
-		case 'f':
-			//face
+		if (strncmp(buf, "mtllib", strlen("mtllib")) == 0) {
+			if (mesh.m_MaterialFile.size()) throw MLIB_EXCEPTION("only a single mtllib definition allowed");
 			fscanf( fp, "%s", buf);
-			{
-				unsigned int n = 2;
-
-				//determine the type, and read the initial vertex, all entries in a face must have the same format
-				if ( sscanf( buf, "%d//%d", &idx[0][0], &idx[0][1]) == 2) {
-					type = 4;
-					//This face has vertex and normal indices
-
-					//remap them to the right spot
-					idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-					idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_Normals.size() - idx[0][1]);
-
-					//grab the second vertex to prime
-					fscanf( fp, "%d//%d", &idx[1][0], &idx[1][1]);
-
-					//remap them to the right spot
-					idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-					idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_Normals.size() - idx[1][1]);
-
-					//create the fan
-					while ( fscanf( fp, "%d//%d", &idx[n][0], &idx[n][1]) == 2) {
-						//remap them to the right spot
-						idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-						idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_Normals.size() - idx[n][1]);
-						n++;
-					}
-				}
-				else if ( sscanf( buf, "%d/%d/%d", &idx[0][0], &idx[0][1], &idx[0][2]) == 3) {
-					type = 3;
-					//This face has vertex, texture coordinate, and normal indices
-
-					//remap them to the right spot
-					idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-					idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
-					idx[0][2] = (idx[0][2] > 0) ? (idx[0][2] - 1) : ((int)mesh.m_Normals.size() - idx[0][2]);
-
-					//grab the second vertex to prime
-					fscanf( fp, "%d/%d/%d", &idx[1][0], &idx[1][1], &idx[1][2]);
-
-					//remap them to the right spot
-					idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-					idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
-					idx[1][2] = (idx[1][2] > 0) ? (idx[1][2] - 1) : ((int)mesh.m_Normals.size() - idx[1][2]);
-
-					//create the fan
-					while ( fscanf( fp, "%d/%d/%d", &idx[n][0], &idx[n][1], &idx[n][2]) == 3) {
-						//remap them to the right spot
-						idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-						idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
-						idx[n][2] = (idx[n][2] > 0) ? (idx[n][2] - 1) : ((int)mesh.m_Normals.size() - idx[n][2]);
-						n++;
-					}
-				}
-				else if ( sscanf( buf, "%d/%d/", &idx[0][0], &idx[0][1]) == 2) {
-					type = 2;
-					//This face has vertex and texture coordinate indices
-
-					//remap them to the right spot
-					idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-					idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
-
-					//grab the second vertex to prime
-					fscanf( fp, "%d/%d/", &idx[1][0], &idx[1][1]);
-
-					//remap them to the right spot
-					idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-					idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
-
-					//create the fan
-					while ( fscanf( fp, "%d/%d/", &idx[n][0], &idx[n][1]) == 2) {
-						//remap them to the right spot
-						idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-						idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
-						n++;
-					}
-				}
-				else if ( sscanf( buf, "%d/%d", &idx[0][0], &idx[0][1]) == 2) {
-					type = 2;
-					//This face has vertex and texture coordinate indices
-
-					//remap them to the right spot
-					idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-					idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
-
-					//grab the second vertex to prime
-					fscanf( fp, "%d/%d", &idx[1][0], &idx[1][1]);
-
-					//remap them to the right spot
-					idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-					idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
-
-					//create the fan
-					while ( fscanf( fp, "%d/%d", &idx[n][0], &idx[n][1]) == 2) {
-						//remap them to the right spot
-						idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-						idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
-						n++;
-					}
-				}
-				else if ( sscanf( buf, "%d", &idx[0][0]) == 1) {
-					type = 1;
-					//This face has only vertex indices
-
-					//remap them to the right spot
-					idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-
-					//grab the second vertex to prime
-					fscanf( fp, "%d", &idx[1][0]);
-
-					//remap them to the right spot
-					idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-
-					//create the fan
-					while ( fscanf( fp, "%d", &idx[n][0]) == 1) {
-						//remap them to the right spot
-						idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-						n++;
-					}
-				}
-				else {
-					throw MLIB_EXCEPTION(filename + ": broken obj (face line invalid)");
-					//skipLine( buf, OBJ_LINE_BUF_SIZE, fp);
-				}
-
-				if (n < 3)	throw MLIB_EXCEPTION(filename + ": broken obj (face with less than 3 indices)");
-
-				//create face
-				std::vector<unsigned int> currFaceIndicesVertices;
-				std::vector<unsigned int> currFaceIndicesNormals;
-				std::vector<unsigned int> currFaceIndicesTextureCoords;
-
-				for (unsigned int i = 0; i < n; i++) {	
-					currFaceIndicesVertices.push_back(idx[i][0]);
-					if (type == 2) {	//has vertex and tex coords
-						currFaceIndicesTextureCoords.push_back(idx[i][1]);
-					} else if (type == 3) {
-						currFaceIndicesTextureCoords.push_back(idx[i][1]);
-						currFaceIndicesNormals.push_back(idx[i][2]);
-					}
-					//vertex[i] = vertices[idx[i][0]];
-					//	if (type == 2) {	//has vertex and tex coords
-					//		vertex[i]->texCoord = float2(_texCoords[idx[i][1]*3+0], _texCoords[idx[i][1]*3+1]);
-					//	} else if (type == 3) { // has vertex, normals and tex coords
-					//		vertex[i]->texCoord = float2(_texCoords[idx[i][2]*3+0], _texCoords[idx[i][2]*3+1]);
-					//	}
-				}
-
-				if (currFaceIndicesVertices.size())			mesh.m_FaceIndicesVertices.push_back(currFaceIndicesVertices);
-				if (currFaceIndicesNormals.size())			mesh.m_FaceIndicesNormals.push_back(currFaceIndicesNormals);
-				if (currFaceIndicesTextureCoords.size())	mesh.m_FaceIndicesTextureCoords.push_back(currFaceIndicesTextureCoords);
+			mesh.m_MaterialFile = std::string(buf);
+		} else if (strncmp(buf, "usemtl", strlen("usemtl")) == 0) {
+			unsigned int faceIndex = mesh.m_FaceIndicesVertices.size();
+			if (bActiveMaterial) {
+				activeMaterial.end = faceIndex;
+				mesh.m_MaterialIndices.push_back(activeMaterial);
 			}
 
-			break;
+			fscanf( fp, "%s", buf);
+			activeMaterial.materialName = std::string(buf);
+			activeMaterial.start = faceIndex;
+			bActiveMaterial = true;
+		} else {
+			switch (buf[0]) {
+			case '#':
+				//comment line, eat the remainder
+				skipLine( buf, OBJ_LINE_BUF_SIZE, fp);
+				break;
+			case 'v':
+				switch (buf[1]) {
 
-		case 's':
-		case 'g':
-		case 'u':
-			//all presently ignored
-		default:
-			skipLine( buf, OBJ_LINE_BUF_SIZE, fp);
+				case '\0':
+					//vertex, 3 or 4 components
+					val[3] = 1.0f;  //default w coordinate
+					match = fscanf( fp, "%f %f %f %f %f %f", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5]);	//meshlab stores colors right after vertex pos (3 xyz, 3 rgb)
+					mesh.m_Vertices.push_back(point3d<FloatType>(val[0], val[1], val[2]));
 
-		};
+					if (match == 6) {  //we found color data
+						mesh.m_Colors.push_back(point4d<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
+					}
+					assert( match == 3 || match == 4 || match == 6);
+					break;
+
+				case 'n':
+					//normal, 3 components
+					match = fscanf( fp, "%f %f %f", &val[0], &val[1], &val[2]);
+					mesh.m_Normals.push_back(point3d<FloatType>(val[0], val[1], val[2]));
+
+					assert( match == 3);
+					break;
+
+				case 't':
+					//texcoord, 2 or 3 components
+					val[2] = 0.0f;  //default r coordinate
+					match = fscanf( fp, "%f %f %f %f", &val[0], &val[1], &val[2], &val[3]);
+					mesh.m_TextureCoords.push_back(point2d<FloatType>(val[0], val[1]));
+
+					assert( match > 1 && match < 4);
+					assert( match == 2);
+					break;
+				}
+				break;
+
+			case 'f':
+				//face
+				fscanf( fp, "%s", buf);
+				{
+					unsigned int n = 2;
+
+					//determine the type, and read the initial vertex, all entries in a face must have the same format
+					if ( sscanf( buf, "%d//%d", &idx[0][0], &idx[0][1]) == 2) {
+						type = 4;
+						//This face has vertex and normal indices
+
+						//remap them to the right spot
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
+						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_Normals.size() - idx[0][1]);
+
+						//grab the second vertex to prime
+						fscanf( fp, "%d//%d", &idx[1][0], &idx[1][1]);
+
+						//remap them to the right spot
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
+						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_Normals.size() - idx[1][1]);
+
+						//create the fan
+						while ( fscanf( fp, "%d//%d", &idx[n][0], &idx[n][1]) == 2) {
+							//remap them to the right spot
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
+							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_Normals.size() - idx[n][1]);
+							n++;
+						}
+					}
+					else if ( sscanf( buf, "%d/%d/%d", &idx[0][0], &idx[0][1], &idx[0][2]) == 3) {
+						type = 3;
+						//This face has vertex, texture coordinate, and normal indices
+
+						//remap them to the right spot
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
+						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
+						idx[0][2] = (idx[0][2] > 0) ? (idx[0][2] - 1) : ((int)mesh.m_Normals.size() - idx[0][2]);
+
+						//grab the second vertex to prime
+						fscanf( fp, "%d/%d/%d", &idx[1][0], &idx[1][1], &idx[1][2]);
+
+						//remap them to the right spot
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
+						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
+						idx[1][2] = (idx[1][2] > 0) ? (idx[1][2] - 1) : ((int)mesh.m_Normals.size() - idx[1][2]);
+
+						//create the fan
+						while ( fscanf( fp, "%d/%d/%d", &idx[n][0], &idx[n][1], &idx[n][2]) == 3) {
+							//remap them to the right spot
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
+							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
+							idx[n][2] = (idx[n][2] > 0) ? (idx[n][2] - 1) : ((int)mesh.m_Normals.size() - idx[n][2]);
+							n++;
+						}
+					}
+					else if ( sscanf( buf, "%d/%d/", &idx[0][0], &idx[0][1]) == 2) {
+						type = 2;
+						//This face has vertex and texture coordinate indices
+
+						//remap them to the right spot
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
+						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
+
+						//grab the second vertex to prime
+						fscanf( fp, "%d/%d/", &idx[1][0], &idx[1][1]);
+
+						//remap them to the right spot
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
+						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
+
+						//create the fan
+						while ( fscanf( fp, "%d/%d/", &idx[n][0], &idx[n][1]) == 2) {
+							//remap them to the right spot
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
+							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
+							n++;
+						}
+					}
+					else if ( sscanf( buf, "%d/%d", &idx[0][0], &idx[0][1]) == 2) {
+						type = 2;
+						//This face has vertex and texture coordinate indices
+
+						//remap them to the right spot
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
+						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
+
+						//grab the second vertex to prime
+						fscanf( fp, "%d/%d", &idx[1][0], &idx[1][1]);
+
+						//remap them to the right spot
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
+						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
+
+						//create the fan
+						while ( fscanf( fp, "%d/%d", &idx[n][0], &idx[n][1]) == 2) {
+							//remap them to the right spot
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
+							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
+							n++;
+						}
+					}
+					else if ( sscanf( buf, "%d", &idx[0][0]) == 1) {
+						type = 1;
+						//This face has only vertex indices
+
+						//remap them to the right spot
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
+
+						//grab the second vertex to prime
+						fscanf( fp, "%d", &idx[1][0]);
+
+						//remap them to the right spot
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
+
+						//create the fan
+						while ( fscanf( fp, "%d", &idx[n][0]) == 1) {
+							//remap them to the right spot
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
+							n++;
+						}
+					}
+					else {
+						throw MLIB_EXCEPTION(filename + ": broken obj (face line invalid)");
+						//skipLine( buf, OBJ_LINE_BUF_SIZE, fp);
+					}
+
+					if (n < 3)	throw MLIB_EXCEPTION(filename + ": broken obj (face with less than 3 indices)");
+
+					//create face
+					std::vector<unsigned int> currFaceIndicesVertices;
+					std::vector<unsigned int> currFaceIndicesNormals;
+					std::vector<unsigned int> currFaceIndicesTextureCoords;
+
+					for (unsigned int i = 0; i < n; i++) {	
+						currFaceIndicesVertices.push_back(idx[i][0]);
+						if (type == 2) {		//has vertex, tex coords
+							currFaceIndicesTextureCoords.push_back(idx[i][1]);
+						} else if (type == 3) { //has vertex, tex coords, normals
+							currFaceIndicesTextureCoords.push_back(idx[i][1]);
+							currFaceIndicesNormals.push_back(idx[i][2]);
+						} else if (type == 4) { //has vertex, normals
+							currFaceIndicesNormals.push_back(idx[i][1]);
+						}
+					}
+				
+
+					if (currFaceIndicesVertices.size())			mesh.m_FaceIndicesVertices.push_back(currFaceIndicesVertices);
+
+					if (currFaceIndicesNormals.size()) {
+						mesh.m_FaceIndicesNormals.push_back(currFaceIndicesNormals);
+											bHasFaceNormalIndices = true;
+					} else {
+						//insert empty face
+						typename MeshData<FloatType>::Indices::Face fFaceIndicesNormals(NULL, 0);
+						mesh.m_FaceIndicesNormals.push_back(fFaceIndicesNormals);
+					}
+					if (currFaceIndicesTextureCoords.size()) {
+						mesh.m_FaceIndicesTextureCoords.push_back(currFaceIndicesTextureCoords);
+						bHasFaceTexCoordIndices = true;
+					} else {
+						//insert empty face
+						typename MeshData<FloatType>::Indices::Face fFaceIndicesTextureCoords(NULL, 0);
+						mesh.m_FaceIndicesTextureCoords.push_back(fFaceIndicesTextureCoords);
+					}
+				}
+
+				break;
+
+			case 's':
+			case 'g':
+			case 'u':
+				//all presently ignored
+			default:
+				skipLine( buf, OBJ_LINE_BUF_SIZE, fp);
+
+			};
+		}
 	}
 
 	fclose(fp);
+
+	if (!bHasFaceTexCoordIndices)	mesh.m_FaceIndicesTextureCoords.clear();
+	if (!bHasFaceNormalIndices)		mesh.m_FaceIndicesNormals.clear();
+
+
+	if (bActiveMaterial) {
+		unsigned int faceIndex = mesh.m_FaceIndicesVertices.size();
+		activeMaterial.end = faceIndex;
+		mesh.m_MaterialIndices.push_back(activeMaterial);
+	}
+
 }
 
 

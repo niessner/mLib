@@ -80,10 +80,15 @@ private:
 #define OBJ_LINE_BUF_SIZE 256
 	static void skipLine(char * buf, int size, FILE * fp)
 	{
-		do {
-			buf[size-1] = '$';
-			fgets(buf, size, fp);
-		} while (buf[size-1] != '$');
+		//some weird files don't have newlines, which confused fgets
+		while (1) {
+			int c = fgetc(fp);
+			if (c == EOF || c == '\n' || c == '\r') break;
+		}
+		//do {
+		//	buf[size-1] = '$';
+		//	fgets(buf, size, fp);
+		//} while (buf[size-1] != '$');
 	}
 };
 

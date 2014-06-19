@@ -149,9 +149,12 @@ void AppTest::init(ml::ApplicationData &app)
 	//for (size_t i = 0; i < meshData.m_Colors.size(); i++) {
 	//	meshData.m_Colors[i] = ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f);
 	//}
-	ml::MeshIOf::saveToFile("outtest.ply", meshData);
-	//ml::MeshIOf::writeToFile("outtest.off", meshData);
-	//ml::MeshIOf::writeToFile("outtest.obj", meshData);
+	//ml::MeshIOf::saveToFile("outtest.ply", meshData);
+	//ml::MeshIOf::saveToFile("outtest.off", meshData);
+	//ml::MeshIOf::saveToFile("outtest.obj", meshData);
+
+	//meshData.clear();
+	//MeshIOf::loadFromFile("outtest.obj", meshData);
 
 	//meshData.mergeCloseVertices(0.3f, false);
 	//meshData.mergeCloseVertices(pow(0.3f,3), true);
@@ -167,7 +170,15 @@ void AppTest::init(ml::ApplicationData &app)
 	meshData.merge(bbData);
 	assert(meshData.isConsistent());
 
+	meshData.clear();
+	MeshIOf::loadFromFile("out.obj", meshData);
+	//meshData.m_TextureCoords.clear();
+	//meshData.m_Normals.clear();
+	//meshData.m_FaceIndicesTextureCoords.clear();
+	//meshData.m_FaceIndicesNormals.clear();
+
 	ml::TriMeshf triMesh(meshData);
+	triMesh.setColor(vec4f(0.0f, 1.0f, 0.0f, 1.0f));
 	//auto p = meshData.getBoundingBox().getBottomPlane();
 
 

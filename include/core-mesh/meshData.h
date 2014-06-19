@@ -180,12 +180,17 @@ public:
 			addFace(&indices[0], (unsigned int)indices.size());
 		}
 		void addFace(const unsigned int* indices, unsigned int count) {
-			unsigned int* ptrBefore = m_Indices.size() > 0 ? &m_Indices[0] : NULL;
-			m_Indices.resize(m_Indices.size() + count);
-			unsigned int* ptr = &m_Indices[m_Indices.size() - count];
-			memcpy(ptr, indices, count*sizeof(unsigned int));
-			m_Faces.push_back(Face(ptr, count));
-			if (ptrBefore != &m_Indices[0])	recomputeFacePtr();
+			if (count > 0) {
+				unsigned int* ptrBefore = m_Indices.size() > 0 ? &m_Indices[0] : NULL;
+				m_Indices.resize(m_Indices.size() + count);
+				unsigned int* ptr = &m_Indices[m_Indices.size() - count];
+				memcpy(ptr, indices, count*sizeof(unsigned int));
+				m_Faces.push_back(Face(ptr, count));
+				if (ptrBefore != &m_Indices[0])	recomputeFacePtr();
+			} else {
+				//allow to insert empty faces
+				m_Faces.push_back(Face(NULL, 0));
+			}
 		}
 
 		unsigned int getFaceValence(size_t i) const {
@@ -280,17 +285,7 @@ public:
 			return const_iterator(this, size());
 		}
 
-		//void insert(const const_iterator& position, const const_iterator& first, const const_iterator& last) {
 
-			//m_Indices.insert(
-			//	m_Indices.begin()+position.getCurr(), 
-			//	first.getIndices()->m_Indices.begin()+first.getCurr(), 
-			//	last.getIndices()->m_Indices.begin()+last.getCurr());
-
-			//m_Faces.insert(
-			//	m_Faces.begin()+position.getCurr(), 
-			//	first.getIndices()->m_Faces.begin()+first.getCurr(), 
-			//	last.getIndices()->m_Faces.begin()+last.getCurr());
 		void append(const Indices& other) {
 			m_Indices.insert(m_Indices.end(), other.m_Indices.begin(), other.m_Indices.end());
 			m_Faces.insert(m_Faces.end(), other.m_Faces.begin(), other.m_Faces.end());
@@ -313,8 +308,11 @@ public:
 		{
 			size_t offset = 0;
 			for (size_t i = 0; i < m_Faces.size(); i++) {
-				m_Faces[i].setPtr(&m_Indices[offset]);
-				offset += m_Faces[i].size();
+				if (m_Faces[i].size()) {
+					//ignore empty faces
+					m_Faces[i].setPtr(&m_Indices[offset]);
+					offset += m_Faces[i].size();
+				}
 			}
 		}
 
@@ -335,6 +333,8 @@ public:
 		m_FaceIndicesNormals = std::move(d.m_FaceIndicesNormals);
 		m_FaceIndicesTextureCoords = std::move(d.m_FaceIndicesTextureCoords);
 		m_FaceIndicesColors = std::move(d.m_FaceIndicesColors);
+		m_MaterialFile = std::move(d.m_MaterialFile);
+		m_MaterialIndices = std::move(d.m_MaterialIndices);
 	}
 	void operator=(MeshData&& d) {
 		m_Vertices = std::move(d.m_Vertices);
@@ -345,6 +345,8 @@ public:
 		m_FaceIndicesNormals = std::move(d.m_FaceIndicesNormals);
 		m_FaceIndicesTextureCoords = std::move(d.m_FaceIndicesTextureCoords);
 		m_FaceIndicesColors = std::move(d.m_FaceIndicesColors);
+		m_MaterialFile = std::move(d.m_MaterialFile);
+		m_MaterialIndices = std::move(d.m_MaterialIndices);
 	}
 	void clear() {
 		m_Vertices.clear();
@@ -354,6 +356,8 @@ public:
 		m_FaceIndicesNormals.clear();
 		m_FaceIndicesTextureCoords.clear();
 		m_FaceIndicesColors.clear();
+		m_MaterialFile.clear();
+		m_MaterialIndices.clear();
 	}
 
 	bool isConsistent(bool detailedCheck = false) const {
@@ -476,6 +480,16 @@ public:
 	Indices	m_FaceIndicesNormals;		//indices in normal array (if size==0, indicesVertices is used)
 	Indices	m_FaceIndicesTextureCoords;	//indices in texture array (if size==0, indicesVertices is used)
 	Indices	m_FaceIndicesColors;		//indices in color array (if size==0, indicesVertices is used)
+
+	std::string		m_MaterialFile;	// in case of objs, refers to the filename
+	struct MaterialIndex {
+		MaterialIndex() {}
+		MaterialIndex(unsigned int s, unsigned int e, const std::string& name) : start(s), end(e), materialName(s) {}
+		unsigned int start;
+		unsigned int end;	//end index NOT included (similar to iterators)
+		std::string materialName;
+	};
+	std::vector<MaterialIndex>	m_MaterialIndices;	//active material for indices; from - to (in case of objcs)
 
 	//! Debug print with all details
 	void print() const {
