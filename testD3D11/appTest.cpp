@@ -172,6 +172,8 @@ void AppTest::init(ml::ApplicationData &app)
 
 	meshData.clear();
 	MeshIOf::loadFromFile("out.obj", meshData);
+	std::vector<Materialf> mats;
+	Materialf::loadFromMTL("out.mtl", mats);
 
 	ml::TriMeshf triMesh(meshData);
 	//triMesh.setColor(vec4f(0.0f, 1.0f, 0.0f, 1.0f));

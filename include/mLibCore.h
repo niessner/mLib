@@ -81,12 +81,12 @@
 //
 // core-mesh headers
 //
+#include "core-mesh/material.h"
 #include "core-mesh/meshData.h"
 #include "core-mesh/plyHeader.h"
 #include "core-mesh/meshIO.h"
 #include "core-mesh/pointCloud.h"
 #include "core-mesh/pointCloudIO.h"
-#include "core-mesh/material.h"
 
 #include "core-mesh/triMesh.h"
 #include "core-mesh/triangleBVHAccelerator.h"

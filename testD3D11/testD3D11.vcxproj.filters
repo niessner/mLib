@@ -210,6 +210,9 @@
     <ClInclude Include="..\include\core-mesh\plyHeader.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-mesh\material.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />

@@ -124,6 +124,7 @@
     <ClInclude Include="..\include\core-math\point6d.h" />
     <ClInclude Include="..\include\core-math\quaternion.h" />
     <ClInclude Include="..\include\core-math\sparseMatrix.h" />
+    <ClInclude Include="..\include\core-mesh\material.h" />
     <ClInclude Include="..\include\core-mesh\meshData.h" />
     <ClInclude Include="..\include\core-mesh\meshIO.h" />
     <ClInclude Include="..\include\core-mesh\meshShapes.h" />

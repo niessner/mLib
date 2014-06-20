@@ -491,6 +491,14 @@ public:
 	};
 	std::vector<MaterialIndex>	m_MaterialIndices;	//active material for indices; from - to (in case of objcs)
 
+
+	static void splitByMaterial(const MeshData& meshData, std::vector<std::pair<MeshData, Material<FloatType>>>& res) {
+		res.clear();
+		std::vector<Material<FloatType>> mats;
+		Material<FloatType>::loadFromMTL(meshData.m_MaterialFile, mats);
+		//TODO MATTHIAS
+	}
+	
 	//! Debug print with all details
 	void print() const {
 		std::cout << "Vertices:\n";
