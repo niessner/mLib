@@ -1,3 +1,5 @@
+#ifndef KEYCODES_H_
+#define KEYCODES_H_
 
 #define KEY_ESCAPE            0x1B
 
@@ -91,3 +93,5 @@
 #define KEY_F10               121
 #define KEY_F11               122
 #define KEY_F12               123
+
+#endif  // KEYCODES_H_
