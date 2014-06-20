@@ -47,6 +47,12 @@ public:
 		BaseImageHelper::convertBaseImagePixel<T,U>(m_InvalidValue, otherInvalidValue);
 	}
 
+	//! clears the image; and release all memory
+	void clear() {
+		SAFE_DELETE_ARRAY(m_Data);
+		m_Width = m_Height = 0;
+	}
+
 	//! adl swap
 	friend void swap(BaseImage& a, BaseImage& b) {
 		std::swap(a.m_Data, b.m_Data);
@@ -308,7 +314,7 @@ public:
 	}
 
 	//! sets all pixels to value
-	void clearImage(const T &value) {
+	void setToValue(const T &value) {
 		for (unsigned int i = 0; i < m_Height * m_Width; i++) {
 			m_Data[i] = value;
 		}
