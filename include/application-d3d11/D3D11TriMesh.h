@@ -18,36 +18,37 @@ public:
 	};
 	D3D11TriMesh()
 	{
-		m_layout = NULL;
+        m_device = NULL;
 		m_vertexBuffer = NULL;
 		m_indexBuffer = NULL;
 	}
 	template<class T>
 	D3D11TriMesh(GraphicsDevice &g, const MeshData<T>& meshData) {
-		m_layout = NULL;
 		m_vertexBuffer = NULL;
 		m_indexBuffer = NULL;
 		load(g, meshData);
 	}
 	template<class T>
 	D3D11TriMesh(GraphicsDevice &g, const TriMesh<T>& triMesh) {
-		m_layout = NULL;
 		m_vertexBuffer = NULL;
 		m_indexBuffer = NULL;
 		load(g, triMesh);
 	}
 	~D3D11TriMesh()
 	{
-		SAFE_RELEASE(m_layout);
 		SAFE_RELEASE(m_vertexBuffer);
 		SAFE_RELEASE(m_indexBuffer);
 	}
 
-	//void load(GraphicsDevice &g, const TriMeshOld& mesh);
-	//void load(GraphicsDevice &g, TriMeshOld&& mesh);
+    void load(GraphicsDevice &g, const D3D11TriMesh& triMesh) {
+        m_Vertices = triMesh.m_Vertices;
+        m_Indices = triMesh.m_Indices;
+        reset(g);
+    }
 
 	template<class T>
 	void load(GraphicsDevice &g, const TriMesh<T>& triMesh) {
+        m_device = &g.castD3D11();
 		m_Vertices.resize(triMesh.getVertices().size());
 		for (size_t i = 0; i < triMesh.getVertices().size(); i++) {
 			m_Vertices[i].position = vec3f(triMesh.getVertices()[i].position);
@@ -67,6 +68,7 @@ public:
 
 	template<class T>
 	void load(GraphicsDevice &g, const MeshData<T>& meshData) {
+        m_device = &g.castD3D11();
 		m_Vertices.resize(meshData.m_Vertices.size());
 
 		for (unsigned int i = 0; i < m_Vertices.size(); i++) {
@@ -93,7 +95,6 @@ public:
 
 	//! updates the first attribute which is typically color
 	void updateAttributeA(GraphicsDevice &g, const std::vector<vec4f> &vertexColors);
-
 
 	static const UINT layoutElementCount = 4;
 	static const D3D11_INPUT_ELEMENT_DESC layout[layoutElementCount];
@@ -140,15 +141,44 @@ public:
 		getMeshData(meshData);
 		return meshData;
 	}
+
+    D3D11TriMesh(const D3D11TriMesh &t)
+    {
+        m_vertexBuffer = NULL;
+        m_indexBuffer = NULL;
+        load(*t.m_device, t);
+    }
+    D3D11TriMesh(D3D11TriMesh &&t)
+    {
+        m_device = t.m_device; t.m_device = nullptr;
+        m_vertexBuffer = t.m_vertexBuffer; t.m_vertexBuffer = nullptr;
+        m_indexBuffer = t.m_indexBuffer; t.m_indexBuffer = nullptr;
+        m_Vertices = std::move(t.m_Vertices);
+        m_Indices = std::move(t.m_Indices);
+    }
+
+    void operator = (const D3D11TriMesh& t)
+    {
+        m_vertexBuffer = NULL;
+        m_indexBuffer = NULL;
+        load(*t.m_device, t);
+    }
+
+    void operator = (D3D11TriMesh&& t)
+    {
+        m_device = t.m_device; t.m_device = nullptr;
+        m_vertexBuffer = t.m_vertexBuffer; t.m_vertexBuffer = nullptr;
+        m_indexBuffer = t.m_indexBuffer; t.m_indexBuffer = nullptr;
+        m_Vertices = std::move(t.m_Vertices);
+        m_Indices = std::move(t.m_Indices);
+    }
+
 private:
-
-    // copying for meshes is not supported
-    void operator = (const D3D11TriMesh& t);
-
-	void initVB(GraphicsDevice &g);
+    void initVB(GraphicsDevice &g);
 	void initIB(GraphicsDevice &g);
 
-	ID3D11InputLayout *m_layout;
+    D3D11GraphicsDevice *m_device;
+
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;
 	

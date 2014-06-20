@@ -15,14 +15,13 @@ TriMeshf cylinder(const vec3f &p0, const vec3f &p1, float radius, UINT stacks, U
 
 TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT stacks, UINT slices, const std::function<vec4f(unsigned int)> &stackIndexToColor);
 
-inline TriMeshf line(const vec3f& p0, const vec3f& p1, const vec4f& color = vec4f(1, 0, 0, 1), const float thickness = 0.01f) {
-  return cylinder(p0, p1, thickness, 2, 10, color);
-    //return cylinder(p0, p1, thickness, 20, 20, color);
+inline TriMeshf line(const vec3f& p0, const vec3f& p1, const vec4f& color, const float thickness) {
+  return cylinder(p0, p1, thickness, 2, 9, color);
 }
 
-TriMeshf wireframeBox(float dim = 1, const vec4f& color = vec4f(1, 0, 0, 1));
+TriMeshf wireframeBox(float dimension, const vec4f& color, float thickness);
 
-TriMeshf wireframeBox(const mat4f& unitCubeToWorld, const vec4f& color = vec4f(1, 0, 0, 1));
+TriMeshf wireframeBox(const mat4f& unitCubeToWorld, const vec4f& color, float thickness);
 
 TriMeshf sphere(const float radius, const ml::vec3f& pos, const size_t stacks = 10, const size_t slices = 10, const ml::vec4f& color = ml::vec4f(1,1,1,1));
 

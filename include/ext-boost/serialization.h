@@ -60,17 +60,20 @@ namespace serialization {
 
 template<class Archive, class T>
 inline void serialize(Archive& ar, ml::point2d<T>& p, const unsigned int version) {
-    ar & p.array;
+    //ar & p.array;
+    ar & p.x & p.y;
 }
 
 template<class Archive, class T>
 inline void serialize(Archive& ar, ml::point3d<T>& p, const unsigned int version) {
-	ar & p.array;
+	//ar & p.array;
+    ar & p.x & p.y & p.z;
 }
 
 template<class Archive, class T>
 inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version) {
-  ar & p.array;
+  //ar & p.array;
+    ar & p.x & p.y & p.z & p.w;
 }
 
 template<class Archive, class T>

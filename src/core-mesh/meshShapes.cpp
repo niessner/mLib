@@ -131,23 +131,23 @@ TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT s
     return TriMeshf(vertices, indices);
 }
 
-TriMeshf wireframeBox(float dim, const vec4f& color) {
+TriMeshf wireframeBox(float dim, const vec4f& color, float thickness) {
     std::vector<ml::TriMeshf> meshes;
     ml::vec3f v[8];  std::memmove(v, cubeVData, sizeof(v[0]) * 8);
     for (uint i = 0; i < 12; i++) {
-        meshes.push_back(line(dim * v[cubeEData[i][0]], dim * v[cubeEData[i][1]], color));
+        meshes.push_back(line(dim * v[cubeEData[i][0]], dim * v[cubeEData[i][1]], color, thickness));
     }
     return meshutil::createUnifiedMesh(meshes);
 }
 
-TriMeshf wireframeBox(const mat4f& xf, const vec4f& color) {
+TriMeshf wireframeBox(const mat4f& xf, const vec4f& color, float thickness) {
     std::vector<ml::TriMeshf> meshes;
     ml::vec3f v[8];  std::memmove(v, cubeVData, sizeof(v[0]) * 8);
     for (uint i = 0; i < 8; i++) { v[i] = xf * v[i]; }
     for (unsigned int i = 0; i < 12; i++) {
         const ml::vec3f& p0 = v[cubeEData[i][0]];
         const ml::vec3f& p1 = v[cubeEData[i][1]];
-        meshes.push_back(line(p0, p1, color));
+        meshes.push_back(line(p0, p1, color, thickness));
     }
     return meshutil::createUnifiedMesh(meshes);
 }

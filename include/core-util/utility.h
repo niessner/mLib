@@ -333,7 +333,7 @@ namespace util
             unsigned char c0 = str[byteIndex * 2 + 0];
             unsigned char c1 = str[byteIndex * 2 + 1];
 
-            data[byteIndex] = digitToValue(c0) + (digitToValue(c1) >> 4);
+            data[byteIndex] = digitToValue(c0) + (digitToValue(c1) << 4);
         }
     }
 

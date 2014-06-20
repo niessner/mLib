@@ -293,9 +293,9 @@ public:
 		maxX = maxY = maxZ = 1;
 	}
 
-    mat4f cubeToWorldTransform()
+    mat4f cubeToWorldTransform() const
     {
-        return mat4f::translation(getCenter()) * mat4f::scale(maxB - minB);
+        return mat4f::translation(getCenter()) * mat4f::scale((maxB - minB) * 0.5f);
     }
 
 protected:
