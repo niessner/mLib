@@ -91,6 +91,11 @@ inline void serialize(Archive& ar, ml::TriMesh<T>& m, const unsigned int version
     ar & m.getVertices() & m.getIndices();
 }
 
+template<class Archive, class T>
+inline void serialize(Archive& ar, ml::Material<T>& m, const unsigned int version) {
+    ar & m.m_name & m.m_ambient & m.m_diffuse & m.m_specular & m.m_shiny & m.m_TextureFilename_Ka & m.m_TextureFilename_Kd & m.m_TextureFilename_Ks;
+}
+
 }  // namespace serialization
 }  // namespace boost
 
