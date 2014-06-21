@@ -161,6 +161,7 @@ public:
 		return *this;
 	}
 
+
 	//! Assignment operator r-value
 	BaseImage& operator=(BaseImage&& other) {
 		swap(*this, other);

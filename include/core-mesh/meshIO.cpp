@@ -231,7 +231,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 		if (strncmp(buf, "mtllib", strlen("mtllib")) == 0) {
 			if (mesh.m_MaterialFile.size()) throw MLIB_EXCEPTION("only a single mtllib definition allowed");
 			fscanf( fp, "%s", buf);
-			mesh.m_MaterialFile = std::string(buf);
+			mesh.m_MaterialFile = util::directoryFromPath(filename) + "//" + std::string(buf);			
 		} else if (strncmp(buf, "usemtl", strlen("usemtl")) == 0) {
 			unsigned int faceIndex = mesh.m_FaceIndicesVertices.size();
 			if (bActiveMaterial) {

@@ -536,30 +536,86 @@ public:
 			MeshData& meshData = res[i].first;
 			meshData.clear();
 
-			std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
-			unsigned int cnt = 0;
-			for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
-				const Indices::Face& f = m_FaceIndicesVertices[j];
-				meshData.m_FaceIndicesVertices.push_back(f);
-				Indices::Face& face = meshData.m_FaceIndicesVertices.back();
-				
-				for (auto& idx : face) {
-					if (_map.find(idx) != _map.end()) {
-						idx = _map[idx];	//set to new idx, which already exists
-					} else {
-						_map[idx] = cnt;
-						meshData.m_Vertices.push_back(m_Vertices[idx]);
-						if (hasPerVertexColors())		meshData.m_Colors.push_back(m_Colors[idx]);
-						if (hasPerVertexNormals())		meshData.m_Normals.push_back(m_Normals[idx]);
-						if (hasPerVertexTexCoords())	meshData.m_TextureCoords.push_back(m_TextureCoords[idx]);
-
-						idx = cnt;
-						cnt++;
+			//vertices
+			{
+				std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
+				unsigned int cnt = 0;
+				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+					meshData.m_FaceIndicesVertices.push_back(getFaceIndicesVertices()[j]);
+					Indices::Face& face = meshData.m_FaceIndicesVertices.back();				
+					for (auto& idx : face) {
+						if (_map.find(idx) != _map.end()) {
+							idx = _map[idx];	//set to new idx, which already exists
+						} else {
+							_map[idx] = cnt;
+							meshData.m_Vertices.push_back(m_Vertices[idx]);
+							if (hasPerVertexColors())		meshData.m_Colors.push_back(m_Colors[idx]);
+							if (hasPerVertexNormals())		meshData.m_Normals.push_back(m_Normals[idx]);
+							if (hasPerVertexTexCoords())	meshData.m_TextureCoords.push_back(m_TextureCoords[idx]);
+							//TODO HANDLE COLOR NORMAL TEX COORD
+							idx = cnt;
+							cnt++;
+						}
 					}
-				}
-				
+				}				
 			}
-			int a = 5;
+			if (hasColorIndices()) {
+				std::unordered_map<unsigned int, unsigned int> _map(m_Colors.size());
+				unsigned int cnt = 0;
+				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+					meshData.m_FaceIndicesColors.push_back(getFaceIndicesColors()[j]);
+					Indices::Face& face = meshData.m_FaceIndicesColors.back();				
+					for (auto& idx : face) {
+						if (_map.find(idx) != _map.end()) {
+							idx = _map[idx];	//set to new idx, which already exists
+						} else {
+							_map[idx] = cnt;
+							meshData.m_Colors.push_back(m_Colors[idx]);
+							idx = cnt;
+							cnt++;
+						}
+					}
+				}	
+			}
+			if (hasNormalIndices()) {
+				std::unordered_map<unsigned int, unsigned int> _map(m_Normals.size());
+				unsigned int cnt = 0;
+				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+					meshData.m_FaceIndicesNormals.push_back(getFaceIndicesNormals()[j]);
+					Indices::Face& face = meshData.m_FaceIndicesNormals.back();				
+					for (auto& idx : face) {
+						if (_map.find(idx) != _map.end()) {
+							idx = _map[idx];	//set to new idx, which already exists
+						} else {
+							_map[idx] = cnt;
+							meshData.m_Normals.push_back(m_Normals[idx]);
+							idx = cnt;
+							cnt++;
+						}
+					}
+				}	
+			}
+			if (hasTexCoordsIndices()) {
+				std::unordered_map<unsigned int, unsigned int> _map(m_TextureCoords.size());
+				unsigned int cnt = 0;
+				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+					meshData.m_FaceIndicesTextureCoords.push_back(getFaceIndicesTexCoords()[j]);
+					Indices::Face& face = meshData.m_FaceIndicesTextureCoords.back();				
+					for (auto& idx : face) {
+						if (_map.find(idx) != _map.end()) {
+							idx = _map[idx];	//set to new idx, which already exists
+						} else {
+							_map[idx] = cnt;
+							meshData.m_TextureCoords.push_back(m_TextureCoords[idx]);
+							idx = cnt;
+							cnt++;
+						}
+					}
+				}	
+			}
+
+			meshData.deleteRedundantIndices();
+
 
 		}
 	}

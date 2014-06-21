@@ -10,36 +10,30 @@ public:
 		reset();
 	}
 	Material(Material&& m) {
-		std::swap(m_name, m.m_name);
-		std::swap(m_ambient, m_ambient);
-		std::swap(m_diffuse, m.m_diffuse);
-		std::swap(m_specular, m.m_specular);
-		std::swap(m_shiny, m_shiny);
-
-		std::swap(m_TextureFilename_Ka, m.m_TextureFilename_Ka);
-		std::swap(m_TextureFilename_Kd, m.m_TextureFilename_Kd);
-		std::swap(m_TextureFilename_Ks, m.m_TextureFilename_Ks);
-		std::swap(m_Texture_Ka, m.m_Texture_Ka);
-		std::swap(m_Texture_Kd, m.m_Texture_Kd);
-		std::swap(m_Texture_Ks, m.m_Texture_Ks);
+		swap(*this, m);
 	}
 	 
 	~Material() {
 	}
 
 	void operator=(Material&& m) {
-		std::swap(m_name, m.m_name);
-		std::swap(m_ambient, m_ambient);
-		std::swap(m_diffuse, m.m_diffuse);
-		std::swap(m_specular, m.m_specular);
-		std::swap(m_shiny, m_shiny);
+		swap(*this, m);
+	}
 
-		std::swap(m_TextureFilename_Ka, m.m_TextureFilename_Ka);
-		std::swap(m_TextureFilename_Kd, m.m_TextureFilename_Kd);
-		std::swap(m_TextureFilename_Ks, m.m_TextureFilename_Ks);
-		std::swap(m_Texture_Ka, m.m_Texture_Ka);
-		std::swap(m_Texture_Kd, m.m_Texture_Kd);
-		std::swap(m_Texture_Ks, m.m_Texture_Ks);
+	//! adl swap
+	friend void swap(Material& a, Material& b) {
+		std::swap(a.m_name, b.m_name);
+		std::swap(a.m_ambient, b.m_ambient);
+		std::swap(a.m_diffuse, b.m_diffuse);
+		std::swap(a.m_specular, b.m_specular);
+		std::swap(a.m_shiny, b.m_shiny);
+
+		std::swap(a.m_TextureFilename_Ka, b.m_TextureFilename_Ka);
+		std::swap(a.m_TextureFilename_Kd, b.m_TextureFilename_Kd);
+		std::swap(a.m_TextureFilename_Ks, b.m_TextureFilename_Ks);
+		std::swap(a.m_Texture_Ka, b.m_Texture_Ka);
+		std::swap(a.m_Texture_Kd, b.m_Texture_Kd);
+		std::swap(a.m_Texture_Ks, b.m_Texture_Ks);
 	}
 
 	static void loadFromMTL(const std::string& filename, std::vector<Material>& res) {

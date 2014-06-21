@@ -187,7 +187,11 @@ void AppTest::init(ml::ApplicationData &app)
 	//{
 	//	meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
 	//}
-	meshes.push_back(triMesh);
+	//meshes.push_back(triMesh);
+	for (auto& m : materialMeshes) {
+		meshes.push_back(TriMeshf(m.first));
+		meshes.back().setColor(vec4f(1.0f, 1.0f, 0.0f, 1.0f));
+	}
 	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));
 	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));
 	//m_mesh.updateAttributeA(app.graphics, color);
