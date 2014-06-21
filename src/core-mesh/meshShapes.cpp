@@ -86,6 +86,11 @@ TriMeshf cylinder(const vec3f& p0, const vec3f& p1, float radius, UINT stacks, U
     return result;
 }
 
+TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT stacks, UINT slices, const vec4f& color)
+{
+    return torus(center, majorRadius, minorRadius, stacks, slices, [&](unsigned int stackIndex) { return color; });
+}
+
 TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT stacks, UINT slices, const std::function<vec4f(unsigned int)> &stackIndexToColor)
 {
     std::vector<TriMeshf::Vertexf> vertices(slices * stacks);

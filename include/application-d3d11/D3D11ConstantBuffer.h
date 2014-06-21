@@ -39,6 +39,13 @@ public:
 		D3D_VALIDATE(g.castD3D11().device().CreateBuffer( &desc, NULL, &m_buffer ));
 	}
 
+    void updateAndBind(GraphicsDevice &g, const T &data, UINT constantBufferIndex)
+    {
+        update(g, data);
+        bindVertexShader(g, constantBufferIndex);
+        bindPixelShader(g, constantBufferIndex);
+    }
+
 	void update(GraphicsDevice &g, const T &data)
 	{
 		g.castD3D11().context().UpdateSubresource( m_buffer, 0, NULL, &data, 0, 0 );
