@@ -285,6 +285,12 @@ public:
 			return const_iterator(this, size());
 		}
 
+		Face& back() {
+			return m_Faces.back();
+		}
+		Face& back() const {
+			return m_Faces.back();
+		}
 
 		void append(const Indices& other) {
 			m_Indices.insert(m_Indices.end(), other.m_Indices.begin(), other.m_Indices.end());
@@ -294,7 +300,18 @@ public:
 		}
 
 
+		bool operator==(const Indices& other) const {
+			if (size() != other.size())	return false;
+			if (m_Indices.size() != other.m_Indices.size()) return false;
+			for (size_t i = 0; i < m_Indices.size(); i++) {
+				if (m_Indices[i] != other.m_Indices[i])	return false;
+			}
+			return true;
+		}
 
+		bool operator!=(const Indices& other) const {
+			return operator!=(other);
+		}
 
 		void operator=(const std::vector<std::vector<unsigned int>>& other) {
 			MLIB_WARNING("inefficient function; should not actually been sued");
@@ -492,11 +509,59 @@ public:
 	std::vector<MaterialIndex>	m_MaterialIndices;	//active material for indices; from - to (in case of objcs)
 
 
-	static void splitByMaterial(const MeshData& meshData, std::vector<std::pair<MeshData, Material<FloatType>>>& res) {
+	std::vector<std::pair<MeshData, Material<FloatType>>> splitByMaterial() const {
+		std::vector<std::pair<MeshData, Material<FloatType>>> res;
+		splitByMaterial(res);
+		return res;
+	}
+
+	void splitByMaterial(std::vector<std::pair<MeshData, Material<FloatType>>>& res) const {
 		res.clear();
 		std::vector<Material<FloatType>> mats;
-		Material<FloatType>::loadFromMTL(meshData.m_MaterialFile, mats);
-		//TODO MATTHIAS
+		Material<FloatType>::loadFromMTL(m_MaterialFile, mats);
+		
+		res.resize(m_MaterialIndices.size());
+
+		for (size_t i = 0; i < m_MaterialIndices.size(); i++) {
+			Material<FloatType>* m = NULL;
+			for (size_t j = 0; j < mats.size(); j++) {
+				if (m_MaterialIndices[i].materialName == mats[j].m_name) {
+					m = &mats[j];
+					break;
+				}
+			}
+			if (!m) throw MLIB_EXCEPTION("material not found");
+
+			res[i].second = *m;
+			MeshData& meshData = res[i].first;
+			meshData.clear();
+
+			std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
+			unsigned int cnt = 0;
+			for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+				const Indices::Face& f = m_FaceIndicesVertices[j];
+				meshData.m_FaceIndicesVertices.push_back(f);
+				Indices::Face& face = meshData.m_FaceIndicesVertices.back();
+				
+				for (auto& idx : face) {
+					if (_map.find(idx) != _map.end()) {
+						idx = _map[idx];	//set to new idx, which already exists
+					} else {
+						_map[idx] = cnt;
+						meshData.m_Vertices.push_back(m_Vertices[idx]);
+						if (hasPerVertexColors())		meshData.m_Colors.push_back(m_Colors[idx]);
+						if (hasPerVertexNormals())		meshData.m_Normals.push_back(m_Normals[idx]);
+						if (hasPerVertexTexCoords())	meshData.m_TextureCoords.push_back(m_TextureCoords[idx]);
+
+						idx = cnt;
+						cnt++;
+					}
+				}
+				
+			}
+			int a = 5;
+
+		}
 	}
 	
 	//! Debug print with all details
@@ -538,6 +603,13 @@ public:
 
     //! inserts a midpoint into every faces; and triangulates the result
     FloatType subdivideFacesLoop(float edgeThresh = 0.0f);
+
+
+	void deleteRedundantIndices() {
+		if (m_FaceIndicesVertices == m_FaceIndicesNormals)			m_FaceIndicesNormals.clear();
+		if (m_FaceIndicesVertices == m_FaceIndicesColors)			m_FaceIndicesColors.clear();
+		if (m_FaceIndicesVertices == m_FaceIndicesTextureCoords)	m_FaceIndicesTextureCoords.clear();
+	}
 private:
 	inline vec3i toVirtualVoxelPos(const point3d<FloatType>& v, FloatType voxelSize) {
 		return vec3i(v/voxelSize+(FloatType)0.5*point3d<FloatType>(math::sign(v)));

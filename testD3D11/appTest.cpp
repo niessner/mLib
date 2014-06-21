@@ -171,9 +171,10 @@ void AppTest::init(ml::ApplicationData &app)
 	assert(meshData.isConsistent());
 
 	meshData.clear();
-	MeshIOf::loadFromFile("out.obj", meshData);
-	std::vector<Materialf> mats;
-	Materialf::loadFromMTL("out.mtl", mats);
+	MeshIOf::loadFromFile("1a8e293609eca3b3f7e27638e63d848.obj", meshData);
+	auto materialMeshes = meshData.splitByMaterial();
+	//std::vector<Materialf> mats;
+	//Materialf::loadFromMTL("out.mtl", mats);
 
 	ml::TriMeshf triMesh(meshData);
 	//triMesh.setColor(vec4f(0.0f, 1.0f, 0.0f, 1.0f));
