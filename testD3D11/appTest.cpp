@@ -171,7 +171,7 @@ void AppTest::init(ml::ApplicationData &app)
 	assert(meshData.isConsistent());
 
 	meshData.clear();
-	MeshIOf::loadFromFile("1a8e293609eca3b3f7e27638e63d848.obj", meshData);
+	MeshIOf::loadFromFile("../1a8e293609eca3b3f7e27638e63d848.obj", meshData);
 	auto materialMeshes = meshData.splitByMaterial();
 	//std::vector<Materialf> mats;
 	//Materialf::loadFromMTL("out.mtl", mats);
@@ -187,11 +187,11 @@ void AppTest::init(ml::ApplicationData &app)
 	//{
 	//	meshes.push_back(ml::TriMeshf(triMesh.getBoundingBox()));
 	//}
-	//meshes.push_back(triMesh);
-	for (auto& m : materialMeshes) {
-		meshes.push_back(TriMeshf(m.first));
-		meshes.back().setColor(vec4f(1.0f, 1.0f, 0.0f, 1.0f));
-	}
+	meshes.push_back(triMesh);
+	//for (auto& m : materialMeshes) {
+	//	meshes.push_back(TriMeshf(m.first));
+	//	meshes.back().setColor(vec4f(1.0f, 1.0f, 0.0f, 1.0f));
+	//}
 	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));
 	//std::vector<ml::vec4f> color(meshData.m_Vertices.size(), ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f));
 	//m_mesh.updateAttributeA(app.graphics, color);
