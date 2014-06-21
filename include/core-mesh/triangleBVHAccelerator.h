@@ -129,20 +129,25 @@ public:
 	TriangleBVHAccelerator(void) {
 		m_Root = NULL;
 	}
-	TriangleBVHAccelerator( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true) {
+	TriangleBVHAccelerator( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true, bool copyVertexData = false) {
 		m_Root = NULL;
-		build(triMesh, useParallelBuild);
+		build(triMesh, useParallelBuild, copyVertexData);
 	}
 
 	~TriangleBVHAccelerator(void) {
 		destroy();
 	}
 
-	void build( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true )
+	void build( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true, bool copyVertexData = false  )
 	{
-		SAFE_DELETE(m_Root);	//in case there is already a mesh before...
+		destroy();	//in case there is already a mesh before...
 		
-		createTrianglePointers(triMesh.getVertices(), triMesh.getIndices());
+		if (copyVertexData) {
+			m_VerticesCopy = triMesh.getVertices();
+			createTrianglePointers(m_VerticesCopy, triMesh.getIndices());
+		} else {
+			createTrianglePointers(triMesh.getVertices(), triMesh.getIndices());
+		}
 
 		if (useParallelBuild) {
 			buildParallel(m_TrianglePointers);
@@ -158,9 +163,12 @@ public:
 
 	void destroy() {
 		SAFE_DELETE(m_Root);
-		for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
-			SAFE_DELETE(m_TrianglePointers[i]);
-		}
+		m_Triangles.clear();
+		m_TrianglePointers.clear();
+		m_VerticesCopy.clear();
+		//for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
+		//	SAFE_DELETE(m_TrianglePointers[i]);
+		//}
 	}
 	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
 		u = v = std::numeric_limits<FloatType>::max();	
@@ -171,14 +179,26 @@ public:
 private:
 
 	void createTrianglePointers(const std::vector<typename TriMesh<FloatType>::Vertex<FloatType>>& vertices, const std::vector<vec3ui>& indices) {
-		for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
-			SAFE_DELETE(m_TrianglePointers[i]);
-		}
-		m_TrianglePointers.resize(indices.size());
+		m_Triangles.clear();
+		m_Triangles.reserve(indices.size());
 		for (size_t i = 0; i < indices.size(); i++) {
-			typename TriMesh<FloatType>::Triangle<FloatType>* tri = new typename TriMesh<FloatType>::Triangle<FloatType>(&vertices[indices[i].x], &vertices[indices[i].y], &vertices[indices[i].z]);
-			m_TrianglePointers[i] = tri;
+			m_Triangles.push_back(typename TriMesh<FloatType>::Triangle<FloatType>(&vertices[indices[i].x], &vertices[indices[i].y], &vertices[indices[i].z]));
 		}
+
+		m_TrianglePointers.resize(m_Triangles.size());
+		for (size_t i = 0; i < m_Triangles.size(); i++) {
+			m_TrianglePointers[i] = &m_Triangles[i];
+		}
+
+		
+		//for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
+		//	SAFE_DELETE(m_TrianglePointers[i]);
+		//}
+		//m_TrianglePointers.resize(indices.size());
+		//for (size_t i = 0; i < indices.size(); i++) {
+		//	typename TriMesh<FloatType>::Triangle<FloatType>* tri = new typename TriMesh<FloatType>::Triangle<FloatType>(&vertices[indices[i].x], &vertices[indices[i].y], &vertices[indices[i].z]);
+		//	m_TrianglePointers[i] = tri;
+		//}
 	}
 
 	void buildParallel(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris) {
@@ -255,7 +275,9 @@ private:
 	//! private data
 	TriangleBVHNode<FloatType>* m_Root;
 
-	std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*> m_TrianglePointers;
+	std::vector<typename TriMesh<FloatType>::Vertex<FloatType>>		m_VerticesCopy;
+	std::vector<typename TriMesh<FloatType>::Triangle<FloatType>>	m_Triangles;
+	std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>	m_TrianglePointers;
 };
 
 typedef TriangleBVHAccelerator<float> TriangleBVHAcceleratorf;
