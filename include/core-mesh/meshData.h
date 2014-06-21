@@ -509,16 +509,19 @@ public:
 	std::vector<MaterialIndex>	m_MaterialIndices;	//active material for indices; from - to (in case of objcs)
 
 
-	std::vector<std::pair<MeshData, Material<FloatType>>> splitByMaterial() const {
+	std::vector<std::pair<MeshData, Material<FloatType>>> splitByMaterial(const std::string& overwriteMTLPath = "") const {
 		std::vector<std::pair<MeshData, Material<FloatType>>> res;
-		splitByMaterial(res);
+		splitByMaterial(res, overwriteMTLPath);
 		return res;
 	}
 
-	void splitByMaterial(std::vector<std::pair<MeshData, Material<FloatType>>>& res) const {
+	void splitByMaterial(std::vector<std::pair<MeshData, Material<FloatType>>>& res, const std::string& overwriteMTLPath = "") const {
 		res.clear();
 		std::vector<Material<FloatType>> mats;
-		Material<FloatType>::loadFromMTL(m_MaterialFile, mats);
+		if (overwriteMTLPath != "")
+			Material<FloatType>::loadFromMTL(overwriteMTLPath, mats);
+		else 
+			Material<FloatType>::loadFromMTL(m_MaterialFile, mats);
 		
 		res.resize(m_MaterialIndices.size());
 
