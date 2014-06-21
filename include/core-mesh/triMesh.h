@@ -61,6 +61,7 @@ public:
 	template<class FloatType>
 	class Triangle {
 	public:
+
 		Triangle(const Vertex<FloatType> *v0, const Vertex<FloatType> *v1, const Vertex<FloatType> *v2) {
 			assert (v0 && v1 && v2);
 			this->v0 = v0;
@@ -70,6 +71,7 @@ public:
 		}
 		~Triangle() {
 		}
+
 
 		Vertex<FloatType> getSurfaceVertex(FloatType u, FloatType v) const {
 			return *v0 *((FloatType)1.0 - u - v) + *v1 *u + *v2 *v;
