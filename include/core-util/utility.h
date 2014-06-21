@@ -103,6 +103,11 @@ namespace math
 		return (f > (T)0.0) ? (int)floor(f + (T)0.5) : (int)ceil(f - (T)0.5);
 	}
 
+    template<class T>
+    inline T triangleNormal(const T& v0, const T& v1, const T& v2) {
+        return ((v1 - v0) ^ (v2 - v0)).getNormalized();
+    }
+
 	template<class T>
 	inline bool isPower2(const T& x) {
 		return (x & (x - 1)) == 0;
