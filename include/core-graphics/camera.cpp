@@ -38,6 +38,47 @@ Camera<FloatType>::Camera(const Matrix4x4<FloatType>& m, FloatType fieldOfView, 
 }
 
 template <class FloatType>
+Camera<FloatType>::Camera(const std::string &str)
+{
+    std::istringstream s(str);
+    auto read = [](std::istringstream &s, point3d<FloatType> &pt) {
+        s >> pt.x >> pt.y >> pt.z;
+    };
+    read(s, m_eye);
+    read(s, m_right);
+    read(s, m_look);
+    read(s, m_up);
+    read(s, m_worldUp);
+    s >> m_fieldOfView;
+    s >> m_aspect;
+    s >> m_zNear;
+    s >> m_zFar;
+
+    m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);
+
+    update();
+}
+
+template <class FloatType>
+std::string Camera<FloatType>::toString() const
+{
+    std::ostringstream s;
+    auto write = [](std::ostringstream &s, const point3d<FloatType> &pt) {
+        s << pt.x << ' ' << pt.y << ' ' << pt.z << ' ';
+    };
+    write(s, m_eye);
+    write(s, m_right);
+    write(s, m_look);
+    write(s, m_up);
+    write(s, m_worldUp);
+    s << m_fieldOfView << ' ';
+    s << m_aspect << ' ';
+    s << m_zNear << ' ';
+    s << m_zFar;
+    return s.str();
+}
+
+template <class FloatType>
 void Camera<FloatType>::updateAspectRatio(FloatType newAspect) {
 	m_aspect = newAspect;
 	m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);

@@ -8,6 +8,7 @@ template <class FloatType>
 class Camera {
 public:
 	Camera() {}
+    Camera(const std::string &s);
 	Camera(const point3d<FloatType>& eye, const point3d<FloatType>& worldUp, const point3d<FloatType>& right, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar);
 
 	//! Construct camera from extrinsics matrix m (columns are -x, y, z vectors and origin of camera in that order) NOTE: -x due to sensor horizontal flipping
@@ -45,6 +46,8 @@ public:
 	FloatType getAspect() const {
 		return m_aspect;
 	}
+
+    std::string toString() const;
 
 private:
 	void applyTransform(const Matrix4x4<FloatType>& transform);
