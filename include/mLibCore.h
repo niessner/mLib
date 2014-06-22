@@ -26,6 +26,7 @@
 //
 // core-math headers
 //
+#include "core-math/nr_templates.h"
 #include "core-math/point1d.h"
 #include "core-math/point2d.h"
 #include "core-math/point3d.h"

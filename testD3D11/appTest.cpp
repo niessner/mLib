@@ -82,6 +82,16 @@ unsigned int test2(unsigned int size) {
 
 void AppTest::init(ml::ApplicationData &app)
 {
+	mat3f m;
+	for (unsigned int i = 0; i < 9; i++) {
+		m[i] = (float)i;
+	}
+	vec3f l;
+	mat3f e;
+	m.computeEigenvaluesAndEigenvectorsNR(l,e);
+	std::cout << l << std::endl;
+	std::cout << e << std::endl;
+
 	MeshDataf::Indices indices;
 	//for (auto i = indices.begin(); i != indices.end(); i++) {}
 	//for (auto face : indices) {}
