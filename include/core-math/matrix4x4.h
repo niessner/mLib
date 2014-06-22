@@ -4,6 +4,9 @@
 
 namespace ml {
 
+template <class FloatType>
+class DenseMatrix;
+
 //! This class provides functions to handle 4-dimensional matrices
 /*! The arrangement of the matrix is row-like.
     The index of a specific position is:
@@ -92,6 +95,12 @@ public:
 		}
 		at(3,0) = at(3,1) = at(3,2) = 0.0;	at(3,3) = 1.0;
 	}
+
+    Matrix4x4(const DenseMatrix<FloatType> &m) {
+        MLIB_ASSERT_STR(m.rows() == 4 && m.cols() == 4, "invalid matrix dimensions");
+        for (unsigned int i = 0; i < 16; i++)
+            matrix[i] = m.ptr()[i];
+    }
 
 	//! destructor
 	~Matrix4x4() {}
@@ -505,8 +514,15 @@ public:
 		point4d<FloatType>(matrix[12],matrix[13],matrix[14],matrix[15]);
 	}
 
+    Matrix4x4<FloatType> eigenSystem() const {
+        EigenSolverVTK<FloatType> solver;
+        EigenSystem<FloatType> system = solver.eigenSystem(ml::DenseMatrix<FloatType>(*this));
+        //solver.eigenTest(ml::DenseMatrix<FloatType>(*this));
+        return Matrix4x4<FloatType>(system.eigenvectors);
+    }
+
 	//! return the inverse matrix; but does not change the current matrix
-	Matrix4x4 getInverse() const {
+    Matrix4x4<FloatType> getInverse() const {
 		FloatType inv[16];
 		
 		inv[0] = matrix[5]  * matrix[10] * matrix[15] - 

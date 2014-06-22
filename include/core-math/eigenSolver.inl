@@ -82,11 +82,11 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
 
         if (i < 3)                                // first 3 sweeps
         {
-            tresh = 0.2*sm / (n*n);
+            tresh = (T)0.2*sm / (n*n);
         }
         else
         {
-            tresh = 0.0;
+            tresh = (T)0.0;
         }
 
         for (ip = 0; ip<n - 1; ip++)
@@ -110,22 +110,22 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
                     }
                     else
                     {
-                        theta = 0.5*h / (a(ip, iq));
-                        t = 1.0 / (fabs(theta) + sqrt(1.0 + theta*theta));
+                        theta = (T)0.5*h / (a(ip, iq));
+                        t = (T)1.0 / (fabs(theta) + sqrt((T)1.0 + theta*theta));
                         if (theta < 0.0)
                         {
                             t = -t;
                         }
                     }
-                    c = 1.0 / sqrt(1 + t*t);
+                    c = (T)1.0 / sqrt(1 + t*t);
                     s = t*c;
-                    tau = s / (1.0 + c);
+                    tau = s / ((T)1.0 + c);
                     h = t*a(ip, iq);
                     z[ip] -= h;
                     z[iq] += h;
                     eigenvalues[ip] -= T(h);
                     eigenvalues[iq] += T(h);
-                    a(ip, iq) = 0.0;
+                    a(ip, iq) = (T)0.0;
 
                     // ip already shifted left by 1 unit
                     for (j = 0; j <= ip - 1; j++)
@@ -212,7 +212,7 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
         {
             for (i = 0; i<n; i++)
             {
-                eigenvectors[i][j] *= -1.0;
+                eigenvectors[i][j] *= (T)-1.0;
             }
         }
     }

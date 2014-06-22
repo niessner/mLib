@@ -21,7 +21,7 @@ public:
 		m_dataPtr = &m_data[0];
 	}
 
-	DenseMatrix(DenseMatrix &&s)
+    DenseMatrix(DenseMatrix<D> &&s)
 	{
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
@@ -31,7 +31,7 @@ public:
 		m_dataPtr = &m_data[0];
 	}
 
-	explicit DenseMatrix(UINT squareDimension)
+    explicit DenseMatrix(UINT squareDimension)
 	{
 		m_rows = squareDimension;
 		m_cols = squareDimension;
@@ -91,6 +91,17 @@ public:
 		}
 	}
 
+    DenseMatrix(const Matrix4x4<D> &m)
+    {
+        m_rows = 4;
+        m_cols = 4;
+        m_data.resize(16);
+        m_dataPtr = &m_data[0];
+        for (unsigned int element = 0; element < m_data.size(); element++)
+            m_data[element] = m.matrix[element];
+    }
+
+
 	void operator=(const DenseMatrix<D>& s)
 	{
 		m_rows = s.m_rows;
@@ -140,6 +151,10 @@ public:
 			result[row] = m_data[row * m_cols + row];
 		return result;
 	}
+    const D* ptr() const
+    {
+        return m_dataPtr;
+    }
 
 	//
 	// math functions
