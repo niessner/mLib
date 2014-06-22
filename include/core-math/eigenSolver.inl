@@ -4,6 +4,14 @@
 
 namespace ml {
 
+#define VTK_ROTATE(a,i,j,k,l) g=a(i,j);h=a(k,l);a(i,j)=g-s*(h+g*tau);\
+    a(k,l) = h + s*(g - h*tau)
+
+#define VTK_ROTATE2(a,i,j,k,l) g=a[i][j];h=a[k][l];a[i][j]=g-s*(h+g*tau);\
+    a[k][l] = h + s*(g - h*tau)
+
+#define VTK_MAX_ROTATIONS 40
+
 //
 // Jacobi iteration for the solution of eigenvectors/eigenvalues of a nxn
 // real symmetric matrix. Square nxn matrix a; size of matrix in n;
@@ -14,7 +22,7 @@ namespace ml {
 // Code modified from VTK vtkJacobiN function
 //
 template<class T>
-void EigenSolverVTK<T>::eigenSystem(const DenseMatrix<T> &M, T **eigenvectors, T *eigenvalues) const
+void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenvectors, T *eigenvalues) const
 {
     const unsigned int rows = M.rows();
     MLIB_ASSERT_STR(M.square() && M.rows() >= 2, "invalid matrix dimensions in EigenSolverVTK<T>::eigenSystem");
@@ -51,8 +59,8 @@ void EigenSolverVTK<T>::eigenSystem(const DenseMatrix<T> &M, T **eigenvectors, T
     }
     for (ip = 0; ip<n; ip++)
     {
-        b[ip] = a[ip][ip];
-        eigenvalues[ip] = T(a[ip][ip]);
+        b[ip] = a(ip, ip);
+        eigenvalues[ip] = T(a(ip, ip));
         z[ip] = 0.0;
     }
 
@@ -64,7 +72,7 @@ void EigenSolverVTK<T>::eigenSystem(const DenseMatrix<T> &M, T **eigenvectors, T
         {
             for (iq = ip + 1; iq<n; iq++)
             {
-                sm += fabs(a[ip][iq]);
+                sm += fabs(a(ip, iq));
             }
         }
         if (sm == 0.0)
@@ -85,24 +93,24 @@ void EigenSolverVTK<T>::eigenSystem(const DenseMatrix<T> &M, T **eigenvectors, T
         {
             for (iq = ip + 1; iq<n; iq++)
             {
-                g = T(100.0*fabs(a[ip][iq]));
+                g = T(100.0*fabs(a(ip, iq)));
 
                 // after 4 sweeps
                 if (i > 3 && (fabs(eigenvalues[ip]) + g) == fabs(eigenvalues[ip])
                     && (fabs(eigenvalues[iq]) + g) == fabs(eigenvalues[iq]))
                 {
-                    a[ip][iq] = 0.0;
+                    a(ip, iq) = 0.0;
                 }
-                else if (fabs(a[ip][iq]) > tresh)
+                else if (fabs(a(ip, iq)) > tresh)
                 {
                     h = eigenvalues[iq] - eigenvalues[ip];
                     if ((fabs(h) + g) == fabs(h))
                     {
-                        t = (a[ip][iq]) / h;
+                        t = (a(ip, iq)) / h;
                     }
                     else
                     {
-                        theta = 0.5*h / (a[ip][iq]);
+                        theta = 0.5*h / (a(ip, iq));
                         t = 1.0 / (fabs(theta) + sqrt(1.0 + theta*theta));
                         if (theta < 0.0)
                         {
@@ -112,12 +120,12 @@ void EigenSolverVTK<T>::eigenSystem(const DenseMatrix<T> &M, T **eigenvectors, T
                     c = 1.0 / sqrt(1 + t*t);
                     s = t*c;
                     tau = s / (1.0 + c);
-                    h = t*a[ip][iq];
+                    h = t*a(ip, iq);
                     z[ip] -= h;
                     z[iq] += h;
                     eigenvalues[ip] -= T(h);
                     eigenvalues[iq] += T(h);
-                    a[ip][iq] = 0.0;
+                    a(ip, iq) = 0.0;
 
                     // ip already shifted left by 1 unit
                     for (j = 0; j <= ip - 1; j++)
@@ -137,7 +145,7 @@ void EigenSolverVTK<T>::eigenSystem(const DenseMatrix<T> &M, T **eigenvectors, T
                     for (j = 0; j<n; j++)
                     {
 #pragma warning ( disable : 4244 )
-                        VTK_ROTATE(eigenvectors, j, ip, j, iq);
+                        VTK_ROTATE2(eigenvectors, j, ip, j, iq);
 #pragma warning ( default : 4244 )
                     }
                 }
@@ -214,7 +222,6 @@ void EigenSolverVTK<T>::eigenSystem(const DenseMatrix<T> &M, T **eigenvectors, T
         delete[] b;
         delete[] z;
     }
-    return true;
 }
 
 }  // namespace ml

@@ -96,7 +96,7 @@ public:
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
 		m_data = s.m_data;
-		m_dataPtr = m_data.ptr();
+        m_dataPtr = &m_data[0];
 	}
 
 	void operator=(DenseMatrix<D>&& s)
@@ -106,7 +106,7 @@ public:
 		s.m_rows = 0;
 		s.m_cols = 0;
 		m_data = std::move(s.m_data);
-		m_dataPtr = m_data.ptr();
+		m_dataPtr = &m_data[0];
 	}
 
 	//

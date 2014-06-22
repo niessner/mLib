@@ -20,8 +20,8 @@ struct EigenSystem
     std::vector<T*> eigenvectorList()
     {
         std::vector<T*> result(eigenvectors.rows());
-        for (rowIndex = 0; rowIndex < eigenvectors.rows(); rowIndex++)
-            result[rowIndex] = &eigenvectors(rowIndex, 0);
+        for (unsigned int row = 0; row < eigenvectors.rows(); row++)
+            result[row] = &eigenvectors(row, 0);
         return result;
     }
     DenseMatrix<T> eigenvectors;
@@ -48,17 +48,17 @@ public:
         eigenSystemInternal(M, &result.eigenvectorList()[0], &result.eigenvalues[0]);
         eigenTest(M, &result.eigenvectorList()[0], &result.eigenvalues[0]);
     }
-    void eigenTest(const DenseMatrix<T> &M, const T **eigenvectors, const T *eigenvalues) const
+    void eigenTest(const DenseMatrix<T> &M, T **eigenvectors, T *eigenvalues) const
     {
         const unsigned int n = M.rows();
-        const std::vector<T> eigenvector(n);
+        std::vector<T> eigenvector(n);
         double maxError = 0.0;
         for (UINT eigenIndex = 0; eigenIndex < n; eigenIndex++)
         {
             for (UINT element = 0; element < n; element++)
                 eigenvector[element] = eigenvectors[element][eigenIndex];
 
-            std::vector<T> result = multiply(M, eigenvector);
+            std::vector<T> result = DenseMatrix<T>::multiply(M, eigenvector);
             
             double error = 0.0;
             T eigenvalue = eigenvalues[eigenIndex];
@@ -77,7 +77,7 @@ private:
 template<class T> class EigenSolverVTK : public EigenSolver<T>
 {
 public:
-    void eigenSystem(const DenseMatrix<T> &M, T **eigenvectors, T *eigenvalues) const;
+    void eigenSystemInternal(const DenseMatrix<T> &M, T **eigenvectors, T *eigenvalues) const;
 };
 
 }  // namespace ml
