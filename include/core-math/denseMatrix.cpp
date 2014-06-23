@@ -4,8 +4,8 @@
 
 namespace ml {
 
-template<class D>
-D DenseMatrix<D>::maxMagnitude() const
+template<class FloatType>
+FloatType DenseMatrix<FloatType>::maxMagnitude() const
 {
 	MLIB_ASSERT_STR(valid(), "dense matrix has invalid entries");
 	double result = 0.0;
@@ -15,8 +15,8 @@ D DenseMatrix<D>::maxMagnitude() const
 	return result;
 }
 
-template<class D>
-bool DenseMatrix<D>::valid() const
+template<class FloatType>
+bool DenseMatrix<FloatType>::valid() const
 {
 	for(UINT row = 0; row < m_rows; row++)
 		for(UINT col = 0; col < m_cols; col++)
@@ -27,69 +27,69 @@ bool DenseMatrix<D>::valid() const
 	return true;
 }
 
-template<class D>
-DenseMatrix<D> DenseMatrix<D>::transpose() const
+template<class FloatType>
+DenseMatrix<FloatType> DenseMatrix<FloatType>::transpose() const
 {
-    DenseMatrix<D> result(m_cols, m_rows);
+    DenseMatrix<FloatType> result(m_cols, m_rows);
     for(UINT row = 0; row < m_rows; row++)
         for(UINT col = 0; col < m_cols; col++)
             result.m_dataPtr[col * m_rows + row] = m_dataPtr[row * m_cols + col];
     return result;
 }
 
-template<class D>
-DenseMatrix<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, D val)
+template<class FloatType>
+DenseMatrix<FloatType> DenseMatrix<FloatType>::multiply(const DenseMatrix<FloatType> &A, FloatType val)
 {
-	DenseMatrix<D> result(A.m_rows, A.m_cols);
+	DenseMatrix<FloatType> result(A.m_rows, A.m_cols);
 	for(UINT row = 0; row < A.m_rows; row++)
 		for(UINT col = 0; col < A.m_cols; col++)
 			result.m_dataPtr[row * A.m_cols + col] = A.m_dataPtr[row * A.m_cols + col] * val;
 	return result;
 }
 
-template<class D>
-DenseMatrix<D> DenseMatrix<D>::add(const DenseMatrix<D> &A, const DenseMatrix<D> &B)
+template<class FloatType>
+DenseMatrix<FloatType> DenseMatrix<FloatType>::add(const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B)
 {
 	MLIB_ASSERT_STR(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
 	
 	const UINT rows = A.m_rows;
 	const UINT cols = A.m_cols;
 
-	DenseMatrix<D> result(A.m_rows, A.m_cols);
+	DenseMatrix<FloatType> result(A.m_rows, A.m_cols);
 	for(UINT row = 0; row < rows; row++)
 		for(UINT col = 0; col < cols; col++)
 			result.m_dataPtr[row * cols + col] = A.m_dataPtr[row * cols + col] + B.m_dataPtr[row * cols + col];
 	return result;
 }
 
-template<class D>
-DenseMatrix<D> DenseMatrix<D>::subtract(const DenseMatrix<D> &A, const DenseMatrix<D> &B)
+template<class FloatType>
+DenseMatrix<FloatType> DenseMatrix<FloatType>::subtract(const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B)
 {
 	MLIB_ASSERT_STR(A.rows() == B.rows() && A.cols() == B.cols(), "invalid matrix dimensions");
 
 	const UINT rows = A.m_rows;
 	const UINT cols = A.m_cols;
 
-	DenseMatrix<D> result(A.m_rows, A.m_cols);
+	DenseMatrix<FloatType> result(A.m_rows, A.m_cols);
 	for(UINT row = 0; row < rows; row++)
 		for(UINT col = 0; col < cols; col++)
 			result.m_dataPtr[row * cols + col] = A.m_dataPtr[row * cols + col] - B.m_dataPtr[row * cols + col];
 	return result;
 }
 
-template<class D>
-std::vector<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const std::vector<D> &B)
+template<class FloatType>
+std::vector<FloatType> DenseMatrix<FloatType>::multiply(const DenseMatrix<FloatType> &A, const std::vector<FloatType> &B)
 {
 	MLIB_ASSERT_STR(A.cols() == B.size(), "invalid dimensions");
 	const int rows = A.m_rows;
 	const UINT cols = A.m_cols;
-	std::vector<D> result(rows);
+	std::vector<FloatType> result(rows);
 //#ifdef MLIB_OPENMP
 //#pragma omp parallel for
 //#endif
 	for(int row = 0; row < rows; row++)
 	{
-		D val = 0.0;
+		FloatType val = 0.0;
 		for(UINT col = 0; col < cols; col++)
 			val += A.m_dataPtr[row * cols + col] * B[col];
 		result[row] = val;
@@ -97,8 +97,8 @@ std::vector<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const std::vect
 	return result;
 }
 
-template<class D>
-DenseMatrix<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const DenseMatrix<D> &B)
+template<class FloatType>
+DenseMatrix<FloatType> DenseMatrix<FloatType>::multiply(const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B)
 {
 	MLIB_ASSERT_STR(A.cols() == B.rows(), "invalid dimensions");
 
@@ -106,12 +106,12 @@ DenseMatrix<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const DenseMatr
 	const UINT cols = B.cols();
 	const UINT innerCount = A.cols();
 
-	DenseMatrix<D> result(rows, cols);
+	DenseMatrix<FloatType> result(rows, cols);
 	
 	for(UINT row = 0; row < rows; row++)
 		for(UINT col = 0; col < cols; col++)
 		{
-			D sum = 0.0;
+			FloatType sum = 0.0;
 			for(UINT inner = 0; inner < innerCount; inner++)
 				sum += A(row, inner) * B(inner, col);
 			result(row, col) = sum;
@@ -120,16 +120,16 @@ DenseMatrix<D> DenseMatrix<D>::multiply(const DenseMatrix<D> &A, const DenseMatr
 	return result;
 }
 
-template<class D>
-DenseMatrix<D> DenseMatrix<D>::inverse()
+template<class FloatType>
+DenseMatrix<FloatType> DenseMatrix<FloatType>::inverse()
 {
-	DenseMatrix<D> result = *this;
+	DenseMatrix<FloatType> result = *this;
 	result.invertInPlace();
 	return result;
 }
 
-template<class D>
-void DenseMatrix<D>::invertInPlace()
+template<class FloatType>
+void DenseMatrix<FloatType>::invertInPlace()
 {
 	MLIB_ASSERT_STR(square(), "DenseMatrix<D>::invertInPlace called on non-square matrix");
 	for (UINT i = 1; i < m_rows; i++)
@@ -144,7 +144,7 @@ void DenseMatrix<D>::invertInPlace()
 		//
 		for (UINT j = i; j < m_rows; j++)
 		{
-			D sum = 0;
+			FloatType sum = 0;
 			for (UINT k = 0; k < i; k++)  
 			{
 				sum += (*this)(j, k) * (*this)(k, i);
@@ -161,7 +161,7 @@ void DenseMatrix<D>::invertInPlace()
 		//
 		for (UINT j = i + 1; j < m_rows; j++)
 		{
-			D sum = 0;
+			FloatType sum = 0;
 			for (UINT k = 0; k < i; k++)
 				sum += (*this)(i, k) * (*this)(k, j);
 			(*this)(i, j) = ((*this)(i, j) - sum) / (*this)(i, i);
@@ -174,7 +174,7 @@ void DenseMatrix<D>::invertInPlace()
 	for (UINT i = 0; i < m_rows; i++)
 		for (UINT j = i; j < m_rows; j++)
 		{
-			D sum = (D)1.0;
+			FloatType sum = (FloatType)1.0;
 			if ( i != j )
 			{
 				sum = 0;
@@ -196,10 +196,10 @@ void DenseMatrix<D>::invertInPlace()
 				{
 					continue;
 				}
-				D sum = 0;
+				FloatType sum = 0;
 				for (UINT k = i; k < j; k++)
 				{
-					D val = (D)1.0;
+					FloatType val = (FloatType)1.0;
 					if(i != k)
 					{
 						val = (*this)(i, k);
@@ -216,7 +216,7 @@ void DenseMatrix<D>::invertInPlace()
 			{
 				for (UINT j = 0; j < m_rows; j++)
 				{
-					D sum = 0;
+					FloatType sum = 0;
 					UINT larger = j;
 					if(i > j)
 					{
@@ -224,7 +224,7 @@ void DenseMatrix<D>::invertInPlace()
 					}
 					for (UINT k = larger; k < m_rows; k++)
 					{
-						D val = (D)1.0;
+						FloatType val = (FloatType)1.0;
 						if(j != k)
 						{
 							val = (*this)(j, k);

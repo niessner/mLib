@@ -9,47 +9,47 @@ enum MatrixStringFormat
 	MatrixStringFormatMathematica,
 };
 
-template <class D> 
+template <class FloatType> 
 struct SparseRowEntry
 {
 	SparseRowEntry() {}
-	SparseRowEntry(UINT _col, D _val)
+	SparseRowEntry(UINT _col, FloatType _val)
 	{
 		col = _col;
 		val = _val;
 	}
 	UINT col;
-	D val;
+	FloatType val;
 };
 
-template <class D>
+template <class FloatType>
 struct SparseRow
 {
-	D& operator()(UINT col)
+	FloatType& operator()(UINT col)
 	{
-		for(SparseRowEntry<D> &e : entries)
+		for(SparseRowEntry<FloatType> &e : entries)
 		{
 			if(e.col == col) return e.val;
 		}
-		entries.push_back(SparseRowEntry<D>(col, 0.0));
+		entries.push_back(SparseRowEntry<FloatType>(col, 0.0));
 		return entries.back().val;
 	}
-	D operator()(UINT col) const
+	FloatType operator()(UINT col) const
 	{
-		for(const SparseRowEntry<D> &e : entries)
+		for(const SparseRowEntry<FloatType> &e : entries)
 		{
 			if(e.col == col) return e.val;
 		}
 		return 0.0;
 	}
-	std::vector< SparseRowEntry<D> > entries;
+	std::vector< SparseRowEntry<FloatType> > entries;
 };
 
-template<class D, class = typename std::enable_if<std::is_arithmetic<D>::value, D>::type>
+template<class FloatType, class = typename std::enable_if<std::is_arithmetic<FloatType>::value, FloatType>::type>
 class SparseMatrix;
 
-template<class D>
-class SparseMatrix<D>
+template<class FloatType>
+class SparseMatrix<FloatType>
 {
 public:
 	SparseMatrix()
@@ -58,7 +58,7 @@ public:
 		m_cols = 0;
 	}
 
-	SparseMatrix(const SparseMatrix<D>& s)
+	SparseMatrix(const SparseMatrix<FloatType>& s)
 	{
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
@@ -107,7 +107,7 @@ public:
 				for(UINT col = 0; col < values.size(); col++)
 				{
 					const std::string s = ml::util::replace(ml::util::replace(values[col], "{",""), "}","");
-					(*this)(row, col) = (D)std::stod(s);
+					(*this)(row, col) = (FloatType)std::stod(s);
 				}
 			}
 		}
@@ -117,14 +117,14 @@ public:
 		}
 	}
 
-	void operator=(const SparseMatrix<D>& s)
+	void operator=(const SparseMatrix<FloatType>& s)
 	{
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
 		m_data = s.m_data;
 	}
 
-	void operator=(SparseMatrix<D>&& s)
+	void operator=(SparseMatrix<FloatType>&& s)
 	{
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
@@ -136,11 +136,11 @@ public:
 	//
 	// Accessors
 	//
-	D& operator()(UINT row, UINT col)
+	FloatType& operator()(UINT row, UINT col)
 	{
 		return m_data[row](col);
 	}
-	D operator()(UINT row, UINT col) const
+	FloatType operator()(UINT row, UINT col) const
 	{
 		return m_data[row](col);
 	}
@@ -152,28 +152,28 @@ public:
 	{
 		return m_cols;
 	}
-	const SparseRow<D>& sparseRow(UINT row) const
+	const SparseRow<FloatType>& sparseRow(UINT row) const
 	{
 		return m_data[row];
 	}
-	const MathVector<D> denseRow(UINT row) const
+	const MathVector<FloatType> denseRow(UINT row) const
 	{
-		MathVector<D> result(m_cols);
+		MathVector<FloatType> result(m_cols);
 		for(UINT col = 0; col < m_cols; col++)
 			result[col] = (*this)(row, col);
 		return result;
 	}
-	const MathVector<D> denseCol(UINT col) const
+	const MathVector<FloatType> denseCol(UINT col) const
 	{
-		MathVector<D> result(m_rows);
+		MathVector<FloatType> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = (*this)(row, col);
 		return result;
 	}
-	MathVector<D> diagonal() const
+	MathVector<FloatType> diagonal() const
 	{
 		MLIB_ASSERT_STR(square(), "diagonal called on non-square matrix");
-		MathVector<D> result(m_rows);
+		MathVector<FloatType> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = m_data[row](row);
 		return result;
@@ -182,8 +182,8 @@ public:
 	//
 	// math functions
 	//
-	SparseMatrix<D> transpose() const;
-	D maxMagnitude() const;
+	SparseMatrix<FloatType> transpose() const;
+	FloatType maxMagnitude() const;
 	bool square() const
 	{
 		return (m_rows == m_cols);
@@ -193,58 +193,58 @@ public:
 	//
 	// overloaded operator helpers
 	//
-	static SparseMatrix<D> add(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
-	static SparseMatrix<D> subtract(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
-	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, D c);
-	static MathVector<D> multiply(const SparseMatrix<D> &A, const MathVector<D> &v);
-	static SparseMatrix<D> multiply(const SparseMatrix<D> &A, const SparseMatrix<D> &B);
+	static SparseMatrix<FloatType> add(const SparseMatrix<FloatType> &A, const SparseMatrix<FloatType> &B);
+	static SparseMatrix<FloatType> subtract(const SparseMatrix<FloatType> &A, const SparseMatrix<FloatType> &B);
+	static SparseMatrix<FloatType> multiply(const SparseMatrix<FloatType> &A, FloatType c);
+	static MathVector<FloatType> multiply(const SparseMatrix<FloatType> &A, const MathVector<FloatType> &v);
+	static SparseMatrix<FloatType> multiply(const SparseMatrix<FloatType> &A, const SparseMatrix<FloatType> &B);
 	
 	// returns the scalar v^T A v
-	static D quadratic(const SparseMatrix<D> &A, const MathVector<D> &v)
+	static FloatType quadratic(const SparseMatrix<FloatType> &A, const MathVector<FloatType> &v)
 	{
-		return MathVector<D>::dot(v, multiply(A, v));
+		return MathVector<FloatType>::dot(v, multiply(A, v));
 	}
 
 private:
 	UINT m_rows, m_cols;
-    std::vector< SparseRow<D> > m_data;
+    std::vector< SparseRow<FloatType> > m_data;
 
 	// set is a more efficient version of operator() that assumes the entry
 	// does not exist.
 	void insert(UINT row, UINT col, double val)
 	{
-		m_data[row].entries.push_back(SparseRowEntry<D>(col, val));
+		m_data[row].entries.push_back(SparseRowEntry<FloatType>(col, val));
 	}
 };
 
-template<class D>
-SparseMatrix<D> operator + (const SparseMatrix<D> &A, const SparseMatrix<D> &B)
+template<class FloatType>
+SparseMatrix<FloatType> operator + (const SparseMatrix<FloatType> &A, const SparseMatrix<FloatType> &B)
 {
-	return SparseMatrix<D>::add(A, B);
+	return SparseMatrix<FloatType>::add(A, B);
 }
 
-template<class D>
-SparseMatrix<D> operator - (const SparseMatrix<D> &A, const SparseMatrix<D> &B)
+template<class FloatType>
+SparseMatrix<FloatType> operator - (const SparseMatrix<FloatType> &A, const SparseMatrix<FloatType> &B)
 {
-	return SparseMatrix<D>::subtract(A, B);
+	return SparseMatrix<FloatType>::subtract(A, B);
 }
 
-template<class D>
-SparseMatrix<D> operator * (const SparseMatrix<D> &A, const SparseMatrix<D> &B)
+template<class FloatType>
+SparseMatrix<FloatType> operator * (const SparseMatrix<FloatType> &A, const SparseMatrix<FloatType> &B)
 {
-	return SparseMatrix<D>::multiply(A, B);
+	return SparseMatrix<FloatType>::multiply(A, B);
 }
 
-template<class D>
-MathVector<D> operator * (const SparseMatrix<D> &A, const MathVector<D> &B)
+template<class FloatType>
+MathVector<FloatType> operator * (const SparseMatrix<FloatType> &A, const MathVector<FloatType> &B)
 {
-	return SparseMatrix<D>::multiply(A, B);
+	return SparseMatrix<FloatType>::multiply(A, B);
 }
 
-template<class D>
-SparseMatrix<D> operator * (const SparseMatrix<D> &A, D val)
+template<class FloatType>
+SparseMatrix<FloatType> operator * (const SparseMatrix<FloatType> &A, FloatType val)
 {
-	return SparseMatrix<D>::multiply(A, val);
+	return SparseMatrix<FloatType>::multiply(A, val);
 }
 
 //typedef SparseMatrix<float> SparseMatrixf;

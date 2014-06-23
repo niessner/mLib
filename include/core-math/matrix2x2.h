@@ -316,11 +316,9 @@ public:
 	}
 
 	EigenSystem<FloatType> eigenSystem() const {
-		EigenSolverVTK<FloatType> solver;
-		EigenSystem<FloatType> system = solver.eigenSystem(ml::DenseMatrix<FloatType>(*this));
-		//solver.eigenTest(ml::DenseMatrix<FloatType>(*this));
-		return system;
+		return EigenSolver<FloatType>::solve<EigenSolver<FloatType>::TYPE_DEFAULT>(*this);
 	}
+
 protected:
 
 private:

@@ -104,9 +104,7 @@ void AppTest::init(ml::ApplicationData &app)
 	}
 	std::cout << m3.rank() << std::endl;
 	//m.setDiag(1.0f, 2.0f, 3.0f);
-	vec3f l;
-	mat3f e;
-	bool s = m3.computeEigenvaluesAndEigenvectorsNR(l,e);
+
 
 	EigenSystemf es4 = m4.eigenSystem();
 	EigenSystemf es3 = m3.eigenSystem();
@@ -117,11 +115,7 @@ void AppTest::init(ml::ApplicationData &app)
 
 
 	std::cout << m3 << std::endl << std::endl;
-	std::cout << l << std::endl << std::endl;
-	std::cout << e << std::endl << std::endl;
 
-	mat3f check = e * mat3f::diag(l.x, l.y, l.z) * e.getInverse();
-	std::cout << check << std::endl;
 
 	MeshDataf::Indices indices;
 	//for (auto i = indices.begin(); i != indices.end(); i++) {}

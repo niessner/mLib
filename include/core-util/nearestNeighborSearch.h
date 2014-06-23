@@ -5,82 +5,82 @@
 namespace ml
 {
 
-template<class D>
+template<class FloatType>
 class NearestNeighborSearch
 {
 public:
-	void init(const std::vector< const D* > &points, UINT dimension, UINT maxK)
+	void init(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK)
 	{
 		initInternal(points, dimension, maxK);
 	}
-	void kNearest(const D *query, UINT k, D epsilon, std::vector<UINT> &result) const
+	void kNearest(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const
 	{
 		kNearestInternal(query, k, epsilon, result);
 	}
-    UINT nearest(const D *query) const
+    UINT nearest(const FloatType *query) const
     {
         std::vector<UINT> result;
         kNearestInternal(query, 1, 0.0f, result);
         return result[0];
     }
 	
-	void init(const std::vector< std::vector<D> > &points, UINT maxK)
+	void init(const std::vector< std::vector<FloatType> > &points, UINT maxK)
 	{
 		//Vector< const D* > v = points.map([](const Vector<D> &x) {return x.ptr();});
-		std::vector< const D* > v(points.size());
+		std::vector< const FloatType* > v(points.size());
 		for(UINT i = 0; i < points.size(); i++)
 			v[i] = &points[i][0];
 		init(v, (UINT)points[0].size(), maxK);
 	}
 
-	void kNearest(const std::vector<D> &query, UINT k, D epsilon, std::vector<UINT> &result) const
+	void kNearest(const std::vector<FloatType> &query, UINT k, FloatType epsilon, std::vector<UINT> &result) const
 	{
 		kNearestInternal(&query[0], k, epsilon, result);
 	}
 
-	std::vector<UINT> kNearest(const std::vector<D> &query, UINT k, D epsilon) const
+	std::vector<UINT> kNearest(const std::vector<FloatType> &query, UINT k, FloatType epsilon) const
 	{
 		std::vector<UINT> result;
 		kNearestInternal(&query[0], k, epsilon, result);
 		return result;
 	}
 
-	std::vector<UINT> kNearest(const D *query, UINT k, D epsilon) const
+	std::vector<UINT> kNearest(const FloatType *query, UINT k, FloatType epsilon) const
 	{
 		std::vector<UINT> result;
 		kNearestInternal(query, k, epsilon, result);
 		return result;
 	}
 
-    std::vector<UINT> fixedRadius(const std::vector<D> &query, UINT k, D radiusSq) const
+    std::vector<UINT> fixedRadius(const std::vector<FloatType> &query, UINT k, FloatType radiusSq) const
 	{
 		std::vector<UINT> result;
 		fixedRadiusInternal(&query[0], k, radiusSq, 0.0f, result);
 		return result;
 	}
 
-    std::vector<UINT> fixedRadius(const D *query, UINT k, D radiusSq) const
+    std::vector<UINT> fixedRadius(const FloatType *query, UINT k, FloatType radiusSq) const
     {
         std::vector<UINT> result;
         fixedRadiusInternal(query, k, radiusSq, 0.0f, result);
         return result;
     }
 
-    std::vector< std::pair<UINT, D> > fixedRadiusDist(const D *query, UINT k, D radiusSq) const
+    std::vector< std::pair<UINT, FloatType> > fixedRadiusDist(const FloatType *query, UINT k, FloatType radiusSq) const
     {
-        std::vector< std::pair<UINT, D> > result;
+        std::vector< std::pair<UINT, FloatType> > result;
         fixedRadiusInternalDist(query, k, radiusSq, 0.0f, result);
         return result;
     }
 
 private:
-	virtual void initInternal(const std::vector< const D* > &points, UINT dimension, UINT maxK) = 0;
-	virtual void kNearestInternal(const D *query, UINT k, D epsilon, std::vector<UINT> &result) const = 0;
-    virtual void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, std::vector<UINT> &result) const = 0;
-    virtual void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, std::vector< std::pair<UINT, D> > &result) const = 0;
+	virtual void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK) = 0;
+	virtual void kNearestInternal(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const = 0;
+    virtual void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector<UINT> &result) const = 0;
+    virtual void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const = 0;
 };
 
-template<class D>
+template<class FloatType>
 class KNearestNeighborQueue
 {
 public:
@@ -90,33 +90,33 @@ public:
 	struct NeighborEntry
 	{
 		NeighborEntry() {}
-		NeighborEntry(int _index, D _dist)
+		NeighborEntry(int _index, FloatType _dist)
 		{
 			index = _index;
 			dist = _dist;
 		}
 		int index;
-		D dist;
+		FloatType dist;
 	};
 
-    KNearestNeighborQueue(UINT k, D clearValue)
+    KNearestNeighborQueue(UINT k, FloatType clearValue)
     {
         init(k, clearValue);
     }
 
-	void init(UINT k, D clearValue)
+	void init(UINT k, FloatType clearValue)
 	{
 		if(m_queue.size() != k) m_queue.resize(k);
 		clear(clearValue);
 	}
 
-	void clear(D clearValue)
+	void clear(FloatType clearValue)
 	{
 		m_queue.assign(m_queue.size(), NeighborEntry(-1, clearValue));
 		m_farthestDist = clearValue;
 	}
 
-    inline void insert(int index, D dist)
+    inline void insert(int index, FloatType dist)
     {
         insert(NeighborEntry(index, dist));
     }
@@ -148,18 +148,18 @@ public:
 	}
 
 private:
-	D m_farthestDist;
+	FloatType m_farthestDist;
 	std::vector<NeighborEntry> m_queue;
 };
 
-template<class D>
-class NearestNeighborSearchBruteForce : public NearestNeighborSearch<D>
+template<class FloatType>
+class NearestNeighborSearchBruteForce : public NearestNeighborSearch<FloatType>
 {
 public:
 	NearestNeighborSearchBruteForce() {}
 	~NearestNeighborSearchBruteForce() {}
 
-	void initInternal(const std::vector< const D* > &points, UINT dimension, UINT maxK)
+	void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK)
 	{
 		m_dimension = dimension;
 		m_pointData.resize(points.size() * dimension);
@@ -172,20 +172,20 @@ public:
 		}
 	}
 
-	void kNearestInternal(const D *query, UINT k, D epsilon, std::vector<UINT> &result) const
+	void kNearestInternal(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const
 	{
-		m_queue.init(k, std::numeric_limits<D>::max());
+		m_queue.init(k, std::numeric_limits<FloatType>::max());
 		
 		for(UINT pointIndex = 0; pointIndex < m_points.size(); pointIndex++)
 		{
-			D dist = 0.0f;
-			const D* point = m_points[pointIndex];
+			FloatType dist = 0.0f;
+			const FloatType* point = m_points[pointIndex];
 			for(UINT d = 0; d < m_dimension; d++)
 			{
-				D diff = point[d] - query[d];
+				FloatType diff = point[d] - query[d];
 				dist += diff * diff;
 			}
-			m_queue.insert(typename KNearestNeighborQueue<D>::NeighborEntry(pointIndex, dist));
+			m_queue.insert(typename KNearestNeighborQueue<FloatType>::NeighborEntry(pointIndex, dist));
 		}
 
 		if(result.size() != k) result.resize(k);
@@ -196,21 +196,21 @@ public:
 		}
 	}
 
-    void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, std::vector<UINT> &result) const
+    void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector<UINT> &result) const
     {
         throw MLIB_EXCEPTION("fixedRadiusInternal not implemented");
     }
 
-    void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, std::vector< std::pair<UINT, D> > &result) const
+    void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const
     {
         throw MLIB_EXCEPTION("fixedRadiusInternalDist not implemented");
     }
 
 private:
 	UINT m_dimension;
-	std::vector<D> m_pointData;
-	std::vector< const D* > m_points;
-	mutable KNearestNeighborQueue<D> m_queue;
+	std::vector<FloatType> m_pointData;
+	std::vector< const FloatType* > m_points;
+	mutable KNearestNeighborQueue<FloatType> m_queue;
 };
 
 }  // namespace ml

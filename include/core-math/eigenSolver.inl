@@ -21,29 +21,29 @@ namespace ml {
 //
 // Code modified from VTK vtkJacobiN function
 //
-template<class T>
-void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenvectors, T *eigenvalues) const
+template<class FloatType>
+void EigenSolverVTK<FloatType>::eigenSystemInternal(const DenseMatrix<FloatType> &M, FloatType **eigenvectors, FloatType *eigenvalues) const
 {
     const unsigned int rows = M.rows();
     MLIB_ASSERT_STR(M.square() && M.rows() >= 2, "invalid matrix dimensions in EigenSolverVTK<T>::eigenSystem");
     int i, j, k, iq, ip, numPos, n = int(rows);
-    T tresh, theta, tau, t, sm, s, h, g, c, tmp;
-    T bspace[4], zspace[4];
-    T *b = bspace;
-    T *z = zspace;
+    FloatType tresh, theta, tau, t, sm, s, h, g, c, tmp;
+    FloatType bspace[4], zspace[4];
+    FloatType *b = bspace;
+    FloatType *z = zspace;
 
     //
     // Jacobi iteration destroys the matrix so create a temporary copy
     //
-    DenseMatrix<T> a = M;
+    DenseMatrix<FloatType> a = M;
     
     //
     // only allocate memory if the matrix is large
     //
     if (n > 4)
     {
-        b = new T[n];
-        z = new T[n];
+        b = new FloatType[n];
+        z = new FloatType[n];
     }
 
     //
@@ -60,7 +60,7 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
     for (ip = 0; ip<n; ip++)
     {
         b[ip] = a(ip, ip);
-        eigenvalues[ip] = T(a(ip, ip));
+        eigenvalues[ip] = FloatType(a(ip, ip));
         z[ip] = 0.0;
     }
 
@@ -82,18 +82,18 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
 
         if (i < 3)                                // first 3 sweeps
         {
-            tresh = (T)0.2*sm / (n*n);
+            tresh = (FloatType)0.2*sm / (n*n);
         }
         else
         {
-            tresh = (T)0.0;
+            tresh = (FloatType)0.0;
         }
 
         for (ip = 0; ip<n - 1; ip++)
         {
             for (iq = ip + 1; iq<n; iq++)
             {
-                g = T(100.0*fabs(a(ip, iq)));
+                g = FloatType(100.0*fabs(a(ip, iq)));
 
                 // after 4 sweeps
                 if (i > 3 && (fabs(eigenvalues[ip]) + g) == fabs(eigenvalues[ip])
@@ -110,22 +110,22 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
                     }
                     else
                     {
-                        theta = (T)0.5*h / (a(ip, iq));
-                        t = (T)1.0 / (fabs(theta) + sqrt((T)1.0 + theta*theta));
+                        theta = (FloatType)0.5*h / (a(ip, iq));
+                        t = (FloatType)1.0 / (fabs(theta) + sqrt((FloatType)1.0 + theta*theta));
                         if (theta < 0.0)
                         {
                             t = -t;
                         }
                     }
-                    c = (T)1.0 / sqrt(1 + t*t);
+                    c = (FloatType)1.0 / sqrt(1 + t*t);
                     s = t*c;
-                    tau = s / ((T)1.0 + c);
+                    tau = s / ((FloatType)1.0 + c);
                     h = t*a(ip, iq);
                     z[ip] -= h;
                     z[iq] += h;
-                    eigenvalues[ip] -= T(h);
-                    eigenvalues[iq] += T(h);
-                    a(ip, iq) = (T)0.0;
+                    eigenvalues[ip] -= FloatType(h);
+                    eigenvalues[iq] += FloatType(h);
+                    a(ip, iq) = (FloatType)0.0;
 
                     // ip already shifted left by 1 unit
                     for (j = 0; j <= ip - 1; j++)
@@ -155,7 +155,7 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
         for (ip = 0; ip<n; ip++)
         {
             b[ip] += z[ip];
-            eigenvalues[ip] = T(b[ip]);
+            eigenvalues[ip] = FloatType(b[ip]);
             z[ip] = 0.0;
         }
     }
@@ -181,12 +181,12 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
         if (k != j)
         {
             eigenvalues[k] = eigenvalues[j];
-            eigenvalues[j] = T(tmp);
+            eigenvalues[j] = FloatType(tmp);
             for (i = 0; i<n; i++)
             {
                 tmp = eigenvectors[i][j];
                 eigenvectors[i][j] = eigenvectors[i][k];
-                eigenvectors[i][k] = T(tmp);
+                eigenvectors[i][k] = FloatType(tmp);
             }
         }
     }
@@ -212,7 +212,7 @@ void EigenSolverVTK<T>::eigenSystemInternal(const DenseMatrix<T> &M, T **eigenve
         {
             for (i = 0; i<n; i++)
             {
-                eigenvectors[i][j] *= (T)-1.0;
+                eigenvectors[i][j] *= (FloatType)-1.0;
             }
         }
     }
