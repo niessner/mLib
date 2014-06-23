@@ -6,6 +6,8 @@ namespace ml {
 
 template <class FloatType>
 class DenseMatrix;
+template <class FloatType>
+struct EigenSystem;
 
 //! This class provides functions to handle 4-dimensional matrices
 /*! The arrangement of the matrix is row-like.
@@ -104,6 +106,17 @@ public:
 
 	//! destructor
 	~Matrix4x4() {}
+
+	//! Access element of Matrix at row x and column y for constant access
+	inline FloatType at(unsigned char x, unsigned char y) const {
+		assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char
+		return matrix2[x][y]; 
+	}
+	//! Access element of Matrix at row x and column y
+	inline FloatType& at(unsigned char x, unsigned char y) {
+		assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char
+		return matrix2[x][y]; 
+	}
 
 	//! Access i,j-th row of Matrix for constant access
 	inline FloatType operator() (unsigned int i, unsigned int j) const {
@@ -514,12 +527,6 @@ public:
 		point4d<FloatType>(matrix[12],matrix[13],matrix[14],matrix[15]);
 	}
 
-    Matrix4x4<FloatType> eigenSystem() const {
-        EigenSolverVTK<FloatType> solver;
-        EigenSystem<FloatType> system = solver.eigenSystem(ml::DenseMatrix<FloatType>(*this));
-        //solver.eigenTest(ml::DenseMatrix<FloatType>(*this));
-        return Matrix4x4<FloatType>(system.eigenvectors);
-    }
 
 	//! return the inverse matrix; but does not change the current matrix
     Matrix4x4<FloatType> getInverse() const {
@@ -761,32 +768,29 @@ public:
 		return util::rank<Matrix4x4<FloatType>, FloatType>(*this, 4, eps);
 	}
 
-	union {
-		//! access matrix using a single array
-		FloatType matrix[16];
-		//! access matrix using a two-dimensional array
-		FloatType matrix2[4][4];
-		//! access matrix using single elements
-		struct {
-			FloatType
-			_m00, _m01, _m02, _m03,
-			_m10, _m11, _m12, _m13,
-			_m20, _m21, _m22, _m23,
-			_m30, _m31, _m32, _m33;
-		};
-	};
+	EigenSystem<FloatType> eigenSystem() const {
+		EigenSolverVTK<FloatType> solver;
+		EigenSystem<FloatType> system = solver.eigenSystem(ml::DenseMatrix<FloatType>(*this));
+		//solver.eigenTest(ml::DenseMatrix<FloatType>(*this));
+		return system;
+	}
+
 
   private:
-    //! Access element of Matrix at row x and column y for constant access
-    inline FloatType at(unsigned char x, unsigned char y) const {
-      assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char
-      return matrix2[x][y]; 
-    }
-    //! Access element of Matrix at row x and column y
-    inline FloatType& at(unsigned char x, unsigned char y) {
-      assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char
-      return matrix2[x][y]; 
-    }
+	  union {
+		  //! access matrix using a single array
+		  FloatType matrix[16];
+		  //! access matrix using a two-dimensional array
+		  FloatType matrix2[4][4];
+		  //! access matrix using single elements
+		  struct {
+			  FloatType
+				  _m00, _m01, _m02, _m03,
+				  _m10, _m11, _m12, _m13,
+				  _m20, _m21, _m22, _m23,
+				  _m30, _m31, _m32, _m33;
+		  };
+	  };
 
     //! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns
     FloatType det3x3(unsigned int i0 = 0, unsigned int i1 = 1, unsigned int i2 = 2, unsigned int j0 = 0, unsigned int j1 = 1, unsigned int j2 = 2) const {

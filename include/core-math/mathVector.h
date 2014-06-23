@@ -146,6 +146,18 @@ inline MathVector<T> operator/(const T& v, const MathVector<T>& other)  {
 	return res;
 }
 
+template<class T>
+inline std::ostream& operator<<(std::ostream& s, const MathVector<T>& v) {
+	s << "vector size " << v.size() << "\n";
+	for (size_t i = 0; i < v.size(); i++) {
+		s << '\t' << v[i];
+		if (i != v.size() - 1) s << '\n';
+	}
+	return s;
+}
+
 }  // namespace ml
+
+
 
 #endif  // CORE_MATH_MATHVECTOR_H_

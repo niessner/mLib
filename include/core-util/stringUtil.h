@@ -161,7 +161,7 @@ namespace util
 }  // namespace util
 
 template<class T>
-__forceinline std::ostream& operator<<(std::ostream& s, const std::vector<T>& v) {
+inline std::ostream& operator<<(std::ostream& s, const std::vector<T>& v) {
 	s << "vector size " << v.size() << "\n";
 	for (size_t i = 0; i < v.size(); i++) {
 		s << '\t' << v[i];
@@ -172,7 +172,7 @@ __forceinline std::ostream& operator<<(std::ostream& s, const std::vector<T>& v)
 
 
 template<class T>
-__forceinline std::ostream& operator<<(std::ostream& s, const std::list<T>& l) {
+inline std::ostream& operator<<(std::ostream& s, const std::list<T>& l) {
 	s << "list size " << l.size() << "\n";  
 	for (std::list<T>::const_iterator iter = l.begin(); iter != l.end(); iter++) {
 		s << '\t' << *iter;

@@ -17,6 +17,15 @@ struct EigenSystem
         eigenvectors = DenseMatrix<T>(n, n);
         eigenvalues.resize(n);
     }
+	EigenSystem(EigenSystem&& e) {
+		eigenvectors = std::move(e.eigenvectors);
+		eigenvalues = std::move(e.eigenvalues);
+	}
+	void operator=(EigenSystem&& e) {
+		eigenvectors = std::move(e.eigenvectors);
+		eigenvalues = std::move(e.eigenvalues);
+	}
+
     std::vector<T*> eigenvectorList()
     {
         std::vector<T*> result(eigenvectors.rows());
@@ -27,6 +36,15 @@ struct EigenSystem
     DenseMatrix<T> eigenvectors;
     MathVector<T> eigenvalues;
 };
+
+typedef EigenSystem<float> EigenSystemf;
+typedef EigenSystem<double> EigenSystemd;
+
+template<class FloatType>
+std::ostream& operator<<(std::ostream& s, const EigenSystem<FloatType>& e) {
+	s << e.eigenvectors << std::endl << e.eigenvalues << std::endl;
+	return s;
+}
 
 template<class T> class EigenSolver
 {

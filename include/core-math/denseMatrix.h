@@ -98,8 +98,28 @@ public:
         m_data.resize(16);
         m_dataPtr = &m_data[0];
         for (unsigned int element = 0; element < m_data.size(); element++)
-            m_data[element] = m.matrix[element];
+            m_data[element] = m[element];
     }
+
+	DenseMatrix(const Matrix3x3<D> &m)
+	{
+		m_rows = 3;
+		m_cols = 3;
+		m_data.resize(9);
+		m_dataPtr = &m_data[0];
+		for (unsigned int element = 0; element < m_data.size(); element++)
+			m_data[element] = m[element];
+	}
+
+	DenseMatrix(const Matrix2x2<D> &m)
+	{
+		m_rows = 2;
+		m_cols = 2;
+		m_data.resize(4);
+		m_dataPtr = &m_data[0];
+		for (unsigned int element = 0; element < m_data.size(); element++)
+			m_data[element] = m[element];
+	}
 
 
 	void operator=(const DenseMatrix<D>& s)
@@ -232,6 +252,19 @@ template<class D>
 DenseMatrix<D> operator * (const DenseMatrix<D> &A, D val)
 {
 	return DenseMatrix<D>::multiply(A, val);
+}
+
+//! writes to a stream
+template <class FloatType> 
+inline std::ostream& operator<<(std::ostream& s, const DenseMatrix<FloatType>& m)
+{ 
+	for (unsigned int i = 0; i < m.rows(); i++) {
+		for (unsigned int j = 0; j < m.cols(); j++) {
+			s << m(i,j) << " ";
+		}
+		std::cout << std::endl;
+	}
+	return s;
 }
 
 typedef DenseMatrix<float> DenseMatrixf;

@@ -98,17 +98,25 @@ void AppTest::init(ml::ApplicationData &app)
 		m4[i] = (float)i;
 	}
 	std::cout << m4.rank() << std::endl << std::endl;
-	mat3f m;	
+	mat3f m3;	
 	for (unsigned int i = 0; i < 9; i++) {
-		m[i] = (float)i;
+		m3[i] = (float)i;
 	}
-	std::cout << m.rank() << std::endl;
+	std::cout << m3.rank() << std::endl;
 	//m.setDiag(1.0f, 2.0f, 3.0f);
 	vec3f l;
 	mat3f e;
-	bool s = m.computeEigenvaluesAndEigenvectorsNR(l,e);
+	bool s = m3.computeEigenvaluesAndEigenvectorsNR(l,e);
 
-	std::cout << m << std::endl << std::endl;
+	EigenSystemf es4 = m4.eigenSystem();
+	EigenSystemf es3 = m3.eigenSystem();
+	EigenSystemf es2 = m2.eigenSystem();
+	std::cout << es4 << std::endl;
+	std::cout << es3 << std::endl;
+	std::cout << es2 << std::endl;
+
+
+	std::cout << m3 << std::endl << std::endl;
 	std::cout << l << std::endl << std::endl;
 	std::cout << e << std::endl << std::endl;
 

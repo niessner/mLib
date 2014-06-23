@@ -4,6 +4,11 @@
 
 namespace ml {
 
+template <class FloatType>
+class DenseMatrix;
+template <class FloatType>
+struct EigenSystem;
+
 //! This class provides functions to handle 3-dimensional matrices
 /*! The arrangement of the matrix is row-like.
     The index of a specific position is:
@@ -492,6 +497,13 @@ public:
 
 	unsigned int rank(FloatType eps = (FloatType)0.00001) const {
 		return util::rank<Matrix3x3<FloatType>, FloatType>(*this, 3, eps);
+	}
+
+	EigenSystem<FloatType> eigenSystem() const {
+		EigenSolverVTK<FloatType> solver;
+		EigenSystem<FloatType> system = solver.eigenSystem(ml::DenseMatrix<FloatType>(*this));
+		//solver.eigenTest(ml::DenseMatrix<FloatType>(*this));
+		return system;
 	}
 
 	//! computes eigenvalues and eigenvectors numerically (numerical recipies); Eigenvalues/vectors are left to the matrix
