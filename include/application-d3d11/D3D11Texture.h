@@ -17,6 +17,12 @@ public:
         SAFE_RELEASE(m_texture);
         SAFE_RELEASE(m_view);
 	}
+    D3D11Texture(GraphicsDevice &g, const Bitmap &bmp)
+    {
+        m_texture = NULL;
+        m_view = NULL;
+        load(g, bmp);
+    }
 	void load(GraphicsDevice &g, const Bitmap &bmp);
 
 	void release(GraphicsDevice &g);

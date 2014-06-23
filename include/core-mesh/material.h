@@ -71,7 +71,11 @@ public:
 				ss >> activeMaterial.m_TextureFilename_Kd;
 			} else if (token == "map_Ks") {
 				ss >> activeMaterial.m_TextureFilename_Ks;
-			} else {
+            }
+            else if (token == "d") {
+                // d token not implemented
+            }
+            else {
 				MLIB_WARNING("unknown token: " + line);
 			}
 		}

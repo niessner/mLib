@@ -22,6 +22,9 @@ void D3D11Texture::reset(GraphicsDevice &g)
 {
     release(g);
 
+    if (m_bmp.cols() == 0 || m_bmp.rows() == 0)
+        return;
+
     auto &device = g.castD3D11().device();
     auto &context = g.castD3D11().context();
 
@@ -48,6 +51,8 @@ void D3D11Texture::reset(GraphicsDevice &g)
 
 void D3D11Texture::bind(GraphicsDevice &g) const
 {
+    if (m_view == NULL)
+        return;
     auto &context = g.castD3D11().context();
     context.PSSetShaderResources(0, 1, &m_view);
 }
