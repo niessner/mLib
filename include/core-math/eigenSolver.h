@@ -98,6 +98,14 @@ public:
     void eigenSystemInternal(const DenseMatrix<T> &M, T **eigenvectors, T *eigenvalues) const;
 };
 
+template<class T> class EigenSolverNR : public  EigenSolver<T>
+{
+public:
+	void eigenSystemInternal(const DenseMatrix<T> &M, T **eigenvectors, T *eigenvalues) const {
+		//TODO MATTHIAS here
+	}
+};
+
 }  // namespace ml
 
 #include "eigenSolver.inl"
