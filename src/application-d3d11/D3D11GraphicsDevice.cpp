@@ -118,6 +118,22 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
     viewport.TopLeftY = 0;
     m_context->RSSetViewports( 1, &viewport );
 
+    //
+    // Setup the sampler state
+    //
+    D3D11_SAMPLER_DESC samplerStateDesc;
+    samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    samplerStateDesc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
+    samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
+    samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+    samplerStateDesc.MipLODBias = 0.0f;
+    samplerStateDesc.MaxAnisotropy = 1;
+    samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    samplerStateDesc.MinLOD = -FLT_MAX;
+    samplerStateDesc.MaxLOD = FLT_MAX;
+    D3D_VALIDATE(m_device->CreateSamplerState(&samplerStateDesc, &m_samplerState));
+    m_context->PSSetSamplers(0, 1, &m_samplerState);
+
 #ifdef _DEBUG
 	m_device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_debug));
 #endif
