@@ -83,7 +83,11 @@ unsigned int test2(unsigned int size) {
 void AppTest::init(ml::ApplicationData &app)
 {
 	DenseMatrixf md(3);
-	for (unsigned int i = 0; i < 9;)
+	for (unsigned int i = 0; i < 9; i++) {
+		md[i] = (float)i;
+	}
+	std::cout << md.rank() << std::endl << std::endl;
+
 	mat2f m2;
 	for (unsigned int i = 0; i < 4; i++) {
 		m2[i] = (float)i;

@@ -35,8 +35,8 @@ public:
 	{
 		m_rows = squareDimension;
 		m_cols = squareDimension;
-		m_data.allocate(m_rows * m_cols);
-		m_dataPtr = m_data.ptr();
+		m_data.resize(m_rows * m_cols);
+		m_dataPtr = &m_data[0];
 	}
 
 	explicit DenseMatrix(const MathVector<D> &diagonal)
@@ -143,6 +143,18 @@ public:
 	{
 		return (m_rows == m_cols);
 	}
+
+	//! Access i-th element of the Matrix for constant access
+	inline D operator[] (unsigned int i) const {
+		assert(i < m_cols*m_rows);
+		return m_dataPtr[i];
+	}
+	//! Access i-th element of the Matrix
+	inline  D& operator[] (unsigned int i) {
+		assert(i < m_cols*m_rows);
+		return m_dataPtr[i];
+	}
+
 	std::vector<D> diagonal() const
 	{
 		MLIB_ASSERT_STR(square(), "diagonal called on non-square matrix");
