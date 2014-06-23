@@ -12,10 +12,29 @@ public:
         m_texture = NULL;
         m_view = NULL;
 	}
+    //
+    // TODO: implement other copy constructors similar to D3D11Mesh
+    //
+    D3D11Texture(D3D11Texture &&t)
+    {
+        m_bmp = std::move(t.m_bmp);
+        m_view = t.m_view; t.m_view = NULL;
+        m_texture = t.m_texture; t.m_texture = NULL;
+    }
+    void operator = (D3D11Texture &&t)
+    {
+        m_bmp = std::move(t.m_bmp);
+        m_view = t.m_view; t.m_view = NULL;
+        m_texture = t.m_texture; t.m_texture = NULL;
+    }
     ~D3D11Texture()
 	{
         SAFE_RELEASE(m_texture);
         SAFE_RELEASE(m_view);
+
+        // m_view does not seem to be a correctly reference-counted object.
+        m_view = NULL;
+        
 	}
     D3D11Texture(GraphicsDevice &g, const Bitmap &bmp)
     {
@@ -29,6 +48,16 @@ public:
 	void reset(GraphicsDevice &g);
 
     void bind(GraphicsDevice &g) const;
+
+    GraphicsAssetType type() const
+    {
+        return GraphicsAssetTexture;
+    }
+
+    const Bitmap& bmp() const
+    {
+        return m_bmp;
+    }
 
 private:
     Bitmap m_bmp;

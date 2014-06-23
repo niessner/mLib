@@ -38,7 +38,7 @@ void D3D11Texture::reset(GraphicsDevice &g)
     desc.SampleDesc.Quality = 0;
     desc.Usage = D3D11_USAGE_DEFAULT;
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
+    desc.CPUAccessFlags = 0;
     desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
     D3D_VALIDATE(device.CreateTexture2D(&desc, nullptr, &m_texture));

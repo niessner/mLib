@@ -51,6 +51,7 @@ public:
 	void renderBeginFrame();
 	void renderEndFrame();
 	void registerAsset(GraphicsAsset *asset);
+    void unregisterAsset(GraphicsAsset *asset);
     void toggleWireframe();
     void clear(const ml::vec4f &clearColor);
 
