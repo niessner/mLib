@@ -397,6 +397,47 @@ namespace util
 		if (begin < end)    { return begin; }
 		else                { return end; }
 	}
+
+	template<class Matrix, class FloatType, unsigned int dimension>
+	unsigned int rank(Matrix mat, FloatType eps = (FloatType)0.00001) {
+
+		const unsigned int n = dimension;
+
+		for (unsigned int k = 0; k < n; k++) { //loop over columns
+			for (unsigned int i = k+1; i < n; i++) { //loop over rows (to zero a specific column)
+
+				if (std::abs(mat(k,k)) <= eps) {
+					//search for a non-zero element
+					for (unsigned int j = k+1; j < n; j++) {
+						if (std::abs(mat(j,k) > eps)) {
+							//swap the column
+							for (unsigned int l = 0; l < n; l++) {
+								std::swap(mat(k,l),mat(j,l));
+							}
+							break;
+						}
+					}
+				}
+				if (std::abs(mat(k,k)) > eps) {
+					FloatType s = mat(i,k) / mat(k,k);
+					for (unsigned int j = k; j < n; j++) {
+						mat(i,j) = mat(i,j) - s*mat(k,j);
+					}
+				}
+			}
+		}
+		unsigned int r = 0;
+		for (unsigned int i = 0; i < n; i++) {
+			for (unsigned int j = 0; j < n; j++) {
+				if (std::abs(mat(i,j)) > eps) {
+					r++;
+					break;
+				}
+			}
+		}
+		return r;
+	}
+
 }  // namespace utility
 
 }  // namespace ml

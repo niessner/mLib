@@ -757,6 +757,10 @@ public:
 		return Matrix4x4(Matrix3x3<FloatType>::frame(n));
 	}
 
+	unsigned int rank(FloatType eps = (FloatType)0.00001) const {
+		return util::rank<Matrix4x4<FloatType>, FloatType, 4>(*this, eps);
+	}
+
 	union {
 		//! access matrix using a single array
 		FloatType matrix[16];

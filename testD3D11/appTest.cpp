@@ -82,15 +82,32 @@ unsigned int test2(unsigned int size) {
 
 void AppTest::init(ml::ApplicationData &app)
 {
-	mat3f m;
+	mat2f m2;
+	for (unsigned int i = 0; i < 4; i++) {
+		m2[i] = (float)i;
+	}
+	std::cout << m2.rank() << std::endl << std::endl;
+	mat4f m4;
+	for (unsigned int i = 0; i < 16; i++) {
+		m4[i] = (float)i;
+	}
+	std::cout << m4.rank() << std::endl << std::endl;
+	mat3f m;	
 	for (unsigned int i = 0; i < 9; i++) {
 		m[i] = (float)i;
 	}
+	std::cout << m.rank() << std::endl;
+	//m.setDiag(1.0f, 2.0f, 3.0f);
 	vec3f l;
 	mat3f e;
-	m.computeEigenvaluesAndEigenvectorsNR(l,e);
-	std::cout << l << std::endl;
-	std::cout << e << std::endl;
+	bool s = m.computeEigenvaluesAndEigenvectorsNR(l,e);
+
+	std::cout << m << std::endl << std::endl;
+	std::cout << l << std::endl << std::endl;
+	std::cout << e << std::endl << std::endl;
+
+	mat3f check = e * mat3f::diag(l.x, l.y, l.z) * e.getInverse();
+	std::cout << check << std::endl;
 
 	MeshDataf::Indices indices;
 	//for (auto i = indices.begin(); i != indices.end(); i++) {}

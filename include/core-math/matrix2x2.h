@@ -306,99 +306,9 @@ public:
 		return ret;
 	}
 
-	/*
-	//! computes eigenvalues and eigenvectors numerically (numerical recipies); Eigenvalues/vectors are left to the matrix
-	bool computeEigenvaluesAndEigenvectorsNR(FloatType &lambda_0, FloatType &lambda_1, FloatType &lambda_2, point3d<FloatType>& ev0, point3d<FloatType>& ev1, point3d<FloatType>& ev2) {
-
-		// Use jacobi's method:
-		// Build 3x3 matrix NR-style:
-		FloatType** CV = new FloatType*[4];
-		for (int i1 = 0; i1 < 4; i1++)	CV[i1] = new FloatType[4];
-
-		FloatType lambda[4];
-		
-		FloatType** v = new FloatType*[4];
-		for(int i1 = 0; i1 < 4; i1++)	v[i1] = new FloatType[4];
-
-
-		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3; j++)
-				CV[i+1][j+1] = (FloatType)matrix[i+3*j];
-
-		int num_of_required_jabobi_rotations;
-
-		if (!jacobi(CV, 3, lambda, v, &num_of_required_jabobi_rotations)) {
-			for(int i1 = 0; i1 < 4; i1++) {
-				delete[] v[i1];
-				delete[] CV[i1];
-			}
-			delete[] v;
-			delete[] CV;
-
-			return false;
-		}
-
-		point3d<FloatType> vec1(v[1][1], v[2][1], v[3][1]);
-		point3d<FloatType> vec2(v[1][2], v[2][2], v[3][2]);
-		point3d<FloatType> vec3(v[1][3], v[2][3], v[3][3]);
-
-		// Sort eigenvectors such the ev[0] is the smallest...
-		if (fabs(lambda[1]) < fabs(lambda[2]) && fabs(lambda[1]) < fabs(lambda[3])) {
-			ev2 = vec1;
-			lambda_2 = lambda[1];
-			if (fabs(lambda[2]) < fabs(lambda[3])) {
-				ev1 = vec2;
-				ev0 = vec3;
-				lambda_1 = lambda[2];
-				lambda_0 = lambda[3];
-			} else {
-				ev0 = vec2;
-				ev1 = vec3;
-				lambda_1 = lambda[3];
-				lambda_0 = lambda[2];
-			}
-		} else if (fabs(lambda[2]) < fabs(lambda[1]) && fabs(lambda[2]) < fabs(lambda[3])) {
-			ev2 = vec2;
-			lambda_2 = lambda[2];
-			if (fabs(lambda[1]) < fabs(lambda[3])) {
-				ev1 = vec1;
-				ev0 = vec3;
-				lambda_1 = lambda[1];
-				lambda_0 = lambda[3];
-			} else {
-				ev0 = vec1;
-				ev1 = vec3;
-				lambda_1 = lambda[3];
-				lambda_0 = lambda[1];
-			}
-		} else { // lambda[3] smallest!
-			ev2 = vec3;
-			lambda_2 = lambda[3];
-			if (fabs(lambda[1]) < fabs(lambda[2])) {
-				ev1 = vec1;
-				ev0 = vec2;
-				lambda_1 = lambda[1];
-				lambda_0 = lambda[2];
-			} else {
-				ev0 = vec1;
-				ev1 = vec2;
-				lambda_1 = lambda[2];
-				lambda_0 = lambda[1];
-			}
-		}
-
-
-		for(int i1 = 0; i1 < 4; i1++) {
-			delete[] v[i1];
-			delete[] CV[i1];
-		}
-		delete[] v;
-		delete[] CV;
-
-		return true;
+	unsigned int rank(FloatType eps = (FloatType)0.00001) const {
+		return util::rank<Matrix2x2<FloatType>, FloatType, 2>(*this, eps);
 	}
-	*/
-
 
 protected:
 
@@ -434,8 +344,8 @@ inline std::istream& operator>>(std::istream& s, const Matrix2x2<FloatType>& m)
 { 
 	return (
 		s >> 
-		m(0,0) >> m(0,1) >> m(0,2) >>
-		m(1,0) >> m(1,1) >> m(1,2)
+		m(0,0) >> m(0,1) >>
+		m(1,0) >> m(1,1)
 		);
 }
 
