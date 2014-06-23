@@ -86,32 +86,40 @@ void AppTest::init(ml::ApplicationData &app)
 	for (unsigned int i = 0; i < 9; i++) {
 		md[i] = (float)i;
 	}
-	std::cout << md.rank() << std::endl << std::endl;
+	//std::cout << md.rank() << std::endl << std::endl;
 
 	mat2f m2;
 	for (unsigned int i = 0; i < 4; i++) {
 		m2[i] = (float)i;
 	}
-	std::cout << m2.rank() << std::endl << std::endl;
+	//std::cout << m2.rank() << std::endl << std::endl;
 	mat4f m4;
 	for (unsigned int i = 0; i < 16; i++) {
 		m4[i] = (float)i;
 	}
-	std::cout << m4.rank() << std::endl << std::endl;
+	//std::cout << m4.rank() << std::endl << std::endl;
 	mat3f m3;	
 	for (unsigned int i = 0; i < 9; i++) {
 		m3[i] = (float)i;
 	}
-	std::cout << m3.rank() << std::endl;
+	//std::cout << m3.rank() << std::endl;
 	//m.setDiag(1.0f, 2.0f, 3.0f);
 
+	EigenSystemf esd_VTK = EigenSolverf::solve<EigenSolverf::TYPE_NR>(md);
+	EigenSystemf esd_NR = EigenSolverf::solve<EigenSolverf::TYPE_VTK>(md);
 
-	EigenSystemf es4 = m4.eigenSystem();
-	EigenSystemf es3 = m3.eigenSystem();
-	EigenSystemf es2 = m2.eigenSystem();
-	std::cout << es4 << std::endl;
-	std::cout << es3 << std::endl;
-	std::cout << es2 << std::endl;
+	std::cout << esd_VTK << std::endl;
+	std::cout << esd_NR << std::endl;
+
+	//EigenSystemf esd = md.eigenSystem();
+	//EigenSystemf es4 = m4.eigenSystem();
+	//EigenSystemf es3 = m3.eigenSystem();
+	//EigenSystemf es2 = m2.eigenSystem();
+
+	//std::cout << esd << std::endl;
+	//std::cout << es4 << std::endl;
+	//std::cout << es3 << std::endl;
+	//std::cout << es2 << std::endl;
 
 
 	std::cout << m3 << std::endl << std::endl;

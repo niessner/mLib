@@ -218,6 +218,11 @@ public:
 		if (!square())	throw MLIB_EXCEPTION("");
 		return util::rank<DenseMatrix<FloatType>, FloatType>(*this, m_rows, eps);
 	} 
+
+	EigenSystem<FloatType> eigenSystem() const {
+		return EigenSolver<FloatType>::solve<EigenSolver<FloatType>::TYPE_DEFAULT>(*this);
+	}
+
 private:
 	UINT m_rows, m_cols;
 	FloatType* m_dataPtr;

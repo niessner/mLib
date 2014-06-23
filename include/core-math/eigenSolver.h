@@ -35,25 +35,26 @@ struct EigenSystem
     }
 
 	void sortByAbsValue() {
-		DenseMatrix<FloatType> new_eigenvectors(eigenvectors.size());
-		MathVector<FloatType> new_eigenvalues(eigenvalues.size());
 
 		//simple selection sort
-		for (size_t i = 0; i < eigenvalues.size(); i++) {
+		for (unsigned int i = 0; i < (UINT)eigenvalues.size(); i++) {
 			FloatType currMax = (FloatType)0;
-			size_t currMaxIdx = -1;
-			for (size_t j = i; j < eigenvalues.size(); j++) {
+			unsigned int currMaxIdx = -1;
+			for (unsigned int j = i; j < (UINT)eigenvalues.size(); j++) {
 				if (std::abs(eigenvalues[j]) > currMax) {
 					currMax = std::abs(eigenvalues[j]);
 					currMaxIdx = j;
 				}
 			}
 
-			new_eigenvalues[i] = eigenvalues[currMaxIdx];
-			for (size_t j = 0; j < eigenvalues.size(); j++) {
-				new_eigenvectors[i][j] = eigenvectors[currMaxIdx][j];
+			if (currMaxIdx != i && currMaxIdx != -1) {
+				std::swap(eigenvalues[i], eigenvalues[currMaxIdx]);
+				for (unsigned int j = 0; j < (UINT)eigenvalues.size(); j++) {
+					std::swap(eigenvectors(i,j), eigenvectors(currMaxIdx,j));
+				}
 			}
 		}
+
 	}
 
     DenseMatrix<FloatType> eigenvectors;
@@ -84,9 +85,13 @@ public:
 	//template<SolverType solverType = TYPE_DEFAULT>
 	template<SolverType solverType>
 	static EigenSystem<FloatType> solve(const DenseMatrix<FloatType> &M) {
-		std::conditional<solverType == TYPE_DEFAULT, EigenSolverVTK<FloatType>, 
-			EigenSolverNR<FloatType>>::type solver;
-		return solver.eigenSystem(M);
+		// (the tuple maps to indices)
+		std::tuple_element<solverType, std::tuple<EigenSolverVTK<FloatType>, EigenSolverVTK<FloatType>, EigenSolverNR<FloatType>>>::type solver;
+		EigenSystem<FloatType> system = solver.eigenSystem(M);
+		if (solverType == TYPE_NR) {
+			system.sortByAbsValue();
+		}
+		return system;
 	}
 
     EigenSystem<FloatType> eigenSystem(const DenseMatrix<FloatType> &M) const
@@ -130,6 +135,10 @@ public:
 private:
     virtual void eigenSystemInternal(const DenseMatrix<FloatType> &M, FloatType **eigenvectors, FloatType *eigenvalues) const = 0;
 };
+
+typedef EigenSolver<float> EigenSolverf;
+typedef EigenSolver<double> EigenSolverd;
+
 
 template<class FloatType> class EigenSolverVTK : public EigenSolver<FloatType>
 {
