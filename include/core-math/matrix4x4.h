@@ -758,7 +758,7 @@ public:
 	}
 
 	unsigned int rank(FloatType eps = (FloatType)0.00001) const {
-		return util::rank<Matrix4x4<FloatType>, FloatType, 4>(*this, eps);
+		return util::rank<Matrix4x4<FloatType>, FloatType>(*this, 4, eps);
 	}
 
 	union {

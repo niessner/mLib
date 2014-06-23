@@ -182,6 +182,10 @@ public:
 		return DenseMatrix<D>(MathVector<D>(n, (D)1.0));
 	}
 
+	unsigned int rank(D eps = (D)0.00001) const {
+		if (!square())	throw MLIB_EXCEPTION("");
+		return util::rank<DenseMatrix<D>, D>(*this, m_rows, eps);
+	} 
 private:
 	UINT m_rows, m_cols;
 	D* m_dataPtr;
@@ -217,6 +221,9 @@ DenseMatrix<D> operator * (const DenseMatrix<D> &A, D val)
 {
 	return DenseMatrix<D>::multiply(A, val);
 }
+
+typedef DenseMatrix<float> DenseMatrixf;
+typedef DenseMatrix<double> DenseMatrixd;
 
 }  // namespace ml
 

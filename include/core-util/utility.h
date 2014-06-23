@@ -398,9 +398,11 @@ namespace util
 		else                { return end; }
 	}
 
-	template<class Matrix, class FloatType, unsigned int dimension>
-	unsigned int rank(Matrix mat, FloatType eps = (FloatType)0.00001) {
 
+
+	template<class Matrix, class FloatType>
+	unsigned int rank(Matrix mat, unsigned int dimension, FloatType eps = (FloatType)0.00001) 
+	{
 		const unsigned int n = dimension;
 
 		for (unsigned int k = 0; k < n; k++) { //loop over columns

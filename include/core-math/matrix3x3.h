@@ -491,7 +491,7 @@ public:
 	}
 
 	unsigned int rank(FloatType eps = (FloatType)0.00001) const {
-		return util::rank<Matrix3x3<FloatType>, FloatType, 3>(*this, eps);
+		return util::rank<Matrix3x3<FloatType>, FloatType>(*this, 3, eps);
 	}
 
 	//! computes eigenvalues and eigenvectors numerically (numerical recipies); Eigenvalues/vectors are left to the matrix

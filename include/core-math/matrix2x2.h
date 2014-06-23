@@ -307,7 +307,7 @@ public:
 	}
 
 	unsigned int rank(FloatType eps = (FloatType)0.00001) const {
-		return util::rank<Matrix2x2<FloatType>, FloatType, 2>(*this, eps);
+		return util::rank<Matrix2x2<FloatType>, FloatType>(*this, 2, eps);
 	}
 
 protected:
