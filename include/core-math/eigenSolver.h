@@ -82,6 +82,7 @@ public:
 		TYPE_NR = 2
 	};
     //type 0 -> VTK; type 1 -> NR
+	//TODO VS 2013
 	//template<SolverType solverType = TYPE_DEFAULT>
 	template<SolverType solverType>
 	static EigenSystem<FloatType> solve(const DenseMatrix<FloatType> &M) {

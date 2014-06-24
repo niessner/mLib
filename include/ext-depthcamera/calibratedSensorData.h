@@ -36,6 +36,8 @@ public:
 
 	//! Camera-to-World matrix
 	mat4f m_ExtrinsicInverse;
+
+	//TODO MATTHIAS get rid of the inverse matrices
 };
 
 //! write to binary stream overload
