@@ -105,19 +105,9 @@ public:
 
 	}
 
-	//! bbox intersection
-	bool intersect(const BoundingBox3d<FloatType>& other) {
-		return(
-			maxX > other.minX && 
-			minX < other.maxX &&
-			maxY > other.minY &&
-			minY < other.maxY &&
-			maxZ > other.minZ &&
-			minZ < other.maxZ);
-	}
-
+	 
 	//! triangle intersection
-	bool intersect
+//	bool intersect(const Point3d<FloatType>& v0, const Point3D<FloatType>)
 
 	FloatType getMaxExtend() const {
 		FloatType d0 = maxX - minX;
