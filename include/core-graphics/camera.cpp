@@ -163,7 +163,7 @@ point3d<T> Camera<T>::getScreenRayDirection(T screenX, T screenY) const
 {
     point3d<T> perspectivePoint( math::linearMap((T)0.0, (T)1.0, (T)-1.0, (T)1.0, screenX),
                                  math::linearMap((T)0.0, (T)1.0, (T)1.0, (T)-1.0, screenY),
-                                 (T)0.5 );
+                                 (T)-0.5 );
     return cameraPerspective().getInverse() * perspectivePoint - m_eye;
 }
 

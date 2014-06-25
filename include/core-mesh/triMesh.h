@@ -46,6 +46,9 @@ public:
 			*this = *this - other;
 		}
 
+        //
+        // If you change the order of these fields, you must update the layout fields in D3D11TriMesh::layout 
+        //
 		point3d<FloatType> position;
 		point3d<FloatType> normal;
 		point4d<FloatType> color;
@@ -314,7 +317,10 @@ public:
     std::vector<vec3ui>& getIndices() { return m_Indices; }
 
 	void getMeshData(MeshData<FloatType>& meshData) const {
-		meshData.clear();
+        //TODO: fix
+        throw MLIB_EXCEPTION("This doesn't compile");
+
+		/*meshData.clear();
 
 		meshData.m_Vertices.resize(m_Vertices.size());
 		meshData.m_FaceIndicesVertices.resize(m_Indices.size());
@@ -338,7 +344,7 @@ public:
 			if (m_bHasColors)		meshData.m_Colors[i] = m_Vertices[i].color;
 			if (m_bHasNormals)		meshData.m_Normals[i] = m_Vertices[i].normal;
 			if (m_bHasTexCoords)	meshData.m_TextureCoords[i] = m_Vertices[i].texCoord;
-		}
+		}*/
 	}
 
 	MeshData<FloatType> getMeshData() const {

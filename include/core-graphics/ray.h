@@ -12,8 +12,8 @@ public:
 
 	Ray(const point3d<FloatType> &o, const point3d<FloatType> &d) {
 		m_Origin = o;
-		m_Direction = d;
-		m_InverseDirection = point3d<FloatType>((FloatType)1.0/d.x, (FloatType)1.0/d.y, (FloatType)1.0/d.z);
+		m_Direction = d.getNormalized();
+        m_InverseDirection = point3d<FloatType>((FloatType)1.0 / m_Direction.x, (FloatType)1.0 / m_Direction.y, (FloatType)1.0 / m_Direction.z);
 
 		m_Sign.x = (m_InverseDirection.x < (FloatType)0);
 		m_Sign.y = (m_InverseDirection.y < (FloatType)0);
