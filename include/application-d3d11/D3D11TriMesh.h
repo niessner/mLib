@@ -99,10 +99,17 @@ public:
 	static const UINT layoutElementCount = 4;
 	static const D3D11_INPUT_ELEMENT_DESC layout[layoutElementCount];
 
+    bbox3f boundingBox() const {
+        bbox3f result;
+        for (auto &v : m_Vertices)
+            result.include(v.position);
+        return result;
+    }
 
 	const std::vector<D3D11TriMeshVertex>& getVertices() const {
 		return m_Vertices;
 	}
+
 	const std::vector<unsigned int>& getIndices() const {
 		return m_Indices;
 	} 

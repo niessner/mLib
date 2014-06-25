@@ -91,6 +91,7 @@
 #include "core-mesh/pointCloudIO.h"
 
 #include "core-mesh/triMesh.h"
+#include "core-mesh/triMeshSampler.h"
 #include "core-mesh/triangleBVHAccelerator.h"
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"

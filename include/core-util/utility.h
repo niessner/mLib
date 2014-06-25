@@ -47,7 +47,7 @@ namespace math
 		return static_cast<T>(left + s * (right - left));
 	}
 
-	inline int mod(int x, UINT M) {
+	inline int mod(int x, size_t M) {
 		if (x >= 0) { return (x % M); }
 		else { return ((x + (x / static_cast<int>(M) + 2) * static_cast<int>(M)) % M); }
 	}
@@ -303,6 +303,15 @@ namespace util
             if(e == element)
                 return true;
         return false;
+    }
+
+    template<class T>
+    int indexOf(const std::vector<T> &vec, const T &element)
+    {
+        for (int index = 0; index < vec.size(); index++)
+            if (vec[index] == element)
+                return index;
+        return -1;
     }
 
     //

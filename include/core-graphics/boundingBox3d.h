@@ -109,7 +109,7 @@ public:
 	//! triangle intersection
 //	bool intersect(const Point3d<FloatType>& v0, const Point3D<FloatType>)
 
-	FloatType getMaxExtend() const {
+	FloatType getMaxExtent() const {
 		FloatType d0 = maxX - minX;
 		FloatType d1 = maxY - minY;
 		FloatType d2 = maxZ - maxZ;
