@@ -23,7 +23,7 @@ template <class FloatType>
 Camera<FloatType>::Camera(const Matrix4x4<FloatType>& m, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar) {
 	m_eye = point3d<FloatType>(m(0, 3), m(1, 3), m(2, 3));
 	m_worldUp = point3d<FloatType>(m(0, 1), m(1, 1), m(2, 1));
-	m_right = -point3d<FloatType>(m(0, 0), m(1, 0), m(2, 0));  // NOTE: Negation to compensate for sensor horizontal flip
+	m_right = point3d<FloatType>(m(0, 0), m(1, 0), m(2, 0));
 	m_look = (m_worldUp ^ m_right).getNormalized();
 	m_up = (m_right ^ m_look).getNormalized();
 
@@ -156,6 +156,15 @@ Matrix4x4<FloatType> Camera<FloatType>::viewMatrix(const point3d<FloatType>& eye
 	             //l.x, l.y, l.z, -point3d<FloatType>::dot(l, eye),
 				 -l.x, -l.y, -l.z, point3d<FloatType>::dot(l, eye),  // Negation of look to create right-handed view matrix
 	             0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+template <class T>
+point3d<T> Camera<T>::getScreenRayDirection(T screenX, T screenY) const
+{
+    point3d<T> perspectivePoint( math::linearMap((T)0.0, (T)1.0, (T)-1.0, (T)1.0, screenX),
+                                 math::linearMap((T)0.0, (T)1.0, (T)1.0, (T)-1.0, screenY),
+                                 (T)0.5 );
+    return cameraPerspective().getInverse() * perspectivePoint - m_eye;
 }
 
 }  // namespace ml
