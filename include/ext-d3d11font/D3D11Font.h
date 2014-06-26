@@ -27,7 +27,7 @@ public:
         reset(g);
     }
 
-    void drawString(GraphicsDevice &g, const std::string &text, const ml::vec2i &pos, const float fontHeight, RGBColor color)
+    void drawString(GraphicsDevice &g, const std::string &text, const ml::vec2i &pos, const float fontHeight, RGBColor color) const
     {
         std::wstring wText(text.begin(), text.end());
         m_fontWrapper->DrawString(
@@ -39,6 +39,16 @@ public:
             0xff000000 + 0x00010000 * color.b + 0x00000100 * color.g + 0x00000001 * color.r,// Text color, 0xAaBbGgRr
             FW1_RESTORESTATE// Flags (for example FW1_RESTORESTATE to keep context states unchanged)
             );
+    }
+
+    void drawStrings(GraphicsDevice &g, const std::vector< std::pair<std::string, RGBColor> > &text, const ml::vec2i &pos, const float fontHeight, UINT lineHeight) const
+    {
+        int lineIndex = 0;
+        for (const auto &line : text)
+        {
+            drawString(g, line.first, pos + ml::vec2i(0, lineHeight * lineIndex), fontHeight, line.second);
+            lineIndex++;
+        }
     }
 
     void release(GraphicsDevice &g)
