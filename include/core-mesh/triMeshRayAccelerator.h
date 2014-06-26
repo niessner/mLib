@@ -80,7 +80,11 @@ public:
 
     void init(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy)
     {
-        // for now, this always stores a local copy but it would also be simple to iterate over the trimeshes.
+        if (!storeLocalCopy)
+        {
+            m_meshes = meshes;
+            return;
+        }
         
         size_t triCount = 0;
         for (const auto &p : meshes)
@@ -106,19 +110,20 @@ public:
             meshIndex++;
         }
     }
+
     bool intersect(const Ray<T> &ray, TriMeshRayAccelerator<T>::Intersection &result) const
     {
         result.dist = std::numeric_limits<float>::max();
         result.meshIndex = -1;
         result.triangleIndex = -1;
 
-        int triangleIndex = 0;
-        for (const Triangle &tri : m_tris)
+        if (m_tris.size() > 0)
         {
-            T dist, u, v;
-            if (tri.intersect(ray, dist, u, v))
+            int triangleIndex = 0;
+            for (const Triangle &tri : m_tris)
             {
-                if (dist < result.dist)
+                T dist, u, v;
+                if (tri.intersect(ray, dist, u, v) && dist < result.dist)
                 {
                     result.dist = dist;
                     result.meshIndex = tri.meshIndex;
@@ -127,14 +132,48 @@ public:
                     result.uv.y = v;
                     result.pos = tri.getPos(result.uv);
                 }
+                triangleIndex++;
             }
-            triangleIndex++;
         }
+        else if (m_meshes.size() > 0)
+        {
+            int meshIndex = 0, triangleIndex = 0;
+            for (const auto &p : m_meshes)
+            {
+                for (const auto &indices : p.first->getIndices())
+                {
+                    Triangle tri;
+
+                    tri.meshIndex = meshIndex;
+                    for (int i = 0; i < 3; i++)
+                        tri.pos[i] = p.second * p.first->getVertices()[indices[i]].position;
+
+                    T dist, u, v;
+                    if (tri.intersect(ray, dist, u, v) && dist < result.dist)
+                    {
+                        result.dist = dist;
+                        result.meshIndex = tri.meshIndex;
+                        result.triangleIndex = triangleIndex;
+                        result.uv.x = u;
+                        result.uv.y = v;
+                        result.pos = tri.getPos(result.uv);
+                    }
+
+                    triangleIndex++;
+                }
+                meshIndex++;
+            }
+        }
+        
         return (result.meshIndex != -1);
     }
 
 private:
+    //
+    // exactly one of m_tris or m_meshes contains data, depending on storeLocalCopy
+    //
     std::vector< Triangle > m_tris;
+    std::vector< std::pair<const TriMesh<T> *, mat4f> > m_meshes;
 };
 
 } // ml

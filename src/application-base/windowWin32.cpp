@@ -32,8 +32,8 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         switch( wParam )                 //key pressed
         {
         case VK_ESCAPE:
-            PostQuitMessage(0);        //if escape pressed, exit
-            break;
+        //    PostQuitMessage(0);        //if escape pressed, exit
+        //    break;
         default:
 			UINT keyIndex = (UINT)wParam;
             parent.callback().keyDown(parent.data(), (UINT)wParam);
