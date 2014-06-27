@@ -13,16 +13,16 @@ namespace ml {
 			unsigned int byteSize;
 		};
 		PlyHeader(std::ifstream& file) {
-			m_NumVertices = -1;
-			m_NumFaces = -1;
+			m_NumVertices = (unsigned int)-1;
+			m_NumFaces = (unsigned int)-1;
 			m_bHasNormals = false;
 			m_bHasColors = false;
 
 			read(file);
 		}
 		PlyHeader() {
-			m_NumVertices = -1;
-			m_NumFaces = -1;
+			m_NumVertices = (unsigned int)-1;
+			m_NumFaces = (unsigned int)-1;
 			m_bHasNormals = false;
 			m_bHasColors = false;
 		}

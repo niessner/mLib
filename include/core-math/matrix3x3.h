@@ -306,6 +306,7 @@ public:
 		for (unsigned int i = 0; i < 9; i++) {
 			result.matrix[i] = matrix[i] + other.matrix[i];
 		}
+		return result;
 	}
 
 	//! add matrix other to the operand
@@ -322,6 +323,7 @@ public:
 		for (unsigned int i = 0; i < 9; i++) {
 			result.matrix[i] = matrix[i] - other.matrix[i];
 		}
+		return result;
 	}
 	//! subtract matrix other from the operand
 	Matrix3x3 operator-= (const Matrix3x3& other) {
@@ -351,7 +353,7 @@ public:
 	}
 	//! get the x row out of the matrix
 	point3d<FloatType> xrow() const {
-		point3d<FloatType>(matrix[0],matrix[1],matrix[2]);
+		return point3d<FloatType>(matrix[0],matrix[1],matrix[2]);
 	}
 	//! get the y row out of the matrix
 	point3d<FloatType> yrow() const {
@@ -359,7 +361,7 @@ public:
 	}
 	//! get the y row out of the matrix
 	point3d<FloatType> zrow() const {
-		point3d<FloatType>(matrix[6],matrix[7],matrix[8]);
+		return point3d<FloatType>(matrix[6],matrix[7],matrix[8]);
 	}
 
 	//! return the inverse matrix; but does not change the current matrix
@@ -433,7 +435,7 @@ public:
 		out << 3 << " " << 3 << "\n";
 		for (unsigned int h = 0; h < numMatrices; h++) {
 			for (unsigned int i = 0; i < 3; i++) {
-				for (unsigned int j = 0; j < 3 j++) {
+				for (unsigned int j = 0; j < 3; j++) {
 					out << matrixArray[h](i,j) << " ";
 				}
 				out << "\n";

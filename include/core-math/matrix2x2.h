@@ -199,12 +199,11 @@ public:
 		}
 		return *this;
 	}
-	//! transform a 3D-vector with the matrix
-	point3d<FloatType> operator* (const point3d<FloatType>& v) const {
+	//! transform a 2D-vector with the matrix
+	point2d<FloatType> operator* (const point2d<FloatType>& v) const {
 		return point3d<FloatType>(
-			matrix[0]*v[0] + matrix[1]*v[1] + matrix[2]*v[2],
-			matrix[3]*v[0] + matrix[4]*v[1] + matrix[5]*v[2],
-			matrix[6]*v[0] + matrix[7]*v[1] + matrix[8]*v[2]
+			matrix[0]*v[0] + matrix[1]*v[1],
+			matrix[2]*v[0] + matrix[3]*v[1]
 		);
 	}
 	//! return the sum of the operand with matrix b
@@ -213,6 +212,7 @@ public:
 		for (unsigned int i = 0; i < 4; i++) {
 			result.matrix[i] = matrix[i] + other.matrix[i];
 		}
+		return result;
 	}
 
 	//! add matrix other to the operand
@@ -229,6 +229,7 @@ public:
 		for (unsigned int i = 0; i < 4; i++) {
 			result.matrix[i] = matrix[i] - other.matrix[i];
 		}
+		return result;
 	}
 	//! subtract matrix other from the operand
 	Matrix2x2 operator-= (const Matrix2x2& other) {
@@ -250,11 +251,11 @@ public:
 	}
 	//! get the y column out of the matrix
 	point3d<FloatType> ycol() const {
-		return point3d<FloatType>(matrix[1],matrix[3]);
+		return point2d<FloatType>(matrix[1],matrix[3]);
 	}
 	//! get the x row out of the matrix
 	point2d<FloatType> xrow() const {
-		point3d<FloatType>(matrix[0],matrix[1]);
+		return point2d<FloatType>(matrix[0],matrix[1]);
 	}
 	//! get the y row out of the matrix
 	point2d<FloatType> yrow() const {

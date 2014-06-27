@@ -14,7 +14,7 @@ namespace ml {
 
 		PlyHeader header(file);
 
-		if (header.m_NumVertices == -1) throw MLIB_EXCEPTION("no vertices found");
+		if (header.m_NumVertices == (unsigned int)-1) throw MLIB_EXCEPTION("no vertices found");
 
 		pc.m_points.resize(header.m_NumVertices);
 		if (header.m_bHasNormals)	pc.m_normals.resize(header.m_NumVertices);

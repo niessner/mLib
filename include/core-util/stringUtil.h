@@ -174,7 +174,7 @@ inline std::ostream& operator<<(std::ostream& s, const std::vector<T>& v) {
 template<class T>
 inline std::ostream& operator<<(std::ostream& s, const std::list<T>& l) {
 	s << "list size " << l.size() << "\n";  
-	for (std::list<T>::const_iterator iter = l.begin(); iter != l.end(); iter++) {
+	for (auto iter = l.begin(); iter != l.end(); iter++) {
 		s << '\t' << *iter;
 		if (iter != --l.end()) s << '\n';
 	}

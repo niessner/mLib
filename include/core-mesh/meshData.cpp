@@ -120,7 +120,7 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 	for (size_t i1 = 0; i1 < numV; i1++) {
 		const point3d<FloatType>& pt = m_Vertices[i1];
 
-		std::map<point3d<FloatType>, unsigned int, bool(*)(const point3d<FloatType>&, const point3d<FloatType>&)>::iterator it = pts.find(pt);
+		std::map<point3d<FloatType> , unsigned int, bool(*)(const point3d<FloatType>&, const point3d<FloatType>&) >::iterator it = pts.find(pt);
 
 		if (it != pts.end()) {
 			vertexLookUp[i1] = it->second;
@@ -158,7 +158,7 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 
 
 template <class FloatType>
-unsigned int MeshData<FloatType>::hasNearestNeighbor( const vec3i& coord, SparseGrid3D<std::list<std::pair<point3d<FloatType>,unsigned int>>> &neighborQuery, const point3d<FloatType>& v, FloatType thresh )
+unsigned int MeshData<FloatType>::hasNearestNeighbor( const vec3i& coord, SparseGrid3D<std::list<std::pair<point3d<FloatType>,unsigned int> > > &neighborQuery, const point3d<FloatType>& v, FloatType thresh )
 {
 	FloatType threshSq = thresh*thresh;
 	for (int i = -1; i <= 1; i++) {
@@ -231,7 +231,7 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 			}
 		}
 	} else {
-		SparseGrid3D<std::list<std::pair<point3d<FloatType>, unsigned int>>> neighborQuery(0.6f, numV*2);
+		SparseGrid3D<std::list<std::pair<point3d<FloatType>, unsigned int> > > neighborQuery(0.6f, numV*2);
 		for (unsigned int v = 0; v < numV; v++) {
 
 			const point3d<FloatType>& vert = m_Vertices[v];

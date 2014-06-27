@@ -206,7 +206,7 @@ public:
 	{
 	}
 
-	TriMesh(const std::vector<point3d<FloatType>>& vertices, const std::vector<unsigned int>& indices) : TriMesh(vertices.size(), indices.size(), &vertices[0], &indices[0]) {}
+	TriMesh(const std::vector<point3d<FloatType> >& vertices, const std::vector<unsigned int>& indices) : TriMesh(vertices.size(), indices.size(), &vertices[0], &indices[0]) {}
 
 	TriMesh(
 		size_t numVertices, size_t numIndices,

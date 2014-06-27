@@ -234,7 +234,7 @@ public:
 	//! returns the file size; if the file cannot be opened returns -1 (e.g., the file does not exist)
 	size_t getFileSizeInBytes(const std::string &filename) {
 		std::ifstream file(filename, std::ios::binary | std::ios::ate);
-		if (!file.is_open())	return -1;
+		if (!file.is_open())	return (size_t)-1;
 		size_t size = file.tellg();
 		file.close();
 		return size;

@@ -39,7 +39,7 @@ struct EigenSystem
 		//simple selection sort
 		for (unsigned int i = 0; i < (UINT)eigenvalues.size(); i++) {
 			FloatType currMax = (FloatType)0;
-			unsigned int currMaxIdx = -1;
+			unsigned int currMaxIdx = (unsigned int)-1;
 			for (unsigned int j = i; j < (UINT)eigenvalues.size(); j++) {
 				if (std::abs(eigenvalues[j]) > currMax) {
 					currMax = std::abs(eigenvalues[j]);
@@ -47,7 +47,7 @@ struct EigenSystem
 				}
 			}
 
-			if (currMaxIdx != i && currMaxIdx != -1) {
+			if (currMaxIdx != i && currMaxIdx != (unsigned int)-1) {
 				std::swap(eigenvalues[i], eigenvalues[currMaxIdx]);
 				for (unsigned int j = 0; j < (UINT)eigenvalues.size(); j++) {
 					std::swap(eigenvectors(i,j), eigenvectors(currMaxIdx,j));
@@ -87,7 +87,7 @@ public:
 	template<SolverType solverType>
 	static EigenSystem<FloatType> solve(const DenseMatrix<FloatType> &M) {
 		// (the tuple maps to indices)
-		std::tuple_element<solverType, std::tuple<EigenSolverVTK<FloatType>, EigenSolverVTK<FloatType>, EigenSolverNR<FloatType>>>::type solver;
+		std::tuple_element<solverType, std::tuple<EigenSolverVTK<FloatType>, EigenSolverVTK<FloatType>, EigenSolverNR<FloatType> > >::type solver;
 		EigenSystem<FloatType> system = solver.eigenSystem(M);
 		if (solverType == TYPE_NR) {
 			system.sortByAbsValue();

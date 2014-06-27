@@ -379,17 +379,17 @@ public:
 		if (std::is_same<T, vec2d >::value || std::is_same<T, vec2f >::value || std::is_same<T, vec2uc>::value ||	std::is_same<T, vec2ui>::value || std::is_same<T, vec2i >::value) return 2;
 		if (std::is_same<T, vec3d >::value || std::is_same<T, vec3f >::value || std::is_same<T, vec3uc>::value ||	std::is_same<T, vec3ui>::value || std::is_same<T, vec3i >::value) return 3;
 		if (std::is_same<T, vec4d >::value || std::is_same<T, vec4f >::value || std::is_same<T, vec4uc>::value ||	std::is_same<T, vec4ui>::value || std::is_same<T, vec4i >::value) return 4;
-		return -1;
+		return (unsigned int)-1;
 	}
 
 	//! returns the number of bits per channel (-1 if unknown);
 	unsigned int getNumBytesPerChannel() const  {
 		const unsigned int numChannels = getNumChannels();
-		if (numChannels != -1) return sizeof(T)/numChannels;
-		else return -1;
+		if (numChannels != (unsigned int)-1) return sizeof(T)/numChannels;
+		else return (unsigned int)-1;
 	}
 
-	//! returns the storage requirsments per pixel
+	//! returns the storage reqirements per pixel
 	unsigned int getNumBytesPerPixel() const {
 		return sizeof(T);
 	}

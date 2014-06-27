@@ -60,7 +60,7 @@ public:
 		if (!found)	m_Filenames.push_back(filename);
 	}
 
-	const void reload() {
+	void reload() {
 		m_Values.clear();
 		for(const auto &file : m_Filenames)
 		{

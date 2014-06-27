@@ -208,4 +208,31 @@ typedef unsigned char BYTE;
 typedef unsigned short USHORT;
 #endif
 
+
+
+
+#ifndef sint
+typedef signed int sint;
+#endif
+
+#ifndef uint
+typedef unsigned int uint;
+#endif 
+
+#ifndef slong 
+typedef signed long slong;
+#endif
+
+#ifndef ulong
+typedef unsigned long ulong;
+#endif
+
+#ifndef uchar
+typedef unsigned char uchar;
+#endif
+
+#ifndef schar
+typedef signed char schar;
+#endif
+
 #endif  // CORE_BASE_COMMON_H_

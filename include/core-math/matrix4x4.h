@@ -456,6 +456,7 @@ public:
 		for (unsigned int i = 0; i < 16; i++) {
 			result.matrix[i] = matrix[i] + other.matrix[i];
 		}
+		return result;
 	}
 
 	//! add matrix other to the operand
@@ -472,6 +473,7 @@ public:
 		for (unsigned int i = 0; i < 16; i++) {
 			result.matrix[i] = matrix[i] - other.matrix[i];
 		}
+		return result;
 	}
 	//! subtract matrix other from the operand
 	Matrix4x4 operator-= (const Matrix4x4& other) {
@@ -512,7 +514,7 @@ public:
 	}
 	//! get the x row out of the matrix
 	point4d<FloatType> xrow() const {
-		point4d<FloatType>(matrix[0],matrix[1],matrix[2],matrix[3]);
+		return point4d<FloatType>(matrix[0],matrix[1],matrix[2],matrix[3]);
 	}
 	//! get the y row out of the matrix
 	point4d<FloatType> yrow() const {
@@ -520,11 +522,11 @@ public:
 	}
 	//! get the y row out of the matrix
 	point4d<FloatType> zrow() const {
-		point4d<FloatType>(matrix[8],matrix[9],matrix[10],matrix[11]);
+		return point4d<FloatType>(matrix[8],matrix[9],matrix[10],matrix[11]);
 	}
 	//! get the t row out of the matrix
 	inline point4d<FloatType> trow() const {
-		point4d<FloatType>(matrix[12],matrix[13],matrix[14],matrix[15]);
+		return point4d<FloatType>(matrix[12],matrix[13],matrix[14],matrix[15]);
 	}
 
 

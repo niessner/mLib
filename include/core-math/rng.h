@@ -62,11 +62,6 @@
 #include <climits>
 #include <vector>
 
-//TODO rewrite to use UINT INT etc. (these typedefs are redundant)
-typedef signed int sint;
-typedef unsigned int uint;
-typedef signed long slong;
-typedef unsigned long ulong;
 
 namespace ml {
 

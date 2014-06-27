@@ -14,8 +14,8 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	// read header
 	PlyHeader header(file);
 
-	if (header.m_NumFaces == -1) throw MLIB_EXCEPTION("no faces found");
-	if (header.m_NumVertices == -1) throw MLIB_EXCEPTION("no vertices found");
+	if (header.m_NumFaces == (unsigned int)-1) throw MLIB_EXCEPTION("no faces found");
+	if (header.m_NumVertices == (unsigned int)-1) throw MLIB_EXCEPTION("no vertices found");
 
 	mesh.m_Vertices.resize(header.m_NumVertices);
 	mesh.m_FaceIndicesVertices.resize(header.m_NumFaces, 3);	//assuming triangles

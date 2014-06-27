@@ -53,13 +53,13 @@ public:
 		}
 		pointsProjMean /= (FloatType)numPoints;
 
-		Matrix2D<FloatType> cov;
+		Matrix2x2<FloatType> cov;
 		for (unsigned int i = 0; i < numPoints; i++) {
 			point2d<FloatType> curr = pointsProj[i] - pointsProjMean;
-			cov.a += curr.x * curr.x;
-			cov.b += curr.x * curr.y;
-			cov.c += curr.x * curr.y;
-			cov.d += curr.y * curr.y;
+			cov[0] += curr.x * curr.x;
+			cov[1] += curr.x * curr.y;
+			cov[2] += curr.x * curr.y;
+			cov[3] += curr.y * curr.y;
 		}
 
 		SAFE_DELETE_ARRAY(pointsProj);

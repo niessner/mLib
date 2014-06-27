@@ -509,13 +509,13 @@ public:
 	std::vector<MaterialIndex>	m_MaterialIndices;	//active material for indices; from - to (in case of objcs)
 
 
-	std::vector<std::pair<MeshData, Material<FloatType>>> splitByMaterial(const std::string& overwriteMTLPath = "") const {
-		std::vector<std::pair<MeshData, Material<FloatType>>> res;
+	std::vector< std::pair <MeshData, Material<FloatType> > > splitByMaterial(const std::string& overwriteMTLPath = "") const {
+		std::vector<std::pair<MeshData, Material<FloatType> > > res;
 		splitByMaterial(res, overwriteMTLPath);
 		return res;
 	}
 
-	void splitByMaterial(std::vector<std::pair<MeshData, Material<FloatType>>>& res, const std::string& overwriteMTLPath = "") const {
+	void splitByMaterial(std::vector<std::pair<MeshData, Material<FloatType> > >& res, const std::string& overwriteMTLPath = "") const {
 		res.clear();
 		std::vector<Material<FloatType>> mats;
 		if (overwriteMTLPath != "")
@@ -674,7 +674,7 @@ private:
 		return vec3i(v/voxelSize+(FloatType)0.5*point3d<FloatType>(math::sign(v)));
 	} 
 	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned
-	unsigned int hasNearestNeighbor(const vec3i& coord, SparseGrid3D<std::list<std::pair<point3d<FloatType>,unsigned int>>> &neighborQuery, const point3d<FloatType>& v, FloatType thresh );
+	unsigned int hasNearestNeighbor(const vec3i& coord, SparseGrid3D<std::list<std::pair<point3d<FloatType>,unsigned int> > > &neighborQuery, const point3d<FloatType>& v, FloatType thresh );
 
 	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned (manhattan distance)
 	unsigned int hasNearestNeighborApprox(const vec3i& coord, SparseGrid3D<unsigned int> &neighborQuery, FloatType thresh );
