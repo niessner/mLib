@@ -376,6 +376,19 @@ namespace util
         return result;
     }
 
+    //Usage: size_t result = minValue(v, [](const vec3f &x) { return (x.length() == 0.0f); });
+    template<class T, class selectFunction>
+    int findFirstIndex(const std::vector<T> &collection, selectFunction function)
+    {
+        size_t index = 0;
+        for (const auto &element : collection)
+        {
+            if (function(element))
+                return index;
+        }
+        return -1;
+    }
+
     //Usage: float result = minValue(v, [](vec3f x) { return x.length(); });
     template<class mapFunction, class T>
     size_t minIndex(const std::vector<T> &collection, mapFunction function)

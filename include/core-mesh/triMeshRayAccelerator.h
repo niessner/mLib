@@ -176,6 +176,9 @@ private:
     std::vector< std::pair<const TriMesh<T> *, mat4f> > m_meshes;
 };
 
+typedef TriMeshRayAccelerator<float> TriMeshRayAcceleratorf;
+typedef TriMeshRayAccelerator<double> TriMeshRayAcceleratord;
+
 } // ml
 
 #endif

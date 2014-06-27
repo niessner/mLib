@@ -159,6 +159,12 @@ Matrix4x4<FloatType> Camera<FloatType>::viewMatrix(const point3d<FloatType>& eye
 }
 
 template <class T>
+Ray<T> Camera<T>::getScreenRay(T screenX, T screenY) const
+{
+    return Rayf(m_eye, getScreenRayDirection(screenX, screenY));
+}
+
+template <class T>
 point3d<T> Camera<T>::getScreenRayDirection(T screenX, T screenY) const
 {
     point3d<T> perspectivePoint( math::linearMap((T)0.0, (T)1.0, (T)-1.0, (T)1.0, screenX),

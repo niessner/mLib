@@ -23,6 +23,7 @@ public:
 	void jump(FloatType delta);
 	void move(FloatType delta);
 
+    Ray<FloatType> getScreenRay(FloatType screenX, FloatType screenY) const;
     point3d<FloatType> getScreenRayDirection(FloatType screenX, FloatType screenY) const;
 
 	Matrix4x4<FloatType> camera() const {
