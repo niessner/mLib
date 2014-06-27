@@ -75,7 +75,7 @@ TriMeshf cylinder(float radius, float height, UINT stacks, UINT slices, const ve
             indices[iIndex++] = (i + 1) * slices + i2p1;
         }
 
-    return TriMeshf(vertices, indices);
+    return TriMeshf(vertices, indices, true);
 }
 
 TriMeshf cylinder(const vec3f& p0, const vec3f& p1, float radius, UINT stacks, UINT slices, const vec4f& color) {
@@ -133,7 +133,7 @@ TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT s
         }
     }
 
-    return TriMeshf(vertices, indices);
+    return TriMeshf(vertices, indices, true);
 }
 
 TriMeshf wireframeBox(float dim, const vec4f& color, float thickness) {

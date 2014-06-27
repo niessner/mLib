@@ -181,15 +181,19 @@ public:
 	}
 	TriMesh(const MeshData<FloatType>& meshData);
 
-	TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<unsigned int>& indices) {
+	TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<unsigned int>& indices, bool recomputeNormals = false) {
 		if (indices.size()%3 != 0)	throw MLIB_EXCEPTION("not a tri mesh");
 		m_Vertices = vertices;
 		m_Indices.resize(indices.size()/3);
 		memcpy(&m_Indices[0], &indices[0], indices.size()*sizeof(unsigned int));
+        if (recomputeNormals)
+            computeNormals();
 	}
-	TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<vec3ui>& indices) {
+    TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<vec3ui>& indices, bool recomputeNormals = false) {
 		m_Vertices = vertices;
 		m_Indices = indices;
+        if (recomputeNormals)
+            computeNormals();
 	}
 
 	TriMesh(
@@ -352,6 +356,7 @@ public:
 		getMeshData(meshData);
 		return meshData;
 	}
+
 private:
     friend class boost::serialization::access;
 		

@@ -376,6 +376,19 @@ namespace util
         return result;
     }
 
+    template<class T>
+    int findFirstIndex(const std::vector<T> &collection, const T &value)
+    {
+        int index = 0;
+        for (const auto &element : collection)
+        {
+            if (element == value)
+                return index;
+            index++;
+        }
+        return -1;
+    }
+
     //Usage: size_t result = minValue(v, [](const vec3f &x) { return (x.length() == 0.0f); });
     template<class T, class selectFunction>
     int findFirstIndex(const std::vector<T> &collection, selectFunction function)

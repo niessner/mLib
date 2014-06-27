@@ -19,8 +19,25 @@ public:
         point2d<T> uv;
     };
 
-    virtual void init(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy) = 0;
+    void init(const TriMesh<T> &mesh, bool storeLocalCopy)
+    {
+        init(mesh, ml::mat4f::identity(), storeLocalCopy);
+    }
+    void init(const TriMesh<T> &mesh, const mat4f &transform, bool storeLocalCopy)
+    {
+        std::vector< std::pair<const TriMesh<T> *, mat4f> > meshes;
+        meshes.push_back(std::make_pair(&mesh, transform));
+        init(meshes, storeLocalCopy);
+    }
+    void init(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy)
+    {
+        initInternal(meshes, storeLocalCopy);
+    }
     virtual bool intersect(const Ray<T> &ray, Intersection &result) const = 0;
+
+private:
+    virtual void initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy) = 0;
+    
 };
 
 template<class T>
@@ -78,7 +95,7 @@ public:
         }
     };
 
-    void init(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy)
+    void initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy)
     {
         if (!storeLocalCopy)
         {
