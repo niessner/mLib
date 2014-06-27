@@ -63,6 +63,7 @@ struct TriangleBVHNode {
 		}
 	}
 
+    //TODO: return triangle pointer instead of bool
 	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType& tmin, FloatType& tmax, bool intersectOnlyFrontFaces = false) const {
 		if (t < tmin || t > tmax)	return false;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {

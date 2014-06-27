@@ -376,6 +376,26 @@ namespace util
         return result;
     }
 
+    //Usage: float result = minValue(v, [](vec3f x) { return x.length(); });
+    template<class mapFunction, class T>
+    size_t minIndex(const std::vector<T> &collection, mapFunction function)
+        //float zz(std::vector<int> &collection)
+    {
+        auto minValue = function(*(collection.begin()));
+        size_t minIndex = 0, curIndex = 0;
+        for (const auto &element : collection)
+        {
+            auto value = function(element);
+            if (value < minValue)
+            {
+                minValue = value;
+                minIndex = curIndex;
+            }
+            curIndex++;
+        }
+        return minIndex;
+    }
+
     //Usage: auto filteredVector = filter(v, [](int a) { return a > 10; });
     template<class filterFunction, class T>
     auto filter(const std::vector<T> &v, filterFunction function) -> std::vector<T>
