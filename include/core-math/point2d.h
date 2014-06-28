@@ -133,6 +133,10 @@ public:
 		return (array[0]*other.array[0] + array[1]*other.array[1]);
 	}
 
+    static inline T dot(const point2d& l, const point2d& r) {
+        return(l.array[0] * r.array[0] + l.array[1] * r.array[1]);
+    }
+
 	inline T& operator[](unsigned int i) {
 		assert(i < 2);
 		return array[i];

@@ -786,6 +786,47 @@ public:
 		return ret;
 	}
 
+    std::vector< point3d<FloatType> > getVertices() const
+    {
+        std::vector< point3d<FloatType> > result;
+        
+        result.push_back(m_Anchor + m_AxesScaled[0] * 0.0f + m_AxesScaled[1] * 0.0f + m_AxesScaled[2] * 0.0f);
+        result.push_back(m_Anchor + m_AxesScaled[0] * 1.0f + m_AxesScaled[1] * 0.0f + m_AxesScaled[2] * 0.0f);
+        result.push_back(m_Anchor + m_AxesScaled[0] * 1.0f + m_AxesScaled[1] * 1.0f + m_AxesScaled[2] * 0.0f);
+        result.push_back(m_Anchor + m_AxesScaled[0] * 0.0f + m_AxesScaled[1] * 1.0f + m_AxesScaled[2] * 0.0f);
+
+        result.push_back(m_Anchor + m_AxesScaled[0] * 0.0f + m_AxesScaled[1] * 0.0f + m_AxesScaled[2] * 1.0f);
+        result.push_back(m_Anchor + m_AxesScaled[0] * 1.0f + m_AxesScaled[1] * 0.0f + m_AxesScaled[2] * 1.0f);
+        result.push_back(m_Anchor + m_AxesScaled[0] * 1.0f + m_AxesScaled[1] * 1.0f + m_AxesScaled[2] * 1.0f);
+        result.push_back(m_Anchor + m_AxesScaled[0] * 0.0f + m_AxesScaled[1] * 1.0f + m_AxesScaled[2] * 1.0f);
+
+        return result;
+    }
+
+    std::vector< LineSegment3<FloatType> > getEdges() const
+    {
+        std::vector< LineSegment3<FloatType> > result;
+
+        auto v = getVertices();
+        
+        result.push_back(LineSegment3<FloatType>(v[0], v[1]));
+        result.push_back(LineSegment3<FloatType>(v[1], v[2]));
+        result.push_back(LineSegment3<FloatType>(v[2], v[3]));
+        result.push_back(LineSegment3<FloatType>(v[3], v[0]));
+
+        result.push_back(LineSegment3<FloatType>(v[4], v[5]));
+        result.push_back(LineSegment3<FloatType>(v[5], v[6]));
+        result.push_back(LineSegment3<FloatType>(v[6], v[7]));
+        result.push_back(LineSegment3<FloatType>(v[7], v[4]));
+
+        result.push_back(LineSegment3<FloatType>(v[0], v[4]));
+        result.push_back(LineSegment3<FloatType>(v[1], v[5]));
+        result.push_back(LineSegment3<FloatType>(v[2], v[6]));
+        result.push_back(LineSegment3<FloatType>(v[3], v[7]));
+
+        return result;
+    }
+
 private:
 	static inline bool isInUnitInterval(const FloatType &v, FloatType eps = (FloatType)0.00001) {
 		if (v >= -eps && v <= 1 + eps) return true;

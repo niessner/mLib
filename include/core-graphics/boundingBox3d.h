@@ -11,6 +11,9 @@
 
 namespace ml {
 
+template<class T>
+class ObjectOrientedBoundingBox;
+
 template<class FloatType>
 class BoundingBox3d
 {
@@ -24,9 +27,8 @@ public:
 	BoundingBox3d(const std::vector< point3d<FloatType> >& verts) 
 	{
 		reset();
-		for (unsigned int i = 0; i < verts.size(); i++) {
-			include(verts[i]);
-		}
+        for (const auto &v : verts)
+			include(v);
 	}
 
 	BoundingBox3d(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) 
@@ -36,12 +38,12 @@ public:
 		maxB = maxBound;
 	}
 
-
-	~BoundingBox3d(void)
-	{
-
-	}
-	
+    explicit BoundingBox3d(const ObjectOrientedBoundingBox<FloatType> &oobb)
+    {
+        reset();
+        for (const auto &v : oobb.getVertices())
+            include(v);
+    }
 
 	void reset()
 	{
