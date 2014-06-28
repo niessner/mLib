@@ -74,7 +74,7 @@
 #include "core-graphics/colorUtils.h"
 #include "core-graphics/ray.h"
 #include "core-graphics/camera.h"
-#include "core-graphics/lineSegment.h"
+#include "core-graphics/lineSegment3d.h"
 #include "core-graphics/plane.h"
 #include "core-graphics/boundingBox3d.h"
 #include "core-graphics/orientedBoundingBox3d.h"
