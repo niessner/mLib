@@ -377,6 +377,13 @@ namespace util
     }
 
     template<class T>
+    void removeSwap(std::vector<T> &collection, size_t index)
+    {
+        std::swap(collection[index], collection.back());
+        collection.pop_back();
+    }
+
+    template<class T>
     int findFirstIndex(const std::vector<T> &collection, const T &value)
     {
         int index = 0;
