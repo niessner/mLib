@@ -78,6 +78,7 @@
 #include "core-graphics/plane.h"
 #include "core-graphics/boundingBox3d.h"
 #include "core-graphics/orientedBoundingBox3d.h"
+#include "core-graphics/dist.h"
 #include "core-util/colorGradient.h"
 
 //

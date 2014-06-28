@@ -13,6 +13,14 @@ public:
 		setInvalid();
 	}
 
+    ObjectOrientedBoundingBox(const BoundingBox3d<FloatType> &box)
+    {
+        m_Anchor = box.getMin();
+        m_AxesScaled[0] = vec3f::eX * box.getExtentX();
+        m_AxesScaled[1] = vec3f::eY * box.getExtentY();
+        m_AxesScaled[2] = vec3f::eZ * box.getExtentZ();
+    }
+
 	//! creates an object oriented bounding for a given set of points with the same axis as the other OOBB
 	ObjectOrientedBoundingBox(const point3d<FloatType>* points, unsigned int numPoints, const ObjectOrientedBoundingBox& other) {
 		m_AxesScaled[0] = other.m_AxesScaled[0].getNormalized();
