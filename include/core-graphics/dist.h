@@ -31,10 +31,10 @@ T distSq(const point3d<T> &pt, const ObjectOrientedBoundingBox<T> &box)
     return (*this)(box, pt);
 }
 
-template <class T, class A, class B>
-T dist(const A &a, const B &b)
+template <class A, class B>
+double dist(const A &a, const B &b)
 {
-    return sqrt(distSq(a, b));
+    return sqrt((double)distSq(a, b));
 }
 
 }  // namespace ml
