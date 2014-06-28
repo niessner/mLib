@@ -1,15 +1,15 @@
 
-#ifndef CORE_GRAPHICS_LINESEGMENT_H_
-#define CORE_GRAPHICS_LINESEGMENT_H_
+#ifndef CORE_GRAPHICS_LINESEGMENT3D_H_
+#define CORE_GRAPHICS_LINESEGMENT3D_H_
 
 namespace ml {
 
 template<class FloatType>
-class LineSegment
+class LineSegment3
 {
 public:
 
-    LineSegment(const point3d<FloatType> &p0, const point3d<FloatType> &p1)
+    LineSegment3(const point3d<FloatType> &p0, const point3d<FloatType> &p1)
     {
         m_p0 = p0;
         m_p1 = p1;
@@ -37,9 +37,9 @@ private:
 	point3d<FloatType> m_delta;  //p1 - p0
 };
 
-typedef LineSegment<float> LineSegmentf;
-typedef LineSegment<double> LineSegmentd;
+typedef LineSegment3<float> LineSegment3f;
+typedef LineSegment3<double> LineSegment3d;
 
 }  // namespace ml
 
-#endif  // CORE_GRAPHICS_RAY_H_
+#endif  // CORE_GRAPHICS_LINESEGMENT3D_H_
