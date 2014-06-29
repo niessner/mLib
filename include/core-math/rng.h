@@ -258,6 +258,14 @@ namespace ml {
 
 	}; // class RNG
 
+    namespace util
+    {
+        inline float randomUniform(float min = 0.0f, float max = 1.0f)
+        {
+            return RNG::global.uniform(min, max);
+        }
+    }
+
 }  // namespace ml
 
 #endif  // CORE_MATH_RNG_H_

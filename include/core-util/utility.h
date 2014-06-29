@@ -188,15 +188,6 @@ namespace math
 namespace util
 {
     //
-    // random wrappers
-    //
-    template<class T>
-    T randomUniform(T min = 0.0f, T max = 1.0f)
-    {
-        return RNG::global.uniform(min, max);
-    }
-
-    //
     // iterator helpers
     //
     template<class container, class assignFunction>
@@ -206,7 +197,6 @@ namespace util
             x = func(i++);
         }
     }
-
 
 	//
 	// hashing
