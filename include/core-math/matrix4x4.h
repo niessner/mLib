@@ -782,8 +782,6 @@ public:
 		return EigenSolver<FloatType>::solve<EigenSolver<FloatType>::TYPE_DEFAULT>(*this);
 	}
 
-
-  private:
 	  union {
 		  //! access matrix using a single array
 		  FloatType matrix[16];
@@ -799,6 +797,7 @@ public:
 		  };
 	  };
 
+  private:
     //! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns
     FloatType det3x3(unsigned int i0 = 0, unsigned int i1 = 1, unsigned int i2 = 2, unsigned int j0 = 0, unsigned int j1 = 1, unsigned int j2 = 2) const {
       return
