@@ -77,7 +77,7 @@ std::vector<typename TriMeshSampler<T>::Sample> TriMeshSampler<T>::sample(const 
         meshIndex++;
     }
 
-    const UINT sampleCount = std::min(maxSampleCount, UINT(totalArea / sampleDensity));
+    const UINT sampleCount = std::min(maxSampleCount, UINT(totalArea * sampleDensity));
 
     std::vector<Sample> samples(sampleCount);
 
