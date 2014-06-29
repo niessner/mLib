@@ -450,6 +450,14 @@ public:
 		return point3d<FloatType>(result.x, result.y, result.z);
 	}
 
+    point3d<FloatType> transformAffine(const point3d<FloatType>& v) const {
+        return point3d<FloatType>(
+            matrix[0] * v.x + matrix[1] * v.y + matrix[2] * v.z + matrix[3],
+            matrix[4] * v.x + matrix[5] * v.y + matrix[6] * v.z + matrix[7],
+            matrix[8] * v.x + matrix[9] * v.y + matrix[10] * v.z + matrix[11]
+            );
+    }
+
 	//! return the sum of the operand with matrix b
 	Matrix4x4 operator+ (const Matrix4x4& other) const {
 		Matrix4x4<FloatType> result;
