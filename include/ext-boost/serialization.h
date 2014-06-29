@@ -58,6 +58,7 @@ class InOutArchive {
 namespace boost {
 namespace serialization {
 
+#ifdef MLIB_USE_ARRAY_SERIALIZATION
 template<class Archive, class T>
 inline void serialize(Archive& ar, ml::point2d<T>& p, const unsigned int version) {
     ar & p.array;
@@ -75,6 +76,25 @@ inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version
   ar & p.array;
   //ar & p.x & p.y & p.z & p.w;
 }
+
+#else // MLIB_USE_ARRAY_SERIALIZATION
+
+template<class Archive, class T>
+inline void serialize(Archive& ar, ml::point2d<T>& p, const unsigned int version) {
+    ar & p.x & p.y;
+}
+
+template<class Archive, class T>
+inline void serialize(Archive& ar, ml::point3d<T>& p, const unsigned int version) {
+    ar & p.x & p.y & p.z;
+}
+
+template<class Archive, class T>
+inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version) {
+    ar & p.x & p.y & p.z & p.w;
+}
+
+#endif // MLIB_USE_ARRAY_SERIALIZATION
 
 template<class Archive, class T>
 inline void serialize(Archive& ar, ml::Matrix4x4<T>& m, const unsigned int version) {
