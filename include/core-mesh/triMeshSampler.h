@@ -27,17 +27,173 @@ public:
         return sample(meshes, sampleDensity, sampleCount, [&](const vec3f &n) { return vec3f::distSq(normal, n) < 1e-5f; });
     }
 
-    static std::vector<Sample> sample(const std::pair<const TriMesh<T>*, mat4f> &meshes, float sampleDensity, UINT maxSampleCount, const std::function<bool(const vec3f&)> &normalPredicate)
+    static std::vector<Sample> sample(const std::pair<const TriMesh<T>*, mat4f> &meshes, float sampleDensity, UINT maxSampleCount, const std::function<bool(const vec3f&)> &normalPredicate);
+
+private:
+    static double directionalSurfaceArea(const TriMesh<T> &m, const mat4f &transform, const std::function<bool(const vec3f&)> &normalPredicate);
+
+    static double triangleArea(const TriMesh<T> &m, const mat4f &transform, UINT triangleIndex)
     {
-        std::vector<Sample> result;
-
-        //
-        // TODO
-        //
-
-        return result;
+        return triangleArea(m, transform, m.getIndices()[triangleIndex]);
     }
+    static point3d<T> triangleNormal(const TriMesh<T> &m, const mat4f &transform, UINT triangleIndex)
+    {
+        return triangleNormal(m, transform, m.getIndices()[triangleIndex]);
+    }
+
+    static double triangleArea(const TriMesh<T> &m, const mat4f &transform, const vec3ui &tri);
+    static point3d<T> triangleNormal(const TriMesh<T> &m, const mat4f &transform, const vec3ui &tri);
+    static Sample sampleTriangle(const TriMesh<T> &m, const mat4f &transform, UINT meshIndex, UINT triangleIndex, double sampleValue);
+    static vec2f stratifiedSample2D(double s, UINT depth = 0);
 };
+
+template<class T>
+std::vector<typename TriMeshSampler<T>::Sample> TriMeshSampler<T>::sample(const std::pair<const TriMesh<T>*, mat4f> &meshes, float sampleDensity, UINT maxSampleCount, const std::function<bool(const vec3f&)> &normalPredicate)
+{
+    double totalArea = 0.0;
+    for (const auto &m : meshes)
+        totalArea += directionalSurfaceArea(*m.first, m.second, normalPredicate);
+    double areaScale = 1.0 / totalArea;
+
+    if (totalArea == 0.0)
+    {
+        return std::vector<Sample>();
+    }
+
+    sampleCount = Math::Min(maxSampleCount, UINT(totalArea / sampleDensity));
+
+    std::vector<Sample> result(sampleCount);
+
+    // Indices of mesh index <-> triangle index pairs with acceptable normals
+    std::vector< std::pair<UINT, UINT> > meshTriangleIndices;
+
+    UINT meshIndex = 0;
+    for (auto &m : meshes)
+    {
+        const auto &indices = m.first->getIndices();
+        for (UINT triangleIndex = 0; triangleIndex < indices.size())
+        {
+            if (normalPredicate(triangleNormal(*m.first, m.second, indices[triangleIndex])))
+                meshTriangleIndices.push_back(std::make_pair(meshIndex, triangleIndex));
+        }
+        meshIndex++;
+    }
+
+    auto activeMeshTriangle = meshTriangleIndices.begin();
+    double samplingTriangleAreaRatio = triangleArea(m, samplingTriangleIndex) * areaScale;
+    double accumulatedAreaRatio = samplingTriangleAreaRatio;
+
+    for (UINT sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
+    {
+        double intervalMin = double(sampleIndex) / double(sampleCount);
+        double intervalMax = double(sampleIndex + 1) / double(sampleCount);
+        double sampleValue = util::uniformRandom(intervalMin, intervalMax);
+
+        while (accumulatedAreaRatio < sampleValue && activeMeshTriangle != < meshTriangleIndices.end())
+        {
+            activeMeshTriangle++;
+            auto &mesh = meshes[activeMeshTriangle->first];
+            samplingTriangleAreaRatio = triangleArea(*mesh.first, mesh.second, activeMeshTriangle->second) * areaScale;
+            accumulatedAreaRatio += samplingTriangleAreaRatio;
+        }
+
+        double triangleValue = Utility::Bound(Math::LinearMap(accumulatedAreaRatio - samplingTriangleAreaRatio, accumulatedAreaRatio, 0.0, 1.0, sampleValue), 0.0, 1.0);
+
+        auto &mesh = meshes[activeMeshTriangle->first];
+        samples[sampleIndex] = sampleTriangle(mesh.first, mesh.second, activeMeshTriangle->first, activeMeshTriangle->second, triangleValue);
+    }
+
+    return result;
+}
+
+template<class T>
+double TriMeshSampler<T>::directionalSurfaceArea(const TriMesh<T> &m, const mat4f &transform, const std::function<bool(const vec3f&)> &normalPredicate)
+{
+    double result = 0.0;
+    for (const vec3ui &tri : m.getIndices())
+    {
+        if (normalPredicate(triangleNormal(m, transform, tri)))
+            result += triangleArea(m, transform, tri);
+    }
+    return Result;
+}
+
+template<class T>
+double TriMeshSampler<T>::triangleArea(const TriMesh<T> &m, const mat4f &transform, const vec3ui &tri)
+{
+    ml::point3d<T> v[3];
+    for (int i = 0; i < 3; i++)
+        v[i] = transform * m.getVertices()[tri[i]].position;
+    return math::triangleArea(v[0], v[1], v[2]);
+}
+
+template<class T>
+point3d<T> TriMeshSampler<T>::triangleNormal(const TriMesh<T> &m, const mat4f &transform, const vec3ui &tri)
+{
+    ml::point3d<T> v[3];
+    for (int i = 0; i < 3; i++)
+        v[i] = transform * m.getVertices()[tri[i]].position;
+    return math::triangleNormal(v[0], v[1], v[2]);
+}
+
+template<class T>
+typename TriMeshSampler<T>::Sample TriMeshSampler<T>::sampleTriangle(const TriMesh<T> &m, const mat4f &transform, UINT meshIndex, UINT triangleIndex, double sampleValue)
+{
+    vec3ui tri = m.getIndices()[triangleIndex];
+
+    point3d<T> v[3];
+    for (int i = 0; i < 3; i++)
+        v[i] = transform * m.getVertices()[tri[i]].position;
+
+    vec2f uv = stratifiedSample2D(sampleValue);
+    if (uv.x + uv.y > 1.0f)
+    {
+        uv = vec2d(1.0 - uv.y, 1.0 - uv.x);
+    }
+
+    Sample result;
+    result.pos = v[0] + (v[1] - v[0]) * uv.x + (v[2] - v[0]) * uv.y;
+    result.normal = math::TriangleNormal(v[0], v[1], v[2]);
+    
+    result.meshIndex = meshIndex;
+    result.triangleIndex = triangleIndex;
+    result.uv = uv;
+    return result;
+}
+
+template<class T>
+vec2f TriMeshSampler<T>::stratifiedSample2D(double s, UINT depth)
+{
+    if (depth == 10)
+    {
+        return Vec2f(RNG::global.uniform(0.0f, 1.0f), RNG::global.uniform(0.0f, 1.0f));
+    }
+
+    vec2d basePoint;
+    double baseValue;
+    if (s < 0.25)
+    {
+        baseValue = 0.0;
+        basePoint = vec2f(0.0f, 0.0f);
+    }
+    else if (s < 0.5)
+    {
+        baseValue = 0.25;
+        basePoint = vec2f(0.5f, 0.0f);
+    }
+    else if (s < 0.75)
+    {
+        baseValue = 0.5;
+        basePoint = vec2f(0.0f, 0.5f);
+    }
+    else
+    {
+        baseValue = 0.75;
+        basePoint = vec2f(0.5f, 0.5f);
+    }
+
+    return basePoint + stratifiedSample2D((s - baseValue) * 4.0, depth + 1) * 0.5f;
+}
 
 } // ml
 

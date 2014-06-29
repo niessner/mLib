@@ -104,6 +104,11 @@ namespace math
 	}
 
     template<class T>
+    inline T triangleArea(const T& v0, const T& v1, const T& v2) {
+        return ((v1 - v0) ^ (v2 - v0)).length() * (T)0.5;
+    }
+
+    template<class T>
     inline T triangleNormal(const T& v0, const T& v1, const T& v2) {
         return ((v1 - v0) ^ (v2 - v0)).getNormalized();
     }
@@ -182,6 +187,15 @@ namespace math
 
 namespace util
 {
+    //
+    // random wrappers
+    //
+    template<class T>
+    T uniformRandom(T min = 0.0f, T max = 1.0f)
+    {
+        return RNG::global.uniform(min, max);
+    }
+
     //
     // iterator helpers
     //
