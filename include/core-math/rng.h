@@ -260,7 +260,7 @@ namespace ml {
 
     namespace util
     {
-        inline float randomUniform(float min = 0.0f, float max = 1.0f)
+        inline double randomUniform(double min = 0.0, double max = 1.0)
         {
             return RNG::global.uniform(min, max);
         }
