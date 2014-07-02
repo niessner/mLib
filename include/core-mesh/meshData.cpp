@@ -52,7 +52,7 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 	//};
 
 	struct vecHash {
-		size_t operator()(const std::vector<unsigned int>& v) const {
+		size_t operator()(const Indices::Face& v) const {
 			//TODO larger prime number (64 bit) to match size_t
 			const size_t p[] = {73856093, 19349669, 83492791};
 			size_t res = 0;
@@ -65,12 +65,12 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 	};
 
 	size_t numFaces = m_FaceIndicesVertices.size();
-	std::vector<std::vector<unsigned int>> faces_new;
+	Indices faces_new;
 	faces_new.reserve(numFaces);
 
-	std::unordered_set<std::vector<unsigned int>, vecHash> _set;
+	std::unordered_set<Indices::Face, vecHash> _set;
 	for (size_t i = 0; i < numFaces; i++) {
-		std::vector<unsigned int> f = m_FaceIndicesVertices[i];
+		Indices::Face f = m_FaceIndicesVertices[i];
 		std::sort(f.begin(), f.end());
 		if (_set.find(f) == _set.end()) {
 			//not found yet
@@ -79,7 +79,7 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 		}
 	}
 	if (m_FaceIndicesVertices.size() != faces_new.size()) {
-		m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(faces_new.begin(), faces_new.end());
+		m_FaceIndicesVertices = Indices(faces_new);
 	}
 
 	//std::cout << "Removed " << numFaces-faces_new.size() << " duplicate faces of " << numFaces << " faces" << std::endl;
@@ -253,8 +253,8 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 	}
 
 	// Update faces
-	for (std::vector<std::vector<unsigned int>>::iterator it = m_FaceIndicesVertices.begin(); it != m_FaceIndicesVertices.end(); it++) {
-		for (std::vector<unsigned int>::iterator idx = it->begin(); idx != it->end(); idx++) {
+	for (auto it = m_FaceIndicesVertices.begin(); it != m_FaceIndicesVertices.end(); it++) {
+		for (auto idx = it->begin(); idx != it->end(); idx++) {
 			*idx = vertexLookUp[*idx];
 		}
 	}
@@ -277,7 +277,7 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 template <class FloatType>
 unsigned int MeshData<FloatType>::removeDegeneratedFaces()
 {
-	std::vector<std::vector<unsigned int>> newFacesIndicesVertices;
+	Indices newFacesIndicesVertices;
 
 	for (size_t i = 0; i < m_FaceIndicesVertices.size(); i++) {
 		std::unordered_set<unsigned int> _set(m_FaceIndicesVertices[i].size());

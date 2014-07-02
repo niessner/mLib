@@ -24,6 +24,16 @@ public:
 			const unsigned int& operator[](unsigned int i) const {
 				return indices[i];
 			}
+			bool operator==(const Face& other) const {
+				if (valence != other.valence) return false;
+				for (unsigned int i = 0; i < valence; i++) {
+					if (indices[i] != other.indices[i]) return false;
+				}
+				return true;
+			}
+			bool operator!=(const Face& other) const {
+				return !(*this==other);
+			}
 
 			unsigned int size() const {
 				return valence;
@@ -39,7 +49,7 @@ public:
 
 			//iterator over all indices within a face
 			template<bool is_const_iterator = true>
-			class const_noconst_iterator : public std::iterator<std::forward_iterator_tag, unsigned int> {
+			class const_noconst_iterator : public std::iterator<std::random_access_iterator_tag, unsigned int> {
 			public:
 				typedef typename std::conditional<is_const_iterator, const Indices*, Indices*>::type IndicesPtr;
 				typedef typename std::conditional<is_const_iterator, const Indices&, Indices&>::type IndicesRef;
@@ -65,6 +75,33 @@ public:
 					operator++();
 					return tmp;
 				}
+				const_noconst_iterator& operator--() {
+					curr--;
+					return *this;
+				}
+				const_noconst_iterator operator--(int) {
+					const_noconst_iterator tmp(*this);
+					operator--();
+					return tmp;
+				}
+
+				void     operator+=(const std::size_t& n)  {curr += (unsigned int)n;}
+				void     operator+=(const const_noconst_iterator& other) {curr += other.curr;}
+				const_noconst_iterator operator+ (const std::size_t& n)  {const_noconst_iterator tmp(*this); tmp += n; return tmp;}
+				const_noconst_iterator operator+ (const const_noconst_iterator& other) {const_noconst_iterator tmp(*this); tmp += other; return tmp;}
+
+				void        operator-=(const std::size_t& n)  {curr -= (unsigned int)n;}
+				void        operator-=(const const_noconst_iterator& other) {curr -= other.curr;}
+				const_noconst_iterator    operator- (const std::size_t& n)  {const_noconst_iterator tmp(*this); tmp -= n; return tmp;}
+				std::size_t operator- (const const_noconst_iterator& other) {return curr - other.curr;}
+
+				bool operator< (const const_noconst_iterator& other) {return (curr-other.curr)< 0;}
+				bool operator<=(const const_noconst_iterator& other) {return (curr-other.curr)<=0;}
+				bool operator> (const const_noconst_iterator& other) {return (curr-other.curr)> 0;}
+				bool operator>=(const const_noconst_iterator& other) {return (curr-other.curr)>=0;}
+				bool operator==(const const_noconst_iterator& other) {return  curr == other.curr; }
+				bool operator!=(const const_noconst_iterator& other) {return  curr != other.curr; }
+
 				uintRef operator*() {
 					return (*face)[curr];
 				}
