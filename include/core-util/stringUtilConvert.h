@@ -38,6 +38,15 @@ namespace convert {
 		if (s == "false" || s == "False" || s == "0") { return false; }
 		else { return true; }
 	}
+    template<class T>
+    inline std::string toString(const std::vector<T>& val) {
+        std::string result;
+        for (const auto &e : val)
+        {
+            result = result + std::to_string(e) + " ";
+        }
+        return result;
+    }
 	template<class T>
 	inline std::string toString(const T& val) {
 		return std::to_string(val);

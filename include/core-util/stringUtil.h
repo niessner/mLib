@@ -62,7 +62,7 @@ namespace util
 
     template <class T>
     inline const T& randomElement(const std::vector<T>& v) {
-        return v[rand() % v.size()];
+        return v[ randomInteger(0, (long)v.size() - 1) ];
     }
 
 
