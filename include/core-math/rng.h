@@ -260,6 +260,10 @@ namespace ml {
 
     namespace util
     {
+        inline long randomInteger(long min, long max)
+        {
+            return RNG::global.rand_int() % (max - min + 1) + min;
+        }
         inline double randomUniform(double min = 0.0, double max = 1.0)
         {
             return RNG::global.uniform(min, max);

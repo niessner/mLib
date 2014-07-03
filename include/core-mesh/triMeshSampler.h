@@ -165,7 +165,7 @@ vec2f TriMeshSampler<T>::stratifiedSample2D(double s, UINT depth)
 {
     if (depth == 10)
     {
-        return vec2f(util::randomUniform(0.0f, 1.0f), util::randomUniform(0.0f, 1.0f));
+        return vec2f((float)util::randomUniform(0.0f, 1.0f), (float)util::randomUniform(0.0f, 1.0f));
     }
 
     vec2d basePoint;
