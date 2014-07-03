@@ -99,8 +99,6 @@ public:
 				bool operator<=(const const_noconst_iterator& other) {return (curr-other.curr)<=0;}
 				bool operator> (const const_noconst_iterator& other) {return (curr-other.curr)> 0;}
 				bool operator>=(const const_noconst_iterator& other) {return (curr-other.curr)>=0;}
-				bool operator==(const const_noconst_iterator& other) {return  curr == other.curr; }
-				bool operator!=(const const_noconst_iterator& other) {return  curr != other.curr; }
 
 				uintRef operator*() {
 					return (*face)[curr];
@@ -108,7 +106,6 @@ public:
 				const unsigned int& operator*() const {
 					return (*face)[curr];
 				}
-
 
 				bool operator==(const const_noconst_iterator& other) const {
 					assert(face == other.face);
@@ -250,7 +247,7 @@ public:
 
 		//iterator over all faces
 		template<bool is_const_iterator = true>
-		class const_noconst_iterator : public std::iterator<std::forward_iterator_tag, Face> {
+		class const_noconst_iterator : public std::iterator<std::random_access_iterator_tag, Face> {
 		public:
 			typedef typename std::conditional<is_const_iterator, const Indices*, Indices*>::type IndicesPtr;
 			typedef typename std::conditional<is_const_iterator, const Indices&, Indices&>::type IndicesRef;
@@ -274,6 +271,31 @@ public:
 				operator++();
 				return tmp;
 			}
+			const_noconst_iterator& operator--() {
+				curr--;
+				return *this;
+			}
+			const_noconst_iterator operator--(int) {
+				const_noconst_iterator tmp(*this);
+				operator--();
+				return tmp;
+			}
+
+			void     operator+=(const std::size_t& n)  {curr += n;}
+			void     operator+=(const const_noconst_iterator& other) {curr += other.curr;}
+			const_noconst_iterator operator+ (const std::size_t& n)  {const_noconst_iterator tmp(*this); tmp += n; return tmp;}
+			const_noconst_iterator operator+ (const const_noconst_iterator& other) {const_noconst_iterator tmp(*this); tmp += other; return tmp;}
+
+			void        operator-=(const std::size_t& n)  {curr -= n;}
+			void        operator-=(const const_noconst_iterator& other) {curr -= other.curr;}
+			const_noconst_iterator    operator- (const std::size_t& n)  {const_noconst_iterator tmp(*this); tmp -= n; return tmp;}
+			std::size_t operator- (const const_noconst_iterator& other) {return curr - other.curr;}
+
+			bool operator< (const const_noconst_iterator& other) {return (curr-other.curr)< 0;}
+			bool operator<=(const const_noconst_iterator& other) {return (curr-other.curr)<=0;}
+			bool operator> (const const_noconst_iterator& other) {return (curr-other.curr)> 0;}
+			bool operator>=(const const_noconst_iterator& other) {return (curr-other.curr)>=0;}
+
 			Face operator*() {
 				return (*indices)[curr];
 			}
