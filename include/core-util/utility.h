@@ -368,13 +368,26 @@ namespace util
     //Usage: float result = minValue(v, [](vec3f x) { return x.length(); });
     template<class mapFunction, class T>
     auto minValue(const std::vector<T> &collection, mapFunction function) -> decltype(function(std::declval<T>()))
-    //float zz(std::vector<int> &collection)
     {
         auto result = function(*(collection.begin()));
         for (const auto &element : collection)
         {
             auto value = function(element);
             if (value < result)
+                result = value;
+        }
+        return result;
+    }
+
+    //Usage: float result = minValue(v, [](vec3f x) { return x.length(); });
+    template<class mapFunction, class T>
+    auto maxValue(const std::vector<T> &collection, mapFunction function) -> decltype(function(std::declval<T>()))
+    {
+        auto result = function(*(collection.begin()));
+        for (const auto &element : collection)
+        {
+            auto value = function(element);
+            if (value > result)
                 result = value;
         }
         return result;

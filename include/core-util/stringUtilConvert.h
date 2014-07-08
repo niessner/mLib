@@ -47,6 +47,15 @@ namespace convert {
         }
         return result;
     }
+    template<class T>
+    inline std::string toString(const point3d<T>& p) {
+        std::string result;
+        for (const auto &e : p.array)
+        {
+            result = result + std::to_string(e) + ",";
+        }
+        return result;
+    }
 	template<class T>
 	inline std::string toString(const T& val) {
 		return std::to_string(val);
