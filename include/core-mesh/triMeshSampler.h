@@ -32,7 +32,7 @@ public:
     static std::vector<Sample> sample(const std::vector< std::pair<const TriMesh<T>*, mat4f> > &meshes, float sampleDensity, UINT maxSampleCount, const std::function<bool(const vec3f&)> &normalPredicate);
 
 private:
-    static double directionalSurfaceArea(const MeshData &mesh, const std::function<bool(const vec3f&)> &no  rmalPredicate);
+    static double directionalSurfaceArea(const MeshData &mesh, const std::function<bool(const vec3f&)> &normalPredicate);
 
     static double triangleArea(const MeshData &mesh, UINT triangleIndex)
     {

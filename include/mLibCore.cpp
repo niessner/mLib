@@ -22,6 +22,7 @@
 // core-math source files
 //
 #include "../src/core-math/rng.cpp"
+#include "../src/core-math/triangleIntersection.cpp"
 
 //
 // core-util source files
