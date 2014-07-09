@@ -3,7 +3,7 @@
 
 namespace ml {
 
-template<class T>
+template<class T, class ChildType>
 class TriMeshCollisionAccelerator
 {
 public:
@@ -27,15 +27,16 @@ public:
     // this is not actually a virtual function, since we only expect each accelerator to handle collisions
     // with its own accelerator type.
     //
-    //virtual bool collision(const TriMeshCollisionAccelerator<T> &accel) const = 0;
+    //virtual bool collision(const ChildType &accel) const;
+    virtual bool collisionAABB(const BoundingBox3d<T> &bbox) const { return true; }
+    virtual bool collisionOOBB(const ObjectOrientedBoundingBox<T> &bbox) const { return true; }
 
 private:
     virtual void initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy) = 0;
-    
 };
 
 template<class T>
-class TriMeshCollisionAcceleratorBruteForce : public TriMeshCollisionAccelerator<T>
+class TriMeshCollisionAcceleratorBruteForce : public TriMeshCollisionAccelerator<T, TriMeshCollisionAcceleratorBruteForce<T> >
 {
 public:
     struct Triangle
@@ -53,6 +54,8 @@ private:
     std::vector< Triangle > m_tris;
     std::vector< std::pair<const TriMesh<T> *, mat4f> > m_meshes;
 };
+
+typedef TriMeshCollisionAcceleratorBruteForce<float> TriMeshCollisionAcceleratorBruteForcef;
 
 } // ml
 
