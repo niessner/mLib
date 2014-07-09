@@ -17,10 +17,19 @@ public:
         int meshIndex;
         int triangleIndex;
         point2d<T> uv;
+
+        // normal of the contact triangle
+        point3d<T> normal;
     };
 
     template<class Accelerator>
     static bool getFirstIntersection(const ml::Rayf &ray,
+        const std::vector< Accelerator > &objectAccelerators,
+        Intersection &intersect,
+        UINT &objectIndex);
+
+    template<class Accelerator>
+    static bool getFirstIntersectionDirect(const ml::Rayf &ray,
         const std::vector< Accelerator > &objectAccelerators,
         Intersection &intersect,
         UINT &objectIndex);
@@ -59,6 +68,10 @@ public:
         {
             return (pos[0] + (pos[1] - pos[0]) * uv.x + (pos[2] - pos[0]) * uv.y);
         }
+        point3d<T> normal() const
+        {
+            return math::triangleNormal(pos[0], pos[1], pos[2]);
+        }
 
         //
         // TODO: this belongs in a utility class, certainly not here nor in TriMesh<T>::Triangle
@@ -75,6 +88,7 @@ private:
     //
     std::vector< Triangle > m_tris;
     std::vector< std::pair<const TriMesh<T> *, mat4f> > m_meshes;
+    BoundingBox3d<T> m_bbox;
 };
 
 typedef TriMeshRayAccelerator<float> TriMeshRayAcceleratorf;

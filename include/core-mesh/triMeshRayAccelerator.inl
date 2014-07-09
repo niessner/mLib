@@ -15,6 +15,31 @@ bool TriMeshRayAccelerator<T>::getFirstIntersection(const ml::Rayf &ray,
     for (const auto &accelerator : objectAccelerators)
     {
         ml::TriMeshRayAcceleratorf::Intersection curIntersection;
+        if (accelerator->intersect(ray, curIntersection))
+        {
+            if (curIntersection.dist < intersect.dist)
+            {
+                intersect = curIntersection;
+                objectIndex = curObjectIndex;
+            }
+        }
+        curObjectIndex++;
+    }
+    return (intersect.dist != std::numeric_limits<float>::max());
+}
+
+template<class T>
+template<class Accelerator>
+bool TriMeshRayAccelerator<T>::getFirstIntersectionDirect(const ml::Rayf &ray,
+    const std::vector< Accelerator > &objectAccelerators,
+    Intersection &intersect,
+    UINT &objectIndex)
+{
+    UINT curObjectIndex = 0;
+    intersect.dist = std::numeric_limits<float>::max();
+    for (const auto &accelerator : objectAccelerators)
+    {
+        ml::TriMeshRayAcceleratorf::Intersection curIntersection;
         if (accelerator.intersect(ray, curIntersection))
         {
             if (curIntersection.dist < intersect.dist)
@@ -69,6 +94,13 @@ bool TriMeshRayAcceleratorBruteForce<T>::Triangle::intersect(const Ray<T> &r, T&
 template<class T>
 void TriMeshRayAcceleratorBruteForce<T>::initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy)
 {
+    m_bbox.reset();
+    for (const auto &p : meshes)
+    {
+        ml::ObjectOrientedBoundingBox<T> oobb = p.second * ml::ObjectOrientedBoundingBox<T>(p.first->getBoundingBox());
+        m_bbox.include(oobb.getVertices());
+    }
+
     if (!storeLocalCopy)
     {
         m_meshes = meshes;
@@ -107,6 +139,9 @@ bool TriMeshRayAcceleratorBruteForce<T>::intersect(const Ray<T> &ray, TriMeshRay
     result.meshIndex = -1;
     result.triangleIndex = -1;
 
+    if (!m_bbox.intersect(ray, 0.0f, std::numeric_limits<float>::max()))
+        return false;
+
     if (m_tris.size() > 0)
     {
         int triangleIndex = 0;
@@ -121,6 +156,7 @@ bool TriMeshRayAcceleratorBruteForce<T>::intersect(const Ray<T> &ray, TriMeshRay
                 result.uv.x = u;
                 result.uv.y = v;
                 result.pos = tri.getPos(result.uv);
+                result.normal = tri.normal();
             }
             triangleIndex++;
         }
@@ -147,6 +183,7 @@ bool TriMeshRayAcceleratorBruteForce<T>::intersect(const Ray<T> &ray, TriMeshRay
                     result.uv.x = u;
                     result.uv.y = v;
                     result.pos = tri.getPos(result.uv);
+                    result.normal = tri.normal();
                 }
 
                 triangleIndex++;

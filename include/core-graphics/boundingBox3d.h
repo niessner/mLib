@@ -73,6 +73,12 @@ public:
 		if (v.z > maxZ)	maxZ = v.z;
 	}
 
+    void include(const std::vector<point3d<FloatType>> &v)
+    {
+        for (const auto &p : v)
+            include(p);
+    }
+
 	bool intersect(const Ray<FloatType> &r, FloatType tmin, FloatType tmax ) const
 	{
 		//const FloatType t0 = 0.0;
