@@ -175,10 +175,10 @@ void AppTest::init(ml::ApplicationData &app)
 	const std::string testFilename = "scans/gates381.ply";
 	//const std::string testFilename = "scans/gates381_ascii.ply";
 	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
-	ml::MeshDataf bunny = MeshIOf::loadFromFile("bunny_color.ply");
+	//ml::MeshDataf bunny = MeshIOf::loadFromFile("bunny_color.ply");
 
 	//bunny.m_Colors.resize(bunny.m_Vertices.size(), vec4f(0.5f, 0.5f, 0.5f, 1.0f));
-	meshData.merge(bunny);
+	//meshData.merge(bunny);
 	//meshData.m_Vertices.push_back(vec3f(1.0f, 2.0f, 3.0f));
 	//meshData.m_Colors.push_back(vec4f(1.0f, 0.0f, 0.0f, 1.0f));
 	//meshData.m_Normals.push_back(vec3f(1.0f, 0.0f, 0.0f));

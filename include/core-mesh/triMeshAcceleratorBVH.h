@@ -164,10 +164,8 @@ public:
 		m_Triangles.clear();
 		m_TrianglePointers.clear();
 		m_VerticesCopy.clear();
-		//for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
-		//	SAFE_DELETE(m_TrianglePointers[i]);
-		//}
 	}
+
 	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
 		u = v = std::numeric_limits<FloatType>::max();	
 		t = tmax;	//TODO MATTHIAS: probably we don't have to track tmax since t must always be smaller than the prev
