@@ -3,9 +3,9 @@
 
 namespace ml {
 
-template<class T>
+template<class FloatType>
 template<class Accelerator>
-bool TriMeshRayAccelerator<T>::getFirstIntersection(const ml::Rayf &ray,
+bool TriMeshRayAccelerator<FloatType>::getFirstIntersection(const Ray<FloatType>& ray,
                                     const std::vector< Accelerator > &objectAccelerators,
                                     Intersection &intersect,
                                     UINT &objectIndex)
@@ -28,9 +28,9 @@ bool TriMeshRayAccelerator<T>::getFirstIntersection(const ml::Rayf &ray,
     return (intersect.dist != std::numeric_limits<float>::max());
 }
 
-template<class T>
+template<class FloatType>
 template<class Accelerator>
-bool TriMeshRayAccelerator<T>::getFirstIntersectionDirect(const ml::Rayf &ray,
+bool TriMeshRayAccelerator<FloatType>::getFirstIntersectionDirect(const Ray<FloatType>& ray,
     const std::vector< Accelerator > &objectAccelerators,
     Intersection &intersect,
     UINT &objectIndex)
@@ -39,7 +39,7 @@ bool TriMeshRayAccelerator<T>::getFirstIntersectionDirect(const ml::Rayf &ray,
     intersect.dist = std::numeric_limits<float>::max();
     for (const auto &accelerator : objectAccelerators)
     {
-        ml::TriMeshRayAcceleratorf::Intersection curIntersection;
+        TriMeshRayAccelerator<FloatType>::Intersection curIntersection;
         if (accelerator.intersect(ray, curIntersection))
         {
             if (curIntersection.dist < intersect.dist)
@@ -53,33 +53,33 @@ bool TriMeshRayAccelerator<T>::getFirstIntersectionDirect(const ml::Rayf &ray,
     return (intersect.dist != std::numeric_limits<float>::max());
 }
 
-template<class T>
-bool TriMeshRayAcceleratorBruteForce<T>::Triangle::intersect(const Ray<T> &r, T& _t, T& _u, T& _v, T tmin = (T)0, T tmax = std::numeric_limits<T>::max()) const
+template<class FloatType>
+bool TriMeshRayAcceleratorBruteForce<FloatType>::Triangle::intersect(const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max()) const
 {
-    const point3d<T> &d = r.direction();
-    const point3d<T> &p = r.origin();
+    const point3d<FloatType> &d = r.direction();
+    const point3d<FloatType> &p = r.origin();
 
-    point3d<T> e1 = pos[1] - pos[0];
-    point3d<T> e2 = pos[2] - pos[0];
+    point3d<FloatType> e1 = pos[1] - pos[0];
+    point3d<FloatType> e2 = pos[2] - pos[0];
 
-    point3d<T> h = d ^ e2;
-    T a = e1 | h;
+    point3d<FloatType> h = d ^ e2;
+    FloatType a = e1 | h;
 
-    if (a == (T)0.0 || a == -(T)0.0) return false;
+    if (a == (FloatType)0.0 || a == -(FloatType)0.0) return false;
 
-    T f = (T)1.0 / a;
-    point3d<T> s = p - pos[0];
-    T u = f * (s | h);
+    FloatType f = (FloatType)1.0 / a;
+    point3d<FloatType> s = p - pos[0];
+    FloatType u = f * (s | h);
 
-    if (u < (T)0.0 || u >(T)1.0) return false;
+    if (u < (FloatType)0.0 || u >(FloatType)1.0) return false;
 
-    point3d<T> q = s ^ e1;
-    T v = f * (d | q);
+    point3d<FloatType> q = s ^ e1;
+    FloatType v = f * (d | q);
 
-    if (v < (T)0.0 || u + v >(T)1.0) return false;
+    if (v < (FloatType)0.0 || u + v >(FloatType)1.0) return false;
 
     // at this stage we can compute t to find out where the intersection point is on the line
-    T t = f * (e2 | q);
+    FloatType t = f * (e2 | q);
 
     if (t <= tmax && t >= tmin)
     {
@@ -91,13 +91,13 @@ bool TriMeshRayAcceleratorBruteForce<T>::Triangle::intersect(const Ray<T> &r, T&
     return false;
 }
 
-template<class T>
-void TriMeshRayAcceleratorBruteForce<T>::initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy)
+template<class FloatType>
+void TriMeshRayAcceleratorBruteForce<FloatType>::initInternal(const std::vector< std::pair<const TriMesh<FloatType> *, mat4f> > &meshes, bool storeLocalCopy)
 {
     m_bbox.reset();
     for (const auto &p : meshes)
     {
-        ml::ObjectOrientedBoundingBox<T> oobb = p.second * ml::ObjectOrientedBoundingBox<T>(p.first->getBoundingBox());
+        ml::ObjectOrientedBoundingBox<FloatType> oobb = p.second * ml::ObjectOrientedBoundingBox<FloatType>(p.first->getBoundingBox());
         m_bbox.include(oobb.getVertices());
     }
 
@@ -132,8 +132,8 @@ void TriMeshRayAcceleratorBruteForce<T>::initInternal(const std::vector< std::pa
     }
 }
 
-template<class T>
-bool TriMeshRayAcceleratorBruteForce<T>::intersect(const Ray<T> &ray, TriMeshRayAccelerator<T>::Intersection &result) const
+template<class FloatType>
+bool TriMeshRayAcceleratorBruteForce<FloatType>::intersect(const Ray<FloatType> &ray, TriMeshRayAccelerator<FloatType>::Intersection &result) const
 {
     result.dist = std::numeric_limits<float>::max();
     result.meshIndex = -1;
@@ -147,7 +147,7 @@ bool TriMeshRayAcceleratorBruteForce<T>::intersect(const Ray<T> &ray, TriMeshRay
         int triangleIndex = 0;
         for (const Triangle &tri : m_tris)
         {
-            T dist, u, v;
+            FloatType dist, u, v;
             if (tri.intersect(ray, dist, u, v) && dist < result.dist)
             {
                 result.dist = dist;
@@ -174,7 +174,7 @@ bool TriMeshRayAcceleratorBruteForce<T>::intersect(const Ray<T> &ray, TriMeshRay
                 for (int i = 0; i < 3; i++)
                     tri.pos[i] = p.second * p.first->getVertices()[indices[i]].position;
 
-                T dist, u, v;
+                FloatType dist, u, v;
                 if (tri.intersect(ray, dist, u, v) && dist < result.dist)
                 {
                     result.dist = dist;

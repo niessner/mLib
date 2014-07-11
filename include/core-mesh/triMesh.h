@@ -152,19 +152,28 @@ public:
 		const point3d<FloatType>& getCenter() const {
 			return m_Center;
 		}
-    //TODO: Should vertex accessors below exist?
-    const Vertex<FloatType>& getV0() const {
-    return *v0;
-    }
-    const Vertex<FloatType>& getV1() const {
-    return *v1;
-    }
-    const Vertex<FloatType>& getV2() const {
-    return *v2;
-    }
+
+		const Vertex<FloatType>& getV0() const {
+			return *v0;
+		}
+		const Vertex<FloatType>& getV1() const {
+			return *v1;
+		}
+		const Vertex<FloatType>& getV2() const {
+			return *v2;
+		}
+		
+		unsigned int getIndex() const {
+			return m_TriangleIndex;
+		}
+		unsigned int getMeshIndex() const {
+			return m_MeshIndex;
+		}
 	private:
 		const Vertex<FloatType> *v0, *v1, *v2;			
-		point3d<FloatType> m_Center;
+		point3d<FloatType> m_Center;	//TODO check if we want to store the center
+		unsigned int m_TriangleIndex;	//! 0-based triangle index within it's mesh 
+		unsigned int m_MeshIndex;		//! 0-based mesh index; used for accelerators that take an std::vector of triMeshes 
 	};
 	typedef Triangle<float> Trianglef;
 	typedef Triangle<double> Triangled;

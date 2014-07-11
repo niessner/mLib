@@ -1,74 +1,71 @@
+
 #ifndef _COREMESH_TRIMESHRAYACCELERATOR_H_
 #define _COREMESH_TRIMESHRAYACCELERATOR_H_
 
 namespace ml {
 
-template<class T>
+template<class FloatType>
 class TriMeshRayAccelerator
 {
 public:
     struct Intersection
     {
-        point3d<T> pos;
-        
-        // dist of intersect from ray origin
-        T dist;
-
-        int meshIndex;
-        int triangleIndex;
-        point2d<T> uv;
-
-        // normal of the contact triangle
-        point3d<T> normal;
+        FloatType t;
+        point2d<FloatType> uv;	
+		//const typename TriMesh<FloatType>::Triangle<FloatType>* triangle;
     };
 
-    template<class Accelerator>
-    static bool getFirstIntersection(const ml::Rayf &ray,
-        const std::vector< Accelerator > &objectAccelerators,
-        Intersection &intersect,
-        UINT &objectIndex);
+	template<class Accelerator>
+	static bool getFirstIntersection(
+		const Ray<FloatType>& ray,  
+		const std::vector< Accelerator >& objectAccelerators,
+		Intersection& intersect,
+		UINT &objectIndex);
 
-    template<class Accelerator>
-    static bool getFirstIntersectionDirect(const ml::Rayf &ray,
-        const std::vector< Accelerator > &objectAccelerators,
-        Intersection &intersect,
-        UINT &objectIndex);
+	template<class Accelerator>
+	static bool getFirstIntersectionDirect(const Ray<FloatType>& ray,
+		const std::vector< Accelerator > &objectAccelerators,
+		Intersection &intersect,
+		UINT &objectIndex);
 
-    void init(const TriMesh<T> &mesh, bool storeLocalCopy)
+    void build(const TriMesh<FloatType> &mesh, bool storeLocalCopy = false)
     {
-        init(mesh, ml::mat4f::identity(), storeLocalCopy);
+		typename TriMesh<FloatType>::Triangle<FloatType> t;
+
+        build(mesh, Matrix4x4<FloatType>::identity(), storeLocalCopy);
     }
-    void init(const TriMesh<T> &mesh, const mat4f &transform, bool storeLocalCopy)
+    void build(const TriMesh<FloatType>& mesh, const Matrix4x4<FloatType>& transform, bool storeLocalCopy)
     {
-        std::vector< std::pair<const TriMesh<T> *, mat4f> > meshes;
+        std::vector< std::pair<const TriMesh<FloatType>*, Matrix4x4<FloatType>> > meshes;
         meshes.push_back(std::make_pair(&mesh, transform));
-        init(meshes, storeLocalCopy);
+        build(meshes, storeLocalCopy);
     }
-    void init(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy)
+    void build(const std::vector< std::pair<const TriMesh<FloatType> *, Matrix4x4<FloatType>> > &meshes, bool storeLocalCopy)
     {
-        initInternal(meshes, storeLocalCopy);
+        buildInternal(meshes, storeLocalCopy);
     }
-    virtual bool intersect(const Ray<T> &ray, Intersection &result) const = 0;
+    virtual bool intersect(const Ray<FloatType> &ray, Intersection &result) const = 0;
 
 private:
-    virtual void initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy) = 0;
+    virtual void buildInternal(const std::vector< std::pair<const TriMesh<FloatType> *, Matrix4x4<FloatType>> > &meshes, bool storeLocalCopy) = 0;
     
 };
 
-template<class T>
-class TriMeshRayAcceleratorBruteForce : public TriMeshRayAccelerator<T>
+template<class FloatType>
+class TriMeshRayAcceleratorBruteForce : public TriMeshRayAccelerator<FloatType>
 {
 public:
+
     struct Triangle
     {
-        point3d<T> pos[3];
+        point3d<FloatType> pos[3];
         UINT meshIndex;
 
-        point3d<T> getPos(const point2d<T> &uv) const
+        point3d<FloatType> getPos(const point2d<FloatType> &uv) const
         {
             return (pos[0] + (pos[1] - pos[0]) * uv.x + (pos[2] - pos[0]) * uv.y);
         }
-        point3d<T> normal() const
+        point3d<FloatType> normal() const
         {
             return math::triangleNormal(pos[0], pos[1], pos[2]);
         }
@@ -76,19 +73,19 @@ public:
         //
         // TODO: this belongs in a utility class, certainly not here nor in TriMesh<T>::Triangle
         //
-        bool intersect(const Ray<T> &r, T& _t, T& _u, T& _v, T tmin = (T)0, T tmax = std::numeric_limits<T>::max()) const;
+        bool intersect(const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max()) const;
     };
 
-    void initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy);
-    bool intersect(const Ray<T> &ray, TriMeshRayAccelerator<T>::Intersection &result) const;
+    void initInternal(const std::vector< std::pair<const TriMesh<FloatType> *, mat4f> > &meshes, bool storeLocalCopy);
+    bool intersect(const Ray<FloatType> &ray, TriMeshRayAccelerator<FloatType>::Intersection &result) const;
 
 private:
     //
     // exactly one of m_tris or m_meshes contains data, depending on storeLocalCopy
     //
     std::vector< Triangle > m_tris;
-    std::vector< std::pair<const TriMesh<T> *, mat4f> > m_meshes;
-    BoundingBox3d<T> m_bbox;
+    std::vector< std::pair<const TriMesh<FloatType> *, mat4f> > m_meshes;
+    BoundingBox3d<FloatType> m_bbox;
 };
 
 typedef TriMeshRayAccelerator<float> TriMeshRayAcceleratorf;

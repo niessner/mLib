@@ -39,26 +39,26 @@ template<class T>
 class TriMeshCollisionAcceleratorBruteForce : public TriMeshCollisionAccelerator<T, TriMeshCollisionAcceleratorBruteForce<T> >
 {
 public:
-    struct Triangle
-    {
-        point3d<T> pos[3];
-    };
+	struct Triangle
+	{
+		point3d<T> pos[3];
+	};
 
-    void initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy);
-    bool collision(const TriMeshCollisionAcceleratorBruteForce<T> &accel) const;
+	void initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy);
+	bool collision(const TriMeshCollisionAcceleratorBruteForce<T> &accel) const;
 
 private:
-    //
-    // exactly one of m_tris or m_meshes contains data, depending on storeLocalCopy
-    //
-    std::vector< Triangle > m_tris;
-    std::vector< std::pair<const TriMesh<T> *, mat4f> > m_meshes;
+	//
+	// exactly one of m_tris or m_meshes contains data, depending on storeLocalCopy
+	//
+	std::vector< Triangle > m_tris;
+	std::vector< std::pair<const TriMesh<T> *, mat4f> > m_meshes;
 };
 
 typedef TriMeshCollisionAcceleratorBruteForce<float> TriMeshCollisionAcceleratorBruteForcef;
 
 } // ml
 
-#include "TriMeshCollisionAccelerator.inl"
+#include "triMeshCollisionAccelerator.inl"
 
 #endif

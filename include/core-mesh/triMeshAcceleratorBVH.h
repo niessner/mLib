@@ -123,19 +123,19 @@ struct TriangleBVHNode {
 };
 
 template <class FloatType>
-class TriangleBVHAccelerator
+class TriMeshRayAcceleratorBVH
 {
 public:
 
-	TriangleBVHAccelerator(void) {
+	TriMeshRayAcceleratorBVH(void) {
 		m_Root = NULL;
 	}
-	TriangleBVHAccelerator( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true, bool copyVertexData = false) {
+	TriMeshRayAcceleratorBVH( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true, bool copyVertexData = false) {
 		m_Root = NULL;
 		build(triMesh, useParallelBuild, copyVertexData);
 	}
 
-	~TriangleBVHAccelerator(void) {
+	~TriMeshRayAcceleratorBVH(void) {
 		destroy();
 	}
 
@@ -156,10 +156,7 @@ public:
 			buildRecursive(m_TrianglePointers);
 		}
 
-		//std::cout << "Info: TriangleBVHAccelerator build done ( " << m_TrianglePointers.size() << " tris )" << std::endl;
-		//std::cout << "Info: Tree depth " << m_Root->getTreeDepthRec() << std::endl;
-		//std::cout << "Info: NumNodes " << m_Root->getNumNodesRec() << std::endl;
-		//std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
+
 	}
 
 	void destroy() {
@@ -176,6 +173,13 @@ public:
 		t = tmax;	//TODO MATTHIAS: probably we don't have to track tmax since t must always be smaller than the prev
 		triangle = NULL;
 		return m_Root->intersect(r, t, u, v, triangle, tmin, tmax, intersectOnlyFrontFaces);
+	}
+
+	void printInfo() const {
+		std::cout << "Info: TriangleBVHAccelerator build done ( " << m_TrianglePointers.size() << " tris )" << std::endl;
+		std::cout << "Info: Tree depth " << m_Root->getTreeDepthRec() << std::endl;
+		std::cout << "Info: NumNodes " << m_Root->getNumNodesRec() << std::endl;
+		std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
 	}
 private:
 
@@ -281,8 +285,8 @@ private:
 	std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>	m_TrianglePointers;
 };
 
-typedef TriangleBVHAccelerator<float> TriangleBVHAcceleratorf;
-typedef TriangleBVHAccelerator<double> TriangleBVHAcceleratord;
+typedef TriMeshRayAcceleratorBVH<float>		TriMeshAcceleratorBVHf;
+typedef TriMeshRayAcceleratorBVH<double>	TriMeshAcceleratorBVHd;
 
 } // namespace ml
 
