@@ -12,8 +12,8 @@ struct VertexShaderOutput
 
 VertexShaderOutput vertexShaderMain( float4 position : position,
 									 float3 normal : normal,
-									 float4 attributeA : attributeA,
-									 float4 attributeB : attributeB )
+									 float4 texCoord : texCoord,
+									 float4 color : color)
 {
     VertexShaderOutput output;
     output.position = mul( position, worldViewProj );
