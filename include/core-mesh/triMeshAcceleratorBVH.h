@@ -1,13 +1,13 @@
 #pragma once
 
-#ifndef _TRIANGLEBVHACCELERATOR_H_
-#define _TRIANGLEBVHACCELERATOR_H_
+#ifndef _TRIMESH_ACCELERATOR_BVH_H_
+#define _TRIMESH_ACCELERATOR_BVH_H_
 
 namespace ml {
 
 template <class FloatType>
 struct TriangleBVHNode {
-	TriangleBVHNode() : parent(0), rChild(0), lChild(0), leafTri(0) {}
+	TriangleBVHNode() : rChild(0), lChild(0), leafTri(0) {}
 	~TriangleBVHNode() {
 		SAFE_DELETE(rChild);
 		SAFE_DELETE(lChild);
@@ -21,7 +21,6 @@ struct TriangleBVHNode {
 	typename TriMesh<FloatType>::Triangle<FloatType>* leafTri;
 
 
-	TriangleBVHNode<FloatType> *parent;
 	TriangleBVHNode<FloatType> *lChild;
 	TriangleBVHNode<FloatType> *rChild;
 
@@ -51,7 +50,6 @@ struct TriangleBVHNode {
 
 			lChild = new TriangleBVHNode;
 			rChild = new TriangleBVHNode;
-			lChild->parent = rChild->parent = this;
 
 			const unsigned int newSortAxis = (lastSortAxis+1)%3;
 			lChild->split(begin, begin + ((end-begin)/2), newSortAxis);
@@ -63,24 +61,23 @@ struct TriangleBVHNode {
 		}
 	}
 
-    //TODO: return triangle pointer instead of bool
-	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType& tmin, FloatType& tmax, bool intersectOnlyFrontFaces = false) const {
-		if (t < tmin || t > tmax)	return false;	//early out (warning t must be initialized)
+
+	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType& tmin, FloatType& tmax, bool onlyFrontFaces = false) const {
+		if (t < tmin || t > tmax)	return NULL;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {
-			bool b = false;
-			if (!lChild && !rChild) {
-				if (leafTri->intersect(r, t, u, v, tmin, tmax, intersectOnlyFrontFaces))	{
-					triangle = leafTri;
-					b = true; ///intersect !!!!
+			if (!lChild && !rChild) { //is leaf
+				if (leafTri->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces))	{
 					tmax = t;
+					return leafTri;
 				}
 			} else {
-				if (lChild->intersect(r, t, u, v, triangle, tmin, tmax, intersectOnlyFrontFaces))	b = true;
-				if (rChild->intersect(r, t, u, v, triangle, tmin, tmax, intersectOnlyFrontFaces))	b = true;
+				typename const TriMesh<FloatType>::Triangle<FloatType>* t0 = lChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
+				typename const TriMesh<FloatType>::Triangle<FloatType>* t1 = rChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
+				if (t1)	return t1;
+				if (t0)	return t0;
 			}
-			return b;
 		} 
-		return false;
+		return NULL;
 	}
 
 	unsigned int getTreeDepthRec() const {
@@ -123,27 +120,27 @@ struct TriangleBVHNode {
 };
 
 template <class FloatType>
-class TriMeshRayAcceleratorBVH
+class TriMeshAcceleratorBVH : public TriMeshRayAccelerator<FloatType>
 {
 public:
 
-	TriMeshRayAcceleratorBVH(void) {
+	TriMeshAcceleratorBVH(void) {
 		m_Root = NULL;
 	}
-	TriMeshRayAcceleratorBVH( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true, bool copyVertexData = false) {
+	TriMeshAcceleratorBVH( const TriMesh<FloatType>& triMesh, bool storeLocalCopy = false, bool useParallelBuild = true) {
 		m_Root = NULL;
-		build(triMesh, useParallelBuild, copyVertexData);
+		build(triMesh, storeLocalCopy, useParallelBuild);
 	}
 
-	~TriMeshRayAcceleratorBVH(void) {
+	~TriMeshAcceleratorBVH(void) {
 		destroy();
 	}
 
-	void build( const TriMesh<FloatType>& triMesh, bool useParallelBuild = true, bool copyVertexData = false  )
+	void build( const TriMesh<FloatType>& triMesh, bool storeLocalCopy = false, bool useParallelBuild = true)
 	{
 		destroy();	//in case there is already a mesh before...
 		
-		if (copyVertexData) {
+		if (storeLocalCopy) {
 			m_VerticesCopy = triMesh.getVertices();
 			createTrianglePointers(m_VerticesCopy, triMesh.getIndices());
 		} else {
@@ -166,11 +163,10 @@ public:
 		m_VerticesCopy.clear();
 	}
 
-	bool intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, typename TriMesh<FloatType>::Triangle<FloatType>* &triangle, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
+	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
 		u = v = std::numeric_limits<FloatType>::max();	
 		t = tmax;	//TODO MATTHIAS: probably we don't have to track tmax since t must always be smaller than the prev
-		triangle = NULL;
-		return m_Root->intersect(r, t, u, v, triangle, tmin, tmax, intersectOnlyFrontFaces);
+		return m_Root->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
 	}
 
 	void printInfo() const {
@@ -192,16 +188,6 @@ private:
 		for (size_t i = 0; i < m_Triangles.size(); i++) {
 			m_TrianglePointers[i] = &m_Triangles[i];
 		}
-
-		
-		//for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
-		//	SAFE_DELETE(m_TrianglePointers[i]);
-		//}
-		//m_TrianglePointers.resize(indices.size());
-		//for (size_t i = 0; i < indices.size(); i++) {
-		//	typename TriMesh<FloatType>::Triangle<FloatType>* tri = new typename TriMesh<FloatType>::Triangle<FloatType>(&vertices[indices[i].x], &vertices[indices[i].y], &vertices[indices[i].z]);
-		//	m_TrianglePointers[i] = tri;
-		//}
 	}
 
 	void buildParallel(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris) {
@@ -240,8 +226,6 @@ private:
 					TriangleBVHNode<FloatType>* rChild = new TriangleBVHNode<FloatType>;
 					node->lChild = lChild;
 					node->rChild = rChild;
-
-					lChild->parent = rChild->parent = node;
 
 					nextLevel[2*i+0].begin = begin;
 					nextLevel[2*i+0].end = begin + ((end-begin)/2);
@@ -283,8 +267,8 @@ private:
 	std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>	m_TrianglePointers;
 };
 
-typedef TriMeshRayAcceleratorBVH<float>		TriMeshAcceleratorBVHf;
-typedef TriMeshRayAcceleratorBVH<double>	TriMeshAcceleratorBVHd;
+typedef TriMeshAcceleratorBVH<float>		TriMeshAcceleratorBVHf;
+typedef TriMeshAcceleratorBVH<double>	TriMeshAcceleratorBVHd;
 
 } // namespace ml
 

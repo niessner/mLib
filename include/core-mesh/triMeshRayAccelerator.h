@@ -10,9 +10,14 @@ class TriMeshRayAccelerator
 public:
     struct Intersection
     {
-        FloatType t;
-        point2d<FloatType> uv;	
-		//const typename TriMesh<FloatType>::Triangle<FloatType>* triangle;
+        FloatType t, u, v;	
+		const typename TriMesh<FloatType>::Triangle<FloatType>* triangle;
+		bool isValid() const {
+			return triangle != NULL;
+		}
+		point3d<FloatType> getPosition() const {
+			triangle->getSurfacePosition(u,v);
+		}
     };
 
 	template<class Accelerator>
@@ -40,16 +45,22 @@ public:
         meshes.push_back(std::make_pair(&mesh, transform));
         build(meshes, storeLocalCopy);
     }
-    void build(const std::vector< std::pair<const TriMesh<FloatType> *, Matrix4x4<FloatType>> > &meshes, bool storeLocalCopy)
-    {
-        buildInternal(meshes, storeLocalCopy);
-    }
-    virtual bool intersect(const Ray<FloatType> &ray, Intersection &result) const = 0;
+	void build(const std::vector< std::pair<const TriMesh<FloatType> *, Matrix4x4<FloatType>> > &meshes, bool storeLocalCopy)
+	{
+		buildInternal(meshes, storeLocalCopy);
+	}
 
+	virtual typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const = 0;
+    //virtual bool intersect(const Ray<FloatType> &ray, Intersection &result, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const = 0;
+	//virtual Intersection intersect(const Ray<FloatType>& ray, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) = 0;
 private:
-    virtual void buildInternal(const std::vector< std::pair<const TriMesh<FloatType> *, Matrix4x4<FloatType>> > &meshes, bool storeLocalCopy) = 0;
+   // virtual void buildInternal(const std::vector< std::pair<const TriMesh<FloatType> *, Matrix4x4<FloatType>> > &meshes, bool storeLocalCopy) = 0;
     
 };
+
+} //ml
+
+/*
 
 template<class FloatType>
 class TriMeshRayAcceleratorBruteForce : public TriMeshRayAccelerator<FloatType>
@@ -94,5 +105,6 @@ typedef TriMeshRayAccelerator<double> TriMeshRayAcceleratord;
 } // ml
 
 #include "TriMeshRayAccelerator.inl"
+*/
 
 #endif
