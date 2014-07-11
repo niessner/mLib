@@ -337,8 +337,9 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		std::cout << triMesh.getBoundingBox() << std::endl;
 
 		ml::Timer c0;
-		c0.start();
-		ml::TriangleBVHAcceleratorf accel(triMesh, false);
+		c0.start(); 
+		ml::TriMeshAcceleratorBVHf accel(triMesh, false);
+		//ml::TriMeshRayAcceleratorBruteForce<float> accelNew(triMesh, false);
 		std::cout << "time construct " << c0.getElapsedTimeMS() << std::endl;
 
 

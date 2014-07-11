@@ -135,6 +135,7 @@
     <ClInclude Include="..\include\core-mesh\pointCloudIO.h" />
     <ClInclude Include="..\include\core-mesh\triangleBVHAccelerator.h" />
     <ClInclude Include="..\include\core-mesh\triMesh.h" />
+    <ClInclude Include="..\include\core-mesh\triMeshCollisionAccelerator.h" />
     <ClInclude Include="..\include\core-util\binaryDataBuffer.h" />
     <ClInclude Include="..\include\core-util\binaryDataSerialize.h" />
     <ClInclude Include="..\include\core-util\binaryDataStream.h" />

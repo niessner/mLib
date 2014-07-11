@@ -216,6 +216,9 @@
     <ClInclude Include="..\include\core-math\nr_templates.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshCollisionAccelerator.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
