@@ -108,8 +108,8 @@ void AppTest::init(ml::ApplicationData &app)
 	EigenSystemf esd_VTK = EigenSolverf::solve<EigenSolverf::TYPE_NR>(md);
 	EigenSystemf esd_NR = EigenSolverf::solve<EigenSolverf::TYPE_VTK>(md);
 
-	std::cout << esd_VTK << std::endl;
-	std::cout << esd_NR << std::endl;
+	//std::cout << esd_VTK << std::endl;
+	//std::cout << esd_NR << std::endl;
 
 	//EigenSystemf esd = md.eigenSystem();
 	//EigenSystemf es4 = m4.eigenSystem();
@@ -122,7 +122,7 @@ void AppTest::init(ml::ApplicationData &app)
 	//std::cout << es2 << std::endl;
 
 
-	std::cout << m3 << std::endl << std::endl;
+	//std::cout << m3 << std::endl << std::endl;
 
 
 	MeshDataf::Indices indices;
@@ -131,16 +131,16 @@ void AppTest::init(ml::ApplicationData &app)
 	//for (auto face: indices) {}
 
 
-	unsigned int size = 50000;
-	Timer t;
-	std::cout << test0(size) << std::endl;
-	std::cout << t.getElapsedTimeMS() << std::endl;
-	t.start();
-	std::cout << test1(size) << std::endl;
-	std::cout << t.getElapsedTimeMS() << std::endl;
-	t.start();
-	std::cout << test2(size) << std::endl;
-	std::cout << t.getElapsedTimeMS() << std::endl;
+	//unsigned int size = 50000;
+	//Timer t;
+	//std::cout << test0(size) << std::endl;
+	//std::cout << t.getElapsedTimeMS() << std::endl;
+	//t.start();
+	//std::cout << test1(size) << std::endl;
+	//std::cout << t.getElapsedTimeMS() << std::endl;
+	//t.start();
+	//std::cout << test2(size) << std::endl;
+	//std::cout << t.getElapsedTimeMS() << std::endl;
 
 	//PointCloudf pc = PointCloudIOf::loadFromFile("bunny.ply");
 
@@ -334,12 +334,12 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
 		ml::TriMeshf triMesh(meshData);
 
-		std::cout << triMesh.getBoundingBox() << std::endl;
+		//std::cout << triMesh.getBoundingBox() << std::endl;
 
 		ml::Timer c0;
 		c0.start(); 
-		ml::TriMeshAcceleratorBVHf accel(triMesh, false);
-		//ml::TriMeshRayAcceleratorBruteForce<float> accelNew(triMesh, false);
+		//ml::TriMeshAcceleratorBVHf accel(triMesh, false, false);
+		ml::TriMeshRayAcceleratorBruteForce<float> accelNew(triMesh);
 		std::cout << "time construct " << c0.getElapsedTimeMS() << std::endl;
 
 
@@ -368,22 +368,21 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				//p /= p.w;
 				//Rayf r1(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).getNormalized());
 
-
-				//std::cout << r << std::endl;
-				//std::cout << r1 << std::endl;
-				//std::cout << std::endl;
-
-				float t,u,v;	ml::TriMeshf::Trianglef* tri;
-				if (accel.intersect(r, t, u, v, tri)) {
+				float t,u,v;	
+				const ml::TriMeshf::Trianglef* tri = accel.intersect(r, t, u, v);
+				if (tri) {
 					image(i,j) = tri->getSurfaceColor(u,v).getPoint3d();
-					//std::cout << image(i,j) << std::endl;
 				} else {
 					image(i,j) = 0;
 				}
 			
 			}
 		}
-		std::cout << "time trace " << c.getElapsedTimeMS() << std::endl;
+		double elapsed = c.getElapsedTimeMS();
+		std::cout << "time trace " << elapsed << std::endl;
+		unsigned int raysPerSec = (unsigned int)((double)(app.window.height()*app.window.width())/(elapsed/1000.0));
+		std::cout << "million rays/s " << (float)raysPerSec/1000000.0 << std::endl;
+
 		ml::FreeImageWrapper::saveImage("test.jpg", image);
 
 	}

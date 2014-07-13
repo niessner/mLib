@@ -5,22 +5,28 @@
 namespace ml {
 
 template <class FloatType>
-class TriMeshRayAcceleratorBruteForce
+class TriMeshAcceleratorBruteForce : public TriMeshRayAccelerator<FloatType>
 {
 public:
-
-	TriMeshRayAcceleratorBruteForce() {}
-	TriMeshRayAcceleratorBruteForce(const TriMesh<FloatType>& triMesh, bool storeLocalCopy = false) {
-
-		build(triMesh, storeLocalCopy, useParallelBuild);
+	TriMeshAcceleratorBruteForce(const TriMesh<FloatType>& triMesh, bool storeLocalCopy = false) {
+		build(triMesh, storeLocalCopy);
 	}
 
-	void build (const TriMesh<FloatType>& triMesh, bool storeLocalCopy = false) {
+	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
+		
+		for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
 
+		}
 	}
+
+
 private:
+	void buildInternal() {
+		//nothing to do here
+	}
 
 };
+
 
 } //namespace ml
 

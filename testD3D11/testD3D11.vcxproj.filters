@@ -177,9 +177,6 @@
     <ClInclude Include="..\include\core-mesh\triMesh.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-mesh\triangleBVHAccelerator.h">
-      <Filter>mLibHeader\core-mesh</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-math\quaternion.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
@@ -217,6 +214,15 @@
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
     <ClInclude Include="..\include\core-mesh\triMeshCollisionAccelerator.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshAcceleratorBVH.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshAcceleratorBruteForce.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshRayAccelerator.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
   </ItemGroup>

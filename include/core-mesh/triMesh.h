@@ -65,12 +65,14 @@ public:
 	class Triangle {
 	public:
 
-		Triangle(const Vertex<FloatType> *v0, const Vertex<FloatType> *v1, const Vertex<FloatType> *v2) {
+		Triangle(const Vertex<FloatType> *v0, const Vertex<FloatType> *v1, const Vertex<FloatType> *v2, unsigned int triIdx = 0, unsigned int meshIdx = 0) {
 			assert (v0 && v1 && v2);
 			this->v0 = v0;
 			this->v1 = v1;
 			this->v2 = v2;
 			m_Center = (v0->position + v1->position + v2->position)/(FloatType)3.0;
+			m_TriangleIndex = triIdx;
+			m_MeshIndex = meshIdx;
 		}
 		~Triangle() {
 		}
@@ -85,10 +87,10 @@ public:
 		point4d<FloatType> getSurfaceColor(FloatType u, FloatType v) const {
 			return v0->color*((FloatType)1.0 - u - v) + v1->color*u + v2->color*v;
 		}
-		point2d<FloatType> getSurfaceNormal(FloatType u, FloatType v) const {
+		point3d<FloatType> getSurfaceNormal(FloatType u, FloatType v) const {
 			return v0->normal*((FloatType)1.0 - u - v) + v1->normal*u + v2->normal*v;
 		}
-		point3d<FloatType> getSurfaceTexCoord(FloatType u, FloatType v) const {
+		point2d<FloatType> getSurfaceTexCoord(FloatType u, FloatType v) const {
 			return v0->texCoord*((FloatType)1.0 - u - v) + v1->texCoord*u + v2->texCoord*v;
 		}
 
