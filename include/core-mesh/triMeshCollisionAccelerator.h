@@ -1,9 +1,10 @@
+
 #ifndef _COREMESH_TRIMESHCOLLISIONACCELERATOR_H_
 #define _COREMESH_TRIMESHCOLLISIONACCELERATOR_H_
 
 namespace ml {
 
-template<class T, class ChildType>
+template<class FloatType, class ChildType>
 class TriMeshCollisionAccelerator
 {
 public:
