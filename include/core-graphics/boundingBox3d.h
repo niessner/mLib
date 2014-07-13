@@ -113,9 +113,16 @@ public:
 
 	}
 
-	 
-	//! triangle intersection
-//	bool intersect(const Point3d<FloatType>& v0, const Point3D<FloatType>)
+
+	//! triangle collision
+	bool collision(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) const {
+		//TODO
+	}
+
+	//! bounding box collision
+	bool collision(const BoundingBox3d<FloatType>& other) const {
+		//TOOD
+	}
 
 	FloatType getMaxExtent() const {
 		FloatType d0 = maxX - minX;

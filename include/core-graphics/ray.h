@@ -43,6 +43,8 @@ public:
 		return m_Sign;
 	}
 
+
+
 private:
 	point3d<FloatType> m_Direction;
 	point3d<FloatType> m_InverseDirection;

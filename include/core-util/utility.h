@@ -519,6 +519,35 @@ namespace util
 		return r;
 	}
 
+
+	template<class T>
+	std::vector<T*> toVecPtr(std::vector<T>& v) {
+		std::vector<T*> res; res.reserve(v.size());
+		for (auto& e : v) {
+			res.push_back(&e);
+		}
+		return res;
+	}
+
+	template<class T>
+	std::vector<const T*> toVecPtr(const std::vector<T>& v) {
+		std::vector<const T*> res; res.reserve(v.size());
+		for (const auto& e : v) {
+			res.push_back(&e);
+		}
+		return res;
+	}
+
+	template<class T>
+	std::vector<const T*> toVecConstPtr(const std::vector<T>& v) {
+		std::vector<const T*> res; res.reserve(v.size());
+		for (const auto& e : v) {
+			res.push_back(&e);
+		}
+		return res;
+	}
+
+
 }  // namespace utility
 
 }  // namespace ml

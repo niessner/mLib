@@ -8,12 +8,20 @@ template <class FloatType>
 class TriMeshAcceleratorBruteForce : public TriMeshRayAccelerator<FloatType>
 {
 public:
+
+	TriMeshAcceleratorBruteForce() {
+
+	}
+
 	TriMeshAcceleratorBruteForce(const TriMesh<FloatType>& triMesh, bool storeLocalCopy = false) {
 		build(triMesh, storeLocalCopy);
 	}
 
-	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
-		
+
+private:
+
+	typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
+
 		typename TriMesh<FloatType>::Triangle<FloatType>* tri = NULL;
 		for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
 			if (m_TrianglePointers[i]->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces)) {
@@ -24,8 +32,6 @@ public:
 		return tri;
 	}
 
-
-private:
 	void buildInternal() {
 		//nothing to do here
 	}

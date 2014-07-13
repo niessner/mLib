@@ -2,7 +2,7 @@
 #define _COREMESH_TRIMESHRAYACCELERATOR_INL_
 
 namespace ml {
-
+/*
 template<class FloatType>
 template<class Accelerator>
 bool TriMeshRayAccelerator<FloatType>::getFirstIntersection(const Ray<FloatType>& ray,
@@ -194,7 +194,7 @@ bool TriMeshRayAcceleratorBruteForce<FloatType>::intersect(const Ray<FloatType> 
         
     return (result.meshIndex != -1);
 }
-
+*/
 } // ml
 
 #endif

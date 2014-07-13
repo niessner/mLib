@@ -138,8 +138,11 @@ public:
 			}
 		}
 
+		bool collision(const Triangle<FloatType>& other) const {
+			//TOOD
+		}
 
-		void includeInBoundingBox(BoundingBox3d<FloatType> &bb) {
+		void includeInBoundingBox(BoundingBox3d<FloatType> &bb) const {
 			bb.include(v0->position);
 			bb.include(v1->position);
 			bb.include(v2->position);

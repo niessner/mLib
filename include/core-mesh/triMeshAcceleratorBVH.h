@@ -18,7 +18,7 @@ struct TriangleBVHNode {
 	//using Triangle = TriMesh::Triangle<T>;
 
 	BoundingBox3d<FloatType> boundingBox;
-	typename TriMesh<FloatType>::Triangle<FloatType>* leafTri;
+	const typename TriMesh<FloatType>::Triangle<FloatType>* leafTri;
 
 
 	TriangleBVHNode<FloatType> *lChild;
@@ -61,11 +61,14 @@ struct TriangleBVHNode {
 		}
 	}
 
+	inline bool isLeaf() const {
+		return !(lChild || rChild);
+	}
 
 	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType& tmin, FloatType& tmax, bool onlyFrontFaces = false) const {
 		if (t < tmin || t > tmax)	return NULL;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {
-			if (!lChild && !rChild) { //is leaf
+			if (isLeaf()) {
 				if (leafTri->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces))	{
 					tmax = t;
 					return leafTri;
@@ -79,6 +82,43 @@ struct TriangleBVHNode {
 		} 
 		return NULL;
 	}
+
+	bool collision(const typename TriMesh<FloatType>::Triangle<FloatType>* tri) const {
+		if (boundingBox.collision(tri->v0, tri->v1, tri->v2)) {
+			if (isLeaf()) {
+				return tri->collision(*leafTri);
+			} else {
+				return lChild->collision(tri) || rChild->collision(tri);
+			}
+		} else {
+			return false;
+		}
+
+	}
+
+	bool collision(const BoundingBox3d<FloatType>& bb) const {
+		if (boundingBox.collision(tri->v0, tri->v1, tri->v2)) {
+			if (isLeaf()) {
+				return bb.collision(leafTri);
+			} else {
+				return lChild->collision(bb) || rChild->collision(bb);
+			}
+		}
+	}
+
+	bool collision(const TriangleBVHNode& other) const {
+		if (boundingBox.collision(other.boundingBox)) {
+			if (isLeaf()) {
+				return other.collision(leafTri);
+			} else {
+				return lChild->collision(other) || rChild->collision(other);
+			}
+		} else {
+			return false;
+		}
+	}
+
+
 
 	unsigned int getTreeDepthRec() const {
 		unsigned int maxDepth = 0;
@@ -124,7 +164,7 @@ class TriMeshAcceleratorBVH : public TriMeshRayAccelerator<FloatType>
 {
 public:
 
-	TriMeshAcceleratorBVH(void) {
+	TriMeshAcceleratorBVH() {
 		m_Root = NULL;
 	}
 	TriMeshAcceleratorBVH(const TriMesh<FloatType>& triMesh, bool storeLocalCopy = false) {
@@ -146,11 +186,8 @@ public:
 	}
 
 
-	//! defined by the interface
-	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
-		u = v = std::numeric_limits<FloatType>::max();	
-		t = tmax;	//TODO MATTHIAS: probably we don't have to track tmax since t must always be smaller than the prev
-		return m_Root->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
+	bool collision(const TriMeshAcceleratorBVH<FloatType>& other) const {
+		return m_Root->collision(other.m_Root);
 	}
 
 	void printInfo() const {
@@ -160,8 +197,14 @@ public:
 		std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
 	}
 private:
+	//! defined by the interface
+	typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
+		u = v = std::numeric_limits<FloatType>::max();	
+		t = tmax;	//TODO MATTHIAS: probably we don't have to track tmax since t must always be smaller than the prev
+		return m_Root->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
+	}
 
-	//! interface
+	//! defined by the interface
 	void buildInternal() {
 		SAFE_DELETE(m_Root);
 

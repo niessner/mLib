@@ -342,6 +342,8 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		//ml::TriMeshAcceleratorBruteForcef accel(triMesh);
 		std::cout << "time construct " << c0.getElapsedTimeMS() << std::endl;
 
+		std::vector<const TriMeshAcceleratorBVHf*> accelVec;
+		accelVec.push_back(&accel);
 
 		ml::Timer c;
 		c.start();
@@ -369,7 +371,15 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				//Rayf r1(m_camera.getEye(), (ml::vec3f(p.x,p.y,p.z)-m_camera.getEye()).getNormalized());
 
 				float t,u,v;	
-				const ml::TriMeshf::Trianglef* tri = accel.intersect(r, t, u, v);
+				//const ml::TriMeshf::Trianglef* tri = accel.intersect(r, t, u, v);
+				const ml::TriMeshf::Trianglef* tri;
+				unsigned int objIdx;
+				TriMeshRayAcceleratorf::Intersection intersect = TriMeshRayAcceleratorf::getFirstIntersection(r, accelVec, objIdx);
+				t = intersect.t;
+				u = intersect.u;
+				v = intersect.v;
+				tri = intersect.triangle;
+
 				if (tri) {
 					image(i,j) = tri->getSurfaceColor(u,v).getPoint3d();
 				} else {

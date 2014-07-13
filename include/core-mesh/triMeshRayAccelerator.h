@@ -14,13 +14,7 @@ class TriMeshRayAccelerator
 public:
     struct Intersection
     {
-		Intersection() {}
-		Intersection(Intersection&& other) {
-			*this = std::move(other);
-		}
-		void operator==(Intersection&& other) {
-			*this = std::move(other);
-		}
+		Intersection() : triangle(NULL) {}
 
 		bool isValid() const {
 			return triangle != NULL;
@@ -53,11 +47,6 @@ public:
 		const typename TriMesh<FloatType>::Triangle<FloatType>* triangle;
     };
 
-	//////////////////////////////////////////////////////////////////////////
-	// Interface Definition
-	//////////////////////////////////////////////////////////////////////////
-
-	virtual typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const = 0;
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -121,33 +110,61 @@ public:
 		buildInternal();	//construct the acceleration structure
 	}
 
+	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
+		return intersectInternal(r, t, u, v, tmin, tmax, onlyFrontFaces);
+	}
 
 	bool intersect(const Ray<FloatType>& r, Intersection& i, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
-		i.triangle = intersect(r, i.t, i.u, i.v, tmin, tmax, onlyFrontFaces);
+		i.triangle = intersectInternal(r, i.t, i.u, i.v, tmin, tmax, onlyFrontFaces);
 		return i.isValid();
 	}
 
 	Intersection intersect(const Ray<FloatType> &r, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
 		Intersection i;
-		i.triangle = intersect(r, i.t, i.u, i.v, tmin, tmax, onlyFrontFaces);
+		i.triangle = intersectInternal(r, i.t, i.u, i.v, tmin, tmax, onlyFrontFaces);
 		return i;
 	}
 
 
-/*
+	template<class Accelerator>
+	static Intersection getFirstIntersection(
+		const Ray<FloatType>& ray,  
+		const std::vector< const Accelerator* >& objectAccelerators,
+		UINT &objectIndex) 
+	{
+		Intersection intersect;
+
+		UINT curObjectIndex = 0;
+		intersect.t = std::numeric_limits<float>::max();
+		for (const auto &accelerator : objectAccelerators)
+		{
+			Intersection curIntersection;
+			if (accelerator->intersect(ray, curIntersection))
+			{
+				if (curIntersection.t < intersect.t)
+				{
+					intersect = curIntersection;
+					objectIndex = curObjectIndex;
+				}
+			}
+			curObjectIndex++;
+		}
+		return intersect;
+		//return (intersect.t != std::numeric_limits<float>::max());
+	}
+
+
 	template<class Accelerator>
 	static bool getFirstIntersection(
 		const Ray<FloatType>& ray,  
-		const std::vector< Accelerator >& objectAccelerators,
-		Intersection& intersect,
-		UINT &objectIndex);
+		const std::vector< const Accelerator* >& objectAccelerators,
+		Intersection& i,
+		UINT &objectIndex) 
+	{
+		i = getFirstIntersection(ray, objectAccelerators, objectIndex);
+		return i.isValid();
+	}
 
-	template<class Accelerator>
-	static bool getFirstIntersectionDirect(const Ray<FloatType>& ray,
-		const std::vector< Accelerator > &objectAccelerators,
-		Intersection &intersect,
-		UINT &objectIndex);
-*/
 	
 protected:
 
@@ -193,6 +210,12 @@ private:
 		m_TrianglePointers.clear();
 		m_VerticesCopy.clear();
 	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// Interface Definition
+	//////////////////////////////////////////////////////////////////////////
+
+	virtual typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const = 0;
 
 	//! given protected data above filed, the data structure is constructed
 	virtual void buildInternal() = 0;
