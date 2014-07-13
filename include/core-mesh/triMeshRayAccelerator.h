@@ -205,6 +205,9 @@ private:
 
 };
 
+typedef TriMeshRayAccelerator<float> TriMeshRayAcceleratorf;
+typedef TriMeshRayAccelerator<double> TriMeshRayAcceleratord;
+
 } //ml
 
 /*
@@ -245,9 +248,6 @@ private:
     std::vector< std::pair<const TriMesh<FloatType> *, mat4f> > m_meshes;
     BoundingBox3d<FloatType> m_bbox;
 };
-
-typedef TriMeshRayAccelerator<float> TriMeshRayAcceleratorf;
-typedef TriMeshRayAccelerator<double> TriMeshRayAcceleratord;
 
 } // ml
 

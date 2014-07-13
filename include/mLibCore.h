@@ -98,7 +98,7 @@
 #include "core-mesh/triMeshAcceleratorBruteForce.h"
 #include "core-mesh/triMeshAcceleratorBVH.h"
 
-#include "core-mesh/triMeshCollisionAccelerator.h"
+//#include "core-mesh/triMeshCollisionAccelerator.h"
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"
 
