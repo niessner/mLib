@@ -111,7 +111,7 @@ public:
 	}
 
 	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
-		return intersectInternal(r, t, u, v, tmin, tmax, onlyFrontFaces);
+		return intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
 	}
 
 	bool intersect(const Ray<FloatType>& r, Intersection& i, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
