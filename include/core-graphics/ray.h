@@ -43,8 +43,17 @@ public:
 		return m_Sign;
 	}
 
+	void transform(const Matrix4x4<FloatType>& m) {
+		*this = Ray(m * m_Origin,  m.transformNormalAffine(m_Direction));
+	}
 
+	void rotate(const Matrix3x3<FloatType>& m) {
+		*this = Ray(m_Origin, m * m_Direction);
+	}
 
+	void translate(const point3d<FloatType>& p) {
+		*this = Ray(m_Origin + p, m_Direction);
+	}
 private:
 	point3d<FloatType> m_Direction;
 	point3d<FloatType> m_InverseDirection;
@@ -54,16 +63,16 @@ private:
 };
 
 template<class FloatType>
+Ray<FloatType> operator*(const Matrix4x4<FloatType>& m, const Ray<FloatType>& r) {
+	Ray<FloatType> res = r; 
+	res.transform(m);
+	return res;
+}
+
+template<class FloatType>
 std::ostream& operator<<(std::ostream& os, const Ray<FloatType>& r) {
 	os << r.origin() << " | " << r.direction();
 	return os;
-}
-
-template<class T>
-Ray<T> operator * (const Matrix4x4<T> &m, const Ray<T> &r)
-{
-    const Ray<T> result(m.transformAffine(r.origin()),  m.transformNormalAffine(r.direction()));
-    return result;
 }
 
 typedef Ray<float> Rayf;

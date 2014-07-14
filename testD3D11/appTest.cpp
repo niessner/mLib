@@ -361,6 +361,9 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				vec3f eye = m_camera.getEye();
 				Rayf r(m_camera.getEye(), (p0.getPoint3d()-p1.getPoint3d()).getNormalized());
 
+				mat4f tmp = mat4f::rotationZ(45.0f);
+				r = tmp * r;
+
 				//ml::vec4f p((float)j, (float)i, 0.5f, 1.0f);
 				//p.x /= app.window.width();
 				//p.y /= app.window.height();
