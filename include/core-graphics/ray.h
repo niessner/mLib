@@ -59,6 +59,13 @@ std::ostream& operator<<(std::ostream& os, const Ray<FloatType>& r) {
 	return os;
 }
 
+template<class T>
+Ray<T> operator * (const Matrix4x4<T> &m, const Ray<T> &r)
+{
+    const Ray<T> result(m.transformAffine(r.origin()),  m.transformNormalAffine(r.direction()));
+    return result;
+}
+
 typedef Ray<float> Rayf;
 typedef Ray<double> Rayd;
 

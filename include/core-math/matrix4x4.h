@@ -458,6 +458,14 @@ public:
             );
     }
 
+    point3d<FloatType> transformNormalAffine(const point3d<FloatType>& v) const {
+        return point3d<FloatType>(
+            matrix[0] * v.x + matrix[1] * v.y + matrix[2] * v.z,
+            matrix[4] * v.x + matrix[5] * v.y + matrix[6] * v.z,
+            matrix[8] * v.x + matrix[9] * v.y + matrix[10] * v.z
+            );
+    }
+
 	//! return the sum of the operand with matrix b
 	Matrix4x4 operator+ (const Matrix4x4& other) const {
 		Matrix4x4<FloatType> result;

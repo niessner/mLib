@@ -125,11 +125,15 @@ public:
 		return i;
 	}
 
+    size_t triangleCount() const
+    {
+        return m_Triangles.size();
+    }
 
 	template<class Accelerator>
 	static Intersection getFirstIntersection(
 		const Ray<FloatType>& ray,  
-		const std::vector< const Accelerator* >& objectAccelerators,
+		const std::vector< Accelerator* >& objectAccelerators,
 		UINT &objectIndex) 
 	{
 		Intersection intersect;
@@ -153,17 +157,59 @@ public:
 		//return (intersect.t != std::numeric_limits<float>::max());
 	}
 
+    template<class Accelerator>
+    static Intersection getFirstIntersectionTransform(
+        const Ray<FloatType>& ray,
+        const std::vector< std::pair<const Accelerator*, ml::mat4f> >& transformedAccelerators,
+        UINT &objectIndex)
+    {
+        Intersection intersect;
+
+        UINT curObjectIndex = 0;
+        intersect.t = std::numeric_limits<float>::max();
+        float bestDistSqToOrigin = std::numeric_limits<float>::max();
+
+        for (const auto &accelerator : transformedAccelerators)
+        {
+            Intersection curIntersection;
+            if (accelerator.first->intersect(accelerator.second * ray, curIntersection))
+            {
+                float curDistSqToOrigin = (float)distSq(accelerator.second.getInverse() * curIntersection.getSurfacePosition(), ray.origin());
+                if (curDistSqToOrigin < bestDistSqToOrigin)
+                {
+                    bestDistSqToOrigin = curDistSqToOrigin;
+                    intersect = curIntersection;
+                    objectIndex = curObjectIndex;
+                }
+            }
+            curObjectIndex++;
+        }
+
+        return intersect;
+    }
+
 
 	template<class Accelerator>
 	static bool getFirstIntersection(
 		const Ray<FloatType>& ray,  
-		const std::vector< const Accelerator* >& objectAccelerators,
+		const std::vector< Accelerator* >& objectAccelerators,
 		Intersection& i,
 		UINT &objectIndex) 
 	{
 		i = getFirstIntersection(ray, objectAccelerators, objectIndex);
 		return i.isValid();
 	}
+
+    template<class Accelerator>
+    static bool getFirstIntersectionTransform(
+        const Ray<FloatType>& ray,
+        const std::vector< std::pair<const Accelerator*, ml::mat4f> >& transformedAccelerators,
+        Intersection& i,
+        UINT &objectIndex)
+    {
+        i = getFirstIntersectionTransform(ray, transformedAccelerators, objectIndex);
+        return i.isValid();
+    }
 
 	
 protected:
