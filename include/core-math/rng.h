@@ -260,6 +260,7 @@ namespace ml {
 
     namespace util
     {
+        //! Note that this has modulo bias!
         inline long randomInteger(long min, long max)
         {
             return RNG::global.rand_int() % (max - min + 1) + min;
