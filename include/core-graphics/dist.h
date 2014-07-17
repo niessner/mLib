@@ -28,6 +28,12 @@ double distSq(const point3d<T> &ptA, const point3d<T> &ptB)
 }
 
 template <class T>
+float distSqf(const point3d<T> &ptA, const point3d<T> &ptB)
+{
+    return (float)point3d<T>::distSq(ptA, ptB);
+}
+
+template <class T>
 double distSq(const ObjectOrientedBoundingBox<T> &box, const point3d<T> &pt)
 {
     //

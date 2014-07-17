@@ -89,19 +89,22 @@ public:
 
 		FloatType txmin, txmax, tymin, tymax, tzmin, tzmax;
 
+        auto sign = r.sign();
+        auto origin = r.origin();
+        auto invDir = r.inverseDirection();
 
-		txmin = (parameters[r.sign().x*3] - r.origin().x) * r.inverseDirection().x;
-		txmax = (parameters[3-r.sign().x*3] - r.origin().x) * r.inverseDirection().x;
-		tymin = (parameters[r.sign().y*3 + 1] - r.origin().y) * r.inverseDirection().y;
-		tymax = (parameters[3-r.sign().y*3 + 1] - r.origin().y) * r.inverseDirection().y;
+        txmin = (parameters[sign.x * 3] - origin.x) * invDir.x;
+        txmax = (parameters[3 - sign.x * 3] - origin.x) * invDir.x;
+        tymin = (parameters[sign.y * 3 + 1] - origin.y) * invDir.y;
+        tymax = (parameters[3 - sign.y * 3 + 1] - origin.y) * invDir.y;
 
 		if ( (txmin > tymax) || (tymin > txmax) ) return false;
 
 		if (tymin > txmin)	txmin = tymin;
 		if (tymax < txmax)	txmax = tymax;
 
-		tzmin = (parameters[r.sign().z*3 + 2] - r.origin().z) * r.inverseDirection().z;
-		tzmax = (parameters[3-r.sign().z*3 + 2] - r.origin().z) * r.inverseDirection().z;
+        tzmin = (parameters[sign.z * 3 + 2] - origin.z) * invDir.z;
+        tzmax = (parameters[3 - sign.z * 3 + 2] - origin.z) * invDir.z;
 
 		if ( (txmin > tzmax) || (tzmin > txmax) ) 
 			return false;
