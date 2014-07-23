@@ -10,6 +10,10 @@ class Ray
 {
 public:
 
+    Ray()
+    {
+
+    }
 	Ray(const point3d<FloatType> &o, const point3d<FloatType> &d) {
 		m_Origin = o;
 		m_Direction = d.getNormalized();
