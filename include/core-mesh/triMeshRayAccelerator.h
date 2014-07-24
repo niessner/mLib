@@ -16,6 +16,10 @@ public:
     {
 		Intersection() : triangle(NULL) {}
 
+        bool valid() const {
+            return triangle != NULL;
+        }
+
 		bool isValid() const {
 			return triangle != NULL;
 		}
