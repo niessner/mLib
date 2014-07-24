@@ -12,24 +12,24 @@ public:
 
 	D3D11TriMesh()
 	{
-        m_device = NULL;
-		m_vertexBuffer = NULL;
-		m_indexBuffer = NULL;
+        m_device = nullptr;
+		m_vertexBuffer = nullptr;
+		m_indexBuffer = nullptr;
 	}
 
 	template<class T>
 	D3D11TriMesh(GraphicsDevice &g, const MeshData<T>& meshData)
     {
-		m_vertexBuffer = NULL;
-		m_indexBuffer = NULL;
+		m_vertexBuffer = nullptr;
+		m_indexBuffer = nullptr;
 		load(g, meshData);
 	}
 
 	template<class T>
 	D3D11TriMesh(GraphicsDevice &g, const TriMesh<T>& triMesh)
     {
-		m_vertexBuffer = NULL;
-		m_indexBuffer = NULL;
+		m_vertexBuffer = nullptr;
+		m_indexBuffer = nullptr;
 		load(g, triMesh);
 	}
 
@@ -89,8 +89,8 @@ public:
 
     D3D11TriMesh(const D3D11TriMesh &t)
     {
-        m_vertexBuffer = NULL;
-        m_indexBuffer = NULL;
+        m_vertexBuffer = nullptr;
+        m_indexBuffer = nullptr;
         load(*t.m_device, t);
     }
     D3D11TriMesh(D3D11TriMesh &&t)
@@ -103,8 +103,8 @@ public:
 
     void operator = (const D3D11TriMesh& t)
     {
-        m_vertexBuffer = NULL;
-        m_indexBuffer = NULL;
+        m_vertexBuffer = nullptr;
+        m_indexBuffer = nullptr;
         load(*t.m_device, t);
     }
 

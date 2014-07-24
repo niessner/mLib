@@ -209,7 +209,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 {
 	mesh.clear();
 
-	FILE *fp = NULL;
+	FILE *fp = nullptr;
 	//fopen_s(&fp, filename.c_str(), "r");
 	fp = fopen(filename.c_str(), "r");
 	if (!fp) throw MLIB_EXCEPTION("Could not open file " + filename);
@@ -439,7 +439,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 											bHasFaceNormalIndices = true;
 					} else {
 						//insert empty face
-						typename MeshData<FloatType>::Indices::Face fFaceIndicesNormals(NULL, 0);
+						typename MeshData<FloatType>::Indices::Face fFaceIndicesNormals(nullptr, 0);
 						mesh.m_FaceIndicesNormals.push_back(fFaceIndicesNormals);
 					}
 					if (currFaceIndicesTextureCoords.size()) {
@@ -447,7 +447,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 						bHasFaceTexCoordIndices = true;
 					} else {
 						//insert empty face
-						typename MeshData<FloatType>::Indices::Face fFaceIndicesTextureCoords(NULL, 0);
+						typename MeshData<FloatType>::Indices::Face fFaceIndicesTextureCoords(nullptr, 0);
 						mesh.m_FaceIndicesTextureCoords.push_back(fFaceIndicesTextureCoords);
 					}
 				}

@@ -9,7 +9,7 @@ template <class T> Grid2D<T>::Grid2D()
 {
 	m_rows = 0;
 	m_cols = 0;
-	m_data = NULL;
+	m_data = nullptr;
 }
 
 template <class T> Grid2D<T>::Grid2D(size_t rows, size_t cols)
@@ -48,7 +48,7 @@ template <class T> Grid2D<T>::Grid2D(Grid2D<T> &&G)
 
 	G.m_rows = 0;
 	G.m_cols = 0;
-	G.m_data = NULL;
+	G.m_data = nullptr;
 }
 
 template <class T> Grid2D<T>::~Grid2D()
@@ -60,10 +60,10 @@ template <class T> void Grid2D<T>::deleteMemory()
 {
 	m_rows = 0;
 	m_cols = 0;
-	if(m_data != NULL)
+	if(m_data != nullptr)
 	{
 		delete[] m_data;
-		m_data = NULL;
+		m_data = nullptr;
 	}
 }
 

@@ -3,11 +3,11 @@
 // In a multi-window world, s_windowMap would be needed.  In a single-window world, s_mainWindow is sufficient.
 //
 //std::map<HWND, WindowWin32*> s_windowMap;
-ml::WindowWin32* s_mainWindow = NULL;
+ml::WindowWin32* s_mainWindow = nullptr;
 
 LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	if(s_mainWindow == NULL || !s_mainWindow->parent().initialized()) return DefWindowProc( hWnd, msg, wParam, lParam );
+	if(s_mainWindow == nullptr || !s_mainWindow->parent().initialized()) return DefWindowProc( hWnd, msg, wParam, lParam );
 
 	auto &parent = s_mainWindow->parent();
 
@@ -92,7 +92,7 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 ml::WindowWin32::~WindowWin32()
 {
 	destroy();
-	s_mainWindow = NULL;
+	s_mainWindow = nullptr;
 }
 
 void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std::string &name)
@@ -103,10 +103,10 @@ void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std:
 	m_class.cbClsExtra = 0;
 	m_class.cbWndExtra = 0;
 	m_class.hInstance = instance;
-	m_class.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	m_class.hCursor = LoadCursor(NULL, IDC_ARROW);
+	m_class.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
+	m_class.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	m_class.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); 
-	m_class.lpszMenuName =  NULL;
+	m_class.lpszMenuName =  nullptr;
 	m_class.lpszClassName = m_className.c_str();
 	RegisterClassW(&m_class);
 
@@ -119,10 +119,10 @@ void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std:
 		0, //CW_USEDEFAULT
 		width, 
 		height, 
-		(HWND) NULL, 
-		(HMENU) NULL, 
+		(HWND) nullptr, 
+		(HMENU) nullptr, 
 		instance,
-		(LPVOID) NULL);
+		(LPVOID) nullptr);
 	
 	ShowWindow(m_handle, SW_SHOW);
 	UpdateWindow(m_handle);

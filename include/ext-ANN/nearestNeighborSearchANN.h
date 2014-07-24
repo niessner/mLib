@@ -13,11 +13,11 @@ public:
 	{
 		m_dimension = 0;
 		m_maxK = 0;
-		m_indices = NULL;
-		m_dists = NULL;
-		m_queryPt = NULL;
-		m_points = NULL;
-		m_tree = NULL;
+		m_indices = nullptr;
+		m_dists = nullptr;
+		m_queryPt = nullptr;
+		m_points = nullptr;
+		m_tree = nullptr;
 	}
 	~NearestNeighborSearchANN()
 	{

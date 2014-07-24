@@ -35,16 +35,16 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
 	};
 	UINT numFeatureLevels = ARRAYSIZE( featureLevels );
 
-	D3D_VALIDATE(D3D11CreateDeviceAndSwapChain( NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, createDeviceFlags, featureLevels, numFeatureLevels,
+	D3D_VALIDATE(D3D11CreateDeviceAndSwapChain( nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, featureLevels, numFeatureLevels,
 				 D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, &m_featureLevel, &m_context ));
 
     //
 	// Create a render target view
     //
-	ID3D11Texture2D* backBuffer = NULL;
+	ID3D11Texture2D* backBuffer = nullptr;
 	D3D_VALIDATE(m_swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* )&backBuffer ));
 	
-	D3D_VALIDATE(m_device->CreateRenderTargetView( backBuffer, NULL, &m_renderView ));
+	D3D_VALIDATE(m_device->CreateRenderTargetView( backBuffer, nullptr, &m_renderView ));
 	backBuffer->Release();
 
     //
@@ -79,7 +79,7 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
     depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     depthDesc.CPUAccessFlags = 0;
     depthDesc.MiscFlags = 0;
-    D3D_VALIDATE(m_device->CreateTexture2D( &depthDesc, NULL, &m_depthBuffer ));
+    D3D_VALIDATE(m_device->CreateTexture2D( &depthDesc, nullptr, &m_depthBuffer ));
 
     //
     // Setup the depth state
@@ -190,12 +190,12 @@ void ml::D3D11GraphicsDevice::captureBackBufferInternal(Bitmap &result)
     D3D11_TEXTURE2D_DESC desc;
     frameBuffer->GetDesc(&desc);
 
-    if(m_captureBuffer == NULL)
+    if(m_captureBuffer == nullptr)
     {
         desc.BindFlags = 0;
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
         desc.Usage = D3D11_USAGE_STAGING;
-        D3D_VALIDATE(m_device->CreateTexture2D(&desc, NULL, &m_captureBuffer));
+        D3D_VALIDATE(m_device->CreateTexture2D(&desc, nullptr, &m_captureBuffer));
     }
 
     m_context->CopyResource( m_captureBuffer, frameBuffer );

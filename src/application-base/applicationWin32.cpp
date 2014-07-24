@@ -32,14 +32,14 @@ void ml::ApplicationWin32::messageLoop()
 	bool messageReceived;
 	MSG msg;
 	msg.message = WM_NULL;
-	PeekMessage( &msg, NULL, 0U, 0U, PM_NOREMOVE );
+	PeekMessage( &msg, nullptr, 0U, 0U, PM_NOREMOVE );
 
 	m_initialized = true;
 
 	while( WM_QUIT != msg.message )
 	{
 		// Use PeekMessage() so we can use idle time to render the scene. 
-		messageReceived = ( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) != 0 );
+		messageReceived = ( PeekMessage( &msg, nullptr, 0U, 0U, PM_REMOVE ) != 0 );
 
 		if( messageReceived )
 		{

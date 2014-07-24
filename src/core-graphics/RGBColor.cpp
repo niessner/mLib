@@ -28,7 +28,7 @@ RGBColor::RGBColor(const std::string &hex)
 		channel[1] = carray[offset++];
 		channel[2] = '\0';
 
-		color[c] = (BYTE) strtol(channel, NULL, 16);
+		color[c] = (BYTE) strtol(channel, nullptr, 16);
 	}
 	r = color[0];
 	g = color[1];

@@ -9,9 +9,9 @@ class D3D11VertexShader : public GraphicsAsset
 public:
 	D3D11VertexShader()
 	{
-		m_shader = NULL;
-		m_blob = NULL;
-		m_standardLayout = NULL;
+		m_shader = nullptr;
+		m_blob = nullptr;
+		m_standardLayout = nullptr;
 	}
 	~D3D11VertexShader()
 	{

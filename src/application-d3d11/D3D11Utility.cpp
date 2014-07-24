@@ -10,19 +10,19 @@ ID3DBlob* ml::D3D11Utility::CompileShader(const std::string &filename, const std
 	shaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
-	ID3DBlob* blob = NULL;
-	ID3DBlob* errorBlob = NULL;
+	ID3DBlob* blob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
     MLIB_ASSERT_STR(util::fileExists(filename), "File not found: " + filename);
 #ifdef UNICODE
 	std::wstring s(filename.begin(), filename.end());
 #else
 	std::string s(filename.begin(), filename.end());
 #endif
-	HRESULT hr = D3DX11CompileFromFile( s.c_str(), NULL, NULL, entryPoint.c_str(), shaderModel.c_str(), 
-		shaderFlags, 0, NULL, &blob, &errorBlob, NULL );
+	HRESULT hr = D3DX11CompileFromFile( s.c_str(), nullptr, nullptr, entryPoint.c_str(), shaderModel.c_str(), 
+		shaderFlags, 0, nullptr, &blob, &errorBlob, nullptr );
 	if( FAILED(hr) )
 	{
-		if( errorBlob != NULL )
+		if( errorBlob != nullptr )
 		{
 			Console::log() << "Shader compilation failed for " << filename << std::endl
 			               << (char *)errorBlob->GetBufferPointer() << std::endl;

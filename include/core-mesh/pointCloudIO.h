@@ -132,14 +132,14 @@ public:
 		}
 	}
 
-	static void saveToFile(const std::string &filename, const std::vector<point3d<FloatType>>* points, const std::vector<point3d<FloatType>>* normals = NULL, const std::vector<point3d<FloatType>>* colors = NULL) {
+	static void saveToFile(const std::string &filename, const std::vector<point3d<FloatType>>* points, const std::vector<point3d<FloatType>>* normals = nullptr, const std::vector<point3d<FloatType>>* colors = nullptr) {
 		std::string extension = getFileExtension(filename);
 
 		assert(points);
 
-		if (colors == NULL && normals == NULL) {
+		if (colors == nullptr && normals == nullptr) {
 			saveToFile(filename, *points);	
-		} else if (normals == NULL)	{
+		} else if (normals == nullptr)	{
 			if (extension == "ply") {
 				saveToPLYColors(filename, *points, *colors);
 			} else {

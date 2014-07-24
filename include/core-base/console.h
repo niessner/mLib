@@ -12,7 +12,7 @@ namespace ml
 class MultiStream: public std::ostream
 {
 public: 
-	MultiStream(std::ostream &baseStream) : std::ostream(NULL)
+	MultiStream(std::ostream &baseStream) : std::ostream(nullptr)
 	{
 		std::ostream::rdbuf(&m_multiBuffer);
 		addStream(baseStream);

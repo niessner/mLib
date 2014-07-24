@@ -1,7 +1,7 @@
 
 class TestBinaryStreamTestData {
 public:
-	TestBinaryStreamTestData() { m_Data = NULL; m_Size = 0;}
+	TestBinaryStreamTestData() { m_Data = nullptr; m_Size = 0;}
 	~TestBinaryStreamTestData() { clear(); }
 
 	void clear() {

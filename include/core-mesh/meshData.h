@@ -15,7 +15,7 @@ public:
 
 		class Face {
 		public:
-			Face() : indices(NULL), valence(0) {}
+			Face() : indices(nullptr), valence(0) {}
 			Face(unsigned int* i, unsigned int v) : indices(i) , valence(v) {}
 
 			unsigned int& operator[](unsigned int i) {
@@ -215,7 +215,7 @@ public:
 		}
 		void addFace(const unsigned int* indices, unsigned int count) {
 			if (count > 0) {
-				unsigned int* ptrBefore = m_Indices.size() > 0 ? &m_Indices[0] : NULL;
+				unsigned int* ptrBefore = m_Indices.size() > 0 ? &m_Indices[0] : nullptr;
 				m_Indices.resize(m_Indices.size() + count);
 				unsigned int* ptr = &m_Indices[m_Indices.size() - count];
 				memcpy(ptr, indices, count*sizeof(unsigned int));
@@ -223,7 +223,7 @@ public:
 				if (ptrBefore != &m_Indices[0])	recomputeFacePtr();
 			} else {
 				//allow to insert empty faces
-				m_Faces.push_back(Face(NULL, 0));
+				m_Faces.push_back(Face(nullptr, 0));
 			}
 		}
 
@@ -585,7 +585,7 @@ public:
 		res.resize(m_MaterialIndices.size());
 
 		for (size_t i = 0; i < m_MaterialIndices.size(); i++) {
-			Material<FloatType>* m = NULL;
+			Material<FloatType>* m = nullptr;
 			for (size_t j = 0; j < mats.size(); j++) {
 				if (m_MaterialIndices[i].materialName == mats[j].m_name) {
 					m = &mats[j];

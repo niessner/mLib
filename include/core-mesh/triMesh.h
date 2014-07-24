@@ -218,9 +218,9 @@ public:
 		const std::vector<point3d<FloatType>>& texCoords) :
 	TriMesh(vertices.size(), indices.size(), 
 		&vertices[0], &indices[0],
-		colors.size() > 0 ? &colors[0] : NULL,
-		normals.size() > 0 ? &normals[0] : NULL,
-		texCoords.size() > 0 ? &texCoords[0] : NULL) 
+		colors.size() > 0 ? &colors[0] : nullptr,
+		normals.size() > 0 ? &normals[0] : nullptr,
+		texCoords.size() > 0 ? &texCoords[0] : nullptr) 
 	{
 	}
 
@@ -230,9 +230,9 @@ public:
 		size_t numVertices, size_t numIndices,
 		const point3d<FloatType>* vertices, 
 		const unsigned int* indices, 
-		const point4d<FloatType>* colors = NULL, 
-		const point3d<FloatType>* normals = NULL, 
-		const point2d<FloatType>* texCoords = NULL) 
+		const point4d<FloatType>* colors = nullptr, 
+		const point3d<FloatType>* normals = nullptr, 
+		const point2d<FloatType>* texCoords = nullptr) 
 	{
 		if (numIndices % 3 != 0) throw MLIB_EXCEPTION("not a tri mesh");
 

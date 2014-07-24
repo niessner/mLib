@@ -9,8 +9,8 @@ class D3D11Texture : public GraphicsAsset
 public:
     D3D11Texture()
 	{
-        m_texture = NULL;
-        m_view = NULL;
+        m_texture = nullptr;
+        m_view = nullptr;
 	}
     //
     // TODO: implement other copy constructors similar to D3D11Mesh
@@ -18,14 +18,14 @@ public:
     D3D11Texture(D3D11Texture &&t)
     {
         m_bmp = std::move(t.m_bmp);
-        m_view = t.m_view; t.m_view = NULL;
-        m_texture = t.m_texture; t.m_texture = NULL;
+        m_view = t.m_view; t.m_view = nullptr;
+        m_texture = t.m_texture; t.m_texture = nullptr;
     }
     void operator = (D3D11Texture &&t)
     {
         m_bmp = std::move(t.m_bmp);
-        m_view = t.m_view; t.m_view = NULL;
-        m_texture = t.m_texture; t.m_texture = NULL;
+        m_view = t.m_view; t.m_view = nullptr;
+        m_texture = t.m_texture; t.m_texture = nullptr;
     }
     ~D3D11Texture()
 	{
@@ -33,13 +33,13 @@ public:
         SAFE_RELEASE(m_view);
 
         // m_view does not seem to be a correctly reference-counted object.
-        m_view = NULL;
+        m_view = nullptr;
         
 	}
     D3D11Texture(GraphicsDevice &g, const Bitmap &bmp)
     {
-        m_texture = NULL;
-        m_view = NULL;
+        m_texture = nullptr;
+        m_view = nullptr;
         load(g, bmp);
     }
 	void load(GraphicsDevice &g, const Bitmap &bmp);

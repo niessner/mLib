@@ -10,11 +10,11 @@ template <class T>
 class BaseImage {
 public:
 	BaseImage() {
-		m_Data = NULL;
+		m_Data = nullptr;
 		m_Height = m_Width = 0;
 	}
 
-	BaseImage(unsigned int height, unsigned int width, const T *data = NULL) {
+	BaseImage(unsigned int height, unsigned int width, const T *data = nullptr) {
 		create(height, width);
 
 		if (data) {
@@ -31,7 +31,7 @@ public:
 
 	//! Move constructor
 	BaseImage(BaseImage&& other) {
-		m_Data = NULL;
+		m_Data = nullptr;
 		m_Height = m_Width = 0;
 		swap(*this, other);
 	}
@@ -61,7 +61,7 @@ public:
 		std::swap(a.m_InvalidValue, b.m_InvalidValue);
 	}
 
-	void initialize(const T *data = NULL)
+	void initialize(const T *data = nullptr)
 	{
 		if (data) {
 			memcpy(m_Data, data, sizeof(T) * m_Width * m_Height);

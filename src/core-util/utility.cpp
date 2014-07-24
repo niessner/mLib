@@ -180,13 +180,13 @@ namespace util
 #ifdef WIN32
 	void copyStringToClipboard(const std::string &S)
 	{
-		OpenClipboard(NULL);
+		OpenClipboard(nullptr);
 		EmptyClipboard();
 
 		HGLOBAL globalHandle;
 		size_t bytesToCopy = S.length() + 1;
 		globalHandle = GlobalAlloc(GMEM_MOVEABLE, bytesToCopy);
-		if(globalHandle != NULL)
+		if(globalHandle != nullptr)
 		{
 			BYTE *stringPointer = (BYTE*)GlobalLock(globalHandle); 
 			memcpy(stringPointer, S.c_str(), bytesToCopy); 
@@ -200,12 +200,12 @@ namespace util
 	{
 		std::string result;
 
-		OpenClipboard(NULL);
+		OpenClipboard(nullptr);
 		HGLOBAL globalHandle = GetClipboardData(CF_TEXT);
-		if(globalHandle != NULL)
+		if(globalHandle != nullptr)
 		{
 			const char *stringPointer = (const char *)GlobalLock(globalHandle);
-			if(stringPointer != NULL)
+			if(stringPointer != nullptr)
 			{
 				result = stringPointer;
 				GlobalUnlock(GlobalHandle);
@@ -244,14 +244,14 @@ namespace util
 		strcpy(fullCommandLinePtr, fullCommandLine.c_str());
 
 		// Start the child process. 
-		if( !CreateProcessA( NULL,  // No module name (use command line)
+		if( !CreateProcessA( nullptr,  // No module name (use command line)
 			fullCommandLinePtr,		// Command line
-			NULL,           // Process handle not inheritable
-			NULL,           // Thread handle not inheritable
+			nullptr,           // Process handle not inheritable
+			nullptr,           // Thread handle not inheritable
 			FALSE,          // Set handle inheritance to FALSE
 			0,              // No creation flags
-			NULL,           // Use parent's environment block
-			NULL,           // Use parent's starting directory 
+			nullptr,           // Use parent's environment block
+			nullptr,           // Use parent's starting directory 
 			&si,            // Pointer to STARTUPINFO structure
 			&pi )           // Pointer to PROCESS_INFORMATION structure
 			) 
@@ -280,7 +280,7 @@ namespace util
     std::string soFar = "";
     for (const std::string& part : dirParts) {
       soFar += part + "/";
-      CreateDirectoryA(soFar.c_str(), NULL);
+      CreateDirectoryA(soFar.c_str(), nullptr);
     }
 	}
 

@@ -8,7 +8,7 @@ namespace ml {
 
 Pipe::Pipe()
 {
-    m_handle = NULL;
+    m_handle = nullptr;
 }
 
 Pipe::~Pipe()
@@ -18,12 +18,12 @@ Pipe::~Pipe()
 
 void Pipe::closePipe()
 {
-    if(m_handle != NULL)
+    if(m_handle != nullptr)
     {
         FlushFileBuffers(m_handle);
         DisconnectNamedPipe(m_handle);
         CloseHandle(m_handle);
-        m_handle = NULL;
+        m_handle = nullptr;
     }
 }
 
@@ -35,14 +35,14 @@ void Pipe::createPipe(const std::string &pipeName, bool block)
     const UINT PipeBufferSize = 100000;
 
     DWORD dwRes;
-    PSID pEveryoneSID = NULL, pAdminSID = NULL;
-    PACL pACL = NULL;
-    PSECURITY_DESCRIPTOR pSD = NULL;
+    PSID pEveryoneSID = nullptr, pAdminSID = nullptr;
+    PACL pACL = nullptr;
+    PSECURITY_DESCRIPTOR pSD = nullptr;
     EXPLICIT_ACCESS ea[1];
     SID_IDENTIFIER_AUTHORITY SIDAuthWorld = SECURITY_WORLD_SID_AUTHORITY;
     SID_IDENTIFIER_AUTHORITY SIDAuthNT = SECURITY_NT_AUTHORITY;
     SECURITY_ATTRIBUTES attributes;
-    HKEY hkSub = NULL;
+    HKEY hkSub = nullptr;
 
     // Create a well-known SID for the Everyone group.
     BOOL success = AllocateAndInitializeSid(&SIDAuthWorld, 1,
@@ -62,12 +62,12 @@ void Pipe::createPipe(const std::string &pipeName, bool block)
     ea[0].Trustee.ptstrName  = (LPTSTR) pEveryoneSID;
 
     // Create a new ACL that contains the new ACEs.
-    dwRes = SetEntriesInAcl(1, ea, NULL, &pACL);
+    dwRes = SetEntriesInAcl(1, ea, nullptr, &pACL);
     MLIB_ASSERT_STR(dwRes == ERROR_SUCCESS, "SetEntriesInAcl failed in Pipe::CreatePipe");
 
     // Initialize a security descriptor.  
     pSD = (PSECURITY_DESCRIPTOR) LocalAlloc(LPTR, SECURITY_DESCRIPTOR_MIN_LENGTH);
-    MLIB_ASSERT_STR(pSD != NULL, "LocalAlloc failed in Pipe::CreatePipe");
+    MLIB_ASSERT_STR(pSD != nullptr, "LocalAlloc failed in Pipe::CreatePipe");
 
     success = InitializeSecurityDescriptor(pSD, SECURITY_DESCRIPTOR_REVISION);
     MLIB_ASSERT_STR(success != FALSE, "InitializeSecurityDescriptor failed in Pipe::CreatePipe");
@@ -105,7 +105,7 @@ void Pipe::createPipe(const std::string &pipeName, bool block)
     if(block)
     {
         Console::log("Pipe created, waiting for connection");
-        BOOL Connected = (ConnectNamedPipe(m_handle, NULL) != 0);
+        BOOL Connected = (ConnectNamedPipe(m_handle, nullptr) != 0);
         MLIB_ASSERT_STR(Connected != FALSE, "ConnectNamedPipe failed in Pipe::CreatePipe");
         Console::log("Connected");
     }
@@ -132,10 +132,10 @@ void Pipe::connectToPipe(const std::string &pipeName)
             GENERIC_READ |                // read and write access 
             GENERIC_WRITE, 
             0,                            // no sharing 
-            NULL,                         // default security attributes
+            nullptr,                         // default security attributes
             OPEN_EXISTING,                // opens existing pipe 
             0,                            // default attributes 
-            NULL);                        // no template file
+            nullptr);                        // no template file
         if(m_handle != INVALID_HANDLE_VALUE)
         {
             done = true;
@@ -149,21 +149,21 @@ void Pipe::connectToPipe(const std::string &pipeName)
     BOOL success = SetNamedPipeHandleState( 
         m_handle,  // pipe handle 
         &mode,    // new pipe mode 
-        NULL,     // don't set maximum bytes 
-        NULL);    // don't set maximum time 
+        nullptr,     // don't set maximum bytes 
+        nullptr);    // don't set maximum time 
     MLIB_ASSERT_STR(success != FALSE, "SetNamedPipeHandleState failed in Pipe::ConnectToPipe");
 }
 
 bool Pipe::messagePresent()
 {
-    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::MessagePresent");
+    MLIB_ASSERT_STR(m_handle != nullptr, "Pipe invalid in Pipe::MessagePresent");
     DWORD BytesReady  = 0;
     DWORD BytesLeft   = 0;
     BOOL success = PeekNamedPipe(
         m_handle,
-        NULL,
+        nullptr,
         0,
-        NULL,
+        nullptr,
         &BytesReady,
         &BytesLeft);
     //MLIB_ASSERT_STR(success != FALSE, "PeekNamedPipe failed in Pipe::MessagePresent");
@@ -172,15 +172,15 @@ bool Pipe::messagePresent()
 
 bool Pipe::readMessage(std::vector<BYTE> &Message)
 {
-    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::ReadMessage");
+    MLIB_ASSERT_STR(m_handle != nullptr, "Pipe invalid in Pipe::ReadMessage");
     DWORD BytesReady  = 0;
     BOOL success = PeekNamedPipe(
         m_handle,
-        NULL,
+        nullptr,
         0,
-        NULL,
+        nullptr,
         &BytesReady,
-        NULL);
+        nullptr);
     MLIB_ASSERT_STR(success != FALSE, "PeekNamedPipe failed in Pipe::ReadMessage");
     Message.resize(BytesReady);
     if(BytesReady == 0)
@@ -194,7 +194,7 @@ bool Pipe::readMessage(std::vector<BYTE> &Message)
         &Message[0],            // buffer to receive data 
         (DWORD)Message.size(),  // size of buffer 
         &BytesRead,             // number of bytes read 
-        NULL);                  // not overlapped I/O 
+        nullptr);                  // not overlapped I/O 
     MLIB_ASSERT_STR(success != FALSE && BytesRead > 0, "ReadFile failed in Pipe::ReadMessage");
     return true;
 }
@@ -215,8 +215,8 @@ void Pipe::sendMessage(const std::string &message)
 
 void Pipe::sendMessage(const BYTE *Message, UINT MessageLength)
 {
-    if(Message == NULL || MessageLength == 0) return;
-    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::SendMessage");
+    if(Message == nullptr || MessageLength == 0) return;
+    MLIB_ASSERT_STR(m_handle != nullptr, "Pipe invalid in Pipe::SendMessage");
 
     DWORD BytesWritten;
     BOOL success = WriteFile( 
@@ -224,22 +224,22 @@ void Pipe::sendMessage(const BYTE *Message, UINT MessageLength)
         Message,               // message
         MessageLength,         // message length
         &BytesWritten,         // bytes written
-        NULL);                 // not overlapped
+        nullptr);                 // not overlapped
     MLIB_ASSERT_STR(success != FALSE, "WriteFile failed in Pipe::ReadMessage");
     MLIB_ASSERT_STR(BytesWritten == MessageLength, "WriteFile failed to send entire message in Pipe::ReadMessage");
 }
 
 UINT Pipe::activeInstances()
 {
-    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::ActiveInstances");
+    MLIB_ASSERT_STR(m_handle != nullptr, "Pipe invalid in Pipe::ActiveInstances");
     DWORD Instances;
     BOOL success = GetNamedPipeHandleState(
         m_handle,
-        NULL,
+        nullptr,
         &Instances,
-        NULL,
-        NULL,
-        NULL,
+        nullptr,
+        nullptr,
+        nullptr,
         0);
     MLIB_ASSERT_STR(success != FALSE, "GetNamedPipeHandleState failed in Pipe::ActiveInstances");
     return Instances;
@@ -247,14 +247,14 @@ UINT Pipe::activeInstances()
 
 std::string Pipe::userName()
 {
-    MLIB_ASSERT_STR(m_handle != NULL, "Pipe invalid in Pipe::UserName");
+    MLIB_ASSERT_STR(m_handle != nullptr, "Pipe invalid in Pipe::UserName");
     char buffer[512];
     BOOL success = GetNamedPipeHandleStateA(
         m_handle,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
+        nullptr,
+        nullptr,
+        nullptr,
+        nullptr,
         buffer,
         512);
     MLIB_ASSERT_STR(success != FALSE, "GetNamedPipeHandleState failed in Pipe::UserName");
@@ -263,7 +263,7 @@ std::string Pipe::userName()
 
 bool Pipe::valid()
 {
-    return (m_handle != NULL);
+    return (m_handle != nullptr);
 }
 
 }  // namespace ml

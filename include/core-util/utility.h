@@ -268,7 +268,7 @@ namespace util
 	//
 	inline FILE* checkedFOpen(const char* filename, const char* mode) {
 		FILE* file = fopen(filename, mode);
-		MLIB_ASSERT_STR(file != NULL && !ferror(file), std::string("Failed to open file: ") + std::string(filename));
+		MLIB_ASSERT_STR(file != nullptr && !ferror(file), std::string("Failed to open file: ") + std::string(filename));
 		return file;
 	}
 

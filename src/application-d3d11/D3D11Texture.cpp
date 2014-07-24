@@ -44,14 +44,14 @@ void D3D11Texture::reset(GraphicsDevice &g)
     D3D_VALIDATE(device.CreateTexture2D(&desc, nullptr, &m_texture));
     D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_view));
 
-    context.UpdateSubresource(m_texture, 0, NULL, m_bmp.ptr(), (UINT)m_bmp.cols() * sizeof(RGBColor), (UINT)m_bmp.cols() * (UINT)m_bmp.rows() * sizeof(RGBColor));
+    context.UpdateSubresource(m_texture, 0, nullptr, m_bmp.ptr(), (UINT)m_bmp.cols() * sizeof(RGBColor), (UINT)m_bmp.cols() * (UINT)m_bmp.rows() * sizeof(RGBColor));
 
     context.GenerateMips(m_view);
 }
 
 void D3D11Texture::bind(GraphicsDevice &g) const
 {
-    if (m_view == NULL)
+    if (m_view == nullptr)
         return;
     auto &context = g.castD3D11().context();
     context.PSSetShaderResources(0, 1, &m_view);

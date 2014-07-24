@@ -11,8 +11,8 @@ class D3D11Font : GraphicsAsset
 public:
     D3D11Font()
     {
-        m_factory = NULL;
-        m_fontWrapper = NULL;
+        m_factory = nullptr;
+        m_fontWrapper = nullptr;
     }
     ~D3D11Font()
     {

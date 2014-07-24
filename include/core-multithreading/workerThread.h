@@ -28,7 +28,7 @@ class WorkerThread
 public:
 	WorkerThread()
 	{
-		m_thread = NULL;
+		m_thread = nullptr;
 	}
 	~WorkerThread()
 	{

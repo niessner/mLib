@@ -10,7 +10,7 @@ template <class T> Grid3D<T>::Grid3D()
 	m_rows = 0;
 	m_cols = 0;
 	m_slices = 0;
-	m_data = NULL;
+	m_data = nullptr;
 }
 
 template <class T> Grid3D<T>::Grid3D(UINT rows, UINT cols, UINT slices)
@@ -55,7 +55,7 @@ template <class T> Grid3D<T>::Grid3D(Grid3D<T> &&G)
 	G.m_cols = 0;
 	G.m_slices = 0;
 
-	G.m_data = NULL;
+	G.m_data = nullptr;
 }
 
 template <class T> Grid3D<T>::~Grid3D()
@@ -68,10 +68,10 @@ template <class T> void Grid3D<T>::deleteMemory()
 	m_rows = 0;
 	m_cols = 0;
 	m_slices = 0;
-	if(m_data != NULL)
+	if(m_data != nullptr)
 	{
 		delete[] m_data;
-		m_data = NULL;
+		m_data = nullptr;
 	}
 }
 

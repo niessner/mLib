@@ -14,14 +14,14 @@ class TriMeshRayAccelerator
 public:
     struct Intersection
     {
-		Intersection() : triangle(NULL) {}
+		Intersection() : triangle(nullptr) {}
 
         bool valid() const {
-            return triangle != NULL;
+            return triangle != nullptr;
         }
 
 		bool isValid() const {
-			return triangle != NULL;
+			return triangle != nullptr;
 		}
 		
 		typename TriMesh<FloatType>::Vertex<FloatType> getSurfaceVertex() const {

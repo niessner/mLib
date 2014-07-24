@@ -16,17 +16,17 @@ public:
 	D3D11GraphicsDevice()
 	{
 		m_type = GraphicsDeviceTypeD3D11;
-		m_device = NULL;
-		m_context = NULL;
-		m_renderView = NULL;
-		m_debug = NULL;
-		m_swapChain = NULL;
-        m_depthBuffer = NULL;
-        m_depthState = NULL;
-        m_rasterState = NULL;
-        m_depthView = NULL;
-        m_captureBuffer = NULL;
-        m_samplerState = NULL;
+		m_device = nullptr;
+		m_context = nullptr;
+		m_renderView = nullptr;
+		m_debug = nullptr;
+		m_swapChain = nullptr;
+        m_depthBuffer = nullptr;
+        m_depthState = nullptr;
+        m_rasterState = nullptr;
+        m_depthView = nullptr;
+        m_captureBuffer = nullptr;
+        m_samplerState = nullptr;
 		m_featureLevel = D3D_FEATURE_LEVEL_9_1;
 	}
 	~D3D11GraphicsDevice()

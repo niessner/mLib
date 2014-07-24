@@ -10,7 +10,7 @@ class D3D11ConstantBuffer : public GraphicsAsset
 public:
 	D3D11ConstantBuffer()
 	{
-		m_buffer = NULL;
+		m_buffer = nullptr;
 	}
 	~D3D11ConstantBuffer()
 	{
@@ -36,7 +36,7 @@ public:
 		desc.ByteWidth = sizeof(T);
 		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		desc.CPUAccessFlags = 0;
-		D3D_VALIDATE(g.castD3D11().device().CreateBuffer( &desc, NULL, &m_buffer ));
+		D3D_VALIDATE(g.castD3D11().device().CreateBuffer( &desc, nullptr, &m_buffer ));
 	}
 
     void updateAndBind(GraphicsDevice &g, const T &data, UINT constantBufferIndex)
@@ -48,7 +48,7 @@ public:
 
 	void update(GraphicsDevice &g, const T &data)
 	{
-		g.castD3D11().context().UpdateSubresource( m_buffer, 0, NULL, &data, 0, 0 );
+		g.castD3D11().context().UpdateSubresource( m_buffer, 0, nullptr, &data, 0, 0 );
 	}
 
 	void bindVertexShader(GraphicsDevice &g, UINT constantBufferIndex)

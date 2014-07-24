@@ -345,7 +345,7 @@ void MeshSampler::Sample(const Vector< pair<const BaseMesh *, Matrix4> > &meshLi
     for (UINT meshIndex = 0; meshIndex < meshList.Length(); meshIndex++)
     {
         meshIndexToBaseTriangleIndex[meshIndex] = curIndex;
-        if (meshList[meshIndex].first != NULL)
+        if (meshList[meshIndex].first != nullptr)
         {
             const UINT triangleCount = meshList[meshIndex].first->FaceCount();
             for (UINT triangleIndex = 0; triangleIndex < triangleCount; triangleIndex++)

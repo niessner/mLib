@@ -64,11 +64,11 @@ void Directory::load(const std::string &path)
 	m_directories.clear();
 
 	auto dir = opendir(path.c_str());
-	if (dir == NULL) return; // could not open directory
+	if (dir == nullptr) return; // could not open directory
 
 	auto entity = readdir(dir);
 
-	while (entity != NULL) {
+	while (entity != nullptr) {
 		auto entity = readdir(dir);
 		if (entity->d_type == DT_DIR) {
 			// don't process  '..' & '.' directories

@@ -66,7 +66,7 @@ struct TriangleBVHNode {
 	}
 
 	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType& tmin, FloatType& tmax, bool onlyFrontFaces = false) const {
-		if (t < tmin || t > tmax)	return NULL;	//early out (warning t must be initialized)
+		if (t < tmin || t > tmax)	return nullptr;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {
 			if (isLeaf()) {
 				if (leafTri->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces))	{
@@ -80,7 +80,7 @@ struct TriangleBVHNode {
 				if (t0)	return t0;
 			}
 		} 
-		return NULL;
+		return nullptr;
 	}
 
 	bool collision(const typename TriMesh<FloatType>::Triangle<FloatType>* tri) const {
@@ -165,10 +165,10 @@ class TriMeshAcceleratorBVH : public TriMeshRayAccelerator<FloatType>
 public:
 
 	TriMeshAcceleratorBVH() {
-		m_Root = NULL;
+		m_Root = nullptr;
 	}
 	TriMeshAcceleratorBVH(const TriMesh<FloatType>& triMesh, bool storeLocalCopy = false) {
-		m_Root = NULL;
+		m_Root = nullptr;
 		build(triMesh, storeLocalCopy);
 		
 		//std::vector<const TriMesh<FloatType>*> meshes;

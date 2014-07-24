@@ -9,8 +9,8 @@ class D3D11PixelShader : public GraphicsAsset
 public:
 	D3D11PixelShader()
 	{
-		m_shader = NULL;
-		m_blob = NULL;
+		m_shader = nullptr;
+		m_blob = nullptr;
 	}
 	~D3D11PixelShader()
 	{

@@ -13,7 +13,7 @@ public:
 		m_parent(parent)
 	{
 		m_className = L"uninitialized";
-		m_handle = NULL;
+		m_handle = nullptr;
 		ZeroMemory(&m_class, sizeof(m_class));
 	}
 	~WindowWin32();
