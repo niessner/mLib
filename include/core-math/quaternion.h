@@ -407,8 +407,8 @@ template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::o
 template <class FloatType> inline void Quaternion<FloatType>::operator+=( const Quaternion& b ) { m_Real += b.re; m_Imag += b.im; }
 
 template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::operator* ( const Quaternion& b ) const {
-	FloatType re2 = ( m_Real * b.re ) - ( m_Imag | b.im );	// | = dot product
-	point3d<FloatType> im2 = ( b.im * m_Real ) + ( m_Imag * b.re ) + ( m_Imag ^ b.im ); // ^ = cross product
+	FloatType re2 = ( m_Real * b.real() ) - ( m_Imag | b.imag() );	// | = dot product
+	point3d<FloatType> im2 = ( b.imag() * m_Real ) + ( m_Imag * b.real() ) + ( m_Imag ^ b.imag() ); // ^ = cross product
 	return Quaternion( re2, im2 );
 	}
 
