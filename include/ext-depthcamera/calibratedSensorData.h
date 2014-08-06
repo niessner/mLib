@@ -193,7 +193,6 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 
 	assert(sensorData.m_ColorNumFrames == sensorData.m_ColorImages.size());
 	assert(sensorData.m_DepthNumFrames == sensorData.m_DepthImages.size());
-	assert(sensorData.m_DepthNumFrames == sensorData.m_trajectory.size());
 
 	for (unsigned int i = 0; i < sensorData.m_DepthImages.size(); i++) {
 		s.writeData((BYTE*)sensorData.m_DepthImages[i], sizeof(float)*sensorData.m_DepthImageWidth*sensorData.m_DepthImageHeight);
