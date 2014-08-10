@@ -106,6 +106,7 @@
     <ClInclude Include="..\include\core-base\grid.h" />
     <ClInclude Include="..\include\core-graphics\boundingBox3d.h" />
     <ClInclude Include="..\include\core-graphics\camera.h" />
+    <ClInclude Include="..\include\core-graphics\intersection.h" />
     <ClInclude Include="..\include\core-graphics\orientedBoundingBox3d.h" />
     <ClInclude Include="..\include\core-graphics\plane.h" />
     <ClInclude Include="..\include\core-graphics\ray.h" />

@@ -72,6 +72,7 @@
 //
 #include "core-graphics/RGBColor.h"
 #include "core-graphics/colorUtils.h"
+#include "core-graphics/intersection.h"
 #include "core-graphics/ray.h"
 #include "core-graphics/camera.h"
 #include "core-graphics/lineSegment2d.h"
