@@ -51,8 +51,20 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 	//	}
 	//};
 
+	//struct vecHash {
+	//	size_t operator()(const Indices::Face& v) const {
+	//		//TODO larger prime number (64 bit) to match size_t
+	//		const size_t p[] = {73856093, 19349669, 83492791};
+	//		size_t res = 0;
+	//		for (unsigned int i : v) {
+	//			res = res ^ (size_t)i * p[i%3];
+	//		}
+	//		return res;
+	//		//const size_t res = ((size_t)v.x * p0)^((size_t)v.y * p1)^((size_t)v.z * p2);
+	//	}
+	//};
 	struct vecHash {
-		size_t operator()(const Indices::Face& v) const {
+		size_t operator()(const std::vector<unsigned int>& v) const {
 			//TODO larger prime number (64 bit) to match size_t
 			const size_t p[] = {73856093, 19349669, 83492791};
 			size_t res = 0;
@@ -68,13 +80,17 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 	Indices faces_new;
 	faces_new.reserve(numFaces);
 
-	std::unordered_set<Indices::Face, vecHash> _set;
+	unsigned int count = 0; unsigned int ordered = 0;
+	std::unordered_set<std::vector<unsigned int>, vecHash> _set;
 	for (size_t i = 0; i < numFaces; i++) {
-		Indices::Face f = m_FaceIndicesVertices[i];
-		std::sort(f.begin(), f.end());
-		if (_set.find(f) == _set.end()) {
+		Indices::Face f = m_FaceIndicesVertices[i]; // same pointer
+		std::vector<unsigned int> face(f.size()); // copy so that m_FaceIndicesVertices[i] remains unsorted
+		for (unsigned int j = 0; j < f.size(); j++)
+			face[j] = f[j];
+		std::sort(face.begin(), face.end());
+		if (_set.find(face) == _set.end()) {
 			//not found yet
-			_set.insert(f);
+			_set.insert(face);
 			faces_new.push_back(m_FaceIndicesVertices[i]);	//inserted the unsorted one
 		}
 	}
