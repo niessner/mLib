@@ -2,6 +2,25 @@
 #ifndef _COREMESH_TRIMESHCOLLISIONACCELERATOR_H_
 #define _COREMESH_TRIMESHCOLLISIONACCELERATOR_H_
 
+namespace ml {
+
+template<class FloatType, class ChildType>
+class TriMeshCollisionAccelerator : virtual public TriMeshAccelerator<FloatType>
+{
+public:
+	virtual bool collision(const ChildType &accel) const {
+		return collisionInternal(accel);
+	}
+
+private:
+	virtual bool collisionInternal(const ChildType &accel) const = 0;
+};
+
+//typedef TriMeshCollisionAccelerator<float> TriMeshCollisionAcceleratorf;
+//typedef TriMeshCollisionAccelerator<double> TriMeshCollisionAcceleratord;
+
+} // namespace ml
+
 /*
 namespace ml {
 

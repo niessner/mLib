@@ -361,8 +361,9 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		//ml::TriMeshAcceleratorBruteForcef accel(triMesh);
 		std::cout << "time construct " << c0.getElapsedTimeMS() << std::endl;
 
-		std::vector<const TriMeshAcceleratorBVHf*> accelVec;
+		std::vector<const TriMeshRayAcceleratorf*> accelVec;
 		accelVec.push_back(&accel);
+		int s = sizeof(accel);
 
 		ml::Timer c;
 		c.start();

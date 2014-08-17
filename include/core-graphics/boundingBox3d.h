@@ -120,11 +120,13 @@ public:
 	//! triangle collision
 	bool collision(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) const {
 		//TODO
+		return false;
 	}
 
 	//! bounding box collision
 	bool collision(const BoundingBox3d<FloatType>& other) const {
 		//TOOD
+		return false;
 	}
 
 	FloatType getMaxExtent() const {

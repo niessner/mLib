@@ -84,7 +84,7 @@ struct TriangleBVHNode {
 	}
 
 	bool collision(const typename TriMesh<FloatType>::Triangle<FloatType>* tri) const {
-		if (boundingBox.collision(tri->v0, tri->v1, tri->v2)) {
+		if (boundingBox.collision(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
 			if (isLeaf()) {
 				return tri->collision(*leafTri);
 			} else {
@@ -97,7 +97,7 @@ struct TriangleBVHNode {
 	}
 
 	bool collision(const BoundingBox3d<FloatType>& bb) const {
-		if (boundingBox.collision(tri->v0, tri->v1, tri->v2)) {
+		if (boundingBox.collision(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
 			if (isLeaf()) {
 				return bb.collision(leafTri);
 			} else {
@@ -160,7 +160,7 @@ struct TriangleBVHNode {
 };
 
 template <class FloatType>
-class TriMeshAcceleratorBVH : public TriMeshRayAccelerator<FloatType>
+class TriMeshAcceleratorBVH : public TriMeshRayAccelerator<FloatType>, public TriMeshCollisionAccelerator<FloatType, TriMeshAcceleratorBVH<FloatType>>
 {
 public:
 
@@ -185,11 +185,7 @@ public:
 		SAFE_DELETE(m_Root);
 	}
 
-
-	bool collision(const TriMeshAcceleratorBVH<FloatType>& other) const {
-		return m_Root->collision(other.m_Root);
-	}
-
+	
 	void printInfo() const {
 		std::cout << "Info: TriangleBVHAccelerator build done ( " << m_TrianglePointers.size() << " tris )" << std::endl;
 		std::cout << "Info: Tree depth " << m_Root->getTreeDepthRec() << std::endl;
@@ -197,6 +193,11 @@ public:
 		std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
 	}
 private:
+	//! defined by the interface
+	bool collisionInternal(const TriMeshAcceleratorBVH<FloatType>& other) const {
+		return m_Root->collision(*other.m_Root);
+	}
+
 	//! defined by the interface
 	typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
 		u = v = std::numeric_limits<FloatType>::max();	

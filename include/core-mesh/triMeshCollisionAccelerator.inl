@@ -1,6 +1,7 @@
 #ifndef _COREMESH_TRIMESHCOLLISIONACCELERATOR_INL_
 #define _COREMESH_TRIMESHCOLLISIONACCELERATOR_INL_
 
+/*
 namespace ml {
 
 template<class T>
@@ -58,5 +59,6 @@ bool TriMeshCollisionAcceleratorBruteForce<T>::collision(const TriMeshCollisionA
 }
 
 } // ml
+*/
 
 #endif

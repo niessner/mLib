@@ -5,7 +5,7 @@
 namespace ml {
 
 template <class FloatType>
-class TriMeshAcceleratorBruteForce : public TriMeshRayAccelerator<FloatType>
+class TriMeshAcceleratorBruteForce : public TriMeshRayAccelerator<FloatType> , public TriMeshCollisionAccelerator<FloatType,TriMeshAcceleratorBruteForce<FloatType>>
 {
 public:
 
@@ -20,6 +20,23 @@ public:
 
 private:
 
+	//! interface definition
+	bool collisionInternal(const TriMeshAcceleratorBruteForce<FloatType>& accel) const {
+		if (triangleCount() > 0) {
+			for (const auto* triA : m_TrianglePointers)	{
+				for (const auto* triB : accel.m_TrianglePointers) {
+					if (intersection::intersectTriangleTriangle(
+						triA->getV0().position, triA->getV1().position, triA->getV2().position
+						triB->getV0().position, triB->getV1().position, triB->getV2().position))
+							return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	//! interface definition
 	typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
 
 		typename TriMesh<FloatType>::Triangle<FloatType>* tri = nullptr;

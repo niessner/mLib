@@ -95,11 +95,13 @@
 
 #include "core-mesh/triMesh.h"
 #include "core-mesh/triMeshSampler.h"
+
+#include "core-mesh/triMeshAccelerator.h"
 #include "core-mesh/triMeshRayAccelerator.h"
+#include "core-mesh/triMeshCollisionAccelerator.h"
 #include "core-mesh/triMeshAcceleratorBruteForce.h"
 #include "core-mesh/triMeshAcceleratorBVH.h"
 
-//#include "core-mesh/triMeshCollisionAccelerator.h"
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"
 

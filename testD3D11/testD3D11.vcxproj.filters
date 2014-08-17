@@ -228,6 +228,9 @@
     <ClInclude Include="..\include\core-graphics\intersection.h">
       <Filter>mLibHeader\core-graphics</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshAccelerator.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
