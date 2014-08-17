@@ -14,9 +14,9 @@ namespace intersection {
 		}
 	}
 
-/* this edge to edge test is based on Franlin Antonio's gem:
-   "Faster Line Segment Intersection", in Graphics Gems III,
-   pp. 199-202 */
+	// this edge to edge test is based on Franlin Antonio's gem:
+    //"Faster Line Segment Intersection", in Graphics Gems III,
+    //pp. 199-202
 	template<class FloatType> 
 	bool EDGE_EDGE_TEST(
 		const point3d<FloatType>& V0, 
@@ -39,65 +39,85 @@ namespace intersection {
 		f = a.y*b.x - a.x*b.y;
 		d = b.y*c.x - b.x*c.y;
 
-		if((f>0 && d>=0 && d<=f) || (f<0 && d<=0 && d>=f)) 
-		{                                                  
-			e=Ax*Cy-Ay*Cx;                                   
-			if(f>0)                                          
-			{                                                
-				if(e>=0 && e<=f) return 1;                     
-			}                                                
-			else                                             
-			{                                                
-				if(e<=0 && e>=f) return 1;                     
+		if((f>0 && d>=0 && d<=f) || (f<0 && d<=0 && d>=f)) 	{                                                  
+			e=a.x*c.y-a.y*c.x;                                   
+			if (f>0)	{                                                
+				if(e>=0 && e<=f) {return true;}            
+			} else {                                                
+				if(e<=0 && e>=f) {return true;}                       
 			}                                                
 		}
+		return false;
 	}
 	
 
-#define EDGE_AGAINST_TRI_EDGES(V0,V1,U0,U1,U2)
-{                                             
-  FloatType Ax,Ay,Bx,By,Cx,Cy,e,d,f;          
-  Ax=V1[i0]-V0[i0];                           
-  Ay=V1[i1]-V0[i1];                           
-  /* test edge U0,U1 against V0,V1 */         
-  EDGE_EDGE_TEST(V0,U0,U1);                   
-  /* test edge U1,U2 against V0,V1 */         
-  EDGE_EDGE_TEST(V0,U1,U2);                   
-  /* test edge U2,U1 against V0,V1 */         
-  EDGE_EDGE_TEST(V0,U2,U0);                   
-}
+	template<class FloatType> 
+	bool EDGE_AGAINST_TRI_EDGES(
+		const point3d<FloatType>& V0,
+		const point3d<FloatType>& V1,
+		const point3d<FloatType>& U0,
+		const point3d<FloatType>& U1,
+		const point3d<FloatType>& U2,
+		unsigned short i0, unsigned short i1)
+	{
+		point2d<FloatType> a, b, c;
+		FloatType e,d,f;          
+		a.x = V1[i0]-V0[i0];                           
+		a.y = V1[i1]-V0[i1];                           
+		//test edge U0,U1 against V0,V1         
+		if (EDGE_EDGE_TEST(V0,U0,U1,i0,i1,a,b,c,d,e,f)) return true;                
+		//test edge U1,U2 against V0,V1        
+		if (EDGE_EDGE_TEST(V0,U1,U2,i0,i1,a,b,c,d,e,f)) return true;                 
+		//test edge U2,U1 against V0,V1    
+		if (EDGE_EDGE_TEST(V0,U2,U0,i0,i1,a,b,c,d,e,f)) return true;
 
-#define POINT_IN_TRI(V0,U0,U1,U2)          
-{                                          
-  float a,b,c,d0,d1,d2;                    
-  /* is T1 completly inside T2? */         
-  /* check if V0 is inside tri(U0,U1,U2) */
-  a=U1[i1]-U0[i1];                         
-  b=-(U1[i0]-U0[i0]);                      
-  c=-a*U0[i0]-b*U0[i1];                    
-  d0=a*V0[i0]+b*V0[i1]+c;                  
-                                           
-  a=U2[i1]-U1[i1];                         
-  b=-(U2[i0]-U1[i0]);                      
-  c=-a*U1[i0]-b*U1[i1];                    
-  d1=a*V0[i0]+b*V0[i1]+c;                  
-                                           
-  a=U0[i1]-U2[i1];                         
-  b=-(U0[i0]-U2[i0]);                      
-  c=-a*U2[i0]-b*U2[i1];                    
-  d2=a*V0[i0]+b*V0[i1]+c;                  
-  if(d0*d1>0.0)                            
-  {                                        
-    if(d0*d2>0.0) return 1;                
-  }                                        
-}
+		return false;
+	}
+
+
+	template<class FloatType> 
+	bool POINT_IN_TRI(
+		const point3d<FloatType>& V0,
+		const point3d<FloatType>& U0,
+		const point3d<FloatType>& U1,
+		const point3d<FloatType>& U2,
+		unsigned short i0, unsigned short i1)          
+	{                                          
+		FloatType a,b,c,d0,d1,d2;                    
+		//is T1 completely inside T2?    
+		//check if V0 is inside tri(U0,U1,U2)
+		a=U1[i1]-U0[i1];                         
+		b=-(U1[i0]-U0[i0]);                      
+		c=-a*U0[i0]-b*U0[i1];                    
+		d0=a*V0[i0]+b*V0[i1]+c;                  
+
+		a=U2[i1]-U1[i1];                         
+		b=-(U2[i0]-U1[i0]);                      
+		c=-a*U1[i0]-b*U1[i1];                    
+		d1=a*V0[i0]+b*V0[i1]+c;                  
+
+		a=U0[i1]-U2[i1];                         
+		b=-(U0[i0]-U2[i0]);                      
+		c=-a*U2[i0]-b*U2[i1];                    
+		d2=a*V0[i0]+b*V0[i1]+c;                  
+		if (d0*d1 > (FloatType)0.0) {                                        
+			if (d0*d2 > (FloatType)0.0) return true;               
+		} 
+		return false;
+	}
 
 
 	template<class FloatType>
-	int coplanar_tri_tri(FloatType N[3],FloatType V0[3],FloatType V1[3],FloatType V2[3],
-		FloatType U0[3],FloatType U1[3],FloatType U2[3])
+	bool coplanar_tri_tri(
+		const point3d<FloatType>& N,
+		const point3d<FloatType>& V0,
+		const point3d<FloatType>& V1,
+		const point3d<FloatType>& V2,
+		const point3d<FloatType>& U0,
+		const point3d<FloatType>& U1,
+		const point3d<FloatType>& U2)
 	{
-		FloatType A[3];
+		point3d<FloatType> A[3];
 		short i0,i1;
 		// first project onto an axis-aligned plane, that maximizes the area 
 		// of the triangles, compute indices: i0,i1. 
@@ -125,20 +145,28 @@ namespace intersection {
 		}
 
 		// test all edges of triangle 1 against the edges of triangle 2 
-		EDGE_AGAINST_TRI_EDGES(V0,V1,U0,U1,U2);
-		EDGE_AGAINST_TRI_EDGES(V1,V2,U0,U1,U2);
-		EDGE_AGAINST_TRI_EDGES(V2,V0,U0,U1,U2);
+		if (EDGE_AGAINST_TRI_EDGES(V0,V1,U0,U1,U2,i0,i1))	return true;
+		if (EDGE_AGAINST_TRI_EDGES(V1,V2,U0,U1,U2,i0,i1))	return true;
+		if (EDGE_AGAINST_TRI_EDGES(V2,V0,U0,U1,U2,i0,i1))	return true;
 
 		// finally, test if tri1 is totally contained in tri2 or vice versa 
-		POINT_IN_TRI(V0,U0,U1,U2);
-		POINT_IN_TRI(U0,V0,V1,V2);
+		if (POINT_IN_TRI(V0,U0,U1,U2,i0,i1)) return true;
+		if (POINT_IN_TRI(U0,V0,V1,V2,i0,i1)) return true;
 
-		return 0;
+		return false;
 	}
 
 
+	//returns true if coplanar
 	template<class FloatType>
 	bool NEWCOMPUTE_INTERVALS(
+		const point3d<FloatType>& v0,
+		const point3d<FloatType>& v1,
+		const point3d<FloatType>& v2,
+		const point3d<FloatType>& u0,
+		const point3d<FloatType>& u1,
+		const point3d<FloatType>& u2,
+		const point3d<FloatType>& n1,
 		FloatType& VV0,FloatType& VV1,FloatType& VV2, 
 		FloatType& D0, FloatType& D1, FloatType& D2, 
 		FloatType& D0D1, FloatType& D0D2,
@@ -170,10 +198,10 @@ namespace intersection {
 		}
 		else
 		{
-			// triangles are coplanar
-			return coplanar_tri_tri(N1,V0,V1,V2,U0,U1,U2);
+			//triangles are co-planar
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	template<class FloatType>
@@ -186,7 +214,7 @@ namespace intersection {
 		const point3d<FloatType> &u2) 
 	{
 		const bool USE_EPSILON_TEST = true;
-		const FloatType EPSILON = 0.000001;
+		const FloatType EPSILON = (FloatType)0.000001;
 
 		//compute plane equation of triangle(V0,V1,V2)
 		point3d<FloatType> e1 = v1 - v0;
@@ -262,14 +290,14 @@ namespace intersection {
 
 		// compute interval for triangle 1
 		FloatType a,b,c,x0,x1;
-		if (!NEWCOMPUTE_INTERVALS(vp0,vp1,vp2,dv0,dv1,dv2,dv0dv1,dv0dv2,a,b,c,x0,x1)) {
-			return false;
+		if (NEWCOMPUTE_INTERVALS(u0,u1,u2,v0,v1,v2,n1,vp0,vp1,vp2,dv0,dv1,dv2,dv0dv1,dv0dv2,a,b,c,x0,x1)) {
+			return (coplanar_tri_tri(n1,v0,v1,v2,u0,u1,u2));	//triangles are a co-planar
 		}
 
 		// compute interval for triangle 2 
 		FloatType d,e,f,y0,y1;
-		if (!NEWCOMPUTE_INTERVALS(up0,up1,up2,du0,du1,du2,du0du1,du0du2,d,e,f,y0,y1)) {
-			return false;
+		if (NEWCOMPUTE_INTERVALS(u0,u1,u2,v0,v1,v2,n1,up0,up1,up2,du0,du1,du2,du0du1,du0du2,d,e,f,y0,y1)) {
+			return (coplanar_tri_tri(n1,v0,v1,v2,u0,u1,u2));	//triangles are a co-planar
 		}
 
 		FloatType xx,yy,xxyy,tmp;

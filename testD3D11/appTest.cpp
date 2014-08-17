@@ -82,6 +82,17 @@ unsigned int test2(unsigned int size) {
 
 void AppTest::init(ml::ApplicationData &app)
 {
+	vec3f u0(0,0,0);
+	vec3f u1(0,1,0);
+	vec3f u2(0,1,1);
+	vec3f v0(-0.25,0.25,0.25);
+	vec3f v1(1,1,0);
+	vec3f v2(1,1,1);
+
+	bool b = intersection::intersectTriangleTriangle(u0,u1,u2, v0,v1,v2);
+	std::cout << (int)b << std::endl;
+
+
 	DenseMatrixf md(3);
 	for (unsigned int i = 0; i < 9; i++) {
 		md[i] = (float)i;
