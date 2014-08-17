@@ -117,7 +117,7 @@ namespace intersection {
 		const point3d<FloatType>& U1,
 		const point3d<FloatType>& U2)
 	{
-		point3d<FloatType> A[3];
+		point3d<FloatType> A;
 		short i0,i1;
 		// first project onto an axis-aligned plane, that maximizes the area 
 		// of the triangles, compute indices: i0,i1. 

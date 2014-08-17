@@ -139,7 +139,7 @@ public:
 		}
 
 		bool collision(const Triangle<FloatType>& other) const {
-			//TOOD
+			return intersectTriangleTriangle(*v0,*v1,*v2, *other.v0,*other.v1,*other.v2);
 		}
 
 		void includeInBoundingBox(BoundingBox3d<FloatType> &bb) const {

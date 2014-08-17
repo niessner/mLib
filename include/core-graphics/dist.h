@@ -5,14 +5,14 @@
 namespace ml {
 
 
+////
+//// TODO: this should be moved into an intersect class
+////
+//namespace math {
+//bool triangleIntersectTriangle(const ml::vec3f &t0v0, const ml::vec3f &t0v1, const ml::vec3f &t0v2, const ml::vec3f &t1v0, const ml::vec3f &t1v1, const ml::vec3f &t1v2);
 //
-// TODO: this should be moved into an intersect class
-//
-namespace math {
-bool triangleIntersectTriangle(const ml::vec3f &t0v0, const ml::vec3f &t0v1, const ml::vec3f &t0v2, const ml::vec3f &t1v0, const ml::vec3f &t1v1, const ml::vec3f &t1v2);
-
-bool triangleIntersectTriangle(const ml::vec3f t0[3], const ml::vec3f t1[3]);
-}
+//bool triangleIntersectTriangle(const ml::vec3f t0[3], const ml::vec3f t1[3]);
+//}
 
 
 //
