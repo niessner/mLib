@@ -71,15 +71,18 @@ namespace OpenMeshTriMesh {
 		out = TriMeshf(mData);
 	}
 
+	//! decimates a mesh to a specific target vertex number; REVOMES ALSO ALL COLOR/NORMAL/TEXCOORD data
 	static void decimate(TriMeshf& triMesh, size_t targetNumVertices) {
 		Mesh        mesh;									// a mesh object
 		convertToOpenMesh(triMesh, mesh);
 
-		//Decimater   decimater(mesh);						// a decimater object, connected to a mesh
-		//HModQuadric hModQuadric;							// use a quadric module
-		//decimater.add( hModQuadric );						// register module at the decimater
-		//decimater.initialize();								// let the decimater initialize the mesh and the modules
-		//decimater.decimate_to(targetNumVertices);			// do decimation
+		Decimater   decimater(mesh);						// a decimater object, connected to a mesh
+		HModQuadric hModQuadric;							// use a quadric module
+		decimater.add( hModQuadric );						// register module at the decimater
+		decimater.initialize();								// let the decimater initialize the mesh and the modules
+		decimater.decimate_to(targetNumVertices);			// do decimation
+		mesh.garbage_collection();
+		convertToTriMesh(mesh, triMesh);
 	}
 
 }	//namespace OpenMeshTriMesh

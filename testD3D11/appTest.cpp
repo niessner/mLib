@@ -129,6 +129,12 @@ void AppTest::init(ml::ApplicationData &app)
 	OpenMeshTriMesh::convertToOpenMesh(s, omesh);
 	OpenMeshTriMesh::convertToTriMesh(omesh, s);
 	MeshIOf::saveToFile("bla1.ply",s.getMeshData());
+	//MeshDataf meshData0 = s.getMeshData();
+	//meshData0.mergeCloseVertices(0.00001f, true);
+	//s = TriMeshf(meshData0);
+	MeshIOf::saveToFile("bla2.ply",s.getMeshData());
+	OpenMeshTriMesh::decimate(s, 500);
+	MeshIOf::saveToFile("bla3.ply",s.getMeshData());
 
 	testCollisions();
 	//vec3f u0(0,0,0);

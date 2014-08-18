@@ -468,11 +468,11 @@ public:
 		return consistent;
 	}
 
-	void applyTransform(const mat4f& t) {
+	void applyTransform(const Matrix4x4<FloatType>& t) {
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i] = t*m_Vertices[i];
 		}
-		mat4f invTrans = t.getInverse().getTranspose();
+		Matrix4x4<FloatType> invTrans = t.getInverse().getTranspose();
 		for (size_t i = 0; i < m_Normals.size(); i++) {
 			m_Normals[i] = invTrans*m_Normals[i];
 		}
