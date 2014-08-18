@@ -123,6 +123,13 @@ void testCollisions() {
 
 void AppTest::init(ml::ApplicationData &app)
 {
+	TriMeshf s = shapes::sphere(0.1f, vec3f(0.0f), 50, 50);
+	MeshIOf::saveToFile("bla0.ply",s.getMeshData());
+	OpenMeshTriMesh::Mesh omesh;
+	OpenMeshTriMesh::convertToOpenMesh(s, omesh);
+	OpenMeshTriMesh::convertToTriMesh(omesh, s);
+	MeshIOf::saveToFile("bla1.ply",s.getMeshData());
+
 	testCollisions();
 	//vec3f u0(0,0,0);
 	//vec3f u1(0,1,0);

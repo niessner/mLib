@@ -16,10 +16,17 @@
 
 #include <OpenMesh/Core/IO/MeshIO.hh>
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
+#include <OpenMesh/Core/Utils/Property.hh>
+
+#include <OpenMesh/Tools/Decimater/DecimaterT.hh>
+#include <OpenMesh/Tools/Decimater/ModQuadricT.hh>
+#include <OpenMesh/Tools/Decimater/ModProgMeshT.hh>
+#include <OpenMesh/Tools/Decimater/BaseDecimaterT.hh>
 
 //
 // ext-openmesh headers
 //
 #include "ext-openmesh/loader.h"
+#include "ext-openmesh/triMesh.h"
 
 #endif  // INCLUDE_MLIBOPENMESH_H_

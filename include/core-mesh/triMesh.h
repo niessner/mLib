@@ -298,6 +298,14 @@ public:
 		m_bHasColors = other.m_bHasColors;
 	}
 
+	void clear() {
+		m_Vertices.clear();
+		m_Indices.clear();
+		m_bHasNormals = false;
+		m_bHasTexCoords = false;
+		m_bHasColors = false;
+	}
+
 	void transform(const Matrix4x4<FloatType>& m) {
 		for (Vertex<FloatType>& v : m_Vertices) { v.position = m * v.position; }
 	}
@@ -335,10 +343,8 @@ public:
     std::vector<vec3ui>& getIndices() { return m_Indices; }
 
 	void getMeshData(MeshData<FloatType>& meshData) const {
-        //TODO: fix
-        throw MLIB_EXCEPTION("This doesn't compile");
 
-		/*meshData.clear();
+		meshData.clear();
 
 		meshData.m_Vertices.resize(m_Vertices.size());
 		meshData.m_FaceIndicesVertices.resize(m_Indices.size());
@@ -352,9 +358,9 @@ public:
 			meshData.m_TextureCoords.resize(m_Vertices.size());
 		}
 		for (size_t i = 0; i < m_Indices.size(); i++) {
-			std::vector<unsigned int> ci(3);
-			ci[0] = m_Indices[i].x;	ci[1] = m_Indices[i].y;	ci[2] = m_Indices[i].z;
-			meshData.m_FaceIndicesVertices[i] = ci;
+			meshData.m_FaceIndicesVertices[i][0] = m_Indices[i].x;
+			meshData.m_FaceIndicesVertices[i][1] = m_Indices[i].y;
+			meshData.m_FaceIndicesVertices[i][2] = m_Indices[i].z;
 		}
 
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
@@ -362,7 +368,7 @@ public:
 			if (m_bHasColors)		meshData.m_Colors[i] = m_Vertices[i].color;
 			if (m_bHasNormals)		meshData.m_Normals[i] = m_Vertices[i].normal;
 			if (m_bHasTexCoords)	meshData.m_TextureCoords[i] = m_Vertices[i].texCoord;
-		}*/
+		}
 	}
 
 	MeshData<FloatType> getMeshData() const {
