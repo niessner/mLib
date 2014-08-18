@@ -95,7 +95,7 @@ void testCollisions() {
 	Timer tbvh;
 	for (unsigned int i = 0; i < 10000; i++) {
 		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
-		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 50, 50);
+		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 15, 15);
 		TriMeshAcceleratorBVHf accels0(s0);
 		TriMeshAcceleratorBVHf accels1(s1);
 		//std::cout << i << std::endl;
@@ -109,7 +109,7 @@ void testCollisions() {
 	Timer tbrute;
 	for (unsigned int i = 0; i < 10000; i++) {
 		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
-		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 50, 50);
+		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 15, 15);
 		TriMeshAcceleratorBruteForcef accels0(s0);
 		TriMeshAcceleratorBruteForcef accels1(s1);
 		//std::cout << i << std::endl;
