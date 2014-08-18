@@ -80,8 +80,50 @@ unsigned int test2(unsigned int size) {
 //	return sum;
 //}
 
+void testCollisions() {
+	BoundingBox3f bb0(vec3f(0,0,0), vec3f(1,1,1));
+	BoundingBox3f bb1(vec3f(-1,-1,-1), vec3f(-0.5f,0.5f,0.5f));
+	for (unsigned int i = 0; i < 10000; i++) {
+		bb1.translate(vec3f(0.001f, 0.001f, 0.001f));
+		if (bb0.collision(bb1)) {
+			std::cout << i << std::endl;
+			std::cout << bb1 << std::endl;
+			break;
+		}
+	}
+
+	Timer tbvh;
+	for (unsigned int i = 0; i < 10000; i++) {
+		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
+		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 50, 50);
+		TriMeshAcceleratorBVHf accels0(s0);
+		TriMeshAcceleratorBVHf accels1(s1);
+		//std::cout << i << std::endl;
+		if (accels0.collision(accels1)) {
+			std::cout << "BVH:\t" << i << std::endl;
+			break;
+		}
+	}
+	std::cout << "tbvh:\t" << tbvh.getElapsedTimeMS() << std::endl; 
+	
+	Timer tbrute;
+	for (unsigned int i = 0; i < 10000; i++) {
+		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
+		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 50, 50);
+		TriMeshAcceleratorBruteForcef accels0(s0);
+		TriMeshAcceleratorBruteForcef accels1(s1);
+		//std::cout << i << std::endl;
+		if (accels0.collision(accels1)) {
+			std::cout << "BruteForce:\t" << i << std::endl;
+			break;
+		}
+	}
+	std::cout << "tbrute:\t" << tbrute.getElapsedTimeMS() << std::endl; 
+}
+
 void AppTest::init(ml::ApplicationData &app)
 {
+	testCollisions();
 	//vec3f u0(0,0,0);
 	//vec3f u1(0,1,0);
 	//vec3f u2(0,1,1);

@@ -142,14 +142,14 @@ public:
 			return intersection::intersectTriangleTriangle(v0->position,v1->position,v2->position, other.v0->position,other.v1->position,other.v2->position);
 		}
 
-		void includeInBoundingBox(BoundingBox3d<FloatType> &bb) const {
+		void includeInBoundingBox(BoundingBox3<FloatType> &bb) const {
 			bb.include(v0->position);
 			bb.include(v1->position);
 			bb.include(v2->position);
 		}
 
-		BoundingBox3d<FloatType> getBoundingBox() const {
-			BoundingBox3d<FloatType> bb;
+		BoundingBox3<FloatType> getBoundingBox() const {
+			BoundingBox3<FloatType> bb;
 			includeInBoundingBox(bb);
 			return bb;
 		}
@@ -249,7 +249,7 @@ public:
 		}
 	}
 
-	TriMesh(const BoundingBox3d<FloatType>& bbox, const point4d<FloatType>& color = point4d<FloatType>(1.0,1.0,1.0,1.0)) {
+	TriMesh(const BoundingBox3<FloatType>& bbox, const point4d<FloatType>& color = point4d<FloatType>(1.0,1.0,1.0,1.0)) {
 		std::vector<point3d<FloatType>> vertices;
 		std::vector<vec3ui> indices;
 		std::vector<point3d<FloatType>> normals;
@@ -316,8 +316,8 @@ public:
 	}
 		
 	//! Computes the bounding box of the mesh (not cached!)
-	BoundingBox3d<FloatType> getBoundingBox() const {
-		BoundingBox3d<FloatType> bb;
+	BoundingBox3<FloatType> getBoundingBox() const {
+		BoundingBox3<FloatType> bb;
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			bb.include(m_Vertices[i].position);
 		}

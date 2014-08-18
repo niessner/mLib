@@ -26,7 +26,7 @@ private:
 			for (const auto* triA : m_TrianglePointers)	{
 				for (const auto* triB : accel.m_TrianglePointers) {
 					if (intersection::intersectTriangleTriangle(
-						triA->getV0().position, triA->getV1().position, triA->getV2().position
+						triA->getV0().position, triA->getV1().position, triA->getV2().position,
 						triB->getV0().position, triB->getV1().position, triB->getV2().position))
 							return true;
 				}

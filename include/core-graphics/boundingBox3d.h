@@ -15,30 +15,30 @@ template<class T>
 class ObjectOrientedBoundingBox;
 
 template<class FloatType>
-class BoundingBox3d
+class BoundingBox3
 {
 public:
 
-	BoundingBox3d(void)
+	BoundingBox3(void)
 	{
 		reset();
 	}
 
-	BoundingBox3d(const std::vector< point3d<FloatType> >& verts) 
+	BoundingBox3(const std::vector< point3d<FloatType> >& verts) 
 	{
 		reset();
         for (const auto &v : verts)
 			include(v);
 	}
 
-	BoundingBox3d(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) 
+	BoundingBox3(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) 
 	{
 		reset();
 		minB = minBound;
 		maxB = maxBound;
 	}
 
-    explicit BoundingBox3d(const ObjectOrientedBoundingBox<FloatType> &oobb)
+    explicit BoundingBox3(const ObjectOrientedBoundingBox<FloatType> &oobb)
     {
         reset();
         for (const auto &v : oobb.getVertices())
@@ -51,7 +51,7 @@ public:
 		maxX = maxY = maxZ = -std::numeric_limits<FloatType>::max();
 	}
 
-	void include(const BoundingBox3d &other)
+	void include(const BoundingBox3 &other)
 	{
 		if (other.minX < minX)	minX = other.minX;
 		if (other.minY < minY)	minY = other.minY;
@@ -117,16 +117,60 @@ public:
 	}
 
 
+	std::vector< point3d<FloatType> > getVertices() const {
+		std::vector< point3d<FloatType> > result;
+		result.resize(8);
+
+		result[0] = point3d<FloatType>(minX, minY, minZ);
+		result[1] = point3d<FloatType>(maxX, minY, minZ);
+		result[2] = point3d<FloatType>(maxX, maxY, minZ);
+		result[3] = point3d<FloatType>(minX, maxY, minZ);
+		result[4] = point3d<FloatType>(minX, minY, maxZ);
+		result[5] = point3d<FloatType>(maxX, minY, maxZ);
+		result[6] = point3d<FloatType>(maxX, maxY, maxZ);
+		result[7] = point3d<FloatType>(minX, maxY, maxZ);
+
+		return result;
+	}
+
+
+	std::vector< LineSegment3<FloatType> > getEdges() const
+	{
+		std::vector< LineSegment3<FloatType> > result;
+
+		auto v = getVertices();
+
+		result.push_back(LineSegment3<FloatType>(v[0], v[1]));
+		result.push_back(LineSegment3<FloatType>(v[1], v[2]));
+		result.push_back(LineSegment3<FloatType>(v[2], v[3]));
+		result.push_back(LineSegment3<FloatType>(v[3], v[0]));
+
+		result.push_back(LineSegment3<FloatType>(v[4], v[5]));
+		result.push_back(LineSegment3<FloatType>(v[5], v[6]));
+		result.push_back(LineSegment3<FloatType>(v[6], v[7]));
+		result.push_back(LineSegment3<FloatType>(v[7], v[4]));
+
+		result.push_back(LineSegment3<FloatType>(v[0], v[4]));
+		result.push_back(LineSegment3<FloatType>(v[1], v[5]));
+		result.push_back(LineSegment3<FloatType>(v[2], v[6]));
+		result.push_back(LineSegment3<FloatType>(v[3], v[7]));
+
+		return result;
+	}
+
+
+
 	//! triangle collision
 	bool collision(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) const {
-		//TODO
-		return false;
+		return intersection::intersectTriangleABBB(minB, maxB, p0, p1, p2);
 	}
 
 	//! bounding box collision
-	bool collision(const BoundingBox3d<FloatType>& other) const {
-		//TOOD
-		return false;
+	bool collision(const BoundingBox3<FloatType>& other) const {
+		return 
+			minX <= other.maxX && other.minX <= maxX &&
+			minY <= other.maxY && other.minY <= maxY &&
+			minZ <= other.maxZ && other.minZ <= maxZ;
 	}
 
 	FloatType getMaxExtent() const {
@@ -218,12 +262,34 @@ public:
 		}
 	}
 
+	//! transforms the bounding box (conservatively)
+	void transform(const Matrix4x4<FloatType>& m) {
+		std::vector< point3d< FloatType > > verts = getVertices();
+		reset();
+		for (auto& p : verts) {
+			include(p*m);
+		}
+	}
+
+	void translate(const point3d<FloatType>& t) {
+		minB += t;
+		maxB += t;
+	}
+
 	//! scales the bounding box (see scale)
-	BoundingBox3d<FloatType> operator*(FloatType t) const {
-		BoundingBox3d<FloatType> res = *this;
+	BoundingBox3<FloatType> operator*(FloatType t) const {
+		BoundingBox3<FloatType> res = *this;
 		res.scale(t);
 		return res;
 	}
+
+	//! transforms the bounding box (see transform)
+	BoundingBox3<FloatType> operator*(const Matrix4x4<FloatType>& m) const {
+		BoundingBox3<FloatType> res = *this;
+		res.transform(m);
+		return res;
+	}
+
 
 	Plane<FloatType> getBottomPlane() const {
 		std::vector<point3d<FloatType>> vertices; vertices.resize(3);
@@ -317,9 +383,8 @@ public:
 		maxX = maxY = maxZ = 1;
 	}
 
-    mat4f cubeToWorldTransform() const
-    {
-        return mat4f::translation(getCenter()) * mat4f::scale((maxB - minB) * 0.5f);
+    Matrix4x4<FloatType> cubeToWorldTransform() const {
+        return  Matrix4x4<FloatType>::translation(getCenter()) *  Matrix4x4<FloatType>::scale((maxB - minB) * (FloatType)0.5);
     }
 
 protected:
@@ -337,16 +402,16 @@ protected:
 };
 
 template<class FloatType>
-std::ostream& operator<< (std::ostream& s, const BoundingBox3d<FloatType>& bb) {
+std::ostream& operator<< (std::ostream& s, const BoundingBox3<FloatType>& bb) {
 	s << bb.getMin() << std::endl << bb.getMax() << std::endl;
 	return s;
 }
 
-typedef BoundingBox3d<float> BoundingBox3df;
-typedef BoundingBox3d<double> BoundingBox3dd;
+typedef BoundingBox3<float> BoundingBox3f;
+typedef BoundingBox3<double> BoundingBox3d;
 
-typedef BoundingBox3d<float> bbox3f;
-typedef BoundingBox3d<double> bbox3d;
+typedef BoundingBox3<float> bbox3f;
+typedef BoundingBox3<double> bbox3d;
 
 }  // namespace ml
 

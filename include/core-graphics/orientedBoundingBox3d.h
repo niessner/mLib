@@ -13,7 +13,7 @@ public:
 		setInvalid();
 	}
 
-    ObjectOrientedBoundingBox(const BoundingBox3d<FloatType> &box)
+    ObjectOrientedBoundingBox(const BoundingBox3<FloatType> &box)
     {
         m_Anchor = box.getMin();
         m_AxesScaled[0] = vec3f::eX * box.getExtentX();

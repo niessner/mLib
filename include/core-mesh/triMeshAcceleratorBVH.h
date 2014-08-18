@@ -17,7 +17,7 @@ struct TriangleBVHNode {
 	//template<class T>
 	//using Triangle = TriMesh::Triangle<T>;
 
-	BoundingBox3d<FloatType> boundingBox;
+	BoundingBox3<FloatType> boundingBox;
 	const typename TriMesh<FloatType>::Triangle<FloatType>* leafTri;
 
 
@@ -96,7 +96,7 @@ struct TriangleBVHNode {
 
 	}
 
-	bool collision(const BoundingBox3d<FloatType>& bb) const {
+	bool collision(const BoundingBox3<FloatType>& bb) const {
 		if (boundingBox.collision(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
 			if (isLeaf()) {
 				return bb.collision(leafTri);
