@@ -258,7 +258,7 @@ public:
 		return point3d<T>(x,y,z);
 	}
 	inline point4d<T> getPoint4d() const {
-		return point4d<T>(x,y,z,w);
+		return point4d<T>(x,y,z,xx);
 	}
 
 	union {

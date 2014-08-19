@@ -452,7 +452,7 @@ public:
 		assert(height == width && height == 3);
 		matrices.resize(numMatrices);
 		for (unsigned int k = 0; k < numMatrices; k++) {
-			Matrix4x4<FloatType> &curr = matrices[k];
+			Matrix3x3<FloatType> &curr = matrices[k];
 			for (unsigned int i = 0; i < 3; i++) {
 				for (unsigned int j = 0; j < 3; j++) {
 					in >> curr.matrix2[i][j];
