@@ -8,12 +8,17 @@ template<class FloatType, class ChildType>
 class TriMeshCollisionAccelerator : virtual public TriMeshAccelerator<FloatType>
 {
 public:
-	virtual bool collision(const ChildType &accel) const {
+	bool collision(const ChildType &accel) const {
 		return collisionInternal(accel);
 	}
 
+    bool collision(const ChildType& accel, const Matrix4x4<FloatType>& transform) const {
+        return collisionTransformInternal(accel, transform);
+    }
+
 private:
-	virtual bool collisionInternal(const ChildType &accel) const = 0;
+	virtual bool collisionInternal(const ChildType& accel) const = 0;
+    virtual bool collisionTransformInternal(const ChildType& accel, const Matrix4x4<FloatType>& transform) const = 0;
 };
 
 //typedef TriMeshCollisionAccelerator<float> TriMeshCollisionAcceleratorf;

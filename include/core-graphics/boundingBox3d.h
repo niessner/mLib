@@ -267,7 +267,7 @@ public:
 		std::vector< point3d< FloatType > > verts = getVertices();
 		reset();
 		for (auto& p : verts) {
-			include(p*m);
+			include(m*p);
 		}
 	}
 

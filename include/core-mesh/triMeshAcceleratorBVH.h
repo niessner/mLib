@@ -83,6 +83,7 @@ struct TriangleBVHNode {
 		return nullptr;
 	}
 
+    // collisions with other Triangles
 	bool collision(const typename TriMesh<FloatType>::Triangle<FloatType>* tri) const {
 		if (boundingBox.collision(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
 			if (isLeaf()) {
@@ -93,19 +94,28 @@ struct TriangleBVHNode {
 		} else {
 			return false;
 		}
-
 	}
+    bool collision(const typename TriMesh<FloatType>::Triangle<FloatType>* tri, const Matrix4x4<FloatType>& transform) const {
 
-	bool collision(const BoundingBox3<FloatType>& bb) const {
-		if (boundingBox.collision(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
-			if (isLeaf()) {
-				return bb.collision(leafTri);
-			} else {
-				return lChild->collision(bb) || rChild->collision(bb);
-			}
-		}
-	}
+        typename TriMesh<FloatType>::Vertex<FloatType> v0(transform * tri->getV0().position);
+        typename TriMesh<FloatType>::Vertex<FloatType> v1(transform * tri->getV1().position);
+        typename TriMesh<FloatType>::Vertex<FloatType> v2(transform * tri->getV2().position);
+        typename TriMesh<FloatType>::Triangle<FloatType> triTrans(&v0,&v1,&v2);
 
+        if (boundingBox.collision(triTrans.getV0().position, triTrans.getV1().position, triTrans.getV2().position)) {
+            if (isLeaf()) {
+                return triTrans.collision(*leafTri);
+            }
+            else {
+                return lChild->collision(&triTrans) || rChild->collision(&triTrans);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+    
+    // collisions with other TriangleBVHNodes
 	bool collision(const TriangleBVHNode& other) const {
 		if (boundingBox.collision(other.boundingBox)) {
 			if (isLeaf()) {
@@ -117,6 +127,19 @@ struct TriangleBVHNode {
 			return false;
 		}
 	}
+    bool collision(const TriangleBVHNode& other, const Matrix4x4<FloatType>& transform) const {
+        if (boundingBox.collision(other.boundingBox * transform)) { //TODO fixe OBB
+            if (isLeaf()) {
+                return other.collision(leafTri, transform.getInverse());
+            }
+            else {
+                return lChild->collision(other, transform) || rChild->collision(other, transform);
+            }
+        }
+        else {
+            return false;
+        }
+    }
 
 
 
@@ -197,6 +220,10 @@ private:
 	bool collisionInternal(const TriMeshAcceleratorBVH<FloatType>& other) const {
 		return m_Root->collision(*other.m_Root);
 	}
+
+    bool collisionTransformInternal(const TriMeshAcceleratorBVH<FloatType>& other, const Matrix4x4<FloatType>& transform) const {
+        return m_Root->collision(*other.m_Root, transform);
+    }
 
 	//! defined by the interface
 	typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
