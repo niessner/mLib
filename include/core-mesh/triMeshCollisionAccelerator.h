@@ -16,9 +16,14 @@ public:
         return collisionTransformInternal(accel, transform);
     }
 
+    bool collisionBBoxOnly(const ChildType& accel, const Matrix4x4<FloatType>& transform) const {
+        return collisionTransformBBoxOnlyInternal(accel, transform);
+    }
+
 private:
 	virtual bool collisionInternal(const ChildType& accel) const = 0;
     virtual bool collisionTransformInternal(const ChildType& accel, const Matrix4x4<FloatType>& transform) const = 0;
+    virtual bool collisionTransformBBoxOnlyInternal(const ChildType& accel, const Matrix4x4<FloatType>& transform) const = 0;
 };
 
 //typedef TriMeshCollisionAccelerator<float> TriMeshCollisionAcceleratorf;

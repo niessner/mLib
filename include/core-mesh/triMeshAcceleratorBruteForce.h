@@ -52,6 +52,12 @@ private:
         return false;
     }
 
+    //! interface definition
+    bool collisionTransformBBoxOnlyInternal(const TriMeshAcceleratorBruteForce<FloatType>& accel, const Matrix4x4<FloatType>& transform) const {
+        //TODO: have Matthias do this
+        return false;
+    }
+
 
 	//! interface definition
 	typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {

@@ -134,6 +134,18 @@ public:
 	}
 
 
+    void getVertices(point3d<FloatType> *result) const {
+        result[0] = point3d<FloatType>(minX, minY, minZ);
+        result[1] = point3d<FloatType>(maxX, minY, minZ);
+        result[2] = point3d<FloatType>(maxX, maxY, minZ);
+        result[3] = point3d<FloatType>(minX, maxY, minZ);
+        result[4] = point3d<FloatType>(minX, minY, maxZ);
+        result[5] = point3d<FloatType>(maxX, minY, maxZ);
+        result[6] = point3d<FloatType>(maxX, maxY, maxZ);
+        result[7] = point3d<FloatType>(minX, maxY, maxZ);
+    }
+
+
 	std::vector< LineSegment3<FloatType> > getEdges() const
 	{
 		std::vector< LineSegment3<FloatType> > result;
@@ -158,8 +170,6 @@ public:
 		return result;
 	}
 
-
-
 	//! triangle collision
 	bool collision(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) const {
 		return intersection::intersectTriangleABBB(minB, maxB, p0, p1, p2);
@@ -172,6 +182,12 @@ public:
 			minY <= other.maxY && other.minY <= maxY &&
 			minZ <= other.maxZ && other.minZ <= maxZ;
 	}
+
+    //! transformed bounding box collision
+    //bool collision(const BoundingBox3<FloatType>& other, const matrix4x4<FloatType> &transform) const {
+    //    BoundingBox3<FloatType> otherTransformed = other * transform;
+    //    return collision(otherTransformed);
+    //}
 
 	FloatType getMaxExtent() const {
 		FloatType d0 = maxX - minX;
@@ -264,10 +280,11 @@ public:
 
 	//! transforms the bounding box (conservatively)
 	void transform(const Matrix4x4<FloatType>& m) {
-		std::vector< point3d< FloatType > > verts = getVertices();
+        point3d<FloatType> verts[8];
+		getVertices(verts);
 		reset();
-		for (auto& p : verts) {
-			include(m*p);
+		for (const auto& p : verts) {
+			include(m.transformAffine(p));
 		}
 	}
 

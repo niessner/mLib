@@ -127,13 +127,28 @@ struct TriangleBVHNode {
 			return false;
 		}
 	}
+
     bool collision(const TriangleBVHNode& other, const Matrix4x4<FloatType>& transform) const {
-        if (boundingBox.collision(other.boundingBox * transform)) { //TODO fixe OBB
+        if (boundingBox.collision(other.boundingBox * transform)) { //TODO fix OBB
             if (isLeaf()) {
                 return other.collision(leafTri, transform.getInverse());
             }
             else {
                 return lChild->collision(other, transform) || rChild->collision(other, transform);
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    bool collisionBBoxOnly(const TriangleBVHNode& other, const Matrix4x4<FloatType>& transform) const {
+        if (boundingBox.collision(other.boundingBox * transform)) { //TODO fix OBB
+            if (isLeaf()) {
+                return true;
+            }
+            else {
+                return lChild->collisionBBoxOnly(other, transform) || rChild->collisionBBoxOnly(other, transform);
             }
         }
         else {
@@ -223,6 +238,10 @@ private:
 
     bool collisionTransformInternal(const TriMeshAcceleratorBVH<FloatType>& other, const Matrix4x4<FloatType>& transform) const {
         return m_Root->collision(*other.m_Root, transform);
+    }
+
+    bool collisionTransformBBoxOnlyInternal(const TriMeshAcceleratorBVH<FloatType>& other, const Matrix4x4<FloatType>& transform) const {
+        return m_Root->collisionBBoxOnly(*other.m_Root, transform);
     }
 
 	//! defined by the interface
