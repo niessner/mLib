@@ -243,6 +243,7 @@ namespace util
 	std::string loadStringFromClipboard();
 	int runCommand(const std::string& executablePath, const std::string& commandLine, bool Blocking);
 	void makeDirectory(const std::string& directory);
+	bool directoryExists(const std::string& directory);
 	std::string workingDirectory();
 
 	//
