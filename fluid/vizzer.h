@@ -32,4 +32,5 @@ private:
 	ml::Cameraf m_camera;
 
     Fluid2D fluid;
+    vec2i selectedCell;
 };

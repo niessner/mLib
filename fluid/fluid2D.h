@@ -12,7 +12,8 @@ struct Cell
     vec2f velocity;
     float pressure;
     float divergence;
-    vec3f color;
+    float level;
+    //vec3f color;
 
     //
     // temporaries
@@ -25,7 +26,8 @@ inline Cell operator + (const Cell &a, const Cell &b)
 {
     Cell result;
     result.velocity = a.velocity + b.velocity;
-    result.color = a.color + b.color;
+    //result.color = a.color + b.color;
+    result.level = a.level + b.level;
     return result;
 }
 
@@ -33,7 +35,8 @@ inline Cell operator - (const Cell &a, const Cell &b)
 {
     Cell result;
     result.velocity = a.velocity - b.velocity;
-    result.color = a.color - b.color;
+    //result.color = a.color - b.color;
+    result.level = a.level - b.level;
     return result;
 }
 
@@ -41,7 +44,7 @@ inline Cell operator * (const Cell &a, float b)
 {
     Cell result;
     result.velocity = a.velocity * b;
-    result.color = a.color * b;
+    result.level = a.level * b;
     return result;
 }
 
@@ -49,7 +52,7 @@ inline Cell operator * (float b, const Cell &a)
 {
     Cell result;
     result.velocity = a.velocity * b;
-    result.color = a.color * b;
+    result.level = a.level * b;
     return result;
 }
 
@@ -64,10 +67,13 @@ public:
         int x0 = math::clamp(math::floor(x), 0L, gridSize - 2);
         int y0 = math::clamp(math::floor(y), 0L, gridSize - 2);
         
+        int xp1 = std::min(x0 + 1, (int)gridSize - 1);
+        int yp1 = std::min(y0 + 1, (int)gridSize - 1);
+
         const Cell &c00 = data(y0 + 0, x0 + 0);
-        const Cell &c10 = data(y0 + 0, x0 + 1);
-        const Cell &c01 = data(y0 + 1, x0 + 0);
-        const Cell &c11 = data(y0 + 1, x0 + 1);
+        const Cell &c10 = data(y0 + 0, xp1);
+        const Cell &c01 = data(yp1, x0 + 0);
+        const Cell &c11 = data(yp1, xp1);
         
         float xs = x - x0;
         float ys = y - y0;
@@ -80,13 +86,16 @@ public:
 
     Cell sampleCell(float x, float y)
     {
-        int x0 = math::clamp(math::floor(x), 0L, gridSize - 2);
-        int y0 = math::clamp(math::floor(y), 0L, gridSize - 2);
+        int x0 = math::clamp(math::floor(x), 0L, gridSize - 1);
+        int y0 = math::clamp(math::floor(y), 0L, gridSize - 1);
+
+        int xp1 = std::min(x0 + 1, (int)gridSize - 1);
+        int yp1 = std::min(y0 + 1, (int)gridSize - 1);
 
         const Cell &c00 = data(y0 + 0, x0 + 0);
-        const Cell &c10 = data(y0 + 0, x0 + 1);
-        const Cell &c01 = data(y0 + 1, x0 + 0);
-        const Cell &c11 = data(y0 + 1, x0 + 1);
+        const Cell &c10 = data(y0 + 0, xp1);
+        const Cell &c01 = data(yp1, x0 + 0);
+        const Cell &c11 = data(yp1, xp1);
 
         float xs = x - x0;
         float ys = y - y0;
@@ -106,7 +115,7 @@ public:
     void pressureJacobiIteration();
     void subtractPressureGradient();
 
-    const long gridSize = 32;
+    const long gridSize = 128;
     float dt;
     float gridScale;
     float gridScaleInv;

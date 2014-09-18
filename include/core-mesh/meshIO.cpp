@@ -174,7 +174,7 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 			point3d<FloatType> v;
 			file >> v.x >> v.y >> v.z;
 			mesh.m_Vertices[i] = v;
-			mesh.m_Colors[i] = vec3f::origin;
+			mesh.m_Colors[i] = vec4f::origin;
 		}
 	}
 	else

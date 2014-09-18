@@ -8,20 +8,21 @@
 void Fluid2D::init()
 {
     data.allocate(gridSize, gridSize);
-    newData.allocate(gridSize, gridSize);
-
     for (long y = 0; y < gridSize; y++)
     {
         for (long x = 0; x < gridSize; x++)
         {
             Cell &c = data(y, x);
-            c.color = vec3f(1.0f, 0.0f, 0.0f);
-            if ( (x / 5 + y / 5) % 2 == 0)
-                c.color = vec3f(0.0f, 0.0f, 1.0f);
+            //c.color = vec3f(1.0f, 0.0f, 0.0f);
+            //if ( (x / 16 + y / 16) % 2 == 0)
+            //    c.color = vec3f(0.0f, 0.0f, 1.0f);
+            c.level = (gridSize * 0.5f - y) * 2.0f / gridSize;
         }
     }
 
-    dt = 0.01f;
+    newData = data;
+
+    dt = 0.2f;
     gridScale = 1.0f;
     gridScaleInv = 1.0f / gridScale;
 }
@@ -35,6 +36,7 @@ void Fluid2D::step()
 
     updateBoundaries();
     computeDivergence();
+
     computePressure();
 
     updateBoundaries();
@@ -45,9 +47,9 @@ void Fluid2D::advectAll()
 {
     // TODO: implement Keenan's advection
 
-    for (long y = 0; y < gridSize; y++)
+    for (long y = 1; y < gridSize - 1; y++)
     {
-        for (long x = 0; x < gridSize; x++)
+        for (long x = 1; x < gridSize - 1; x++)
         {
             const Cell &c = data(y, x);
             vec2f pos = vec2f((float)x, (float)y) - dt * gridScaleInv * c.velocity;
@@ -67,7 +69,16 @@ void Fluid2D::applyForces()
 {
     // TODO: mouse-controlled forces
 
-    data(8, 10).velocity += 0.1f * dt * vec2f(0.8f, 0.2f);
+    //data(8, 10).velocity += 0.1f * dt * vec2f(0.8f, 0.2f);
+
+    for (long y = 1; y < gridSize - 1; y++)
+    {
+        for (long x = 1; x < gridSize - 1; x++)
+        {
+            Cell &c = data(y, x);
+            c.velocity.y -= dt * 0.0001f;
+        }
+    }
 }
 
 void Fluid2D::updateBoundaries()
@@ -111,7 +122,7 @@ void Fluid2D::computeDivergence()
 
 void Fluid2D::computePressure()
 {
-    const UINT jacobiIterationCount = 40;
+    const UINT jacobiIterationCount = 80;
 
     //
     // initial pressure guess is zero
@@ -146,9 +157,17 @@ void Fluid2D::pressureJacobiIteration()
             Cell &t = data(y - 1, x);
             Cell &b = data(y + 1, x);
 
-            c.newPressure = (l.pressure + r.pressure + b.pressure + t.pressure + alpha * c.pressure) * rBeta;
+            c.newPressure = (l.pressure + r.pressure + b.pressure + t.pressure + alpha * c.divergence) * rBeta;
+
+            if (c.level < 0.0f)
+            {
+                c.newPressure = 0.0f;
+            }
         }
     }
+
+    //vector<Cell> dataVecB(data.begin(), data.end());
+    //int a = 5;
 
     for (auto &c : data)
         c.pressure = c.newPressure;
@@ -172,5 +191,5 @@ void Fluid2D::subtractPressureGradient()
     }
 
     for (auto &c : data)
-        c.newVelocity = c.velocity;
+        c.velocity = c.newVelocity;
 }

@@ -1,7 +1,8 @@
 
 #include "main.h"
 
-const float gridScale = 0.02f;
+const float gridScale = 0.01f;
+const float velocityDelta = 1.0f;
 
 void Vizzer::init(ml::ApplicationData &app)
 {
@@ -18,6 +19,8 @@ void Vizzer::init(ml::ApplicationData &app)
     m_camera = Cameraf("0.307802 0.319373 0.910465 1.0 0 0 0 0 -1 0 1 0 0 0 1 60 1.2433 0.01 1000");
 
     m_font.init(app.graphics, "Calibri");
+
+    selectedCell = vec2i(60, 40);
 
     fluid.init();
 }
@@ -42,7 +45,14 @@ void Vizzer::render(ml::ApplicationData &app)
             mat4f transform = mat4f::translation(vec3f(x * gridScale, y * gridScale, 0.0f));
 
             ConstantBuffer constants;
-            constants.color = vec4f(c.color, 1.0f);
+            //constants.color = vec4f(c.color, 1.0f);
+            constants.color = vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+            if (c.level > 0.0f)
+                constants.color = vec4f(0.0f, 0.0f, 1.0f, 1.0f);
+
+            if (selectedCell.x == x && selectedCell.y == y)
+                constants.color = vec4f(0.1f, 0.6f, 0.1f, 1.0f);
+
             constants.worldViewProj = m_camera.cameraPerspective() * transform;
             m_constants.update(app.graphics, constants);
             m_constants.bindVertexShader(app.graphics, 0);
@@ -69,6 +79,15 @@ void Vizzer::keyDown(ml::ApplicationData &app, UINT key)
         file << m_camera.toString();
     }
     
+    if (key == KEY_K)
+    {
+        fluid.data(selectedCell.y, selectedCell.x).velocity.x += velocityDelta;
+    }
+
+    if (key == KEY_L)
+    {
+        fluid.data(selectedCell.y, selectedCell.x).velocity.y += velocityDelta;
+    }
 }
 
 void Vizzer::keyPressed(ml::ApplicationData &app, UINT key)
@@ -87,6 +106,11 @@ void Vizzer::keyPressed(ml::ApplicationData &app, UINT key)
     if(key == KEY_DOWN) m_camera.lookUp(-theta);
     if(key == KEY_LEFT) m_camera.lookRight(theta);
     if(key == KEY_RIGHT) m_camera.lookRight(-theta);
+
+    if (key == KEY_LEFT)  selectedCell.x = math::mod(selectedCell.x - 1, fluid.gridSize);
+    if (key == KEY_RIGHT) selectedCell.x = math::mod(selectedCell.x + 1, fluid.gridSize);
+    if (key == KEY_UP)    selectedCell.y = math::mod(selectedCell.y - 1, fluid.gridSize);
+    if (key == KEY_DOWN)  selectedCell.y = math::mod(selectedCell.y + 1, fluid.gridSize);
 }
 
 void Vizzer::mouseDown(ml::ApplicationData &app, ml::MouseButtonType button)

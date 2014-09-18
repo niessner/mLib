@@ -43,7 +43,7 @@ static TriMeshf load(const std::string& filename) {
     const Mesh::Color& c = mesh.color(*vIt);                 // c is vec3uc
     mv.position = p.data();
     mv.normal = n.data();
-    mv.color = vec3f(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f);
+    mv.color = vec4f(c[0] / 255.0f, c[1] / 255.0f, c[2] / 255.0f, 1.0f);
     vertices[currVertIdx] = mv;
   }
   UINT currIndexIdx = 0;
