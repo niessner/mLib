@@ -123,9 +123,9 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
     //
     D3D11_SAMPLER_DESC samplerStateDesc;
     samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    samplerStateDesc.AddressU = D3D11_TEXTURE_ADDRESS_MIRROR;
-    samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_MIRROR;
-    samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_MIRROR;
+    samplerStateDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
     samplerStateDesc.MipLODBias = 0.0f;
     samplerStateDesc.MaxAnisotropy = 1;
     samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
