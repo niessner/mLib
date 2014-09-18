@@ -1,7 +1,8 @@
 
 struct ConstantBuffer
 {
-	ml::mat4f worldViewProj;
+	mat4f worldViewProj;
+    vec4f color;
 };
 
 class Vizzer : public ml::ApplicationCallback

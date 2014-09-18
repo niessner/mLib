@@ -103,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\fluid.shader" />
-    <None Include="shaders\test.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,6 +10,17 @@ void Fluid2D::init()
     data.allocate(gridSize, gridSize);
     newData.allocate(gridSize, gridSize);
 
+    for (long y = 0; y < gridSize; y++)
+    {
+        for (long x = 0; x < gridSize; x++)
+        {
+            Cell &c = data(y, x);
+            c.color = vec3f(1.0f, 0.0f, 0.0f);
+            if ( (x / 5 + y / 5) % 2 == 0)
+                c.color = vec3f(0.0f, 0.0f, 1.0f);
+        }
+    }
+
     dt = 0.01f;
     gridScale = 1.0f;
     gridScaleInv = 1.0f / gridScale;
@@ -56,7 +67,7 @@ void Fluid2D::applyForces()
 {
     // TODO: mouse-controlled forces
 
-    data(50, 50).velocity += 0.1f * dt * vec2f(0.8f, 0.2f);
+    data(8, 10).velocity += 0.1f * dt * vec2f(0.8f, 0.2f);
 }
 
 void Fluid2D::updateBoundaries()

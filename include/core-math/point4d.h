@@ -39,7 +39,7 @@ class point4d : public BinaryDataSerialize< point4d<T> >
 			array[3] = (T)other.array[3];
 		}
 
-        point4d(const point3d<T>& other, T w = (T)1) {
+        explicit point4d(const point3d<T>& other, T w = (T)1) {
             array[0] = other.array[0];
             array[1] = other.array[1];
             array[2] = other.array[2];
