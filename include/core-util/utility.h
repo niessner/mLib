@@ -92,6 +92,18 @@ namespace math
 		return x;
 	}
 
+    template<class T>
+    inline long int floor(T x)
+    {
+        return (long int)std::floor(x);
+    }
+
+    template<class T>
+    inline long int ceil(T x)
+    {
+        return (long int)std::ceil(x);
+    }
+
 	template<class T>
 	inline T abs(T x) {
 		if (x < 0) { return -x; }

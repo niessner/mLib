@@ -5,6 +5,8 @@ namespace ml {
 
 namespace shapes {
 
+TriMeshf plane(const vec3f &start, const vec3f &end, const vec3f &normal);
+
 TriMeshf box(float xDim, float yDim, float zDim, const vec4f& color = ml::vec4f(1, 1, 1, 1));
 
 inline TriMeshf box(float dim = 1, const vec4f& color = vec4f(1, 1, 1, 1)) { return box(dim, dim, dim, color); }
