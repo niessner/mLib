@@ -144,6 +144,9 @@ void AppTest::init(ml::ApplicationData &app)
 	//vec3f v1(1,1,0);
 	//vec3f v2(1,1,1);
 
+	vec2f t0(0,0);
+	vec3f t1(t0, 0.0f);
+
 	vec3f u0(0,0,0);
 	vec3f u1(0,1,0);
 	vec3f u2(0,1,1);

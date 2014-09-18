@@ -36,6 +36,12 @@ public:
 		array[2] = (T)other.array[2];
 	}
 
+	point3d(const point2d<T>& other, T z = (T)1) {
+		array[0] = other.array[0];
+		array[1] = other.array[1];
+		array[2] = z;
+	}
+
 	point3d(const point3d& other) {
 		array[0] = other.array[0];
 		array[1] = other.array[1];
