@@ -20,10 +20,13 @@ Camera<FloatType>::Camera(const point3d<FloatType>& eye, const point3d<FloatType
 }
 
 template <class FloatType>
-Camera<FloatType>::Camera(const Matrix4x4<FloatType>& m, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar) {
+Camera<FloatType>::Camera(const Matrix4x4<FloatType>& m, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, const bool flipRight) {
 	m_eye = point3d<FloatType>(m(0, 3), m(1, 3), m(2, 3));
 	m_worldUp = point3d<FloatType>(m(0, 1), m(1, 1), m(2, 1));
 	m_right = point3d<FloatType>(m(0, 0), m(1, 0), m(2, 0));
+  if (flipRight) {
+    m_right = -m_right;
+  }
 	m_look = (m_worldUp ^ m_right).getNormalized();
 	m_up = (m_right ^ m_look).getNormalized();
 

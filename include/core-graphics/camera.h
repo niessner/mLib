@@ -11,8 +11,9 @@ public:
     Camera(const std::string &s);
 	Camera(const point3d<FloatType>& eye, const point3d<FloatType>& worldUp, const point3d<FloatType>& right, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar);
 
-	//! Construct camera from extrinsics matrix m (columns are -x, y, z vectors and origin of camera in that order) NOTE: -x due to sensor horizontal flipping
-	Camera(const Matrix4x4<FloatType>& m, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar);
+	//! Construct camera from extrinsics matrix m (columns are x, y, z vectors and origin of camera in that order).
+	//! If flipRight is set, flip x to correct for sensor horizontal flipping
+	Camera(const Matrix4x4<FloatType>& m, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar, const bool flipRight = false);
 
 	void updateAspectRatio(FloatType newAspect);
 	void lookRight(FloatType theta);
