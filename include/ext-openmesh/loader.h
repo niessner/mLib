@@ -57,7 +57,7 @@ static TriMeshf load(const std::string& filename) {
   MLIB_ASSERT_STR(currVertIdx == nVertices, "nVertices != vertices parsed");
   MLIB_ASSERT_STR(currIndexIdx == nIndices, "nIndices != indices parsed");
 
-  return TriMeshf(vertices, indices);
+  return TriMeshf(vertices, indices, /* computeNormals=*/ false, /*hasNormals=*/ true, /*hasTexCoords=*/ true, /*hasColors=*/ true);
 }
 
 }  // namespace OpenMeshLoader

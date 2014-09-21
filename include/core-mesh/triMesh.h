@@ -195,20 +195,31 @@ public:
 	}
 	TriMesh(const MeshData<FloatType>& meshData);
 
-	TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<unsigned int>& indices, bool recomputeNormals = false) {
+	TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<unsigned int>& indices, const bool recomputeNormals = false,
+          const bool hasNormals = false, const bool hasTexCoords = false, const bool hasColors = false) {
 		if (indices.size()%3 != 0)	throw MLIB_EXCEPTION("not a tri mesh");
 		m_Vertices = vertices;
 		m_Indices.resize(indices.size()/3);
 		memcpy(&m_Indices[0], &indices[0], indices.size()*sizeof(unsigned int));
-        if (recomputeNormals)
-            computeNormals();
+    m_bHasNormals = hasNormals;
+    m_bHasTexCoords = hasTexCoords;
+    m_bHasColors = hasColors;
+    if (recomputeNormals) {
+      computeNormals();
+    }
 	}
-    TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<vec3ui>& indices, bool recomputeNormals = false) {
-		m_Vertices = vertices;
-		m_Indices = indices;
-        if (recomputeNormals)
-            computeNormals();
-	}
+
+  TriMesh(const std::vector<Vertex<FloatType>>& vertices, const std::vector<vec3ui>& indices, bool recomputeNormals = false,
+          const bool hasNormals = false, const bool hasTexCoords = false, const bool hasColors = false) {
+	  m_Vertices = vertices;
+	  m_Indices = indices;
+    m_bHasNormals = hasNormals;
+    m_bHasTexCoords = hasTexCoords;
+    m_bHasColors = hasColors;
+    if (recomputeNormals) {
+      computeNormals();
+    }
+  }
 
 	TriMesh(
 		const std::vector<point3d<FloatType>>& vertices, 
@@ -235,8 +246,10 @@ public:
 		const point2d<FloatType>* texCoords = nullptr) 
 	{
 		if (numIndices % 3 != 0) throw MLIB_EXCEPTION("not a tri mesh");
-
-		m_Vertices.resize(numVertices);
+    m_bHasColors = colors != nullptr;
+    m_bHasNormals = normals != nullptr;
+    m_bHasTexCoords = texCoords != nullptr;
+    m_Vertices.resize(numVertices);
 		for (size_t i = 0; i < numVertices; i++) {
 			m_Vertices[i].position = vertices[i];
 			if (colors) m_Vertices[i].color = colors[i];
@@ -262,6 +275,7 @@ public:
 			m_Vertices[i].normal = normals[i];
 		}
 		m_Indices = indices;
+    m_bHasColors = m_bHasNormals = m_bHasTexCoords = true;
 	}
 
 	TriMesh(const TriMesh& other) {
