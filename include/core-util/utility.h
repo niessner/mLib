@@ -472,7 +472,7 @@ namespace util
 
 	//! uses the <, >  and = operator of the key type
 	template<typename Iterator, typename T>
-	inline Iterator binarySearch(Iterator& begin, Iterator& end, const T& key) {
+	inline Iterator binarySearch(Iterator begin, Iterator end, const T& key) {
 		while (begin < end) {
 			Iterator middle = begin + (std::distance(begin, end) / 2);
 

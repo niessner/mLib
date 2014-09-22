@@ -191,6 +191,16 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 	return s;
 }
 
+template<class BinaryDataBuffer, class BinaryDataCompressor, class K, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::unordered_map<K,T>& m) {
+	s << m.size();
+	s << m.max_load_factor();
+	for (auto iter = m.begin(); iter != m.end(); iter++) {
+		s << iter->first << iter->second;
+	}
+	return s;
+}
+
 
 
 
@@ -287,6 +297,20 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	v.resize(size);
 	for (size_t i = 0; i < v.size(); i++) {
 		s >> v[i];
+	}
+	return s;
+}
+
+template<class BinaryDataBuffer, class BinaryDataCompressor, class K, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, std::unordered_map<K,T>& m) {
+	m.clear();
+	size_t size;	float maxLoadFactor;
+	s >> size >> maxLoadFactor;
+	m.max_load_factor(maxLoadFactor);
+	for (size_t i = 0; i < size; i++) {
+		K first;	T second;
+		s >> first >> second;
+		m[first] = second;
 	}
 	return s;
 }
