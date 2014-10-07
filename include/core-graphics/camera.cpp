@@ -95,16 +95,19 @@ void Camera<FloatType>::update() {
 	//m_cameraPerspective = m_perspective;
 }
 
+//! angle is specified in degrees
 template <class FloatType>
 void Camera<FloatType>::lookRight(FloatType theta) {
 	applyTransform(Matrix4x4<FloatType>::rotation(m_worldUp, theta));
 }
 
+//! angle is specified in degrees
 template <class FloatType>
 void Camera<FloatType>::lookUp(FloatType theta) {
 	applyTransform(Matrix4x4<FloatType>::rotation(m_right, -theta));
 }
 
+//! angle is specified in degrees
 template <class FloatType>
 void Camera<FloatType>::roll(FloatType theta) {
 	applyTransform(Matrix4x4<FloatType>::rotation(m_look, theta));

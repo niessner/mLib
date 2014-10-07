@@ -174,6 +174,7 @@ public:
 		unsigned int getMeshIndex() const {
 			return m_MeshIndex;
 		}
+
 	private:
 		const Vertex<FloatType> *v0, *v1, *v2;			
 		point3d<FloatType> m_Center;	//TODO check if we want to store the center
@@ -389,6 +390,17 @@ public:
 		MeshData<FloatType> meshData;
 		getMeshData(meshData);
 		return meshData;
+	}
+
+
+	bool hasNormals() const {
+		return m_bHasNormals;
+	}
+	bool hasColors() const {
+		return m_bHasColors;
+	}
+	bool hasTexCoords() const {
+		return m_bHasTexCoords;
 	}
 
 private:
