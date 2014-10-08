@@ -112,6 +112,11 @@ public:
 		return convertHSVtoRGB(vec3f(240.0f*x, 1.0f, 0.5f));
 	}
 
+	__forceinline static vec4f convertDepthToRGBA(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
+		vec3f d = convertDepthToRGB(depth, depthMin, depthMax);
+		return vec4f(d, 1.0f);
+	}
+
 };
 
 } // namespace ml

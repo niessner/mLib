@@ -99,20 +99,34 @@ public:
 		unsigned int width = image.getWidth();
 		unsigned int height = image.getHeight();
 
-		unsigned int bytesPerPixel = image.getNumChannels();
+		const unsigned int bytesPerPixel = image.getNumBytesPerPixel();
+		const unsigned int numChannels = image.getNumChannels();
 
-
-		assert(image.getNumChannels() == 3 || image.getNumChannels() == 4);
-		//TODO do it for depth maps
-
+		
 		if (filename.length() > 4 && filename.find(".jpg") != std::string::npos ||
 			filename.length() > 4 && filename.find(".png") != std::string::npos) {
-			FIBITMAP *dib = FreeImage_Allocate(width, height, bytesPerPixel * 8);
+			FREE_IMAGE_TYPE type = FIT_BITMAP;	
+			if (numChannels == 1 && bytesPerPixel == 2) type = FIT_UINT16;
+			FIBITMAP *dib = FreeImage_AllocateT(type, width, height, bytesPerPixel * 8);
 			BYTE* bits = FreeImage_GetBits(dib);
 			unsigned int pitch = FreeImage_GetPitch(dib);
 
-
-			if (bytesPerPixel == 3) {
+			if (numChannels == 1 && bytesPerPixel == 2) {
+				//depth map; unsigned short
+				#pragma omp parallel for
+				for (int i = 0; i < (int)height; i++) {
+					BYTE* bitsRowStart = bits + (height-1-i)*pitch;
+					USHORT* bitsRowStartUShort = (USHORT*)bitsRowStart;
+					for (int j = 0; j < (int)width; j++) {
+						USHORT v;	convertToUSHORT(v, image(i,j));
+						bitsRowStartUShort[j] = v;
+						//const unsigned short& v = image(i,j);
+						//bitsRowStart[j*bytesPerPixel + 0] = ((BYTE*)(const unsigned short*)&v)[0];
+						//bitsRowStart[j*bytesPerPixel + 1] = ((BYTE*)(const unsigned short*)&v)[1];
+					}
+				}
+			} else if (numChannels == 3 && bytesPerPixel == 3) {
+				//color map; R8G8B8
 				#pragma omp parallel for
 				for (int i = 0; i < (int)height; i++) {
 					BYTE* bitsRowStart = bits + (height-1-i)*pitch;
@@ -120,12 +134,12 @@ public:
 						vec3uc color;		convertToVEC3UC(color, image(i,j));
 						bitsRowStart[j*bytesPerPixel + FI_RGBA_RED] =	(unsigned char)color.x;
 						bitsRowStart[j*bytesPerPixel + FI_RGBA_GREEN] = (unsigned char)color.y;
-						bitsRowStart[j*bytesPerPixel + FI_RGBA_BLUE] = (unsigned char)color.z;
+						bitsRowStart[j*bytesPerPixel + FI_RGBA_BLUE] =	(unsigned char)color.z;
 					}
 				}
-			} else if (bytesPerPixel == 4) {
+			} else if (numChannels == 4 && bytesPerPixel == 4) {
 				assert(filename.find(".jpg") == std::string::npos);	//jpgs with transparencies don't work...
-
+				//color map; R8G8B8A8
 				#pragma omp parallel for
 				for (int i = 0; i < (int)height; i++) {
 					BYTE* bitsRowStart = bits + (height-1-i)*pitch;
@@ -133,12 +147,12 @@ public:
 						vec4uc color;		convertToVEC4UC(color, image(i,j));
 						bitsRowStart[j*bytesPerPixel + FI_RGBA_RED] =	(unsigned char)color.x;
 						bitsRowStart[j*bytesPerPixel + FI_RGBA_GREEN] = (unsigned char)color.y;
-						bitsRowStart[j*bytesPerPixel + FI_RGBA_BLUE] = (unsigned char)color.z;
+						bitsRowStart[j*bytesPerPixel + FI_RGBA_BLUE] =	(unsigned char)color.z;
 						bitsRowStart[j*bytesPerPixel + FI_RGBA_ALPHA] = (unsigned char)color.w;
 					}
 				}
 			} else {
-				throw MLIB_EXCEPTION("Unknown image format");
+				throw MLIB_EXCEPTION("Unknown image format (" + std::to_string(image.getNumChannels()) + "|" + std::to_string(image.getNumBytesPerChannel()) + ")");
 			}
 
 

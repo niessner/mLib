@@ -140,7 +140,7 @@ public:
 		return matrix[i];
 	}
 
-	
+	//! overwrites the 3x3 part; all other values remain unchanged
 	void setMatrix3x3(Matrix3x3<FloatType>& m) {
 		for (unsigned char i = 0; i < 3; i++) {
 			for (unsigned char j = 0; j < 3; j++) {
@@ -149,10 +149,12 @@ public:
 		}
 	}
 
+	//TODO this function should be called set rotation matrix
 	void setRotation(Matrix3x3<FloatType>& m) {
 		setMatrix3x3(m);
 	}
 	
+	//! overwrites the translation vector; all other values remain unchanged
 	void setTranslationVector(point3d<FloatType>& t) {
 		at(0,3) = t.x;
 		at(1,3) = t.y;

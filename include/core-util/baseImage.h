@@ -375,6 +375,7 @@ public:
 
 	//! returns the number of channels per pixel (-1 if unknown)
 	unsigned int getNumChannels() const  {
+		if (std::is_same<T, USHORT>::value || std::is_same<T, short >::value) return 1;
 		if (std::is_same<T, double>::value || std::is_same<T, float >::value || std::is_same<T, UCHAR >::value ||	std::is_same<T, UINT  >::value || std::is_same<T, int   >::value) return 1;
 		if (std::is_same<T, vec2d >::value || std::is_same<T, vec2f >::value || std::is_same<T, vec2uc>::value ||	std::is_same<T, vec2ui>::value || std::is_same<T, vec2i >::value) return 2;
 		if (std::is_same<T, vec3d >::value || std::is_same<T, vec3f >::value || std::is_same<T, vec3uc>::value ||	std::is_same<T, vec3ui>::value || std::is_same<T, vec3i >::value) return 3;
@@ -389,7 +390,7 @@ public:
 		else return (unsigned int)-1;
 	}
 
-	//! returns the storage reqirements per pixel
+	//! returns the storage requirements per pixel
 	unsigned int getNumBytesPerPixel() const {
 		return sizeof(T);
 	}
@@ -531,6 +532,21 @@ __forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator
 	return s;
 }
 
+class DepthImage16 : public BaseImage<unsigned short> {
+public:
+	DepthImage16() : BaseImage() {
+		m_InvalidValue = 0;
+	}
+	DepthImage16(unsigned int height, unsigned int width, const unsigned short *data) : BaseImage(height, width, data) {
+		m_InvalidValue = 0;
+	}
+	DepthImage16(unsigned int height, unsigned int width) : BaseImage(height, width) {
+		m_InvalidValue = 0;
+	}
+	~DepthImage16() {
+	}
+private:
+};
 
 class DepthImage : public BaseImage<float> {
 public:
@@ -699,11 +715,73 @@ public:
 };
 
 
-typedef ColorImageRGB PointImage;
+class ColorImageRGBA : public BaseImage<vec4f> {
+public:
+	ColorImageRGBA() : BaseImage() {
+		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+	}
+
+	ColorImageRGBA(unsigned int height, unsigned int width, const vec4f *data) : BaseImage(height, width, data) {
+		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+	}
+
+	ColorImageRGBA(unsigned int height, unsigned int width, const vec4uc *data, float scale = 255.0f) : BaseImage(height, width) {
+		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+
+#pragma omp parallel for
+		for (int i = 0; i < (int)height; i++) {
+			for (int j = 0; j < (int)width; j++) {
+				vec4f value(
+					(float)data[i*width + j].x / scale,
+					(float)data[i*width + j].y / scale,
+					(float)data[i*width + j].z / scale,
+					(float)data[i*width + j].w / scale
+					);
+				setPixel(i, j, value);
+			}
+		}
+	}
+	ColorImageRGBA(unsigned int height, unsigned int width) : BaseImage(height, width) {
+		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+	}
+
+	ColorImageRGBA(const DepthImage& depthImage) : BaseImage(depthImage.getHeight(), depthImage.getWidth()) {
+		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(),-std::numeric_limits<float>::infinity());
+
+		const float* data = depthImage.getDataPointer();
+		float maxDepth = -FLT_MAX;
+		float minDepth = +FLT_MAX;
+		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+			if (data[i] != depthImage.getInvalidValue()) {
+				if (data[i] > maxDepth) maxDepth = data[i];
+				if (data[i] < minDepth) minDepth = data[i];
+			}
+		}
+		std::cout << "max Depth " << maxDepth << std::endl;
+		std::cout << "min Depth " << minDepth << std::endl;
+
+		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+			if (data[i] != depthImage.getInvalidValue()) {
+				m_Data[i] = BaseImageHelper::convertDepthToRGBA(data[i], minDepth, maxDepth);
+			} else {
+				m_Data[i] = getInvalidValue();
+			}
+		}
+	}
+	~ColorImageRGBA() {
+	}
+
+};
+
+
+typedef ColorImageRGB	PointImage;
+typedef ColorImageRGB	ColorImageR32G32B32;
+typedef ColorImageRGBA	ColorImageR32G32B32A32;
 
 typedef BaseImage<float>	ColorImageR32;
 typedef BaseImage<vec3uc>	ColorImageR8G8B8;
 typedef BaseImage<vec4uc>	ColorImageR8G8B8A8;
+
 
 } // namespace ml
 

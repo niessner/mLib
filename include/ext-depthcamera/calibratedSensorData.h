@@ -150,7 +150,7 @@ public:
 	std::vector<UINT64>	m_DepthImagesTimeStamps;
 	std::vector<UINT64>	m_ColorImagesTimeStamps;
 
-	std::vector<mat4f> m_trajectory;
+	std::vector<mat4f> m_trajectory;	//accumulated R|t mapping back to the first frame
 };
 
 

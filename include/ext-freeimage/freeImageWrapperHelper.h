@@ -15,7 +15,7 @@ namespace ml {
 
 //BYTE
 template<class T>	__forceinline void convertFromBYTE(T& output, const BYTE* input) {
-	throw EXCEPTION("Invalid Data Conversion");
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
 	//static_assert(false, "Function should never be called");
 }
 template<>	__forceinline void convertFromBYTE<vec3d>(vec3d& output, const BYTE* input) {
@@ -76,7 +76,7 @@ template<>	__forceinline void convertFromBYTE<vec4uc>(vec4uc& output, const BYTE
 
 //BYTE3
 template<class T>	__forceinline void convertFromBYTE3(T& output, const BYTE* input) {
-	throw EXCEPTION("Invalid Data Conversion");
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
 	//static_assert(false, "Function should never be called");
 }
 template<>	__forceinline void convertFromBYTE3<vec3d>(vec3d& output, const BYTE* input) {
@@ -138,7 +138,7 @@ template<>	__forceinline void convertFromBYTE3<vec4uc>(vec4uc& output, const BYT
 
 //BYTE4
 template<class T>	__forceinline void convertFromBYTE4(T& output, const BYTE* input) {
-	throw EXCEPTION("Invalid Data Conversion");
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
 	//static_assert(false, "Function should never be called");
 }
 template<>	__forceinline void convertFromBYTE4<vec3d>(vec3d& output, const BYTE* input) {
@@ -345,6 +345,24 @@ template<>	__forceinline void convertToVEC4UC<vec4uc>(vec4uc& output, const vec4
 	output.z = input[2];
 	output.w = input[3];
 }
+
+
+//USHORT
+template<class T>	__forceinline void convertToUSHORT(unsigned short& output, const T& input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+
+template<>	__forceinline void convertToUSHORT<unsigned short>(unsigned short& output, const unsigned short& input) {
+	output = input;
+}
+template<>	__forceinline void convertToUSHORT<float>(unsigned short& output, const float& input) {
+	output = (unsigned short)(input * 1000.0f);
+}
+template<>	__forceinline void convertToUSHORT<double>(unsigned short& output, const double& input) {
+	output = (unsigned short)(input * 1000.0);
+}
+
 
 } // namespace
 

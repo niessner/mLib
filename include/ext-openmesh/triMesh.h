@@ -90,7 +90,7 @@ namespace OpenMeshTriMesh {
 		decimater.add( hModQuadric );						// register module at the decimater
 		decimater.initialize();								// let the decimater initialize the mesh and the modules
 		decimater.decimate_to(targetNumVertices);			// do decimation
-		mesh.garbage_collection();
+		//mesh.garbage_collection();
 		convertToTriMesh(mesh, triMesh, keepVertexAttributes);
 	}
 
