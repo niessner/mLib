@@ -1,7 +1,10 @@
 
+#define MLIB_ERROR_CHECK
+
 #include "main.h"
 
 using namespace ml;
+
 
 class App
 {

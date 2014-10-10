@@ -201,6 +201,9 @@
     <ClInclude Include="testGrid.h">
       <Filter>tests</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-base\binaryGrid3d.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

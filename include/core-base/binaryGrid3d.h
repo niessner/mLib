@@ -6,21 +6,77 @@ namespace ml {
 
 class BinaryGrid3d {
 public:
+	BinaryGrid3d() {
+		m_slices = m_cols = m_rows = 0;
+		m_data = NULL;
+	}
 	BinaryGrid3d(unsigned int rows, unsigned int cols, unsigned int slices) {
-		m_rows = rows;
-		m_cols = cols;
-		m_slices = slices;
+		m_data = NULL;
+		allocate(rows,cols,slices);
+	}
 
-		unsigned int numEntries = getNumTotalEntries();
-		m_data = new unsigned int[(numEntries + bitsPerUInt - 1) / bitsPerUInt];
+	BinaryGrid3d(const BinaryGrid3d& other) {
+		m_data = NULL;
+		allocate(other.rows(), other.cols(), other.slices());
+		memcpy(m_data, other.m_data, getNumUInts());
+	}
+	BinaryGrid3d(BinaryGrid3d&& other) {
+		m_cols = other.m_cols;
+		m_rows = other.m_rows;
+		m_slices = other.m_slices;
+
+		m_data = other.m_data;
+
+		other.m_rows = 0;
+		other.m_cols = 0;
+		other.m_slices = 0;
+
+		other.m_data = nullptr;
 	}
 
 	~BinaryGrid3d() {
 		SAFE_DELETE_ARRAY(m_data)
 	}
 
+	inline void allocate(unsigned int rows, unsigned int cols, unsigned int slices) {
+		SAFE_DELETE_ARRAY(m_data);
+		m_rows = rows;
+		m_cols = cols;
+		m_slices = slices;
+
+		m_data = new unsigned int[getNumUInts()];
+	}
+
+	inline void operator=(const BinaryGrid3d& other) {
+		allocate(other.rows(), other.cols(), other.slices());
+		memcpy(m_data, other.m_data, getNumUInts());
+	}
+
+	inline void operator=(BinaryGrid3d&& other) {
+		std::swap(m_rows, other.m_rows);
+		std::swap(m_cols, other.m_cols);
+		std::swap(m_slices, other.m_slices);
+		std::swap(m_data, other.m_data);
+	}
+
+	inline bool operator==(const BinaryGrid3d& other) const {
+		if (m_rows != other.m_rows ||
+			m_cols != other.m_cols ||
+			m_rows != other.m_rows)	return false;
+
+		for (unsigned int i = 0; i < getNumUInts(); i++) {
+			if (m_data[i] != other.m_data[i])	return false;
+		}
+
+		return true;
+	}
+
+	inline bool operator!=(const BinaryGrid3d& other) const {
+		return !(*this == other);
+	}
+
 	//! clears all voxels
-	void clear() {
+	inline void clear() {
 		unsigned int numEntries = getNumTotalEntries();
 		unsigned int numUInts = (numEntries + bitsPerUInt - 1) / bitsPerUInt;
 		for (unsigned int i = 0; i < numUInts; i++) {
@@ -81,6 +137,12 @@ public:
 	}
 
 private:
+
+	inline unsigned getNumUInts() const {
+		unsigned int numEntries = getNumTotalEntries();
+		return (numEntries + bitsPerUInt - 1) / bitsPerUInt;
+	}
+
 	static const unsigned int bitsPerUInt = sizeof(unsigned int);
 	unsigned int*	m_data;
 	unsigned int	m_rows, m_cols, m_slices;

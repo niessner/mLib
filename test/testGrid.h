@@ -18,11 +18,9 @@ public:
 		}
 
 		grid.clear();
-		grid.print();
 		for (unsigned int i = 0; i < s; i++) {
 			grid.setVoxel(i,i,i);
 		}
-		grid.print();
 
 		ml::Console::log() << "binaryGrid3d test passed" << std::endl;
 	}

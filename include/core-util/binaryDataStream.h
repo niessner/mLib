@@ -173,6 +173,19 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 }
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Grid3D<T>& g) {
+	s << (UINT64)g.rows() << (UINT64)g.cols() << (UINT64)g.slices();
+	s.reserve(sizeof(T) * g.rows() * g.cols() * g.slices());
+	
+	for (UINT64 row = 0; row < g.rows(); row++)
+		for (UINT64 col = 0; col < g.cols(); col++)
+			for (UINT64 slice = 0; slice < g.slices(); slice++)
+				s << g(row, col, slice);
+	return s;
+}
+
+
+template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::list<T>& l) {
 	s << (UINT64)l.size();
 	s.reserve(sizeof(T)*l.size());
@@ -275,6 +288,18 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	for (UINT64 row = 0; row < g.rows(); row++)
 		for (UINT64 col = 0; col < g.cols(); col++)
 			s << g(row, col);
+	return s;
+}
+
+template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Grid3D<T>& g) {
+	UINT64 rows, cols, slices;
+	s >> rows >> cols, slices;
+	g.allocate(rows, cols, slices);
+	for (UINT64 row = 0; row < g.rows(); row++)
+		for (UINT64 col = 0; col < g.cols(); col++)
+			for (UINT slice = 0; slice < g.slices(); slice++)
+				s << g(row, col, slice);
 	return s;
 }
 
