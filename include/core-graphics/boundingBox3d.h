@@ -398,7 +398,7 @@ public:
 		normals.resize(24);
 		indices.resize(12);
 
-		makeTriMesh(vertices.data(), normals.data(), indices.data());
+    makeTriMesh(vertices.data(), indices.data(), normals.data());
 	}
 
 	void makeTriMesh(point3d<FloatType>* vertices, vec3ui* indices) const {

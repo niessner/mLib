@@ -87,7 +87,7 @@ struct TriangleBVHNode {
 	bool intersects(const typename TriMesh<FloatType>::Triangle<FloatType>* tri) const {
 		if (boundingBox.intersects(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
 			if (isLeaf()) {
-				return tri->collision(*leafTri);
+				return tri->intersects(*leafTri);
 			} else {
 				return lChild->intersects(tri) || rChild->intersects(tri);
 			}
@@ -104,7 +104,7 @@ struct TriangleBVHNode {
 
         if (boundingBox.intersects(triTrans.getV0().position, triTrans.getV1().position, triTrans.getV2().position)) {
             if (isLeaf()) {
-                return triTrans.collision(*leafTri);
+                return triTrans.intersects(*leafTri);
             }
             else {
                 return lChild->intersects(&triTrans) || rChild->intersects(&triTrans);
