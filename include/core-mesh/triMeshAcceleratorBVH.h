@@ -84,30 +84,30 @@ struct TriangleBVHNode {
 	}
 
     // collisions with other Triangles
-	bool collision(const typename TriMesh<FloatType>::Triangle<FloatType>* tri) const {
-		if (boundingBox.collision(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
+	bool intersects(const typename TriMesh<FloatType>::Triangle<FloatType>* tri) const {
+		if (boundingBox.intersects(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
 			if (isLeaf()) {
 				return tri->collision(*leafTri);
 			} else {
-				return lChild->collision(tri) || rChild->collision(tri);
+				return lChild->intersects(tri) || rChild->intersects(tri);
 			}
 		} else {
 			return false;
 		}
 	}
-    bool collision(const typename TriMesh<FloatType>::Triangle<FloatType>* tri, const Matrix4x4<FloatType>& transform) const {
+    bool intersects(const typename TriMesh<FloatType>::Triangle<FloatType>* tri, const Matrix4x4<FloatType>& transform) const {
 
         typename TriMesh<FloatType>::Vertex<FloatType> v0(transform * tri->getV0().position);
         typename TriMesh<FloatType>::Vertex<FloatType> v1(transform * tri->getV1().position);
         typename TriMesh<FloatType>::Vertex<FloatType> v2(transform * tri->getV2().position);
         typename TriMesh<FloatType>::Triangle<FloatType> triTrans(&v0,&v1,&v2);
 
-        if (boundingBox.collision(triTrans.getV0().position, triTrans.getV1().position, triTrans.getV2().position)) {
+        if (boundingBox.intersects(triTrans.getV0().position, triTrans.getV1().position, triTrans.getV2().position)) {
             if (isLeaf()) {
                 return triTrans.collision(*leafTri);
             }
             else {
-                return lChild->collision(&triTrans) || rChild->collision(&triTrans);
+                return lChild->intersects(&triTrans) || rChild->intersects(&triTrans);
             }
         }
         else {
@@ -116,25 +116,25 @@ struct TriangleBVHNode {
     }
     
     // collisions with other TriangleBVHNodes
-	bool collision(const TriangleBVHNode& other) const {
-		if (boundingBox.collision(other.boundingBox)) {
+	bool intersects(const TriangleBVHNode& other) const {
+		if (boundingBox.intersects(other.boundingBox)) {
 			if (isLeaf()) {
-				return other.collision(leafTri);
+				return other.intersects(leafTri);
 			} else {
-				return lChild->collision(other) || rChild->collision(other);
+				return lChild->intersects(other) || rChild->intersects(other);
 			}
 		} else {
 			return false;
 		}
 	}
 
-    bool collision(const TriangleBVHNode& other, const Matrix4x4<FloatType>& transform) const {
-        if (boundingBox.collision(other.boundingBox * transform)) { //TODO fix OBB
+    bool intersects(const TriangleBVHNode& other, const Matrix4x4<FloatType>& transform) const {
+        if (boundingBox.intersects(other.boundingBox * transform)) { //TODO fix OBB
             if (isLeaf()) {
-                return other.collision(leafTri, transform.getInverse());
+                return other.intersects(leafTri, transform.getInverse());
             }
             else {
-                return lChild->collision(other, transform) || rChild->collision(other, transform);
+                return lChild->intersects(other, transform) || rChild->intersects(other, transform);
             }
         }
         else {
@@ -143,7 +143,7 @@ struct TriangleBVHNode {
     }
 
     bool collisionBBoxOnly(const TriangleBVHNode& other, const Matrix4x4<FloatType>& transform) const {
-        if (boundingBox.collision(other.boundingBox * transform)) { //TODO fix OBB
+        if (boundingBox.intersects(other.boundingBox * transform)) { //TODO fix OBB
             if (isLeaf()) {
                 return true;
             }
@@ -233,11 +233,11 @@ public:
 private:
 	//! defined by the interface
 	bool collisionInternal(const TriMeshAcceleratorBVH<FloatType>& other) const {
-		return m_Root->collision(*other.m_Root);
+		return m_Root->intersects(*other.m_Root);
 	}
 
     bool collisionTransformInternal(const TriMeshAcceleratorBVH<FloatType>& other, const Matrix4x4<FloatType>& transform) const {
-        return m_Root->collision(*other.m_Root, transform);
+        return m_Root->intersects(*other.m_Root, transform);
     }
 
     bool collisionTransformBBoxOnlyInternal(const TriMeshAcceleratorBVH<FloatType>& other, const Matrix4x4<FloatType>& transform) const {

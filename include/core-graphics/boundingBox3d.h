@@ -171,12 +171,12 @@ public:
 	}
 
 	//! triangle collision
-	bool collision(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) const {
+	bool intersects(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) const {
 		return intersection::intersectTriangleABBB(minB, maxB, p0, p1, p2);
 	}
 
 	//! bounding box collision
-	bool collision(const BoundingBox3<FloatType>& other) const {
+	bool intersects(const BoundingBox3<FloatType>& other) const {
 		return 
 			minX <= other.maxX && other.minX <= maxX &&
 			minY <= other.maxY && other.minY <= maxY &&
@@ -339,11 +339,8 @@ public:
 	}
 
 	//! generates vertices, indices, and normals which can be used to initialize a triMesh
-	void makeTriMesh(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<point3d<FloatType>>& normals) const {
-		//TODO check face and normal orientation
-		vertices.resize(24);
-		normals.resize(24);
-		indices.resize(12);
+	void makeTriMesh(point3d<FloatType>* vertices, vec3ui* indices, point3d<FloatType>* normals) const {
+
 		//bottom
 		vertices[0] = point3d<FloatType>(minX, minY, minZ);
 		vertices[1] = point3d<FloatType>(maxX, minY, minZ);
@@ -394,6 +391,47 @@ public:
 		normals[20] = normals[21] = normals[22] = normals[23] = point3d<FloatType>(0,0,1);
 	}
 
+	//! generates vertices, indices, and normals which can be used to initialize a triMesh
+	void makeTriMesh(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<point3d<FloatType>>& normals) const {
+		//TODO check face and normal orientation
+		vertices.resize(24);
+		normals.resize(24);
+		indices.resize(12);
+
+		makeTriMesh(vertices.data(), normals.data(), indices.data());
+	}
+
+	void makeTriMesh(point3d<FloatType>* vertices, vec3ui* indices) const {
+		vertices[0] = point3d<FloatType>(maxX, maxY, maxZ);
+		vertices[1] = point3d<FloatType>(minX, maxY, maxZ);
+		vertices[2] = point3d<FloatType>(minX, minY, maxZ);
+		vertices[3] = point3d<FloatType>(maxX, minY, maxZ);
+		vertices[4] = point3d<FloatType>(maxX, maxY, minZ);
+		vertices[5] = point3d<FloatType>(minX, maxY, minZ);
+		vertices[6] = point3d<FloatType>(minX, minY, minZ);
+		vertices[7] = point3d<FloatType>(maxX, minY, minZ);
+
+		indices[0].x = 1;	indices[0].y = 2;	indices[0].z = 3; 
+		indices[1].x = 1;	indices[1].y = 3;	indices[1].z = 0; 
+		indices[2].x = 0;	indices[2].y = 3;	indices[2].z = 7; 
+		indices[3].x = 0;	indices[3].y = 7;	indices[3].z = 4; 
+		indices[4].x = 3;	indices[4].y = 2;	indices[4].z = 6; 
+		indices[5].x = 3;	indices[5].y = 6;	indices[5].z = 7; 
+		indices[6].x = 1;	indices[6].y = 6;	indices[6].z = 2; 
+		indices[7].x = 1;	indices[7].y = 5;	indices[7].z = 6; 
+		indices[8].x = 0;	indices[8].y = 5;	indices[8].z = 1; 
+		indices[9].x = 0;	indices[9].y = 4;	indices[9].z = 5; 
+		indices[10].x = 6;	indices[10].y = 5;	indices[10].z = 4; 
+		indices[11].x = 6;	indices[11].y = 4;	indices[11].z = 7; 
+	}
+
+	//! generates vertices, indices which can be used to initialize a triMesh
+	void makeTriMesh(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices) const {
+		//TODO check face and normal orientation
+		vertices.resize(8);
+		indices.resize(12);
+		makeTriMesh(vertices.data(), indices.data());
+	}
 
 	void setUnitCube() {
 		minX = minY = minZ = 0;

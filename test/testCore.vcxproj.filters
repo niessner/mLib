@@ -249,6 +249,12 @@
     <ClInclude Include="..\include\core-mesh\triMesh.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-graphics\boundingBox3d.h">
+      <Filter>mLibHeader\core-graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\meshShapes.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

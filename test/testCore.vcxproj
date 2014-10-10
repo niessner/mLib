@@ -100,6 +100,7 @@
     <ClInclude Include="..\include\core-base\console.h" />
     <ClInclude Include="..\include\core-base\grid2d.h" />
     <ClInclude Include="..\include\core-base\grid3d.h" />
+    <ClInclude Include="..\include\core-graphics\boundingBox3d.h" />
     <ClInclude Include="..\include\core-graphics\RGBColor.h" />
     <ClInclude Include="..\include\core-math\denseMatrix.h" />
     <ClInclude Include="..\include\core-math\kMeansClustering.h" />
@@ -119,6 +120,7 @@
     <ClInclude Include="..\include\core-mesh\material.h" />
     <ClInclude Include="..\include\core-mesh\meshData.h" />
     <ClInclude Include="..\include\core-mesh\meshIO.h" />
+    <ClInclude Include="..\include\core-mesh\meshShapes.h" />
     <ClInclude Include="..\include\core-mesh\meshUtil.h" />
     <ClInclude Include="..\include\core-mesh\plyHeader.h" />
     <ClInclude Include="..\include\core-mesh\pointCloud.h" />

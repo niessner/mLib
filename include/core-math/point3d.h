@@ -321,6 +321,14 @@ namespace math {
 	inline vec3i round(const point3d<T>& f) {
 		return vec3i(round(f.x), round(f.y), round(f.z));
 	}
+	template<class T>
+	inline vec3i ceil(const point3d<T>& f) {
+		return vec3i(ceil(f.x), ceil(f.y), ceil(f.z));
+	}
+	template<class T>
+	inline vec3i floor(const point3d<T>& f) {
+		return vec3i(floor(f.x), floor(f.y), floor(f.z));
+	}
 }
 
 }  // namespace ml

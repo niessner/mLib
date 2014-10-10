@@ -17,8 +17,9 @@ public:
 	class Vertex {
 	public:
 		Vertex() : position(point3d<FloatType>::origin), normal(point3d<FloatType>::origin), color(point4d<FloatType>::origin), texCoord(point2d<FloatType>::origin) { }
-		Vertex(const vec3f& _position) : position(_position) { }
-		Vertex(const vec3f& _p, const vec3f& _n, const vec4f& _c, const vec2f& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
+		Vertex(const point3d<FloatType>& _position) : position(_position) { }
+		Vertex(const point3d<FloatType>& _p, const point3d<FloatType>& _n) : position(_p), normal(_n) { }
+		Vertex(const point3d<FloatType>& _p, const point3d<FloatType>& _n, const point4d<FloatType>& _c, const point2d<FloatType>& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
 
 		Vertex operator*(FloatType t) const {
 			return Vertex(position*t, normal*t, color*t, texCoord*t);
@@ -138,7 +139,7 @@ public:
 			}
 		}
 
-		bool collision(const Triangle<FloatType>& other) const {
+		bool intersects(const Triangle<FloatType>& other) const {
 			return intersection::intersectTriangleTriangle(v0->position,v1->position,v2->position, other.v0->position,other.v1->position,other.v2->position);
 		}
 
@@ -254,7 +255,7 @@ public:
 		for (size_t i = 0; i < numVertices; i++) {
 			m_Vertices[i].position = vertices[i];
 			if (colors) m_Vertices[i].color = colors[i];
-			if (normals) m_Vertices[i].normals = normals[i];
+			if (normals) m_Vertices[i].normal = normals[i];
 			if (texCoords) m_Vertices[i].texCoord = texCoords[i];
 		}
 		m_Indices.resize(numIndices/3);
@@ -292,6 +293,55 @@ public:
 		m_bHasNormals = t.m_bHasNormals;
 		m_bHasTexCoords = t.m_bHasTexCoords;
 		m_bHasColors = t.m_bHasColors;
+	}
+
+
+	TriMesh(const BinaryGrid3d& grid, FloatType voxelSize = (FloatType)1, bool withNormals = true, const point4d<FloatType>& color = point4d<FloatType>(0.5,0.5,0.5,0.5)) {
+		for (unsigned int z = 0; z < grid.slices(); z++) {
+			for (unsigned int y = 0; y < grid.rows(); y++) {
+				for (unsigned int x = 0; x < grid.cols(); x++) {
+					if (grid.isVoxelSet(x,y,z)) {
+						point3d<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
+						p = p * voxelSize;
+						BoundingBox3<FloatType> bb;
+						bb.include(p - voxelSize*0.5f);	bb.include(p + voxelSize*0.5f);
+
+
+						if (withNormals) {
+							point3d<FloatType> verts[24];
+							vec3ui indices[12];
+							point3d<FloatType> normals[24];
+							bb.makeTriMesh(verts,indices,normals);
+
+							unsigned int vertIdxBase = (unsigned int)m_Vertices.size();
+							for (unsigned int i = 0; i < 24; i++) {
+								m_Vertices.push_back(Vertex<FloatType>(verts[i], normals[i]));
+							}
+							for (unsigned int i = 0; i < 12; i++) {
+								indices[i] += vertIdxBase;
+								m_Indices.push_back(indices[i]);
+							}
+						} else {
+							point3d<FloatType> verts[8];
+							vec3ui indices[12];
+							bb.makeTriMesh(verts, indices);
+
+							unsigned int vertIdxBase = (unsigned int)m_Vertices.size();
+							for (unsigned int i = 0; i < 8; i++) {
+								m_Vertices.push_back(Vertex<FloatType>(verts[i]));
+							}
+							for (unsigned int i = 0; i < 12; i++) {
+								indices[i] += vertIdxBase;
+								m_Indices.push_back(indices[i]);
+							}
+						}
+					}
+				}
+			}
+			for (unsigned int i = 0; i < m_Vertices.size(); i++) {
+				m_Vertices[i].color = color;
+			}
+		}
 	}
 
 	~TriMesh() {
@@ -421,6 +471,25 @@ private:
 	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, FloatType voxelSize, const vec3ui& voxelOffset) const {
 		float diagLenSq = voxelSize*voxelSize*3.0f;
 		if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
+			//BoundingBox3<FloatType> bb;
+			//bb.include(v0);	bb.include(v1);	bb.include(v2);
+			//vec3ui minI = math::floor(bb.getMin()/voxelSize);
+			//vec3ui maxI = math::ceil(bb.getMax()/voxelSize);
+
+			//for (unsigned int i = minI.x; i <= maxI.x; i++) {
+			//	for (unsigned int j = minI.y; j <= maxI.y; j++) {
+			//		for (unsigned int k = minI.z; k <= maxI.z; k++) {
+			//			point3d<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
+			//			BoundingBox3<FloatType> voxel;
+			//			voxel.include((v - (FloatType)0.5)*voxelSize);
+			//			voxel.include((v + (FloatType)0.5)*voxelSize);
+			//			if (voxel.intersects(v0, v1, v2)) {
+			//				grid.setVoxel(i,j,k);
+			//			}
+			//		}
+			//	}
+			//}
+
 			grid.setVoxel(vec3i(math::round(v0/voxelSize)) + voxelOffset);
 			grid.setVoxel(vec3i(math::round(v1/voxelSize)) + voxelOffset);
 			grid.setVoxel(vec3i(math::round(v2/voxelSize)) + voxelOffset);
