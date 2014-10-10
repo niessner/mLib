@@ -296,7 +296,7 @@ public:
 	}
 
 
-	TriMesh(const BinaryGrid3d& grid, FloatType voxelSize = (FloatType)1, bool withNormals = true, const point4d<FloatType>& color = point4d<FloatType>(0.5,0.5,0.5,0.5)) {
+	TriMesh(const BinaryGrid3d& grid, FloatType voxelSize = (FloatType)1, bool withNormals = false, const point4d<FloatType>& color = point4d<FloatType>(0.5,0.5,0.5,0.5)) {
 		for (unsigned int z = 0; z < grid.slices(); z++) {
 			for (unsigned int y = 0; y < grid.rows(); y++) {
 				for (unsigned int x = 0; x < grid.cols(); x++) {
@@ -457,7 +457,7 @@ public:
 
 		BoundingBox3<FloatType> bb = getBoundingBox();
 		bb.include(point3d<FloatType>(0.0f,0.0f,0.0f));
-		bb.scale(1.1f);
+		bb.scale(1.2f);
 		//TODO use bounding box to compute offset such that all voxels are positive...
 
 		BinaryGrid3d grid(vec3ui(bb.getExtent() / voxelSize));
@@ -471,18 +471,27 @@ private:
 	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, FloatType voxelSize, const vec3ui& voxelOffset) const {
 		float diagLenSq = voxelSize*voxelSize*3.0f;
 		if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
-			//BoundingBox3<FloatType> bb;
-			//bb.include(v0);	bb.include(v1);	bb.include(v2);
-			//vec3ui minI = math::floor(bb.getMin()/voxelSize);
-			//vec3ui maxI = math::ceil(bb.getMax()/voxelSize);
+			BoundingBox3<FloatType> bb;
+			bb.include(v0);	bb.include(v1);	bb.include(v2);
+			vec3ui minI = math::floor(bb.getMin()/voxelSize);
+			vec3ui maxI = math::ceil(bb.getMax()/voxelSize);
+
+			for (unsigned int i = minI.x; i <= maxI.x; i++) {
+				for (unsigned int j = minI.y; j <= maxI.y; j++) {
+					for (unsigned int k = minI.z; k <= maxI.z; k++) {
+						grid.setVoxel(i,j,k);
+					}
+				}
+			}
 
 			//for (unsigned int i = minI.x; i <= maxI.x; i++) {
 			//	for (unsigned int j = minI.y; j <= maxI.y; j++) {
 			//		for (unsigned int k = minI.z; k <= maxI.z; k++) {
 			//			point3d<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
 			//			BoundingBox3<FloatType> voxel;
-			//			voxel.include((v - (FloatType)0.5)*voxelSize);
-			//			voxel.include((v + (FloatType)0.5)*voxelSize);
+			//			const FloatType eps = (FloatType)0.0001;
+			//			voxel.include((v - (FloatType)0.5-eps)*voxelSize);
+			//			voxel.include((v + (FloatType)0.5+eps)*voxelSize);
 			//			if (voxel.intersects(v0, v1, v2)) {
 			//				grid.setVoxel(i,j,k);
 			//			}
@@ -490,9 +499,9 @@ private:
 			//	}
 			//}
 
-			grid.setVoxel(vec3i(math::round(v0/voxelSize)) + voxelOffset);
-			grid.setVoxel(vec3i(math::round(v1/voxelSize)) + voxelOffset);
-			grid.setVoxel(vec3i(math::round(v2/voxelSize)) + voxelOffset);
+			//grid.setVoxel(vec3i(math::round(v0/voxelSize)) + voxelOffset);
+			//grid.setVoxel(vec3i(math::round(v1/voxelSize)) + voxelOffset);
+			//grid.setVoxel(vec3i(math::round(v2/voxelSize)) + voxelOffset);
 		} else {
 			vec3f e0 = (v0 + v1)/2.0f;
 			vec3f e1 = (v1 + v2)/2.0f;

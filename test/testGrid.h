@@ -48,10 +48,10 @@ public:
 		//TriMeshf tmesh(p.size(), i.size() * 3, p.data(), (unsigned int*)i.data());
 		//MeshIOf::saveToFile("box.ply", tmesh.getMeshData());
 
-		ml::TriMeshf box = ml::shapes::sphere(5.0f, ml::vec3f(0,0,0));
+		ml::TriMeshf box = ml::shapes::sphere(5.0f, ml::vec3f(0,0,0), 128, 128);
 		box.transform(ml::mat4f::translation(ml::vec3f(6.0f)));
 
-		ml::BinaryGrid3d grid = box.voxelize(0.2f);
+		ml::BinaryGrid3d grid = box.voxelize(0.05f);
 		ml::PointCloudf pc(grid, 1.0f);
 		ml::PointCloudIOf::saveToFile("gridcloud1.ply", pc);
 
