@@ -198,6 +198,9 @@
     <ClInclude Include="..\include\core-math\quaternion.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
+    <ClInclude Include="testGrid.h">
+      <Filter>tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

@@ -146,6 +146,7 @@
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="testANN.h" />
     <ClInclude Include="testBinaryStream.h" />
+    <ClInclude Include="testGrid.h" />
     <ClInclude Include="testLodePNG.h" />
     <ClInclude Include="testMath.h" />
     <ClInclude Include="testUtility.h" />

@@ -9,6 +9,7 @@ public:
 	void go();
 
 private:
+	TestGrid m_grid;
 	TestUtility m_utility;
 	TestMath m_math;
 	TestANN m_ANN;
@@ -24,6 +25,7 @@ void App::go()
 	m_ANN.run();
 	m_lodePNG.run();
 	m_binaryStream.run();
+	m_grid.run();
 
 	ml::Console::log("All tests completed");
 	std::cin.get();
@@ -92,7 +94,6 @@ int main()
 		std::cout << std::endl;
 	} 
 
-	int c = 5;
 
 	/*
 	//ml::ColorImageR8G8B8 test;
