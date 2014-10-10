@@ -7,6 +7,21 @@ template <class FloatType>
 class PointCloud {
 public:
 	PointCloud() {}
+
+	//!conversion from a binary voxel grid
+	PointCloud(const BinaryGrid3d& grid, FloatType scale) {
+		for (unsigned int z = 0; z < grid.slices(); z++) {
+			for (unsigned int y = 0; y < grid.rows(); y++) {
+				for (unsigned int x = 0; x < grid.cols(); x++) {
+					if (grid.isVoxelSet(x,y,z)) {
+						point3d<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
+						m_points.push_back(p * scale);
+					}
+				}
+			}
+		}
+	}
+
 	PointCloud(PointCloud&& pc) {
 		m_points = std::move(pc.m_points);
 		m_normals = std::move(pc.m_normals);

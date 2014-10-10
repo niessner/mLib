@@ -5,7 +5,6 @@ public:
 	{
 		unsigned int s = 10;
 		ml::BinaryGrid3d grid(s,s,s);
-		grid.clear();
 		for (unsigned int i = 0; i < s; i++) {
 			for (unsigned int j = 0; j < s; j++) {
 				for (unsigned int k = 0; k < s; k++) {
@@ -27,7 +26,16 @@ public:
 
 	void test1()
 	{
-
+		unsigned int s = 50;
+		ml::BinaryGrid3d grid(s,s,s);
+		for (unsigned int i = 0; i < s; i++) {
+			grid.setVoxel(i,i,i);
+			grid.setVoxel(50-1-i,i,i);
+			grid.setVoxel(i,50-1-i,i);
+			grid.setVoxel(i,i,50-1-i);
+		}
+		ml::PointCloudf pc(grid, 1.0f);
+		ml::PointCloudIOf::saveToFile("gridcloud.ply",pc);
 	}
 
 	std::string name() {

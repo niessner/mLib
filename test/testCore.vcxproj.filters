@@ -34,6 +34,9 @@
     <Filter Include="mLibHeader\ext-freeimage">
       <UniqueIdentifier>{1d841e69-4bae-4331-a2d9-9c055afc13e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-mesh">
+      <UniqueIdentifier>{cb522a1b-1b16-42b8-b95b-535a5ea54741}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -203,6 +206,45 @@
     </ClInclude>
     <ClInclude Include="..\include\core-base\binaryGrid3d.h">
       <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshAcceleratorBVH.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshCollisionAccelerator.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshRayAccelerator.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshSampler.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\material.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\meshData.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\meshIO.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\meshUtil.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\plyHeader.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\pointCloud.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\pointCloudIO.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshAccelerator.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMeshAcceleratorBruteForce.h">
+      <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

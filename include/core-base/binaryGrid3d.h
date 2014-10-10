@@ -13,6 +13,7 @@ public:
 	BinaryGrid3d(unsigned int rows, unsigned int cols, unsigned int slices) {
 		m_data = NULL;
 		allocate(rows,cols,slices);
+		clear();
 	}
 
 	BinaryGrid3d(const BinaryGrid3d& other) {
@@ -77,9 +78,7 @@ public:
 
 	//! clears all voxels
 	inline void clear() {
-		unsigned int numEntries = getNumTotalEntries();
-		unsigned int numUInts = (numEntries + bitsPerUInt - 1) / bitsPerUInt;
-		for (unsigned int i = 0; i < numUInts; i++) {
+		for (unsigned int i = 0; i < getNumUInts(); i++) {
 			m_data[i] = 0;
 		}
 	}
