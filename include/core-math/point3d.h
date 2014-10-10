@@ -315,6 +315,14 @@ template<> const vec3d vec3d::eX(1.0, 0.0, 0.0);
 template<> const vec3d vec3d::eY(0.0, 1.0, 0.0);
 template<> const vec3d vec3d::eZ(0.0, 0.0, 1.0);
 
+
+namespace math {
+	template<class T>
+	inline vec3i round(const point3d<T>& f) {
+		return vec3i(round(f.x), round(f.y), round(f.z));
+	}
+}
+
 }  // namespace ml
 
 #endif  // CORE_MATH_POINT3D_H_

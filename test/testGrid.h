@@ -35,7 +35,20 @@ public:
 			grid.setVoxel(i,i,50-1-i);
 		}
 		ml::PointCloudf pc(grid, 1.0f);
-		ml::PointCloudIOf::saveToFile("gridcloud.ply",pc);
+		ml::PointCloudIOf::saveToFile("gridcloud0.ply", pc);
+	}
+
+	void test2() 
+	{
+
+		ml::TriMeshf box = ml::shapes::box(10);
+		box.transform(ml::mat4f::translation(ml::vec3f(6.0f)));
+
+		ml::BinaryGrid3d grid = box.voxelize(0.2f);
+		ml::PointCloudf pc(grid, 1.0f);
+		ml::PointCloudIOf::saveToFile("gridcloud1.ply", pc);
+
+		int a = 5;
 	}
 
 	std::string name() {

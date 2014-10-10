@@ -403,7 +403,38 @@ public:
 		return m_bHasTexCoords;
 	}
 
+	BinaryGrid3d voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>()) const {
+
+		BoundingBox3<FloatType> bb = getBoundingBox();
+		bb.include(point3d<FloatType>(0.0f,0.0f,0.0f));
+		bb.scale(1.1f);
+		//TODO use bounding box to compute offset such that all voxels are positive...
+
+		BinaryGrid3d grid(vec3ui(bb.getExtent() / voxelSize));
+		for (size_t i = 0; i < m_Indices.size(); i++) {
+			voxelizeTriangle(m_Vertices[m_Indices[i].x].position, m_Vertices[m_Indices[i].y].position, m_Vertices[m_Indices[i].z].position, grid, voxelSize, vec3ui(0,0,0));
+		}
+		return grid;
+	}
 private:
+
+	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, FloatType voxelSize, const vec3ui& voxelOffset) const {
+		float diagLenSq = voxelSize*voxelSize*3.0f;
+		if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
+			grid.setVoxel(vec3i(math::round(v0/voxelSize)) + voxelOffset);
+			grid.setVoxel(vec3i(math::round(v1/voxelSize)) + voxelOffset);
+			grid.setVoxel(vec3i(math::round(v2/voxelSize)) + voxelOffset);
+		} else {
+			vec3f e0 = (v0 + v1)/2.0f;
+			vec3f e1 = (v1 + v2)/2.0f;
+			vec3f e2 = (v2 + v0)/2.0f;
+			voxelizeTriangle(v0,e0,e2, grid, voxelSize, voxelOffset);
+			voxelizeTriangle(e0,v1,e1, grid, voxelSize, voxelOffset);
+			voxelizeTriangle(e1,v2,e2, grid, voxelSize, voxelOffset);
+			voxelizeTriangle(e0,e1,e2, grid, voxelSize, voxelOffset);
+		}
+	}
+
     friend class boost::serialization::access;
 		
 	bool m_bHasNormals;

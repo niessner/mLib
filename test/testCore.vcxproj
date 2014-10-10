@@ -123,6 +123,7 @@
     <ClInclude Include="..\include\core-mesh\plyHeader.h" />
     <ClInclude Include="..\include\core-mesh\pointCloud.h" />
     <ClInclude Include="..\include\core-mesh\pointCloudIO.h" />
+    <ClInclude Include="..\include\core-mesh\triMesh.h" />
     <ClInclude Include="..\include\core-mesh\triMeshAccelerator.h" />
     <ClInclude Include="..\include\core-mesh\triMeshAcceleratorBruteForce.h" />
     <ClInclude Include="..\include\core-mesh\triMeshAcceleratorBVH.h" />

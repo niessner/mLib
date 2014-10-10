@@ -4,6 +4,7 @@
 
 namespace ml {
 
+
 class BinaryGrid3d {
 public:
 	BinaryGrid3d() {
@@ -13,6 +14,12 @@ public:
 	BinaryGrid3d(unsigned int rows, unsigned int cols, unsigned int slices) {
 		m_data = NULL;
 		allocate(rows,cols,slices);
+		clear();
+	}
+
+	BinaryGrid3d(const vec3ui& dim) {
+		m_data = NULL;
+		allocate(dim);
 		clear();
 	}
 
@@ -46,6 +53,10 @@ public:
 		m_slices = slices;
 
 		m_data = new unsigned int[getNumUInts()];
+	}
+
+	inline void allocate(const vec3ui& dim) {
+		allocate(dim.x, dim.y, dim.z);
 	}
 
 	inline void operator=(const BinaryGrid3d& other) {
@@ -90,11 +101,19 @@ public:
 		return (m_data[baseIdx] & (1 << localIdx)) != 0;
 	}
 
+	inline bool isVoxelSet(const vec3ui& v) {
+		return isVoxelSet(v.x, v.y, v.z);
+	}
+
 	inline void setVoxel(unsigned int row, unsigned int col, unsigned int slice) {
 		unsigned int linIdx = slice*m_cols*m_rows + row*m_cols + col;
 		unsigned int baseIdx = linIdx / bitsPerUInt;
 		unsigned int localIdx = linIdx % bitsPerUInt;
 		m_data[baseIdx] |= (1 << localIdx);
+	}
+
+	inline void setVoxel(const vec3ui& v) {
+		setVoxel(v.x, v.y, v.z);
 	}
 
 	inline void clearVoxel(unsigned int row, unsigned int col, unsigned int slice) {

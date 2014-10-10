@@ -12,7 +12,6 @@
 #include "core-base/console.h"
 #include "core-base/grid2d.h"
 #include "core-base/grid3d.h"
-#include "core-base/binaryGrid3d.h"
 
 //
 // core-util headers (these are required by matrices)
@@ -59,6 +58,7 @@
 #include "core-util/pipe.h"
 #include "core-util/UIConnection.h"
 #include "core-util/sparseGrid3d.h"
+#include "core-base/binaryGrid3d.h"
 #include "core-util/baseImage.h"
 
 //

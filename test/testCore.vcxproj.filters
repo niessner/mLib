@@ -246,6 +246,9 @@
     <ClInclude Include="..\include\core-mesh\triMeshAcceleratorBruteForce.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-mesh\triMesh.h">
+      <Filter>mLibHeader\core-mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />
