@@ -21,7 +21,7 @@ public:
 			grid.setVoxel(i,i,i);
 		}
 
-		ml::Console::log() << "binaryGrid3d test passed" << std::endl;
+		ml::Console::log() << "binaryGrid3d test0 passed" << std::endl;
 	}
 
 	void test1()
@@ -36,6 +36,8 @@ public:
 		}
 		ml::PointCloudf pc(grid, 1.0f);
 		ml::PointCloudIOf::saveToFile("gridcloud0.ply", pc);
+
+		ml::Console::log() << "binaryGrid3d test1 passed" << std::endl;
 	}
 
 	void test2() 
@@ -49,7 +51,8 @@ public:
 		//MeshIOf::saveToFile("box.ply", tmesh.getMeshData());
 
 		ml::TriMeshf box = ml::shapes::sphere(5.0f, ml::vec3f(0,0,0), 128, 128);
-		box.transform(ml::mat4f::translation(ml::vec3f(6.0f)));
+		box.transform(ml::mat4f::translation(ml::vec3f(6.0053f)));
+		box.transform(ml::mat4f::rotation(0.0012f, 0.021f, 0.0024));
 
 		ml::BinaryGrid3d grid = box.voxelize(0.05f);
 		ml::PointCloudf pc(grid, 1.0f);
@@ -58,7 +61,7 @@ public:
 		TriMeshf voxelMesh(grid);
 		MeshIOf::saveToFile("box.ply", voxelMesh.getMeshData());
 
-		int a = 5;
+		ml::Console::log() << "binaryGrid3d test2 passed" << std::endl;
 	}
 
 

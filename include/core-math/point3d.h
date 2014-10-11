@@ -329,6 +329,11 @@ namespace math {
 	inline vec3i floor(const point3d<T>& f) {
 		return vec3i(floor(f.x), floor(f.y), floor(f.z));
 	}
+	template<class T>
+	inline point3d<T> abs(const point3d<T>& p) {
+		return point3d<T>(abs(p.x), abs(p.y), abs(p.z));
+	}
+
 }
 
 }  // namespace ml

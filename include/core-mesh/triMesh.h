@@ -476,28 +476,28 @@ private:
 			vec3ui minI = math::floor(bb.getMin()/voxelSize);
 			vec3ui maxI = math::ceil(bb.getMax()/voxelSize);
 
-			for (unsigned int i = minI.x; i <= maxI.x; i++) {
-				for (unsigned int j = minI.y; j <= maxI.y; j++) {
-					for (unsigned int k = minI.z; k <= maxI.z; k++) {
-						grid.setVoxel(i,j,k);
-					}
-				}
-			}
-
 			//for (unsigned int i = minI.x; i <= maxI.x; i++) {
 			//	for (unsigned int j = minI.y; j <= maxI.y; j++) {
 			//		for (unsigned int k = minI.z; k <= maxI.z; k++) {
-			//			point3d<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
-			//			BoundingBox3<FloatType> voxel;
-			//			const FloatType eps = (FloatType)0.0001;
-			//			voxel.include((v - (FloatType)0.5-eps)*voxelSize);
-			//			voxel.include((v + (FloatType)0.5+eps)*voxelSize);
-			//			if (voxel.intersects(v0, v1, v2)) {
-			//				grid.setVoxel(i,j,k);
-			//			}
+			//			grid.setVoxel(i,j,k);
 			//		}
 			//	}
 			//}
+
+			for (unsigned int i = minI.x; i <= maxI.x; i++) {
+				for (unsigned int j = minI.y; j <= maxI.y; j++) {
+					for (unsigned int k = minI.z; k <= maxI.z; k++) {
+						point3d<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
+						BoundingBox3<FloatType> voxel;
+						const FloatType eps = (FloatType)0.0001;
+						voxel.include((v - (FloatType)0.5-eps)*voxelSize);
+						voxel.include((v + (FloatType)0.5+eps)*voxelSize);
+						if (voxel.intersects(v0, v1, v2)) {
+							grid.setVoxel(i,j,k);
+						}
+					}
+				}
+			} 
 
 			//grid.setVoxel(vec3i(math::round(v0/voxelSize)) + voxelOffset);
 			//grid.setVoxel(vec3i(math::round(v1/voxelSize)) + voxelOffset);
