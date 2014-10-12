@@ -79,6 +79,7 @@
 #include "core-graphics/lineSegment2d.h"
 #include "core-graphics/lineSegment3d.h"
 #include "core-graphics/plane.h"
+#include "core-graphics/boundingBox2d.h"
 #include "core-graphics/boundingBox3d.h"
 #include "core-graphics/orientedBoundingBox3d.h"
 #include "core-graphics/dist.h"

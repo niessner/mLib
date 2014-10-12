@@ -453,7 +453,7 @@ public:
 		return m_bHasTexCoords;
 	}
 
-	BinaryGrid3d voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>()) const {
+	BinaryGrid3d voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>(), bool solid = false) const {
 
 		BoundingBox3<FloatType> bb = getBoundingBox();
 		bb.include(point3d<FloatType>(0.0f,0.0f,0.0f));
@@ -469,39 +469,37 @@ public:
 private:
 
 	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, FloatType voxelSize, const vec3ui& voxelOffset) const {
-		float diagLenSq = voxelSize*voxelSize*3.0f;
+		FloatType diagLenSq = (FloatType)3.0*voxelSize*voxelSize;
 		if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
 			BoundingBox3<FloatType> bb;
 			bb.include(v0);	bb.include(v1);	bb.include(v2);
 			vec3ui minI = math::floor(bb.getMin()/voxelSize);
 			vec3ui maxI = math::ceil(bb.getMax()/voxelSize);
 
-			//for (unsigned int i = minI.x; i <= maxI.x; i++) {
-			//	for (unsigned int j = minI.y; j <= maxI.y; j++) {
-			//		for (unsigned int k = minI.z; k <= maxI.z; k++) {
-			//			grid.setVoxel(i,j,k);
-			//		}
-			//	}
-			//}
-
+			//test for accurate voxel-triangle intersections
 			for (unsigned int i = minI.x; i <= maxI.x; i++) {
 				for (unsigned int j = minI.y; j <= maxI.y; j++) {
 					for (unsigned int k = minI.z; k <= maxI.z; k++) {
 						point3d<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
 						BoundingBox3<FloatType> voxel;
-						const FloatType eps = (FloatType)0.0001;
+						const FloatType eps = (FloatType)0.00001;
 						voxel.include((v - (FloatType)0.5-eps)*voxelSize);
 						voxel.include((v + (FloatType)0.5+eps)*voxelSize);
 						if (voxel.intersects(v0, v1, v2)) {
+							//project to xy-plane
+							point2d<FloatType> p0(v0);
+							point2d<FloatType> p1(v1);
+							point2d<FloatType> p2(v2);
+							point2d<FloatType> pv(v);
+							BoundingBox2<FloatType> pBox;	
+							pBox.include(p0);
+							pBox.include(p1);
+							pBox.include(p2);
 							grid.setVoxel(i,j,k);
 						}
 					}
 				}
 			} 
-
-			//grid.setVoxel(vec3i(math::round(v0/voxelSize)) + voxelOffset);
-			//grid.setVoxel(vec3i(math::round(v1/voxelSize)) + voxelOffset);
-			//grid.setVoxel(vec3i(math::round(v2/voxelSize)) + voxelOffset);
 		} else {
 			vec3f e0 = (v0 + v1)/2.0f;
 			vec3f e1 = (v1 + v2)/2.0f;

@@ -54,7 +54,9 @@ public:
 		box.transform(ml::mat4f::translation(ml::vec3f(6.0053f)));
 		box.transform(ml::mat4f::rotation(0.0012f, 0.021f, 0.0024));
 
+		Timer t;
 		ml::BinaryGrid3d grid = box.voxelize(0.05f);
+		std::cout << "voxelization time " << t.getElapsedTimeMS() << std::endl;
 		ml::PointCloudf pc(grid, 1.0f);
 		ml::PointCloudIOf::saveToFile("gridcloud1.ply", pc);
 

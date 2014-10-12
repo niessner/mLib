@@ -325,232 +325,232 @@ namespace intersection {
 
 
 
-
-//////////////////////////////////////////////////////
-// Triangle ABBB: http://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/code/tribox3.txt
-//////////////////////////////////////////////////////
-	template<class FloatType>
-	void FINDMINMAX(FloatType x0, FloatType x1, FloatType x2, FloatType& min, FloatType& max) {
-		min = max = x0;
-		if(x1<min) min=x1;
-		if(x1>max) max=x1;
-		if(x2<min) min=x2;
-		if(x2>max) max=x2;
-	}
-
-
-	//I think this test is somehow broken :) - it's not being used at this point...
-	template<class FloatType>
-	bool intersectTriangleABBB2(
-		const point3d<FloatType> &bbBoxMin,
-		const point3d<FloatType> &bbBoxMax,
-		const point3d<FloatType> &t0,
-		const point3d<FloatType> &t1,
-		const point3d<FloatType> &t2) 
-	{
-		const point3d<FloatType> boxcenter = (FloatType)0.5*(bbBoxMax + bbBoxMin);
-		const point3d<FloatType> boxhalfsize = (FloatType)0.5*(bbBoxMax - bbBoxMin);
-
-		//use separating axis theorem to test overlap between triangle and box
-		//need to test for overlap in these directions:
-		//1) the {x,y,z}-directions (actually, since we use the AABB of the triangle 
-		//we do not even need to test these) 
-		//2) normal of the triangle 
-		//3) crossproduct(edge from tri, {x,y,z}-directin)
-		//this gives 3x3=9 more tests
-
-		//   float axis[3];
-		FloatType min,max,p0,p1,p2,rad,fex,fey,fez;		// -NJMP- "d" local variable removed
-				
-		//This is the fastest branch on Sun 
-		//move everything so that the boxcenter is in (0,0,0)
-		point3d<FloatType> v0 = t0 - boxcenter;
-		point3d<FloatType> v1 = t1 - boxcenter;
-		point3d<FloatType> v2 = t2 - boxcenter;
-
-		//compute triangle edges
-		point3d<FloatType> e0 = v1 - v0;	//tri edge 0
-		point3d<FloatType> e1 = v2 - v1;	//tri edge 1
-		point3d<FloatType> e2 = v0 - v2;	//tri edge 2
-		
-		//Bullet 3:
-		//test the 9 tests first (this was faster)
-
-		fex = math::abs(e0.x);
-		fey = math::abs(e0.y);
-		fez = math::abs(e0.z);
-
-		//AXISTEST_X01(e0.z, e0.y, fez, fey);
-		{
-			FloatType a = e0.z;
-			FloatType b = e0.y;
-			FloatType fa = fez;
-			FloatType fb = fey;
-			p0 = a*v0.y - b*v0.z;	
-			p2 = a*v2.y - b*v2.z;
-			if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;} 
-			rad = fa * boxhalfsize.y + fb * boxhalfsize.z;   
-			if(min>rad || max<-rad) return false;
-		}		
-		//AXISTEST_Y02(e0.z, e0.x, fez, fex);
-		{
-			FloatType a = e0.z;
-			FloatType b = e0.x;
-			FloatType fa = fez;
-			FloatType fb = fex;
-			p0 = -a*v0.x + b*v0.z;
-			p2 = -a*v2.x + b*v2.z;
-			if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;}
-			rad = fa * boxhalfsize.x + fb * boxhalfsize.z;
-			if(min>rad || max<-rad) return false;
-		}
-		//AXISTEST_Z12(e0.y, e0.x, fey, fex);
-		{
-			FloatType a = e0.y;
-			FloatType b = e0.x;
-			FloatType fa = fey;
-			FloatType fb = fex;
-			p1 = a*v1.x - b*v1.y;
-			p2 = a*v2.x - b*v2.y;
-			if(p2<p1) {min=p2; max=p1;} else {min=p1; max=p2;}
-			rad = fa * boxhalfsize.x + fb * boxhalfsize.y;
-			if(min>rad || max<-rad) return false;
-		}
-
-		fex = math::abs(e1.x);
-		fey = math::abs(e1.y);
-		fez = math::abs(e1.x);
-
-		//AXISTEST_X01(e1[Z], e1[Y], fez, fey);
-		{
-			FloatType a = e1.z;
-			FloatType b = e1.y;
-			FloatType fa = fez;
-			FloatType fb = fey;
-			p0 = a*v0.y - b*v0.z;	
-			p2 = a*v2.y - b*v2.z;
-			if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;} 
-			rad = fa * boxhalfsize.y + fb * boxhalfsize.z;   
-			if(min>rad || max<-rad) return false;
-		}
-		//AXISTEST_Y02(e1[Z], e1[X], fez, fex);
-		{
-			FloatType a = e1.z;
-			FloatType b = e1.x;
-			FloatType fa = fez;
-			FloatType fb = fex;
-			p0 = -a*v0.x + b*v0.z;
-			p2 = -a*v2.x + b*v2.z;
-			if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;}
-			rad = fa * boxhalfsize.x + fb * boxhalfsize.z;
-			if(min>rad || max<-rad) return false;
-		}
-		//AXISTEST_Z0(e1[Y], e1[X], fey, fex);
-		{
-			FloatType a = e1.y;
-			FloatType b = e1.x;
-			FloatType fa = fey;
-			FloatType fb = fex;
-			p0 = a*v0.x - b*v0.y;	
-			p1 = a*v1.x - b*v1.y;
-			if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;}
-			rad = fa * boxhalfsize.x + fb * boxhalfsize.y;
-			if(min>rad || max<-rad) return false;
-		}
-
-		fex = math::abs(e2.x);
-		fey = math::abs(e2.y);
-		fez = math::abs(e2.z);
-
-		//AXISTEST_X2(e2[Z], e2[Y], fez, fey);
-		{
-			FloatType a = e2.z;
-			FloatType b = e2.y;
-			FloatType fa = fez;
-			FloatType fb = fey;
-			p0 = a*v0.y - b*v0.z;
-			p1 = a*v1.y - b*v1.z;
-			if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;}
-			rad = fa * boxhalfsize.y + fb * boxhalfsize.z;
-			if(min>rad || max<-rad) return false;
-		}
-		//AXISTEST_Y1(e2[Z], e2[X], fez, fex);
-		{
-			FloatType a = e2.z;
-			FloatType b = e2.x;
-			FloatType fa = fez;
-			FloatType fb = fex;
-			p0 = -a*v0.x + b*v0.x;
-			p1 = -a*v1.x + b*v1.x;
-			if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;}
-			rad = fa * boxhalfsize.x + fb * boxhalfsize.z;
-			if(min>rad || max<-rad) return false;
-		}
-		//AXISTEST_Z12(e2[Y], e2[X], fey, fex);
-		{
-			FloatType a = e2.y;
-			FloatType b = e2.x;
-			FloatType fa = fey;
-			FloatType fb = fex;
-			p1 = a*v1.x - b*v1.y;
-			p2 = a*v2.x - b*v2.y;
-			if(p2<p1) {min=p2; max=p1;} else {min=p1; max=p2;}
-			rad = fa * boxhalfsize.x + fb * boxhalfsize.y;
-			if(min>rad || max<-rad) return false;
-		}
-		
-		//Bullet 1:
-		//first test overlap in the {x,y,z}-directions
-		//find min, max of the triangle each direction, and test for overlap in
-		//that direction -- this is equivalent to testing a minimal AABB around
-		//the triangle against the AABB
-		
-		//test in X-direction
-		FINDMINMAX(v0.x,v1.x,v2.x,min,max);
-		if(min>boxhalfsize.x || max<-boxhalfsize.x) return false;
-
-		//test in Y-direction
-		FINDMINMAX(v0.y,v1.y,v2.y,min,max);
-		if(min>boxhalfsize.y || max<-boxhalfsize.y) return false;
-		
-		//test in Z-direction
-		FINDMINMAX(v0.z,v1.z,v2.z,min,max);
-		if(min>boxhalfsize.z || max<-boxhalfsize.z) return false;
-		
-		//Bullet 2:
-		//test if the box intersects the plane of the triangle 
-		//compute plane equation of triangle: normal*x+d=0
-
-		point3d<FloatType> normal = e0 ^ e1;
-
-		// -NJMP- (line removed here)
-		//if(!planeBoxOverlap(normal,v0,boxhalfsize)) return false;	// -NJMP-
-		{
-			point3d<FloatType> vert = v0;
-			point3d<FloatType> maxbox = boxhalfsize;
-			//int planeBoxOverlap(float normal[3], float vert[3], float maxbox[3])	// -NJMP-
-
-			point3d<FloatType> vmin,vmax;
-
-			for (unsigned int q = 0; q<=2; q++) {
-				FloatType v = vert[q];					// -NJMP-
-				if (normal[q]>0.0f) {
-					vmin[q]=-maxbox[q] - v;	// -NJMP-
-					vmax[q]= maxbox[q] - v;	// -NJMP-
-				} else {
-					vmin[q]= maxbox[q] - v;	// -NJMP-
-					vmax[q]=-maxbox[q] - v;	// -NJMP-
-				}
-			}
-
-			if ((normal | vmin) > (FloatType)0.0) return false;	// -NJMP-
-			if ((normal | vmax) >= (FloatType)0.0) return true;	// -NJMP-
-
-			return false;
-		}		
-
-		return true;  //box and triangle overlaps 
-	}
+//
+////////////////////////////////////////////////////////
+//// Triangle ABBB: http://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/code/tribox3.txt
+////////////////////////////////////////////////////////
+//	template<class FloatType>
+//	void FINDMINMAX(FloatType x0, FloatType x1, FloatType x2, FloatType& min, FloatType& max) {
+//		min = max = x0;
+//		if(x1<min) min=x1;
+//		if(x1>max) max=x1;
+//		if(x2<min) min=x2;
+//		if(x2>max) max=x2;
+//	}
+//
+//
+//	//I think this test is somehow broken :) - it's not being used at this point...
+//	template<class FloatType>
+//	bool intersectTriangleABBB2(
+//		const point3d<FloatType> &bbBoxMin,
+//		const point3d<FloatType> &bbBoxMax,
+//		const point3d<FloatType> &t0,
+//		const point3d<FloatType> &t1,
+//		const point3d<FloatType> &t2) 
+//	{
+//		const point3d<FloatType> boxcenter = (FloatType)0.5*(bbBoxMax + bbBoxMin);
+//		const point3d<FloatType> boxhalfsize = (FloatType)0.5*(bbBoxMax - bbBoxMin);
+//
+//		//use separating axis theorem to test overlap between triangle and box
+//		//need to test for overlap in these directions:
+//		//1) the {x,y,z}-directions (actually, since we use the AABB of the triangle 
+//		//we do not even need to test these) 
+//		//2) normal of the triangle 
+//		//3) crossproduct(edge from tri, {x,y,z}-directin)
+//		//this gives 3x3=9 more tests
+//
+//		//   float axis[3];
+//		FloatType min,max,p0,p1,p2,rad,fex,fey,fez;		// -NJMP- "d" local variable removed
+//				
+//		//This is the fastest branch on Sun 
+//		//move everything so that the boxcenter is in (0,0,0)
+//		point3d<FloatType> v0 = t0 - boxcenter;
+//		point3d<FloatType> v1 = t1 - boxcenter;
+//		point3d<FloatType> v2 = t2 - boxcenter;
+//
+//		//compute triangle edges
+//		point3d<FloatType> e0 = v1 - v0;	//tri edge 0
+//		point3d<FloatType> e1 = v2 - v1;	//tri edge 1
+//		point3d<FloatType> e2 = v0 - v2;	//tri edge 2
+//		
+//		//Bullet 3:
+//		//test the 9 tests first (this was faster)
+//
+//		fex = math::abs(e0.x);
+//		fey = math::abs(e0.y);
+//		fez = math::abs(e0.z);
+//
+//		//AXISTEST_X01(e0.z, e0.y, fez, fey);
+//		{
+//			FloatType a = e0.z;
+//			FloatType b = e0.y;
+//			FloatType fa = fez;
+//			FloatType fb = fey;
+//			p0 = a*v0.y - b*v0.z;	
+//			p2 = a*v2.y - b*v2.z;
+//			if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;} 
+//			rad = fa * boxhalfsize.y + fb * boxhalfsize.z;   
+//			if(min>rad || max<-rad) return false;
+//		}		
+//		//AXISTEST_Y02(e0.z, e0.x, fez, fex);
+//		{
+//			FloatType a = e0.z;
+//			FloatType b = e0.x;
+//			FloatType fa = fez;
+//			FloatType fb = fex;
+//			p0 = -a*v0.x + b*v0.z;
+//			p2 = -a*v2.x + b*v2.z;
+//			if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;}
+//			rad = fa * boxhalfsize.x + fb * boxhalfsize.z;
+//			if(min>rad || max<-rad) return false;
+//		}
+//		//AXISTEST_Z12(e0.y, e0.x, fey, fex);
+//		{
+//			FloatType a = e0.y;
+//			FloatType b = e0.x;
+//			FloatType fa = fey;
+//			FloatType fb = fex;
+//			p1 = a*v1.x - b*v1.y;
+//			p2 = a*v2.x - b*v2.y;
+//			if(p2<p1) {min=p2; max=p1;} else {min=p1; max=p2;}
+//			rad = fa * boxhalfsize.x + fb * boxhalfsize.y;
+//			if(min>rad || max<-rad) return false;
+//		}
+//
+//		fex = math::abs(e1.x);
+//		fey = math::abs(e1.y);
+//		fez = math::abs(e1.x);
+//
+//		//AXISTEST_X01(e1[Z], e1[Y], fez, fey);
+//		{
+//			FloatType a = e1.z;
+//			FloatType b = e1.y;
+//			FloatType fa = fez;
+//			FloatType fb = fey;
+//			p0 = a*v0.y - b*v0.z;	
+//			p2 = a*v2.y - b*v2.z;
+//			if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;} 
+//			rad = fa * boxhalfsize.y + fb * boxhalfsize.z;   
+//			if(min>rad || max<-rad) return false;
+//		}
+//		//AXISTEST_Y02(e1[Z], e1[X], fez, fex);
+//		{
+//			FloatType a = e1.z;
+//			FloatType b = e1.x;
+//			FloatType fa = fez;
+//			FloatType fb = fex;
+//			p0 = -a*v0.x + b*v0.z;
+//			p2 = -a*v2.x + b*v2.z;
+//			if(p0<p2) {min=p0; max=p2;} else {min=p2; max=p0;}
+//			rad = fa * boxhalfsize.x + fb * boxhalfsize.z;
+//			if(min>rad || max<-rad) return false;
+//		}
+//		//AXISTEST_Z0(e1[Y], e1[X], fey, fex);
+//		{
+//			FloatType a = e1.y;
+//			FloatType b = e1.x;
+//			FloatType fa = fey;
+//			FloatType fb = fex;
+//			p0 = a*v0.x - b*v0.y;	
+//			p1 = a*v1.x - b*v1.y;
+//			if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;}
+//			rad = fa * boxhalfsize.x + fb * boxhalfsize.y;
+//			if(min>rad || max<-rad) return false;
+//		}
+//
+//		fex = math::abs(e2.x);
+//		fey = math::abs(e2.y);
+//		fez = math::abs(e2.z);
+//
+//		//AXISTEST_X2(e2[Z], e2[Y], fez, fey);
+//		{
+//			FloatType a = e2.z;
+//			FloatType b = e2.y;
+//			FloatType fa = fez;
+//			FloatType fb = fey;
+//			p0 = a*v0.y - b*v0.z;
+//			p1 = a*v1.y - b*v1.z;
+//			if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;}
+//			rad = fa * boxhalfsize.y + fb * boxhalfsize.z;
+//			if(min>rad || max<-rad) return false;
+//		}
+//		//AXISTEST_Y1(e2[Z], e2[X], fez, fex);
+//		{
+//			FloatType a = e2.z;
+//			FloatType b = e2.x;
+//			FloatType fa = fez;
+//			FloatType fb = fex;
+//			p0 = -a*v0.x + b*v0.x;
+//			p1 = -a*v1.x + b*v1.x;
+//			if(p0<p1) {min=p0; max=p1;} else {min=p1; max=p0;}
+//			rad = fa * boxhalfsize.x + fb * boxhalfsize.z;
+//			if(min>rad || max<-rad) return false;
+//		}
+//		//AXISTEST_Z12(e2[Y], e2[X], fey, fex);
+//		{
+//			FloatType a = e2.y;
+//			FloatType b = e2.x;
+//			FloatType fa = fey;
+//			FloatType fb = fex;
+//			p1 = a*v1.x - b*v1.y;
+//			p2 = a*v2.x - b*v2.y;
+//			if(p2<p1) {min=p2; max=p1;} else {min=p1; max=p2;}
+//			rad = fa * boxhalfsize.x + fb * boxhalfsize.y;
+//			if(min>rad || max<-rad) return false;
+//		}
+//		
+//		//Bullet 1:
+//		//first test overlap in the {x,y,z}-directions
+//		//find min, max of the triangle each direction, and test for overlap in
+//		//that direction -- this is equivalent to testing a minimal AABB around
+//		//the triangle against the AABB
+//		
+//		//test in X-direction
+//		FINDMINMAX(v0.x,v1.x,v2.x,min,max);
+//		if(min>boxhalfsize.x || max<-boxhalfsize.x) return false;
+//
+//		//test in Y-direction
+//		FINDMINMAX(v0.y,v1.y,v2.y,min,max);
+//		if(min>boxhalfsize.y || max<-boxhalfsize.y) return false;
+//		
+//		//test in Z-direction
+//		FINDMINMAX(v0.z,v1.z,v2.z,min,max);
+//		if(min>boxhalfsize.z || max<-boxhalfsize.z) return false;
+//		
+//		//Bullet 2:
+//		//test if the box intersects the plane of the triangle 
+//		//compute plane equation of triangle: normal*x+d=0
+//
+//		point3d<FloatType> normal = e0 ^ e1;
+//
+//		// -NJMP- (line removed here)
+//		//if(!planeBoxOverlap(normal,v0,boxhalfsize)) return false;	// -NJMP-
+//		{
+//			point3d<FloatType> vert = v0;
+//			point3d<FloatType> maxbox = boxhalfsize;
+//			//int planeBoxOverlap(float normal[3], float vert[3], float maxbox[3])	// -NJMP-
+//
+//			point3d<FloatType> vmin,vmax;
+//
+//			for (unsigned int q = 0; q<=2; q++) {
+//				FloatType v = vert[q];					// -NJMP-
+//				if (normal[q]>0.0f) {
+//					vmin[q]=-maxbox[q] - v;	// -NJMP-
+//					vmax[q]= maxbox[q] - v;	// -NJMP-
+//				} else {
+//					vmin[q]= maxbox[q] - v;	// -NJMP-
+//					vmax[q]=-maxbox[q] - v;	// -NJMP-
+//				}
+//			}
+//
+//			if ((normal | vmin) > (FloatType)0.0) return false;	// -NJMP-
+//			if ((normal | vmax) >= (FloatType)0.0) return true;	// -NJMP-
+//
+//			return false;
+//		}		
+//
+//		return true;  //box and triangle overlaps 
+//	}
 
 
 
@@ -589,7 +589,7 @@ namespace intersection {
 
 	////////////from BULLET///////////////
 	template<class FloatType>
-	bool intersectTriangleABBB(
+	bool intersectTriangleAABB(
 		const point3d<FloatType> &bbBoxMin,
 		const point3d<FloatType> &bbBoxMax,
 		const point3d<FloatType> &p1,

@@ -255,6 +255,9 @@
     <ClInclude Include="..\include\core-mesh\meshShapes.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-graphics\boundingBox2d.h">
+      <Filter>mLibHeader\core-graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

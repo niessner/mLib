@@ -123,6 +123,27 @@ public:
 		m_data[baseIdx] &= ~(1 << localIdx);
 	}
 
+	inline void clearVoxel(const vec3ui& v) {
+		clearVoxel(v.x, v.y, v.z);
+	}
+
+	inline void toggleVoxel(unsigned int row, unsigned int col, unsigned int slice) {
+		unsigned int linIdx = slice*m_cols*m_rows + row*m_cols + col;
+		unsigned int baseIdx = linIdx / bitsPerUInt;
+		unsigned int localIdx = linIdx % bitsPerUInt;
+		m_data[baseIdx] ^= (1 << localIdx);
+	}
+
+	inline void toggleVoxel(const vec3ui& v) {
+		toggleVoxel(v.x, v.y, v.z);
+	}
+
+	inline void toggleVoxelAndBehindRow(const vec3ui& v) {
+		for (unsigned int i = v.x; i < m_rows; i++) {
+			toggleVoxel(i, v.y, v.z);
+		}
+	}
+
 	inline void print() const {
 		for (unsigned int z = 0; z < m_slices; z++) {
 			std::cout << "slice0" << std::endl;

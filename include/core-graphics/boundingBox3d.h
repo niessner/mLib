@@ -12,47 +12,41 @@
 namespace ml {
 
 template<class T>
-class ObjectOrientedBoundingBox;
+class ObjectOrientedBoundingBox3;
 
 template<class FloatType>
 class BoundingBox3
 {
 public:
 
-	BoundingBox3(void)
-	{
+	BoundingBox3() {
 		reset();
 	}
 
-	BoundingBox3(const std::vector< point3d<FloatType> >& verts) 
-	{
+	BoundingBox3(const std::vector< point3d<FloatType> >& verts) {
 		reset();
         for (const auto &v : verts)
 			include(v);
 	}
 
-	BoundingBox3(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) 
-	{
+	BoundingBox3(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) {
 		reset();
 		minB = minBound;
 		maxB = maxBound;
 	}
 
-    explicit BoundingBox3(const ObjectOrientedBoundingBox<FloatType> &oobb)
-    {
+    explicit BoundingBox3(const ObjectOrientedBoundingBox3<FloatType> &oobb) {
         reset();
         for (const auto &v : oobb.getVertices())
             include(v);
     }
 
-	void reset()
-	{
+	void reset() {
 		minX = minY = minZ = std::numeric_limits<FloatType>::max();
 		maxX = maxY = maxZ = -std::numeric_limits<FloatType>::max();
 	}
 
-	void include(const BoundingBox3 &other)
-	{
+	void include(const BoundingBox3 &other) {
 		if (other.minX < minX)	minX = other.minX;
 		if (other.minY < minY)	minY = other.minY;
 		if (other.minZ < minZ)	minZ = other.minZ;
@@ -62,8 +56,7 @@ public:
 		if (other.maxZ > maxZ)	maxZ = other.maxZ;
 	}
 
-	void include(const point3d<FloatType> &v)
-	{
+	void include(const point3d<FloatType> &v) {
 		if (v.x < minX)	minX = v.x;
 		if (v.y < minY)	minY = v.y;
 		if (v.z < minZ)	minZ = v.z;
@@ -73,8 +66,7 @@ public:
 		if (v.z > maxZ)	maxZ = v.z;
 	}
 
-    void include(const std::vector<point3d<FloatType>> &v)
-    {
+    void include(const std::vector<point3d<FloatType>> &v) {
         for (const auto &p : v)
             include(p);
     }
@@ -117,10 +109,7 @@ public:
 	}
 
 
-	std::vector< point3d<FloatType> > getVertices() const {
-		std::vector< point3d<FloatType> > result;
-		result.resize(8);
-
+	void getVertices(point3d<FloatType> *result) const {
 		result[0] = point3d<FloatType>(minX, minY, minZ);
 		result[1] = point3d<FloatType>(maxX, minY, minZ);
 		result[2] = point3d<FloatType>(maxX, maxY, minZ);
@@ -129,21 +118,19 @@ public:
 		result[5] = point3d<FloatType>(maxX, minY, maxZ);
 		result[6] = point3d<FloatType>(maxX, maxY, maxZ);
 		result[7] = point3d<FloatType>(minX, maxY, maxZ);
+	}
+
+	std::vector< point3d<FloatType> > getVertices() const {
+		std::vector< point3d<FloatType> > result;
+		result.resize(8);
+
+		getVertices(result.data());
 
 		return result;
 	}
 
 
-    void getVertices(point3d<FloatType> *result) const {
-        result[0] = point3d<FloatType>(minX, minY, minZ);
-        result[1] = point3d<FloatType>(maxX, minY, minZ);
-        result[2] = point3d<FloatType>(maxX, maxY, minZ);
-        result[3] = point3d<FloatType>(minX, maxY, minZ);
-        result[4] = point3d<FloatType>(minX, minY, maxZ);
-        result[5] = point3d<FloatType>(maxX, minY, maxZ);
-        result[6] = point3d<FloatType>(maxX, maxY, maxZ);
-        result[7] = point3d<FloatType>(minX, maxY, maxZ);
-    }
+
 
 
 	std::vector< LineSegment3<FloatType> > getEdges() const
@@ -172,7 +159,7 @@ public:
 
 	//! triangle collision
 	bool intersects(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) const {
-		return intersection::intersectTriangleABBB(minB, maxB, p0, p1, p2);
+		return intersection::intersectTriangleAABB(minB, maxB, p0, p1, p2);
 	}
 
 	//! bounding box collision
@@ -229,7 +216,7 @@ public:
 	void setMin(const point3d<FloatType>& minValue) {
 		minX = minValue.x;
 		minY = minValue.y;
-		minZ = minValue.x;
+		minZ = minValue.z;
 	}
 
 	void setMax(const point3d<FloatType>& maxValue) {
