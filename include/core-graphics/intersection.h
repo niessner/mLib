@@ -6,6 +6,64 @@ namespace ml {
 
 namespace intersection {
 
+
+
+
+	//triangle ray
+	template <class FloatType>
+	bool intersectRayTriangle(
+		const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) 
+	{
+		const point3d<FloatType> &d = r.direction();
+		const point3d<FloatType> &p = r.origin();
+
+		point3d<FloatType> e1 = v1 - v0;
+		point3d<FloatType> e2 = v2 - v0;
+
+		if (intersectOnlyFrontFaces) {
+			point3d<FloatType> n = e1^e2; n.normalize();
+			if ((d | n) > (FloatType)0.0) return false;
+		}
+
+		point3d<FloatType> h = d^e2;
+		FloatType a = e1 | h;
+
+		//if (a > -0.0000000001 && a < 0.0000000001) return false;
+		if (a == (FloatType)0.0 || a == -(FloatType)0.0)	return false;
+
+		FloatType f = (FloatType)1.0/a;
+		point3d<FloatType> s = p - v0;
+		FloatType u = f * (s | h);
+
+		if (u < (FloatType)0.0 || u > (FloatType)1.0)	return false;
+
+		point3d<FloatType> q = s^e1;
+		FloatType v = f * (d | q);
+
+		if (v < (FloatType)0.0 || u + v > (FloatType)1.0)	return false;
+
+		// at this stage we can compute t to find out where the intersection point is on the line
+		FloatType t = f * (e2 | q);
+
+		//if (t > 0.0000000001 && t < r.t) {
+		//if (t < _t) {
+		if (t <= tmax && t >= tmin) {
+			_t = t;
+			_u = u;
+			_v = v;
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+
+
+
+
+
+
 	// sort so that a<=b 
 	template<class FloatType>
 	void SORT(FloatType& a, FloatType& b) {
@@ -637,6 +695,28 @@ namespace intersection {
 
 		return true;
 
+	}
+
+	template<class FloatType> 
+	FloatType halfEdgeTest(const point2d<FloatType>& p1, const point2d<FloatType>& p2, const point2d<FloatType>& p3) {
+		return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+	}
+
+	//2d test whether the point inside of the triangle (eps makes the triangle bigger)
+	template<class FloatType>
+	bool intersectTrianglePoint(
+		const point2d<FloatType> &v1,
+		const point2d<FloatType> &v2,
+		const point2d<FloatType> &v3,
+		const point2d<FloatType> &pt) 
+	{
+		bool b1, b2, b3;
+
+		b1 = halfEdgeTest(pt, v1, v2) < (FloatType)0.0;
+		b2 = halfEdgeTest(pt, v2, v3) < (FloatType)0.0;
+		b3 = halfEdgeTest(pt, v3, v1) < (FloatType)0.0;
+
+		return ((b1 == b2) && (b2 == b3));
 	}
 
 }	//namespace intersection

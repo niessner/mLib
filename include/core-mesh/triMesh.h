@@ -96,47 +96,48 @@ public:
 		}
 
 		bool intersect(const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) const {
-			const point3d<FloatType> &d = r.direction();
-			const point3d<FloatType> &p = r.origin();
+			intersection::intersectRayTriangle(v0->position, v1->position, v2->position, r, _t, _u, _v, tmin, tmax, intersectOnlyFrontFaces)
+			//const point3d<FloatType> &d = r.direction();
+			//const point3d<FloatType> &p = r.origin();
 
-			point3d<FloatType> e1 = v1->position - v0->position;
-			point3d<FloatType> e2 = v2->position - v0->position;
+			//point3d<FloatType> e1 = v1->position - v0->position;
+			//point3d<FloatType> e2 = v2->position - v0->position;
 
-			if (intersectOnlyFrontFaces) {
-				point3d<FloatType> n = e1^e2; n.normalize();
-				if ((d | n) > (FloatType)0.0) return false;
-			}
+			//if (intersectOnlyFrontFaces) {
+			//	point3d<FloatType> n = e1^e2; n.normalize();
+			//	if ((d | n) > (FloatType)0.0) return false;
+			//}
 
-			point3d<FloatType> h = d^e2;
-			FloatType a = e1 | h;
+			//point3d<FloatType> h = d^e2;
+			//FloatType a = e1 | h;
 
-			//if (a > -0.0000000001 && a < 0.0000000001) return false;
-			if (a == (FloatType)0.0 || a == -(FloatType)0.0)	return false;
+			////if (a > -0.0000000001 && a < 0.0000000001) return false;
+			//if (a == (FloatType)0.0 || a == -(FloatType)0.0)	return false;
 
-			FloatType f = (FloatType)1.0/a;
-			point3d<FloatType> s = p - v0->position;
-			FloatType u = f * (s | h);
+			//FloatType f = (FloatType)1.0/a;
+			//point3d<FloatType> s = p - v0->position;
+			//FloatType u = f * (s | h);
 
-			if (u < (FloatType)0.0 || u > (FloatType)1.0)	return false;
+			//if (u < (FloatType)0.0 || u > (FloatType)1.0)	return false;
 
-			point3d<FloatType> q = s^e1;
-			FloatType v = f * (d | q);
+			//point3d<FloatType> q = s^e1;
+			//FloatType v = f * (d | q);
 
-			if (v < (FloatType)0.0 || u + v > (FloatType)1.0)	return false;
+			//if (v < (FloatType)0.0 || u + v > (FloatType)1.0)	return false;
 
-			// at this stage we can compute t to find out where the intersection point is on the line
-			FloatType t = f * (e2 | q);
+			//// at this stage we can compute t to find out where the intersection point is on the line
+			//FloatType t = f * (e2 | q);
 
-			//if (t > 0.0000000001 && t < r.t) {
-			//if (t < _t) {
-			if (t <= tmax && t >= tmin) {
-				_t = t;
-				_u = u;
-				_v = v;
-				return true;
-			} else {
-				return false;
-			}
+			////if (t > 0.0000000001 && t < r.t) {
+			////if (t < _t) {
+			//if (t <= tmax && t >= tmin) {
+			//	_t = t;
+			//	_u = u;
+			//	_v = v;
+			//	return true;
+			//} else {
+			//	return false;
+			//}
 		}
 
 		bool intersects(const Triangle<FloatType>& other) const {
@@ -468,7 +469,7 @@ public:
 	}
 private:
 
-	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, FloatType voxelSize, const vec3ui& voxelOffset) const {
+	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, FloatType voxelSize, const vec3ui& voxelOffset, bool solid = false) const {
 		FloatType diagLenSq = (FloatType)3.0*voxelSize*voxelSize;
 		if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
 			BoundingBox3<FloatType> bb;
@@ -482,20 +483,30 @@ private:
 					for (unsigned int k = minI.z; k <= maxI.z; k++) {
 						point3d<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
 						BoundingBox3<FloatType> voxel;
-						const FloatType eps = (FloatType)0.00001;
+						const FloatType eps = (FloatType)0.0000;
 						voxel.include((v - (FloatType)0.5-eps)*voxelSize);
 						voxel.include((v + (FloatType)0.5+eps)*voxelSize);
 						if (voxel.intersects(v0, v1, v2)) {
-							//project to xy-plane
-							point2d<FloatType> p0(v0);
-							point2d<FloatType> p1(v1);
-							point2d<FloatType> p2(v2);
-							point2d<FloatType> pv(v);
-							BoundingBox2<FloatType> pBox;	
-							pBox.include(p0);
-							pBox.include(p1);
-							pBox.include(p2);
-							grid.setVoxel(i,j,k);
+							if (solid) {
+								//project to xy-plane
+								point2d<FloatType> p0(v0.getPoint2d());
+								point2d<FloatType> p1(v1.getPoint2d());
+								point2d<FloatType> p2(v2.getPoint2d());
+								point2d<FloatType> pv(v);	pv *= voxelSize;
+								if (intersection::intersectTrianglePoint(p0, p1, p2, pv)) {
+									Ray<FloatType> r0(point3d<FloatType>(v*voxelSize), point3d<FloatType>(0,0,1));
+									Ray<FloatType> r1(point3d<FloatType>(v*voxelSize), point3d<FloatType>(0,0,-1));
+									FloatType t0, t1, _u0, _u1, _v0, _v1;
+									bool b0 = intersection::intersectRayTriangle(v0,v1,v2,r0,t0,_u0,_v0);
+									bool b1 = intersection::intersectRayTriangle(v0,v1,v2,r1,t1,_u1,_v1);
+									if ((b0 && t0 <= voxelSize/2) || (b1 && t1 <= voxelSize/2)) {
+										grid.toggleVoxelAndBehindSlice(i,j,k);
+									}
+									//grid.setVoxel(i,j,k);
+								}
+							} else {
+								grid.setVoxel(i,j,k);
+							}
 						}
 					}
 				}

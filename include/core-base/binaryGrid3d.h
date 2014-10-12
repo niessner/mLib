@@ -138,10 +138,22 @@ public:
 		toggleVoxel(v.x, v.y, v.z);
 	}
 
-	inline void toggleVoxelAndBehindRow(const vec3ui& v) {
-		for (unsigned int i = v.x; i < m_rows; i++) {
-			toggleVoxel(i, v.y, v.z);
+	inline void toggleVoxelAndBehindRow(unsigned int row, unsigned int col, unsigned int slice) {
+		for (unsigned int i = row; i < m_rows; i++) {
+			toggleVoxel(i, col, slice);
 		}
+	}
+	inline void toggleVoxelAndBehindRow(const vec3ui& v) {
+		toggleVoxelAndBehindRow(v.x, v.y, v.z);
+	}
+
+	inline void toggleVoxelAndBehindSlice(unsigned int row, unsigned int col, unsigned int slice) {
+		for (unsigned int i = slice; i < m_slices; i++) {
+			toggleVoxel(row, col, i);
+		}
+	}
+	inline void toggleVoxelAndBehindSlice(const vec3ui& v) {
+		toggleVoxelAndBehindRow(v.x, v.y, v.z);
 	}
 
 	inline void print() const {
