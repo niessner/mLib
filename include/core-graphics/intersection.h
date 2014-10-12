@@ -612,6 +612,36 @@ namespace intersection {
 
 
 
+	//! returns 1 if intersects; 0 if front; -1 if back
+	template<class FloatType>
+	int intersectBoxPlane(
+		const point3d<FloatType>& bbBoxMin,
+		const point3d<FloatType>& bbBoxMax,
+		const Plane<FloatType>& plane) 
+	{
+		FloatType BOX_PLANE_EPSILON = (FloatType)0.00001;
+
+		point3d<FloatType> center = (FloatType)0.5 * (bbBoxMin + bbBoxMax);
+		point3d<FloatType> extent = bbBoxMax - center;
+		FloatType _fOrigin =  plane.getNormal() | center;
+		FloatType _fMaximumExtent = extent | math::abs(plane.getNormal());
+		FloatType _fmin = _fOrigin - _fMaximumExtent;
+		FloatType _fmax = _fOrigin + _fMaximumExtent;
+
+		if (plane.getDistance() > _fmax + BOX_PLANE_EPSILON) {
+			return -1;
+			//return G_BACK_PLANE; // 0
+		}
+
+		if (plane.getDistance() + BOX_PLANE_EPSILON >=_fmin) {
+			return 1;
+			//return G_COLLIDE_PLANE; //1
+		}
+		return 0;
+		//return G_FRONT_PLANE;//2
+	}
+
+
 #define TEST_CROSS_EDGE_BOX_MCR(edge,absolute_edge,pointa,pointb,_extend,i_dir_0,i_dir_1,i_comp_0,i_comp_1)\
 {\
 	const FloatType dir0 = -edge[i_dir_0];\
@@ -650,48 +680,49 @@ namespace intersection {
 	bool intersectTriangleAABB(
 		const point3d<FloatType> &bbBoxMin,
 		const point3d<FloatType> &bbBoxMax,
+		const point3d<FloatType> &p0,
 		const point3d<FloatType> &p1,
-		const point3d<FloatType> &p2,
-		const point3d<FloatType> &p3) 
+		const point3d<FloatType> &p2) 
 	{
 		//TODO
 		//if(!collide_plane(triangle_plane)) return false;
+		if (intersectBoxPlane(bbBoxMin, bbBoxMax, Plane<FloatType>(p0,p1,p2)) != 1) return false;
 
 		point3d<FloatType> center = (FloatType)0.5 * (bbBoxMin + bbBoxMax);
-		point3d<FloatType> extends = bbBoxMax - center;
+		point3d<FloatType> extent = bbBoxMax - center;
 
-		const point3d<FloatType> v1(p1 - center);
-		const point3d<FloatType> v2(p2 - center);
-		const point3d<FloatType> v3(p3 - center);
+		const point3d<FloatType> v1(p0 - center);
+		const point3d<FloatType> v2(p1 - center);
+		const point3d<FloatType> v3(p2 - center);
 
 		//First axis
 		point3d<FloatType> diff(v2 - v1);
 		point3d<FloatType> abs_diff = math::abs(diff);
 		//Test With X axis
-		TEST_CROSS_EDGE_BOX_X_AXIS_MCR(diff,abs_diff,v1,v3,extends);
+		TEST_CROSS_EDGE_BOX_X_AXIS_MCR(diff,abs_diff,v1,v3,extent);
 		//Test With Y axis
-		TEST_CROSS_EDGE_BOX_Y_AXIS_MCR(diff,abs_diff,v1,v3,extends);
+		TEST_CROSS_EDGE_BOX_Y_AXIS_MCR(diff,abs_diff,v1,v3,extent);
 		//Test With Z axis
-		TEST_CROSS_EDGE_BOX_Z_AXIS_MCR(diff,abs_diff,v1,v3,extends);
+		TEST_CROSS_EDGE_BOX_Z_AXIS_MCR(diff,abs_diff,v1,v3,extent);
 
 
 		diff = v3 - v2;
 		abs_diff = math::abs(diff);
 		//Test With X axis
-		TEST_CROSS_EDGE_BOX_X_AXIS_MCR(diff,abs_diff,v2,v1,extends);
+		TEST_CROSS_EDGE_BOX_X_AXIS_MCR(diff,abs_diff,v2,v1,extent);
 		//Test With Y axis
-		TEST_CROSS_EDGE_BOX_Y_AXIS_MCR(diff,abs_diff,v2,v1,extends);
+		TEST_CROSS_EDGE_BOX_Y_AXIS_MCR(diff,abs_diff,v2,v1,extent);
 		//Test With Z axis
-		TEST_CROSS_EDGE_BOX_Z_AXIS_MCR(diff,abs_diff,v2,v1,extends);
+		TEST_CROSS_EDGE_BOX_Z_AXIS_MCR(diff,abs_diff,v2,v1,extent);
 
 		diff = v1 - v3;
 		abs_diff = math::abs(diff);
 		//Test With X axis
-		TEST_CROSS_EDGE_BOX_X_AXIS_MCR(diff,abs_diff,v3,v2,extends);
+		TEST_CROSS_EDGE_BOX_X_AXIS_MCR(diff,abs_diff,v3,v2,extent);
 		//Test With Y axis
-		TEST_CROSS_EDGE_BOX_Y_AXIS_MCR(diff,abs_diff,v3,v2,extends);
+		TEST_CROSS_EDGE_BOX_Y_AXIS_MCR(diff,abs_diff,v3,v2,extent);
 		//Test With Z axis
-		TEST_CROSS_EDGE_BOX_Z_AXIS_MCR(diff,abs_diff,v3,v2,extends);
+		TEST_CROSS_EDGE_BOX_Z_AXIS_MCR(diff,abs_diff,v3,v2,extent);
 
 		return true;
 
@@ -718,6 +749,9 @@ namespace intersection {
 
 		return ((b1 == b2) && (b2 == b3));
 	}
+
+
+
 
 }	//namespace intersection
 

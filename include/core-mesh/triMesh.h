@@ -463,7 +463,7 @@ public:
 
 		BinaryGrid3d grid(vec3ui(bb.getExtent() / voxelSize));
 		for (size_t i = 0; i < m_Indices.size(); i++) {
-			voxelizeTriangle(m_Vertices[m_Indices[i].x].position, m_Vertices[m_Indices[i].y].position, m_Vertices[m_Indices[i].z].position, grid, voxelSize, vec3ui(0,0,0));
+			voxelizeTriangle(m_Vertices[m_Indices[i].x].position, m_Vertices[m_Indices[i].y].position, m_Vertices[m_Indices[i].z].position, grid, voxelSize, vec3ui(0,0,0), true);
 		}
 		return grid;
 	}
@@ -515,10 +515,10 @@ private:
 			vec3f e0 = (v0 + v1)/2.0f;
 			vec3f e1 = (v1 + v2)/2.0f;
 			vec3f e2 = (v2 + v0)/2.0f;
-			voxelizeTriangle(v0,e0,e2, grid, voxelSize, voxelOffset);
-			voxelizeTriangle(e0,v1,e1, grid, voxelSize, voxelOffset);
-			voxelizeTriangle(e1,v2,e2, grid, voxelSize, voxelOffset);
-			voxelizeTriangle(e0,e1,e2, grid, voxelSize, voxelOffset);
+			voxelizeTriangle(v0,e0,e2, grid, voxelSize, voxelOffset, solid);
+			voxelizeTriangle(e0,v1,e1, grid, voxelSize, voxelOffset, solid);
+			voxelizeTriangle(e1,v2,e2, grid, voxelSize, voxelOffset, solid);
+			voxelizeTriangle(e0,e1,e2, grid, voxelSize, voxelOffset, solid);
 		}
 	}
 

@@ -13,7 +13,7 @@ public:
 	}
 
 	Plane(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) {
-		const point3d<FloatType>* p[] = {p0,p1,p2};
+		const point3d<FloatType> p[] = {p0,p1,p2};
 		createFromPoints(p);
 	}
 
@@ -66,7 +66,7 @@ public:
 	}
 
 private:
-	void createFromPoints( const point3d<FloatType> * points ) 
+	void createFromPoints( const point3d<FloatType>* points ) 
 	{
 		m_Normal = ((points[1] - points[0])^(points[2] - points[0])).getNormalized();
 		m_Distance = (m_Normal | points[0]);
