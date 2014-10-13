@@ -462,20 +462,35 @@ public:
 		//TODO use bounding box to compute offset such that all voxels are positive...
 
 		BinaryGrid3d grid(vec3ui(bb.getExtent() / voxelSize));
-		for (size_t i = 0; i < m_Indices.size(); i++) {
-			voxelizeTriangle(m_Vertices[m_Indices[i].x].position, m_Vertices[m_Indices[i].y].position, m_Vertices[m_Indices[i].z].position, grid, voxelSize, vec3ui(0,0,0), true);
-		}
+		mat4f worldToVoxel = mat4f::scale((FloatType)1 / voxelSize);
+		voxelize(grid, worldToVoxel, solid);
+
 		return grid;
+	}
+
+	void voxelize(BinaryGrid3d& grid, const mat4f& worldToVoxel = mat4f::identity(), bool solid = false) const {
+		for (size_t i = 0; i < m_Indices.size(); i++) {
+			point3d<FloatType> p0 = worldToVoxel * m_Vertices[m_Indices[i].x].position;
+			point3d<FloatType> p1 = worldToVoxel * m_Vertices[m_Indices[i].y].position;
+			point3d<FloatType> p2 = worldToVoxel * m_Vertices[m_Indices[i].z].position;
+
+			BoundingBox3<FloatType> bb0(p0, p1, p2);
+			BoundingBox3<FloatType> bb1(point3d<FloatType>(0,0,0), point3d<FloatType>((FloatType)grid.cols(), (FloatType)grid.rows(), (FloatType)grid.slices()));
+			if (bb0.intersects(bb1)) {
+				voxelizeTriangle(p0, p1, p2, grid, solid);
+			} else {
+				MLIB_WARNING("triangle outside of grid - ignored");
+			}
+		}
 	}
 private:
 
-	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, FloatType voxelSize, const vec3ui& voxelOffset, bool solid = false) const {
-		FloatType diagLenSq = (FloatType)3.0*voxelSize*voxelSize;
+	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, bool solid = false) const {
+		FloatType diagLenSq = (FloatType)3.0;
 		if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
-			BoundingBox3<FloatType> bb;
-			bb.include(v0);	bb.include(v1);	bb.include(v2);
-			vec3ui minI = math::floor(bb.getMin()/voxelSize);
-			vec3ui maxI = math::ceil(bb.getMax()/voxelSize);
+			BoundingBox3<FloatType> bb(v0, v1, v2);
+			vec3ui minI = math::floor(bb.getMin());
+			vec3ui maxI = math::ceil(bb.getMax());
 
 			//test for accurate voxel-triangle intersections
 			for (unsigned int i = minI.x; i <= maxI.x; i++) {
@@ -484,22 +499,19 @@ private:
 						point3d<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
 						BoundingBox3<FloatType> voxel;
 						const FloatType eps = (FloatType)0.0000;
-						voxel.include((v - (FloatType)0.5-eps)*voxelSize);
-						voxel.include((v + (FloatType)0.5+eps)*voxelSize);
+						voxel.include((v - (FloatType)0.5-eps));
+						voxel.include((v + (FloatType)0.5+eps));
 						if (voxel.intersects(v0, v1, v2)) {
 							if (solid) {
 								//project to xy-plane
-								point2d<FloatType> p0(v0.getPoint2d());
-								point2d<FloatType> p1(v1.getPoint2d());
-								point2d<FloatType> p2(v2.getPoint2d());
-								point2d<FloatType> pv(v);	pv *= voxelSize;
-								if (intersection::intersectTrianglePoint(p0, p1, p2, pv)) {
-									Ray<FloatType> r0(point3d<FloatType>(v*voxelSize), point3d<FloatType>(0,0,1));
-									Ray<FloatType> r1(point3d<FloatType>(v*voxelSize), point3d<FloatType>(0,0,-1));
+								point2d<FloatType> pv = v.getPoint2d();
+								if (intersection::intersectTrianglePoint(v0.getPoint2d(), v1.getPoint2d(), v2.getPoint2d(), pv)) {
+									Ray<FloatType> r0(point3d<FloatType>(v), point3d<FloatType>(0,0,1));
+									Ray<FloatType> r1(point3d<FloatType>(v), point3d<FloatType>(0,0,-1));
 									FloatType t0, t1, _u0, _u1, _v0, _v1;
 									bool b0 = intersection::intersectRayTriangle(v0,v1,v2,r0,t0,_u0,_v0);
 									bool b1 = intersection::intersectRayTriangle(v0,v1,v2,r1,t1,_u1,_v1);
-									if ((b0 && t0 <= voxelSize/2) || (b1 && t1 <= voxelSize/2)) {
+									if ((b0 && t0 <= (FloatType)0.5) || (b1 && t1 <= (FloatType)0.5)) {
 										grid.toggleVoxelAndBehindSlice(i,j,k);
 									}
 									//grid.setVoxel(i,j,k);
@@ -515,10 +527,10 @@ private:
 			vec3f e0 = (v0 + v1)/2.0f;
 			vec3f e1 = (v1 + v2)/2.0f;
 			vec3f e2 = (v2 + v0)/2.0f;
-			voxelizeTriangle(v0,e0,e2, grid, voxelSize, voxelOffset, solid);
-			voxelizeTriangle(e0,v1,e1, grid, voxelSize, voxelOffset, solid);
-			voxelizeTriangle(e1,v2,e2, grid, voxelSize, voxelOffset, solid);
-			voxelizeTriangle(e0,e1,e2, grid, voxelSize, voxelOffset, solid);
+			voxelizeTriangle(v0,e0,e2, grid, solid);
+			voxelizeTriangle(e0,v1,e1, grid, solid);
+			voxelizeTriangle(e1,v2,e2, grid, solid);
+			voxelizeTriangle(e0,e1,e2, grid, solid);
 		}
 	}
 

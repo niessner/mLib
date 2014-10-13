@@ -187,6 +187,7 @@ public:
 		return m_rows*m_cols*m_slices;
 	}
 
+
 private:
 
 	inline unsigned getNumUInts() const {

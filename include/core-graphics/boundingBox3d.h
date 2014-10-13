@@ -29,6 +29,13 @@ public:
 			include(v);
 	}
 
+	BoundingBox3(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) {
+		reset();
+		include(p0);
+		include(p1);
+		include(p2);
+	}
+
 	BoundingBox3(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) {
 		reset();
 		minB = minBound;
@@ -155,6 +162,14 @@ public:
 		result.push_back(LineSegment3<FloatType>(v[3], v[7]));
 
 		return result;
+	}
+
+	//! point collision
+	bool intersects(const point3d<FloatType>& p) const {
+		if (p.x >= minX && p.x <= maxX && 
+			p.y >= minY && p.y <= maxY && 
+			p.z >= minZ && p.z <= maxZ) return true
+		else  return false;
 	}
 
 	//! triangle collision
@@ -428,6 +443,10 @@ public:
     Matrix4x4<FloatType> cubeToWorldTransform() const {
         return  Matrix4x4<FloatType>::translation(getCenter()) *  Matrix4x4<FloatType>::scale((maxB - minB) * (FloatType)0.5);
     }
+
+	//Matrix4x4<FloatType> worldToCubeTransform() const {
+	//	return cubeToWorldTransform().getInverse();	//tODO avoid the inverse
+	//}
 
 protected:
 	union {

@@ -29,6 +29,13 @@ public:
 			include(v);
 	}
 
+	BoundingBox2(const point2d<FloatType>& p0, const point2d<FloatType>& p1, const point2d<FloatType>& p2) {
+		reset();
+		include(p0);
+		include(p1);
+		include(p2);
+	}
+
 	BoundingBox2(const point2d<FloatType>& minBound, const point2d<FloatType>& maxBound) {
 		reset();
 		minB = minBound;
@@ -107,6 +114,13 @@ public:
 			result.push_back(LineSegment2<FloatType>(v[3], v[7]));
 
 			return result;
+		}
+
+		//! point collision
+		bool intersects(const point2d<FloatType>& p) const {
+			if (p.x >= minX && p.x <= maxX && 
+				p.y >= minY && p.y <= maxY) return true
+			else  return false;
 		}
 
 		//! triangle collision
