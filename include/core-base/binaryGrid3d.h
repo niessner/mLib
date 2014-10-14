@@ -153,7 +153,7 @@ public:
 		}
 	}
 	inline void toggleVoxelAndBehindSlice(const vec3ui& v) {
-		toggleVoxelAndBehindRow(v.x, v.y, v.z);
+		toggleVoxelAndBehindSlice(v.x, v.y, v.z);
 	}
 
 	inline void print() const {
