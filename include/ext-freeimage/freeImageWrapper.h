@@ -137,7 +137,7 @@ public:
 						bitsRowStart[j*numChannels + FI_RGBA_BLUE] =	(unsigned char)color.z;
 					}
 				}
-			} else if (numChannels == 4 && bytesPerChannel == 4) {
+			} else if (numChannels == 4 && bytesPerChannel == 1) {
 				assert(filename.find(".jpg") == std::string::npos);	//jpgs with transparencies don't work...
 				//color map; R8G8B8A8
 				#pragma omp parallel for
