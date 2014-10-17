@@ -2,7 +2,7 @@
 #include "main.h"
 
 const float gridScale = 0.01f;
-const float velocityDelta = 1.0f;
+const float velocityDelta = 0.1f;
 
 void Vizzer::init(ml::ApplicationData &app)
 {
@@ -20,7 +20,7 @@ void Vizzer::init(ml::ApplicationData &app)
 
     m_font.init(app.graphics, "Calibri");
 
-    selectedCell = vec2i(60, 40);
+    selectedCell = vec2i(30, 55);
 
     fluid.init();
 }
@@ -86,7 +86,19 @@ void Vizzer::keyDown(ml::ApplicationData &app, UINT key)
 
     if (key == KEY_L)
     {
-        fluid.data(selectedCell.y, selectedCell.x).velocity.y += velocityDelta;
+        const int radius = 2;
+        for (int offsetY = -radius; offsetY <= radius; offsetY++)
+        {
+            for (int offsetX = -radius; offsetX <= radius; offsetX++)
+            {
+                if (fluid.data.validCoordinates(selectedCell.y + offsetY, selectedCell.x + offsetX))
+                {
+                    Cell &c = fluid.data(selectedCell.y + offsetY, selectedCell.x + offsetX);
+                    c.velocity.y += velocityDelta;
+                    c.velocity.x += velocityDelta;
+                }
+            }
+        }
     }
 }
 

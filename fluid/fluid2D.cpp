@@ -22,7 +22,7 @@ void Fluid2D::init()
 
     newData = data;
 
-    dt = 0.2f;
+    dt = 0.5f;
     gridScale = 1.0f;
     gridScaleInv = 1.0f / gridScale;
 }
@@ -76,7 +76,7 @@ void Fluid2D::applyForces()
         for (long x = 1; x < gridSize - 1; x++)
         {
             Cell &c = data(y, x);
-            c.velocity.y -= dt * 0.0001f;
+            c.velocity.y -= dt * 0.000001f;
         }
     }
 }
@@ -122,7 +122,7 @@ void Fluid2D::computeDivergence()
 
 void Fluid2D::computePressure()
 {
-    const UINT jacobiIterationCount = 80;
+    const UINT jacobiIterationCount = 30;
 
     //
     // initial pressure guess is zero
