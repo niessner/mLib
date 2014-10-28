@@ -165,15 +165,6 @@
     <ClInclude Include="testBinaryStream.h">
       <Filter>tests</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-base\grid2d.h">
-      <Filter>mLibHeader\core-base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\core-base\grid3d.h">
-      <Filter>mLibHeader\core-base</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\core-util\sparseGrid3d.h">
-      <Filter>mLibHeader\core-util</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-math\rng.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
@@ -203,9 +194,6 @@
     </ClInclude>
     <ClInclude Include="testGrid.h">
       <Filter>tests</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\core-base\binaryGrid3d.h">
-      <Filter>mLibHeader\core-base</Filter>
     </ClInclude>
     <ClInclude Include="..\include\core-mesh\triMeshAcceleratorBVH.h">
       <Filter>mLibHeader\core-mesh</Filter>
@@ -257,6 +245,18 @@
     </ClInclude>
     <ClInclude Include="..\include\core-graphics\boundingBox2d.h">
       <Filter>mLibHeader\core-graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\binaryGrid3.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\grid2.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-base\grid3.h">
+      <Filter>mLibHeader\core-base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-util\sparseGrid3.h">
+      <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

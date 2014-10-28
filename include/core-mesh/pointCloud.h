@@ -9,10 +9,10 @@ public:
 	PointCloud() {}
 
 	//!conversion from a binary voxel grid
-	PointCloud(const BinaryGrid3d& grid, FloatType voxelSize = (FloatType)1) {
-		for (unsigned int z = 0; z < grid.numZ(); z++) {
-			for (unsigned int y = 0; y < grid.numY(); y++) {
-				for (unsigned int x = 0; x < grid.numX(); x++) {
+	PointCloud(const BinaryGrid3& grid, FloatType voxelSize = (FloatType)1) {
+		for (unsigned int z = 0; z < grid.dimZ(); z++) {
+			for (unsigned int y = 0; y < grid.dimY(); y++) {
+				for (unsigned int x = 0; x < grid.dimX(); x++) {
 					if (grid.isVoxelSet(x,y,z)) {
 						point3d<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
 						m_points.push_back(p * voxelSize);

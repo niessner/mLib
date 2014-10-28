@@ -103,7 +103,7 @@ inline bool operator != (RGBColor left, RGBColor right)
     return ((left.r != right.r) || (left.g != right.g) || (left.b != right.b));
 }
 
-typedef Grid2D<RGBColor> Bitmap;
+typedef Grid2<RGBColor> Bitmap;
 
 }  // namespace ml
 

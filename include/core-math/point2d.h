@@ -260,7 +260,8 @@ typedef point2d<float> vec2f;
 typedef point2d<int> vec2i;
 typedef point2d<unsigned int> vec2ui;
 typedef point2d<unsigned char> vec2uc;
-
+typedef point2d<UINT64> vec2ul;
+typedef point2d<INT64> vec2l;
 
 template<> const vec2f vec2f::origin(0.0f, 0.0f);
 template<> const vec2f vec2f::eX(1.0f, 0.0f);

@@ -4,7 +4,7 @@ public:
 	void test0() 
 	{
 		unsigned int s = 10;
-		ml::BinaryGrid3d grid(s,s,s);
+		ml::BinaryGrid3 grid(s,s,s);
 		for (unsigned int i = 0; i < s; i++) {
 			for (unsigned int j = 0; j < s; j++) {
 				for (unsigned int k = 0; k < s; k++) {
@@ -27,7 +27,7 @@ public:
 	void test1()
 	{
 		unsigned int s = 50;
-		ml::BinaryGrid3d grid(s,s,s);
+		ml::BinaryGrid3 grid(s,s,s);
 		for (unsigned int i = 0; i < s; i++) {
 			grid.setVoxel(i,i,i);
 			grid.setVoxel(50-1-i,i,i);
@@ -61,7 +61,7 @@ public:
 		sphere.transform(ml::mat4f::rotation(0.0012f, 0.021f, 0.0024f));
 
 		Timer t;
-		ml::BinaryGrid3d grid = sphere.voxelize(0.25f);
+		ml::BinaryGrid3 grid = sphere.voxelize(0.25f);
 		std::cout << "voxelization time " << t.getElapsedTimeMS() << std::endl;
 		ml::PointCloudf pc(grid, 1.0f);
 		ml::PointCloudIOf::saveToFile("gridcloud1.ply", pc);
@@ -78,12 +78,12 @@ public:
 	}
 private:
 
-	bool checkIfAllOtherAreZero(const ml::BinaryGrid3d& grid, unsigned int _i, unsigned int _j, unsigned int _k) {
-		for (unsigned int i = 0; i < grid.numX(); i++) {
+	bool checkIfAllOtherAreZero(const ml::BinaryGrid3& grid, unsigned int _i, unsigned int _j, unsigned int _k) {
+		for (unsigned int i = 0; i < grid.dimX(); i++) {
 			if (i == _i) continue;
-			for (unsigned int j = 0; j < grid.numY(); j++) {
+			for (unsigned int j = 0; j < grid.dimY(); j++) {
 				if (j == _j) continue;
-				for (unsigned int k = 0; k < grid.numZ(); k++) {
+				for (unsigned int k = 0; k < grid.dimZ(); k++) {
 					if (k == _k) continue;
 					if (grid.isVoxelSet(i,j,k)) return false;
 				}

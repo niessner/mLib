@@ -340,6 +340,8 @@ typedef point4d<float> vec4f;
 typedef point4d<int> vec4i;
 typedef point4d<unsigned int> vec4ui;
 typedef point4d<unsigned char> vec4uc;
+typedef point4d<UINT64> vec4ul;
+typedef point4d<INT64> vec4l;
 
 
 template<> const vec4f vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);

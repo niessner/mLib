@@ -5,7 +5,7 @@
 namespace ml
 {
 
-template <class T> Grid3D<T>::Grid3D()
+template <class T> Grid3<T>::Grid3()
 {
 	m_rows = 0;
 	m_cols = 0;
@@ -13,7 +13,7 @@ template <class T> Grid3D<T>::Grid3D()
 	m_data = nullptr;
 }
 
-template <class T> Grid3D<T>::Grid3D(UINT rows, UINT cols, UINT slices)
+template <class T> Grid3<T>::Grid3(size_t rows, size_t cols, size_t slices)
 {
 	m_rows = rows;
 	m_cols = cols;
@@ -21,7 +21,7 @@ template <class T> Grid3D<T>::Grid3D(UINT rows, UINT cols, UINT slices)
 	m_data = new T[rows * cols * slices];
 }
 
-template <class T> Grid3D<T>::Grid3D(UINT rows, UINT cols, UINT slices, const T &clearValue)
+template <class T> Grid3<T>::Grid3(size_t rows, size_t cols, size_t slices, const T &clearValue)
 {
 	m_rows = rows;
 	m_cols = cols;
@@ -30,20 +30,20 @@ template <class T> Grid3D<T>::Grid3D(UINT rows, UINT cols, UINT slices, const T 
 	clear(clearValue);
 }
 
-template <class T> Grid3D<T>::Grid3D(const Grid3D<T> &G)
+template <class T> Grid3<T>::Grid3(const Grid3<T> &G)
 {
 	m_rows = G.m_rows;
 	m_cols = G.m_cols;
 	m_slices = G.m_slices;
 
-	const UINT totalEntries = getNumTotalEntries();
+	const size_t totalEntries = getNumTotalEntries();
 	m_data = new T[totalEntries];
-	for(UINT i = 0; i < totalEntries; i++) {
+	for(size_t i = 0; i < totalEntries; i++) {
 		m_data[i] = G.m_data[i];
 	}
 }
 
-template <class T> Grid3D<T>::Grid3D(Grid3D<T> &&G)
+template <class T> Grid3<T>::Grid3(Grid3<T> &&G)
 {
 	m_cols = G.m_cols;
 	m_rows = G.m_rows;
@@ -58,12 +58,12 @@ template <class T> Grid3D<T>::Grid3D(Grid3D<T> &&G)
 	G.m_data = nullptr;
 }
 
-template <class T> Grid3D<T>::~Grid3D()
+template <class T> Grid3<T>::~Grid3()
 {
 	deleteMemory();
 }
 
-template <class T> void Grid3D<T>::deleteMemory()
+template <class T> void Grid3<T>::deleteMemory()
 {
 	m_rows = 0;
 	m_cols = 0;
@@ -75,23 +75,23 @@ template <class T> void Grid3D<T>::deleteMemory()
 	}
 }
 
-template <class T> Grid3D<T>& Grid3D<T>::operator = (const Grid3D<T> &G)
+template <class T> Grid3<T>& Grid3<T>::operator = (const Grid3<T> &G)
 {
 	if(m_data) delete[] m_data;
 	m_rows = G.m_rows;
 	m_cols = G.m_cols;
 	m_slices = G.m_slices;
 
-	const UINT totalEntries = getNumTotalEntries();
+	const size_t totalEntries = getNumTotalEntries();
 	m_data = new T[totalEntries];
-	for (UINT i = 0; i < totalEntries; i++) {
+	for (size_t i = 0; i < totalEntries; i++) {
 		m_data[i] = G.m_data[i];
 	}
 
 	return *this;
 }
 
-template <class T> Grid3D<T>& Grid3D<T>::operator = (Grid3D<T> &&G)
+template <class T> Grid3<T>& Grid3<T>::operator = (Grid3<T> &&G)
 {
 	std::swap(m_rows, G.m_rows);
 	std::swap(m_cols, G.m_cols);
@@ -100,7 +100,7 @@ template <class T> Grid3D<T>& Grid3D<T>::operator = (Grid3D<T> &&G)
 	return *this;
 }
 
-template <class T> void Grid3D<T>::allocate(UINT rows, UINT cols, UINT slices)
+template <class T> void Grid3<T>::allocate(size_t rows, size_t cols, size_t slices)
 {
 	m_rows = rows;
 	m_cols = cols;
@@ -109,16 +109,16 @@ template <class T> void Grid3D<T>::allocate(UINT rows, UINT cols, UINT slices)
 	m_data = new T[rows * cols * slices];
 }
 
-template <class T> void Grid3D<T>::allocate(UINT rows, UINT cols, UINT slices, const T &clearValue)
+template <class T> void Grid3<T>::allocate(size_t rows, size_t cols, size_t slices, const T &clearValue)
 {
 	allocate(rows, cols, slices);
 	clear(clearValue);
 }
 
-template <class T> void Grid3D<T>::clear(const T &clearValue)
+template <class T> void Grid3<T>::clear(const T &clearValue)
 {
-	const UINT totalEntries = getNumTotalEntries();
-	for(UINT i = 0; i < totalEntries; i++) m_data[i] = clearValue;
+	const size_t totalEntries = getNumTotalEntries();
+	for(size_t i = 0; i < totalEntries; i++) m_data[i] = clearValue;
 }
 
 }  // namespace ml

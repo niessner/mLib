@@ -10,8 +10,8 @@
 //
 #include "core-base/common.h"
 #include "core-base/console.h"
-#include "core-base/grid2d.h"
-#include "core-base/grid3d.h"
+#include "core-base/grid2.h"
+#include "core-base/grid3.h"
 
 //
 // core-util headers (these are required by matrices)
@@ -57,8 +57,8 @@
 #include "core-util/keycodes.h"
 #include "core-util/pipe.h"
 #include "core-util/UIConnection.h"
-#include "core-util/sparseGrid3d.h"
-#include "core-base/binaryGrid3d.h"
+#include "core-util/sparseGrid3.h"
+#include "core-base/binaryGrid3.h"
 #include "core-util/baseImage.h"
 
 //

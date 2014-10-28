@@ -214,7 +214,8 @@ typedef point1d<float> vec1f;
 typedef point1d<int> vec1i;
 typedef point1d<unsigned int> vec1ui;
 typedef point1d<unsigned char> vec1uc;
-
+typedef point1d<UINT64> vec1ul;
+typedef point1d<INT64> vec1l;
 
 template<> const vec1f vec1f::origin(0.0f);
 template<> const vec1f vec1f::eX(1.0f);

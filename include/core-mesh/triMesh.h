@@ -297,10 +297,10 @@ public:
 	}
 
 
-	TriMesh(const BinaryGrid3d& grid, FloatType voxelSize = (FloatType)1, bool withNormals = false, const point4d<FloatType>& color = point4d<FloatType>(0.5,0.5,0.5,0.5)) {
-		for (unsigned int z = 0; z < grid.numZ(); z++) {
-			for (unsigned int y = 0; y < grid.numY(); y++) {
-				for (unsigned int x = 0; x < grid.numX(); x++) {
+	TriMesh(const BinaryGrid3& grid, FloatType voxelSize = (FloatType)1, bool withNormals = false, const point4d<FloatType>& color = point4d<FloatType>(0.5,0.5,0.5,0.5)) {
+		for (unsigned int z = 0; z < grid.dimZ(); z++) {
+			for (unsigned int y = 0; y < grid.dimY(); y++) {
+				for (unsigned int x = 0; x < grid.dimX(); x++) {
 					if (grid.isVoxelSet(x,y,z)) {
 						point3d<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
 						p = p * voxelSize;
@@ -454,7 +454,7 @@ public:
 		return m_bHasTexCoords;
 	}
 
-	BinaryGrid3d voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>(), bool solid = false) const {
+	BinaryGrid3 voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>(), bool solid = false) const {
 		
 		BoundingBox3<FloatType> bb;
 		if (bounds.isInitialized()) {
@@ -465,7 +465,7 @@ public:
 		}
 
 		Matrix4x4<FloatType> worldToVoxel = Matrix4x4<FloatType>::scale((FloatType)1/voxelSize) * Matrix4x4<FloatType>::translation(-bb.getMin());
-		BinaryGrid3d grid(vec3ui(bb.getExtent() / voxelSize));
+		BinaryGrid3 grid(vec3ui(bb.getExtent() / voxelSize));
 
 		//for (size_t i = 0; i < m_Vertices.size(); i++) {
 		//	point3d<FloatType> p = worldToVoxel * m_Vertices[i].position;
@@ -483,24 +483,27 @@ public:
 	}
 
 
-	void voxelize(BinaryGrid3d& grid, const mat4f& worldToVoxel = mat4f::identity(), bool solid = false) const {
+	void voxelize(BinaryGrid3& grid, const mat4f& worldToVoxel = mat4f::identity(), bool solid = false) const {
 		for (size_t i = 0; i < m_Indices.size(); i++) {
 			point3d<FloatType> p0 = worldToVoxel * m_Vertices[m_Indices[i].x].position;
 			point3d<FloatType> p1 = worldToVoxel * m_Vertices[m_Indices[i].y].position;
 			point3d<FloatType> p2 = worldToVoxel * m_Vertices[m_Indices[i].z].position;
 
 			BoundingBox3<FloatType> bb0(p0, p1, p2);
-			BoundingBox3<FloatType> bb1(point3d<FloatType>(0,0,0), point3d<FloatType>((FloatType)grid.numX(), (FloatType)grid.numY(), (FloatType)grid.numZ()));
+			BoundingBox3<FloatType> bb1(point3d<FloatType>(0,0,0), point3d<FloatType>((FloatType)grid.dimX(), (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
 			if (bb0.intersects(bb1)) {
 				voxelizeTriangle(p0, p1, p2, grid, solid);
 			} else {
+				std::cerr << "out of bounds: " << p0 << "\tof: " << grid.getDimensions() << std::endl;
+				std::cerr << "out of bounds: " << p1 << "\tof: " << grid.getDimensions() << std::endl;
+				std::cerr << "out of bounds: " << p2 << "\tof: " << grid.getDimensions() << std::endl;
 				MLIB_WARNING("triangle outside of grid - ignored");
 			}
 		}
 	}
 private:
 
-	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, bool solid = false) const {
+	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3& grid, bool solid = false) const {
 
 		FloatType diagLenSq = (FloatType)3.0;
 		if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
@@ -528,14 +531,14 @@ private:
 									bool b0 = intersection::intersectRayTriangle(v0,v1,v2,r0,t0,_u0,_v0);
 									bool b1 = intersection::intersectRayTriangle(v0,v1,v2,r1,t1,_u1,_v1);
 									if ((b0 && t0 <= (FloatType)0.5) || (b1 && t1 <= (FloatType)0.5)) {
-                    if (i < grid.numX() && j < grid.numY() && k < grid.numZ()) {
+                    if (i < grid.dimX() && j < grid.dimY() && k < grid.dimZ()) {
 											grid.toggleVoxelAndBehindSlice(i, j, k);
 										}
 									}
 									//grid.setVoxel(i,j,k);
 								}
 							} else {
-                if (i < grid.numX() && j < grid.numY() && k < grid.numZ()) {
+                if (i < grid.dimX() && j < grid.dimY() && k < grid.dimZ()) {
 									grid.setVoxel(i, j, k);
 								}
 							}

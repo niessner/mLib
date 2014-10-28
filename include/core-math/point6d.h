@@ -314,6 +314,8 @@ typedef point6d<float> vec6f;
 typedef point6d<int> vec6i;
 typedef point6d<unsigned int> vec6ui;
 typedef point6d<unsigned char> vec6uc;
+typedef point6d<UINT64> vec6ul;
+typedef point6d<INT64> vec6l;
 
 }  // namespace ml
 

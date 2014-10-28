@@ -16,11 +16,11 @@ struct std::hash<ml::vec3i> : public std::unary_function<ml::vec3i, size_t> {
 
 namespace ml {
 
-template<class T> class SparseGrid3D;
-template<class T> std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g);
+template<class T> class SparseGrid3;
+template<class T> std::ostream& operator<<(std::ostream& s, const SparseGrid3<T>& g);
 
 template<class T>
-class SparseGrid3D {
+class SparseGrid3 {
 public:
 	typedef typename std::unordered_map<vec3i, T, std::hash<vec3i>>::iterator iterator;
 	typedef typename std::unordered_map<vec3i, T, std::hash<vec3i>>::const_iterator const_iterator;
@@ -29,11 +29,11 @@ public:
 	const_iterator begin() const {return m_Data.begin();}
 	const_iterator end() const {return m_Data.end();}
 	
-	SparseGrid3D(float maxLoadFactor = 0.6, size_t reserveBuckets = 64) {
+	SparseGrid3(float maxLoadFactor = 0.6, size_t reserveBuckets = 64) {
 		m_Data.reserve(reserveBuckets);
 		m_Data.max_load_factor(maxLoadFactor);
 	}
-	~SparseGrid3D() {
+	~SparseGrid3() {
 
 	}
 
@@ -71,17 +71,17 @@ public:
 #ifdef _WIN32
 	template<class U>
 #endif
-	friend std::ostream& operator<< <> (std::ostream& s, const SparseGrid3D<T>& g);
+	friend std::ostream& operator<< <> (std::ostream& s, const SparseGrid3<T>& g);
 
 
 #ifdef _WIN32
 	template<class U, class V, class W>
 #endif
-	friend BinaryDataStream<U,V>& operator>> <>(BinaryDataStream<U,V>& s, SparseGrid3D<T>& g);
+	friend BinaryDataStream<U,V>& operator>> <>(BinaryDataStream<U,V>& s, SparseGrid3<T>& g);
 #ifdef _WIN32
 	template<class U, class V, class W>
 #endif
-	friend BinaryDataStream<U,V>& operator<< <>(BinaryDataStream<U,V>& s, const SparseGrid3D<T>& g);
+	friend BinaryDataStream<U,V>& operator<< <>(BinaryDataStream<U,V>& s, const SparseGrid3<T>& g);
 
 
 
@@ -128,7 +128,7 @@ protected:
 };
 
 template<class T>
-inline std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g) {
+inline std::ostream& operator<<(std::ostream& s, const SparseGrid3<T>& g) {
 	for (auto iter = g.m_Data.begin(); iter != g.m_Data.end(); iter++) {
 		s << "\t" << iter->first << "\t: " << iter->second << std::endl;
 	}
@@ -138,7 +138,7 @@ inline std::ostream& operator<<(std::ostream& s, const SparseGrid3D<T>& g) {
 
 //! read from binary stream overload
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, SparseGrid3D<T>& g) {
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, SparseGrid3<T>& g) {
 	g.clear();
 	size_t size;	float maxLoadFactor;
 	s >> size >> maxLoadFactor;
@@ -152,7 +152,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 }
 //! write to binary stream overload
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const SparseGrid3D<T>& g) {
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const SparseGrid3<T>& g) {
 	s << g.m_Data.size();
 	s << g.m_Data.max_load_factor();
 	for (auto iter = g.begin(); iter != g.end(); iter++) {

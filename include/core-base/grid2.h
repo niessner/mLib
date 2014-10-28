@@ -5,28 +5,28 @@
 namespace ml
 {
 
-template <class T> class Grid2D
+template <class T> class Grid2
 {
 public:
-	Grid2D();
-	Grid2D(size_t rows, size_t cols);
-	Grid2D(size_t rows, size_t cols, const T &clearValue);
-	Grid2D(const Grid2D<T> &G);
-	Grid2D(Grid2D<T> &&G);
+	Grid2();
+	Grid2(size_t rows, size_t cols);
+	Grid2(size_t rows, size_t cols, const T &clearValue);
+	Grid2(const Grid2<T> &G);
+	Grid2(Grid2<T> &&G);
 
-	~Grid2D();
+	~Grid2();
 
 	//
 	// Memory
 	//
 	void deleteMemory();
-	Grid2D<T>& operator = (const Grid2D<T> &G);
-	Grid2D<T>& operator = (Grid2D<T> &&G);
+	Grid2<T>& operator = (const Grid2<T> &G);
+	Grid2<T>& operator = (Grid2<T> &&G);
 
 	void allocate(size_t rows, size_t cols);
 	void allocate(size_t rows, size_t cols, const T &clearValue);
 
-	inline Grid2D<T>& operator += (const Grid2D<T> &right)
+	inline Grid2<T>& operator += (const Grid2<T> &right)
 	{
 		MLIB_ASSERT_STR(m_rows == right.m_rows && m_cols == right.m_cols, "grid dimensions must be equal");
 		for (size_t r = 0; r < m_rows; r++)
@@ -34,7 +34,7 @@ public:
 				m_data[r * m_cols + c] += right(r,c);
 		return *this;
 	}
-	inline Grid2D<T>& operator *= (T right)
+	inline Grid2<T>& operator *= (T right)
 	{
 		for (size_t r = 0; r < m_rows; r++)
 			for (size_t c = 0; c < m_cols; c++)
@@ -42,9 +42,9 @@ public:
 		return *this;
 	}
 
-	inline Grid2D<T> operator * (T x)
+	inline Grid2<T> operator * (T x)
 	{
-		Grid2D<T> result(m_rows, m_cols);
+		Grid2<T> result(m_rows, m_cols);
 		for (size_t r = 0; r < m_rows; r++)
 			for (size_t c = 0; c < m_cols; c++)
 				result(r,c) = m_data[r * m_cols + c] * x;
@@ -80,6 +80,11 @@ public:
 	{
 		return std::make_pair(m_rows, m_cols);
 	}
+
+	//inline vec2ul getDimensions() const {
+	//	return vec2ul(m_rows, m_cols);
+	//}
+
 	inline bool square() const
 	{
 		return (m_rows == m_cols);
@@ -165,7 +170,7 @@ protected:
 	size_t m_rows, m_cols;
 };
 
-template <class T> inline bool operator == (const Grid2D<T> &a, const Grid2D<T> &b)
+template <class T> inline bool operator == (const Grid2<T> &a, const Grid2<T> &b)
 {
 	if(a.rows() != b.rows() || a.cols() != b.cols()) return false;
 	for(size_t row = 0; row < a.rows(); row++)
@@ -175,13 +180,13 @@ template <class T> inline bool operator == (const Grid2D<T> &a, const Grid2D<T> 
 	return true;
 }
 
-template <class T> inline bool operator != (const Grid2D<T> &a, const Grid2D<T> &b)
+template <class T> inline bool operator != (const Grid2<T> &a, const Grid2<T> &b)
 {
 	return !(a == b);
 }
 
 }
 
-#include "grid2d.cpp"
+#include "grid2.cpp"
 
 #endif  // CORE_BASE_GRID2D_H_

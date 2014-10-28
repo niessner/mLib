@@ -304,6 +304,9 @@ typedef point3d<int> vec3i;
 typedef point3d<short> vec3s;
 typedef point3d<unsigned int> vec3ui;
 typedef point3d<unsigned char> vec3uc;
+typedef point3d<UINT64> vec3ul;
+typedef point3d<INT64> vec3l;
+
 
 template<> const vec3f vec3f::origin(0.0f, 0.0f, 0.0f);
 template<> const vec3f vec3f::eX(1.0f, 0.0f, 0.0f);

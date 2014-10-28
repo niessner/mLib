@@ -95,11 +95,11 @@
     <ClCompile Include="mLibSource.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\core-base\binaryGrid3d.h" />
+    <ClInclude Include="..\include\core-base\binaryGrid3.h" />
     <ClInclude Include="..\include\core-base\common.h" />
     <ClInclude Include="..\include\core-base\console.h" />
-    <ClInclude Include="..\include\core-base\grid2d.h" />
-    <ClInclude Include="..\include\core-base\grid3d.h" />
+    <ClInclude Include="..\include\core-base\grid2.h" />
+    <ClInclude Include="..\include\core-base\grid3.h" />
     <ClInclude Include="..\include\core-graphics\boundingBox2d.h" />
     <ClInclude Include="..\include\core-graphics\boundingBox3d.h" />
     <ClInclude Include="..\include\core-graphics\RGBColor.h" />
@@ -146,7 +146,7 @@
     <ClInclude Include="..\include\core-util\directory.h" />
     <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
     <ClInclude Include="..\include\core-util\pipe.h" />
-    <ClInclude Include="..\include\core-util\sparseGrid3d.h" />
+    <ClInclude Include="..\include\core-util\sparseGrid3.h" />
     <ClInclude Include="..\include\core-util\stringUtil.h" />
     <ClInclude Include="..\include\core-util\stringUtilConvert.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
