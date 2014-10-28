@@ -534,9 +534,9 @@ private:
 				}
 			} 
 		} else {
-			vec3f e0 = (v0 + v1)/2.0f;
-			vec3f e1 = (v1 + v2)/2.0f;
-			vec3f e2 = (v2 + v0)/2.0f;
+			point3d<FloatType> e0 = (FloatType)0.5*(v0 + v1);
+			point3d<FloatType> e1 = (FloatType)0.5*(v1 + v2);
+			point3d<FloatType> e2 = (FloatType)0.5*(v2 + v0);
 			voxelizeTriangle(v0,e0,e2, grid, solid);
 			voxelizeTriangle(e0,v1,e1, grid, solid);
 			voxelizeTriangle(e1,v2,e2, grid, solid);
