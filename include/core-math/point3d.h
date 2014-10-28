@@ -266,7 +266,7 @@ inline point3d<T> operator*(T s, const point3d<T>& v) {
 template <class T>
 inline point3d<T> operator/(T s, const point3d<T>& v)
 {
-	return v / s;
+	return point3d<T>(s/v.x, s/v.y, s/v.z);
 }
 template <class T>
 inline point3d<T> operator+(T s, const point3d<T>& v)
@@ -276,7 +276,7 @@ inline point3d<T> operator+(T s, const point3d<T>& v)
 template <class T>
 inline point3d<T> operator-(T s, const point3d<T>& v)
 {
-	return v - s;
+	return point3d<T>(s-v.x, s-v.y, s-v.z);
 }
  
 namespace math {

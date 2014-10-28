@@ -179,7 +179,7 @@ inline point1d<T> operator*(T s, const point1d<T>& v)
 template <class T>
 inline point1d<T> operator/(T s, const point1d<T>& v)
 {
-	return v / s;
+	return point1d<T>(s/v.x);
 }
 template <class T>
 inline point1d<T> operator+(T s, const point1d<T>& v)
@@ -189,7 +189,7 @@ inline point1d<T> operator+(T s, const point1d<T>& v)
 template <class T>
 inline point1d<T> operator-(T s, const point1d<T>& v)
 {
-	return v - s;
+	return point1d<T>(s-v.x);
 }
 
 namespace math {

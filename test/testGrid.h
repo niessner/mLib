@@ -42,8 +42,13 @@ public:
 
 	void test2() 
 	{
-		//BoundingBox3f bb;
-		//bb.include(vec3f(0.0f,0.0f,0.0f));
+		BoundingBox3f bb;
+		bb.include(vec3f(0.0f,0.0f,0.0f));
+		bb.include(vec3f(10.0f,10.0f,10.0f));
+		mat4f trans = bb.cubeToWorldTransform();
+		vec3f p0 = trans * vec3f(0.0f,0.0f,0.0f);
+		vec3f p1 = trans * vec3f(1.0f,1.0f,1.0f);
+
 		//bb.include(vec3f(1.0f,1.0f,1.0f));
 		//std::vector<vec3f> p;	std::vector<vec3ui> i;
 		//bb.makeTriMesh(p, i);
@@ -51,6 +56,7 @@ public:
 		//MeshIOf::saveToFile("box.ply", tmesh.getMeshData());
 
 		ml::TriMeshf sphere = ml::shapes::sphere(5.0f, ml::vec3f(0,0,0), 128, 128);
+
 		sphere.transform(ml::mat4f::translation(ml::vec3f(6.0053f)));
 		sphere.transform(ml::mat4f::rotation(0.0012f, 0.021f, 0.0024f));
 

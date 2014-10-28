@@ -226,7 +226,7 @@ inline point2d<T> operator*(T s, const point2d<T>& v)
 template <class T>
 inline point2d<T> operator/(T s, const point2d<T>& v)
 {
-	return v / s;
+	return point2d<T>(s/v.x, s/v.y);
 }
 template <class T>
 inline point2d<T> operator+(T s, const point2d<T>& v)
@@ -236,7 +236,7 @@ inline point2d<T> operator+(T s, const point2d<T>& v)
 template <class T>
 inline point2d<T> operator-(T s, const point2d<T>& v)
 {
-	return v - s;
+	return point2d<T>(s-v.x, s-v.y);
 }
 
 namespace math {

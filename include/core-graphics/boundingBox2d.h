@@ -11,85 +11,89 @@
 
 namespace ml {
 
-template<class T>
-class ObjectOrientedBoundingBox2;
+	template<class T>
+	class ObjectOrientedBoundingBox2;
 
-template<class FloatType>
-class BoundingBox2
-{
-public:
+	template<class FloatType>
+	class BoundingBox2
+	{
+	public:
 
-	BoundingBox2(void) {
-		reset();
-	}
+		BoundingBox2(void) {
+			reset();
+		}
 
-	BoundingBox2(const std::vector< point2d<FloatType> >& verts) {
-		reset();
-		for (const auto &v : verts)
-			include(v);
-	}
+		BoundingBox2(const std::vector< point2d<FloatType> >& verts) {
+			reset();
+			for (const auto &v : verts)
+				include(v);
+		}
 
-	BoundingBox2(const point2d<FloatType>& p0, const point2d<FloatType>& p1, const point2d<FloatType>& p2) {
-		reset();
-		include(p0);
-		include(p1);
-		include(p2);
-	}
+		BoundingBox2(const point2d<FloatType>& p0, const point2d<FloatType>& p1, const point2d<FloatType>& p2) {
+			reset();
+			include(p0);
+			include(p1);
+			include(p2);
+		}
 
-	BoundingBox2(const point2d<FloatType>& minBound, const point2d<FloatType>& maxBound) {
-		reset();
-		minB = minBound;
-		maxB = maxBound;
-	}
+		BoundingBox2(const point2d<FloatType>& minBound, const point2d<FloatType>& maxBound) {
+			reset();
+			minB = minBound;
+			maxB = maxBound;
+		}
 
-	//TODO
-	//explicit BoundingBox2(const ObjectOrientedBoundingBox2<FloatType> &oobb) {
-	//	reset();
-	//	for (const auto &v : oobb.getVertices())
-	//		include(v);
-	//}
+		//TODO
+		//explicit BoundingBox2(const ObjectOrientedBoundingBox2<FloatType> &oobb) {
+		//	reset();
+		//	for (const auto &v : oobb.getVertices())
+		//		include(v);
+		//}
 
-	void reset() {
-		minX = minY = std::numeric_limits<FloatType>::max();
-		maxX = maxY = -std::numeric_limits<FloatType>::max();
-	}
+		void reset() {
+			minX = minY = std::numeric_limits<FloatType>::max();
+			maxX = maxY = -std::numeric_limits<FloatType>::max();
+		}
 
-	void include(const BoundingBox2 &other) {
-		if (other.minX < minX)	minX = other.minX;
-		if (other.minY < minY)	minY = other.minY;
+		void include(const BoundingBox2 &other) {
+			if (other.minX < minX)	minX = other.minX;
+			if (other.minY < minY)	minY = other.minY;
 
-		if (other.maxX > maxX)	maxX = other.maxX;
-		if (other.maxY > maxY)	maxY = other.maxY;
-	}
+			if (other.maxX > maxX)	maxX = other.maxX;
+			if (other.maxY > maxY)	maxY = other.maxY;
+		}
 
-	void include(const point2d<FloatType> &v) {
-		if (v.x < minX)	minX = v.x;
-		if (v.y < minY)	minY = v.y;
+		void include(const point2d<FloatType> &v) {
+			if (v.x < minX)	minX = v.x;
+			if (v.y < minY)	minY = v.y;
 
-		if (v.x > maxX)	maxX = v.x;
-		if (v.y > maxY)	maxY = v.y;
-	}
+			if (v.x > maxX)	maxX = v.x;
+			if (v.y > maxY)	maxY = v.y;
+		}
 
-	void include(const std::vector<point2d<FloatType>> &v) {
-		for (const auto &p : v)
-			include(p);
-	}
+		void include(const std::vector<point2d<FloatType>> &v) {
+			for (const auto &p : v)
+				include(p);
+		}
 
-	void getVertices(point2d<FloatType> *result) const {
-		result[0] = point2d<FloatType>(minX, minY);
-		result[1] = point2d<FloatType>(maxX, minY);
-		result[2] = point2d<FloatType>(maxX, maxY);
-		result[3] = point2d<FloatType>(minX, maxY);
-	}
+		bool isInitialized() const {
+			return (minX != std::numeric_limits<FloatType>::max());
+		}
 
-	std::vector< point2d<FloatType> > getVertices() const {
-		std::vector< point2d<FloatType> > result;
-		result.resize(4);
+		void getVertices(point2d<FloatType> *result) const {
+			result[0] = point2d<FloatType>(minX, minY);
+			result[1] = point2d<FloatType>(maxX, minY);
+			result[2] = point2d<FloatType>(maxX, maxY);
+			result[3] = point2d<FloatType>(minX, maxY);
+		}
 
-		getVertices(result.data());
+		std::vector< point2d<FloatType> > getVertices() const {
+			std::vector< point2d<FloatType> > result;
+			result.resize(4);
 
-		return result;
-	}
+			getVertices(result.data());
+
+			return result;
+		}
 
 
 		std::vector< LineSegment2<FloatType> > getEdges() const
@@ -248,7 +252,7 @@ public:
 			return res;
 		}
 
-		
+
 		void setUnitCube() {
 			minX = minY = 0;
 			maxX = maxY = 1;

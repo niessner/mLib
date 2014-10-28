@@ -456,17 +456,22 @@ public:
 
 	BinaryGrid3d voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>(), bool solid = false) const {
 
-		BoundingBox3<FloatType> bb = getBoundingBox();
-		bb.include(point3d<FloatType>(0.0f,0.0f,0.0f));
-		bb.scale(1.2f);
-		//TODO use bounding box to compute offset such that all voxels are positive...
+		BoundingBox3<FloatType> bb;
+		if (bounds.isInitialized()) {
+			bb = bounds;
+		} else {
+			bb = getBoundingBox();
+			bb.scale((FloatType)1 + (FloatType)3.0*voxelSize);	//safety margin
+		}
 
+		Matrix4x4<FloatType> worldToVoxel = Matrix4x4<FloatType>::scale((FloatType)1/voxelSize) * Matrix4x4<FloatType>::translation(-bb.getMin());
 		BinaryGrid3d grid(vec3ui(bb.getExtent() / voxelSize));
-		mat4f worldToVoxel = mat4f::scale((FloatType)1 / voxelSize);
+
 		voxelize(grid, worldToVoxel, solid);
 
 		return grid;
 	}
+
 
 	void voxelize(BinaryGrid3d& grid, const mat4f& worldToVoxel = mat4f::identity(), bool solid = false) const {
 		for (size_t i = 0; i < m_Indices.size(); i++) {

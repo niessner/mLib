@@ -78,6 +78,10 @@ public:
             include(p);
     }
 
+	bool isInitialized() const {
+		return (minX != std::numeric_limits<FloatType>::max());
+	}
+
 	bool intersect(const Ray<FloatType> &r, FloatType tmin, FloatType tmax ) const
 	{
 		//const FloatType t0 = 0.0;
@@ -440,13 +444,15 @@ public:
 		maxX = maxY = maxZ = 1;
 	}
 
+	//! transforms a point in [-1;1]^3 to the bounding box space
     Matrix4x4<FloatType> cubeToWorldTransform() const {
         return  Matrix4x4<FloatType>::translation(getCenter()) *  Matrix4x4<FloatType>::scale((maxB - minB) * (FloatType)0.5);
     }
-
-	//Matrix4x4<FloatType> worldToCubeTransform() const {
-	//	return cubeToWorldTransform().getInverse();	//tODO avoid the inverse
-	//}
+	
+	//! transforms a point from bounding box space to [-1;1]^3
+	Matrix4x4<FloatType> worldToCubeTransform() const {
+		return cubeToWorldTransform().getInverse();	//TODO avoid the inverse
+	}
 
 protected:
 	union {

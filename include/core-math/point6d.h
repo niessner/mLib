@@ -278,7 +278,7 @@ inline point6d<T> operator*(T s, const point6d<T>& v)
 template <class T>
 inline point6d<T> operator/(T s, const point6d<T>& v)
 {
-	return v / s;
+	return point6d<T>(s/v.x, s/v.y, s/v.z, s/v.xx, s/v.yy, s/v.zz);
 }
 template <class T>
 inline point6d<T> operator+(T s, const point6d<T>& v)
@@ -288,7 +288,7 @@ inline point6d<T> operator+(T s, const point6d<T>& v)
 template <class T>
 inline point6d<T> operator-(T s, const point6d<T>& v)
 {
-	return v - s;
+	return point6d<T>(s-v.x, s-v.y, s-v.z, s-v.xx, s-v.yy, s-v.zz);
 }
 
 namespace math {
