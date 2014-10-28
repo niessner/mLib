@@ -298,9 +298,9 @@ public:
 
 
 	TriMesh(const BinaryGrid3d& grid, FloatType voxelSize = (FloatType)1, bool withNormals = false, const point4d<FloatType>& color = point4d<FloatType>(0.5,0.5,0.5,0.5)) {
-		for (unsigned int z = 0; z < grid.slices(); z++) {
-			for (unsigned int y = 0; y < grid.rows(); y++) {
-				for (unsigned int x = 0; x < grid.cols(); x++) {
+		for (unsigned int z = 0; z < grid.numZ(); z++) {
+			for (unsigned int y = 0; y < grid.numY(); y++) {
+				for (unsigned int x = 0; x < grid.numX(); x++) {
 					if (grid.isVoxelSet(x,y,z)) {
 						point3d<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
 						p = p * voxelSize;
@@ -480,7 +480,7 @@ public:
 			point3d<FloatType> p2 = worldToVoxel * m_Vertices[m_Indices[i].z].position;
 
 			BoundingBox3<FloatType> bb0(p0, p1, p2);
-			BoundingBox3<FloatType> bb1(point3d<FloatType>(0,0,0), point3d<FloatType>((FloatType)grid.cols(), (FloatType)grid.rows(), (FloatType)grid.slices()));
+			BoundingBox3<FloatType> bb1(point3d<FloatType>(0,0,0), point3d<FloatType>((FloatType)grid.numX(), (FloatType)grid.numY(), (FloatType)grid.numZ()));
 			if (bb0.intersects(bb1)) {
 				voxelizeTriangle(p0, p1, p2, grid, solid);
 			} else {
@@ -518,14 +518,14 @@ private:
 									bool b0 = intersection::intersectRayTriangle(v0,v1,v2,r0,t0,_u0,_v0);
 									bool b1 = intersection::intersectRayTriangle(v0,v1,v2,r1,t1,_u1,_v1);
 									if ((b0 && t0 <= (FloatType)0.5) || (b1 && t1 <= (FloatType)0.5)) {
-										if (i < grid.rows() && j < grid.cols() && k < grid.slices()) {
+                    if (i < grid.numX() && j < grid.numY() && k < grid.numZ()) {
 											grid.toggleVoxelAndBehindSlice(i, j, k);
 										}
 									}
 									//grid.setVoxel(i,j,k);
 								}
 							} else {
-								if (i < grid.rows() && j < grid.cols() && k < grid.slices()) {
+                if (i < grid.numX() && j < grid.numY() && k < grid.numZ()) {
 									grid.setVoxel(i, j, k);
 								}
 							}

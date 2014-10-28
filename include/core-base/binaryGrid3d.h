@@ -25,7 +25,7 @@ public:
 
 	BinaryGrid3d(const BinaryGrid3d& other) {
 		m_data = nullptr;
-		allocate(other.rows(), other.cols(), other.slices());
+    allocate(other.m_rows, other.m_cols, other.m_slices);
 		memcpy(m_data, other.m_data, getNumUInts());
 	}
 
@@ -61,7 +61,7 @@ public:
 	}
 
 	inline void operator=(const BinaryGrid3d& other) {
-		allocate(other.rows(), other.cols(), other.slices());
+		allocate(other.m_rows, other.m_cols, other.m_slices);
 		memcpy(m_data, other.m_data, getNumUInts());
 	}
 
@@ -174,15 +174,15 @@ public:
 		}
 	}
 
-	inline unsigned int rows() const {
-		return m_rows;
-	}
-	inline unsigned int cols() const {
-		return m_cols;
-	}
-	inline unsigned int slices() const {
-		return m_slices;
-	}
+  inline unsigned int numX() const {
+    return m_rows;
+  }
+  inline unsigned int numY() const {
+    return m_cols;
+  }
+  inline unsigned int numZ() const {
+    return m_slices;
+  }
 
 	inline unsigned int getNumTotalEntries() const {
 		return m_rows*m_cols*m_slices;
