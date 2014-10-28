@@ -518,12 +518,16 @@ private:
 									bool b0 = intersection::intersectRayTriangle(v0,v1,v2,r0,t0,_u0,_v0);
 									bool b1 = intersection::intersectRayTriangle(v0,v1,v2,r1,t1,_u1,_v1);
 									if ((b0 && t0 <= (FloatType)0.5) || (b1 && t1 <= (FloatType)0.5)) {
-										grid.toggleVoxelAndBehindSlice(i,j,k);
+										if (i < grid.rows() && j < grid.cols() && k < grid.slices()) {
+											grid.toggleVoxelAndBehindSlice(i, j, k);
+										}
 									}
 									//grid.setVoxel(i,j,k);
 								}
 							} else {
-								grid.setVoxel(i,j,k);
+								if (i < grid.rows() && j < grid.cols() && k < grid.slices()) {
+									grid.setVoxel(i, j, k);
+								}
 							}
 						}
 					}
