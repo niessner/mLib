@@ -184,6 +184,10 @@ public:
     return m_slices;
   }
 
+  inline vec3ui getDimensions() const {
+	  return vec3ui(numX(), numY(), numZ());
+  }
+
 	inline unsigned int getNumTotalEntries() const {
 		return m_rows*m_cols*m_slices;
 	}

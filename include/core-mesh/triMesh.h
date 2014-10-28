@@ -467,6 +467,16 @@ public:
 		Matrix4x4<FloatType> worldToVoxel = Matrix4x4<FloatType>::scale((FloatType)1/voxelSize) * Matrix4x4<FloatType>::translation(-bb.getMin());
 		BinaryGrid3d grid(vec3ui(bb.getExtent() / voxelSize));
 
+		//for (size_t i = 0; i < m_Vertices.size(); i++) {
+		//	point3d<FloatType> p = worldToVoxel * m_Vertices[i].position;
+		//	if (p.x < 0 || p.x > grid.numX() ||
+		//		p.y < 0 || p.y > grid.numY() ||
+		//		p.z < 0 || p.z > grid.numZ()) {
+
+		//		std::cout << "out of bounds: " << p << "\tof: " << grid.getDimensions() << std::endl;
+		//	}
+		//}
+
 		voxelize(grid, worldToVoxel, solid);
 		
 		return grid;
