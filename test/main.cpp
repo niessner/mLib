@@ -33,13 +33,52 @@ void App::go()
 	ml::Console::log("All tests completed");
 	std::cin.get();
 }
-  
+ 
+//int zero_fill(int nAllocType, 
+//			  void* pvData, 
+//			  size_t nSize,
+//			  int nBlockUse, 
+//			  long lRequest, 
+//			  const unsigned char *szFileName, 
+//			  int nLine )
+//{
+//	/// Very Importaint !! 
+//	/// infinite recursion if this is removed !!
+//	/// _CRT_BLOCK must not do any thing but return TRUE
+//	/// even calling printf in the _CRT_BLOCK will cause
+//	/// infinite recursion
+//	if ( nBlockUse == _CRT_BLOCK )
+//		return( TRUE );
+//	switch(nAllocType)
+//	{
+//	case _HOOK_ALLOC:
+//	case _HOOK_REALLOC:
+//		// zero initialize the allocated space.
+//		//memset(pvData,0,nSize);
+//		break;
+//	case _HOOK_FREE:
+//		break;
+//	}
+//	return TRUE;
+//}
+
 int main()
 {
 	// Enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
+	//_CrtSetAllocHook(&zero_fill);
 #endif
+
+	//{
+	//	unsigned int size = 10;
+	//	int* a = new int[size];
+	//	for (unsigned int i = 0; i < size; i++) {
+	//		std::cout << a[i];
+	//	}
+	//	SAFE_DELETE_ARRAY(a);
+	//}
 	{
 		vec3f p0(0,1,0);
 		vec3f p1(1,0,0);

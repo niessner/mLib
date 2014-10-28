@@ -79,11 +79,11 @@ public:
 private:
 
 	bool checkIfAllOtherAreZero(const ml::BinaryGrid3d& grid, unsigned int _i, unsigned int _j, unsigned int _k) {
-		for (unsigned int i = 0; i < grid.rows(); i++) {
+		for (unsigned int i = 0; i < grid.numX(); i++) {
 			if (i == _i) continue;
-			for (unsigned int j = 0; j < grid.cols(); j++) {
+			for (unsigned int j = 0; j < grid.numY(); j++) {
 				if (j == _j) continue;
-				for (unsigned int k = 0; k < grid.slices(); k++) {
+				for (unsigned int k = 0; k < grid.numZ(); k++) {
 					if (k == _k) continue;
 					if (grid.isVoxelSet(i,j,k)) return false;
 				}
