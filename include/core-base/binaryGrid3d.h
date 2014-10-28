@@ -9,25 +9,26 @@ class BinaryGrid3d {
 public:
 	BinaryGrid3d() {
 		m_slices = m_cols = m_rows = 0;
-		m_data = NULL;
+		m_data = nullptr;
 	}
 	BinaryGrid3d(unsigned int rows, unsigned int cols, unsigned int slices) {
-		m_data = NULL;
+		m_data = nullptr;
 		allocate(rows,cols,slices);
 		clear();
 	}
 
 	BinaryGrid3d(const vec3ui& dim) {
-		m_data = NULL;
+		m_data = nullptr;
 		allocate(dim);
 		clear();
 	}
 
 	BinaryGrid3d(const BinaryGrid3d& other) {
-		m_data = NULL;
+		m_data = nullptr;
 		allocate(other.rows(), other.cols(), other.slices());
 		memcpy(m_data, other.m_data, getNumUInts());
 	}
+
 	BinaryGrid3d(BinaryGrid3d&& other) {
 		m_cols = other.m_cols;
 		m_rows = other.m_rows;

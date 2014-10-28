@@ -455,7 +455,7 @@ public:
 	}
 
 	BinaryGrid3d voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>(), bool solid = false) const {
-
+		
 		BoundingBox3<FloatType> bb;
 		if (bounds.isInitialized()) {
 			bb = bounds;
@@ -468,7 +468,7 @@ public:
 		BinaryGrid3d grid(vec3ui(bb.getExtent() / voxelSize));
 
 		voxelize(grid, worldToVoxel, solid);
-
+		
 		return grid;
 	}
 
@@ -491,6 +491,7 @@ public:
 private:
 
 	void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3d& grid, bool solid = false) const {
+
 		FloatType diagLenSq = (FloatType)3.0;
 		if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
 			BoundingBox3<FloatType> bb(v0, v1, v2);
