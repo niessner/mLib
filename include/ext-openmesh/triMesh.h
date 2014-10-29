@@ -41,7 +41,7 @@ namespace ml {
 		typedef OpenMesh::Decimater::ModQuadricT< Mesh >::Handle HModQuadric;	// Decimation Module Handle type
 
 
-		
+		/*
 		static bool Vec3fless(const OpenMesh::Vec3f& v0, const OpenMesh::Vec3f& v1)
 		{
 			if (v0[0] < v1[0]) return true;
@@ -149,6 +149,7 @@ namespace ml {
 
 			mesh = n;
 		}
+		*/
 		
 
 		static void convertToOpenMesh(const TriMeshf& triMesh, Mesh& out, bool keepVertexAttributes = false) {
