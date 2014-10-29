@@ -306,12 +306,12 @@ public:
 		return res;
 	}
 
-	////! transforms the bounding box (see transform)
-	//BoundingBox3<FloatType> operator*(const Matrix4x4<FloatType>& m) const {
-	//	BoundingBox3<FloatType> res = *this;
-	//	res.transform(m);
-	//	return res;
-	//}
+	//! transforms the bounding box (see transform)
+	BoundingBox3<FloatType> operator*(const Matrix4x4<FloatType>& m) const {
+		BoundingBox3<FloatType> res = *this;
+		res.transform(m);
+		return res;
+	}
 
 
 	Plane<FloatType> getBottomPlane() const {
