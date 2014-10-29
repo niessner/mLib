@@ -61,12 +61,12 @@ public:
 		sphere.transform(ml::mat4f::rotation(0.0012f, 0.021f, 0.0024f));
 
 		Timer t;
-		ml::BinaryGrid3 grid = sphere.voxelize(0.25f);
+		std::pair<ml::BinaryGrid3, ml::mat4f> grid = sphere.voxelize(0.25f);
 		std::cout << "voxelization time " << t.getElapsedTimeMS() << std::endl;
-		ml::PointCloudf pc(grid, 1.0f);
+		ml::PointCloudf pc(grid.first, 1.0f);
 		ml::PointCloudIOf::saveToFile("gridcloud1.ply", pc);
 
-		TriMeshf voxelMesh(grid);
+		TriMeshf voxelMesh(grid.first, grid.second.getInverse());
 		MeshIOf::saveToFile("box.ply", voxelMesh.getMeshData());
 
 		ml::Console::log() << "binaryGrid3d test2 passed" << std::endl;
