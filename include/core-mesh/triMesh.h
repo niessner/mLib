@@ -454,7 +454,7 @@ public:
 		return m_bHasTexCoords;
 	}
 
-	BinaryGrid3 voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>(), bool solid = false) const {
+	std::pair<BinaryGrid3, Matrix4x4<FloatType>> voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>(), bool solid = false) const {
 		
 		BoundingBox3<FloatType> bb;
 		if (bounds.isInitialized()) {
@@ -465,21 +465,12 @@ public:
 		}
 
 		Matrix4x4<FloatType> worldToVoxel = Matrix4x4<FloatType>::scale((FloatType)1/voxelSize) * Matrix4x4<FloatType>::translation(-bb.getMin());
-		BinaryGrid3 grid(vec3ui(bb.getExtent() / voxelSize));
 
-		//for (size_t i = 0; i < m_Vertices.size(); i++) {
-		//	point3d<FloatType> p = worldToVoxel * m_Vertices[i].position;
-		//	if (p.x < 0 || p.x > grid.numX() ||
-		//		p.y < 0 || p.y > grid.numY() ||
-		//		p.z < 0 || p.z > grid.numZ()) {
+		std::pair<BinaryGrid3, Matrix4x4<FloatType>> gridTrans = std::make_pair(BinaryGrid3(vec3ui(bb.getExtent() / voxelSize)), worldToVoxel);
 
-		//		std::cout << "out of bounds: " << p << "\tof: " << grid.getDimensions() << std::endl;
-		//	}
-		//}
-
-		voxelize(grid, worldToVoxel, solid);
+		voxelize(gridTrans.first, gridTrans.second, solid);
 		
-		return grid;
+		return gridTrans;
 	}
 
 
@@ -531,14 +522,14 @@ private:
 									bool b0 = intersection::intersectRayTriangle(v0,v1,v2,r0,t0,_u0,_v0);
 									bool b1 = intersection::intersectRayTriangle(v0,v1,v2,r1,t1,_u1,_v1);
 									if ((b0 && t0 <= (FloatType)0.5) || (b1 && t1 <= (FloatType)0.5)) {
-                    if (i < grid.dimX() && j < grid.dimY() && k < grid.dimZ()) {
+										if (i < grid.dimX() && j < grid.dimY() && k < grid.dimZ()) {
 											grid.toggleVoxelAndBehindSlice(i, j, k);
 										}
 									}
 									//grid.setVoxel(i,j,k);
 								}
 							} else {
-                if (i < grid.dimX() && j < grid.dimY() && k < grid.dimZ()) {
+								if (i < grid.dimX() && j < grid.dimY() && k < grid.dimZ()) {
 									grid.setVoxel(i, j, k);
 								}
 							}

@@ -76,6 +76,15 @@ public:
 	{
 		return m_cols;
 	}
+
+	inline size_t dimX() const {
+		return m_rows;
+	}
+
+	inline size_t dimY() const {
+		return m_cols;
+	}
+
 	inline std::pair<size_t, size_t> dimensions() const
 	{
 		return std::make_pair(m_rows, m_cols);
