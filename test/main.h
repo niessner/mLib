@@ -9,3 +9,4 @@
 #include "testLodePNG.h"
 #include "testBinaryStream.h"
 #include "testGrid.h"
+#include "testOpenMesh.h"

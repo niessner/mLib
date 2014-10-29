@@ -258,6 +258,9 @@
     <ClInclude Include="..\include\core-util\sparseGrid3.h">
       <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
+    <ClInclude Include="testOpenMesh.h">
+      <Filter>tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

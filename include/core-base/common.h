@@ -12,17 +12,17 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-// Disable iterator debugging if _IDL0 set
-#ifdef _IDL0
-#if _SECURE_SCL
-#undef _SECURE_SCL
-#define _SECURE_SCL 0
-#endif
-
-#ifndef _ITERATOR_DEBUG_LEVEL
-#define _ITERATOR_DEBUG_LEVEL 0
-#endif
-#endif
+//// Disable iterator debugging if _IDL0 set
+//#ifdef _IDL0
+//#if _SECURE_SCL
+//#undef _SECURE_SCL
+//#define _SECURE_SCL 0
+//#endif
+//
+//#ifndef _ITERATOR_DEBUG_LEVEL
+//#define _ITERATOR_DEBUG_LEVEL 0
+//#endif
+//#endif
 
 #define MLIB_OPENMP
 

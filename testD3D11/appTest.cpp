@@ -85,7 +85,7 @@ void testCollisions() {
 	BoundingBox3f bb1(vec3f(-1,-1,-1), vec3f(-0.5f,0.5f,0.5f));
 	for (unsigned int i = 0; i < 10000; i++) {
 		bb1.translate(vec3f(0.001f, 0.001f, 0.001f));
-		if (bb0.collision(bb1)) {
+		if (bb0.intersects(bb1)) {
 			std::cout << i << std::endl;
 			std::cout << bb1 << std::endl;
 			break;
