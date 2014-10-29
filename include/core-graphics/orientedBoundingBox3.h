@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef OBJECT_ORIENTED_BOUNDIG_BOX_H_
-#define OBJECT_ORIENTED_BOUNDIG_BOX_H_
+#ifndef OBJECT_ORIENTED_BOUNDIG_BOX3_H_
+#define OBJECT_ORIENTED_BOUNDIG_BOX3_H_
 
 namespace ml {
 

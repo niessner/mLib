@@ -1,6 +1,6 @@
 
-#ifndef CORE_GRAPHICS_BOUNDINGBOX3D_H_
-#define CORE_GRAPHICS_BOUNDINGBOX3D_H_
+#ifndef CORE_GRAPHICS_BOUNDINGBOX3_H_
+#define CORE_GRAPHICS_BOUNDINGBOX3_H_
 
 #include "Ray.h"
 
@@ -482,4 +482,4 @@ typedef BoundingBox3<double> bbox3d;
 
 }  // namespace ml
 
-#endif  // CORE_GRAPHICS_BOUNDINGBOX3D_H_
+#endif  // CORE_GRAPHICS_BOUNDINGBOX3_H_

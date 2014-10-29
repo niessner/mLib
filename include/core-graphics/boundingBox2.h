@@ -1,6 +1,6 @@
 
-#ifndef CORE_GRAPHICS_BOUNDINGBOX2D_H_
-#define CORE_GRAPHICS_BOUNDINGBOX2D_H_
+#ifndef CORE_GRAPHICS_BOUNDINGBOX2_H_
+#define CORE_GRAPHICS_BOUNDINGBOX2_H_
 
 #include "Ray.h"
 
@@ -285,4 +285,4 @@ namespace ml {
 
 }  // namespace ml
 
-#endif  // CORE_GRAPHICS_BoundingBox2D_H_
+#endif  // CORE_GRAPHICS_BoundingBox2_H_
