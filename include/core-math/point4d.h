@@ -322,15 +322,17 @@ namespace math {
 }
 
 
-//! write a point4d to a stream (should be the inverse of read operator; with " ")
+//! write a point4d to a stream
 template <class T>
-inline std::ostream& operator<<(std::ostream& s, const point4d<T>& v)
-{ return (s << v[0] << " / " << v[1] << " / " << v[2] << " / " << v[3]);}
+inline std::ostream& operator<<(std::ostream& s, const point4d<T>& v) {
+  return (s << v[0] << " " << v[1] << " " << v[2] << " " << v[3]);
+}
 
 //! read a point4d from a stream
 template <class T>
-inline std::istream& operator>>(std::istream& s, point4d<T>& v)
-{ return (s >> v[0] >> v[1] >> v[2] >> v[3]); }
+inline std::istream& operator>>(std::istream& s, point4d<T>& v) {
+  return (s >> v[0] >> v[1] >> v[2] >> v[3]);
+}
 
 
 typedef point4d<double> vec4d;

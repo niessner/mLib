@@ -284,15 +284,17 @@ namespace math {
 }
 
 
-//! write a point3d to a stream (should be the inverse of input operator; with " ")
+//! write a point3d to a stream
 template <class T> 
-inline std::ostream& operator<<(std::ostream& s, const point3d<T>& v)
-{ return (s << v[0] << " / " << v[1] << " / " << v[2]);}
+inline std::ostream& operator<<(std::ostream& s, const point3d<T>& v) {
+  return (s << v[0] << " " << v[1] << " " << v[2]);
+}
 
 //! read a point3d from a stream
 template <class T> 
-inline std::istream& operator>>(std::istream& s, point3d<T>& v)
-{ return (s >> v[0] >> v[1] >> v[2]); }
+inline std::istream& operator>>(std::istream& s, point3d<T>& v) {
+  return (s >> v[0] >> v[1] >> v[2]);
+}
 
 
 typedef point3d<double> vec3d;

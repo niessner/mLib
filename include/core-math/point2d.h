@@ -245,12 +245,14 @@ namespace math {
 }
 
 //! write a point2d to a stream
-template <class T> inline std::ostream& operator<<(std::ostream& s, const point2d<T>& v)
-{ return (s << v[0] << " / " << v[1]);}
+template <class T> inline std::ostream& operator<<(std::ostream& s, const point2d<T>& v) {
+  return (s << v[0] << " " << v[1]);
+}
 
 //! read a point2d from a stream
-template <class T> inline std::istream& operator>>(std::istream& s, point2d<T>& v)
-{ return (s >> v[0] >> v[1]); }
+template <class T> inline std::istream& operator>>(std::istream& s, point2d<T>& v) {
+  return (s >> v[0] >> v[1]);
+}
 
 
 typedef point2d<double> vec2d;

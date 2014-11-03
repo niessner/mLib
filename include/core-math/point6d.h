@@ -298,13 +298,15 @@ namespace math {
 
 //! write a point6d to a stream
 template <class T> 
-inline std::ostream& operator<<(std::ostream& s, const point6d<T>& v)
-{ return (s << v[0] << " / " << v[1] << " / " << v[2] << " / " << v[3] << " / " << v[4] << " / " << v[5]);}
+inline std::ostream& operator<<(std::ostream& s, const point6d<T>& v) {
+  return (s << v[0] << " " << v[1] << " " << v[2] << " " << v[3] << " " << v[4] << " " << v[5]);
+}
 
 //! read a point6d from a stream
 template <class T> 
-inline std::istream& operator>>(std::istream& s, point6d<T>& v)
-{ return (s >> v[0] >> v[1] >> v[2] >> v[3] >> v[4] >> v[5]); }
+inline std::istream& operator>>(std::istream& s, point6d<T>& v) {
+  return (s >> v[0] >> v[1] >> v[2] >> v[3] >> v[4] >> v[5]);
+}
 
 
 typedef point6d<double> vec6d;
