@@ -52,9 +52,6 @@ public:
 		}
 	}
 
-	//! destructor
-	~Matrix2x2() {}
-
 	//! Access element of Matrix at row x and column y for constant access
 	inline FloatType at(unsigned char x, unsigned char y) const {
 		assert((x<2)&&(y<2)); // no test if x<0 or y<0; they are unsigned char

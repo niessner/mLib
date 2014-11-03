@@ -33,9 +33,6 @@ public:
 		m_Data.reserve(reserveBuckets);
 		m_Data.max_load_factor(maxLoadFactor);
 	}
-	~SparseGrid3() {
-
-	}
 
 	void clear() {
 		m_Data.clear();

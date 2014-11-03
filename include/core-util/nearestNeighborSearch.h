@@ -85,7 +85,6 @@ class KNearestNeighborQueue
 {
 public:
 	KNearestNeighborQueue() {}
-	~KNearestNeighborQueue() {}
 
 	struct NeighborEntry
 	{
@@ -157,7 +156,6 @@ class NearestNeighborSearchBruteForce : public NearestNeighborSearch<FloatType>
 {
 public:
 	NearestNeighborSearchBruteForce() {}
-	~NearestNeighborSearchBruteForce() {}
 
 	void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK)
 	{

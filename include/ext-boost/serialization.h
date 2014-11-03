@@ -33,7 +33,6 @@ class InOutArchive {
 		, m_is(&m_buf, std::ios::binary)
 		, m_oa(m_os)
 		, m_ia(m_is) { }
-	~InOutArchive() { }
 
 	template<typename T>
 	inline InOutArchive& operator<<(T const& obj) {

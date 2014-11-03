@@ -104,9 +104,6 @@ public:
             matrix[i] = m.ptr()[i];
     }
 
-	//! destructor
-	~Matrix4x4() {}
-
 	//! Access element of Matrix at row x and column y for constant access
 	inline FloatType at(unsigned char x, unsigned char y) const {
 		assert((x<4)&&(y<4)); // no test if x<0 or y<0; they are unsigned char

@@ -147,8 +147,6 @@ public:
 		return array[i];
 	}
 
-	~point2d(void) {};
-
 	inline bool operator<(const point2d& other) const {
 		if ((x < other.x) && (y < other.y))
 			return true;

@@ -24,9 +24,6 @@ public:
 		m_Sign.z = (m_InverseDirection.z < (FloatType)0);
 	}
 
-	~Ray() {
-	}
-
 	point3d<FloatType> getHitPoint(FloatType t) const {
 		return m_Origin + t * m_Direction;
 	}

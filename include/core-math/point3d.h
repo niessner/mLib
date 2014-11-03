@@ -183,9 +183,6 @@ public:
 	inline operator const T*() const {
 		return array;
 	}
-	
-	~point3d(void) {};
-
 
 	inline void print() const {
 		Console::log() << "(" << array[0] << " / " << array[1] << " / " << array[2] << ")" << std::endl;

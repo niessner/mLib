@@ -12,9 +12,6 @@ public:
 	Material(Material&& m) {
 		swap(*this, m);
 	}
-	 
-	~Material() {
-	}
 
 	void operator=(Material&& m) {
 		swap(*this, m);

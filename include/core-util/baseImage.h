@@ -543,8 +543,7 @@ public:
 	DepthImage16(unsigned int height, unsigned int width) : BaseImage(height, width) {
 		m_InvalidValue = 0;
 	}
-	~DepthImage16() {
-	}
+
 private:
 };
 
@@ -559,9 +558,6 @@ public:
 	}
 	DepthImage(unsigned int height, unsigned int width) : BaseImage(height, width) {
 		m_InvalidValue = -std::numeric_limits<float>::infinity();
-	}
-	~DepthImage() {
-
 	}
 
 	//! Saves the depth image as a PPM file; note that there is a loss of precision
@@ -708,10 +704,6 @@ public:
 			}
 		}
 	}
-	~ColorImageRGB() {
-
-	}
-
 };
 
 
@@ -768,9 +760,6 @@ public:
 			}
 		}
 	}
-	~ColorImageRGBA() {
-	}
-
 };
 
 

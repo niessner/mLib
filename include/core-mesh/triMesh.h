@@ -75,8 +75,6 @@ namespace ml {
 				m_TriangleIndex = triIdx;
 				m_MeshIndex = meshIdx;
 			}
-			~Triangle() {
-			}
 
 
 			Vertex<FloatType> getSurfaceVertex(FloatType u, FloatType v) const {

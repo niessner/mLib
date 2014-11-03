@@ -56,9 +56,6 @@ public:
 		}
 	}
 
-	//! destructor
-	~Matrix3x3() {}
-
 	//! Access element of Matrix at row x and column y for constant access
 	inline FloatType at(unsigned char x, unsigned char y) const {
 		assert((x<3)&&(y<3)); // no test if x<0 or y<0; they are unsigned char

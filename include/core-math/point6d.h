@@ -200,8 +200,6 @@ public:
 		return (v0-v1).length();
 	}
 
-	~point6d(void) {};
-
 	inline void print() const {
 		Console::log() << "(" << array[0] << " / " << array[1] << " / " << array[2] << " / " << array[3] << " / " << array[4] << " / " << array[5] << ")" << std::endl;
 	}

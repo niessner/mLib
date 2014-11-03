@@ -97,12 +97,6 @@ public:
 		computeFromPCA(points);
 	}
 
-
-	~ObjectOrientedBoundingBox3() {
-
-	}
-
-
 	bool isValid() {
 		if (m_Anchor.x == -FLT_MAX || m_Anchor.y == -FLT_MAX || m_Anchor.z == -FLT_MAX)	return false;
 		else return true;

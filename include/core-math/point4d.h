@@ -196,8 +196,6 @@ class point4d : public BinaryDataSerialize< point4d<T> >
             return (v0 - v1).length();
         }
 
-        ~point4d(void) {};
-
         void print() const
         {
             Console::log() << "(" << array[0] << " / " << array[1] << " / " << array[2] <<

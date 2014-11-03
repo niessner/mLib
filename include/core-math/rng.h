@@ -110,7 +110,6 @@ namespace ml {
 			z(x_), w(x_), jsr(x_), jcong(x_) { zigset(); }
 		RNG(ulong z_, ulong w_, ulong jsr_, ulong jcong_ ) :
 			z(z_), w(w_), jsr(jsr_), jcong(jcong_) { zigset(); }
-		~RNG() { }
 
 #if ULONG_MAX == 4294967295ul
 		// 32 bit unsigned longs

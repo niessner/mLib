@@ -115,8 +115,6 @@ public:
 		return array[i];
 	}
 
-	~point1d(void) {};
-
 	inline T lengthSq() const {
 		return (array[0]*array[0]);
 	}
