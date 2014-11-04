@@ -55,6 +55,7 @@ public:
 	void registerAsset(GraphicsAsset *asset);
     void toggleWireframe();
     void clear(const ml::vec4f &clearColor);
+    void bindRenderDepth();
 
 
 	ID3D11Device& device()

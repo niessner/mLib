@@ -157,6 +157,11 @@ void ml::D3D11GraphicsDevice::renderBeginFrame()
     m_context->ClearDepthStencilView( m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void ml::D3D11GraphicsDevice::bindRenderDepth()
+{
+    m_context->OMSetRenderTargets(1, &m_renderView, m_depthView);
+}
+
 void ml::D3D11GraphicsDevice::clear(const ml::vec4f &clearColor)
 {
     m_context->ClearRenderTargetView( m_renderView, clearColor.array );
