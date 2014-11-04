@@ -44,6 +44,7 @@
 #include "core-math/rng.h"
 #include "core-math/kMeansClustering.h"
 #include "core-math/sampling.h"
+#include "core-math/mathUtil.h"
 
 //
 // core-util headers

@@ -4,7 +4,7 @@
 
 namespace ml {
 
-template <class FloatType> class DenseMatrix
+template <class T> class DenseMatrix
 {
 public:
 	DenseMatrix()
@@ -13,7 +13,7 @@ public:
 		m_cols = 0;
 	}
 
-	DenseMatrix(const DenseMatrix<FloatType>& s)
+	DenseMatrix(const DenseMatrix<T>& s)
 	{
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
@@ -21,7 +21,7 @@ public:
 		m_dataPtr = &m_data[0];
 	}
 
-    DenseMatrix(DenseMatrix<FloatType> &&s)
+    DenseMatrix(DenseMatrix<T> &&s)
 	{
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
@@ -39,7 +39,7 @@ public:
 		m_dataPtr = &m_data[0];
 	}
 
-	explicit DenseMatrix(const MathVector<FloatType> &diagonal)
+	explicit DenseMatrix(const MathVector<T> &diagonal)
 	{
 		m_rows = (UINT)diagonal.size();
 		m_cols = (UINT)diagonal.size();
@@ -54,11 +54,11 @@ public:
 
 	}
 
-	DenseMatrix(UINT rows, UINT cols)
+	DenseMatrix(UINT rows, UINT cols, T clearValue = (T)0.0)
 	{
 		m_rows = rows;
 		m_cols = cols;
-		m_data.resize(m_rows * m_cols);
+        m_data.resize(m_rows * m_cols, clearValue);
 		m_dataPtr = &m_data[0];
 	}
 
@@ -81,7 +81,7 @@ public:
 				for(UINT col = 0; col < values.size(); col++)
 				{
 					const std::string s = ml::util::replace(ml::util::replace(values[col], "{",""), "}","");
-					(*this)(row, col) = (FloatType)std::stod(s);
+					(*this)(row, col) = (T)std::stod(s);
 				}
 			}
 		}
@@ -91,7 +91,7 @@ public:
 		}
 	}
 
-    DenseMatrix(const Matrix4x4<FloatType> &m)
+    DenseMatrix(const Matrix4x4<T> &m)
     {
         m_rows = 4;
         m_cols = 4;
@@ -101,7 +101,7 @@ public:
             m_data[element] = m[element];
     }
 
-	DenseMatrix(const Matrix3x3<FloatType> &m)
+	DenseMatrix(const Matrix3x3<T> &m)
 	{
 		m_rows = 3;
 		m_cols = 3;
@@ -111,7 +111,7 @@ public:
 			m_data[element] = m[element];
 	}
 
-	DenseMatrix(const Matrix2x2<FloatType> &m)
+	DenseMatrix(const Matrix2x2<T> &m)
 	{
 		m_rows = 2;
 		m_cols = 2;
@@ -122,7 +122,7 @@ public:
 	}
 
 
-	void operator=(const DenseMatrix<FloatType>& s)
+	void operator=(const DenseMatrix<T>& s)
 	{
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
@@ -130,7 +130,7 @@ public:
         m_dataPtr = &m_data[0];
 	}
 
-	void operator=(DenseMatrix<FloatType>&& s)
+	void operator=(DenseMatrix<T>&& s)
 	{
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
@@ -143,125 +143,142 @@ public:
 	//
 	// Accessors
 	//
-	FloatType& operator()(UINT row, UINT col)
+	T& operator()(UINT row, UINT col)
 	{
 		return m_dataPtr[row * m_cols + col];
 	}
-	FloatType operator()(UINT row, UINT col) const
+
+	T operator()(UINT row, UINT col) const
 	{
 		return m_dataPtr[row * m_cols + col];
 	}
+
 	UINT rows() const
 	{
 		return m_rows;
 	}
+
 	UINT cols() const
 	{
 		return m_cols;
 	}
+
 	bool square() const
 	{
 		return (m_rows == m_cols);
 	}
 
 	//! Access i-th element of the Matrix for constant access
-	inline FloatType operator[] (unsigned int i) const {
-		assert(i < m_cols*m_rows);
-		return m_dataPtr[i];
-	}
-	//! Access i-th element of the Matrix
-	inline  FloatType& operator[] (unsigned int i) {
+	inline T operator[] (unsigned int i) const {
 		assert(i < m_cols*m_rows);
 		return m_dataPtr[i];
 	}
 
-	std::vector<FloatType> diagonal() const
+	//! Access i-th element of the Matrix
+	inline  T& operator[] (unsigned int i) {
+		assert(i < m_cols*m_rows);
+		return m_dataPtr[i];
+	}
+
+	std::vector<T> diagonal() const
 	{
 		MLIB_ASSERT_STR(square(), "diagonal called on non-square matrix");
-		std::vector<FloatType> result(m_rows);
+		std::vector<T> result(m_rows);
 		for(UINT row = 0; row < m_rows; row++)
 			result[row] = m_data[row * m_cols + row];
 		return result;
 	}
-    const FloatType* ptr() const
+
+    const T* ptr() const
     {
         return m_dataPtr;
     }
 
+
 	//
 	// math functions
 	//
-	DenseMatrix<FloatType> transpose() const;
-	FloatType maxMagnitude() const;
-	DenseMatrix<FloatType> inverse();
+	DenseMatrix<T> transpose() const;
+	T maxMagnitude() const;
+	DenseMatrix<T> inverse();
 	void invertInPlace();
 	bool valid() const;
 
 	//
 	// overloaded operator helpers
 	//
-	static DenseMatrix<FloatType> add(const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B);
-	static DenseMatrix<FloatType> subtract(const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B);
-	static DenseMatrix<FloatType> multiply(const DenseMatrix<FloatType> &A, FloatType c);
-	static std::vector<FloatType> multiply(const DenseMatrix<FloatType> &A, const std::vector<FloatType> &v);
-	static DenseMatrix<FloatType> multiply(const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B);
+	static DenseMatrix<T> add(const DenseMatrix<T> &A, const DenseMatrix<T> &B);
+	static DenseMatrix<T> subtract(const DenseMatrix<T> &A, const DenseMatrix<T> &B);
+	static DenseMatrix<T> multiply(const DenseMatrix<T> &A, T c);
+	static std::vector<T> multiply(const DenseMatrix<T> &A, const std::vector<T> &v);
+	static DenseMatrix<T> multiply(const DenseMatrix<T> &A, const DenseMatrix<T> &B);
 
 	//
 	// common matrices
 	//
-	static DenseMatrix<FloatType> identity(int n)
+	static DenseMatrix<T> identity(int n)
 	{
-		return DenseMatrix<FloatType>(MathVector<FloatType>(n, (FloatType)1.0));
+		return DenseMatrix<T>(MathVector<T>(n, (T)1.0));
 	}
 
-	unsigned int rank(FloatType eps = (FloatType)0.00001) const {
+	unsigned int rank(T eps = (T)0.00001) const {
 		if (!square())	throw MLIB_EXCEPTION("");
-		return util::rank<DenseMatrix<FloatType>, FloatType>(*this, m_rows, eps);
+		return util::rank<DenseMatrix<T>, T>(*this, m_rows, eps);
 	} 
 
-	EigenSystem<FloatType> eigenSystem() const {
-		return EigenSolver<FloatType>::solve<EigenSolver<FloatType>::TYPE_DEFAULT>(*this);
+	EigenSystem<T> eigenSystem() const {
+		return EigenSolver<T>::solve<EigenSolver<T>::TYPE_DEFAULT>(*this);
 	}
+
+    //
+    // in-place operators
+    //
+    void operator /= (T x)
+    {
+        T rcp = (T)1.0 / x;
+        for (T &e : m_data)
+            e *= rcp;
+    }
 
 private:
 	UINT m_rows, m_cols;
-	FloatType* m_dataPtr;
-    std::vector< FloatType > m_data;
+	T* m_dataPtr;
+    std::vector< T > m_data;
 };
 
-template<class FloatType>
-DenseMatrix<FloatType> operator + (const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B)
+template<class T>
+DenseMatrix<T> operator + (const DenseMatrix<T> &A, const DenseMatrix<T> &B)
 {
-	return DenseMatrix<FloatType>::add(A, B);
+	return DenseMatrix<T>::add(A, B);
 }
 
-template<class FloatType>
-DenseMatrix<FloatType> operator - (const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B)
+template<class T>
+DenseMatrix<T> operator - (const DenseMatrix<T> &A, const DenseMatrix<T> &B)
 {
-	return DenseMatrix<FloatType>::subtract(A, B);
+	return DenseMatrix<T>::subtract(A, B);
 }
 
-template<class FloatType>
-DenseMatrix<FloatType> operator * (const DenseMatrix<FloatType> &A, const DenseMatrix<FloatType> &B)
+template<class T>
+DenseMatrix<T> operator * (const DenseMatrix<T> &A, const DenseMatrix<T> &B)
 {
-	return DenseMatrix<FloatType>::multiply(A, B);
+	return DenseMatrix<T>::multiply(A, B);
 }
 
-template<class FloatType>
-std::vector<FloatType> operator * (const DenseMatrix<FloatType> &A, const MathVector<FloatType> &B)
+template<class T>
+std::vector<T> operator * (const DenseMatrix<T> &A, const MathVector<T> &B)
 {
-	return DenseMatrix<FloatType>::multiply(A, B);
+	return DenseMatrix<T>::multiply(A, B);
 }
 
-template<class FloatType>
-DenseMatrix<FloatType> operator * (const DenseMatrix<FloatType> &A, FloatType val)
+template<class T>
+DenseMatrix<T> operator * (const DenseMatrix<T> &A, T val)
 {
-	return DenseMatrix<FloatType>::multiply(A, val);
+	return DenseMatrix<T>::multiply(A, val);
 }
 
 //! writes to a stream
-template <class FloatType> 
-inline std::ostream& operator<<(std::ostream& s, const DenseMatrix<FloatType>& m)
+template <class T> 
+inline std::ostream& operator<<(std::ostream& s, const DenseMatrix<T>& m)
 { 
 	for (unsigned int i = 0; i < m.rows(); i++) {
 		for (unsigned int j = 0; j < m.cols(); j++) {
