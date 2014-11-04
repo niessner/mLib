@@ -80,6 +80,13 @@ void D3D11RenderTarget::reset(GraphicsDevice &g)
     depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     depthViewDesc.Texture2D.MipSlice = 0;
 
+    //
+    // Create the capture buffer
+    //
+    renderDesc.BindFlags = 0;
+    renderDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+    renderDesc.Usage = D3D11_USAGE_STAGING;
+    D3D_VALIDATE(device.CreateTexture2D(&renderDesc, nullptr, &m_captureTexture));
 }
 
 void D3D11RenderTarget::bind(GraphicsDevice &g)
@@ -96,6 +103,26 @@ void D3D11RenderTarget::clear(GraphicsDevice &g, const ml::vec4f &clearColor)
     auto &context = g.castD3D11().context();
     context.ClearRenderTargetView(m_renderView, clearColor.array);
     context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
+void D3D11RenderTarget::captureBitmap(GraphicsDevice &g, Bitmap &result)
+{
+    auto &context = g.castD3D11().context();
+    context.CopyResource(m_captureTexture, m_texture);
+
+    result.allocate(m_height, m_width);
+
+    D3D11_MAPPED_SUBRESOURCE resource;
+    UINT subresource = D3D11CalcSubresource(0, 0, 0);
+    HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ_WRITE, 0, &resource);
+    const BYTE *data = (BYTE *)resource.pData;
+    
+    for (UINT row = 0; row < m_height; row++)
+    {
+        memcpy(&result(row, 0), data + resource.RowPitch * row, m_width * sizeof(RGBColor));
+    }
+
+    context.Unmap(m_captureTexture, subresource);
 }
 
 }

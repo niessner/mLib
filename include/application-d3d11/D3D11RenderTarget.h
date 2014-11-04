@@ -12,6 +12,7 @@ public:
         m_width = 0;
         m_height = 0;
         m_texture = nullptr;
+        m_captureTexture = nullptr;
         m_depthBuffer = nullptr;
         m_renderView = nullptr;
         m_depthView = nullptr;
@@ -21,6 +22,7 @@ public:
         m_width = t.m_width;
         m_height = t.m_height;
         m_texture = t.m_texture; t.m_texture = nullptr;
+        m_captureTexture = t.m_captureTexture; t.m_captureTexture = nullptr;
         m_depthBuffer = t.m_depthBuffer; t.m_depthBuffer = nullptr;
         m_renderView = t.m_renderView; t.m_renderView = nullptr;
         m_depthView = t.m_depthView; t.m_depthView = nullptr;
@@ -30,6 +32,7 @@ public:
         m_width = t.m_width;
         m_height = t.m_height;
         m_texture = t.m_texture; t.m_texture = nullptr;
+        m_captureTexture = t.m_captureTexture; t.m_captureTexture = nullptr;
         m_depthBuffer = t.m_depthBuffer; t.m_depthBuffer = nullptr;
         m_renderView = t.m_renderView; t.m_renderView = nullptr;
         m_depthView = t.m_depthView; t.m_depthView = nullptr;
@@ -39,11 +42,13 @@ public:
         SAFE_RELEASE(m_renderView);
         SAFE_RELEASE(m_depthView);
         SAFE_RELEASE(m_texture);
+        SAFE_RELEASE(m_captureTexture);
         SAFE_RELEASE(m_depthBuffer);
 	}
     D3D11RenderTarget(GraphicsDevice &g, const UINT width, const UINT height)
     {
         m_texture = nullptr;
+        m_captureTexture = nullptr;
         m_depthBuffer = nullptr;
         m_renderView = nullptr;
         m_depthView = nullptr;
@@ -56,6 +61,7 @@ public:
 
     void bind(GraphicsDevice &g);
     void clear(GraphicsDevice &g, const ml::vec4f &clearColor);
+    void captureBitmap(GraphicsDevice &g, Bitmap &result);
 
     GraphicsAssetType type() const
     {
@@ -65,6 +71,7 @@ public:
 private:
     UINT m_width, m_height;
     ID3D11Texture2D *m_texture;
+    ID3D11Texture2D *m_captureTexture;
     ID3D11Texture2D *m_depthBuffer;
 
     ID3D11RenderTargetView *m_renderView;
