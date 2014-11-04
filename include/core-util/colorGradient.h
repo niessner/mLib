@@ -14,7 +14,7 @@ public:
         m_colors = bmp.getRow(0);
     }
 
-    RGBColor value(double x)
+    RGBColor value(double x) const
     {
         if(x < 0.0) return m_leftColor;
         if(x > 1.0) return m_rightColor;
