@@ -22,7 +22,7 @@ public:
     }
 
 	//! creates an object oriented bounding for a given set of points with the same axis as the other OOBB
-	ObjectOrientedBoundingBox3(const point3d<FloatType>* points, unsigned int numPoints, const ObjectOrientedBoundingBox3& other) {
+    ObjectOrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const ObjectOrientedBoundingBox3& other) {
 		m_AxesScaled[0] = other.m_AxesScaled[0].getNormalized();
 		m_AxesScaled[1] = other.m_AxesScaled[1].getNormalized();
 		m_AxesScaled[2] = other.m_AxesScaled[2].getNormalized();
@@ -31,7 +31,7 @@ public:
 	}
 
 	//! creates an object oriented bounding box given a set of points and 3 axis
-	ObjectOrientedBoundingBox3(const point3d<FloatType>* points, unsigned int numPoints, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
+	ObjectOrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
 		m_AxesScaled[0] = xAxis.getNormalized();
 		m_AxesScaled[1] = yAxis.getNormalized();
 		m_AxesScaled[2] = zAxis.getNormalized();
@@ -40,7 +40,7 @@ public:
 	}
 
 	//! creates an object oriented bounding box around a set of points with a given zAxis
-	ObjectOrientedBoundingBox3(const point3d<FloatType>* points, unsigned int numPoints, const point3d<FloatType>& zAxis) {
+    ObjectOrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& zAxis) {
 
 		m_AxesScaled[2] = zAxis.getNormalized();
 	
