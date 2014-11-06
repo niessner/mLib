@@ -79,6 +79,7 @@ void D3D11RenderTarget::reset(GraphicsDevice &g)
     depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
     depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     depthViewDesc.Texture2D.MipSlice = 0;
+    D3D_VALIDATE(device.CreateDepthStencilView(m_depthBuffer, nullptr, &m_depthView));
 
     //
     // Create the capture buffer
