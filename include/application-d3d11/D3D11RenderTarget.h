@@ -54,13 +54,21 @@ public:
         m_depthView = nullptr;
         load(g, width, height);
     }
+
+    // create a new render target with given width and height. Also creates an equal-sized depth buffer.
     void load(GraphicsDevice &g, const UINT width, const UINT height);
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
 
+    // sets the render and depth buffers as the render target for the current device.
+    // to return to the original graphics device render target, call bindRenderDepth() on the graphics device.
     void bind(GraphicsDevice &g);
+
+    // clears the render and depth buffers
     void clear(GraphicsDevice &g, const ml::vec4f &clearColor);
+
+    // save the render target data as a bitmap
     void captureBitmap(GraphicsDevice &g, Bitmap &result);
 
     GraphicsAssetType type() const
