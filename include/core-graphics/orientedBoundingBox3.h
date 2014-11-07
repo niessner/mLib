@@ -206,6 +206,10 @@ public:
 		return m_Anchor + (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]) * (FloatType)0.5;
 	}
 
+    point3d<FloatType> getAxis(int axisIndex) const {
+        return m_AxesScaled[axisIndex];
+    }
+
 	point3d<FloatType> getExtent() const {
 		return point3d<FloatType>(m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length());
 	}

@@ -44,7 +44,7 @@ vector< std::pair<point2d<T>, T> > pointSetPCA(const std::vector< point2d<T> > &
 {
     auto mean = std::accumulate(points.begin(), points.end(), point2d<T>::origin) / (T)points.size();
 
-    /*DenseMatrix<T> covariance(2, 2, (T)0.0);
+    DenseMatrix<T> covariance(2, 2, (T)0.0);
 
     for (const auto &p : points)
     {
@@ -54,15 +54,15 @@ vector< std::pair<point2d<T>, T> > pointSetPCA(const std::vector< point2d<T> > &
             for (int x = 0; x < 2; x++)
                 covariance(y, x) += tensor(y, x);
     }
-    */
 
-    DenseMatrix<T> B(2, (UINT)points.size());
+    /*DenseMatrix<T> B(2, (UINT)points.size());
     for (UINT pointIndex = 0; pointIndex < (UINT)points.size(); pointIndex++)
     {
         B(0, pointIndex) = points[pointIndex][0] - mean[0];
         B(1, pointIndex) = points[pointIndex][1] - mean[1];
     }
-    auto covariance = B * B.transpose();
+    auto covariance = B * B.transpose();*/
+
     covariance /= (T)(points.size() - 1);
 
     auto system = covariance.eigenSystem();
