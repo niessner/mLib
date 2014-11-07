@@ -139,6 +139,10 @@ public:
 		return(l.array[0] * r.array[0] + l.array[1] * r.array[1] + l.array[2] * r.array[2]);
 	}
 
+    static inline point3d cross(const point3d& l, const point3d& r) {
+        return (l ^ r);
+    }
+
 	inline point3d<T> operator-(const point3d& other) const {
 		return point3d<T>(array[0]-other.array[0], array[1]-other.array[1], array[2]-other.array[2]);
 	}
