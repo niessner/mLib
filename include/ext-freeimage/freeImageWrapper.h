@@ -125,7 +125,7 @@ public:
 						//bitsRowStart[j*bytesPerPixel + 1] = ((BYTE*)(const unsigned short*)&v)[1];
 					}
 				}
-			} else if ((numChannels == 3 && bytesPerChannel == 3) || (numChannels == 3 && bytesPerChannel == 4)) {
+			} else if ((numChannels == 3 && bytesPerChannel == 1) || (numChannels == 3 && bytesPerChannel == 4)) {
 				//color map; R8G8B8; R32G32B32
 				#pragma omp parallel for
 				for (int i = 0; i < (int)height; i++) {
