@@ -53,6 +53,7 @@ public:
 		m_Width = m_Height = 0;
 	}
 
+
 	//! adl swap
 	friend void swap(BaseImage& a, BaseImage& b) {
 		std::swap(a.m_Data, b.m_Data);
@@ -103,12 +104,12 @@ public:
 		return m_Data[y*m_Width + x];
 	}
 
-	//! Mutator Operator (double)
+	//! Mutator Operator (double); x,y \in [0;1]
 	T& operator()(double y, double x) {
 		return (*this)((unsigned int)math::round(y*(m_Height-1)), (unsigned int)math::round(x*(m_Width-1)));
 	}
 
-	//! Mutator Operator (float)
+	//! Mutator Operator (float); x,y \in [0;1]
 	T& operator()(float y, float x) {
 		return (*this)((unsigned int)math::round(y*(m_Height-1)), (unsigned int)math::round(x*(m_Width-1)));
 	}
@@ -130,12 +131,12 @@ public:
 		return m_Data[y*m_Width + x];
 	}
 
-	//! Access Operator (double)
+	//! Access Operator (double); x,y \in [0;1]
 	const T& operator()(double y, double x) const {
 		return (*this)((unsigned int)round(y*(m_Height-1)), (unsigned int)round(x*(m_Width-1)));
 	}
 
-	//! Access Operator (float)
+	//! Access Operator (float); x,y \in [0;1]
 	const T& operator()(float y, float x) const {
 		return (*this)((unsigned int)round(y*(m_Height-1)), (unsigned int)round(x*(m_Width-1)));
 	}
@@ -144,6 +145,21 @@ public:
 	template <class S>
 	const T& getPixel(S y, S x) const {
 		return (*this)(y,x);
+	}
+
+	//! returns the bi-linearly interpolated pixel; S must be float or double; ; x,y \in [0;width/height[
+	template<class S>
+	T getInterpolated(S y, S x) const {
+		static_assert(std::is_same<float, S>::value || std::is_same<double, S>::value, "must be double or float");
+
+		uint yl = math::floor(y);	uint yh = math::ceil(y);
+		uint xl = math::floor(x);	uint xh = math::ceil(x);
+		S s = y - (S)yl;	//y interpolation parameter
+		S t = x - (S)xl;	//x interpolation parameter
+
+		T p0 = math::lerp(getPixel(yl, xl), getPixel(yh, xl), s);	// lerp between p_00 and p_10
+		T p1 = math::lerp(getPixel(yl, xh), getPixel(yh, xh), s);	// lerp between P_01 and p_11
+		return math::lerp(p0, p1, t);
 	}
 
 
@@ -323,7 +339,6 @@ public:
 
 	//! flips the image vertically
 	void flipY() {
-		#pragma omp parallel for
 		for (int i = 0; i < (int)m_Width; i++) {
 			for (int j = 0; j < (int)m_Height/2; j++) {
 				T tmp = (*this)(j, i);
@@ -335,7 +350,6 @@ public:
 
 	//! flips the image horizontally
 	void flipX() {
-		#pragma omp parallel for
 		for (int i = 0; i < (int)m_Width/2; i++) {
 			for (int j = 0; j < (int)m_Height; j++) {
 				T tmp = (*this)(j, i);
@@ -373,6 +387,10 @@ public:
 		return getPixel(y,x) != m_InvalidValue;
 	}
 
+	bool isValidCoordinate(unsigned int y, unsigned int x) const {
+		return (y < m_Height && x < m_Width);
+	}
+
 	//! returns the number of channels per pixel (-1 if unknown)
 	unsigned int getNumChannels() const  {
 		if (std::is_same<T, USHORT>::value || std::is_same<T, short >::value) return 1;
@@ -401,7 +419,6 @@ public:
 		result.setInvalidValue(m_InvalidValue);
 
 		if (!ignoreInvalidPixels) {
-			#pragma omp parallel for
 			for (int i = 0; (unsigned int)i < result.getHeight(); i++) {
 				for (int j = 0; (unsigned int)j < result.getWidth(); j++) {
 					result(i,j) = getPixel(2*i + 0, 2*j + 0) + getPixel(2*i + 1, 2*j + 0) + getPixel(2*i + 0, 2*j + 1) + getPixel(2*i + 1, 2*j + 1); 
@@ -409,7 +426,6 @@ public:
 				}
 			}
 		} else {
-			#pragma omp parallel for
 			for (int i = 0; (unsigned int)i < result.getHeight(); i++) {
 				for (int j = 0; (unsigned int)j < result.getWidth(); j++) {
 					unsigned int valid = 0;
@@ -430,10 +446,10 @@ public:
 						valid++;
 						value += getPixel(2*i + 1, 2*j + 1);
 					}
-					if (value == 0) {
+					if (valid == 0) {
 						result(i,j) = result.getInvalidValue();
 					} else {
-						result(i,j) = value / valid;
+						result(i,j) = value / (float)valid;	//this cast is not ideal but works for most classes...
 					}
 				}
 			}
@@ -452,6 +468,44 @@ public:
 				}
 			}
 			*this = std::move(res);
+		}
+	}
+
+	
+	//! smooth (laplacian smoothing step)
+	void smooth(unsigned int steps = 1) {
+		for (unsigned int i = 0; i < steps; i++) {
+			BaseImage<T> other(m_Height, m_Width);
+			other.setInvalidValue(m_InvalidValue);
+
+			for (unsigned int y = 0; y < m_Height; y++) {
+				for (unsigned int x = 0; x < m_Width; x++) {
+					unsigned int valid = 0;
+					T value = T();
+					if (isValidCoordinate(y - 1, x + 0) && isValidValue(y - 1, x + 0))	{
+						valid++;
+						value += getPixel(y - 1, x + 0);
+					}
+					if (isValidCoordinate(y + 1, x + 0) && isValidValue(y + 1, x + 0))	{
+						valid++;
+						value += getPixel(y + 1, x + 0);
+					}
+					if (isValidCoordinate(y + 0, x + 1) && isValidValue(y + 0, x + 1))	{
+						valid++;
+						value += getPixel(y + 0, x + 1);
+					}
+					if (isValidCoordinate(y + 0, x - 1) && isValidValue(y + 0, x - 1))	{
+						valid++;
+						value += getPixel(y + 0, x - 1);
+					}
+
+					if (isValidValue(y, x)) {
+						//other.setPixel(y, x, (getPixel(y, x) + value) / ((float)valid + 1));
+						other.setPixel(y, x, ((float)valid*getPixel(y, x) + value) / (2*(float)valid));
+					}
+				}
+			}
+			*this = other;
 		}
 	}
 
@@ -666,7 +720,6 @@ public:
 	ColorImageRGB(unsigned int height, unsigned int width, const vec3uc *data, float scale = 255.0f) : BaseImage(height, width) {
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-#pragma omp parallel for
 		for (int i = 0; i < (int)height; i++) {
 			for (int j = 0; j < (int)width; j++) {
 				vec3f value(	(float)data[i*width + j].x / scale,
@@ -720,7 +773,6 @@ public:
 	ColorImageRGBA(unsigned int height, unsigned int width, const vec4uc *data, float scale = 255.0f) : BaseImage(height, width) {
 		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-#pragma omp parallel for
 		for (int i = 0; i < (int)height; i++) {
 			for (int j = 0; j < (int)width; j++) {
 				vec4f value(

@@ -296,7 +296,9 @@ public:
 		*this = translation(-center) * rotation(axis, angle) * translation(center);
 	}
 	static Matrix4x4 rotation(const point3d<FloatType> &axis, FloatType angle, const point3d<FloatType>& center) {
-		return rotation(axis, angle, center);
+		Matrix4x4 ret;
+		ret.setRotation(axis, angle, center);
+		return ret;
 	}
 
 	//! overwrite the matrix with a scale-matrix
