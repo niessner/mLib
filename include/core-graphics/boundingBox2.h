@@ -79,6 +79,10 @@ namespace ml {
 			return (minX != std::numeric_limits<FloatType>::max());
 		}
 
+		bool isValid() const {
+			return (minX <= maxX && minY <= maxY);
+		}
+
 		void getVertices(point2d<FloatType> *result) const {
 			result[0] = point2d<FloatType>(minX, minY);
 			result[1] = point2d<FloatType>(maxX, minY);

@@ -81,6 +81,9 @@ public:
 	bool isInitialized() const {
 		return (minX != std::numeric_limits<FloatType>::max());
 	}
+	bool isValid() const {
+		return (minX <= maxX && minY <= maxY && minZ <= maxZ);
+	}
 
 	bool intersect(const Ray<FloatType> &r, FloatType tmin, FloatType tmax ) const
 	{
