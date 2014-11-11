@@ -235,7 +235,9 @@ public:
 		Matrix3x3 res;	res.setDiag(x,y,z);
 		return res;
 	}
-
+	FloatType trace() const {
+		return (matrix2[0][0] + matrix2[1][1] + matrix2[2][2]);
+	}
 
 
 
