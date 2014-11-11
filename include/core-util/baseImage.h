@@ -570,7 +570,7 @@ template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 __forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BaseImage<T>& image) {
 	s.writeData(image.getHeight());
 	s.writeData(image.getWidth());
-	s.writeData(image.m_InvalidValue);
+	s.writeData(image.getInvalidValue());
 	s.writeData((BYTE*)image.getDataPointer(), sizeof(T)*image.getWidth()*image.getHeight());
 	return s;
 }
@@ -580,7 +580,7 @@ __forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator
 	unsigned int height, width;
 	s.readData(&height);
 	s.readData(&width);
-	s.readData(&image.m_InvalidValue);
+	s.readData(&image.getInvalidValue());
 	image.allocateToSize(height, width);
 	s.readData((BYTE*)image.getDataPointer(), sizeof(T)*width*height);
 	return s;
@@ -749,6 +749,18 @@ public:
 		std::cout << "max Depth " << maxDepth << std::endl;
 		std::cout << "min Depth " << minDepth << std::endl;
 	
+		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+			if (data[i] != depthImage.getInvalidValue()) {
+				m_Data[i] = BaseImageHelper::convertDepthToRGB(data[i], minDepth, maxDepth);
+			} else {
+				m_Data[i] = getInvalidValue();
+			}
+		}
+	}
+	ColorImageRGB(const DepthImage& depthImage, float minDepth, float maxDepth) : BaseImage(depthImage.getHeight(), depthImage.getWidth()) {
+		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+
+		const float* data = depthImage.getDataPointer();
 		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 			if (data[i] != depthImage.getInvalidValue()) {
 				m_Data[i] = BaseImageHelper::convertDepthToRGB(data[i], minDepth, maxDepth);
