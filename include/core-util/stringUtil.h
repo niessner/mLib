@@ -62,6 +62,7 @@ namespace util
 
     template <class T>
     inline const T& randomElement(const std::vector<T>& v) {
+        MLIB_ASSERT_STR(v.size() > 0, "empty vector in randomElement");
         return v[ randomInteger(0, (long)v.size() - 1) ];
     }
 
