@@ -100,8 +100,8 @@ public:
 		matrix[0] = matrix[1] = v;
 		matrix[2] = matrix[3] = v;
 	}
-	static Matrix2x2 zero() {
-		Matrix2x2 res; res.zero();
+	static Matrix2x2 zero(FloatType v = (FloatType)0) {
+		Matrix2x2 res; res.setZero(v);
 		return res;
 	}
 
@@ -142,6 +142,9 @@ public:
 	static Matrix2x2 diag(FloatType x, FloatType y) {
 		Matrix2x2 res;	res.setDiag(x,y);
 		return res;
+	}
+	FloatType trace() const {
+		return (matrix2[0][0] + matrix2[1][1]);
 	}
 
 

@@ -366,6 +366,9 @@ public:
 		Matrix4x4 res;	res.setDiag(x,y,z,w);
 		return res;
 	}
+	FloatType trace() const {
+		return (matrix2[0][0] + matrix2[1][1] + matrix2[2][2] + matrix2[3][3]);
+	}
 
 
 	//! return the product of the operand with matrix

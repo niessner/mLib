@@ -105,8 +105,8 @@ public:
 		matrix[3] = matrix[4] = matrix[5] = v;
 		matrix[6] = matrix[7] = matrix[8] = v;
 	}
-	static Matrix3x3 zero() {
-		Matrix3x3 res; res.zero();
+	static Matrix3x3 zero(FloatType v = (FloatType)0) {
+		Matrix3x3 res; res.setZero(v);
 		return res;
 	}
 
