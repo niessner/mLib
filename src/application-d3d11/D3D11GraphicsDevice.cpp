@@ -4,9 +4,8 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
     //
     // Instead of reconstructing the backbuffer everytime the window is resized, we construct a generic, large backbuffer.
     //
-	UINT width = 2560;
-    UINT height = 1600;
-	//UINT height = width * window.height() / window.width();
+	  m_width = 2560;
+    m_height = m_width * window.height() / window.width();
 
 	UINT createDeviceFlags = 0;
 #ifdef _DEBUG
@@ -16,8 +15,8 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	ZeroMemory( &swapChainDesc, sizeof( swapChainDesc ) );
 	swapChainDesc.BufferCount = 1;
-	swapChainDesc.BufferDesc.Width = width;
-	swapChainDesc.BufferDesc.Height = height;
+	swapChainDesc.BufferDesc.Width = m_width;
+	swapChainDesc.BufferDesc.Height = m_height;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
@@ -68,8 +67,8 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
     // Create the depth buffer
     //
     D3D11_TEXTURE2D_DESC depthDesc;
-    depthDesc.Width = width;
-    depthDesc.Height = height;
+    depthDesc.Width = m_width;
+    depthDesc.Height = m_height;
     depthDesc.MipLevels = 1;
     depthDesc.ArraySize = 1;
     depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
@@ -110,8 +109,8 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
     // Setup the viewport
     //
     D3D11_VIEWPORT viewport;
-    viewport.Width = (FLOAT)width;
-    viewport.Height = (FLOAT)height;
+    viewport.Width = (FLOAT)m_width;
+    viewport.Height = (FLOAT)m_height;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     viewport.TopLeftX = 0;
@@ -160,6 +159,14 @@ void ml::D3D11GraphicsDevice::renderBeginFrame()
 void ml::D3D11GraphicsDevice::bindRenderDepth()
 {
     m_context->OMSetRenderTargets(1, &m_renderView, m_depthView);
+    D3D11_VIEWPORT viewport;
+    viewport.Width = (FLOAT)m_width;
+    viewport.Height = (FLOAT)m_height;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    m_context->RSSetViewports(1, &viewport);
 }
 
 void ml::D3D11GraphicsDevice::clear(const ml::vec4f &clearColor)

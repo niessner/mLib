@@ -69,7 +69,8 @@ public:
 	}
 
 private:
-	ID3D11Device *m_device;
+  UINT m_width, m_height;
+  ID3D11Device *m_device;
 	ID3D11DeviceContext *m_context;
 	ID3D11RenderTargetView *m_renderView;
 	ID3D11Debug *m_debug;

@@ -97,6 +97,15 @@ void D3D11RenderTarget::bind(GraphicsDevice &g)
 
     auto &context = g.castD3D11().context();
     context.OMSetRenderTargets(1, &m_renderView, m_depthView);
+
+    D3D11_VIEWPORT viewport;
+    viewport.Width = (FLOAT)m_width;
+    viewport.Height = (FLOAT)m_height;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    context.RSSetViewports(1, &viewport);
 }
 
 void D3D11RenderTarget::clear(GraphicsDevice &g, const ml::vec4f &clearColor)
