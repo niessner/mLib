@@ -578,10 +578,12 @@ __forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 __forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BaseImage<T>& image) {
 	unsigned int height, width;
+	T invalidValue;
 	s.readData(&height);
 	s.readData(&width);
-	s.readData(&image.getInvalidValue());
+	s.readData(&invalidValue);
 	image.allocateToSize(height, width);
+	image.setInvalidValue(invalidValue);
 	s.readData((BYTE*)image.getDataPointer(), sizeof(T)*width*height);
 	return s;
 }
