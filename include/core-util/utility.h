@@ -78,6 +78,10 @@ namespace math
 		else { return C; }
 	}
 
+    template <class T> inline T max(T A, T B, T C, T D) {
+        return max(max(A, B), max(C, D));
+    }
+
     template <class T> inline unsigned int maxIndex(T A, T B, T C) {
         if (A > B && A > C) { return 0; }
         else if (B > C) { return 1; }
