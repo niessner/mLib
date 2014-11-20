@@ -14,7 +14,8 @@ public:
     {
 
     }
-	Ray(const point3d<FloatType> &o, const point3d<FloatType> &d) {
+
+	inline Ray(const point3d<FloatType> &o, const point3d<FloatType> &d) {
 		m_Origin = o;
 		m_Direction = d.getNormalized();
         m_InverseDirection = point3d<FloatType>((FloatType)1.0 / m_Direction.x, (FloatType)1.0 / m_Direction.y, (FloatType)1.0 / m_Direction.z);
@@ -24,35 +25,35 @@ public:
 		m_Sign.z = (m_InverseDirection.z < (FloatType)0);
 	}
 
-	point3d<FloatType> getHitPoint(FloatType t) const {
+	inline point3d<FloatType> getHitPoint(FloatType t) const {
 		return m_Origin + t * m_Direction;
 	}
 
-	const point3d<FloatType>& origin() const {
+	inline const point3d<FloatType>& origin() const {
 		return m_Origin;
 	}
 
-	const point3d<FloatType>& direction() const {
+	inline const point3d<FloatType>& direction() const {
 		return m_Direction;
 	}
 
-	const point3d<FloatType>& inverseDirection() const {
+	inline const point3d<FloatType>& inverseDirection() const {
 		return m_InverseDirection;
 	}
 
-	const vec3i& sign() const {
+	inline const vec3i& sign() const {
 		return m_Sign;
 	}
 
-	void transform(const Matrix4x4<FloatType>& m) {
+	inline void transform(const Matrix4x4<FloatType>& m) {
 		*this = Ray(m * m_Origin,  m.transformNormalAffine(m_Direction));
 	}
 
-	void rotate(const Matrix3x3<FloatType>& m) {
+	inline void rotate(const Matrix3x3<FloatType>& m) {
 		*this = Ray(m_Origin, m * m_Direction);
 	}
 
-	void translate(const point3d<FloatType>& p) {
+	inline void translate(const point3d<FloatType>& p) {
 		*this = Ray(m_Origin + p, m_Direction);
 	}
 private:

@@ -9,8 +9,8 @@ template <class T> class Grid3
 {
 public:
 	Grid3();
-	Grid3(size_t rows, size_t cols, size_t slices);
-	Grid3(size_t rows, size_t cols, size_t slices, const T &clearValue);
+	Grid3(size_t width, size_t height, size_t depth);
+	Grid3(size_t width, size_t height, size_t depth, const T &clearValue);
 	Grid3(const Grid3<T> &G);
 	Grid3(Grid3<T> &&G);
 
@@ -23,12 +23,12 @@ public:
 	Grid3<T>& operator = (const Grid3<T> &G);
 	Grid3<T>& operator = (Grid3<T> &&G);
 
-	void allocate(size_t rows, size_t cols, size_t slices);
-	void allocate(size_t rows, size_t cols, size_t slices, const T &clearValue);
+	void allocate(size_t width, size_t height, size_t depth);
+	void allocate(size_t width, size_t height, size_t depth, const T &clearValue);
 
 	inline Grid3<T>& operator += (const Grid3<T> &right)
 	{
-		MLIB_ASSERT_STR(m_rows == right.m_rows && m_cols == right.m_cols, "grid dimensions must be equal");
+		MLIB_ASSERT_STR(m_width == right.m_rows && m_height == right.m_cols, "grid dimensions must be equal");
 		for (size_t i = 0; i < getNumTotalEntries(); i++) {
 			m_data[i] += right.m_data[i];
 		}
@@ -44,7 +44,7 @@ public:
 
 	inline Grid3<T> operator * (T x)
 	{
-		Grid3<T> result(m_rows, m_cols, m_slices);
+		Grid3<T> result(m_width, m_height, m_depth);
 		for (size_t i = 0; i < getNumTotalEntries(); i++) {
 			result.m_data =  m_data * x;
 		}
@@ -54,31 +54,31 @@ public:
 	//
 	// Accessors
 	//
-	inline T& operator() (size_t row, size_t col, size_t slice)
+	inline T& operator() (size_t x, size_t y, size_t z)
 	{
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-		MLIB_ASSERT_STR( (row < m_rows) && (col < m_cols) && (slice < m_slices), "Out-of-bounds grid access");
+		MLIB_ASSERT_STR( (x < m_width) && (y < m_height) && (z < m_depth), "Out-of-bounds grid access");
 #endif
-		return m_data[slice*m_cols*m_rows + row*m_cols + col];
+		return m_data[z*m_height*m_width + x*m_height + y];
 	}
 	inline const T& operator() (size_t row, size_t col, size_t slice) const
 	{
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-		MLIB_ASSERT_STR( (row < m_rows) && (col < m_cols) && (slice < m_slices), "Out-of-bounds grid access");
+		MLIB_ASSERT_STR( (row < m_width) && (col < m_height) && (slice < m_depth), "Out-of-bounds grid access");
 #endif
-		return m_data[slice*m_cols*m_rows + row*m_cols + col];
+		return m_data[slice*m_height*m_width + row*m_height + col];
 	}
 	inline size_t dimX() const
 	{
-		return m_rows;
+		return m_width;
 	}
 	inline size_t dimY() const
 	{
-		return m_cols;
+		return m_height;
 	}
 	inline size_t dimZ() const 
 	{
-		return m_slices;
+		return m_depth;
 	}
 
 	//inline vec3ui getDimensions() const {
@@ -87,7 +87,7 @@ public:
 
 	inline bool square() const
 	{
-		return (m_rows == m_cols && m_cols == m_slices);
+		return (m_width == m_height && m_height == m_depth);
 	}
 	inline T* ptr()
 	{
@@ -101,9 +101,9 @@ public:
 	//
 	// Query
 	//
-	inline bool validCoordinates(size_t row, size_t col, size_t slices ) const
+	inline bool isValidCoordinate(size_t x, size_t y, size_t z ) const
 	{
-		return (row < m_rows && col < m_cols && slices < m_slices);
+		return (x < m_width && y < m_height && z < m_depth);
 	}
 
 	//
@@ -112,11 +112,11 @@ public:
 	void clear(const T &clearValue);
 
 	size_t getNumTotalEntries() const {
-		return m_rows * m_cols * m_slices;
+		return m_width * m_height * m_depth;
 	}
 protected:
 	T *m_data;
-	size_t m_rows, m_cols, m_slices;
+	size_t m_width, m_height, m_depth;
 };
 
 template <class T> inline bool operator == (const Grid3<T> &a, const Grid3<T> &b)

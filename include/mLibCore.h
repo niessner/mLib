@@ -60,6 +60,7 @@
 #include "core-util/UIConnection.h"
 #include "core-util/sparseGrid3.h"
 #include "core-base/binaryGrid3.h"
+#include "core-base/distanceField3.h"
 #include "core-util/baseImage.h"
 
 //

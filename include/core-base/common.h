@@ -57,6 +57,8 @@
 #include <limits>
 #include <tuple>
 #include <complex>
+#include <queue> 
+
 
 namespace boost {
 namespace serialization {

@@ -8,12 +8,12 @@ namespace ml {
 	class BinaryGrid3 {
 	public:
 		BinaryGrid3() {
-			m_slices = m_cols = m_rows = 0;
+			m_depth = m_height = m_width = 0;
 			m_data = nullptr;
 		}
-		BinaryGrid3(size_t rows, size_t cols, size_t slices) {
+		BinaryGrid3(size_t width, size_t height, size_t depth) {
 			m_data = nullptr;
-			allocate(rows,cols,slices);
+			allocate(width,height,depth);
 			clear();
 		}
 
@@ -25,20 +25,20 @@ namespace ml {
 
 		BinaryGrid3(const BinaryGrid3& other) {
 			m_data = nullptr;
-			allocate(other.m_rows, other.m_cols, other.m_slices);
+			allocate(other.m_width, other.m_height, other.m_depth);
 			memcpy(m_data, other.m_data, getNumUInts());
 		}
 
 		BinaryGrid3(BinaryGrid3&& other) {
-			m_cols = other.m_cols;
-			m_rows = other.m_rows;
-			m_slices = other.m_slices;
+			m_height = other.m_height;
+			m_width = other.m_width;
+			m_depth = other.m_depth;
 
 			m_data = other.m_data;
 
-			other.m_rows = 0;
-			other.m_cols = 0;
-			other.m_slices = 0;
+			other.m_width = 0;
+			other.m_height = 0;
+			other.m_depth = 0;
 
 			other.m_data = nullptr;
 		}
@@ -47,11 +47,11 @@ namespace ml {
 			SAFE_DELETE_ARRAY(m_data)
 		}
 
-		inline void allocate(size_t rows, size_t cols, size_t slices) {
+		inline void allocate(size_t width, size_t height, size_t depth) {
 			SAFE_DELETE_ARRAY(m_data);
-			m_rows = rows;
-			m_cols = cols;
-			m_slices = slices;
+			m_width = width;
+			m_height = height;
+			m_depth = depth;
 
 			m_data = new unsigned int[getNumUInts()];
 		}
@@ -61,21 +61,21 @@ namespace ml {
 		}
 
 		inline void operator=(const BinaryGrid3& other) {
-			allocate(other.m_rows, other.m_cols, other.m_slices);
+			allocate(other.m_width, other.m_height, other.m_depth);
 			memcpy(m_data, other.m_data, getNumUInts());
 		}
 
 		inline void operator=(BinaryGrid3&& other) {
-			std::swap(m_rows, other.m_rows);
-			std::swap(m_cols, other.m_cols);
-			std::swap(m_slices, other.m_slices);
+			std::swap(m_width, other.m_width);
+			std::swap(m_height, other.m_height);
+			std::swap(m_depth, other.m_depth);
 			std::swap(m_data, other.m_data);
 		}
 
 		inline bool operator==(const BinaryGrid3& other) const {
-			if (m_rows != other.m_rows ||
-				m_cols != other.m_cols ||
-				m_rows != other.m_rows)	return false;
+			if (m_width != other.m_width ||
+				m_height != other.m_height ||
+				m_width != other.m_width)	return false;
 
 			for (unsigned int i = 0; i < getNumUInts(); i++) {
 				if (m_data[i] != other.m_data[i])	return false;
@@ -95,19 +95,19 @@ namespace ml {
 			}
 		}
 
-		inline bool isVoxelSet(size_t row, size_t col, size_t slice) const {
-			size_t linIdx = slice*m_cols*m_rows + row*m_cols + col;
+		inline bool isVoxelSet(size_t x, size_t y, size_t z) const {
+			size_t linIdx = z*m_height*m_width + x*m_height + y;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			return (m_data[baseIdx] & (1 << localIdx)) != 0;
 		}
 
-		inline bool isVoxelSet(const vec3ui& v) {
+		inline bool isVoxelSet(const vec3ul& v) const {
 			return isVoxelSet(v.x, v.y, v.z);
 		}
 
-		inline void setVoxel(size_t row,size_t col, size_t slice) {
-			size_t linIdx = slice*m_cols*m_rows + row*m_cols + col;
+		inline void setVoxel(size_t x, size_t y, size_t z) {
+			size_t linIdx = z*m_height*m_width + x*m_height + y;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] |= (1 << localIdx);
@@ -117,8 +117,8 @@ namespace ml {
 			setVoxel(v.x, v.y, v.z);
 		}
 
-		inline void clearVoxel(size_t row, size_t col, size_t slice) {
-			size_t linIdx = slice*m_cols*m_rows + row*m_cols + col;
+		inline void clearVoxel(size_t x, size_t y, size_t z) {
+			size_t linIdx = z*m_height*m_width + x*m_height + y;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] &= ~(1 << localIdx);
@@ -128,8 +128,8 @@ namespace ml {
 			clearVoxel(v.x, v.y, v.z);
 		}
 
-		inline void toggleVoxel(size_t row, size_t col, size_t slice) {
-			size_t linIdx = slice*m_cols*m_rows + row*m_cols + col;
+		inline void toggleVoxel(size_t x, size_t y, size_t z) {
+			size_t linIdx = z*m_height*m_width + x*m_height + y;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] ^= (1 << localIdx);
@@ -139,18 +139,18 @@ namespace ml {
 			toggleVoxel(v.x, v.y, v.z);
 		}
 
-		inline void toggleVoxelAndBehindRow(size_t row, size_t col, size_t slice) {
-			for (size_t i = row; i < m_rows; i++) {
-				toggleVoxel(i, col, slice);
+		inline void toggleVoxelAndBehindRow(size_t x, size_t y, size_t z) {
+			for (size_t i = x; i < m_width; i++) {
+				toggleVoxel(i, y, z);
 			}
 		}
 		inline void toggleVoxelAndBehindRow(const vec3ul& v) {
 			toggleVoxelAndBehindRow(v.x, v.y, v.z);
 		}
 
-		inline void toggleVoxelAndBehindSlice(size_t row, size_t col, size_t slice) {
-			for (size_t i = slice; i < m_slices; i++) {
-				toggleVoxel(row, col, i);
+		inline void toggleVoxelAndBehindSlice(size_t x, size_t y, size_t z) {
+			for (size_t i = z; i < m_depth; i++) {
+				toggleVoxel(x, y, i);
 			}
 		}
 		inline void toggleVoxelAndBehindSlice(const vec3ul& v) {
@@ -158,10 +158,10 @@ namespace ml {
 		}
 
 		inline void print() const {
-			for (size_t z = 0; z < m_slices; z++) {
+			for (size_t z = 0; z < m_depth; z++) {
 				std::cout << "slice0" << std::endl;
-				for (size_t y = 0; y < m_cols; y++) {
-					for (size_t x = 0; x < m_rows; x++) {
+				for (size_t y = 0; y < m_height; y++) {
+					for (size_t x = 0; x < m_width; x++) {
 						if (isVoxelSet(x,y,z)) {
 							std::cout << "1";
 						} else {
@@ -175,13 +175,13 @@ namespace ml {
 		}
 
 		inline size_t dimX() const {
-			return m_rows;
+			return m_width;
 		}
 		inline size_t dimY() const {
-			return m_cols;
+			return m_height;
 		}
 		inline size_t dimZ() const {
-			return m_slices;
+			return m_depth;
 		}
 
 		inline vec3ul getDimensions() const {
@@ -189,8 +189,19 @@ namespace ml {
 		}
 
 		inline size_t getNumTotalEntries() const {
-			return m_rows*m_cols*m_slices;
+			return m_width*m_height*m_depth;
 		}
+
+		inline bool isValidCoordinate(size_t x, size_t y, size_t z) const
+		{
+			return (x < m_width && y < m_height && z < m_depth);
+		}
+
+		inline bool isValidCoordinate(const vec3ul& v) const
+		{
+			return isValidCoordinate(v.x, v.y, v.z);
+		}
+
 
 
 	private:
@@ -202,7 +213,7 @@ namespace ml {
 
 		static const unsigned int bitsPerUInt = sizeof(unsigned int);
 		unsigned int*	m_data;
-		size_t			m_rows, m_cols, m_slices;
+		size_t			m_width, m_height, m_depth;
 	};
 
 

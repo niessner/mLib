@@ -110,7 +110,7 @@ public:
 	//
 	// Query
 	//
-	inline bool validCoordinates(int row, int col) const
+	inline bool isValidCoordinate(int row, int col) const
 	{
 		return (row >= 0 && row < int(m_rows) && col >= 0 && col < int(m_cols));
 	}

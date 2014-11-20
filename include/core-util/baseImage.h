@@ -413,6 +413,13 @@ public:
 		return sizeof(T);
 	}
 
+	////! computes the next mip map level of the image (box filtered image)
+	//BaseImage mipMap(bool ignoreInvalidPixels = false) const {
+	//	BaseImage result;
+	//	mipMap(result, ignoreInvalidPixels);
+	//	return result;
+	//}
+
 	//! computes the next mip map level of the image (box filtered image)
 	void mipMap(BaseImage& result, bool ignoreInvalidPixels = false) const {
 		result.allocateToSize(m_Height / 2, m_Width / 2);
