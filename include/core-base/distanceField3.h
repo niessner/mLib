@@ -7,14 +7,95 @@ namespace ml {
 	class DistanceField3 : public Grid3<FloatType> {
 	public:
 
-		DistanceField3(const BinaryGrid3& grid) : Grid3(grid.dimX(), grid.dimY(), grid.dimZ()) {
-			generateFromBinaryGrid(grid);
+		DistanceField3(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) : Grid3(grid.dimX(), grid.dimY(), grid.dimZ()) {
+			
+			m_truncation = trunc;
+
+			//the simple variant appears to be much faster
+			generateFromBinaryGridSimple(grid, trunc);
+			//generateFromBinaryGridQueue(grid);
 		}
 
 
+		//! computes the distance
+		FloatType evalDist(const BinaryGrid3& grid, const Matrix4x4<FloatType>& gridToDF) {
+
+			FloatType dist = (FloatType)dist;
+
+			for (size_t z = 0; z < grid.dimZ(); z++) {
+				for (size_t y = 0; y < grid.dimY(); y++) {
+					for (size_t x = 0; x < grid.dimX(); x++) {
+						point3d<FloatType> p = gridToDF * point3d<FloatType>((FloatType)x, (FloatType)y, (FloatType)z);
+						vec3ul pi(math::round(p));
+						if (isValidCoordinate(pi)) {
+							const FloatType& d = (*this)(pi);
+							if (d < m_truncation) dist += d;
+						}
+					}
+				}
+			}
+			return dist;
+		}
+
 	private:
 
-		void generateFromBinaryGrid(const BinaryGrid3& grid) {
+		void generateFromBinaryGridSimple(const BinaryGrid3& grid, FloatType trunc) {
+
+			FloatType kernel[3][3][3];
+			for (int k = -1; k <= 1; k++) {
+				for (int j = -1; j <= 1; j++) {
+					for (int i = -1; i <= 1; i++) {
+						FloatType d = point3d<FloatType>((FloatType)k, (FloatType)j, (FloatType)i).length();
+						kernel[k+1][j+1][i+1] = d;
+					}
+				}
+			}
+
+			//initialize with grid distances
+			for (size_t z = 0; z < grid.dimZ(); z++) {
+				for (size_t y = 0; y < grid.dimY(); y++) {
+					for (size_t x = 0; x < grid.dimX(); x++) {
+						if (grid.isVoxelSet(x, y, z)) {
+							(*this)(x, y, z) = (FloatType)0;
+						}
+						else {
+							(*this)(x, y, z) = std::numeric_limits<FloatType>::infinity();
+						}
+					}
+				}
+			}
+
+			bool found = true;
+			while (found) {
+				found = false;
+				for (size_t z = 0; z < dimZ(); z++) {
+					for (size_t y = 0; y < dimY(); y++) {
+						for (size_t x = 0; x < dimX(); x++) {
+
+							FloatType dMin = (*this)(x, y, z);
+							for (int k = -1; k <= 1; k++) {
+								for (int j = -1; j <= 1; j++) {
+									for (int i = -1; i <= 1; i++) {
+										vec3ul n(x + i, y + j, z + k);
+										if (isValidCoordinate(n.x, n.y, n.z)) {
+											FloatType dCurr = (*this)(n.x, n.y, n.z) + kernel[i+1][j+1][k+1];
+											if (dCurr < dMin && dCurr <= trunc) {
+												dMin = dCurr;
+												found = true;
+											}
+										}
+									}
+								}
+							}
+							(*this)(x, y, z) = dMin;
+						}
+					}
+				}
+			}
+
+		}
+
+		void generateFromBinaryGridQueue(const BinaryGrid3& grid) {
 
 			BinaryGrid3 visited(grid.getDimensions());
 
@@ -139,6 +220,8 @@ namespace ml {
 			}
 			return false;
 		}
+
+		FloatType m_truncation;
 	};
 
 	typedef DistanceField3<float> DistanceField3f;
