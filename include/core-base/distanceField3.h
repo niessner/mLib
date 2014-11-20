@@ -18,7 +18,7 @@ namespace ml {
 
 
 		//! computes the distance
-		FloatType evalDist(const BinaryGrid3& grid, const Matrix4x4<FloatType>& gridToDF) {
+		FloatType evalDist(const BinaryGrid3& grid, const Matrix4x4<FloatType>& gridToDF, bool squaredSum = false) {
 
 			FloatType dist = (FloatType)dist;
 
@@ -29,7 +29,15 @@ namespace ml {
 						vec3ul pi(math::round(p));
 						if (isValidCoordinate(pi)) {
 							const FloatType& d = (*this)(pi);
-							if (d < m_truncation) dist += d;
+							if (d < m_truncation) {
+								if (squaredSum) {
+									dist += d*d;
+								}
+								else {
+									dist += d;
+								}
+							}
+							
 						}
 					}
 				}

@@ -82,10 +82,10 @@ public:
 			grid.setVoxel(0, 0, 0);
 			grid.setVoxel(s - 1, 0, 0);
 			DistanceField3f df(grid);
-			for (size_t i = 0; i < s; i++) {
-				std::cout << df(i, 0, 0) << std::endl;
-				//math::floatEqual()
-			}
+			//for (size_t i = 0; i < s; i++) {
+			//	std::cout << df(i, 0, 0) << std::endl;
+			//	//math::floatEqual()
+			//}
 		}
 		{
 			//2d test case
@@ -94,12 +94,12 @@ public:
 			grid.setVoxel(0, 0, 0);
 			grid.setVoxel(s - 1, s - 1, 0);
 			DistanceField3f df(grid);
-			for (size_t i = 0; i < s; i++) {
-				for (size_t j = 0; j < s; j++) {
-					std::cout << math::round(df(i, j, 0)) << " ";
-				}
-				std::cout << std::endl;
-			}
+			//for (size_t i = 0; i < s; i++) {
+			//	for (size_t j = 0; j < s; j++) {
+			//		std::cout << math::round(df(i, j, 0)) << " ";
+			//	}
+			//	std::cout << std::endl;
+			//}
 
 		}
 
