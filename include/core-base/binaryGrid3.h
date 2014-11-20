@@ -77,7 +77,8 @@ namespace ml {
 				m_height != other.m_height ||
 				m_width != other.m_width)	return false;
 
-			for (unsigned int i = 0; i < getNumUInts(); i++) {
+			size_t numUInts = getNumUInts();
+			for (size_t i = 0; i < numUInts; i++) {
 				if (m_data[i] != other.m_data[i])	return false;
 			}
 
@@ -90,7 +91,8 @@ namespace ml {
 
 		//! clears all voxels
 		inline void clear() {
-			for (size_t i = 0; i < getNumUInts(); i++) {
+			size_t numUInts = getNumUInts();
+			for (size_t i = 0; i < numUInts; i++) {
 				m_data[i] = 0;
 			}
 		}
@@ -202,7 +204,14 @@ namespace ml {
 			return isValidCoordinate(v.x, v.y, v.z);
 		}
 
-
+		inline size_t getNumOccupiedEntries() const {
+			size_t numOccupiedEntries = 0;
+			size_t numUInts = getNumUInts();
+			for (size_t i = 0; i < numUInts; i++) {
+				numOccupiedEntries += math::numberOfSetBits(m_data[i]);
+			}
+			return numOccupiedEntries;
+		}
 
 	private:
 

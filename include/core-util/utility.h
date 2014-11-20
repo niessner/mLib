@@ -199,6 +199,20 @@ namespace math
 		sincos(phi, *sinPhi, *cosPhi);
 	}
 
+	//! counts the number of bits in an unsigned integer 
+	inline unsigned int numberOfSetBits(unsigned int i) {
+		i = i - ((i >> 1) & 0x55555555);
+		i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+		return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
+	}
+
+	//! counts the number of bits in an integer 
+	inline int numberOfSetBits(int i) {
+		i = i - ((i >> 1) & 0x55555555);
+		i = (i & 0x33333333) + ((i >> 2) & 0x33333333);
+		return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
+	}
+
 }  // namespace math
 
 namespace util

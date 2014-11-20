@@ -37,6 +37,9 @@ namespace ml {
 			return dist;
 		}
 
+		size_t getNumZeroVoxels() const {
+			return m_numZeroVoxels;
+		}
 	private:
 
 		void generateFromBinaryGridSimple(const BinaryGrid3& grid, FloatType trunc) {
@@ -52,11 +55,13 @@ namespace ml {
 			}
 
 			//initialize with grid distances
+			m_numZeroVoxels = 0;
 			for (size_t z = 0; z < grid.dimZ(); z++) {
 				for (size_t y = 0; y < grid.dimY(); y++) {
 					for (size_t x = 0; x < grid.dimX(); x++) {
 						if (grid.isVoxelSet(x, y, z)) {
 							(*this)(x, y, z) = (FloatType)0;
+							m_numZeroVoxels++;
 						}
 						else {
 							(*this)(x, y, z) = std::numeric_limits<FloatType>::infinity();
@@ -100,12 +105,14 @@ namespace ml {
 			BinaryGrid3 visited(grid.getDimensions());
 
 			//initialize with grid distances
+			m_numZeroVoxels = 0;
 			for (size_t z = 0; z < grid.dimZ(); z++) {
 				for (size_t y = 0; y < grid.dimY(); y++) {
 					for (size_t x = 0; x < grid.dimX(); x++) {
 						if (grid.isVoxelSet(x, y, z)) {
 							(*this)(x, y, z) = (FloatType)0;
 							visited.setVoxel(x, y, z);
+							m_numZeroVoxels++;
 						}
 						else {
 							(*this)(x, y, z) = std::numeric_limits<FloatType>::infinity();
@@ -221,6 +228,7 @@ namespace ml {
 			return false;
 		}
 
+		size_t m_numZeroVoxels;
 		FloatType m_truncation;
 	};
 
