@@ -30,9 +30,27 @@ namespace ml {
 			FloatType dist = (FloatType)0;
             size_t numComparisons = 0;
 
-			for (size_t z = 0; z < grid.dimZ(); z++) {
-				for (size_t y = 0; y < grid.dimY(); y++) {
-					for (size_t x = 0; x < grid.dimX(); x++) {
+			Matrix4x4<FloatType> DFToGrid = gridToDF.getInverse();
+			BoundingBox3<unsigned int> bbBox;
+			bbBox.include(gridToDF*point3d<FloatType>(0,			0,				0));
+			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	0,				0));
+			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	grid.dimY(),	0));
+			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	grid.dimY(),	grid.dimZ()));
+			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	0,				grid.dimZ()));
+			bbBox.include(gridToDF*point3d<FloatType>(0,			0,				grid.dimZ()));
+			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	0,				grid.dimZ()));
+			bbBox.include(gridToDF*point3d<FloatType>(0,			grid.dimY(),	0));
+
+			bbBox.setMin(math::max(bbBox.getMin(), 0));
+			bbBox.setMax(math::min(bbBox.getMax(), grid.getDimensions()));
+
+
+			//for (size_t z = 0; z < grid.dimZ(); z++) {
+			//	for (size_t y = 0; y < grid.dimY(); y++) {
+			//		for (size_t x = 0; x < grid.dimX(); x++) {
+			for (size_t z = bbBox.getMinZ(); z < bbBox.getMaxZ(); z++) {
+				for (size_t y = bbBox.getMinY(); y < bbBox.getMaxY(); y++) {
+					for (size_t x = bbBox.getMinZ(); x < bbBox.getMaxX(); x++) {
 						point3d<FloatType> p = gridToDF * point3d<FloatType>((FloatType)x, (FloatType)y, (FloatType)z);
 						vec3ul pi(math::round(p));
 						if (isValidCoordinate(pi.x, pi.y, pi.z)) {

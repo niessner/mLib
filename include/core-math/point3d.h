@@ -345,6 +345,27 @@ namespace math {
                            std::max(p.y, v),
                            std::max(p.z, v));
     }
+	template<class T>
+	inline point3d<T> max(const point3d<T>& p, const point3d<T>& v) {
+		return point3d<T>(
+			std::max(p.x, v.x),
+			std::max(p.y, v.y),
+			std::max(p.z, v.z));
+	}
+	template<class T>
+	inline point3d<T> min(const point3d<T>& p, T v) {
+		return point3d<T>(	std::min(p.x, v),
+							std::min(p.y, v),
+							std::min(p.z, v));
+	}
+	template<class T>
+	inline point3d<T> min(const point3d<T>& p, const point3d<T>& v) {
+		return point3d<T>(
+			std::min(p.x, v.x),
+			std::min(p.y, v.y),
+			std::min(p.z, v.z));
+	}
+
 
 }
 
