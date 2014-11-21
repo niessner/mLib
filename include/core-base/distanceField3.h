@@ -32,7 +32,6 @@ namespace ml {
 
 			Matrix4x4<FloatType> DFToGrid = gridToDF.getInverse();
 
-            //std::cout << "DF to grid:" << std::endl << gridToDF << std::endl;
 
 			BoundingBox3<int> bbBox;
             bbBox.include(DFToGrid*point3d<FloatType>((FloatType)0,             (FloatType)0,           (FloatType)0));
@@ -44,11 +43,8 @@ namespace ml {
             bbBox.include(DFToGrid*point3d<FloatType>((FloatType)grid.dimX(),   (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
             bbBox.include(DFToGrid*point3d<FloatType>((FloatType)0,             (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
 
-			bbBox.setMin(math::max(bbBox.getMin() - 1, 0));
-           // std::cout << bbBox.getMax() << " " << vec3i(grid.getDimensions()) << std::endl;
+			bbBox.setMin(math::max(bbBox.getMin() - 1, 0));      
 			bbBox.setMax(math::min(bbBox.getMax() + 1, vec3i(grid.getDimensions())));
-
-			//std::cout << bbBox << std::endl;
 
 			//for (size_t z = 0; z < grid.dimZ(); z++) {
 			//	for (size_t y = 0; y < grid.dimY(); y++) {
