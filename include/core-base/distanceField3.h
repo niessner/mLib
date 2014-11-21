@@ -25,17 +25,18 @@ namespace ml {
         }
 
 		//! computes the distance
-		FloatType evalDist(const BinaryGrid3& grid, const Matrix4x4<FloatType>& gridToDF, bool squaredSum = false) {
+		std::pair<FloatType, size_t> evalDist(const BinaryGrid3& grid, const Matrix4x4<FloatType>& gridToDF, bool squaredSum = false) const {
 
-			FloatType dist = (FloatType)dist;
+			FloatType dist = (FloatType)0;
+            size_t numComparisons = 0;
 
 			for (size_t z = 0; z < grid.dimZ(); z++) {
 				for (size_t y = 0; y < grid.dimY(); y++) {
 					for (size_t x = 0; x < grid.dimX(); x++) {
 						point3d<FloatType> p = gridToDF * point3d<FloatType>((FloatType)x, (FloatType)y, (FloatType)z);
 						vec3ul pi(math::round(p));
-						if (isValidCoordinate(pi)) {
-							const FloatType& d = (*this)(pi);
+						if (isValidCoordinate(pi.x, pi.y, pi.z)) {
+							const FloatType& d = (*this)(pi.x, pi.y, pi.z);
 							if (d < m_truncation) {
 								if (squaredSum) {
 									dist += d*d;
@@ -43,13 +44,14 @@ namespace ml {
 								else {
 									dist += d;
 								}
+                                numComparisons++;
 							}
 							
 						}
 					}
 				}
 			}
-			return dist;
+			return std::make_pair(dist,numComparisons);
 		}
 
 		size_t getNumZeroVoxels() const {
