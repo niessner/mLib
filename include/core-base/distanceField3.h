@@ -31,18 +31,18 @@ namespace ml {
             size_t numComparisons = 0;
 
 			Matrix4x4<FloatType> DFToGrid = gridToDF.getInverse();
-			BoundingBox3<unsigned int> bbBox;
-			bbBox.include(gridToDF*point3d<FloatType>(0,			0,				0));
-			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	0,				0));
-			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	grid.dimY(),	0));
-			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	grid.dimY(),	grid.dimZ()));
-			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	0,				grid.dimZ()));
-			bbBox.include(gridToDF*point3d<FloatType>(0,			0,				grid.dimZ()));
-			bbBox.include(gridToDF*point3d<FloatType>(grid.dimX(),	0,				grid.dimZ()));
-			bbBox.include(gridToDF*point3d<FloatType>(0,			grid.dimY(),	0));
+			BoundingBox3<int> bbBox;
+			bbBox.include(gridToDF*point3d<FloatType>((FloatType)0,				(FloatType)0,				(FloatType)0));
+			bbBox.include(gridToDF*point3d<FloatType>((FloatType)grid.dimX(),	(FloatType)0,				(FloatType)0));
+			bbBox.include(gridToDF*point3d<FloatType>((FloatType)grid.dimX(),	(FloatType)grid.dimY(),		(FloatType)0));
+			bbBox.include(gridToDF*point3d<FloatType>((FloatType)grid.dimX(),	(FloatType)grid.dimY(),		(FloatType)grid.dimZ()));
+			bbBox.include(gridToDF*point3d<FloatType>((FloatType)grid.dimX(),	(FloatType)0,				(FloatType)grid.dimZ()));
+			bbBox.include(gridToDF*point3d<FloatType>((FloatType)0,				(FloatType)0,				(FloatType)grid.dimZ()));
+			bbBox.include(gridToDF*point3d<FloatType>((FloatType)grid.dimX(),	(FloatType)0,				(FloatType)grid.dimZ()));
+			bbBox.include(gridToDF*point3d<FloatType>((FloatType)0,				(FloatType)grid.dimY(),		(FloatType)0));
 
 			bbBox.setMin(math::max(bbBox.getMin(), 0));
-			bbBox.setMax(math::min(bbBox.getMax(), grid.getDimensions()));
+			bbBox.setMax(math::min(bbBox.getMax(), vec3i(grid.getDimensions())));
 
 
 			//for (size_t z = 0; z < grid.dimZ(); z++) {
