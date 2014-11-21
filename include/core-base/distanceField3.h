@@ -7,15 +7,22 @@ namespace ml {
 	class DistanceField3 : public Grid3<FloatType> {
 	public:
 
-		DistanceField3(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) : Grid3(grid.dimX(), grid.dimY(), grid.dimZ()) {
-			
-			m_truncation = trunc;
+        DistanceField3() : Grid3() {
+        }
 
-			//the simple variant appears to be much faster
-			generateFromBinaryGridSimple(grid, trunc);
-			//generateFromBinaryGridQueue(grid);
+        DistanceField3(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) : Grid3(grid.dimX(), grid.dimY(), grid.dimZ()) {
+            generateFromBinaryGrid(grid, trunc);
 		}
 
+        void generateFromBinaryGrid(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) {
+            allocate(grid.dimX(), grid.dimY(), grid.dimZ());
+
+            m_truncation = trunc;
+
+            //the simple variant appears to be much faster
+            generateFromBinaryGridSimple(grid, trunc);
+            //generateFromBinaryGridQueue(grid);
+        }
 
 		//! computes the distance
 		FloatType evalDist(const BinaryGrid3& grid, const Matrix4x4<FloatType>& gridToDF, bool squaredSum = false) {

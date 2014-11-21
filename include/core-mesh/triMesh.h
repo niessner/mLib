@@ -426,7 +426,7 @@ namespace ml {
 
 			Matrix4x4<FloatType> worldToVoxel = Matrix4x4<FloatType>::scale((FloatType)1/voxelSize) * Matrix4x4<FloatType>::translation(-bb.getMin());
 
-			std::pair<BinaryGrid3, Matrix4x4<FloatType>> gridTrans = std::make_pair(BinaryGrid3(vec3ui(bb.getExtent() / voxelSize)), worldToVoxel);
+            std::pair<BinaryGrid3, Matrix4x4<FloatType>> gridTrans = std::make_pair(BinaryGrid3(ml::math::max(vec3ui(bb.getExtent() / voxelSize), 1U)), worldToVoxel);
 
 			voxelize(gridTrans.first, gridTrans.second, solid);
 

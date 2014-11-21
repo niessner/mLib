@@ -339,6 +339,12 @@ namespace math {
 	inline point3d<T> abs(const point3d<T>& p) {
 		return point3d<T>(abs(p.x), abs(p.y), abs(p.z));
 	}
+    template<class T>
+    inline point3d<T> max(const point3d<T>& p, T v) {
+        return point3d<T>( std::max(p.x, v),
+                           std::max(p.y, v),
+                           std::max(p.z, v));
+    }
 
 }
 
