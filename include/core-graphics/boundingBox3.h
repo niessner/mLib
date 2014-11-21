@@ -201,7 +201,7 @@ public:
 	FloatType getMaxExtent() const {
 		FloatType d0 = maxX - minX;
 		FloatType d1 = maxY - minY;
-		FloatType d2 = maxZ - maxZ;
+		FloatType d2 = maxZ - minZ;
 		return math::max(d0, d1, d2);
 	}
 
