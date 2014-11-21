@@ -44,6 +44,7 @@ namespace ml {
 			bbBox.setMin(math::max(bbBox.getMin(), 0));
 			bbBox.setMax(math::min(bbBox.getMax(), vec3i(grid.getDimensions())));
 
+			std::cout << bbBox << std::endl;
 
 			//for (size_t z = 0; z < grid.dimZ(); z++) {
 			//	for (size_t y = 0; y < grid.dimY(); y++) {
