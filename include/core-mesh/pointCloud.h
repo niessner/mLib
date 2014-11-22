@@ -8,6 +8,10 @@ class PointCloud {
 public:
 	PointCloud() {}
 
+	PointCloud(const std::vector < point3d<FloatType>>& points) {
+		m_points = points;
+	}
+
 	//!conversion from a binary voxel grid
 	PointCloud(const BinaryGrid3& grid, FloatType voxelSize = (FloatType)1) {
 		for (unsigned int z = 0; z < grid.dimZ(); z++) {
