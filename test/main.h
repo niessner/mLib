@@ -10,3 +10,4 @@
 #include "testBinaryStream.h"
 #include "testGrid.h"
 #include "testOpenMesh.h"
+#include "testCGAL.h"

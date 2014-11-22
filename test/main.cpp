@@ -12,6 +12,7 @@ public:
 	void go();
 
 private:
+	TestCGAL m_cgal;
 	TestGrid m_grid;
 	TestUtility m_utility;
 	//TestMath m_math;
@@ -24,6 +25,7 @@ private:
 void App::go()
 {
 	ml::Console::openLogFile("console.txt");
+	m_cgal.run();
 	m_utility.run();
 	//m_math.run();
 	m_ANN.run();

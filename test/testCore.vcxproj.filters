@@ -37,6 +37,9 @@
     <Filter Include="mLibHeader\core-mesh">
       <UniqueIdentifier>{cb522a1b-1b16-42b8-b95b-535a5ea54741}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\ext-cgal">
+      <UniqueIdentifier>{9258c7a9-df38-4185-961f-234fb58788e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -296,6 +299,15 @@
     </ClInclude>
     <ClInclude Include="..\include\core-graphics\intersection.h">
       <Filter>mLibHeader\core-graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-cgal\cgalWrapper.h">
+      <Filter>mLibHeader\ext-cgal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\mlibCGAL.h">
+      <Filter>mLibHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="testCGAL.h">
+      <Filter>tests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

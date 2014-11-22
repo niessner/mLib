@@ -163,12 +163,14 @@
     <ClInclude Include="..\include\core-util\stringUtilConvert.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
     <ClInclude Include="..\include\ext-ANN\nearestNeighborSearchANN.h" />
+    <ClInclude Include="..\include\ext-cgal\cgalWrapper.h" />
     <ClInclude Include="..\include\ext-eigen\eigenSolver.h" />
     <ClInclude Include="..\include\ext-eigen\eigenUtility.h" />
     <ClInclude Include="..\include\ext-freeimage\freeImageWrapper.h" />
     <ClInclude Include="..\include\ext-freeimage\freeImageWrapperHelper.h" />
     <ClInclude Include="..\include\ext-zlib\ZLibWrapper.h" />
     <ClInclude Include="..\include\mLibANN.h" />
+    <ClInclude Include="..\include\mlibCGAL.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="..\include\mLibEigen.h" />
     <ClInclude Include="..\include\mLibLodePNG.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="testANN.h" />
     <ClInclude Include="testBinaryStream.h" />
+    <ClInclude Include="testCGAL.h" />
     <ClInclude Include="testGrid.h" />
     <ClInclude Include="testLodePNG.h" />
     <ClInclude Include="testMath.h" />

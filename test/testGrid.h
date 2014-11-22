@@ -86,6 +86,8 @@ public:
 			//	std::cout << df(i, 0, 0) << std::endl;
 			//	//math::floatEqual()
 			//}
+
+			df.evalDist(grid, mat4f::identity());
 		}
 		{
 			//2d test case
