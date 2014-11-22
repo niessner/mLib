@@ -34,7 +34,7 @@ float distSqf(const point3d<T> &ptA, const point3d<T> &ptB)
 }
 
 template <class T>
-double distSq(const ObjectOrientedBoundingBox3<T> &box, const point3d<T> &pt)
+double distSq(const OrientedBoundingBox3<T> &box, const point3d<T> &pt)
 {
     //
     // This is wrong, this file is just meant as an example of the dist interface
@@ -43,7 +43,7 @@ double distSq(const ObjectOrientedBoundingBox3<T> &box, const point3d<T> &pt)
 }
 
 template <class T>
-double distSq(const point3d<T> &pt, const ObjectOrientedBoundingBox3<T> &box)
+double distSq(const point3d<T> &pt, const OrientedBoundingBox3<T> &box)
 {
     return distSq(box, pt);
 }

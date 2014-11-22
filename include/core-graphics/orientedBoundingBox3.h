@@ -6,14 +6,14 @@
 namespace ml {
 
 template <class FloatType>
-class ObjectOrientedBoundingBox3 {
+class OrientedBoundingBox3 {
 public:
 
-	ObjectOrientedBoundingBox3() {
+	OrientedBoundingBox3() {
 		setInvalid();
 	}
 
-    ObjectOrientedBoundingBox3(const BoundingBox3<FloatType> &box)
+    OrientedBoundingBox3(const BoundingBox3<FloatType> &box)
     {
         m_Anchor = box.getMin();
         m_AxesScaled[0] = vec3f::eX * box.getExtentX();
@@ -22,7 +22,7 @@ public:
     }
 
 	//! creates an object oriented bounding for a given set of points with the same axis as the other OOBB
-    ObjectOrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const ObjectOrientedBoundingBox3& other) {
+    OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const OrientedBoundingBox3& other) {
 		m_AxesScaled[0] = other.m_AxesScaled[0].getNormalized();
 		m_AxesScaled[1] = other.m_AxesScaled[1].getNormalized();
 		m_AxesScaled[2] = other.m_AxesScaled[2].getNormalized();
@@ -31,7 +31,7 @@ public:
 	}
 
 	//! creates an object oriented bounding box given a set of points and 3 axis
-	ObjectOrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
+	OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
 		m_AxesScaled[0] = xAxis.getNormalized();
 		m_AxesScaled[1] = yAxis.getNormalized();
 		m_AxesScaled[2] = zAxis.getNormalized();
@@ -40,7 +40,7 @@ public:
 	}
 
 	//! creates an object oriented bounding box around a set of points with a given zAxis
-    ObjectOrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& zAxis) {
+    OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& zAxis) {
 
 		m_AxesScaled[2] = zAxis.getNormalized();
 	
@@ -89,11 +89,11 @@ public:
 	}
 
 
-	ObjectOrientedBoundingBox3(const point3d<FloatType>* points, unsigned int numPoints) {
+	OrientedBoundingBox3(const point3d<FloatType>* points, unsigned int numPoints) {
 		computeFromPCA(points, numPoints);
 	}
 
-	ObjectOrientedBoundingBox3(const std::vector<point3d<FloatType>>& points) {
+	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points) {
 		computeFromPCA(points);
 	}
 
@@ -299,7 +299,7 @@ public:
 	}
 
 	//! scales the OOBB
-	ObjectOrientedBoundingBox3<FloatType> &operator*=(const FloatType& scale) {
+	OrientedBoundingBox3<FloatType> &operator*=(const FloatType& scale) {
 		point3d<FloatType> center = getCenter();
 		m_AxesScaled[0] *= scale;
 		m_AxesScaled[1] *= scale;
@@ -308,14 +308,14 @@ public:
 		return *this;
 	}
 	//! returns a scaled OOBB
-	ObjectOrientedBoundingBox3<FloatType> operator*(const FloatType& scale) const {
-		ObjectOrientedBoundingBox3<FloatType> res = *this;
+	OrientedBoundingBox3<FloatType> operator*(const FloatType& scale) const {
+		OrientedBoundingBox3<FloatType> res = *this;
 		res *= scale;
 		return res;
 	}
 
 	//! extends the OOBB
-	ObjectOrientedBoundingBox3<FloatType> &operator+=(const FloatType& ext) {
+	OrientedBoundingBox3<FloatType> &operator+=(const FloatType& ext) {
 		FloatType scaleValues[3] = {m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length()};
 		point3d<FloatType> center = getCenter();
 		m_AxesScaled[0] *= (scaleValues[0] + ext)/scaleValues[0];
@@ -325,14 +325,14 @@ public:
 		return *this;
 	}
 	//! returns an extended OOBB
-	ObjectOrientedBoundingBox3<FloatType> operator+(const FloatType& ext) const {
-		ObjectOrientedBoundingBox3<FloatType> res = *this;
+	OrientedBoundingBox3<FloatType> operator+(const FloatType& ext) const {
+		OrientedBoundingBox3<FloatType> res = *this;
 		res += ext;
 		return res;
 	}
 
 	//! returns a transformed OOBB
-	ObjectOrientedBoundingBox3<FloatType> operator*=(const Matrix4x4<FloatType>& mat) {
+	OrientedBoundingBox3<FloatType> operator*=(const Matrix4x4<FloatType>& mat) {
 		assert(mat.isAffine());
 		m_Anchor = mat * m_Anchor;
 		Matrix3x3<FloatType> rot = mat.getMatrix3x3();
@@ -413,7 +413,7 @@ public:
 		return true;
 	}
 
-	inline bool contains(const ObjectOrientedBoundingBox3<FloatType> &other) {
+	inline bool contains(const OrientedBoundingBox3<FloatType> &other) {
 		point3d<FloatType> cornerPoints[8];
 		other.getCornerPoints(cornerPoints);
 		return contains(cornerPoints, 8);
@@ -489,7 +489,7 @@ public:
 
 	}
 
-	FloatType getMinPlaneExtension(const ObjectOrientedBoundingBox3& box, point3d<FloatType>* facePoints, const point3d<FloatType>& faceNormal) {
+	FloatType getMinPlaneExtension(const OrientedBoundingBox3& box, point3d<FloatType>* facePoints, const point3d<FloatType>& faceNormal) {
 		FloatType minPlaneExtension = FLT_MAX;
 		for (unsigned int i = 0; i < 6; i++) {
 			OOBB_PLANE which = (OOBB_PLANE)i;
@@ -518,7 +518,7 @@ public:
 	}
 
 
-	void makeZPlaneOutsideBoxes(const ObjectOrientedBoundingBox3& box0, const ObjectOrientedBoundingBox3& box1) {
+	void makeZPlaneOutsideBoxes(const OrientedBoundingBox3& box0, const OrientedBoundingBox3& box1) {
 
 		////swap axis until z is min extent
 		//point3d<FloatType> extent = getExtent();
@@ -639,13 +639,13 @@ public:
 	}
 
 	//! intersects two object oriented bounding boxes; the return value is another OOBB that convervatively bounds the intersecting volume
-	ObjectOrientedBoundingBox3 intersect(const ObjectOrientedBoundingBox3& other) const {
+	OrientedBoundingBox3 intersect(const OrientedBoundingBox3& other) const {
 
 		if (this == &other) {
 			return *this;
 		}
 
-		ObjectOrientedBoundingBox3 res;
+		OrientedBoundingBox3 res;
 		
 		//try early reject (if there is no intersection)
 		if ((getCenter() - other.getCenter()).length() > (FloatType)0.5 * (getDiagonalLength() + other.getDiagonalLength()))	return res;
@@ -768,8 +768,8 @@ public:
 	}
 
 
-	static ObjectOrientedBoundingBox3 interpolateLinear(const ObjectOrientedBoundingBox3& oobb0, const ObjectOrientedBoundingBox3& oobb1, float t) {
-		ObjectOrientedBoundingBox3 ret;
+	static OrientedBoundingBox3 interpolateLinear(const OrientedBoundingBox3& oobb0, const OrientedBoundingBox3& oobb1, float t) {
+		OrientedBoundingBox3 ret;
 		assert(floatEqual((oobb0.m_AxesScaled[0].getNormalized() - oobb1.m_AxesScaled[0].getNormalized()).length(), (FloatType)0));
 		assert(floatEqual((oobb0.m_AxesScaled[1].getNormalized() - oobb1.m_AxesScaled[1].getNormalized()).length(), (FloatType)0));
 		assert(floatEqual((oobb0.m_AxesScaled[2].getNormalized() - oobb1.m_AxesScaled[2].getNormalized()).length(), (FloatType)0));
@@ -840,7 +840,7 @@ private:
 	point3d<FloatType>	m_AxesScaled[3];
 
 	//! computes the contact points of edges
-	inline void computeContactPoints( const ObjectOrientedBoundingBox3 &other, std::vector<point3d<FloatType>> &contactPoints ) const
+	inline void computeContactPoints( const OrientedBoundingBox3 &other, std::vector<point3d<FloatType>> &contactPoints ) const
 	{
 		Matrix4x4<FloatType> OOBBToWorld = getOOBBToWorld();
 		Matrix4x4<FloatType> worldToOOBB = getWorldToOOBB();
@@ -894,14 +894,14 @@ private:
 };
 
 template<class FloatType>
-ObjectOrientedBoundingBox3<FloatType> operator*(const Matrix4x4<FloatType> &mat, ObjectOrientedBoundingBox3<FloatType>& oobb) {
-	ObjectOrientedBoundingBox3<FloatType> res = oobb;
+OrientedBoundingBox3<FloatType> operator*(const Matrix4x4<FloatType> &mat, OrientedBoundingBox3<FloatType>& oobb) {
+	OrientedBoundingBox3<FloatType> res = oobb;
 	res *= mat;
 	return res;
 }
 
-typedef ObjectOrientedBoundingBox3<float> OOBBf;
-typedef ObjectOrientedBoundingBox3<double> OOBBd;
+typedef OrientedBoundingBox3<float> OBBf;
+typedef OrientedBoundingBox3<double> OBBd;
 
 } //namespace ml
 

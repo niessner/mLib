@@ -12,7 +12,7 @@
 namespace ml {
 
 template<class T>
-class ObjectOrientedBoundingBox3;
+class OrientedBoundingBox3;
 
 template<class FloatType>
 class BoundingBox3
@@ -42,7 +42,7 @@ public:
 		maxB = maxBound;
 	}
 
-    explicit BoundingBox3(const ObjectOrientedBoundingBox3<FloatType> &oobb) {
+    explicit BoundingBox3(const OrientedBoundingBox3<FloatType> &oobb) {
         reset();
         for (const auto &v : oobb.getVertices())
             include(v);
