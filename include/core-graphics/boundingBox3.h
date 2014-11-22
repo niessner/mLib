@@ -42,9 +42,11 @@ public:
 		maxB = maxBound;
 	}
 
-    explicit BoundingBox3(const OrientedBoundingBox3<FloatType> &oobb) {
+    explicit BoundingBox3(const OrientedBoundingBox3<FloatType> &obb) {
         reset();
-        for (const auto &v : oobb.getVertices())
+		std::vector< point3d <FloatType > > vertices = obb.getVertices();
+        for (const auto &v : vertices)
+		//for (const auto &v : obb.getVertices())
             include(v);
     }
 
@@ -87,6 +89,8 @@ public:
 
 	bool intersect(const Ray<FloatType> &r, FloatType tmin, FloatType tmax ) const
 	{
+		//TODO move to intersection
+
 		//const FloatType t0 = 0.0;
 		//const FloatType t1 = r.t;
 
@@ -484,5 +488,7 @@ typedef BoundingBox3<float> bbox3f;
 typedef BoundingBox3<double> bbox3d;
 
 }  // namespace ml
+
+
 
 #endif  // CORE_GRAPHICS_BOUNDINGBOX3_H_

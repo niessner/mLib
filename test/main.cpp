@@ -42,9 +42,18 @@ int main()
 {
 	// Enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 #endif
+	{
+		mat2f m(1, 2, 3, 4);
+		EigenSystemf es = m.eigenSystem();
+		es.sortByAbsValue();
+		vec2f ev0(es.eigenvectorList()[0]);
+		vec2f ev1(es.eigenvectorList()[1]);
+		mat2f check = mat2f(ev0, ev1) * mat2f::diag(es.eigenvalues[0], es.eigenvalues[1]) * mat2f(ev0, ev1).getInverse();
+	}
+
 	//{
 	//	vec3f p0(0,1,0);
 	//	vec3f p1(1,0,0);

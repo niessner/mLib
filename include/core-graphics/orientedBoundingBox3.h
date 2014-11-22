@@ -21,8 +21,8 @@ public:
         m_AxesScaled[2] = vec3f::eZ * box.getExtentZ();
     }
 
-	//! creates an object oriented bounding for a given set of points with the same axis as the other OOBB
-    OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const OrientedBoundingBox3& other) {
+	//! creates an object oriented bounding for a given set of points with the same axes as the other OBB
+	OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const OrientedBoundingBox3& other) {
 		m_AxesScaled[0] = other.m_AxesScaled[0].getNormalized();
 		m_AxesScaled[1] = other.m_AxesScaled[1].getNormalized();
 		m_AxesScaled[2] = other.m_AxesScaled[2].getNormalized();
@@ -30,7 +30,7 @@ public:
 		computeAnchorAndExtentsForGivenNormalizedAxis(points, numPoints);
 	}
 
-	//! creates an object oriented bounding box given a set of points and 3 axis
+	//! creates an object oriented bounding box given a set of points and 3 axes
 	OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
 		m_AxesScaled[0] = xAxis.getNormalized();
 		m_AxesScaled[1] = yAxis.getNormalized();
@@ -40,10 +40,10 @@ public:
 	}
 
 	//! creates an object oriented bounding box around a set of points with a given zAxis
-    OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& zAxis) {
+	OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& zAxis) {
 
 		m_AxesScaled[2] = zAxis.getNormalized();
-	
+
 		point3d<FloatType> v, v0, v1;
 		if (m_AxesScaled[2].x != (FloatType)0)		v = point3d<FloatType>(m_AxesScaled[2].z, -m_AxesScaled[2].x, m_AxesScaled[2].y);
 		else if (m_AxesScaled[2].y != (FloatType)0)	v = point3d<FloatType>(m_AxesScaled[2].z, m_AxesScaled[2].x, -m_AxesScaled[2].y);
@@ -55,14 +55,14 @@ public:
 
 		point2d<FloatType>* pointsProj = new point2d<FloatType>[numPoints];
 		point2d<FloatType> pointsProjMean((FloatType)0, (FloatType)0);
-		for (unsigned int i = 0; i < numPoints; i++) {
+		for (size_t i = 0; i < numPoints; i++) {
 			pointsProj[i] = point2d<FloatType>(points[i] | v0, points[i] | v1);
 			pointsProjMean += pointsProj[i];
 		}
 		pointsProjMean /= (FloatType)numPoints;
 
 		Matrix2x2<FloatType> cov;
-		for (unsigned int i = 0; i < numPoints; i++) {
+		for (size_t i = 0; i < numPoints; i++) {
 			point2d<FloatType> curr = pointsProj[i] - pointsProjMean;
 			cov[0] += curr.x * curr.x;
 			cov[1] += curr.x * curr.y;
@@ -73,11 +73,15 @@ public:
 		SAFE_DELETE_ARRAY(pointsProj);
 
 		cov /= (FloatType)(numPoints - 1);
-		point2d<FloatType> ev0, ev1;
-		cov.calc_e_vectors(ev0, ev1);
-		
+		//point2d<FloatType> ev0, ev1;
+		//cov.calc_e_vectors(ev0, ev1);
+		EigenSystem<FloatType> es = cov.eigenSystem();
+		es.sortByAbsValue();
+		point2d<FloatType> ev0(es.eigenvectorList()[0]);
+		point2d<FloatType> ev1(es.eigenvectorList()[1]);
+
 		//Eigenvector computation has some numerical issues...
-		assert((ev0 | ev1) < 0.001 );
+		assert((ev0 | ev1) < 0.001);
 
 		m_AxesScaled[0] = v0 * ev0.x + v1 * ev0.y;
 		m_AxesScaled[1] = v0 * ev1.x + v1 * ev1.y;
@@ -88,6 +92,218 @@ public:
 		computeAnchorAndExtentsForGivenNormalizedAxis(points, numPoints);
 	}
 
+	bool isValid() const {
+		if (m_Anchor.x == -std::numeric_limits<FloatType>::max() || m_Anchor.y == -std::numeric_limits<FloatType>::max() || m_Anchor.z == -std::numeric_limits<FloatType>::max())	
+			return false;
+		else return true;
+	}
+
+	void setInvalid() {
+		m_Anchor.x = m_Anchor.y = m_Anchor.z = -std::numeric_limits<FloatType>::max();
+	}
+
+	std::vector< point3d<FloatType> > getVertices() const
+	{
+		std::vector< point3d<FloatType> > result(8);
+
+		result[0] = (m_Anchor + m_AxesScaled[0] * (FloatType)0.0 + m_AxesScaled[1] * (FloatType)0.0 + m_AxesScaled[2] * (FloatType)0.0);
+		result[1] = (m_Anchor + m_AxesScaled[0] * (FloatType)1.0 + m_AxesScaled[1] * (FloatType)0.0 + m_AxesScaled[2] * (FloatType)0.0);
+		result[2] = (m_Anchor + m_AxesScaled[0] * (FloatType)1.0 + m_AxesScaled[1] * (FloatType)1.0 + m_AxesScaled[2] * (FloatType)0.0);
+		result[3] = (m_Anchor + m_AxesScaled[0] * (FloatType)0.0 + m_AxesScaled[1] * (FloatType)1.0 + m_AxesScaled[2] * (FloatType)0.0);
+
+		result[4] = (m_Anchor + m_AxesScaled[0] * (FloatType)0.0 + m_AxesScaled[1] * (FloatType)0.0 + m_AxesScaled[2] * (FloatType)1.0);
+		result[5] = (m_Anchor + m_AxesScaled[0] * (FloatType)1.0 + m_AxesScaled[1] * (FloatType)0.0 + m_AxesScaled[2] * (FloatType)1.0);
+		result[6] = (m_Anchor + m_AxesScaled[0] * (FloatType)1.0 + m_AxesScaled[1] * (FloatType)1.0 + m_AxesScaled[2] * (FloatType)1.0);
+		result[7] = (m_Anchor + m_AxesScaled[0] * (FloatType)0.0 + m_AxesScaled[1] * (FloatType)1.0 + m_AxesScaled[2] * (FloatType)1.0);
+
+		return result;
+	}
+
+
+	//! returns the transformation matrix that transforms points into the space of the OBB
+	inline Matrix4x4<FloatType> getOBBToWorld() const 
+	{
+		return Matrix4x4<FloatType>(
+			m_AxesScaled[0].x, m_AxesScaled[1].x, m_AxesScaled[2].x, m_Anchor.x,
+			m_AxesScaled[0].y, m_AxesScaled[1].y, m_AxesScaled[2].y, m_Anchor.y,
+			m_AxesScaled[0].z, m_AxesScaled[1].z, m_AxesScaled[2].z, m_Anchor.z,
+			0, 0, 0, 1);
+	}
+
+	//! returns a matrix that transforms to OBB space [0,1]x[0,1]x[0,1]
+	inline Matrix4x4<FloatType> getWorldToOBB() const {
+		//return getOOBBToWorld().getInverse();
+
+		FloatType scaleValues[3] = { m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length() };
+		Matrix3x3<FloatType> worldToOBB3x3(m_AxesScaled[0] / scaleValues[0], m_AxesScaled[1] / scaleValues[1], m_AxesScaled[2] / scaleValues[2]);
+
+		worldToOBB3x3(0, 0) /= scaleValues[0];	worldToOBB3x3(0, 1) /= scaleValues[0];	worldToOBB3x3(0, 2) /= scaleValues[0];
+		worldToOBB3x3(1, 0) /= scaleValues[1];	worldToOBB3x3(1, 1) /= scaleValues[1];	worldToOBB3x3(1, 2) /= scaleValues[1];
+		worldToOBB3x3(2, 0) /= scaleValues[2];	worldToOBB3x3(2, 1) /= scaleValues[2];	worldToOBB3x3(2, 2) /= scaleValues[2];
+
+		point3d<FloatType> trans = worldToOBB3x3 * (-m_Anchor);
+		Matrix4x4<FloatType> worldToOBB = worldToOBB3x3;
+		worldToOBB.at(0, 3) = trans.x;
+		worldToOBB.at(1, 3) = trans.y;
+		worldToOBB.at(2, 3) = trans.z;
+
+		return worldToOBB;
+	}
+
+	//! returns the center of the OBB
+	point3d<FloatType> getCenter() const {
+		return m_Anchor + (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]) * (FloatType)0.5;
+	}
+
+	//! returns the n'th axis of the OBB
+	const point3d<FloatType>& getAxis(unsigned char n) const {
+		return m_AxesScaled[n];
+	}
+
+	//! returns the first axis of the OBB
+	const point3d<FloatType>& getAxisX() const {
+		return m_AxesScaled[0];
+	}
+
+	//! returns the second axis of the OBB
+	const point3d<FloatType>& getAxisY() const {
+		return m_AxesScaled[1];
+	}
+
+	//! returns the third axis of the OBB
+	const point3d<FloatType>& getAxisZ() const {
+		return m_AxesScaled[2];
+	}
+
+	point3d<FloatType> getExtent() const {
+		return point3d<FloatType>(m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length());
+	}
+
+	//! returns the diagonal extent of the OBB
+	FloatType getDiagonalLength() const {
+		return (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]).length();
+	}
+
+	void getCornerPoints(std::vector<point3d<FloatType>>& points) const {
+		points.resize(8);
+		getCornerPoints(&points[0]);
+	} 
+
+	std::vector< LineSegment3<FloatType> > getEdges() const
+	{
+		std::vector< LineSegment3<FloatType> > result;	result.reserve(12);
+		auto v = getVertices();
+
+		result.push_back(LineSegment3<FloatType>(v[0], v[1]));
+		result.push_back(LineSegment3<FloatType>(v[1], v[2]));
+		result.push_back(LineSegment3<FloatType>(v[2], v[3]));
+		result.push_back(LineSegment3<FloatType>(v[3], v[0]));
+
+		result.push_back(LineSegment3<FloatType>(v[4], v[5]));
+		result.push_back(LineSegment3<FloatType>(v[5], v[6]));
+		result.push_back(LineSegment3<FloatType>(v[6], v[7]));
+		result.push_back(LineSegment3<FloatType>(v[7], v[4]));
+
+		result.push_back(LineSegment3<FloatType>(v[0], v[4]));
+		result.push_back(LineSegment3<FloatType>(v[1], v[5]));
+		result.push_back(LineSegment3<FloatType>(v[2], v[6]));
+		result.push_back(LineSegment3<FloatType>(v[3], v[7]));
+
+		return result;
+	}
+
+	//! scales the OBB
+	void operator*=(const FloatType& scale) {
+		point3d<FloatType> center = getCenter();
+		m_AxesScaled[0] *= scale;
+		m_AxesScaled[1] *= scale;
+		m_AxesScaled[2] *= scale;
+		m_Anchor = center - (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]) * (FloatType)0.5;
+	}
+	//! returns a scaled OBB
+	OrientedBoundingBox3<FloatType> operator*(const FloatType& scale) const {
+		OrientedBoundingBox3<FloatType> res = *this;
+		res *= scale;
+		return res;
+	}
+
+	//! extends the OBB
+	void operator+=(const FloatType& ext) {
+		FloatType scaleValues[3] = { m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length() };
+		point3d<FloatType> center = getCenter();
+		m_AxesScaled[0] *= (scaleValues[0] + ext) / scaleValues[0];
+		m_AxesScaled[1] *= (scaleValues[1] + ext) / scaleValues[1];
+		m_AxesScaled[2] *= (scaleValues[2] + ext) / scaleValues[2];
+		m_Anchor = center - (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]) * (FloatType)0.5;
+	}
+	//! returns an extended OBB
+	OrientedBoundingBox3<FloatType> operator+(const FloatType& ext) const {
+		OrientedBoundingBox3<FloatType> res = *this;
+		res += ext;
+		return res;
+	}
+
+	//! returns a transformed OBB
+	void operator*=(const Matrix4x4<FloatType>& mat) {
+		assert(mat.isAffine());
+		m_Anchor = mat * m_Anchor;
+		Matrix3x3<FloatType> rot = mat.getMatrix3x3();
+		m_AxesScaled[0] = rot * m_AxesScaled[0];
+		m_AxesScaled[1] = rot * m_AxesScaled[1];
+		m_AxesScaled[2] = rot * m_AxesScaled[2];
+	}
+
+private:
+
+	void computeAnchorAndExtentsForGivenNormalizedAxis(const point3d<FloatType>* points, size_t numPoints)
+	{
+		assert((m_AxesScaled[0] | m_AxesScaled[1]) < (FloatType)0.001);
+		assert((m_AxesScaled[1] | m_AxesScaled[2]) < (FloatType)0.001);
+		assert((m_AxesScaled[2] | m_AxesScaled[0]) < (FloatType)0.001);
+
+		Matrix3x3<FloatType> worldToOBBSpace(m_AxesScaled[0], m_AxesScaled[1], m_AxesScaled[2]);
+		Matrix3x3<FloatType> OBBSpaceToWorld = worldToOBBSpace.getTranspose();	//is an orthogonal matrix
+
+		point3d<FloatType> minValues(std::numeric_limits<FloatType>::max(), std::numeric_limits<FloatType>::max(), std::numeric_limits<FloatType>::max());
+		point3d<FloatType> maxValues(-std::numeric_limits<FloatType>::max(), -std::numeric_limits<FloatType>::max(), -std::numeric_limits<FloatType>::max());
+
+		for (size_t i = 0; i < numPoints; i++) {
+			point3d<FloatType> curr = worldToOBBSpace * points[i];
+			if (curr.x < minValues.x)	minValues.x = curr.x;
+			if (curr.y < minValues.y)	minValues.y = curr.y;
+			if (curr.z < minValues.z)	minValues.z = curr.z;
+
+			if (curr.x > maxValues.x)	maxValues.x = curr.x;
+			if (curr.y > maxValues.y)	maxValues.y = curr.y;
+			if (curr.z > maxValues.z)	maxValues.z = curr.z;
+		}
+
+		m_Anchor = OBBSpaceToWorld * minValues;
+
+		FloatType extent[3];
+
+		extent[0] = maxValues.x - minValues.x;
+		extent[1] = maxValues.y - minValues.y;
+		extent[2] = maxValues.z - minValues.z;
+
+
+		//if bounding box has no extent; set invalid and return
+		if (extent[0] < (FloatType)0.00001 ||
+			extent[1] < (FloatType)0.00001 ||
+			extent[2] < (FloatType)0.00001) {
+			setInvalid();
+			return;
+		}
+
+		m_AxesScaled[0] *= extent[0];
+		m_AxesScaled[1] *= extent[1];
+		m_AxesScaled[2] *= extent[2];
+	}
+
+	point3d<FloatType>	m_Anchor;
+	point3d<FloatType>	m_AxesScaled[3];
+
+	/*
 
 	OrientedBoundingBox3(const point3d<FloatType>* points, unsigned int numPoints) {
 		computeFromPCA(points, numPoints);
@@ -97,14 +313,7 @@ public:
 		computeFromPCA(points);
 	}
 
-	bool isValid() {
-		if (m_Anchor.x == -FLT_MAX || m_Anchor.y == -FLT_MAX || m_Anchor.z == -FLT_MAX)	return false;
-		else return true;
-	}
 
-	void setInvalid() {
-		m_Anchor.x = m_Anchor.y = m_Anchor.z = -FLT_MAX;
-	}
 
 	//! computes the bounding box using a pca
 	void computeFromPCA(const std::vector<point3d<FloatType>>& points) {
@@ -153,76 +362,6 @@ public:
 		computeAnchorAndExtentsForGivenNormalizedAxis(points, numPoints);
 	}
 
-	void computeAnchorAndExtentsForGivenNormalizedAxis(const point3d<FloatType>* points,  size_t numPoints) 
-	{
-		assert((m_AxesScaled[0] | m_AxesScaled[1]) < 0.001);
-		assert((m_AxesScaled[1] | m_AxesScaled[2]) < 0.001);
-		assert((m_AxesScaled[2] | m_AxesScaled[0]) < 0.001);
-
-
-
-		Matrix3x3<FloatType> worldToOOBBSpace(m_AxesScaled[0], m_AxesScaled[1], m_AxesScaled[2]);
-		//Matrix3x3<FloatType> OOBBSpaceToWorld = worldToOOBBSpace.getInverse();
-		Matrix3x3<FloatType> OOBBSpaceToWorld = worldToOOBBSpace.getTranspose();	//is an orthogonal matrix
-
-		point3d<FloatType> minValues(FLT_MAX, FLT_MAX, FLT_MAX);
-		point3d<FloatType> maxValues(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-
-		for (unsigned int i = 0; i < numPoints; i++) {
-			point3d<FloatType> curr = worldToOOBBSpace * points[i];
-			if (curr.x < minValues.x)	minValues.x = curr.x;
-			if (curr.y < minValues.y)	minValues.y = curr.y;
-			if (curr.z < minValues.z)	minValues.z = curr.z;
-
-			if (curr.x > maxValues.x)	maxValues.x = curr.x;
-			if (curr.y > maxValues.y)	maxValues.y = curr.y;
-			if (curr.z > maxValues.z)	maxValues.z = curr.z;
-		}
-
-		m_Anchor = OOBBSpaceToWorld * minValues;
-
-		FloatType extent[3];
-
-		extent[0] = maxValues.x - minValues.x;
-		extent[1] = maxValues.y - minValues.y;
-		extent[2] = maxValues.z - minValues.z;
-
-
-		//if bounding box has no extent; set invalid and return
-		if (extent[0] < (FloatType)0.00001 ||
-			extent[1] < (FloatType)0.00001 ||
-			extent[2] < (FloatType)0.00001) {
-				setInvalid();
-				return;
-		}
-
-		m_AxesScaled[0] *= extent[0];
-		m_AxesScaled[1] *= extent[1];
-		m_AxesScaled[2] *= extent[2];
-	}
-
-	//! returns the center of the OOBB
-	point3d<FloatType> getCenter() const {
-		return m_Anchor + (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]) * (FloatType)0.5;
-	}
-
-    point3d<FloatType> getAxis(int axisIndex) const {
-        return m_AxesScaled[axisIndex];
-    }
-
-	point3d<FloatType> getExtent() const {
-		return point3d<FloatType>(m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length());
-	}
-
-	//! returns the diagonal extent of the OOBB
-	FloatType getDiagonalLength() const {
-		return (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]).length();
-	}
-
-	void getCornerPoints(std::vector<point3d<FloatType>>& points) const {
-		points.resize(8);
-		getCornerPoints(&points[0]);
-	}
 
 	void getCornerPoints(point3d<FloatType>* points) const {
 		points[0] = m_Anchor;
@@ -298,90 +437,9 @@ public:
 		}
 	}
 
-	//! scales the OOBB
-	OrientedBoundingBox3<FloatType> &operator*=(const FloatType& scale) {
-		point3d<FloatType> center = getCenter();
-		m_AxesScaled[0] *= scale;
-		m_AxesScaled[1] *= scale;
-		m_AxesScaled[2] *= scale;
-		m_Anchor = center - (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]) * (FloatType)0.5;
-		return *this;
-	}
-	//! returns a scaled OOBB
-	OrientedBoundingBox3<FloatType> operator*(const FloatType& scale) const {
-		OrientedBoundingBox3<FloatType> res = *this;
-		res *= scale;
-		return res;
-	}
 
-	//! extends the OOBB
-	OrientedBoundingBox3<FloatType> &operator+=(const FloatType& ext) {
-		FloatType scaleValues[3] = {m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length()};
-		point3d<FloatType> center = getCenter();
-		m_AxesScaled[0] *= (scaleValues[0] + ext)/scaleValues[0];
-		m_AxesScaled[1] *= (scaleValues[1] + ext)/scaleValues[1];
-		m_AxesScaled[2] *= (scaleValues[2] + ext)/scaleValues[2];
-		m_Anchor = center - (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]) * (FloatType)0.5;
-		return *this;
-	}
-	//! returns an extended OOBB
-	OrientedBoundingBox3<FloatType> operator+(const FloatType& ext) const {
-		OrientedBoundingBox3<FloatType> res = *this;
-		res += ext;
-		return res;
-	}
 
-	//! returns a transformed OOBB
-	OrientedBoundingBox3<FloatType> operator*=(const Matrix4x4<FloatType>& mat) {
-		assert(mat.isAffine());
-		m_Anchor = mat * m_Anchor;
-		Matrix3x3<FloatType> rot = mat.getMatrix3x3();
-		m_AxesScaled[0] = rot * m_AxesScaled[0];
-		m_AxesScaled[1] = rot * m_AxesScaled[1];
-		m_AxesScaled[2] = rot * m_AxesScaled[2];
-		return *this;
-	}
 
-	//! returns the transformation matrix that transforms points into the space of the OOBB
-	inline Matrix4x4<FloatType> getOOBBToWorld() const {
-		//Matrix4x4<FloatType> OOBBToWorld(m_AxesScaled[0], m_AxesScaled[1], m_AxesScaled[2]);
-		//OOBBToWorld.transpose();
-		//Matrix4x4<FloatType> trans = Matrix4x4<FloatType>(Matrix4x4<FloatType>::Translation, m_Anchor);
-		//OOBBToWorld = trans * OOBBToWorld;
-
-		Matrix4x4<FloatType> OOBBToWorld(
-			m_AxesScaled[0].x,	m_AxesScaled[1].x,	m_AxesScaled[2].x,	m_Anchor.x,
-			m_AxesScaled[0].y,	m_AxesScaled[1].y,	m_AxesScaled[2].y,	m_Anchor.y,
-			m_AxesScaled[0].z,	m_AxesScaled[1].z,	m_AxesScaled[2].z,	m_Anchor.z,
-			0, 0, 0, 1);
-
-		return OOBBToWorld;
-	}
-
-	//! returns a matrix that transforms to OOBB space [0,1]x[0,1]x[0,1]
-	inline Matrix4x4<FloatType> getWorldToOOBB() const {
-		//return getOOBBToWorld().getInverse();
-
-		FloatType scaleValues[3] = {m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length()};
-		Matrix3x3<FloatType> worldToOOBB3x3(m_AxesScaled[0]/scaleValues[0], m_AxesScaled[1]/scaleValues[1], m_AxesScaled[2]/scaleValues[2]);
-		
-		//Matrix3x3<FloatType> scale(Matrix3x3<FloatType>::Scale, ((FloatType)1.0)/scaleValues[0], ((FloatType)1.0)/scaleValues[1], ((FloatType)1.0)/scaleValues[2]);
-		//Matrix4x4<FloatType> worldToOOBB = scale * worldToOOBB3x3;
-		//Matrix4x4<FloatType> trans = Matrix4x4<FloatType>(Matrix4x4<FloatType>::Translation, -m_Anchor);
-		//return worldToOOBB * trans;
-
-		worldToOOBB3x3(0,0) /= scaleValues[0];	worldToOOBB3x3(0,1) /= scaleValues[0];	worldToOOBB3x3(0,2) /= scaleValues[0];
-		worldToOOBB3x3(1,0) /= scaleValues[1];	worldToOOBB3x3(1,1) /= scaleValues[1];	worldToOOBB3x3(1,2) /= scaleValues[1];
-		worldToOOBB3x3(2,0) /= scaleValues[2];	worldToOOBB3x3(2,1) /= scaleValues[2];	worldToOOBB3x3(2,2) /= scaleValues[2];
-
-		point3d<FloatType> trans = worldToOOBB3x3 * (-m_Anchor);
-		Matrix4x4<FloatType> worldToOOBB = worldToOOBB3x3;
-		worldToOOBB.at(0,3) = trans.x;
-		worldToOOBB.at(1,3) = trans.y;
-		worldToOOBB.at(2,3) = trans.z;
-
-		return worldToOOBB;
-	}
 
 	//! returns a matrix that transforms to OOBB space [0;extentX]x[0;extentY]x[0;extentZ]
 	inline Matrix4x4<FloatType>  getWorldToOOBBNormalized() const {
@@ -784,46 +842,6 @@ public:
 		return ret;
 	}
 
-    std::vector< point3d<FloatType> > getVertices() const
-    {
-        std::vector< point3d<FloatType> > result;
-        
-        result.push_back(m_Anchor + m_AxesScaled[0] * 0.0f + m_AxesScaled[1] * 0.0f + m_AxesScaled[2] * 0.0f);
-        result.push_back(m_Anchor + m_AxesScaled[0] * 1.0f + m_AxesScaled[1] * 0.0f + m_AxesScaled[2] * 0.0f);
-        result.push_back(m_Anchor + m_AxesScaled[0] * 1.0f + m_AxesScaled[1] * 1.0f + m_AxesScaled[2] * 0.0f);
-        result.push_back(m_Anchor + m_AxesScaled[0] * 0.0f + m_AxesScaled[1] * 1.0f + m_AxesScaled[2] * 0.0f);
-
-        result.push_back(m_Anchor + m_AxesScaled[0] * 0.0f + m_AxesScaled[1] * 0.0f + m_AxesScaled[2] * 1.0f);
-        result.push_back(m_Anchor + m_AxesScaled[0] * 1.0f + m_AxesScaled[1] * 0.0f + m_AxesScaled[2] * 1.0f);
-        result.push_back(m_Anchor + m_AxesScaled[0] * 1.0f + m_AxesScaled[1] * 1.0f + m_AxesScaled[2] * 1.0f);
-        result.push_back(m_Anchor + m_AxesScaled[0] * 0.0f + m_AxesScaled[1] * 1.0f + m_AxesScaled[2] * 1.0f);
-
-        return result;
-    }
-
-    std::vector< LineSegment3<FloatType> > getEdges() const
-    {
-        std::vector< LineSegment3<FloatType> > result;
-
-        auto v = getVertices();
-        
-        result.push_back(LineSegment3<FloatType>(v[0], v[1]));
-        result.push_back(LineSegment3<FloatType>(v[1], v[2]));
-        result.push_back(LineSegment3<FloatType>(v[2], v[3]));
-        result.push_back(LineSegment3<FloatType>(v[3], v[0]));
-
-        result.push_back(LineSegment3<FloatType>(v[4], v[5]));
-        result.push_back(LineSegment3<FloatType>(v[5], v[6]));
-        result.push_back(LineSegment3<FloatType>(v[6], v[7]));
-        result.push_back(LineSegment3<FloatType>(v[7], v[4]));
-
-        result.push_back(LineSegment3<FloatType>(v[0], v[4]));
-        result.push_back(LineSegment3<FloatType>(v[1], v[5]));
-        result.push_back(LineSegment3<FloatType>(v[2], v[6]));
-        result.push_back(LineSegment3<FloatType>(v[3], v[7]));
-
-        return result;
-    }
 
 private:
 	static inline bool isInUnitInterval(const FloatType &v, FloatType eps = (FloatType)0.00001) {
@@ -890,7 +908,9 @@ private:
 		for (unsigned int i = 0; i < contactPoints.size(); i++) {
 			contactPoints[i] = OOBBToWorld * contactPoints[i];
 		}
+		
 	}
+	*/
 };
 
 template<class FloatType>
@@ -899,6 +919,9 @@ OrientedBoundingBox3<FloatType> operator*(const Matrix4x4<FloatType> &mat, Orien
 	res *= mat;
 	return res;
 }
+
+typedef OrientedBoundingBox3<float> OrientedBoundingBox3f;
+typedef OrientedBoundingBox3<double> OrientedBoundingBox3d;
 
 typedef OrientedBoundingBox3<float> OBBf;
 typedef OrientedBoundingBox3<double> OBBd;
