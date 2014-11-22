@@ -15,7 +15,7 @@ public:
 		}
 
 		{
-			size_t size = 1000;
+			size_t size = 100000;
 			std::vector<vec3f> points(size);
 
 			RNG rng;
