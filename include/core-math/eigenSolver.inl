@@ -24,6 +24,7 @@ namespace ml {
 template<class FloatType>
 void EigenSolverVTK<FloatType>::eigenSystemInternal(const DenseMatrix<FloatType> &M, FloatType **eigenvectors, FloatType *eigenvalues) const
 {
+	MLIB_ASSERT_STR(M.isSymmetric(), "can only handle symmetric matrices");
     const unsigned int rows = M.rows();
     MLIB_ASSERT_STR(M.square() && M.rows() >= 2, "invalid matrix dimensions in EigenSolverVTK<T>::eigenSystem");
     int i, j, k, iq, ip, numPos, n = int(rows);

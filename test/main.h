@@ -11,3 +11,4 @@
 #include "testGrid.h"
 #include "testOpenMesh.h"
 #include "testCGAL.h"
+#include "testBox.h"

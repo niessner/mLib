@@ -4,6 +4,7 @@
 #define _MLIB_EIGEN_H_
 
 #include "Eigen/Sparse"
+#include "Eigen/Eigenvalues"
 
 //
 // ext-eigen headers

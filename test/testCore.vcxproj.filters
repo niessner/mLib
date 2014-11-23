@@ -309,6 +309,12 @@
     <ClInclude Include="testCGAL.h">
       <Filter>tests</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-math\mathUtil.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="testBox.h">
+      <Filter>tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

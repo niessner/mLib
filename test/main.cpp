@@ -12,6 +12,7 @@ public:
 	void go();
 
 private:
+	TestBox m_box;
 	TestCGAL m_cgal;
 	TestGrid m_grid;
 	TestUtility m_utility;
@@ -25,6 +26,7 @@ private:
 void App::go()
 {
 	ml::Console::openLogFile("console.txt");
+	m_box.run();
 	m_cgal.run();
 	m_utility.run();
 	//m_math.run();
@@ -45,14 +47,31 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 #endif
-	{
-		mat2f m(1, 2, 3, 4);
-		EigenSystemf es = m.eigenSystem();
-		es.sortByAbsValue();
-		vec2f ev0(es.eigenvectorList()[0]);
-		vec2f ev1(es.eigenvectorList()[1]);
-		mat2f check = mat2f(ev0, ev1) * mat2f::diag(es.eigenvalues[0], es.eigenvalues[1]) * mat2f(ev0, ev1).getInverse();
-	}
+	//{
+	//	mat2f m(1, 2, 3, 4);
+	//	//EigenSystemf es = m.eigenSystem();
+	//	//es.sortByAbsValue();
+	//	//vec2f ev0(es.eigenvectorList()[0]);
+	//	//vec2f ev1(es.eigenvectorList()[1]);
+
+
+	//	Eigen::MatrixXd me;
+	//	eigenutil::makeEigenMatrix(DenseMatrixf(m), me);
+	//	DenseMatrixf ret;
+	//	eigenutil::dumpEigenMatrix(me, ret);
+	//	std::cout << ret << std::endl;
+
+	//	std::cout << me << std::endl;
+	//	
+	//	
+	//	EigenSystemf es = EigenSolverf::solve<EigenSolverf::TYPE_EIGEN>(m);
+	//	vec2f ev0(es.eigenvectorList()[0]);
+	//	vec2f ev1(es.eigenvectorList()[1]);
+	//	mat2f check = mat2f(ev0, ev1)  * mat2f::diag(es.eigenvalues[0], es.eigenvalues[1]) * mat2f(ev0, ev1).getInverse();
+
+	//	int a = 5;
+
+	//}
 
 	//{
 	//	vec3f p0(0,1,0);

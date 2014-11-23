@@ -5,6 +5,8 @@
 namespace ml
 {
 
+
+//linear system solver
 template<class D> class LinearSolverEigen : public LinearSolver<D>
 {
 public:
@@ -157,6 +159,29 @@ private:
 
 	Method m_method;
 };
+
+
+//eigenvalue decomposition
+template<class FloatType> class EigenSolverEigen : public EigenSolver < FloatType >
+{
+public:
+	void eigenSystemInternal(const DenseMatrix<FloatType> &M, FloatType **eigenvectors, FloatType *eigenvalues) const {
+		Eigen::MatrixXd mat;
+		eigenutil::makeEigenMatrix(M, mat);
+		Eigen::EigenSolver<Eigen::MatrixXd> eigenSolver(mat);
+		
+		for (unsigned int i = 0; i < M.rows(); i++) {
+			eigenvalues[i] = (FloatType)eigenSolver.eigenvalues()[i].real();
+			eigenSolver.eigenvalues();
+			for (unsigned int j = 0; j < M.cols(); j++) {
+				eigenvectors[i][j] = (FloatType)eigenSolver.eigenvectors()(i, j).real();
+			}
+		}
+	}
+};
+
+	typedef EigenSolverEigen<float> EigenSolverEigenf;
+	typedef EigenSolverEigen<double> EigenSolverEigend;
 
 }  // namespace ml
 

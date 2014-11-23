@@ -121,6 +121,14 @@ public:
 			m_data[element] = m[element];
 	}
 
+	void resize(UINT rows, UINT cols, T clearValue = (T)0.0)
+	{
+		m_rows = rows;
+		m_cols = cols;
+		m_data.resize(m_rows * m_cols, clearValue);
+		m_dataPtr = &m_data[0];
+	}
+
 
 	void operator=(const DenseMatrix<T>& s)
 	{
@@ -225,6 +233,17 @@ public:
 		if (!square())	throw MLIB_EXCEPTION("");
 		return util::rank<DenseMatrix<T>, T>(*this, m_rows, eps);
 	} 
+
+	// checks whether the matrix is symmetric
+	bool isSymmetric(T eps = (T)0.00001) const {
+		if (!square())	return false;
+		for (unsigned int i = 1; i < m_rows; i++) {
+			for (unsigned int j = 0; j < m_cols/2; j++) {
+				if (!math::floatEqual((*this)(i, j), (*this)(j, i), eps)) return false;
+			}
+		}
+		return true;
+	}
 
 	EigenSystem<T> eigenSystem() const {
 		return EigenSolver<T>::solve<EigenSolver<T>::TYPE_DEFAULT>(*this);

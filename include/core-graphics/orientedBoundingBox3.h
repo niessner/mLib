@@ -53,32 +53,18 @@ public:
 		v0.normalize();
 		v1.normalize();
 
-		point2d<FloatType>* pointsProj = new point2d<FloatType>[numPoints];
+		std::vector < point2d<FloatType> > pointsProj(numPoints);
+
 		point2d<FloatType> pointsProjMean((FloatType)0, (FloatType)0);
 		for (size_t i = 0; i < numPoints; i++) {
 			pointsProj[i] = point2d<FloatType>(points[i] | v0, points[i] | v1);
-			pointsProjMean += pointsProj[i];
-		}
-		pointsProjMean /= (FloatType)numPoints;
-
-		Matrix2x2<FloatType> cov;
-		for (size_t i = 0; i < numPoints; i++) {
-			point2d<FloatType> curr = pointsProj[i] - pointsProjMean;
-			cov[0] += curr.x * curr.x;
-			cov[1] += curr.x * curr.y;
-			cov[2] += curr.x * curr.y;
-			cov[3] += curr.y * curr.y;
 		}
 
-		SAFE_DELETE_ARRAY(pointsProj);
+		vector< std::pair<point3d<FloatType>, FloatType> > pca = math::pointSetPCA(points);
 
-		cov /= (FloatType)(numPoints - 1);
-		//point2d<FloatType> ev0, ev1;
-		//cov.calc_e_vectors(ev0, ev1);
-		EigenSystem<FloatType> es = cov.eigenSystem();
-		es.sortByAbsValue();
-		point2d<FloatType> ev0(es.eigenvectorList()[0]);
-		point2d<FloatType> ev1(es.eigenvectorList()[1]);
+		const point2d<FloatType>& ev0 = pca[0].first;
+		const point2d<FloatType>& ev1 = pca[1].first;
+		
 
 		//Eigenvector computation has some numerical issues...
 		assert((ev0 | ev1) < 0.001);

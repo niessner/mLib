@@ -27,7 +27,7 @@ namespace eigenutil
 	// Does not return by-value because it is not clear if Eigen supports move semantics.
 	//
 	template<class D>
-	static void makeEigenMatrix(const SparseMatrix<D> &M, Eigen::SparseMatrix<double> &result)
+	static void makeEigenMatrix(const SparseMatrix<D> &M, Eigen::SparseMatrix<D> &result)
 	{
 		result.resize(M.rows(), M.cols());
 		auto triplets = makeEigenTriplets(M);
@@ -35,7 +35,19 @@ namespace eigenutil
 	}
 
 	template<class D>
-	Eigen::VectorXd makeEigenVector(const MathVector<D> &v)
+	static void makeEigenMatrix(const DenseMatrix<D> &M, Eigen::MatrixXd &result) 
+	{
+		result.resize(M.rows(), M.cols());
+		for (unsigned int i = 0; i < M.rows(); i++) {
+			for (unsigned int j = 0; j < M.cols(); j++) {
+				result(i, j) = M(i, j);
+			}
+		}
+	}
+
+
+	template<class D>
+	static Eigen::VectorXd makeEigenVector(const MathVector<D> &v)
 	{
 		const UINT n = (UINT)v.size();
 		Eigen::VectorXd result(n);
@@ -44,12 +56,24 @@ namespace eigenutil
 	}
 
 	template<class D>
-	MathVector<D> dumpEigenVector(const Eigen::VectorXd &v)
+	static MathVector<D> dumpEigenVector(const Eigen::VectorXd &v)
 	{
 		const UINT n = (UINT)v.size();
 		MathVector<double> result(n);
 		for(UINT i = 0; i < n; i++) result[i] = v[i];
 		return result;
+	}
+
+	template<class D>
+	static void dumpEigenMatrix(const Eigen::MatrixXd &m, DenseMatrix<D>& result)
+	{
+		//DenseMatrix<D> result(m.rows(), m.cols());
+		result.resize((UINT)m.rows(), (UINT)m.cols());
+		for (unsigned int i = 0; i < m.rows(); i++) {
+			for (unsigned int j = 0; j < m.cols(); j++) {
+				result(i, j) = (D)m(i, j);
+			}
+		}
 	}
 }
 

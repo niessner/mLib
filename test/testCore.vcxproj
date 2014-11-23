@@ -118,6 +118,7 @@
     <ClInclude Include="..\include\core-math\denseMatrix.h" />
     <ClInclude Include="..\include\core-math\kMeansClustering.h" />
     <ClInclude Include="..\include\core-math\linearSolver.h" />
+    <ClInclude Include="..\include\core-math\mathUtil.h" />
     <ClInclude Include="..\include\core-math\mathVector.h" />
     <ClInclude Include="..\include\core-math\matrix2x2.h" />
     <ClInclude Include="..\include\core-math\matrix3x3.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="testANN.h" />
     <ClInclude Include="testBinaryStream.h" />
+    <ClInclude Include="testBox.h" />
     <ClInclude Include="testCGAL.h" />
     <ClInclude Include="testGrid.h" />
     <ClInclude Include="testLodePNG.h" />
