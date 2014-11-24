@@ -18,6 +18,7 @@
 //
 #include "core-util/utility.h"
 #include "core-util/stringUtil.h"
+#include "core-util/flagSet.h"
 #include "core-util/binaryDataCompressor.h"
 #include "core-util/binaryDataBuffer.h"
 #include "core-util/binaryDataSerialize.h"
