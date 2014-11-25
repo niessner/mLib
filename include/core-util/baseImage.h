@@ -778,6 +778,14 @@ public:
 			}
 		}
 	}
+	ColorImageRGB(const BaseImage<float>& image) : BaseImage(image.getHeight(), image.getWidth()) {
+		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+
+		const float* data = image.getDataPointer();
+		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+			m_Data[i] = ml::vec3f(data[i]);
+		}
+	}
 };
 
 
