@@ -22,25 +22,25 @@ public:
     }
 
 	//! creates an object oriented bounding for a given set of points with the same axes as the other OBB
-	OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const OrientedBoundingBox3& other) {
+	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points, const OrientedBoundingBox3& other) {
 		m_AxesScaled[0] = other.m_AxesScaled[0].getNormalized();
 		m_AxesScaled[1] = other.m_AxesScaled[1].getNormalized();
 		m_AxesScaled[2] = other.m_AxesScaled[2].getNormalized();
 
-		computeAnchorAndExtentsForGivenNormalizedAxis(points, numPoints);
+		computeAnchorAndExtentsForGivenNormalizedAxis(points);
 	}
 
 	//! creates an object oriented bounding box given a set of points and 3 axes
-	OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
+	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
 		m_AxesScaled[0] = xAxis.getNormalized();
 		m_AxesScaled[1] = yAxis.getNormalized();
 		m_AxesScaled[2] = zAxis.getNormalized();
 
-		computeAnchorAndExtentsForGivenNormalizedAxis(points, numPoints);
+		computeAnchorAndExtentsForGivenNormalizedAxis(points);
 	}
 
 	//! creates an object oriented bounding box around a set of points with a given zAxis
-	OrientedBoundingBox3(const point3d<FloatType>* points, size_t numPoints, const point3d<FloatType>& zAxis) {
+	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points, const point3d<FloatType>& zAxis) {
 
 		m_AxesScaled[2] = zAxis.getNormalized();
 
@@ -53,10 +53,10 @@ public:
 		v0.normalize();
 		v1.normalize();
 
-		std::vector < point2d<FloatType> > pointsProj(numPoints);
+		std::vector < point2d<FloatType> > pointsProj(points.size());
 
 		point2d<FloatType> pointsProjMean((FloatType)0, (FloatType)0);
-		for (size_t i = 0; i < numPoints; i++) {
+		for (size_t i = 0; i < points.size(); i++) {
 			pointsProj[i] = point2d<FloatType>(points[i] | v0, points[i] | v1);
 		}
 
@@ -75,7 +75,7 @@ public:
 		m_AxesScaled[0].normalize();
 		m_AxesScaled[1].normalize();
 
-		computeAnchorAndExtentsForGivenNormalizedAxis(points, numPoints);
+		computeAnchorAndExtentsForGivenNormalizedAxis(points);
 	}
 
 	bool isValid() const {
@@ -241,7 +241,7 @@ public:
 
 private:
 
-	void computeAnchorAndExtentsForGivenNormalizedAxis(const point3d<FloatType>* points, size_t numPoints)
+	void computeAnchorAndExtentsForGivenNormalizedAxis(const std::vector<point3d<FloatType>>& points)
 	{
 		assert((m_AxesScaled[0] | m_AxesScaled[1]) < (FloatType)0.001);
 		assert((m_AxesScaled[1] | m_AxesScaled[2]) < (FloatType)0.001);
@@ -253,7 +253,7 @@ private:
 		point3d<FloatType> minValues(std::numeric_limits<FloatType>::max(), std::numeric_limits<FloatType>::max(), std::numeric_limits<FloatType>::max());
 		point3d<FloatType> maxValues(-std::numeric_limits<FloatType>::max(), -std::numeric_limits<FloatType>::max(), -std::numeric_limits<FloatType>::max());
 
-		for (size_t i = 0; i < numPoints; i++) {
+		for (size_t i = 0; i < points.size(); i++) {
 			point3d<FloatType> curr = worldToOBBSpace * points[i];
 			if (curr.x < minValues.x)	minValues.x = curr.x;
 			if (curr.y < minValues.y)	minValues.y = curr.y;

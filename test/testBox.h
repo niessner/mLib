@@ -1,3 +1,4 @@
+
 class TestBox : public Test
 {
 public:
@@ -7,8 +8,11 @@ public:
 		std::vector<vec3f> points(size);
 		RNG rng;
 		for (size_t i = 0; i < size; i++) {
-			points[i] = vec3f(rng.rand_closed01(), rng.rand_closed01(), rng.rand_closed01());
+			points[i] = vec3f((float)rng.rand_closed01(), (float)rng.rand_closed01(), (float)rng.rand_closed01());
+			points[i].x *= 3.0f;
 		}
+
+		OBBf obb = CGALWrapperf::computeOrientedBoundingBox(points);
 
 		ml::Console::log() << "box test0 passed" << std::endl;
 	}
@@ -18,4 +22,5 @@ public:
 		return "Box";
 	}
 private:
+
 };

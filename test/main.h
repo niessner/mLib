@@ -3,6 +3,7 @@
 
 #include "test.h"
 
+#include "testBox.h"
 #include "testUtility.h"
 #include "testMath.h"
 #include "testANN.h"
@@ -11,4 +12,3 @@
 #include "testGrid.h"
 #include "testOpenMesh.h"
 #include "testCGAL.h"
-#include "testBox.h"

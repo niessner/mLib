@@ -29,6 +29,13 @@ public:
 			include(v);
 	}
 
+	BoundingBox3(typename std::vector<point3d<FloatType>>::const_iterator pBegin, typename std::vector<point3d<FloatType>>::const_iterator pEnd) {
+		reset();
+		for (const auto& iter = pBegin; iter != pEnd; iter++) {
+			include(*iter);
+		}
+	}
+
 	BoundingBox3(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) {
 		reset();
 		include(p0);
