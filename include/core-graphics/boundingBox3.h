@@ -23,13 +23,13 @@ public:
 		reset();
 	}
 
-	BoundingBox3(const std::vector< point3d<FloatType> >& verts) {
+	explicit BoundingBox3(const std::vector< point3d<FloatType> >& verts) {
 		reset();
         for (const auto &v : verts)
 			include(v);
 	}
 
-	BoundingBox3(typename std::vector<point3d<FloatType>>::const_iterator pBegin, typename std::vector<point3d<FloatType>>::const_iterator pEnd) {
+	explicit BoundingBox3(typename std::vector<point3d<FloatType>>::const_iterator pBegin, typename std::vector<point3d<FloatType>>::const_iterator pEnd) {
 		reset();
 		for (const auto& iter = pBegin; iter != pEnd; iter++) {
 			include(*iter);

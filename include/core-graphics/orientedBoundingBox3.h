@@ -165,6 +165,15 @@ public:
 		return point3d<FloatType>(m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length());
 	}
 
+	point3d<FloatType> getAnchor() const {
+		return m_Anchor;
+	}
+
+	FloatType getVolume() const {
+		point3d<FloatType> extent = getExtent();
+		return extent.x * extent.y * extent.z;
+	}
+
 	//! returns the diagonal extent of the OBB
 	FloatType getDiagonalLength() const {
 		return (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]).length();
@@ -287,7 +296,7 @@ private:
 	}
 
 	point3d<FloatType>	m_Anchor;
-	point3d<FloatType>	m_AxesScaled[3];
+	point3d<FloatType>	m_AxesScaled[3];	//these axes are not normalized; they are scaled according to the extent
 
 	/*
 
@@ -900,10 +909,19 @@ private:
 };
 
 template<class FloatType>
-OrientedBoundingBox3<FloatType> operator*(const Matrix4x4<FloatType> &mat, OrientedBoundingBox3<FloatType>& oobb) {
+OrientedBoundingBox3<FloatType> operator*(const Matrix4x4<FloatType> &mat, const OrientedBoundingBox3<FloatType>& oobb) {
 	OrientedBoundingBox3<FloatType> res = oobb;
 	res *= mat;
 	return res;
+}
+
+template<class FloatType>
+std::ostream& operator<<(std::ostream& os, const OrientedBoundingBox3<FloatType>& obb)  {
+	os << obb.getAxisX() << std::endl << obb.getAxisY() << std::endl << obb.getAxisZ() << std::endl;
+	os << "Extent: " << obb.getExtent() << std::endl;
+	os << "Anchor: " << obb.getAnchor() << std::endl;
+	os << "Volume: " << obb.getVolume() << std::endl;
+	return os;
 }
 
 typedef OrientedBoundingBox3<float> OrientedBoundingBox3f;

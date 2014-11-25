@@ -10,10 +10,18 @@ public:
 		for (size_t i = 0; i < size; i++) {
 			points[i] = vec3f((float)rng.rand_closed01(), (float)rng.rand_closed01(), (float)rng.rand_closed01());
 			points[i].x *= 3.0f;
+			points[i].y *= 2.0f;
+			points[i] = mat3f::rotationZ(45) * points[i];
 		}
 
-		OBBf obb = CGALWrapperf::computeOrientedBoundingBox(points);
-
+		std::cout << "PCA" << std::endl;
+		std::cout << CGALWrapperf::computeOrientedBoundingBox(points, CGALWrapperf::PCA) << std::endl;
+		std::cout << "CONSTRAIN_Z" << std::endl;
+		std::cout << CGALWrapperf::computeOrientedBoundingBox(points, CGALWrapperf::CONSTRAIN_Z) << std::endl;
+		std::cout << "MIN_PCA" << std::endl;
+		std::cout << CGALWrapperf::computeOrientedBoundingBox(points, CGALWrapperf::MIN_PCA) << std::endl;
+		std::cout << "AABB_FALLBACK" << std::endl;
+		std::cout << CGALWrapperf::computeOrientedBoundingBox(points, CGALWrapperf::AABB_FALLBACK) << std::endl;
 		ml::Console::log() << "box test0 passed" << std::endl;
 	}
 

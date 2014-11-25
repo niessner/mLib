@@ -93,7 +93,8 @@ public:
 	static OrientedBoundingBox3<FloatType> computeOrientedBoundingBox(const std::vector<point3d<FloatType>>& points, const FitOptFlags opts = DEFAULT_OPTS) {
 
 		if (opts[PCA]) {
-			return OrientedBoundingBox3<FloatType>(points);
+			auto pca = math::pointSetPCA(points);
+			return OrientedBoundingBox3<FloatType>(points, pca[0].first, pca[1].first, pca[2].first);
 		}
 		else if (opts[CONSTRAIN_Z]) {
 			// Get centroid, z range and x-y points for 2D rect fitting
