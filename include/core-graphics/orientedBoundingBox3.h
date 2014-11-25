@@ -21,6 +21,17 @@ public:
         m_AxesScaled[2] = vec3f::eZ * box.getExtentZ();
     }
 
+	//! constructs an oriented bounding box using PCA
+	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points) {
+
+		auto pca = math::pointSetPCA(points);
+		m_AxesScaled[0] = pca[0].first.getNormalized();
+		m_AxesScaled[1] = pca[1].first.getNormalized();
+		m_AxesScaled[2] = pca[2].first.getNormalized();
+
+		computeAnchorAndExtentsForGivenNormalizedAxis(points);
+	}
+
 	//! creates an object oriented bounding for a given set of points with the same axes as the other OBB
 	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points, const OrientedBoundingBox3& other) {
 		m_AxesScaled[0] = other.m_AxesScaled[0].getNormalized();
