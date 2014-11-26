@@ -86,11 +86,16 @@ public:
 		MIN_PCA = 1 << 1,  // Use minimum PCA axis and determine other axes through 2D project + min rectangle fit
 		AABB_FALLBACK = 1 << 2,  // Fall back to AABB if volume of AABB is within 10% of OBB
 		CONSTRAIN_Z = 1 << 3,  // Constrain OBB z axis to be canonical z axis
+		CONSTRAIN_AXIS = 1 << 4, // Constrain OBB to have an arbitrary canonical z axis (needs an additional parameter)
 		DEFAULT_OPTS = PCA
 	};
 	typedef FlagSet<FitOpts> FitOptFlags;
 
-	static OrientedBoundingBox3<FloatType> computeOrientedBoundingBox(const std::vector<point3d<FloatType>>& points, const FitOptFlags opts = DEFAULT_OPTS) {
+	static OrientedBoundingBox3<FloatType> computeOrientedBoundingBox(
+		const std::vector<point3d<FloatType>>& points, 
+		const FitOptFlags opts = DEFAULT_OPTS, 
+		const point3d<FloatType>& axisConstrain = point3d<FloatType>(0,0,1)) 
+	{
 
 		if (opts[PCA]) {
 			//auto pca = math::pointSetPCA(points);
@@ -160,13 +165,33 @@ public:
 
 			return OrientedBoundingBox3<FloatType>(points, bv0, bv1, (bv0 ^ bv1).getNormalized());
 		}
+		else if (opts[CONSTRAIN_AXIS]) {
+			point3d<FloatType> e(axisConstrain.z, -axisConstrain.x, axisConstrain.y);
+			point3d<FloatType> a0 = axisConstrain^e;
+			if (a0.lengthSq() < (FloatType)0.0001)	throw MLIB_EXCEPTION("invalid axis");
+			point3d<FloatType> a1 = (a0 ^ axisConstrain).getNormalized();
+			Matrix3x3<FloatType> proj3x3(a0, a1, axisConstrain.getNormalized());		proj3x3.transpose();
+			std::vector<point2d<FloatType>> projPs(points.size());
+			size_t i = 0;
+			for (auto it = points.begin(); it != points.end(); it++, i++) {
+				const point3d<FloatType>& p = proj3x3 * *it;
+				projPs[i] = point2d<FloatType>(p.x, p.y);
+			}
+
+			// Find minimum rectangle in that plane
+			const std::vector<point2d<FloatType>>& rectPts = minRectangle2D(projPs);
+
+			const point2d<FloatType> pV0 = rectPts[1] - rectPts[0], pV1 = rectPts[2] - rectPts[1];
+			const point3d<FloatType> bv0 = proj3x3.getTranspose() * point3d<FloatType>(pV0, (FloatType)0), bv1 = proj3x3.getTranspose() * point3d<FloatType>(pV1, (FloatType)0);
+
+			return OrientedBoundingBox3<FloatType>(points, bv0, bv1, (bv0 ^ bv1).getNormalized());
+		}
 
 		// Can now decide if AABB is a better or almost as good fit and revert to it
 		else if (opts[AABB_FALLBACK]) {
 			return OrientedBoundingBox3<FloatType>(BoundingBox3<FloatType>(points));
 		}
 		else {
-
 			throw MLIB_EXCEPTION("invalid flags");
 			return OrientedBoundingBox3 < FloatType >();
 		}
