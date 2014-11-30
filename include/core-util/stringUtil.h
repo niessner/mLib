@@ -159,6 +159,41 @@ namespace util
 		return trimmed.erase(str.find_last_not_of(" \n\r\t") + 1);
 	}
 
+	//! returns the integer of the last suffix
+	inline unsigned int getNumericSuffix(const std::string& str) {
+		std::string suffix;
+		unsigned int i = 0;
+		while (i < str.length()) {
+			char curr = str[str.length()-1-i];
+			if (curr >= '0' && curr <= '9') {
+				suffix = curr + suffix;
+			} else {
+				break;
+			}
+			i++;
+		}
+		if (suffix.length() > 0) {
+			return std::atoi(suffix.c_str());
+		} else {
+			return (unsigned int)(-1);
+		}
+	}
+
+	inline std::string getBaseBeforeNumericSuffix(const std::string& str) {
+		std::string base = str;
+		unsigned int i = 0;
+		while (i < str.length()) {
+			char curr = str[str.length()-1-i];
+			if (curr >= '0' && curr <= '9') {
+				base.pop_back();
+			} else {
+				break;
+			}
+			i++;
+		}
+		return base;
+	}
+
 }  // namespace util
 
 template<class T>

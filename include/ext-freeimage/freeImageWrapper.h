@@ -132,7 +132,7 @@ public:
 				for (int i = 0; i < (int)height; i++) {
 					BYTE* bitsRowStart = bits + (height - 1 - i)*pitch;
 					for (int j = 0; j < (int)width; j++) {
-						vec3uc color;		convertToVEC3UC(color, vec3f(image(i, j)));
+						vec3uc color;		convertToVEC3UC(color, image(i, j));
 						bitsRowStart[j*numChannels + FI_RGBA_RED] = (unsigned char)color.x;
 						bitsRowStart[j*numChannels + FI_RGBA_GREEN] = (unsigned char)color.y;
 						bitsRowStart[j*numChannels + FI_RGBA_BLUE] = (unsigned char)color.z;
