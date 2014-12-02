@@ -113,17 +113,22 @@ public:
 		//return vec3f(depth*x, depth*y, depth);
 	}
 
-	void savePointCloud(const std::string& filename, unsigned int frame) const {
+	void savePointCloud(const std::string& filename, unsigned int frameFrom, unsigned int frameTo = -1) const {
 		PointCloudf pc;
-		for (unsigned int i = 0; i < m_DepthImageWidth*m_DepthImageHeight; i++) {
-			float depth = getDepth(i%m_DepthImageWidth, i/m_DepthImageWidth, frame);
-			if (depth != -std::numeric_limits<float>::infinity() && depth != -FLT_MAX && depth != 0.0f) {
 
-				vec3f p = getWorldPos(i%m_DepthImageWidth, i/m_DepthImageWidth, frame);
-				pc.m_points.push_back(p);
-				if (m_ColorImageWidth == m_DepthImageWidth && m_ColorImageHeight == m_DepthImageHeight) {
-					vec4uc c = m_ColorImages[frame][i];
-					pc.m_colors.push_back(vec4f(c)/255.0f);
+		if (frameTo == (unsigned int)-1) frameTo = frameFrom + 1;
+
+		for (unsigned int frame = frameFrom; frame < frameTo; frame++) {
+			for (unsigned int i = 0; i < m_DepthImageWidth*m_DepthImageHeight; i++) {
+				float depth = getDepth(i%m_DepthImageWidth, i / m_DepthImageWidth, frame);
+				if (depth != -std::numeric_limits<float>::infinity() && depth != -FLT_MAX && depth != 0.0f) {
+
+					vec3f p = getWorldPos(i%m_DepthImageWidth, i / m_DepthImageWidth, frame);
+					pc.m_points.push_back(p);
+					if (m_ColorImageWidth == m_DepthImageWidth && m_ColorImageHeight == m_DepthImageHeight) {
+						vec4uc c = m_ColorImages[frame][i];
+						pc.m_colors.push_back(vec4f(c) / 255.0f);
+					}
 				}
 			}
 		}
