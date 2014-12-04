@@ -180,8 +180,105 @@ public:
 	}
 };
 
-	typedef EigenSolverEigen<float> EigenSolverEigenf;
-	typedef EigenSolverEigen<double> EigenSolverEigend;
+typedef EigenSolverEigen<float> EigenSolverEigenf;
+typedef EigenSolverEigen<double> EigenSolverEigend;
+
+
+template<class FloatType> class EigenWrapper 
+{
+public:
+	//! given a set of 3d correspondences determine a rotation and translation vector
+	static Matrix4x4<FloatType> kabsch(const std::vector<point3d<FloatType>>& source, const std::vector<point3d<FloatType>>& target) {
+		if (source.size() != target.size()) throw MLIB_EXCEPTION("invalid dimensions");
+		if (source.size() < 3) throw MLIB_EXCEPTION("need at least 3 points");
+
+		Eigen::MatrixXd P(3, source.size());
+		for (size_t i = 0; i < source.size(); i++) {
+			P(0, i) = source[i].x;
+			P(1, i) = source[i].y;
+			P(2, i) = source[i].z;
+		}
+		Eigen::MatrixXd Q(3, target.size());
+		for (size_t i = 0; i < target.size(); i++) {
+			Q(0, i) = target[i].x;
+			Q(1, i) = target[i].y;
+			Q(2, i) = target[i].z;
+		}
+		Eigen::VectorXd weights(source.size());
+		for (unsigned int i = 0; i < weights.size(); i++) {
+			weights[i] = 1.0;
+		}
+			 
+		//point3d<FloatType> p0(0, 0, 0);
+		//for (size_t i = 0; i < P.size(); i++) {
+		//	p0 += P[i];
+		//}
+		//p0 /= (FloatType)P.size();
+		//point3d<FloatType> q0(0, 0, 0);
+		//for (size_t i = 0; i < Q.size(); i++) {
+		//	q0 += Q[i];
+		//}
+		//q0 /= (FloatType)Q.size();
+
+		//if (P.cols() != Q.cols() || P.rows() != Q.rows())
+		//	Helpers::ExitWithMessage("Helpers::Kabsch: P and Q have different dimensions");
+		size_t D = P.rows(); // dimension of the space
+		size_t N = P.cols(); // number of points
+		Eigen::VectorXd	normalizedWeights = Eigen::VectorXd(weights.size());
+
+		// normalize weights to sum to 1
+		{
+			double	sumWeights = 0;
+			for (unsigned int i = 0; i < weights.size(); i++)
+			{
+				sumWeights += weights(i);
+			}
+			normalizedWeights = weights * (1.0 / sumWeights);
+		}
+
+		// Centroids
+		Eigen::VectorXd	p0 = P * normalizedWeights;
+		Eigen::VectorXd	q0 = Q * normalizedWeights;
+		Eigen::VectorXd v1 = Eigen::VectorXd::Ones(N);
+
+
+
+		Eigen::MatrixXd P_centred = P - p0*v1.transpose(); // translating P to center the origin
+		Eigen::MatrixXd Q_centred = Q - q0*v1.transpose(); // translating Q to center the origin
+
+		// Covariance between both matrices
+		Eigen::MatrixXd C = P_centred * normalizedWeights.asDiagonal() * Q_centred.transpose();
+
+		// SVD
+		Eigen::JacobiSVD<Eigen::MatrixXd> svd(C, Eigen::ComputeThinU | Eigen::ComputeThinV);
+
+		Eigen::MatrixXd V = svd.matrixU();
+		Eigen::VectorXd S = svd.singularValues();
+		Eigen::MatrixXd W = svd.matrixV();
+		Eigen::MatrixXd I = Eigen::MatrixXd::Identity(D, D);
+
+		if ((V * W.transpose()).determinant() < 0)
+			I(D - 1, D - 1) = -1;
+
+		// Recover the rotation and translation
+		Eigen::MatrixXd resRot = W * I * V.transpose();
+		Eigen::VectorXd resTrans = q0 - resRot*p0;
+
+		Matrix4x4<FloatType> ret;
+		for (unsigned int i = 0; i < 3; i++) {
+			for (unsigned int j = 0; j < 3; j++) {
+				ret(i, j) = (FloatType)resRot(i, j);
+			}
+		}
+		ret(3, 0) = ret(3, 1) = ret(3, 2) = 0;	ret(3, 3) = 1;
+		ret(0, 3) = (FloatType)resTrans(0);
+		ret(1, 3) = (FloatType)resTrans(1);
+		ret(2, 3) = (FloatType)resTrans(2);
+		return ret;
+	}
+};
+typedef EigenWrapper<float> EigenWrapperf;
+typedef EigenWrapper<double> EigenWrapperd;
 
 }  // namespace ml
 
