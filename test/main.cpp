@@ -47,6 +47,31 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 #endif
+	{
+		std::vector<vec3f> source, target;
+		mat4f trans; trans.setIdentity();
+		trans = mat4f::translation(vec3f(1, 2, 3));
+		trans = trans * mat4f::rotation(vec3f(1,2,3).getNormalized(), 25);
+		RNG rng;
+		for (unsigned int i = 0; i < 3; i++) {
+			vec3f p = vec3f((float)rng.rand_closed01(), (float)rng.rand_closed01(), (float)rng.rand_closed01());
+			source.push_back(p);
+			target.push_back(trans * p);
+		}
+
+
+		mat4f res;
+		Timer t;
+		for (unsigned int i = 0; i < 10000; i++) {
+			res = EigenWrapperf::kabsch(source, target);
+		}
+		std::cout << "time required " << t.getElapsedTimeMS() << std::endl;
+		std::cout << trans << std::endl;
+		std::cout << res << std::endl;
+	}
+
+	getchar();
+
 	//{
 	//	mat2f m(1, 2, 3, 4);
 	//	//EigenSystemf es = m.eigenSystem();

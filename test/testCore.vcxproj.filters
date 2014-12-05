@@ -96,9 +96,6 @@
     <ClInclude Include="..\include\mLibEigen.h">
       <Filter>mLibHeader</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\ext-eigen\eigenSolver.h">
-      <Filter>mLibHeader\ext-eigen</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\ext-eigen\eigenUtility.h">
       <Filter>mLibHeader\ext-eigen</Filter>
     </ClInclude>
@@ -314,6 +311,9 @@
     </ClInclude>
     <ClInclude Include="testBox.h">
       <Filter>tests</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ext-eigen\eigenSolver.h">
+      <Filter>mLibHeader\ext-eigen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

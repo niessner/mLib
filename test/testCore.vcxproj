@@ -57,7 +57,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>main.h</PrecompiledHeaderFile>
-      <AdditionalOptions>/Zm512 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Zm512  /bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
