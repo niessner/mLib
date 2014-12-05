@@ -62,7 +62,7 @@ int main()
 
 		mat4f res;
 		Timer t;
-		for (unsigned int i = 0; i < 10000; i++) {
+		for (unsigned int i = 0; i < 1000000; i++) {
 			res = EigenWrapperf::kabsch(source, target);
 		}
 		std::cout << "time required " << t.getElapsedTimeMS() << std::endl;
