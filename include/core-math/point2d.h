@@ -271,6 +271,51 @@ template<> const vec2d vec2d::origin(0.0, 0.0);
 template<> const vec2d vec2d::eX(1.0, 0.0);
 template<> const vec2d vec2d::eY(0.0, 1.0);
 
+
+namespace math {
+	template<class T>
+	inline vec2i round(const point2d<T>& f) {
+		return vec2i(round(f.x), round(f.y));
+	}
+	template<class T>
+	inline vec2i ceil(const point2d<T>& f) {
+		return vec2i(ceil(f.x), ceil(f.y));
+	}
+	template<class T>
+	inline vec2i floor(const point2d<T>& f) {
+		return vec2i(floor(f.x), floor(f.y));
+	}
+	template<class T>
+	inline point2d<T> abs(const point2d<T>& p) {
+		return point2d<T>(abs(p.x), abs(p.y));
+	}
+	template<class T>
+	inline point2d<T> max(const point2d<T>& p, T v) {
+		return point2d<T>(std::max(p.x, v),
+			std::max(p.y, v));
+	}
+	template<class T>
+	inline point2d<T> max(const point2d<T>& p, const point2d<T>& v) {
+		return point2d<T>(
+			std::max(p.x, v.x),
+			std::max(p.y, v.y));
+	}
+	template<class T>
+	inline point2d<T> min(const point2d<T>& p, T v) {
+		return point2d<T>(std::min(p.x, v),
+			std::min(p.y, v));
+	}
+	template<class T>
+	inline point2d<T> min(const point2d<T>& p, const point2d<T>& v) {
+		return point2d<T>(
+			std::min(p.x, v.x),
+			std::min(p.y, v.y));
+	}
+
+
+}
+
 }  // namespace ml
+
 
 #endif  // CORE_MATH_POINT2D_H_

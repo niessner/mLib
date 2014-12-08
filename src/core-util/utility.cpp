@@ -221,7 +221,7 @@ namespace util
 		BOOL success;
 		WIN32_FILE_ATTRIBUTE_DATA fileInfo;
 		success = GetFileAttributesExA(filename.c_str(), GetFileExInfoStandard, (void*)&fileInfo);
-		MLIB_ASSERT_STR(success && fileInfo.nFileSizeHigh == 0, std::string("GetFileAttributesEx failed on ") + filename);
+		MLIB_ASSERT_STR(success != 0, std::string("GetFileAttributesEx failed on ") + filename);
 		//return fileInfo.nFileSizeLow + fileInfo.nFileSizeHigh;
 		LARGE_INTEGER size;
 		size.HighPart = fileInfo.nFileSizeHigh;

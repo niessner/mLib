@@ -283,9 +283,11 @@ namespace ml {
 
 	typedef BoundingBox2<float> BoundingBox2f;
 	typedef BoundingBox2<double> BoundingBox2d;
+	typedef BoundingBox2<int> BoundingBox2i;
 
 	typedef BoundingBox2<float> bbox2f;
 	typedef BoundingBox2<double> bbox2d;
+	typedef BoundingBox2<int> bbox2i;
 
 }  // namespace ml
 
