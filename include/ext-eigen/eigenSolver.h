@@ -324,6 +324,18 @@ public:
 		ret(2, 3) = (FloatType)resTrans(2);
 		return ret;
 	}
+
+
+	static FloatType reProjectionError(const std::vector < point3d<FloatType> >& source, const std::vector < point3d<FloatType> >& target, const Matrix4x4<FloatType>& trans) {
+		if (source.size() != target.size()) throw MLIB_EXCEPTION("invalid dimension");
+
+		FloatType res = 0;
+		for (size_t i = 0; i < source.size(); i++) {
+			FloatType distSq = point3d<FloatType>::distSq(trans * source[i], target[i]);
+			res += distSq;
+		}
+		return res;
+	}
 };
 typedef EigenWrapper<float> EigenWrapperf;
 typedef EigenWrapper<double> EigenWrapperd;
