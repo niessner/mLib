@@ -129,6 +129,11 @@ inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version
 
 #endif // MLIB_USE_ARRAY_SERIALIZATION*/
 
+//
+// In the next version of mlib, this should definitely be switched to the ar & p.x & p.y style
+// a 100x100 sphere in an archive is 7MB in the array style, but 4.2MB in the primitive style
+//
+
 template<class Archive, class T>
 inline void serialize(Archive& ar, ml::point2d<T>& p, const unsigned int version) {
     ar & p.array;
