@@ -17,3 +17,6 @@ OnMeshLoad: reduces to lower res mesh for collisison (maybe in quadedge)`
 
 D3D11: Culling + Shading
 Shapes: Cylinder, Torus, Sphere
+
+Matthias:
+util::concatenate a vector of strings

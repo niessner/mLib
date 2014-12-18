@@ -259,6 +259,10 @@ public:
 		m_AxesScaled[2] = rot * m_AxesScaled[2];
 	}
 
+	bool intersects(const OrientedBoundingBox3<FloatType>& other) const {
+		return intersection::intersectOBBOBB<FloatType>(m_Anchor, &m_AxesScaled[0], other.m_Anchor, &other.m_AxesScaled[0]);
+	}
+
 private:
 
 	void computeAnchorAndExtentsForGivenNormalizedAxis(const std::vector<point3d<FloatType>>& points)

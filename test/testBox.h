@@ -30,6 +30,19 @@ public:
 		ml::Console::log() << "box test0 passed" << std::endl;
 	}
 
+	void test1() 
+	{
+		BoundingBox3f bb0;	bb0.include(vec3f(0, 0, 0));	bb0.include(vec3f(1, 1, 1));
+		BoundingBox3f bb1;	bb1.include(vec3f(0.9f, 0.9f, 0.9f));	bb1.include(vec3f(1.1f, 1.1f, 1.1f));
+
+		OrientedBoundingBox3f obb0(bb0);
+		OrientedBoundingBox3f obb1(bb1);
+
+		bool b = obb0.intersects(obb1);
+		std::cout << "b " << b << std::endl;
+		ml::Console::log() << "box test1 passed" << std::endl;
+	}
+
 	std::string name()
 	{
 		return "Box";
