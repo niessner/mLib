@@ -70,7 +70,7 @@ public:
 	}
 	void addEntry(const T &preWeightedEntry, float weight)
 	{
-		entries.pushBack( std::pair<T, float>(preWeightedEntry, weight) );
+        entries.push_back(std::pair<T, float>(preWeightedEntry, weight));
 	}
 	void addEntry(const T &entry)
 	{
@@ -126,7 +126,7 @@ public:
 
 		m_clusters.resize(clusterCount);
 		for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
-			m_clusters[clusterIndex].init(elements.randomElement());
+            m_clusters[clusterIndex].init(elements[rand() % elements.size()]);
 
 		std::vector<T> weightedElements = elements;
 		for(UINT elementIndex = 0; elementIndex < elements.size(); elementIndex++)
@@ -243,10 +243,10 @@ private:
 	void iterate(const std::vector<T> &elements, const std::vector<T> &weightedElements, const std::vector<float> &weights, std::vector<UINT> &storage)
 	{
 		const int elementCount = (int)elements.size();
-		const T* elementPtr = elements.ptr();
+		const T* elementPtr = &elements[0];
 		const float* weightsPtr = &weights[0];
 		const UINT clusterCount = (UINT)m_clusters.size();
-		KMeansCluster<T> *clustersPtr = m_clusters.ptr();
+		KMeansCluster<T> *clustersPtr = &m_clusters[0];
 
 #ifdef MLIB_OPENMP
 #pragma omp parallel for
@@ -272,7 +272,7 @@ private:
 			clustersPtr[storage[elementIndex]].addEntry(weightedElements[elementIndex], weightsPtr[elementIndex]);
 
 		for(UINT clusterIndex = 0; clusterIndex < clusterCount; clusterIndex++)
-			clustersPtr[clusterIndex].finalizeIteration(elements.randomElement());
+			clustersPtr[clusterIndex].finalizeIteration(ml::util::randomElement(elements));
 	}
 
 	std::vector< KMeansCluster<T> > m_clusters;
