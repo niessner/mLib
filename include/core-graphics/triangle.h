@@ -20,7 +20,6 @@ struct Triangle
         return ml::math::triangleNormal(vertices[0], vertices[1], vertices[2]);
     }
 
-    //wouldn't this be prettier if it were vec3<FloatType>? :)
     point3d<T> vertices[3];
 
 };
