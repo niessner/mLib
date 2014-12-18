@@ -7,7 +7,12 @@ namespace ml {
 namespace intersection {
 
 
-
+    template <class FloatType>
+    bool intersectRayTriangle(
+        const Triangle<FloatType>& triangle, const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false)
+    {
+        return intersectRayTriangle(triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], r, _t, _u, _v, tmin, tmax, intersectOnlyFrontFaces);
+    }
 
 	//triangle ray
 	template <class FloatType>

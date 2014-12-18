@@ -153,7 +153,7 @@ public:
 	}
 
 	//! returns the n'th axis of the OBB
-	const point3d<FloatType>& getAxis(unsigned char n) const {
+	const point3d<FloatType>& getAxis(unsigned int n) const {
 		return m_AxesScaled[n];
 	}
 
