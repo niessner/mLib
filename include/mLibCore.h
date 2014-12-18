@@ -81,6 +81,7 @@
 #include "core-graphics/lineSegment2.h"
 #include "core-graphics/lineSegment3.h"
 #include "core-graphics/plane.h"
+#include "core-graphics/triangle.h"
 #include "core-graphics/intersection.h"
 #include "core-graphics/boundingBox2.h"
 #include "core-graphics/boundingBox3.h"
