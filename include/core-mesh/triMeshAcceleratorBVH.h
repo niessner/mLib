@@ -17,13 +17,23 @@ struct TriangleBVHNode {
 	//template<class T>
 	//using Triangle = TriMesh::Triangle<T>;
 
-	BoundingBox3<FloatType> boundingBox;
-	const typename TriMesh<FloatType>::Triangle<FloatType>* leafTri;
+    TriangleBVHNode<FloatType> *lChild;
+    TriangleBVHNode<FloatType> *rChild;
 
-
-	TriangleBVHNode<FloatType> *lChild;
-	TriangleBVHNode<FloatType> *rChild;
-
+    union
+    {
+        struct
+        {
+            BoundingBox3<FloatType> boundingBox;
+        };
+        
+        struct
+        {
+            vec3f vertices[3];
+            typename TriMesh<FloatType>::Triangle<FloatType> *leafTri;
+        };
+    };
+	
 	void computeBoundingBox() {
 		boundingBox.reset();
 		
@@ -41,6 +51,13 @@ struct TriangleBVHNode {
 		}
 	}
 
+    void loadTri(typename TriMesh<FloatType>::Triangle<FloatType> *tri)
+    {
+        vertices[0] = tri->getV0().position;
+        vertices[1] = tri->getV1().position;
+        vertices[2] = tri->getV2().position;
+        leafTri = tri;
+    }
 
 	void split(typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& end, unsigned int lastSortAxis) {
 		if (end - begin > 1) {
@@ -57,19 +74,23 @@ struct TriangleBVHNode {
 
 		} else {
 			assert(end - begin == 1);
-			leafTri = *begin;	//found a leaf
+            loadTri(*begin);	//found a leaf
 		}
 	}
 
 	inline bool isLeaf() const {
-		return !(lChild || rChild);
+        //
+        // TODO: check with Matthias. It should be fine to just check the left child.
+        //
+        //return !(lChild || rChild);
+        return !(lChild);
 	}
 
 	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType& tmin, FloatType& tmax, bool onlyFrontFaces = false) const {
 		if (t < tmin || t > tmax)	return nullptr;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {
 			if (isLeaf()) {
-				if (leafTri->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces))	{
+                if (intersection::intersectRayTriangle(vertices[0], vertices[1], vertices[2], r, t, u, v, tmin, tmax, onlyFrontFaces))	{
 					tmax = t;
 					return leafTri;
 				}
@@ -307,9 +328,9 @@ private:
 					nextLevel[2*i+0].node = currLevel[i].node->lChild;
 					nextLevel[2*i+1].node = currLevel[i].node->rChild;
 					
-					if (nextLevel[2*i+0].end - nextLevel[2*i+0].begin < 2) lChild->leafTri = tris[nextLevel[2*i+0].begin];
+					if (nextLevel[2*i+0].end - nextLevel[2*i+0].begin < 2) lChild->loadTri(tris[nextLevel[2*i+0].begin]);
 					else needFurtherSplitting = true;
-					if (nextLevel[2*i+1].end - nextLevel[2*i+1].begin < 2) rChild->leafTri = tris[nextLevel[2*i+1].begin];
+					if (nextLevel[2*i+1].end - nextLevel[2*i+1].begin < 2) rChild->loadTri(tris[nextLevel[2*i+1].begin]);
 					else needFurtherSplitting = true;
 				} 
 			}

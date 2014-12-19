@@ -184,10 +184,11 @@ public:
 
 	//! point collision
 	bool intersects(const point3d<FloatType>& p) const {
-		if (p.x >= minX && p.x <= maxX && 
-			p.y >= minY && p.y <= maxY && 
-			p.z >= minZ && p.z <= maxZ) return true
-		else  return false;
+        if (p.x >= minX && p.x <= maxX &&
+            p.y >= minY && p.y <= maxY &&
+            p.z >= minZ && p.z <= maxZ)
+            return true;
+		return false;
 	}
 
 	//! triangle collision
