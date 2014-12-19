@@ -95,10 +95,14 @@ public:
 		//return (intersect.t != std::numeric_limits<float>::max());
 	}
 
+    //
+    // ml::mat4f is the inverse of the "accelerator to world" matrix!
+    // TODO: this returns the closest interesction, but the "t" parameter is broken because it is in the space of the transformed object, not the original world-space ray.
+    //
     template<class Accelerator>
     static Intersection getFirstIntersectionTransform(
         const Ray<FloatType>& ray,
-        const std::vector< std::pair<const Accelerator*, ml::mat4f> >& transformedAccelerators,
+        const std::vector< std::pair<const Accelerator*, ml::mat4f> >& invTransformedAccelerators,
         UINT &objectIndex)
     {
         Intersection intersect;
@@ -107,7 +111,7 @@ public:
         intersect.t = std::numeric_limits<float>::max();
         float bestDistSqToOrigin = std::numeric_limits<float>::max();
 
-        for (const auto &accelerator : transformedAccelerators)
+        for (const auto &accelerator : invTransformedAccelerators)
         {
             Intersection curIntersection;
             if (accelerator.first->intersect(accelerator.second * ray, curIntersection))
@@ -138,14 +142,17 @@ public:
 		return i.isValid();
 	}
 
+    //
+    // ml::mat4f  is the inverse of the "accelerator to world" matrix!
+    //
     template<class Accelerator>
     static bool getFirstIntersectionTransform(
         const Ray<FloatType>& ray,
-        const std::vector< std::pair<const Accelerator*, ml::mat4f> >& transformedAccelerators,
+        const std::vector< std::pair<const Accelerator*, ml::mat4f> >& invTransformedAccelerators,
         Intersection& i,
         UINT &objectIndex)
     {
-        i = getFirstIntersectionTransform(ray, transformedAccelerators, objectIndex);
+        i = getFirstIntersectionTransform(ray, invTransformedAccelerators, objectIndex);
         return i.isValid();
     }
 

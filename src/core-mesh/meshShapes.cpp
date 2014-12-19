@@ -42,6 +42,18 @@ TriMeshf plane(const vec3f &start, const vec3f &end, const vec3f &normal)
     return TriMeshf(vertices, indices);
 }
 
+TriMeshf box(const bbox3f &bbox, const vec4f& color)
+{
+    auto extent = bbox.getExtent();
+    auto center = bbox.getCenter();
+    TriMeshf result = box(extent.x, extent.y, extent.z, color);
+    for (auto &v : result.getVertices())
+    {
+        v.position += center;
+    }
+    return result;
+}
+
 TriMeshf box(float xDim, float yDim, float zDim, const vec4f& color) {
 	std::vector<TriMeshf::Vertexf> vv(8);
 	std::vector<UINT> vi(12 * 3);
