@@ -32,15 +32,50 @@ public:
 
 	void test1() 
 	{
-		BoundingBox3f bb0;	bb0.include(vec3f(0, 0, 0));	bb0.include(vec3f(1, 1, 1));
-		BoundingBox3f bb1;	bb1.include(vec3f(0.9f, 0.9f, 0.9f));	bb1.include(vec3f(1.1f, 1.1f, 1.1f));
+		//BoundingBox3f bb0;	bb0.include(vec3f(0, 0, 0));	bb0.include(vec3f(1, 1, 1));
+		//BoundingBox3f bb1;	bb1.include(vec3f(0.9f, 0.9f, 0.9f));	bb1.include(vec3f(1.1f, 1.1f, 1.1f));
 
-		OrientedBoundingBox3f obb0(bb0);
-		OrientedBoundingBox3f obb1(bb1);
+		//OrientedBoundingBox3f obb0(bb0);
+		//OrientedBoundingBox3f obb1(bb1);
 
-		bool b = obb0.intersects(obb1);
-		std::cout << "b " << b << std::endl;
+		//bool b = obb0.intersects(obb1);
+		//std::cout << "b " << b << std::endl;
+
+		{
+			BoundingBox3f bb0;	bb0.include(vec3f(0, 0, 0));	bb0.include(vec3f(1, 1, 1));
+			BoundingBox3f bb1;	bb1.include(vec3f(0.5, 0.5, 2));	bb1.include(vec3f(1, 1, 3));
+
+			OrientedBoundingBox3f obb0(bb0);
+			OrientedBoundingBox3f obb1(bb1);
+
+			unsigned int numTests = 11;
+			for (unsigned int i = 0; i < numTests; i++) {
+				float t = (float)i / (numTests-1);
+				bb1.translate(vec3f(0,0,2*t));
+
+				bool resultA = bb0.intersects(bb1);
+				bool resultB = obb0.intersects(obb1);
+				MLIB_ASSERT_STR(resultA == resultB, "collisions inconsistent");
+			}
+		}
+
+		unsigned int numTests = 1000;
+		RNG rng;
+		for (unsigned int i = 0; i < 1000; i++) {
+			
+			BoundingBox3f bb0;	bb0.include(vec3d(rng.rand_closed01(), rng.rand_closed01(), rng.rand_closed01()));	bb0.include(vec3d(rng.rand_closed01(), rng.rand_closed01(), rng.rand_closed01()));
+			BoundingBox3f bb1;	bb1.include(vec3d(rng.rand_closed01(), rng.rand_closed01(), rng.rand_closed01()));	bb1.include(vec3d(rng.rand_closed01(), rng.rand_closed01(), rng.rand_closed01()));
+
+			OrientedBoundingBox3f obb0(bb0);
+			OrientedBoundingBox3f obb1(bb1);
+
+			bool resultA = bb0.intersects(bb1);
+			bool resultB = obb0.intersects(obb1);
+			MLIB_ASSERT_STR(resultA == resultB, "collisions inconsistent");
+		}
+
 		ml::Console::log() << "box test1 passed" << std::endl;
+
 	}
 
 	std::string name()

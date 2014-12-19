@@ -787,12 +787,19 @@ namespace intersection {
 		//point3d<FloatType> const* A1 = &box1.axis[0];
 		//point3d<FloatType> const& E1 = box1.extent;
 
-		point3d<FloatType> const& C0 = anchor0;
-		std::array<point3d<FloatType>, 3> A0;	A0[0] = axesScaled0[0].getNormalized();	A0[1] = axesScaled0[1].getNormalized();	A0[2] = axesScaled0[2].getNormalized();
-		point3d<FloatType> E0 = point3d<FloatType>(axesScaled0[0].length(), axesScaled0[1].length(), axesScaled0[2].length());
-		point3d<FloatType> const& C1 = anchor0;
-		std::array<point3d<FloatType>, 3> A1;	A1[0] = axesScaled1[0].getNormalized();	A1[1] = axesScaled1[1].getNormalized();	A1[2] = axesScaled1[2].getNormalized();
-		point3d<FloatType> E1 = point3d<FloatType>(axesScaled1[0].length(), axesScaled1[1].length(), axesScaled1[2].length());
+		std::array<point3d<FloatType>, 3> A0;	
+		A0[0] = axesScaled0[0].getNormalized();	
+		A0[1] = axesScaled0[1].getNormalized();	
+		A0[2] = axesScaled0[2].getNormalized();
+		point3d<FloatType> E0 = point3d<FloatType>(axesScaled0[0].length(), axesScaled0[1].length(), axesScaled0[2].length()) / 2;
+		point3d<FloatType> C0 = anchor0 + (axesScaled0[0] + axesScaled0[1] + axesScaled0[2])/2;
+
+		std::array<point3d<FloatType>, 3> A1;	
+		A1[0] = axesScaled1[0].getNormalized();	
+		A1[1] = axesScaled1[1].getNormalized();	
+		A1[2] = axesScaled1[2].getNormalized();
+		point3d<FloatType> E1 = point3d<FloatType>(axesScaled1[0].length(), axesScaled1[1].length(), axesScaled1[2].length()) / 2;
+		point3d<FloatType> C1 = anchor1 + (axesScaled1[0] + axesScaled1[1] + axesScaled1[2]) / 2;;
 
 		const FloatType cutoff = (FloatType)1 - result.epsilon;
 		bool existsParallelPair = false;

@@ -78,7 +78,6 @@ int main()
 		std::cout << "reProjection Error: " << error << std::endl;
 	}
 
-	getchar();
 
 	//{
 	//	mat2f m(1, 2, 3, 4);
