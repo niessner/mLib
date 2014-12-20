@@ -153,7 +153,7 @@ namespace util
         std::pair<std::string, std::string> result;
         auto firstIndex = str.find_first_of(delim);
         result.first = str.substr(0, firstIndex);
-        result.second = str.substr(firstIndex + 1);
+        result.second = str.substr(firstIndex + delim.size());
         return result;
     }
 
