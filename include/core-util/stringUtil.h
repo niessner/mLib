@@ -148,6 +148,15 @@ namespace util
 		return trimmed.erase(str.find_last_of(delim));
 	}
 
+    //! splits string about the first instance of delim
+    inline std::pair<std::string, std::string> splitOnFirst(const std::string& str, const std::string& delim) {
+        std::pair<std::string, std::string> result;
+        auto firstIndex = str.find_first_of(delim);
+        result.first = str.substr(0, firstIndex);
+        result.second = str.substr(firstIndex + 1);
+        return result;
+    }
+
 	//! returns filename with extension removed
 	inline std::string dropExtension(const std::string& filename) {
 		return substrBeforeLast(filename, ".");
