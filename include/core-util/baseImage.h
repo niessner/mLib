@@ -467,6 +467,7 @@ public:
 	void reSample(unsigned int newHeight, unsigned int newWidth) {
 		if (m_Width != newWidth || m_Height != newHeight) {
 			BaseImage res(newHeight, newWidth);
+			res.setInvalidValue(m_InvalidValue);
 			for (unsigned int i = 0; i < newHeight; i++) {
 				for (unsigned int j = 0; j < newWidth; j++) {
 					const float y = (float)i/(newHeight-1);
@@ -474,7 +475,7 @@ public:
 					res(i,j) = getPixel(y,x);
 				}
 			}
-			*this = std::move(res);
+			swap(*this, res);
 		}
 	}
 
