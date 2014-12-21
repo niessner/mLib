@@ -48,10 +48,12 @@ int main()
 
 #endif
 	{
-		MeshDataf meshData = MeshIOf::loadFromFile("tmp.off");
+		MeshDataf meshData = MeshIOf::loadFromFile("dining1d.ply");
 		meshData.removeIsolatedVertices();
-		TriMeshf triMesh(meshData);
+		MeshIOf::saveToPLY("dining1d_removed.ply", meshData);
 
+		std::cout << "done" << std::endl;
+		getchar();
 	}
 	//{
 	// KABSCH TEST

@@ -348,15 +348,13 @@ unsigned int MeshData<FloatType>::removeIsolatedVertices()
 			}
 		}
 	}
+	
+	m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
 
-	if (m_Vertices.size() != new_verts.size()) {
-		m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
-
-		if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
-		if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
-		if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
-	}
-
+	if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
+	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
+	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
+	
 	return (unsigned int)m_Vertices.size();
 }
 
