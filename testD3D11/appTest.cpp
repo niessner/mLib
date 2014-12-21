@@ -92,6 +92,21 @@ void testCollisions() {
 		}
 	}
 
+	{
+		Timer cTime;
+		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + 1300*0.002f), 50, 50);
+		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 15, 15);
+		TriMeshAcceleratorBVHf accels0(s0);
+		TriMeshAcceleratorBVHf accels1(s1);
+		unsigned int numCols = 0;
+		for (unsigned int i = 0; i < 10000; i++) {
+			if (accels0.collision(accels1)) {
+				numCols++;
+			}
+		}
+		std::cout << "bvh collision time:\t" << cTime.getElapsedTimeMS() << " ms | " << numCols << std::endl;
+	}
+
 	Timer tbvh;
 	for (unsigned int i = 0; i < 10000; i++) {
 		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
@@ -123,6 +138,9 @@ void testCollisions() {
 
 void AppTest::init(ml::ApplicationData &app)
 {
+	testCollisions();
+
+
 	TriMeshf s = shapes::sphere(0.1f, vec3f(0.0f), 50, 50);
 	MeshIOf::saveToFile("bla0.ply",s.getMeshData());
 	OpenMeshTriMesh::Mesh omesh;
@@ -136,7 +154,6 @@ void AppTest::init(ml::ApplicationData &app)
 	OpenMeshTriMesh::decimate(s, 500);
 	MeshIOf::saveToFile("bla3.ply",s.getMeshData());
 
-	testCollisions();
 	//vec3f u0(0,0,0);
 	//vec3f u1(0,1,0);
 	//vec3f u2(0,1,1);
