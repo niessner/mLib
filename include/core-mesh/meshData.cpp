@@ -319,7 +319,7 @@ unsigned int MeshData<FloatType>::removeDegeneratedFaces()
 
 
 
-
+ 
 template <class FloatType>
 unsigned int MeshData<FloatType>::removeIsolatedVertices()
 {
