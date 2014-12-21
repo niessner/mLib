@@ -41,76 +41,72 @@ struct TriangleBVHNode {
 		}
 	}
 
+	void splitMidPoint(typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& end) {
+		if (end - begin > 1) {
+			//determine longest axis
+			BoundingBox3<FloatType> bbox;
+			for (auto iter = begin; iter != end; iter++) {
+				bbox.include((*iter)->getCenter());
+			}
 
-	void split(typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& end, unsigned int lastSortAxis) {
-		bool medianSplit = false;
-
-		if (!medianSplit) {
-			if (end - begin > 1) {
-				//determine longest axis
-				BoundingBox3<FloatType> bbox;
-				for (auto iter = begin; iter != end; iter++) {
-					bbox.include((*iter)->getCenter());
+			FloatType maxExtent = bbox.getMaxExtent();
+			typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator midIter = begin + 1;
+			if (bbox.getExtentX() > bbox.getExtentY() && bbox.getExtentX() > bbox.getExtentZ())	{
+				//x
+				std::stable_sort(begin, end, cmpX);
+				FloatType middle = bbox.getMinX() + maxExtent / 2;
+				for (; midIter != end - 1; midIter++) {
+					if ((*midIter)->getCenter().x >= middle) break;
 				}
-
-				FloatType maxExtent = bbox.getMaxExtent();
-				typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator midIter = begin + 1;
-				if (bbox.getExtentX() > bbox.getExtentY() && bbox.getExtentX() > bbox.getExtentZ())	{
-					//x
-					std::stable_sort(begin, end, cmpX);
-					FloatType middle = bbox.getMinX() + maxExtent / 2;
-					for (; midIter != end-1; midIter++) {
-						if ((*midIter)->getCenter().x >= middle) break;
-					}
+			}
+			else if (bbox.getExtentY() > bbox.getExtentX() && bbox.getExtentY() > bbox.getExtentZ()) {
+				//y
+				std::stable_sort(begin, end, cmpY);
+				FloatType middle = bbox.getMinY() + maxExtent / 2;
+				for (; midIter != end - 1; midIter++) {
+					if ((*midIter)->getCenter().y >= middle) break;
 				}
-				else if (bbox.getExtentY() > bbox.getExtentX() && bbox.getExtentY() > bbox.getExtentZ()) {
-					//y
-					std::stable_sort(begin, end, cmpY);
-					FloatType middle = bbox.getMinY() + maxExtent / 2;
-					for (; midIter != end - 1; midIter++) {
-						if ((*midIter)->getCenter().y >= middle) break;
-					}
-				}
-				else {
-					//z
-					std::stable_sort(begin, end, cmpZ);
-					FloatType middle = bbox.getMinZ() + maxExtent / 2;
-					for (; midIter != end - 1; midIter++) {
-						if ((*midIter)->getCenter().z >= middle) break;
-					}
-				}
-
-				lChild = new TriangleBVHNode;
-				rChild = new TriangleBVHNode;
-
-				const unsigned int newSortAxis = (lastSortAxis + 1) % 3;
-				lChild->split(begin, midIter, newSortAxis);
-				rChild->split(midIter, end, newSortAxis);
-
 			}
 			else {
-				assert(end - begin == 1);
-				leafTri = *begin;	//found a leaf
+				//z
+				std::stable_sort(begin, end, cmpZ);
+				FloatType middle = bbox.getMinZ() + maxExtent / 2;
+				for (; midIter != end - 1; midIter++) {
+					if ((*midIter)->getCenter().z >= middle) break;
+				}
 			}
+
+			lChild = new TriangleBVHNode;
+			rChild = new TriangleBVHNode;
+
+			lChild->splitMidPoint(begin, midIter);
+			rChild->splitMidPoint(midIter, end);
+
 		}
 		else {
-			if (end - begin > 1) {
-				if (lastSortAxis == 0)		std::stable_sort(begin, end, cmpX);
-				else if (lastSortAxis == 1)	std::stable_sort(begin, end, cmpY);
-				else						std::stable_sort(begin, end, cmpZ);
+			assert(end - begin == 1);
+			leafTri = *begin;	//found a leaf
+		}
+	}
 
-				lChild = new TriangleBVHNode;
-				rChild = new TriangleBVHNode;
+	void splitMedian(typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& end, unsigned int lastSortAxis) {
 
-				const unsigned int newSortAxis = (lastSortAxis + 1) % 3;
-				lChild->split(begin, begin + ((end - begin) / 2), newSortAxis);
-				rChild->split(begin + ((end - begin) / 2), end, newSortAxis);
+		if (end - begin > 1) {
+			if (lastSortAxis == 0)		std::stable_sort(begin, end, cmpX);
+			else if (lastSortAxis == 1)	std::stable_sort(begin, end, cmpY);
+			else						std::stable_sort(begin, end, cmpZ);
 
-			}
-			else {
-				assert(end - begin == 1);
-				leafTri = *begin;	//found a leaf
-			}
+			lChild = new TriangleBVHNode;
+			rChild = new TriangleBVHNode;
+
+			const unsigned int newSortAxis = (lastSortAxis + 1) % 3;
+			lChild->splitMedian(begin, begin + ((end - begin) / 2), newSortAxis);
+			rChild->splitMedian(begin + ((end - begin) / 2), end, newSortAxis);
+
+		}
+		else {
+			assert(end - begin == 1);
+			leafTri = *begin;	//found a leaf
 		}
 	}
 
@@ -379,7 +375,8 @@ private:
 	void buildRecursive(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris) {
 		assert(tris.size() > 2);
 		m_Root = new TriangleBVHNode<FloatType>;
-		m_Root->split(tris.begin(), tris.end(), 0);
+		//m_Root->splitMedian(tris.begin(), tris.end(), 0);
+		m_Root->splitMidPoint(tris.begin(), tris.end());
 		m_Root->computeBoundingBox();
 	}
 
