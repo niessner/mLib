@@ -134,6 +134,9 @@ template <class T> inline bool operator != (const Grid3<T> &a, const Grid3<T> &b
 	return !(a == b);
 }
 
+typedef Grid3<float> Grid3f;
+typedef Grid3<double> Grid3d;
+
 }  // namespace ml
 
 #include "grid3.cpp"

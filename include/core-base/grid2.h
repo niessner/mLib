@@ -194,6 +194,9 @@ template <class T> inline bool operator != (const Grid2<T> &a, const Grid2<T> &b
 	return !(a == b);
 }
 
+typedef Grid2<float> Grid2f;
+typedef Grid2<double> Grid2d;
+
 }
 
 #include "grid2.cpp"
