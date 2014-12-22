@@ -277,6 +277,10 @@ template<>	__forceinline void convertToVEC3UC<vec4uc>(vec3uc& output, const vec4
 	output.y = input[1];	
 	output.z = input[2];
 }
+template<>	__forceinline void convertToVEC3UC<float>(vec3uc& output, const float& input) {
+	convertToVEC3UC(output, vec3f(input));
+}
+
 
 
 
@@ -345,7 +349,9 @@ template<>	__forceinline void convertToVEC4UC<vec4uc>(vec4uc& output, const vec4
 	output.z = input[2];
 	output.w = input[3];
 }
-
+template<>	__forceinline void convertToVEC4UC<float>(vec4uc& output, const float& input) {
+	convertToVEC4UC(output, vec4f(input));
+}
 
 //USHORT
 template<class T>	__forceinline void convertToUSHORT(unsigned short& output, const T& input) {
