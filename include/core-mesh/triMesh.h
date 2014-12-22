@@ -441,7 +441,10 @@ namespace ml {
 				point3d<FloatType> p2 = worldToVoxel * m_Vertices[m_Indices[i].z].position;
 
 				BoundingBox3<FloatType> bb0(p0, p1, p2);
-				BoundingBox3<FloatType> bb1(point3d<FloatType>(0,0,0), point3d<FloatType>((FloatType)grid.dimX(), (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
+                //
+                // TODO MATTHIAS: this + 1.0f should be investigated more.
+                //
+				BoundingBox3<FloatType> bb1(point3d<FloatType>(0,0,0), point3d<FloatType>((FloatType)grid.dimX() + 1.0f, (FloatType)grid.dimY() + 1.0f, (FloatType)grid.dimZ() + 1.0f));
 				if (bb0.intersects(bb1)) {
 					voxelizeTriangle(p0, p1, p2, grid, solid);
 				} else {
