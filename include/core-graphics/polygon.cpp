@@ -7,6 +7,7 @@ namespace ml {
 //
 // Sutherland-Hodgman Clipping
 // http://gamedevelopment.tutsplus.com/tutorials/understanding-sutherland-hodgman-clipping-for-physics-engines--gamedev-11917
+// http://www.cc.gatech.edu/grads/h/Hao-wei.Hsieh/Haowei.Hsieh/code2.html
 //
 template<class T>
 Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLine, const vec2<T> &clipCentroid)
@@ -20,7 +21,7 @@ Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLi
     // find the normal of the line segment pointing towards clipCentroid
     //
     vec2<T> normal = clipLine.dir();
-    normal = (-normal.y, normal.x);
+    normal = vec2<T>(-normal.y, normal.x);
     if (((clipCentroid - clipLine.p0()) | normal) < 0.0f)
         normal = -normal;
 
@@ -35,22 +36,25 @@ Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLi
         bool startSide = sideTest(startPoint);
         bool endSide = sideTest(endPoint);
 
-        if (endSide)
+        if (startSide && endSide)
         {
-            if (!startSide)
-            {
-                vec2<T> intersection = startPoint;
-                intersection::intersectLine2Line2(clipLine, Line2<T>(startPoint, endPoint), intersection);
-                output.points.push_back(intersection);
-            }
             output.points.push_back(endPoint);
         }
-        else if (startSide)
+        if (startSide && !endSide)
         {
             vec2<T> intersection = startPoint;
             intersection::intersectLine2Line2(clipLine, Line2<T>(startPoint, endPoint), intersection);
             output.points.push_back(intersection);
         }
+        if (!startSide && endSide)
+        {
+            vec2<T> intersection = startPoint;
+            intersection::intersectLine2Line2(clipLine, Line2<T>(startPoint, endPoint), intersection);
+            output.points.push_back(intersection);
+            output.points.push_back(endPoint);
+        }
+
+        startPoint = endPoint;
     }
 
     return output;

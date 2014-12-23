@@ -35,6 +35,12 @@ struct Polygon
             p += v;
     }
 
+    void scale(float s)
+    {
+        for (vec2<T> &p : points)
+            p *= s;
+    }
+
     vector< vec2<T> > points;
 };
 
