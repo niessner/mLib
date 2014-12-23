@@ -368,6 +368,22 @@ namespace math {
 	}
 
 
+    template<class T>
+    inline T triangleArea(const vec3<T>& v0, const vec3<T>& v1, const vec3<T>& v2) {
+        return ((v1 - v0) ^ (v2 - v0)).length() * (T)0.5;
+    }
+
+    template<class T>
+    inline T triangleArea(const vec2<T>& v0, const vec2<T>& v1, const vec2<T>& v2) {
+        return triangleArea(vec3<T>(v0, 0.0f),
+                            vec3<T>(v1, 0.0f),
+                            vec3<T>(v2, 0.0f));
+    }
+
+    template<class T>
+    inline vec3<T> triangleNormal(const vec3<T>& v0, const vec3<T>& v1, const vec3<T>& v2) {
+        return ((v1 - v0) ^ (v2 - v0)).getNormalized();
+    }
 }
 
 }  // namespace ml
