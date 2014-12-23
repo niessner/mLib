@@ -8,15 +8,15 @@ namespace intersection {
 
     //2D line-line intersection
     template <class T>
-    bool intersectLine2Line2(const Line2<T> &lineA, const Line2<T> &lineB, vec2<T> &result)
+    bool intersectLine2Line2(const Line2<T> &lineA, const Line2<T> &lineB, point2d<T> &result)
     {
         //
         // http://www.ahinson.com/algorithms_general/Sections/Geometry/ParametricLineIntersection.pdf
         //
 
-        const vec2<T> d21 = lineA.dir();
-        const vec2<T> d43 = lineB.dir();
-        const vec2<T> d31 = lineB.p0() - lineA.p0();
+        const point2d<T> d21 = lineA.dir();
+        const point2d<T> d43 = lineB.dir();
+        const point2d<T> d31 = lineB.p0() - lineA.p0();
 
         const float d = d43.x * d21.y - d21.x * d43.y;
         if (d == 0.0f)

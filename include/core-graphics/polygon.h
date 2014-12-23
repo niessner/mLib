@@ -8,7 +8,7 @@ template<class T>
 struct Polygon
 {
     static Polygon<T> clip(const Polygon<T> &sourcePoly, const Polygon<T> &clipPoly);
-    static Polygon<T> clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLine, const vec2<T> &clipCentroid);
+    static Polygon<T> clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLine, const point2d<T> &clipCentroid);
 
     vector< LineSegment2<T> > segments() const
     {
@@ -21,23 +21,23 @@ struct Polygon
         return result;
     }
 
-    vec2<T> centroid() const
+    point2d<T> centroid() const
     {
-        vec2<T> result;
+        point2d<T> result;
         for (const auto &p : points)
             result += p;
         return result / (T)points.size();
     }
 
-    void translate(const vec2<T> &v)
+    void translate(const point2d<T> &v)
     {
-        for (vec2<T> &p : points)
+        for (point2d<T> &p : points)
             p += v;
     }
 
     void scale(float s)
     {
-        for (vec2<T> &p : points)
+        for (point2d<T> &p : points)
             p *= s;
     }
 
@@ -51,7 +51,7 @@ struct Polygon
         return sum;
     }
 
-    vector< vec2<T> > points;
+    vector< point2d<T> > points;
 };
 
 typedef Polygon<float> Polygonf;

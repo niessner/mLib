@@ -34,12 +34,12 @@ float distSqf(const point3d<T> &ptA, const point3d<T> &ptB)
 }
 
 template <class T>
-double distSq(const Line2<T> &line, const vec2<T> &pt)
+double distSq(const Line2<T> &line, const point2d<T> &pt)
 {
-    const vec2<T> diff = line.dir();
+    const point2d<T> diff = line.dir();
     const float d = diff.lengthSq();
-    const vec2<T> p0 = line.p0();
-    const vec2<T> p1 = line.p0() + line.dir();
+    const point2d<T> p0 = line.p0();
+    const point2d<T> p1 = line.p0() + line.dir();
     float n = fabs(diff.y * pt.x - diff.x * pt.y + p1.x * p0.y - p1.y * p0.x);
     return n / d;
 }

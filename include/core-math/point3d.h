@@ -300,8 +300,6 @@ inline std::istream& operator>>(std::istream& s, point3d<T>& v) {
   return (s >> v[0] >> v[1] >> v[2]);
 }
 
-template <class T> using vec3 = point3d<T>;
-
 typedef point3d<double> vec3d;
 typedef point3d<float> vec3f;
 typedef point3d<int> vec3i;
@@ -369,19 +367,19 @@ namespace math {
 
 
     template<class T>
-    inline T triangleArea(const vec3<T>& v0, const vec3<T>& v1, const vec3<T>& v2) {
+    inline T triangleArea(const point3d<T>& v0, const point3d<T>& v1, const point3d<T>& v2) {
         return ((v1 - v0) ^ (v2 - v0)).length() * (T)0.5;
     }
 
     template<class T>
-    inline T triangleArea(const vec2<T>& v0, const vec2<T>& v1, const vec2<T>& v2) {
-        return triangleArea(vec3<T>(v0, 0.0f),
-                            vec3<T>(v1, 0.0f),
-                            vec3<T>(v2, 0.0f));
+    inline T triangleArea(const point2d<T>& v0, const point2d<T>& v1, const point2d<T>& v2) {
+        return triangleArea(point3d<T>(v0, 0.0f),
+                            point3d<T>(v1, 0.0f),
+                            point3d<T>(v2, 0.0f));
     }
 
     template<class T>
-    inline vec3<T> triangleNormal(const vec3<T>& v0, const vec3<T>& v1, const vec3<T>& v2) {
+    inline point3d<T> triangleNormal(const point3d<T>& v0, const point3d<T>& v1, const point3d<T>& v2) {
         return ((v1 - v0) ^ (v2 - v0)).getNormalized();
     }
 }

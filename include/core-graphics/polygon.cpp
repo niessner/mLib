@@ -10,7 +10,7 @@ namespace ml {
 // http://www.cc.gatech.edu/grads/h/Hao-wei.Hsieh/Haowei.Hsieh/code2.html
 //
 template<class T>
-Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLine, const vec2<T> &clipCentroid)
+Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLine, const point2d<T> &clipCentroid)
 {
     Polygon<T> output;
 
@@ -20,18 +20,18 @@ Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLi
     //
     // find the normal of the line segment pointing towards clipCentroid
     //
-    vec2<T> normal = clipLine.dir();
-    normal = vec2<T>(-normal.y, normal.x);
+    point2d<T> normal = clipLine.dir();
+    normal = point2d<T>(-normal.y, normal.x);
     if (((clipCentroid - clipLine.p0()) | normal) < 0.0f)
         normal = -normal;
 
-    auto sideTest = [&](const vec2<T> &pt)
+    auto sideTest = [&](const point2d<T> &pt)
     {
         return ((pt - clipLine.p0()) | normal) >= 0.0f;
     };
 
-    vec2<T> startPoint = sourcePoly.points.back();
-    for (const vec2<T> &endPoint : sourcePoly.points)
+    point2d<T> startPoint = sourcePoly.points.back();
+    for (const point2d<T> &endPoint : sourcePoly.points)
     {
         bool startSide = sideTest(startPoint);
         bool endSide = sideTest(endPoint);
@@ -42,13 +42,13 @@ Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLi
         }
         if (startSide && !endSide)
         {
-            vec2<T> intersection = startPoint;
+            point2d<T> intersection = startPoint;
             intersection::intersectLine2Line2(clipLine, Line2<T>(startPoint, endPoint), intersection);
             output.points.push_back(intersection);
         }
         if (!startSide && endSide)
         {
-            vec2<T> intersection = startPoint;
+            point2d<T> intersection = startPoint;
             intersection::intersectLine2Line2(clipLine, Line2<T>(startPoint, endPoint), intersection);
             output.points.push_back(intersection);
             output.points.push_back(endPoint);
@@ -64,7 +64,7 @@ template<class T>
 Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Polygon<T> &clipPoly)
 {
     Polygon<T> output = sourcePoly;
-    vec2<T> clipCentroid = clipPoly.centroid();
+    point2d<T> clipCentroid = clipPoly.centroid();
 
     for (const LineSegment2<T> &clipSegment : clipPoly.segments())
         output = clip(output, Line2<T>(clipSegment), clipCentroid);
