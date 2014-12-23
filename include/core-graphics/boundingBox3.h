@@ -276,7 +276,7 @@ public:
 	//! scales the bounding box by the factor t (for t=1 the bb remains unchanged)
 	void scale(FloatType x, FloatType y, FloatType z) {
 
-		float scale[] = {x, y, z};
+		FloatType scale[] = {x, y, z};
 		for (unsigned int i = 0; i < 3; i++) {
 			FloatType center = (FloatType)0.5 * (parameters[i] + parameters[i+3]);
 			FloatType diff = parameters[i+3] - parameters[i];

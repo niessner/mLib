@@ -89,6 +89,15 @@ public:
 		computeAnchorAndExtentsForGivenNormalizedAxis(points);
 	}
 
+	//! creates an object oriented bounding box given an anchor and 3 axes
+	OrientedBoundingBox3(const point3d<FloatType>& anchor, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
+		m_AxesScaled[0] = xAxis;
+		m_AxesScaled[1] = yAxis;
+		m_AxesScaled[2] = zAxis;
+
+		m_Anchor = anchor;
+	}
+
 	bool isValid() const {
 		if (m_Anchor.x == -std::numeric_limits<FloatType>::max() || m_Anchor.y == -std::numeric_limits<FloatType>::max() || m_Anchor.z == -std::numeric_limits<FloatType>::max())	
 			return false;
@@ -263,6 +272,23 @@ public:
 		return intersection::intersectOBBOBB<FloatType>(m_Anchor, &m_AxesScaled[0], other.m_Anchor, &other.m_AxesScaled[0]);
 	}
 
+
+	//! scales the bounding box by the factor t (for t=1 the bb remains unchanged)
+	void scale(FloatType x, FloatType y, FloatType z) {
+		point3d<FloatType> extent = getExtent();
+		FloatType scale[] = { x, y, z };
+		point3d<FloatType> center(0, 0, 0);
+		for (unsigned int i = 0; i < 3; i++) {
+			center += (FloatType)0.5 * m_AxesScaled[i];
+			m_AxesScaled[i] *= scale[i];
+		}
+		m_Anchor = center - (FloatType)0.5 * (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]);
+	}
+
+	//! scales the bounding box by the factor t (for t=1 the bb remains unchanged)
+	void scale(FloatType t) {
+		scale(t, t, t);
+	}
 private:
 
 	void computeAnchorAndExtentsForGivenNormalizedAxis(const std::vector<point3d<FloatType>>& points)
