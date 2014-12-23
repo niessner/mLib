@@ -254,6 +254,7 @@ template <class T> inline std::istream& operator>>(std::istream& s, point2d<T>& 
   return (s >> v[0] >> v[1]);
 }
 
+template <class T> using vec2 = point2d<T>;
 
 typedef point2d<double> vec2d;
 typedef point2d<float> vec2f;

@@ -9,18 +9,18 @@ template<class T>
 struct Triangle
 {
     Triangle() {}
-    Triangle(const point3d<T> &v0, const point3d<T> &v1, const point3d<T> &v2)
+    Triangle(const vec3<T> &v0, const vec3<T> &v1, const vec3<T> &v2)
     {
         vertices[0] = v0;
         vertices[1] = v1;
         vertices[2] = v2;
     }
-    point3d<T> getNormal() const
+    vec3<T> getNormal() const
     {
         return ml::math::triangleNormal(vertices[0], vertices[1], vertices[2]);
     }
 
-    point3d<T> vertices[3];
+    vec3<T> vertices[3];
 
 };
 

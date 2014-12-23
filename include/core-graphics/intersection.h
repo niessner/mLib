@@ -6,6 +6,23 @@ namespace ml {
 
 namespace intersection {
 
+    //2D line-line intersection
+    template <class T>
+    bool intersectLine2Line2(const Line2<T> &lineA, const Line2<T> &lineB, vec2<T> &result)
+    {
+        const vec2<T> u = lineA.dir();
+        const vec2<T> v = lineB.dir();
+        const vec2<T> w = lineB.p0() - lineA.p0();
+
+        const float d = v.x * u.y + v.y * u.x;
+        if (d == 0.0f)
+            return false;
+
+        const float tA = (v.y * w.x - v.x * w.y) / d;
+        result = lineA.p0() + tA * lineA.dir();
+
+        return true;
+    }
 
     template <class FloatType>
     bool intersectRayTriangle(

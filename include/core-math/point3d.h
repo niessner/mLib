@@ -300,6 +300,7 @@ inline std::istream& operator>>(std::istream& s, point3d<T>& v) {
   return (s >> v[0] >> v[1] >> v[2]);
 }
 
+template <class T> using vec3 = point3d<T>;
 
 typedef point3d<double> vec3d;
 typedef point3d<float> vec3f;
