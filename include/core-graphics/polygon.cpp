@@ -13,6 +13,9 @@ Polygon<T> Polygon<T>::clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLi
 {
     Polygon<T> output;
 
+    if (sourcePoly.points.size() == 0)
+        return output;
+
     //
     // find the normal of the line segment pointing towards clipCentroid
     //

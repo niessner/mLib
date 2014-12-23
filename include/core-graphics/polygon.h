@@ -13,6 +13,8 @@ struct Polygon
     vector< LineSegment2<T> > segments() const
     {
         vector< LineSegment2<T> > result;
+        if (points.size() <= 1)
+            return result;
         for (UINT pointIndex = 0; pointIndex < points.size() - 1; pointIndex++)
             result.push_back(LineSegment2<T>(points[pointIndex], points[pointIndex + 1]));
         result.push_back(LineSegment2<T>(points.back(), points[0]));
