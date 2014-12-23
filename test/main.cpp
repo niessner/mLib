@@ -47,14 +47,16 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 #endif
-	{
-		MeshDataf meshData = MeshIOf::loadFromFile("dining1d.ply");
-		meshData.removeIsolatedVertices();
-		MeshIOf::saveToPLY("dining1d_removed.ply", meshData);
+	//{
+	// REMOVE ISOLATED VERTICES TEST
+	//	MeshDataf meshData = MeshIOf::loadFromFile("dining1d.ply");
+	//	meshData.removeIsolatedVertices();
+	//	MeshIOf::saveToPLY("dining1d_removed.ply", meshData);
 
-		std::cout << "done" << std::endl;
-		getchar();
-	}
+	//	std::cout << "done" << std::endl;
+	//	getchar();
+	//}
+
 	//{
 	// KABSCH TEST
 	//	std::vector<vec3f> source, target;

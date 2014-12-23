@@ -78,6 +78,15 @@ public:
 
 	}
 
+	void test2() {
+		OrientedBoundingBox3f obb = OrientedBoundingBox3f(vec3f::origin, vec3f::eX, vec3f::eY, vec3f::eZ);
+		std::cout << "obb before\t" << obb << std::endl;
+		obb.scale(1.5);
+		std::cout << "obb after\t" << obb << std::endl;
+
+		ml::Console::log() << "box test2 passed" << std::endl;
+	}
+
 	std::string name()
 	{
 		return "Box";
