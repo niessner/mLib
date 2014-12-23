@@ -43,6 +43,8 @@ struct Polygon
 
     T convexArea() const
     {
+        if (points.size() <= 2)
+            return 0.0;
         T sum = 0.0;
         for (size_t v1 = 1; v1 < points.size() - 1; v1++)
             sum += math::triangleArea(points[0], points[v1], points[v1 + 1]);
