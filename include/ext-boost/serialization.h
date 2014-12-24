@@ -156,6 +156,21 @@ inline void serialize(Archive& ar, ml::Matrix4x4<T>& m, const unsigned int versi
   ar & m.matrix;
 }
 
+template<class Archive, class T>
+inline void serialize(Archive& ar, ml::OrientedBoundingBox3<T>& b, const unsigned int version) {
+    vec3f v[4];
+    v[0] = b.getAnchor();
+    v[1] = b.getAxisX();
+    v[2] = b.getAxisY();
+    v[3] = b.getAxisZ();
+    ar & v[0] & v[1] & v[2] & v[3];
+
+    //
+    // this should be broken into save-load style or friended somehow. It's silly to modify the bounding box when saving.
+    //
+    b = ml::OBBf(v[0], v[1], v[2], v[3]);
+}
+
 template<class Archive>
 inline void serialize(Archive& ar, ml::TriMesh<float>::Vertex<float>& v, const unsigned int version) {
     ar & v.position & v.normal & v.color & v.texCoord;
