@@ -54,6 +54,15 @@ TriMeshf box(const bbox3f &bbox, const vec4f& color)
     return result;
 }
 
+TriMeshf box(const OBBf &obb, const vec4f& color)
+{
+    TriMeshf result = box(bbox3f(vec3f::origin, vec3f(1.0f, 1.0f, 1.0f)), color);
+
+    result.transform(obb.getOBBToWorld());
+
+    return result;
+}
+
 TriMeshf box(float xDim, float yDim, float zDim, const vec4f& color) {
 	std::vector<TriMeshf::Vertexf> vv(8);
 	std::vector<UINT> vi(12 * 3);
