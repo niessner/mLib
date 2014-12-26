@@ -166,7 +166,7 @@ inline void serialize(Archive& ar, ml::OrientedBoundingBox3<T>& b, const unsigne
     ar & v[0] & v[1] & v[2] & v[3];
 
     //
-    // this should be broken into save-load style or friended somehow. It's silly to modify the bounding box when saving.
+    // TODO: this should be broken into save-load style or friended somehow. It's silly to modify the bounding box when saving.
     //
     b = ml::OBBf(v[0], v[1], v[2], v[3]);
 }

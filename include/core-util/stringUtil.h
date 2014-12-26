@@ -39,6 +39,24 @@ namespace util
 		return false;
 	}
 
+    //TODO TEST
+    inline bool contains(const std::string& str, const std::string& find) {
+        for (size_t i = 0; i < str.length(); i++)
+        {
+            if (exactMatchAtOffset(str, find, i))
+                return true;
+        }
+        return false;
+    }
+
+    //TODO TEST
+    inline std::string zeroPad(UINT value, UINT totalLength) {
+        std::string result = std::to_string(value);
+        while (result.size() < totalLength)
+            result = "0" + result;
+        return result;
+    }
+
 	//TODO TEST
 	inline std::string replace(const std::string& str, const std::string& find, const std::string& replace) {
 		std::string result;
