@@ -107,7 +107,7 @@ private:
 #define FUNCTION_LINE_STRING (std::string(__FUNCTION__) + ":" + std::to_string(__LINE__))
 //#define FUNCTION_LINE_STRING (std::string(__FUNCTION__))
 
-#define MLIB_EXCEPTION(s) ml::MLibException(std::string(__FUNCTION__).append(": ").append(s).c_str())
+#define MLIB_EXCEPTION(s) ml::MLibException(std::string(__FUNCTION__).append(":").append(std::to_string(__LINE__)).append(": ").append(s).c_str())
 
 #ifdef MLIB_ERROR_CHECK
 
