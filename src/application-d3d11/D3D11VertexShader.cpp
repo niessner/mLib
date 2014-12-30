@@ -1,6 +1,11 @@
 
 void ml::D3D11VertexShader::load(GraphicsDevice &g, const std::string &filename)
 {
+    if (!util::fileExists(filename))
+    {
+        std::cout << "file not found: " << filename << std::endl;
+        return;
+    }
 	release(g);
 	SAFE_RELEASE(m_blob);
 
