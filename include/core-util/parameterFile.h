@@ -130,6 +130,11 @@ public:
 		}
 	}
 
+    void overrideParameter(const std::string &parameter, const std::string &newValue)
+    {
+        m_Values[parameter] = newValue;
+    }
+
 private:
 	//! removes spaces and tabs at the begin and end of the string
 	void removeSpecialCharacters(std::string &str) const {
