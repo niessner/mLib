@@ -304,7 +304,7 @@ private:
 	void buildInternal() {
 		SAFE_DELETE(m_Root);
 
-		bool useParallelBuild = true;
+		bool useParallelBuild = false;
 		if (useParallelBuild) {
 			buildParallel(m_TrianglePointers);
 		} else {
