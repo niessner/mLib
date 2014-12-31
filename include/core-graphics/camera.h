@@ -43,6 +43,14 @@ public:
 		return m_eye;
 	}
 
+  point3d<FloatType> getLook() const {
+    return m_look;
+  }
+
+  point3d<FloatType> getUp() const {
+    return m_up;
+  }
+
 	FloatType getFoV() const {
 		return m_fieldOfView;
 	}
