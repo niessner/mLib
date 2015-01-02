@@ -38,7 +38,12 @@ public:
 
 	static void saveToFile(const std::string& filename, const MeshData<FloatType>& mesh) {
 
-		if (!mesh.isConsistent() || mesh.isEmpty()) {
+		if (mesh.isEmpty()) {		
+			MLIB_WARNING("empty mesh");
+			return;
+		}
+
+		if (!mesh.isConsistent()) {
 			throw MLIB_EXCEPTION("inconsistent mesh data: " + filename);
 		}
 

@@ -150,9 +150,9 @@ public:
 						bitsRowStart[j*numChannels + FI_RGBA_BLUE] =	(unsigned char)color.z;
 					}
 				}
-			} else if (numChannels == 4 && bytesPerChannel == 1) {
+			} else if ((numChannels == 4 && bytesPerChannel == 1) || (numChannels == 4 && bytesPerChannel == 4)) {
 				assert(filename.find(".jpg") == std::string::npos);	//jpgs with transparencies don't work...
-				//color map; R8G8B8A8
+				//color map; R8G8B8A8; R32G32B32A32
 				#pragma omp parallel for
 				for (int i = 0; i < (int)height; i++) {
 					BYTE* bitsRowStart = bits + (height-1-i)*pitch;
