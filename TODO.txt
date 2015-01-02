@@ -3,6 +3,10 @@ MeshIO -> std::vector<std::vector<unsigned int>> -> std::vector<unsigned int> (p
 MeshIO -> material groups (.obj loader -> index faces)
 MeshIO -> conversion to TriMesh
 
+OBB2f
+
+parameterize ml::shapes
+
 Intersections/Collision: 
 mesh - mesh; ideal std::vector<std::pair<triMesh*, mat4f>> - std::vector<std::pair<triMesh*, mat4f>>
 BVH: Triangle -> Primitive (to support Vertices)

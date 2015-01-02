@@ -15,37 +15,56 @@ namespace ml {
 //}
 
 
-//
-// normally this would be a namespace (hence the lower-case letters),
-// but I wanted to overload () extensively which requires a class.
-// Except that operator() can't be static, so they are just overloaded
-// functions in ml.
-//
 template <class T>
-double distSq(const point3d<T> &ptA, const point3d<T> &ptB)
+T distSq(const point2d<T> &ptA, const point2d<T> &ptB)
+{
+    return point2d<T>::distSq(ptA, ptB);
+}
+
+template <class T>
+T distSq(const point3d<T> &ptA, const point3d<T> &ptB)
 {
     return point3d<T>::distSq(ptA, ptB);
 }
 
 template <class T>
-float distSqf(const point3d<T> &ptA, const point3d<T> &ptB)
+T distSq(const LineSegment2<T> &seg, const point2d<T> &p)
 {
-    return (float)point3d<T>::distSq(ptA, ptB);
+    const point2d<T> &v = seg.p0();
+    const point2d<T> &w = seg.p1();
+    
+    //
+    // http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+    // Return minimum distance between line segment vw and point p
+    //
+    const T l2 = distSq(v, w);  // i.e. |w-v|^2 -  avoid a sqrt
+    if (l2 == (T)0.0) return distSq(p, v);   // v == w case
+
+    //
+    // Consider the line extending the segment, parameterized as v + t (w - v).
+    // We find projection of point p onto the line. 
+    // It falls where t = [(p-v) . (w-v)] / |w-v|^2
+    //
+    const T t = ((p - v) | (w - v)) / l2;
+    if (t < (T)0.0) return distSq(p, v);      // Beyond the 'v' end of the segment
+    else if (t > (T)1.0) return distSq(p, w); // Beyond the 'w' end of the segment
+    const point2d<T> projection = v + t * (w - v);  // Projection falls on the segment
+    return distSq(p, projection);
 }
 
 template <class T>
-double distSq(const Line2<T> &line, const point2d<T> &pt)
+T distSq(const Line2<T> &line, const point2d<T> &pt)
 {
     const point2d<T> diff = line.dir();
-    const float d = diff.lengthSq();
+    const T d = diff.lengthSq();
     const point2d<T> p0 = line.p0();
     const point2d<T> p1 = line.p0() + line.dir();
-    float n = fabs(diff.y * pt.x - diff.x * pt.y + p1.x * p0.y - p1.y * p0.x);
+    T n = fabs(diff.y * pt.x - diff.x * pt.y + p1.x * p0.y - p1.y * p0.x);
     return n / d;
 }
 
 template <class T>
-double distSq(const OrientedBoundingBox3<T> &box, const point3d<T> &pt)
+T distSq(const OrientedBoundingBox3<T> &box, const point3d<T> &pt)
 {
     //
     // This is wrong, this file is just meant as an example of the dist interface
@@ -54,7 +73,7 @@ double distSq(const OrientedBoundingBox3<T> &box, const point3d<T> &pt)
 }
 
 template <class T>
-double distSq(const point3d<T> &pt, const OrientedBoundingBox3<T> &box)
+T distSq(const point3d<T> &pt, const OrientedBoundingBox3<T> &box)
 {
     return distSq(box, pt);
 }
