@@ -126,8 +126,8 @@ namespace ml {
 
 		//! point collision
 		bool intersects(const point2d<FloatType>& p) const {
-			if (p.x >= minX && p.x <= maxX && 
-				p.y >= minY && p.y <= maxY) return true
+			if (p.x >= minX && p.x <= maxX &&
+				p.y >= minY && p.y <= maxY) return true;
 			else  return false;
 		}
 
