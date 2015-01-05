@@ -193,6 +193,19 @@ void ml::D3D11GraphicsDevice::toggleWireframe()
     m_context->RSSetState(m_rasterState);
 }
 
+void ml::D3D11GraphicsDevice::toggleCullMode()
+{
+    m_context->RSGetState(&m_rasterState);
+    m_rasterState->GetDesc(&m_rasterDesc);
+    if (m_rasterDesc.CullMode == D3D11_CULL_NONE)
+        m_rasterDesc.CullMode = D3D11_CULL_FRONT;
+    else
+        m_rasterDesc.CullMode = D3D11_CULL_NONE;
+    m_rasterState->Release();
+    D3D_VALIDATE(m_device->CreateRasterizerState(&m_rasterDesc, &m_rasterState));
+    m_context->RSSetState(m_rasterState);
+}
+
 void ml::D3D11GraphicsDevice::captureBackBufferInternal(Bitmap &result)
 {
     ID3D11Texture2D* frameBuffer;

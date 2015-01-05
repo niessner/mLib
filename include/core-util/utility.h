@@ -358,6 +358,12 @@ namespace util
         return os.str();
     }
 
+    template<class T>
+    inline std::string encodeBytes(const T &data)
+    {
+        return encodeBytes((unsigned char *)&data, sizeof(data));
+    }
+
     inline void decodeBytes(const std::string &str, unsigned char *data)
     {
         auto digitToValue = [](char c) {
