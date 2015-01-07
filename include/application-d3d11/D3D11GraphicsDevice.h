@@ -53,6 +53,8 @@ public:
 	void renderBeginFrame();
 	void renderEndFrame();
 	void registerAsset(GraphicsAsset *asset);
+
+    void setCullMode(D3D11_CULL_MODE mode);
     void toggleCullMode();
     void toggleWireframe();
     void clear(const ml::vec4f &clearColor);
