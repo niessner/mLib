@@ -214,6 +214,22 @@ namespace ml {
 		}
 
 	private:
+    // boost archive serialization functions
+    friend class boost::serialization::access;
+    template <class Archive>
+    void save(Archive& ar, const unsigned int version) const {
+      ar << m_width << m_height << m_depth << boost::serialization::make_array(m_data, getNumUInts());
+    }
+    template<class Archive>
+    void load(Archive& ar, const unsigned int version) {
+      ar >> m_width >> m_height >> m_depth;
+      allocate(m_width, m_height, m_depth);
+      ar >> boost::serialization::make_array(m_data, getNumUInts());
+    }
+    template<class Archive>
+    void serialize(Archive &ar, const unsigned int version) {
+      boost::serialization::split_member(ar, *this, version);
+    }
 
 		inline size_t getNumUInts() const {
 			size_t numEntries = getNumTotalEntries();

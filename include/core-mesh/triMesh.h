@@ -511,7 +511,15 @@ namespace ml {
 			}
 		}
 
-		friend class boost::serialization::access;
+    // boost archive serialization
+    friend class boost::serialization::access;
+    template<class Archive>
+    inline void serialize(Archive& ar, const unsigned int version) {
+      ar & m_Vertices & m_Indices;
+      if (version >= 1) {
+        ar & m_bHasColors & m_bHasNormals & m_bHasTexCoords;
+      }
+    }
 
 		bool m_bHasNormals;
 		bool m_bHasTexCoords;

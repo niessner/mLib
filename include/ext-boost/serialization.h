@@ -10,6 +10,7 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/array.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/version.hpp>
 
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
@@ -174,11 +175,6 @@ inline void serialize(Archive& ar, ml::OrientedBoundingBox3<T>& b, const unsigne
 template<class Archive>
 inline void serialize(Archive& ar, ml::TriMesh<float>::Vertex<float>& v, const unsigned int version) {
     ar & v.position & v.normal & v.color & v.texCoord;
-}
-
-template<class Archive, class T>
-inline void serialize(Archive& ar, ml::TriMesh<T>& m, const unsigned int version) {
-    ar & m.getVertices() & m.getIndices();
 }
 
 template<class Archive, class T>
