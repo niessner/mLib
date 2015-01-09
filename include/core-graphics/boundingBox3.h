@@ -470,6 +470,14 @@ public:
 	}
 
 protected:
+
+  // boost archive serialization functions
+  friend class boost::serialization::access;
+  template <class Archive>
+  inline void serialize(Archive& ar, const unsigned int verion) {
+    ar & boost::serialization::make_array(parameters, 6);
+  }
+
 	union {
 		struct {
 			point3d<FloatType> minB;
