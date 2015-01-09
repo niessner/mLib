@@ -31,6 +31,10 @@ public:
 		return m_camera;
 	}
 
+	void setCamera(Matrix4x4<FloatType>& c){
+		m_camera = c;
+	}
+
 	Matrix4x4<FloatType> perspective() const {
 		return m_perspective;
 	}
@@ -61,8 +65,8 @@ public:
 
     std::string toString() const;
 
-private:
 	void applyTransform(const Matrix4x4<FloatType>& transform);
+private:
 	void update();
 	Matrix4x4<FloatType> perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar);
 	Matrix4x4<FloatType> viewMatrix(const point3d<FloatType>& eye, const point3d<FloatType>& look, const point3d<FloatType>& up, const point3d<FloatType>& right);

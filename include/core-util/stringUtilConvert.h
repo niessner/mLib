@@ -115,6 +115,13 @@ namespace convert {
 		std::stringstream ss(util::removeChar(s, 'f'));
 		ss >> res.x >> res.y >> res.z >> res.w;
 	} 
+	template<class U> inline void to(const std::string& s, Matrix4x4<U>& res) {
+		std::stringstream ss(util::removeChar(s, 'f'));
+		ss >> res(0,0) >> res(0,1) >> res(0,2)  >> res(0,3) >>
+			  res(1,0) >> res(1,1) >> res(1,2)  >> res(1,3) >>
+			  res(2,0) >> res(2,1) >> res(2,2)  >> res(2,3) >>
+			  res(3,0) >> res(3,1) >> res(3,2)  >> res(3,3);
+	}
 
 }  // namespace Convert
 
@@ -140,6 +147,10 @@ namespace util {
 		convert::to(s, res);
 	}
 	template<class U> inline void convertTo(const std::string& s, point4d<U>& res) {
+		convert::to(s, res);
+	}
+
+	template<class U> inline void convertTo(const std::string& s,  Matrix4x4<U>& res) {
 		convert::to(s, res);
 	}
 }  // namespace util
