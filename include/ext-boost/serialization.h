@@ -6,10 +6,11 @@
 #define _WIN32_WINNT 0x0501
 #endif
 
-#include <boost/serialization/list.hpp>
-#include <boost/serialization/vector.hpp>
 #include <boost/serialization/array.hpp>
+#include <boost/serialization/list.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/set.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
 
 #include <boost/archive/text_iarchive.hpp>
