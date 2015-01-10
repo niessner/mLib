@@ -265,6 +265,11 @@ namespace util
 	void makeDirectory(const std::string& directory);
 	bool directoryExists(const std::string& directory);
 	std::string workingDirectory();
+       
+    inline void runSystemCommand(const std::string &s)
+    {
+        system(s.c_str());
+    }
 
 	//
 	// Returns the next line in the given file
