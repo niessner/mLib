@@ -49,7 +49,7 @@ TriMeshf meshutil::createUnifiedMesh(const std::vector<TriMeshf>& meshes) {
     }
   }
 
-  return TriMeshf(vertices, indices);
+  return TriMeshf(vertices, indices, false, false, false, true);
 }
 
 TriMeshf meshutil::createPointCloudTemplate(const TriMeshf& templateMesh,
