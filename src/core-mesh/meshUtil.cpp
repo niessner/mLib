@@ -1,6 +1,20 @@
 
 namespace ml {
 
+    //
+    // TODO: really, the TriMeshf version should be the one that calls the TriMesh* version!!!
+    //
+    TriMeshf meshutil::createUnifiedMesh(const std::vector< std::pair<const TriMeshf*, mat4f> >& meshes) {
+        std::vector< std::pair<TriMeshf, mat4f> > meshList;
+
+        for (const auto &m : meshes)
+        {
+            meshList.push_back(std::make_pair(*m.first, m.second));
+        }
+
+        return createUnifiedMesh(meshList);
+    }
+
 TriMeshf meshutil::createUnifiedMesh(const std::vector< std::pair<TriMeshf, mat4f> >& meshes) {
   auto lambdaVertices = [](size_t total, const std::pair<TriMeshf, mat4f>& t) { return t.first.getVertices().size() + total; };
   const size_t totalPoints = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaVertices);
