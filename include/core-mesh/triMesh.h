@@ -361,6 +361,10 @@ namespace ml {
 		//! Computes the vertex normals of the mesh
 		void computeNormals();
 
+        //! Creates a flat Loop-subdivision of the mesh
+        TriMesh<FloatType> flatLoopSubdivision(float minEdgeLength) const;
+        TriMesh<FloatType> flatLoopSubdivision(UINT iterations, float minEdgeLength) const;
+
 
 		const std::vector<Vertex<FloatType>>& getVertices() const { return m_Vertices; }
 		const std::vector<vec3ui>& getIndices() const { return m_Indices; }

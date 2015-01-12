@@ -107,6 +107,94 @@ namespace ml {
 		m_bHasNormals = true;
 	}
 
+    template<class FloatType>
+    TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(UINT iterations, float minEdgeLength) const
+    {
+        TriMeshf result = *this;
+        for (UINT i = 0; i < iterations; i++)
+            result = result.flatLoopSubdivision(minEdgeLength);
+        return result;
+    }
+
+    template<class FloatType>
+    TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(float minEdgeLength) const
+    {
+        struct Edge
+        {
+            Edge(UINT32 _v0, UINT32 _v1)
+            {
+                v0 = std::min(_v0, _v1);
+                v1 = std::max(_v0, _v1);
+            }
+
+            union
+            {
+                struct {
+                    UINT32 v0, v1;
+                };
+                UINT64 val;
+            };
+        };
+
+        struct edgeCompare
+        {
+            bool operator() (const Edge &a, const Edge &b)
+            {
+                return a.val < b.val;
+            }
+        };
+        
+        map<Edge, UINT, edgeCompare> edgeToNewVertexMap;
+
+        TriMesh<FloatType> result;
+        
+        result.m_Vertices = m_Vertices;
+        result.m_Indices.reserve(m_Indices.size() * 4);
+
+        for (const vec3ui &tri : m_Indices)
+        {
+            bool subdivide = true;
+            for (UINT eIndex = 0; eIndex < 3; eIndex++)
+            {
+                const vec3f &v0 = m_Vertices[tri[eIndex]].position;
+                const vec3f &v1 = m_Vertices[tri[(eIndex + 1) % 3]].position;
+                float edgeLength = vec3f::dist(v0, v1);
+                if (edgeLength < minEdgeLength)
+                    subdivide = false;
+            }
+
+            if (subdivide)
+            {
+                UINT edgeMidpoints[3];
+
+                for (UINT eIndex = 0; eIndex < 3; eIndex++)
+                {
+                    const UINT v0 = tri[eIndex];
+                    const UINT v1 = tri[(eIndex + 1) % 3];
+                    Edge e = Edge(v0, v1);
+                    if (edgeToNewVertexMap.count(e) == 0)
+                    {
+                        edgeToNewVertexMap[e] = (UINT)result.m_Vertices.size();
+                        result.m_Vertices.push_back((m_Vertices[v0] + m_Vertices[v1]) * (FloatType)0.5);
+                    }
+
+                    edgeMidpoints[eIndex] = edgeToNewVertexMap[e];
+                }
+
+                result.m_Indices.push_back(vec3ui(tri[0], edgeMidpoints[0], edgeMidpoints[2]));
+                result.m_Indices.push_back(vec3ui(edgeMidpoints[0], tri[1], edgeMidpoints[1]));
+                result.m_Indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[1], tri[2]));
+                result.m_Indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[0], edgeMidpoints[1]));
+            }
+            else
+            {
+                result.m_Indices.push_back(tri);
+            }
+        }
+
+        return result;
+    }
+
 
 }
 
