@@ -34,6 +34,38 @@ namespace intersection {
         return true;
     }
 
+    //2D line-line intersection
+    template <class T>
+    bool intersectLineSegment2LineSegment2(const LineSegment2<T> &lineA, const LineSegment2<T> &lineB, point2d<T> &result)
+    {
+        //
+        // http://www.ahinson.com/algorithms_general/Sections/Geometry/ParametricLineIntersection.pdf
+        //
+
+        const point2d<T> d21 = lineA.delta();
+        const point2d<T> d43 = lineB.delta();
+        const point2d<T> d31 = lineB.p0() - lineA.p0();
+
+        const float d = d43.x * d21.y - d21.x * d43.y;
+        if (d == 0.0f)
+        {
+            return false;
+        }
+
+        //(bx(cy - ay) + by(ax - cx)) / (dx.by - dy.bx)
+        const float tA = (d43.x * d31.y - d31.x * d43.y) / d;
+        const float tB = (d21.x * d31.y - d31.x * d21.y) / d;
+        if (tA < 0.0f || tA > 1.0f || tB < 0.0f || tB > 1.0f)
+            return false;
+        
+        result = lineA.p0() + tA * lineA.delta();
+
+        //float distA = distSq(lineA, result);
+        //float distB = distSq(lineB, result);
+
+        return true;
+    }
+
     template <class FloatType>
     bool intersectRayTriangle(
         const Triangle<FloatType>& triangle, const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false)

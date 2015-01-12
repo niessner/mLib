@@ -153,7 +153,7 @@ namespace ml {
 
         for (const vec3ui &tri : m_Indices)
         {
-            bool subdivide = true;
+            /*bool subdivide = true;
             for (UINT eIndex = 0; eIndex < 3; eIndex++)
             {
                 const vec3f &v0 = m_Vertices[tri[eIndex]].position;
@@ -161,7 +161,8 @@ namespace ml {
                 float edgeLength = vec3f::dist(v0, v1);
                 if (edgeLength < minEdgeLength)
                     subdivide = false;
-            }
+            }*/
+            bool subdivide = math::triangleArea(m_Vertices[tri[0]].position, m_Vertices[tri[1]].position, m_Vertices[tri[2]].position) >= (minEdgeLength * minEdgeLength);
 
             if (subdivide)
             {
