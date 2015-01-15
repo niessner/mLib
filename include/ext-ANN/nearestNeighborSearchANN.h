@@ -107,6 +107,9 @@ private:
 	ANNpointSet*         m_tree;        // search structure
 };
 
+typedef NearestNeighborSearchANN<float> NearestNeighborSearchANNf;
+typedef NearestNeighborSearchANN<double> NearestNeighborSearchANNd;
+
 }  // namespace ml
 
 #endif  // EXT_ANN_NEARESTNEIGHBORSEARCHANN_H_
