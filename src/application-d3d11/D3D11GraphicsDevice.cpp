@@ -133,6 +133,22 @@ void ml::D3D11GraphicsDevice::init(const WindowWin32 &window)
     D3D_VALIDATE(m_device->CreateSamplerState(&samplerStateDesc, &m_samplerState));
     m_context->PSSetSamplers(0, 1, &m_samplerState);
 
+#ifdef MLIB_GRAPHICSDEVICE_TRANSPARENCY
+    ID3D11BlendState* d3dBlendState;
+    D3D11_BLEND_DESC omDesc;
+    ZeroMemory(&omDesc, sizeof(D3D11_BLEND_DESC));
+    omDesc.RenderTarget[0].BlendEnable = true;
+    omDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+    omDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    omDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    omDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+    omDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    omDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    omDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+    D3D_VALIDATE(m_device->CreateBlendState(&omDesc, &d3dBlendState));
+    m_context->OMSetBlendState(d3dBlendState, 0, 0xffffffff);
+#endif
+
 #ifdef _DEBUG
 	m_device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_debug));
 #endif
