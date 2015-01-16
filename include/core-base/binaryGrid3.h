@@ -27,7 +27,7 @@ namespace ml {
       m_data = nullptr;
       if (other.m_data != nullptr) {
         allocate(other.m_width, other.m_height, other.m_depth);
-        memcpy(m_data, other.m_data, getNumUInts());
+        memcpy(m_data, other.m_data, getNumUInts()*sizeof(unsigned int));
       } else {
         m_data = nullptr;
         m_width = other.m_width;
@@ -60,7 +60,8 @@ namespace ml {
 			m_height = height;
 			m_depth = depth;
 
-			m_data = new unsigned int[getNumUInts()];
+      size_t dataSize = getNumUInts();
+			m_data = new unsigned int[dataSize];
 		}
 
 		inline void allocate(const vec3ul& dim) {
@@ -71,7 +72,7 @@ namespace ml {
       if (this != &other) {
         if (other.m_data != nullptr) {
           allocate(other.m_width, other.m_height, other.m_depth);
-          memcpy(m_data, other.m_data, getNumUInts());
+          memcpy(m_data, other.m_data, getNumUInts()*sizeof(unsigned int));
         } else {
           SAFE_DELETE_ARRAY(m_data);
           m_data = nullptr;
@@ -264,9 +265,9 @@ namespace ml {
 			return (numEntries + bitsPerUInt - 1) / bitsPerUInt;
 		}
 
-		static const unsigned int bitsPerUInt = sizeof(unsigned int);
-		unsigned int*	m_data;
+    static const unsigned int bitsPerUInt = sizeof(unsigned int);
 		size_t			m_width, m_height, m_depth;
+		unsigned int*	m_data;
 	};
 
 
