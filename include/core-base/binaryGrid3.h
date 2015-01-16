@@ -265,7 +265,7 @@ namespace ml {
 			return (numEntries + bitsPerUInt - 1) / bitsPerUInt;
 		}
 
-    static const unsigned int bitsPerUInt = sizeof(unsigned int);
+    static const unsigned int bitsPerUInt = sizeof(unsigned int)*8;
 		size_t			m_width, m_height, m_depth;
 		unsigned int*	m_data;
 	};
