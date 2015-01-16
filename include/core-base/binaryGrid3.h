@@ -24,9 +24,16 @@ namespace ml {
 		}
 
 		BinaryGrid3(const BinaryGrid3& other) {
-			m_data = nullptr;
-			allocate(other.m_width, other.m_height, other.m_depth);
-			memcpy(m_data, other.m_data, getNumUInts());
+      m_data = nullptr;
+      if (other.m_data != nullptr) {
+        allocate(other.m_width, other.m_height, other.m_depth);
+        memcpy(m_data, other.m_data, getNumUInts());
+      } else {
+        m_data = nullptr;
+        m_width = other.m_width;
+        m_height = other.m_height;
+        m_depth = other.m_depth;
+      }
 		}
 
 		BinaryGrid3(BinaryGrid3&& other) {
@@ -60,22 +67,43 @@ namespace ml {
 			allocate(dim.x, dim.y, dim.z);
 		}
 
-		inline void operator=(const BinaryGrid3& other) {
-			allocate(other.m_width, other.m_height, other.m_depth);
-			memcpy(m_data, other.m_data, getNumUInts());
+		inline BinaryGrid3& operator=(const BinaryGrid3& other) {
+      if (this != &other) {
+        if (other.m_data != nullptr) {
+          allocate(other.m_width, other.m_height, other.m_depth);
+          memcpy(m_data, other.m_data, getNumUInts());
+        } else {
+          SAFE_DELETE_ARRAY(m_data);
+          m_data = nullptr;
+          m_width = other.m_width;
+          m_height = other.m_height;
+          m_depth = other.m_depth;
+        }
+      }
+      return *this;
 		}
 
-		inline void operator=(BinaryGrid3&& other) {
-			std::swap(m_width, other.m_width);
-			std::swap(m_height, other.m_height);
-			std::swap(m_depth, other.m_depth);
-			std::swap(m_data, other.m_data);
+		inline BinaryGrid3& operator=(BinaryGrid3&& other) {
+      if (this != &other) {
+        SAFE_DELETE_ARRAY(m_data);
+
+        m_width = other.m_width;
+        m_height = other.m_height;
+        m_depth = other.m_depth;
+        m_data = other.m_data;
+
+        other.m_width = 0;
+        other.m_height = 0;
+        other.m_depth = 0;
+        other.m_data = nullptr;
+      }
+      return *this;
 		}
 
 		inline bool operator==(const BinaryGrid3& other) const {
 			if (m_width != other.m_width ||
 				m_height != other.m_height ||
-				m_width != other.m_width)	return false;
+				m_depth != other.m_depth)	return false;
 
 			size_t numUInts = getNumUInts();
 			for (size_t i = 0; i < numUInts; i++) {
