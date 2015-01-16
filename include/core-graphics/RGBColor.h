@@ -12,7 +12,7 @@ struct RGBColor
 		r = _r;
 		g = _g;
 		b = _b;
-		a = 0;
+		a = 255;
 	}
     RGBColor(BYTE _r, BYTE _g, BYTE _b, BYTE _a)
 	{
@@ -34,7 +34,7 @@ struct RGBColor
     RGBColor grayscale() const
     {
         BYTE avg = BYTE(((int)r + (int)g + (int)b) / 3);
-        return RGBColor(avg, avg, avg, 0);
+        return RGBColor(avg, avg, avg, 255);
     }
 
     RGBColor inverse() const
@@ -72,7 +72,7 @@ struct RGBColor
     operator vec4f() const
     {
         const float scale = 1.0f / 255.0f;
-        return vec4f(r * scale, g * scale, b * scale, 0.0f);
+        return vec4f(r * scale, g * scale, b * scale, a * scale);
     }
 
     static const RGBColor White;
