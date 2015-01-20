@@ -25,6 +25,18 @@ public:
     }
     std::vector<std::string> filesWithSuffix(const std::string &suffix) const;
 
+    static std::vector<std::string> enumerateFiles(const std::string &path)
+    {
+        Directory dir(path);
+        return dir.files();
+    }
+
+    static std::vector<std::string> enumerateFiles(const std::string &path, const std::string &suffix)
+    {
+        Directory dir(path);
+        return dir.filesWithSuffix(suffix);
+    }
+
 private:
     std::string m_path;
     std::vector<std::string> m_files;
