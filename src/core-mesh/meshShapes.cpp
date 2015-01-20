@@ -140,9 +140,11 @@ TriMeshf torus(const vec3f &center, float majorRadius, float minorRadius, UINT s
 	std::vector<UINT> indices(stacks * slices * 6);
 
 	UINT vIndex = 0;
+  // initial theta faces y front
+  float baseTheta = ml::math::PIf/2.0f; 
 	for (UINT i = 0; i < stacks; i++)
 	{
-		float theta = float(i) * 2.0f * ml::math::PIf / float(stacks);
+		float theta = float(i) * 2.0f * ml::math::PIf / float(stacks) + baseTheta;
 		auto color = stackIndexToColor(i);
 		float sinT = sinf(theta);
 		float cosT = cosf(theta);
