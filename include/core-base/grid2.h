@@ -142,7 +142,7 @@ public:
 		const T *CPtr = m_data;
 		for(size_t row = 0; row < m_rows; row++)
 		{
-			result[col] = CPtr[row * m_cols + col];
+			result[row] = CPtr[row * m_cols + col];
 		}
 		return result;
 	}
