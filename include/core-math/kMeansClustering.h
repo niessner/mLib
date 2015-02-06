@@ -159,6 +159,22 @@ public:
 		return m_clusters[clusterIndex].center;
 	}
 
+    size_t findBestClusterRepresenative(const std::vector<T> &elements, UINT clusterIndex) const
+    {
+        size_t bestIndex = 0;
+        float bestDist = std::numeric_limits<float>::max();
+        for (UINT elementIndex = 0; elementIndex < elements.size(); elementIndex++)
+        {
+            float curDist = Metric::Dist(m_clusters[clusterIndex].center, elements[elementIndex]);
+            if (curDist < bestDist)
+            {
+                bestDist = curDist;
+                bestIndex = elementIndex;
+            }
+        }
+        return bestIndex;
+    }
+
     float quantizationError(const std::vector<T> &elements) const
     {
         float sum = 0.0f;
