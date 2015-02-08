@@ -418,6 +418,10 @@ namespace ml {
 			return m_bHasTexCoords;
 		}
 
+		void setHasColors(bool b) {
+			m_bHasColors = b;
+		}
+
 		std::pair<BinaryGrid3, Matrix4x4<FloatType>> voxelize(FloatType voxelSize, const BoundingBox3<FloatType>& bounds = BoundingBox3<FloatType>(), bool solid = false) const {
 
 			BoundingBox3<FloatType> bb;
