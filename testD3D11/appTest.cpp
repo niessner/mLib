@@ -138,174 +138,175 @@ void testCollisions() {
 
 void AppTest::init(ml::ApplicationData &app)
 {
-	testCollisions();
+	//testCollisions();
 
 
-	TriMeshf s = shapes::sphere(0.1f, vec3f(0.0f), 50, 50);
-	MeshIOf::saveToFile("bla0.ply",s.getMeshData());
-	OpenMeshTriMesh::Mesh omesh;
-	OpenMeshTriMesh::convertToOpenMesh(s, omesh);
-	OpenMeshTriMesh::convertToTriMesh(omesh, s);
-	MeshIOf::saveToFile("bla1.ply",s.getMeshData());
-	//MeshDataf meshData0 = s.getMeshData();
-	//meshData0.mergeCloseVertices(0.00001f, true);
-	//s = TriMeshf(meshData0);
-	MeshIOf::saveToFile("bla2.ply",s.getMeshData());
-	OpenMeshTriMesh::decimate(s, 500);
-	MeshIOf::saveToFile("bla3.ply",s.getMeshData());
+	//TriMeshf s = shapes::sphere(0.1f, vec3f(0.0f), 50, 50);
+	//MeshIOf::saveToFile("bla0.ply",s.getMeshData());
+	//OpenMeshTriMesh::Mesh omesh;
+	//OpenMeshTriMesh::convertToOpenMesh(s, omesh);
+	//OpenMeshTriMesh::convertToTriMesh(omesh, s);
+	//MeshIOf::saveToFile("bla1.ply",s.getMeshData());
+	////MeshDataf meshData0 = s.getMeshData();
+	////meshData0.mergeCloseVertices(0.00001f, true);
+	////s = TriMeshf(meshData0);
+	//MeshIOf::saveToFile("bla2.ply",s.getMeshData());
+	//OpenMeshTriMesh::decimate(s, 500);
+	//MeshIOf::saveToFile("bla3.ply",s.getMeshData());
+
+	////vec3f u0(0,0,0);
+	////vec3f u1(0,1,0);
+	////vec3f u2(0,1,1);
+	////vec3f v0(-0.25,0.25,0.25);
+	////vec3f v1(1,1,0);
+	////vec3f v2(1,1,1);
+
+	//vec2f t0(0,0);
+	//vec3f t1(t0, 0.0f);
 
 	//vec3f u0(0,0,0);
 	//vec3f u1(0,1,0);
 	//vec3f u2(0,1,1);
-	//vec3f v0(-0.25,0.25,0.25);
-	//vec3f v1(1,1,0);
-	//vec3f v2(1,1,1);
+	//vec3f v0(0,0,0);
+	//vec3f v1(0,0,1);
+	//vec3f v2(0,1,0);
 
-	vec2f t0(0,0);
-	vec3f t1(t0, 0.0f);
-
-	vec3f u0(0,0,0);
-	vec3f u1(0,1,0);
-	vec3f u2(0,1,1);
-	vec3f v0(0,0,0);
-	vec3f v1(0,0,1);
-	vec3f v2(0,1,0);
-
-	bool b0 = intersection::intersectTriangleTriangle(u0,u1,u2, v0,v1,v2);
-	
-	std::cout << (int)b0 << std::endl;
+	//bool b0 = intersection::intersectTriangleTriangle(u0,u1,u2, v0,v1,v2);
+	//
+	//std::cout << (int)b0 << std::endl;
 
 
-	DenseMatrixf md(3);
-	for (unsigned int i = 0; i < 9; i++) {
-		md[i] = (float)i;
-	}
-	//std::cout << md.rank() << std::endl << std::endl;
-
-	mat2f m2;
-	for (unsigned int i = 0; i < 4; i++) {
-		m2[i] = (float)i;
-	}
-	//std::cout << m2.rank() << std::endl << std::endl;
-	mat4f m4;
-	for (unsigned int i = 0; i < 16; i++) {
-		m4[i] = (float)i;
-	}
-	//std::cout << m4.rank() << std::endl << std::endl;
-	mat3f m3;	
-	for (unsigned int i = 0; i < 9; i++) {
-		m3[i] = (float)i;
-	}
-	//std::cout << m3.rank() << std::endl;
-	//m.setDiag(1.0f, 2.0f, 3.0f);
-
-	EigenSystemf esd_VTK = EigenSolverf::solve<EigenSolverf::TYPE_NR>(md);
-	EigenSystemf esd_NR = EigenSolverf::solve<EigenSolverf::TYPE_VTK>(md);
-
-	//std::cout << esd_VTK << std::endl;
-	//std::cout << esd_NR << std::endl;
-
-	//EigenSystemf esd = md.eigenSystem();
-	//EigenSystemf es4 = m4.eigenSystem();
-	//EigenSystemf es3 = m3.eigenSystem();
-	//EigenSystemf es2 = m2.eigenSystem();
-
-	//std::cout << esd << std::endl;
-	//std::cout << es4 << std::endl;
-	//std::cout << es3 << std::endl;
-	//std::cout << es2 << std::endl;
-
-
-	//std::cout << m3 << std::endl << std::endl;
-
-
-	MeshDataf::Indices indices;
-	//for (auto i = indices.begin(); i != indices.end(); i++) {}
-	//for (auto face : indices) {}
-	//for (auto face: indices) {}
-
-
-	//unsigned int size = 50000;
-	//Timer t;
-	//std::cout << test0(size) << std::endl;
-	//std::cout << t.getElapsedTimeMS() << std::endl;
-	//t.start();
-	//std::cout << test1(size) << std::endl;
-	//std::cout << t.getElapsedTimeMS() << std::endl;
-	//t.start();
-	//std::cout << test2(size) << std::endl;
-	//std::cout << t.getElapsedTimeMS() << std::endl;
-
-	//PointCloudf pc = PointCloudIOf::loadFromFile("bunny.ply");
-
-	//int a = 5;
-
-	//vec3f testVec(1.0f, 2.0f, 3.0f);
-	//float* f = testVec.ptr();
-
-	//unsigned int numSamples = 10000;
-	//std::vector<vec3f> res_uniformSphere(numSamples);
-	//std::vector<vec3f> res_uniformHemisphere(numSamples);
-	//std::vector<vec3f> res_cosineHemisphere(numSamples);
-	//std::vector<vec3f> res_powerCosineSampleHemisphere(numSamples);
-	//RNG r;
-	//for (unsigned int i = 0; i < numSamples; i++) {
-	//	res_uniformSphere[i] = Samplef::squareToUniformSphere(r.uniform2D());
-	//	res_uniformHemisphere[i] = Samplef::squareToUniformHemisphere(r.uniform2D());
-	//	res_cosineHemisphere[i] = mat3f::frame(vec3f(0, 0, -1))*Samplef::squareToCosineHemisphere(r.uniform2D());
-	//	res_powerCosineSampleHemisphere[i] = Samplef::squareToPowerCosineSampleHemisphere(r.uniform2D(), 100000);
+	//DenseMatrixf md(3);
+	//for (unsigned int i = 0; i < 9; i++) {
+	//	md[i] = (float)i;
 	//}
-	//PointCloudIOf::saveToFile("sample_uniformSphere.ply", res_uniformSphere);
-	//PointCloudIOf::saveToFile("sample_uniformHemisphere.ply", res_uniformHemisphere);
-	//PointCloudIOf::saveToFile("sample_cosineHemisphere.ply", res_cosineHemisphere);
-	//PointCloudIOf::saveToFile("sample_powerCosineSampleHemisphere.ply", res_powerCosineSampleHemisphere);
+	////std::cout << md.rank() << std::endl << std::endl;
 
-    //const std::string testPLY = "scans/gates381.ply";
-    //const TriMesh triMesh = OpenMeshLoader::load(testPLY);
-    //m_mesh.load(app.graphics, triMesh);
-
-	//const std::string testFilename = "scans/gates381.off";
-	//const std::string testFilename = "scans/gates381.obj";
-	const std::string testFilename = "scans/gates381.ply";
-	//const std::string testFilename = "scans/gates381_ascii.ply";
-	ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
-	//ml::MeshDataf bunny = MeshIOf::loadFromFile("bunny_color.ply");
-
-	//bunny.m_Colors.resize(bunny.m_Vertices.size(), vec4f(0.5f, 0.5f, 0.5f, 1.0f));
-	//meshData.merge(bunny);
-	//meshData.m_Vertices.push_back(vec3f(1.0f, 2.0f, 3.0f));
-	//meshData.m_Colors.push_back(vec4f(1.0f, 0.0f, 0.0f, 1.0f));
-	//meshData.m_Normals.push_back(vec3f(1.0f, 0.0f, 0.0f));
-	//std::cout << meshData.m_Vertices.size();
-	//std::cout << " reduced to " << meshData.removeIsolatedVertices() << std::endl;
-	//std::cout << meshData.m_Vertices.size();
-	//std::cout << " reduced to " << meshData.removeFacesInFrontOfPlane(Planef::xyPlane(), 0.1f) << std::endl;
-	 
-	assert(meshData.isConsistent());
-
-	//for (size_t i = 0; i < meshData.m_Colors.size(); i++) {
-	//	meshData.m_Colors[i] = ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+	//mat2f m2;
+	//for (unsigned int i = 0; i < 4; i++) {
+	//	m2[i] = (float)i;
 	//}
-	//ml::MeshIOf::saveToFile("outtest.ply", meshData);
-	//ml::MeshIOf::saveToFile("outtest.off", meshData);
-	//ml::MeshIOf::saveToFile("outtest.obj", meshData);
+	////std::cout << m2.rank() << std::endl << std::endl;
+	//mat4f m4;
+	//for (unsigned int i = 0; i < 16; i++) {
+	//	m4[i] = (float)i;
+	//}
+	////std::cout << m4.rank() << std::endl << std::endl;
+	//mat3f m3;	
+	//for (unsigned int i = 0; i < 9; i++) {
+	//	m3[i] = (float)i;
+	//}
+	////std::cout << m3.rank() << std::endl;
+	////m.setDiag(1.0f, 2.0f, 3.0f);
 
-	//meshData.clear();
-	//MeshIOf::loadFromFile("outtest.obj", meshData);
+	//EigenSystemf esd_VTK = EigenSolverf::solve<EigenSolverf::TYPE_NR>(md);
+	//EigenSystemf esd_NR = EigenSolverf::solve<EigenSolverf::TYPE_VTK>(md);
 
-	//meshData.mergeCloseVertices(0.3f, false);
-	//meshData.mergeCloseVertices(pow(0.3f,3), true);
-	
-	//MeshDataf copy = meshData;
-	//copy.applyTransform(mat4f::translation(vec3f(-2,1,1)));
-	//meshData.merge(copy);
-	MeshDataf bbData = shapes::toMeshData(meshData.getBoundingBox(), vec4f(1,1,1,1), true);
-	bbData.subdivideFacesMidpoint();
-	bbData.subdivideFacesLoop();
-	//bbData.print();
-	MeshIOf::saveToFile("outbox.ply", bbData);
-	meshData.merge(bbData);
-	assert(meshData.isConsistent());
+	////std::cout << esd_VTK << std::endl;
+	////std::cout << esd_NR << std::endl;
+
+	////EigenSystemf esd = md.eigenSystem();
+	////EigenSystemf es4 = m4.eigenSystem();
+	////EigenSystemf es3 = m3.eigenSystem();
+	////EigenSystemf es2 = m2.eigenSystem();
+
+	////std::cout << esd << std::endl;
+	////std::cout << es4 << std::endl;
+	////std::cout << es3 << std::endl;
+	////std::cout << es2 << std::endl;
+
+
+	////std::cout << m3 << std::endl << std::endl;
+
+
+	//MeshDataf::Indices indices;
+	////for (auto i = indices.begin(); i != indices.end(); i++) {}
+	////for (auto face : indices) {}
+	////for (auto face: indices) {}
+
+
+	////unsigned int size = 50000;
+	////Timer t;
+	////std::cout << test0(size) << std::endl;
+	////std::cout << t.getElapsedTimeMS() << std::endl;
+	////t.start();
+	////std::cout << test1(size) << std::endl;
+	////std::cout << t.getElapsedTimeMS() << std::endl;
+	////t.start();
+	////std::cout << test2(size) << std::endl;
+	////std::cout << t.getElapsedTimeMS() << std::endl;
+
+	////PointCloudf pc = PointCloudIOf::loadFromFile("bunny.ply");
+
+	////int a = 5;
+
+	////vec3f testVec(1.0f, 2.0f, 3.0f);
+	////float* f = testVec.ptr();
+
+	////unsigned int numSamples = 10000;
+	////std::vector<vec3f> res_uniformSphere(numSamples);
+	////std::vector<vec3f> res_uniformHemisphere(numSamples);
+	////std::vector<vec3f> res_cosineHemisphere(numSamples);
+	////std::vector<vec3f> res_powerCosineSampleHemisphere(numSamples);
+	////RNG r;
+	////for (unsigned int i = 0; i < numSamples; i++) {
+	////	res_uniformSphere[i] = Samplef::squareToUniformSphere(r.uniform2D());
+	////	res_uniformHemisphere[i] = Samplef::squareToUniformHemisphere(r.uniform2D());
+	////	res_cosineHemisphere[i] = mat3f::frame(vec3f(0, 0, -1))*Samplef::squareToCosineHemisphere(r.uniform2D());
+	////	res_powerCosineSampleHemisphere[i] = Samplef::squareToPowerCosineSampleHemisphere(r.uniform2D(), 100000);
+	////}
+	////PointCloudIOf::saveToFile("sample_uniformSphere.ply", res_uniformSphere);
+	////PointCloudIOf::saveToFile("sample_uniformHemisphere.ply", res_uniformHemisphere);
+	////PointCloudIOf::saveToFile("sample_cosineHemisphere.ply", res_cosineHemisphere);
+	////PointCloudIOf::saveToFile("sample_powerCosineSampleHemisphere.ply", res_powerCosineSampleHemisphere);
+
+ //   //const std::string testPLY = "scans/gates381.ply";
+ //   //const TriMesh triMesh = OpenMeshLoader::load(testPLY);
+ //   //m_mesh.load(app.graphics, triMesh);
+
+	////const std::string testFilename = "scans/gates381.off";
+	////const std::string testFilename = "scans/gates381.obj";
+	//const std::string testFilename = "scans/gates381.ply";
+	////const std::string testFilename = "scans/gates381_ascii.ply";
+	//ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
+	////ml::MeshDataf bunny = MeshIOf::loadFromFile("bunny_color.ply");
+
+	////bunny.m_Colors.resize(bunny.m_Vertices.size(), vec4f(0.5f, 0.5f, 0.5f, 1.0f));
+	////meshData.merge(bunny);
+	////meshData.m_Vertices.push_back(vec3f(1.0f, 2.0f, 3.0f));
+	////meshData.m_Colors.push_back(vec4f(1.0f, 0.0f, 0.0f, 1.0f));
+	////meshData.m_Normals.push_back(vec3f(1.0f, 0.0f, 0.0f));
+	////std::cout << meshData.m_Vertices.size();
+	////std::cout << " reduced to " << meshData.removeIsolatedVertices() << std::endl;
+	////std::cout << meshData.m_Vertices.size();
+	////std::cout << " reduced to " << meshData.removeFacesInFrontOfPlane(Planef::xyPlane(), 0.1f) << std::endl;
+	// 
+	//assert(meshData.isConsistent());
+
+	////for (size_t i = 0; i < meshData.m_Colors.size(); i++) {
+	////	meshData.m_Colors[i] = ml::vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+	////}
+	////ml::MeshIOf::saveToFile("outtest.ply", meshData);
+	////ml::MeshIOf::saveToFile("outtest.off", meshData);
+	////ml::MeshIOf::saveToFile("outtest.obj", meshData);
+
+	////meshData.clear();
+	////MeshIOf::loadFromFile("outtest.obj", meshData);
+
+	////meshData.mergeCloseVertices(0.3f, false);
+	////meshData.mergeCloseVertices(pow(0.3f,3), true);
+	//
+	////MeshDataf copy = meshData;
+	////copy.applyTransform(mat4f::translation(vec3f(-2,1,1)));
+	////meshData.merge(copy);
+	//MeshDataf bbData = shapes::toMeshData(meshData.getBoundingBox(), vec4f(1,1,1,1), true);
+	//bbData.subdivideFacesMidpoint();
+	//bbData.subdivideFacesLoop();
+	////bbData.print();
+	//MeshIOf::saveToFile("outbox.ply", bbData);
+	//meshData.merge(bbData);
+	//assert(meshData.isConsistent());
+
 
 	//meshData.clear();
 	//MeshIOf::loadFromFile("1a8e293609eca3b3f7e27638e63d848.obj", meshData);
@@ -313,6 +314,7 @@ void AppTest::init(ml::ApplicationData &app)
 	//std::vector<Materialf> mats;
 	//Materialf::loadFromMTL("out.mtl", mats);
 
+  MeshDataf meshData = MeshIOf::loadFromFile("scans/gates381.ply");
 	ml::TriMeshf triMesh(meshData);
 	//triMesh.setColor(vec4f(0.0f, 1.0f, 0.0f, 1.0f));
 	//auto p = meshData.getBoundingBox().getBottomPlane();
@@ -360,8 +362,11 @@ void AppTest::render(ml::ApplicationData &app)
 {
     m_timer.frame();
 
+    std::cout << m_camera.camera() << std::endl;
+    std::cout << m_camera.getEye() << std::endl;
+    mat4f model = mat4f::translation(0, 2, 0);
     ConstantBuffer constants;
-    constants.worldViewProj = m_camera.cameraPerspective();
+    constants.worldViewProj = m_camera.cameraPerspective() * model;
     m_constants.update(app.graphics, constants);
 
     m_vsColor.bind(app.graphics);

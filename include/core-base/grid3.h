@@ -81,8 +81,8 @@ public:
 		return m_depth;
 	}
 
-	//inline vec3ui getDimensions() const {
-	//	return vec3ui(dimX(), dimY(), dimZ());
+	//inline vec3ul getDimensions() const {
+	//	return vec3ul(dimX(), dimY(), dimZ());
 	//}
 
 	inline bool square() const
