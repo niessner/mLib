@@ -120,6 +120,12 @@ public:
 		ml::Console::log() << "distanceField test3 passed" << std::endl;
 	}
 
+    void test4()
+    {
+        Grid3<float> a;
+        Grid3<float> b = std::move(a);
+    }
+
 	std::string name() {
 		return "grid";
 	}
