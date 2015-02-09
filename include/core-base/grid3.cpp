@@ -7,34 +7,34 @@ namespace ml
 
 template <class T> Grid3<T>::Grid3()
 {
-	m_width = 0;
-	m_height = 0;
-	m_depth = 0;
+	m_dimX = 0;
+	m_dimY = 0;
+	m_dimZ = 0;
 	m_data = nullptr;
 }
 
-template <class T> Grid3<T>::Grid3(size_t rows, size_t cols, size_t slices)
+template <class T> Grid3<T>::Grid3(size_t dimX, size_t dimY, size_t dimZ)
 {
-	m_width = rows;
-	m_height = cols;
-	m_depth = slices;
-	m_data = new T[rows * cols * slices];
+	m_dimX = dimX;
+	m_dimY = dimY;
+	m_dimZ = dimZ;
+	m_data = new T[dimX * dimY * dimZ];
 }
 
-template <class T> Grid3<T>::Grid3(size_t rows, size_t cols, size_t slices, const T &clearValue)
+template <class T> Grid3<T>::Grid3(size_t dimX, size_t dimY, size_t dimZ, const T &clearValue)
 {
-	m_width = rows;
-	m_height = cols;
-	m_depth = slices;
-	m_data = new T[rows * cols * slices];
+	m_dimX = dimX;
+	m_dimY = dimY;
+	m_dimZ = dimZ;
+	m_data = new T[dimX * dimY * dimZ];
 	clear(clearValue);
 }
 
 template <class T> Grid3<T>::Grid3(const Grid3<T> &G)
 {
-  m_width = G.m_width;
-  m_height = G.m_height;
-  m_depth = G.m_depth;
+  m_dimX = G.m_dimX;
+  m_dimY = G.m_dimY;
+  m_dimZ = G.m_dimZ;
 
 	const size_t totalEntries = getNumTotalEntries();
 	m_data = new T[totalEntries];
@@ -45,15 +45,15 @@ template <class T> Grid3<T>::Grid3(const Grid3<T> &G)
 
 template <class T> Grid3<T>::Grid3(Grid3<T> &&G)
 {
-  m_height = G.m_height;
-  m_width = G.m_width;
-  m_depth = G.m_depth;
+  m_dimX = G.m_dimX;
+  m_dimY = G.m_dimY;
+  m_dimZ = G.m_dimZ;
 
 	m_data = G.m_data;
 
-  G.m_height = 0;
-  G.m_width = 0;
-  G.m_depth = 0;
+  G.m_dimX = 0;
+  G.m_dimY = 0;
+  G.m_dimZ = 0;
 
 	G.m_data = nullptr;
 }
@@ -65,9 +65,9 @@ template <class T> Grid3<T>::~Grid3()
 
 template <class T> void Grid3<T>::deleteMemory()
 {
-	m_width = 0;
-	m_height = 0;
-	m_depth = 0;
+	m_dimX = 0;
+	m_dimY = 0;
+	m_dimZ = 0;
 	if(m_data != nullptr)
 	{
 		delete[] m_data;
@@ -78,9 +78,9 @@ template <class T> void Grid3<T>::deleteMemory()
 template <class T> Grid3<T>& Grid3<T>::operator = (const Grid3<T> &G)
 {
 	if(m_data) delete[] m_data;
-	m_width = G.m_rows;
-	m_height = G.m_cols;
-	m_depth = G.m_slices;
+  m_dimX = G.m_dimX;
+  m_dimY = G.m_dimY;
+  m_dimZ = G.m_dimZ;
 
 	const size_t totalEntries = getNumTotalEntries();
 	m_data = new T[totalEntries];
@@ -93,32 +93,32 @@ template <class T> Grid3<T>& Grid3<T>::operator = (const Grid3<T> &G)
 
 template <class T> Grid3<T>& Grid3<T>::operator = (Grid3<T> &&G)
 {
-	std::swap(m_width, G.m_rows);
-	std::swap(m_height, G.m_cols);
-	std::swap(m_depth, G.m_slices);
+  std::swap(m_dimX, G.m_dimX);
+  std::swap(m_dimY, G.m_dimY);
+  std::swap(m_dimZ, G.m_dimZ);
 	std::swap(m_data, G.m_data);
 	return *this;
 }
 
-template <class T> void Grid3<T>::allocate(size_t rows, size_t cols, size_t slices)
+template <class T> void Grid3<T>::allocate(size_t dimX, size_t dimY, size_t dimZ)
 {
-	m_width = rows;
-	m_height = cols;
-	m_depth = slices;
+	m_dimX = dimX;
+	m_dimY = dimY;
+	m_dimZ = dimZ;
 	if(m_data) delete[] m_data;
-	m_data = new T[rows * cols * slices];
+	m_data = new T[dimX * dimY * dimZ];
 }
 
-template <class T> void Grid3<T>::allocate(size_t rows, size_t cols, size_t slices, const T &clearValue)
+template <class T> void Grid3<T>::allocate(size_t dimX, size_t dimY, size_t dimZ, const T &clearValue)
 {
-	allocate(rows, cols, slices);
+	allocate(dimX, dimY, dimZ);
 	clear(clearValue);
 }
 
 template <class T> void Grid3<T>::clear(const T &clearValue)
 {
 	const size_t totalEntries = getNumTotalEntries();
-	for(size_t i = 0; i < totalEntries; i++) m_data[i] = clearValue;
+	for (size_t i = 0; i < totalEntries; i++) m_data[i] = clearValue;
 }
 
 }  // namespace ml
