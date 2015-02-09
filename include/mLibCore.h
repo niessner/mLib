@@ -78,6 +78,7 @@
 #include "core-graphics/colorUtils.h"
 #include "core-graphics/ray.h"
 #include "core-graphics/camera.h"
+#include "core-graphics/cameraTrackball.h"
 #include "core-graphics/lineSegment2.h"
 #include "core-graphics/lineSegment3.h"
 #include "core-graphics/line2.h"
