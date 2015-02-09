@@ -32,9 +32,9 @@ template <class T> Grid3<T>::Grid3(size_t rows, size_t cols, size_t slices, cons
 
 template <class T> Grid3<T>::Grid3(const Grid3<T> &G)
 {
-	m_width = G.m_rows;
-	m_height = G.m_cols;
-	m_depth = G.m_slices;
+  m_width = G.m_width;
+  m_height = G.m_height;
+  m_depth = G.m_depth;
 
 	const size_t totalEntries = getNumTotalEntries();
 	m_data = new T[totalEntries];
@@ -45,15 +45,15 @@ template <class T> Grid3<T>::Grid3(const Grid3<T> &G)
 
 template <class T> Grid3<T>::Grid3(Grid3<T> &&G)
 {
-	m_height = G.m_cols;
-	m_width = G.m_rows;
-	m_depth = G.m_slices;
+  m_height = G.m_height;
+  m_width = G.m_width;
+  m_depth = G.m_depth;
 
 	m_data = G.m_data;
 
-	G.m_rows = 0;
-	G.m_cols = 0;
-	G.m_slices = 0;
+  G.m_height = 0;
+  G.m_width = 0;
+  G.m_depth = 0;
 
 	G.m_data = nullptr;
 }
