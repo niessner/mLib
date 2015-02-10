@@ -10,7 +10,7 @@ template <class T> class Grid3
 public:
 	Grid3();
 	Grid3(size_t dimX, size_t dimY, size_t dimZ);
-  Grid3(size_t dimX, size_t dimY, size_t dimZ, const T &clearValue);
+    Grid3(size_t dimX, size_t dimY, size_t dimZ, const T &clearValue);
 	Grid3(const Grid3<T> &G);
 	Grid3(Grid3<T> &&G);
 
@@ -110,6 +110,16 @@ public:
 	// Modifiers
 	//
 	void clear(const T &clearValue);
+
+    void fill(const std::function<T(size_t x, size_t y, size_t z)> &fillFunction)
+    {
+        for (UINT xIndex = 0; xIndex < m_dimX; xIndex++)
+            for (UINT yIndex = 0; yIndex < m_dimY; yIndex++)
+                for (UINT zIndex = 0; zIndex < m_dimZ; zIndex++)
+                {
+                    (*this)(xIndex, yIndex, zIndex) = fillFunction(xIndex, yIndex, zIndex);
+                }
+    }
 
 	size_t getNumTotalEntries() const {
 		return m_dimX * m_dimY * m_dimZ;
