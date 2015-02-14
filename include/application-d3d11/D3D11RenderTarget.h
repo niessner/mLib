@@ -19,6 +19,9 @@ public:
 	}
     D3D11RenderTarget(D3D11RenderTarget &&t)
     {
+        //
+        // TODO: swap semantics would be cleaner here
+        //
         m_width = t.m_width;
         m_height = t.m_height;
         m_texture = t.m_texture; t.m_texture = nullptr;
@@ -70,6 +73,9 @@ public:
 
     // save the render target data as a bitmap
     void captureBitmap(GraphicsDevice &g, Bitmap &result);
+    
+    void captureColorBuffer(GraphicsDevice &g, ColorImageR8G8B8A8 &result);
+    void captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result);
 
     GraphicsAssetType type() const
     {

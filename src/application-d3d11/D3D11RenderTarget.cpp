@@ -115,6 +115,48 @@ void D3D11RenderTarget::clear(GraphicsDevice &g, const ml::vec4f &clearColor)
     context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result)
+{
+    cout << "captureDepthBuffer is not yet implemented" << endl;
+
+    auto &context = g.castD3D11().context();
+    context.CopyResource(m_captureTexture, m_texture);
+
+    result.allocateToSize(m_height, m_width);
+
+    D3D11_MAPPED_SUBRESOURCE resource;
+    UINT subresource = D3D11CalcSubresource(0, 0, 0);
+    HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ, 0, &resource);
+    const BYTE *data = (BYTE *)resource.pData;
+
+    for (UINT row = 0; row < m_height; row++)
+    {
+        memcpy(&result(row, 0U), data + resource.RowPitch * row, m_width * sizeof(ml::vec4uc));
+    }
+
+    context.Unmap(m_captureTexture, subresource);
+}
+
+void D3D11RenderTarget::captureColorBuffer(GraphicsDevice &g, ColorImageR8G8B8A8 &result)
+{
+    auto &context = g.castD3D11().context();
+    context.CopyResource(m_captureTexture, m_texture);
+
+    result.allocateToSize(m_height, m_width);
+
+    D3D11_MAPPED_SUBRESOURCE resource;
+    UINT subresource = D3D11CalcSubresource(0, 0, 0);
+    HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ, 0, &resource);
+    const BYTE *data = (BYTE *)resource.pData;
+
+    for (UINT row = 0; row < m_height; row++)
+    {
+        memcpy(&result(row, 0U), data + resource.RowPitch * row, m_width * sizeof(ml::vec4uc));
+    }
+
+    context.Unmap(m_captureTexture, subresource);
+}
+
 void D3D11RenderTarget::captureBitmap(GraphicsDevice &g, Bitmap &result)
 {
     auto &context = g.castD3D11().context();
@@ -124,7 +166,7 @@ void D3D11RenderTarget::captureBitmap(GraphicsDevice &g, Bitmap &result)
 
     D3D11_MAPPED_SUBRESOURCE resource;
     UINT subresource = D3D11CalcSubresource(0, 0, 0);
-    HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ_WRITE, 0, &resource);
+    HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ, 0, &resource);
     const BYTE *data = (BYTE *)resource.pData;
     
     for (UINT row = 0; row < m_height; row++)
