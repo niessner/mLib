@@ -117,7 +117,7 @@ void D3D11RenderTarget::clear(GraphicsDevice &g, const ml::vec4f &clearColor)
 
 void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result)
 {
-    cout << "captureDepthBuffer is not yet implemented" << endl;
+    std::cout << "captureDepthBuffer is not yet implemented" << std::endl;
 
     auto &context = g.castD3D11().context();
     context.CopyResource(m_captureTexture, m_texture);
