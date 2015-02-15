@@ -15,6 +15,7 @@
 #include "application-d3d11/D3D11VertexShader.h"
 #include "application-d3d11/D3D11PixelShader.h"
 #include "application-d3d11/D3D11ConstantBuffer.h"
+#include "application-d3d11/D3D11ShaderManager.h"
 #include "application-d3d11/D3D11TriMesh.h"
 #include "application-d3d11/D3D11Texture.h"
 #include "application-d3d11/D3D11Texture3D.h"
