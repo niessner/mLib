@@ -552,6 +552,27 @@ public:
 		}
 		return *this;
 	}
+
+    T* begin()
+    {
+        return m_Data;
+    }
+
+    T* end()
+    {
+        return m_Data + m_Width * m_height;
+    }
+
+    const T* begin() const
+    {
+        return m_Data;
+    }
+
+    const T* end() const
+    {
+        return m_Data + m_Width * m_height;
+    }
+
 protected:
 	//! Allocates memory and sets the image size accordingly
 	void create(unsigned int height, unsigned int width) {
