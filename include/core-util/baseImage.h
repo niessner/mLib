@@ -125,6 +125,12 @@ public:
 		return m_Data[y*m_Width + x];
 	}
 
+    //! Access Operator (size_t)
+    const T& operator()(size_t y, size_t x) const {
+        assert(y < m_Height && x < m_Width);
+        return m_Data[y*m_Width + x];
+    }
+
 	//! Access Operator (int)
 	const T& operator()(int y, int x) const {
 		assert((unsigned int)y < m_Height && (unsigned int)x < m_Width);
