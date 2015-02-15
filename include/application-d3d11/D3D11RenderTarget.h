@@ -81,6 +81,7 @@ public:
     
     void captureColorBuffer(GraphicsDevice &g, ColorImageR8G8B8A8 &result);
     void captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result);
+    void captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result, const mat4f &perspectiveTransform);
 
     GraphicsAssetType type() const
     {

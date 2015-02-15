@@ -122,6 +122,29 @@ void D3D11RenderTarget::clear(GraphicsDevice &g, const ml::vec4f &clearColor)
     context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result, const mat4f &perspectiveTransform)
+{
+    captureDepthBuffer(g, result);
+
+    auto inv = perspectiveTransform.getInverse();
+
+    for (UINT y = 0; y < result.getHeight(); y++)
+    {
+        for (UINT x = 0; x < result.getWidth(); x++)
+        {
+            float &v = result(y, x);
+            if (v >= 1.0f)
+                v = std::numeric_limits<float>::infinity();
+            else
+            {
+                float dx = math::linearMap(0.0f, result.getWidth() - 1.0f, -1.0f, 1.0f, (float)x);
+                float dy = math::linearMap(0.0f, result.getHeight() - 1.0f, -1.0f, 1.0f, (float)y);
+                v = (inv * vec3f(dx, dy, v)).length();
+            }
+        }
+    }
+}
+
 void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result)
 {
     auto &context = g.castD3D11().context();
