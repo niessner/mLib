@@ -236,6 +236,16 @@ public:
 		return result;
 	}
 
+    inline std::string toString(char separator = ',') const {
+        return toString(std::string(1, separator));
+    }
+
+    inline std::string toString(const std::string &separator) const {
+        return std::to_string(x) + separator + 
+               std::to_string(y) + separator + 
+               std::to_string(z);
+    }
+
 	static const point3d<T> origin;
 	static const point3d<T> eX;
 	static const point3d<T> eY;

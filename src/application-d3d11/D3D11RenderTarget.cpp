@@ -122,6 +122,12 @@ void D3D11RenderTarget::clear(GraphicsDevice &g, const ml::vec4f &clearColor)
     context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void D3D11RenderTarget::clearColorBuffer(GraphicsDevice &g, const ml::vec4f &clearColor)
+{
+    auto &context = g.castD3D11().context();
+    context.ClearRenderTargetView(m_renderView, clearColor.array);
+}
+
 void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result, const mat4f &perspectiveTransform)
 {
     captureDepthBuffer(g, result);

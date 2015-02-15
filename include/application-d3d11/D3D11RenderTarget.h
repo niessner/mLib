@@ -75,6 +75,7 @@ public:
 
     // clears the render and depth buffers
     void clear(GraphicsDevice &g, const ml::vec4f &clearColor);
+    void clearColorBuffer(GraphicsDevice &g, const ml::vec4f &clearColor);
 
     // save the render target data as a bitmap
     void captureBitmap(GraphicsDevice &g, Bitmap &result);
