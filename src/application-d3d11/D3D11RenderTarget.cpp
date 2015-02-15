@@ -6,7 +6,6 @@ void D3D11RenderTarget::load(GraphicsDevice &g, const UINT width, const UINT hei
 {
     m_width = width;
     m_height = height;
-    release(g);
     
     g.castD3D11().registerAsset(this);
 
@@ -82,12 +81,20 @@ void D3D11RenderTarget::reset(GraphicsDevice &g)
     D3D_VALIDATE(device.CreateDepthStencilView(m_depthBuffer, nullptr, &m_depthView));
 
     //
-    // Create the capture buffer
+    // Create the color capture buffer
     //
     renderDesc.BindFlags = 0;
     renderDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
     renderDesc.Usage = D3D11_USAGE_STAGING;
     D3D_VALIDATE(device.CreateTexture2D(&renderDesc, nullptr, &m_captureTexture));
+
+    //
+    // Create the depth capture buffer
+    //
+    depthDesc.BindFlags = 0;
+    depthDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+    depthDesc.Usage = D3D11_USAGE_STAGING;
+    D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_captureDepth));
 }
 
 void D3D11RenderTarget::bind(GraphicsDevice &g)
@@ -117,24 +124,22 @@ void D3D11RenderTarget::clear(GraphicsDevice &g, const ml::vec4f &clearColor)
 
 void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result)
 {
-    std::cout << "captureDepthBuffer is not yet implemented" << std::endl;
-
     auto &context = g.castD3D11().context();
-    context.CopyResource(m_captureTexture, m_texture);
+    context.CopyResource(m_captureDepth, m_depthBuffer);
 
     result.allocateToSize(m_height, m_width);
 
     D3D11_MAPPED_SUBRESOURCE resource;
     UINT subresource = D3D11CalcSubresource(0, 0, 0);
-    HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ, 0, &resource);
+    HRESULT hr = context.Map(m_captureDepth, subresource, D3D11_MAP_READ, 0, &resource);
     const BYTE *data = (BYTE *)resource.pData;
 
     for (UINT row = 0; row < m_height; row++)
     {
-        memcpy(&result(row, 0U), data + resource.RowPitch * row, m_width * sizeof(ml::vec4uc));
+        memcpy(&result(row, 0U), data + resource.RowPitch * row, m_width * sizeof(float));
     }
 
-    context.Unmap(m_captureTexture, subresource);
+    context.Unmap(m_captureDepth, subresource);
 }
 
 void D3D11RenderTarget::captureColorBuffer(GraphicsDevice &g, ColorImageR8G8B8A8 &result)

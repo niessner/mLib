@@ -14,6 +14,7 @@ public:
         m_texture = nullptr;
         m_captureTexture = nullptr;
         m_depthBuffer = nullptr;
+        m_captureDepth = nullptr;
         m_renderView = nullptr;
         m_depthView = nullptr;
 	}
@@ -27,6 +28,7 @@ public:
         m_texture = t.m_texture; t.m_texture = nullptr;
         m_captureTexture = t.m_captureTexture; t.m_captureTexture = nullptr;
         m_depthBuffer = t.m_depthBuffer; t.m_depthBuffer = nullptr;
+        m_captureDepth = t.m_captureDepth; t.m_captureDepth = nullptr;
         m_renderView = t.m_renderView; t.m_renderView = nullptr;
         m_depthView = t.m_depthView; t.m_depthView = nullptr;
     }
@@ -37,6 +39,7 @@ public:
         m_texture = t.m_texture; t.m_texture = nullptr;
         m_captureTexture = t.m_captureTexture; t.m_captureTexture = nullptr;
         m_depthBuffer = t.m_depthBuffer; t.m_depthBuffer = nullptr;
+        m_captureDepth = t.m_captureDepth; t.m_captureDepth = nullptr;
         m_renderView = t.m_renderView; t.m_renderView = nullptr;
         m_depthView = t.m_depthView; t.m_depthView = nullptr;
     }
@@ -47,12 +50,14 @@ public:
         SAFE_RELEASE(m_texture);
         SAFE_RELEASE(m_captureTexture);
         SAFE_RELEASE(m_depthBuffer);
+        SAFE_RELEASE(m_captureDepth);
 	}
     D3D11RenderTarget(GraphicsDevice &g, const UINT width, const UINT height)
     {
         m_texture = nullptr;
         m_captureTexture = nullptr;
         m_depthBuffer = nullptr;
+        m_captureDepth = nullptr;
         m_renderView = nullptr;
         m_depthView = nullptr;
         load(g, width, height);
@@ -87,6 +92,7 @@ private:
     ID3D11Texture2D *m_texture;
     ID3D11Texture2D *m_captureTexture;
     ID3D11Texture2D *m_depthBuffer;
+    ID3D11Texture2D *m_captureDepth;
 
     ID3D11RenderTargetView *m_renderView;
     ID3D11DepthStencilView *m_depthView;
