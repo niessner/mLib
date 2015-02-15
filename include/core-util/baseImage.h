@@ -560,7 +560,7 @@ public:
 
     T* end()
     {
-        return m_Data + m_Width * m_height;
+        return m_Data + m_Width * m_Height;
     }
 
     const T* begin() const
