@@ -12,6 +12,15 @@ void D3D11Texture::load(GraphicsDevice &g, const Bitmap &bmp)
     reset(g);
 }
 
+void D3D11Texture::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
+{
+    Bitmap bmp(image.getHeight(), image.getWidth(), [&](size_t row, size_t col) {
+        auto p = image(row, col);
+        return RGBColor(p.x, p.y, p.z, p.w);
+    });
+    load(g, bmp);
+}
+
 void D3D11Texture::release(GraphicsDevice &g)
 {
     SAFE_RELEASE(m_texture);

@@ -51,6 +51,14 @@ template <class T> Grid2<T>::Grid2(Grid2<T> &&G)
 	G.m_data = nullptr;
 }
 
+template <class T> Grid2<T>::Grid2(size_t dimX, size_t dimY, const std::function< T(size_t, size_t) > &fillFunction)
+{
+    m_dimX = dimX;
+    m_dimY = dimY;
+    m_data = new T[dimX * dimY];
+    fill(fillFunction);
+}
+
 template <class T> Grid2<T>::~Grid2()
 {
 	deleteMemory();
@@ -106,6 +114,15 @@ template <class T> void Grid2<T>::clear(const T &clearValue)
 {
 	const size_t totalEntries = m_dimX * m_dimY;
 	for(size_t i = 0; i < totalEntries; i++) m_data[i] = clearValue;
+}
+
+template <class T> void Grid2<T>::fill(const std::function< T(size_t, size_t) > &fillFunction)
+{
+    for (size_t rowIndex = 0; rowIndex < m_dimX; rowIndex++)
+        for (size_t colIndex = 0; colIndex < m_dimY; colIndex++)
+        {
+            m_data[rowIndex * m_dimY + colIndex] = fillFunction(rowIndex, colIndex);
+        }
 }
 
 template <class T> std::pair<size_t, size_t> Grid2<T>::maxIndex() const

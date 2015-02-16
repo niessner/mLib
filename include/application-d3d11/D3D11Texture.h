@@ -43,6 +43,7 @@ public:
         load(g, bmp);
     }
 	void load(GraphicsDevice &g, const Bitmap &bmp);
+    void load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image);
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
