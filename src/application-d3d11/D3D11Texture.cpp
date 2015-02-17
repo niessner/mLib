@@ -4,6 +4,7 @@ namespace ml
 
 void D3D11Texture::load(GraphicsDevice &g, const Bitmap &bmp)
 {
+    m_graphics = &g.castD3D11();
     release(g);
     
     g.castD3D11().registerAsset(this);
@@ -58,12 +59,11 @@ void D3D11Texture::reset(GraphicsDevice &g)
     context.GenerateMips(m_view);
 }
 
-void D3D11Texture::bind(GraphicsDevice &g) const
+void D3D11Texture::bind() const
 {
     if (m_view == nullptr)
         return;
-    auto &context = g.castD3D11().context();
-    context.PSSetShaderResources(0, 1, &m_view);
+    m_graphics->context().PSSetShaderResources(0, 1, &m_view);
 }
 
 }

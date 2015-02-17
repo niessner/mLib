@@ -11,6 +11,7 @@ public:
 	{
 		m_shader = nullptr;
 		m_blob = nullptr;
+        m_graphics = nullptr;
 	}
 	~D3D11PixelShader()
 	{
@@ -22,11 +23,12 @@ public:
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
 
-    void bind(GraphicsDevice &g) const;
+    void bind() const;
 
 	UINT64 hash64();
 
 private:
+    D3D11GraphicsDevice *m_graphics;
 	ID3D11PixelShader *m_shader;
 	ID3DBlob *m_blob;
 	std::string m_filename;

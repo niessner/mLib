@@ -4,6 +4,7 @@ namespace ml
 
 void D3D11RenderTarget::load(GraphicsDevice &g, const UINT width, const UINT height)
 {
+    m_graphics = &g.castD3D11();
     m_width = width;
     m_height = height;
     
@@ -97,12 +98,12 @@ void D3D11RenderTarget::reset(GraphicsDevice &g)
     D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_captureDepth));
 }
 
-void D3D11RenderTarget::bind(GraphicsDevice &g)
+void D3D11RenderTarget::bind()
 {
     if (m_texture == nullptr)
         return;
 
-    auto &context = g.castD3D11().context();
+    auto &context = m_graphics->context();
     context.OMSetRenderTargets(1, &m_renderView, m_depthView);
 
     D3D11_VIEWPORT viewport;
@@ -115,22 +116,22 @@ void D3D11RenderTarget::bind(GraphicsDevice &g)
     context.RSSetViewports(1, &viewport);
 }
 
-void D3D11RenderTarget::clear(GraphicsDevice &g, const ml::vec4f &clearColor)
+void D3D11RenderTarget::clear(const ml::vec4f &clearColor)
 {
-    auto &context = g.castD3D11().context();
+    auto &context = m_graphics->context();
     context.ClearRenderTargetView(m_renderView, clearColor.array);
     context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void D3D11RenderTarget::clearColorBuffer(GraphicsDevice &g, const ml::vec4f &clearColor)
+void D3D11RenderTarget::clearColorBuffer(const ml::vec4f &clearColor)
 {
-    auto &context = g.castD3D11().context();
+    auto &context = m_graphics->context();
     context.ClearRenderTargetView(m_renderView, clearColor.array);
 }
 
-void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result, const mat4f &perspectiveTransform)
+void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result, const mat4f &perspectiveTransform)
 {
-    captureDepthBuffer(g, result);
+    captureDepthBuffer(result);
 
     auto inv = perspectiveTransform.getInverse();
 
@@ -151,9 +152,9 @@ void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &res
     }
 }
 
-void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result)
+void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result)
 {
-    auto &context = g.castD3D11().context();
+    auto &context = m_graphics->context();
     context.CopyResource(m_captureDepth, m_depthBuffer);
 
     result.allocateToSize(m_height, m_width);
@@ -171,9 +172,9 @@ void D3D11RenderTarget::captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &res
     context.Unmap(m_captureDepth, subresource);
 }
 
-void D3D11RenderTarget::captureColorBuffer(GraphicsDevice &g, ColorImageR8G8B8A8 &result)
+void D3D11RenderTarget::captureColorBuffer(ColorImageR8G8B8A8 &result)
 {
-    auto &context = g.castD3D11().context();
+    auto &context = m_graphics->context();
     context.CopyResource(m_captureTexture, m_texture);
 
     result.allocateToSize(m_height, m_width);
@@ -191,9 +192,9 @@ void D3D11RenderTarget::captureColorBuffer(GraphicsDevice &g, ColorImageR8G8B8A8
     context.Unmap(m_captureTexture, subresource);
 }
 
-void D3D11RenderTarget::captureBitmap(GraphicsDevice &g, Bitmap &result)
+void D3D11RenderTarget::captureBitmap(Bitmap &result)
 {
-    auto &context = g.castD3D11().context();
+    auto &context = m_graphics->context();
     context.CopyResource(m_captureTexture, m_texture);
 
     result.allocate(m_height, m_width);

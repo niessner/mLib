@@ -17,6 +17,7 @@ public:
         m_captureDepth = nullptr;
         m_renderView = nullptr;
         m_depthView = nullptr;
+        m_graphics = nullptr;
 	}
     D3D11RenderTarget(D3D11RenderTarget &&t)
     {
@@ -25,6 +26,7 @@ public:
         //
         m_width = t.m_width;
         m_height = t.m_height;
+        m_graphics = t.m_graphics;
         m_texture = t.m_texture; t.m_texture = nullptr;
         m_captureTexture = t.m_captureTexture; t.m_captureTexture = nullptr;
         m_depthBuffer = t.m_depthBuffer; t.m_depthBuffer = nullptr;
@@ -36,6 +38,7 @@ public:
     {
         m_width = t.m_width;
         m_height = t.m_height;
+        m_graphics = t.m_graphics;
         m_texture = t.m_texture; t.m_texture = nullptr;
         m_captureTexture = t.m_captureTexture; t.m_captureTexture = nullptr;
         m_depthBuffer = t.m_depthBuffer; t.m_depthBuffer = nullptr;
@@ -71,18 +74,18 @@ public:
 
     // sets the render and depth buffers as the render target for the current device.
     // to return to the original graphics device render target, call bindRenderDepth() on the graphics device.
-    void bind(GraphicsDevice &g);
+    void bind();
 
     // clears the render and depth buffers
-    void clear(GraphicsDevice &g, const ml::vec4f &clearColor);
-    void clearColorBuffer(GraphicsDevice &g, const ml::vec4f &clearColor);
+    void clear(const ml::vec4f &clearColor);
+    void clearColorBuffer(const ml::vec4f &clearColor);
 
     // save the render target data as a bitmap
-    void captureBitmap(GraphicsDevice &g, Bitmap &result);
+    void captureBitmap(Bitmap &result);
     
-    void captureColorBuffer(GraphicsDevice &g, ColorImageR8G8B8A8 &result);
-    void captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result);
-    void captureDepthBuffer(GraphicsDevice &g, ColorImageR32 &result, const mat4f &perspectiveTransform);
+    void captureColorBuffer(ColorImageR8G8B8A8 &result);
+    void captureDepthBuffer(ColorImageR32 &result);
+    void captureDepthBuffer(ColorImageR32 &result, const mat4f &perspectiveTransform);
 
     GraphicsAssetType type() const
     {
@@ -90,6 +93,8 @@ public:
     }
 
 private:
+    D3D11GraphicsDevice *m_graphics;
+
     UINT m_width, m_height;
     ID3D11Texture2D *m_texture;
     ID3D11Texture2D *m_captureTexture;

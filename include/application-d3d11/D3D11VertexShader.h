@@ -12,6 +12,7 @@ public:
 		m_shader = nullptr;
 		m_blob = nullptr;
 		m_standardLayout = nullptr;
+        m_graphics = nullptr;
 	}
 	~D3D11VertexShader()
 	{
@@ -24,9 +25,10 @@ public:
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
 
-    void bind(GraphicsDevice &g) const;
+    void bind() const;
 
 private:
+    D3D11GraphicsDevice *m_graphics;
 	ID3D11VertexShader *m_shader;
 	ID3DBlob *m_blob;
 	std::string m_filename;

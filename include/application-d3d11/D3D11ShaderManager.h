@@ -31,8 +31,8 @@ public:
     void bindShaders(const std::string &shaderName) const
     {
         auto &shaders = getShaders(shaderName);
-        shaders.ps.bind(*m_graphics);
-        shaders.vs.bind(*m_graphics);
+        shaders.ps.bind();
+        shaders.vs.bind();
     }
 
 private:

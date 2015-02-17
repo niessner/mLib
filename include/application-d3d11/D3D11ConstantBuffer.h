@@ -10,6 +10,7 @@ class D3D11ConstantBuffer : public GraphicsAsset
 public:
 	D3D11ConstantBuffer()
 	{
+        m_graphics = nullptr;
 		m_buffer = nullptr;
 	}
 	~D3D11ConstantBuffer()
@@ -18,6 +19,7 @@ public:
 	}
 	void init(GraphicsDevice &g)
 	{
+        m_graphics = &g.castD3D11();
 		reset(g);
 	}
 
@@ -39,29 +41,30 @@ public:
 		D3D_VALIDATE(g.castD3D11().device().CreateBuffer( &desc, nullptr, &m_buffer ));
 	}
 
-    void updateAndBind(GraphicsDevice &g, const T &data, UINT constantBufferIndex)
+    void updateAndBind(const T &data, UINT constantBufferIndex)
     {
-        update(g, data);
-        bindVertexShader(g, constantBufferIndex);
-        bindPixelShader(g, constantBufferIndex);
+        update(data);
+        bindVertexShader(constantBufferIndex);
+        bindPixelShader(constantBufferIndex);
     }
 
-	void update(GraphicsDevice &g, const T &data)
+	void update(const T &data)
 	{
-		g.castD3D11().context().UpdateSubresource( m_buffer, 0, nullptr, &data, 0, 0 );
+        m_graphics->context().UpdateSubresource(m_buffer, 0, nullptr, &data, 0, 0);
 	}
 
-	void bindVertexShader(GraphicsDevice &g, UINT constantBufferIndex)
+	void bindVertexShader(UINT constantBufferIndex)
 	{
-		g.castD3D11().context().VSSetConstantBuffers( constantBufferIndex, 1, &m_buffer );
+        m_graphics->context().VSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);
 	}
 
-	void bindPixelShader(GraphicsDevice &g, UINT constantBufferIndex)
+	void bindPixelShader(UINT constantBufferIndex)
 	{
-		g.castD3D11().context().PSSetConstantBuffers( constantBufferIndex, 1, &m_buffer );
+        m_graphics->context().PSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);
 	}
 
 private:
+    D3D11GraphicsDevice *m_graphics;
 	ID3D11Buffer *m_buffer;
 };
 

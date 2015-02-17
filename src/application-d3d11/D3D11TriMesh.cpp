@@ -72,10 +72,10 @@ void ml::D3D11TriMesh::initIB(GraphicsDevice &g)
 	D3D_VALIDATE(device.CreateBuffer( &bufferDesc, &data, &m_indexBuffer ));
 }
 
-void ml::D3D11TriMesh::render(GraphicsDevice &g) const
+void ml::D3D11TriMesh::render() const
 {
     if (m_triMesh.getIndices().size() == 0) return;
-	auto &context = g.castD3D11().context();
+	auto &context = m_device->context();
 
 	context.IASetIndexBuffer( m_indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
 

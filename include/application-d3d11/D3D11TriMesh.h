@@ -62,7 +62,7 @@ public:
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
 
-	void render(GraphicsDevice &g) const;
+	void render() const;
 
 	void updateColors(GraphicsDevice &g, const std::vector<vec4f> &vertexColors);
 

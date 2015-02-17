@@ -1,6 +1,7 @@
 
 void ml::D3D11VertexShader::load(GraphicsDevice &g, const std::string &filename)
 {
+    m_graphics = &g.castD3D11();
     if (!util::fileExists(filename))
     {
         std::cout << "file not found: " << filename << std::endl;
@@ -35,9 +36,9 @@ void ml::D3D11VertexShader::reset(GraphicsDevice &g)
 	device.CreateInputLayout( D3D11TriMesh::layout, D3D11TriMesh::layoutElementCount, m_blob->GetBufferPointer(), m_blob->GetBufferSize(), &m_standardLayout );
 }
 
-void ml::D3D11VertexShader::bind(GraphicsDevice &g) const
+void ml::D3D11VertexShader::bind() const
 {
-	auto &context = g.castD3D11().context();
+	auto &context = m_graphics->context();
 	context.VSSetShader( m_shader, nullptr, 0 );
 	context.IASetInputLayout( m_standardLayout );
 }
