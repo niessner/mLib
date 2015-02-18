@@ -1,5 +1,5 @@
 
-void ml::D3D11PixelShader::load(GraphicsDevice &g, const std::string &filename)
+void ml::D3D11PixelShader::load(GraphicsDevice &g, const std::string &filename, const std::string& entryPoint, const std::string& shaderModel)
 {
     m_graphics = &g.castD3D11();
 
@@ -9,7 +9,7 @@ void ml::D3D11PixelShader::load(GraphicsDevice &g, const std::string &filename)
 	m_filename = filename;
 	g.castD3D11().registerAsset(this);
 
-	m_blob = D3D11Utility::CompileShader(m_filename, "pixelShaderMain", "ps_4_0");
+	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel);
 	MLIB_ASSERT_STR(m_blob != nullptr, "CompileShader failed");
 
 	reset(g);

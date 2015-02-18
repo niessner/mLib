@@ -20,7 +20,7 @@ public:
 		SAFE_RELEASE(m_blob);
 		SAFE_RELEASE(m_standardLayout);
 	}
-	void load(GraphicsDevice &g, const std::string &filename);
+  void load(GraphicsDevice &g, const std::string &filename, const std::string& entryPoint = "vertexShaderMain", const std::string& shaderModel = "vs_4_0");
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);

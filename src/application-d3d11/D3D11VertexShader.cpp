@@ -1,5 +1,5 @@
 
-void ml::D3D11VertexShader::load(GraphicsDevice &g, const std::string &filename)
+void ml::D3D11VertexShader::load(GraphicsDevice &g, const std::string &filename, const std::string& entryPoint, const std::string& shaderModel)
 {
     m_graphics = &g.castD3D11();
     if (!util::fileExists(filename))
@@ -13,7 +13,7 @@ void ml::D3D11VertexShader::load(GraphicsDevice &g, const std::string &filename)
 	m_filename = filename;
 	g.castD3D11().registerAsset(this);
 
-	m_blob = D3D11Utility::CompileShader(m_filename, "vertexShaderMain", "vs_4_0");
+	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel);
 	MLIB_ASSERT_STR(m_blob != nullptr, "CompileShader failed");
 
 	reset(g);

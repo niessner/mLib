@@ -20,7 +20,14 @@ public:
 
     void init(GraphicsDevice &g);
 
-    void registerShader(const std::string &filename, const std::string &shaderName);
+    //! loads a vertex/pixel shader pair
+    void registerShader(
+      const std::string &filename, 
+      const std::string &shaderName, 
+      const std::string& entryPointVS = "vertexShaderMain", 
+      const std::string& shaderModelVS = "vs_4_0",
+      const std::string& entryPointPS = "pixelShaderMain",
+      const std::string& shaderModelPS = "ps_4_0");
 
     const D3D11ShaderPair& getShaders(const std::string &shaderName) const
     {

@@ -18,7 +18,7 @@ public:
 		SAFE_RELEASE(m_shader);
 		SAFE_RELEASE(m_blob);
 	}
-	void load(GraphicsDevice &g, const std::string &filename);
+  void load(GraphicsDevice &g, const std::string &filename, const std::string& entryPoint = "pixelShaderMain", const std::string& shaderModel = "ps_4_0");
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
