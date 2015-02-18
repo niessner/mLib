@@ -12,7 +12,7 @@ public:
 
 	D3D11TriMesh()
 	{
-        m_device = nullptr;
+        m_graphics = nullptr;
 		m_vertexBuffer = nullptr;
 		m_indexBuffer = nullptr;
 	}
@@ -48,7 +48,7 @@ public:
 	template<class T>
 	void load(GraphicsDevice &g, const TriMesh<T>& triMesh)
     {
-        m_device = &g.castD3D11();
+        m_graphics = &g.castD3D11();
         m_triMesh = triMesh;
 		reset(g);
 	}
@@ -91,11 +91,11 @@ public:
     {
         m_vertexBuffer = nullptr;
         m_indexBuffer = nullptr;
-        load(*t.m_device, t);
+        load(*t.m_graphics, t);
     }
     D3D11TriMesh(D3D11TriMesh &&t)
     {
-        m_device = t.m_device; t.m_device = nullptr;
+        m_graphics = t.m_graphics; t.m_graphics = nullptr;
         m_vertexBuffer = t.m_vertexBuffer; t.m_vertexBuffer = nullptr;
         m_indexBuffer = t.m_indexBuffer; t.m_indexBuffer = nullptr;
         m_triMesh = std::move(t.m_triMesh);
@@ -105,12 +105,12 @@ public:
     {
         m_vertexBuffer = nullptr;
         m_indexBuffer = nullptr;
-        load(*t.m_device, t);
+        load(*t.m_graphics, t);
     }
 
     void operator = (D3D11TriMesh&& t)
     {
-        m_device = t.m_device; t.m_device = nullptr;
+        m_graphics = t.m_graphics; t.m_graphics = nullptr;
         m_vertexBuffer = t.m_vertexBuffer; t.m_vertexBuffer = nullptr;
         m_indexBuffer = t.m_indexBuffer; t.m_indexBuffer = nullptr;
         m_triMesh = std::move(t.m_triMesh);
@@ -120,7 +120,7 @@ private:
     void initVB(GraphicsDevice &g);
 	void initIB(GraphicsDevice &g);
 
-    D3D11GraphicsDevice *m_device;
+    D3D11GraphicsDevice *m_graphics;
 
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;

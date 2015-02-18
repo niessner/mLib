@@ -75,7 +75,7 @@ void ml::D3D11TriMesh::initIB(GraphicsDevice &g)
 void ml::D3D11TriMesh::render() const
 {
     if (m_triMesh.getIndices().size() == 0) return;
-	auto &context = m_device->context();
+    auto &context = m_graphics->context();
 
 	context.IASetIndexBuffer( m_indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
 

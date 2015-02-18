@@ -8,15 +8,25 @@
 #include "application-base/applicationWin32.h"
 
 //
+// D3D11 headers
+//
+#pragma warning ( disable : 4005)
+
+#include <d3d11.h>
+#include <d3dx11.h>
+#include <d3dcompiler.h>
+
+//
 // application-d3d11 headers
 //
-#include "application-d3d11/D3D11GraphicsDevice.h"
-#include "application-d3d11/D3D11Utility.h"
 #include "application-d3d11/D3D11VertexShader.h"
 #include "application-d3d11/D3D11PixelShader.h"
-#include "application-d3d11/D3D11ConstantBuffer.h"
 #include "application-d3d11/D3D11ShaderManager.h"
+#include "application-d3d11/D3D11GraphicsDevice.h"
+#include "application-d3d11/D3D11Utility.h"
+#include "application-d3d11/D3D11ConstantBuffer.h"
 #include "application-d3d11/D3D11TriMesh.h"
 #include "application-d3d11/D3D11Texture.h"
 #include "application-d3d11/D3D11Texture3D.h"
 #include "application-d3d11/D3D11RenderTarget.h"
+#include "application-d3d11/D3D11Canvas2D.h"

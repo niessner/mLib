@@ -4,6 +4,9 @@
 
 namespace ml {
 
+//
+// TODO: rename this to D3D11Texture2D
+//
 class D3D11Texture : public GraphicsAsset
 {
 public:
