@@ -259,6 +259,8 @@ public:
 		return point4d<T>(x,y,z,xx);
 	}
 
+	static const point6d<T> origin;
+
 	union {
 		struct {
 			T x,y,z, xx, yy, zz;	// standard names for components
@@ -316,6 +318,9 @@ typedef point6d<unsigned int> vec6ui;
 typedef point6d<unsigned char> vec6uc;
 typedef point6d<UINT64> vec6ul;
 typedef point6d<INT64> vec6l;
+
+template<> const vec6d vec6d::origin(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+template<> const vec6f vec6f::origin(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
 }  // namespace ml
 

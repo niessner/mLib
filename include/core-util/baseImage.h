@@ -771,7 +771,7 @@ public:
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 	}
 
-	ColorImageRGB(const DepthImage& depthImage) : BaseImage(depthImage.getHeight(), depthImage.getWidth()) {
+	ColorImageRGB(const DepthImage& depthImage, bool debugPrint = true) : BaseImage(depthImage.getHeight(), depthImage.getWidth()) {
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 		const float* data = depthImage.getDataPointer();
@@ -783,9 +783,10 @@ public:
 				if (data[i] < minDepth) minDepth = data[i];
 			}
 		}
-		std::cout << "max Depth " << maxDepth << std::endl;
-		std::cout << "min Depth " << minDepth << std::endl;
-	
+		if (debugPrint) {
+			std::cout << "max Depth " << maxDepth << std::endl;
+			std::cout << "min Depth " << minDepth << std::endl;
+		}
 		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 			if (data[i] != depthImage.getInvalidValue()) {
 				m_Data[i] = BaseImageHelper::convertDepthToRGB(data[i], minDepth, maxDepth);
