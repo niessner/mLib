@@ -333,7 +333,12 @@ namespace ml {
 		}
 
 		void transform(const Matrix4x4<FloatType>& m) {
-			for (Vertex<FloatType>& v : m_Vertices) { v.position = m * v.position; }
+      Matrix4x4<FloatType> invTrans = m.getInverse().getTranspose();
+			for (Vertex<FloatType>& v : m_Vertices) {
+        v.position = m * v.position;
+        v.normal = invTrans.transformNormalAffine(v.normal);
+        v.normal.normalizeIfNonzero();
+      }
 		}
 
 		void scale(FloatType s) { scale(point3d<FloatType>(s, s, s)); }

@@ -14,6 +14,7 @@ namespace ml {
 		m_bHasColors = meshData.m_Colors.size() > 0;
 		m_bHasTexCoords = meshData.m_TextureCoords.size() > 0;
 
+    // Initialize positions (normals, colors and texcoords to be initialized later)
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i].position = meshData.m_Vertices[i];
 		}
@@ -28,35 +29,39 @@ namespace ml {
 				if (bFaceHasNormals || bFaceHasTexCoords || bFaceHasColors) {
 					vec3ui coords = vec3ui(0,0,0);
 					for (unsigned int j = 0; j < 3; j++) {
+            Vertex<FloatType>& vert = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
 						bool vertexSplit = false;
 						if (bFaceHasNormals) { //split if normal is different than the one found before
 							const point3d<FloatType>& n = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
-							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal != point3d<FloatType>::origin && 
-								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal != n)	vertexSplit = true;
+							if (vert.normal != point3d<FloatType>::origin && vert.normal != n) {
+                vertexSplit = true;
+              }
 						}
 						if (bFaceHasTexCoords) { //split if texcoord is different than the one found before
 							const point2d<FloatType>& t = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
-							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord != point2d<FloatType>::origin && 
-								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord != t) vertexSplit = true;
+							if (vert.texCoord != point2d<FloatType>::origin && vert.texCoord != t) {
+                vertexSplit = true;
+              }
 						}
 						if (bFaceHasColors) { //split if texcoord is different than the one found before
 							const point4d<FloatType>& c = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
-							if (m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != point4d<FloatType>::origin && 
-								m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color != c) vertexSplit = true;
+							if (vert.color != point4d<FloatType>::origin && vert.color != c) {
+                vertexSplit = true;
+              }
 						}
 
 						if (vertexSplit) {
 							MLIB_WARNING("vertex split untested");
-							Vertex<FloatType> v = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
+							Vertex<FloatType> v = vert;  // copy of vert for splitting out
 							if (bFaceHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (bFaceHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
 							if (bFaceHasColors)		v.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							m_Vertices.push_back(v);
 							coords[j] = (unsigned int)m_Vertices.size() - 1;
 						} else {
-							if (bFaceHasNormals)		m_Vertices[meshData.getFaceIndicesVertices()[i][j]].normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
-							if (bFaceHasTexCoords)	m_Vertices[meshData.getFaceIndicesVertices()[i][j]].texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
-							if (bFaceHasColors)		m_Vertices[meshData.getFaceIndicesVertices()[i][j]].color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
+							if (bFaceHasNormals)		vert.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (bFaceHasTexCoords)	vert.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
+							if (bFaceHasColors)		  vert.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							coords[j] = meshData.getFaceIndicesVertices()[i][j];
 						}
 					}

@@ -209,6 +209,16 @@ public:
 		array[2] *= val;
 	}
 
+  //! If this point3d is non-zero, then normalize it, else return
+	inline void normalizeIfNonzero() {
+		const T l = length();
+    if (l == static_cast<T>(0)) { return; }  // TODO: Better to check against epsilon tolerance
+    const T val = static_cast<T>(1) / l;
+		array[0] *= val;
+		array[1] *= val;
+		array[2] *= val;
+	}
+
 	inline point3d<T> getNormalized() const {
 		T val = (T)1.0 / length();
 		return point3d<T>(array[0] * val, array[1] * val, array[2] * val);
