@@ -4,35 +4,40 @@
 
 namespace ml {
 
-class D3D11PixelShader : public GraphicsAsset
-{
-public:
-	D3D11PixelShader()
+	class D3D11PixelShader : public GraphicsAsset
 	{
-		m_shader = nullptr;
-		m_blob = nullptr;
-        m_graphics = nullptr;
-	}
-	~D3D11PixelShader()
-	{
-		SAFE_RELEASE(m_shader);
-		SAFE_RELEASE(m_blob);
-	}
-  void load(GraphicsDevice &g, const std::string &filename, const std::string& entryPoint = "pixelShaderMain", const std::string& shaderModel = "ps_4_0");
+	public:
+		D3D11PixelShader()
+		{
+			m_shader = nullptr;
+			m_blob = nullptr;
+			m_graphics = nullptr;
+		}
+		~D3D11PixelShader()
+		{
+			SAFE_RELEASE(m_shader);
+			SAFE_RELEASE(m_blob);
+		}
+		void load(
+			GraphicsDevice &g, 
+			const std::string &filename, 
+			const std::string& entryPoint = "pixelShaderMain", 
+			const std::string& shaderModel = "ps_4_0",
+			const std::vector<std::pair<std::string, std::string>>& shaderMacros = std::vector<std::pair<std::string, std::string>>());
 
-	void release(GraphicsDevice &g);
-	void reset(GraphicsDevice &g);
+		void release(GraphicsDevice &g);
+		void reset(GraphicsDevice &g);
 
-    void bind() const;
+		void bind() const;
 
-	UINT64 hash64();
+		UINT64 hash64();
 
-private:
-    D3D11GraphicsDevice *m_graphics;
-	ID3D11PixelShader *m_shader;
-	ID3DBlob *m_blob;
-	std::string m_filename;
-};
+	private:
+		D3D11GraphicsDevice *m_graphics;
+		ID3D11PixelShader *m_shader;
+		ID3DBlob *m_blob;
+		std::string m_filename;
+	};
 
 }  // namespace ml
 

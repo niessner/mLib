@@ -1,19 +1,24 @@
 
-void ml::D3D11VertexShader::load(GraphicsDevice &g, const std::string &filename, const std::string& entryPoint, const std::string& shaderModel)
+void ml::D3D11VertexShader::load(
+	GraphicsDevice &g, 
+	const std::string &filename, 
+	const std::string& entryPoint, 
+	const std::string& shaderModel,
+	const std::vector<std::pair<std::string, std::string>>& shaderMacros)
 {
-    m_graphics = &g.castD3D11();
-    if (!util::fileExists(filename))
-    {
-        std::cout << "file not found: " << filename << std::endl;
-        return;
-    }
+	m_graphics = &g.castD3D11();
+	if (!util::fileExists(filename))
+	{
+		std::cout << "file not found: " << filename << std::endl;
+		return;
+	}
 	release(g);
 	SAFE_RELEASE(m_blob);
 
 	m_filename = filename;
 	g.castD3D11().registerAsset(this);
 
-	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel);
+	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel, shaderMacros);
 	MLIB_ASSERT_STR(m_blob != nullptr, "CompileShader failed");
 
 	reset(g);
@@ -30,15 +35,15 @@ void ml::D3D11VertexShader::reset(GraphicsDevice &g)
 	release(g);
 
 	auto &device = g.castD3D11().device();
-	
+
 	D3D_VALIDATE(device.CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &m_shader));
 
-	device.CreateInputLayout( D3D11TriMesh::layout, D3D11TriMesh::layoutElementCount, m_blob->GetBufferPointer(), m_blob->GetBufferSize(), &m_standardLayout );
+	device.CreateInputLayout(D3D11TriMesh::layout, D3D11TriMesh::layoutElementCount, m_blob->GetBufferPointer(), m_blob->GetBufferSize(), &m_standardLayout);
 }
 
 void ml::D3D11VertexShader::bind() const
 {
 	auto &context = m_graphics->context();
-	context.VSSetShader( m_shader, nullptr, 0 );
-	context.IASetInputLayout( m_standardLayout );
+	context.VSSetShader(m_shader, nullptr, 0);
+	context.IASetInputLayout(m_standardLayout);
 }

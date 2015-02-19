@@ -12,13 +12,15 @@ void D3D11ShaderManager::registerShader(
   const std::string& entryPointVS, 
   const std::string& shaderModelVS, 
   const std::string& entryPointPS,
-  const std::string& shaderModelPS)
+  const std::string& shaderModelPS,
+  const std::vector<std::pair<std::string, std::string>>& shaderMacros
+  )
 {
     MLIB_ASSERT_STR(m_graphics != NULL, "shader manager not initialized");
 
     auto &shaders = m_shaders[shaderName];
-    shaders.vs.load(*m_graphics, filename, entryPointVS, shaderModelVS);
-    shaders.ps.load(*m_graphics, filename, entryPointPS, shaderModelPS);
+    shaders.vs.load(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
+    shaders.ps.load(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
 }
 
 }
