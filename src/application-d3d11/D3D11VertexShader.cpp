@@ -1,8 +1,8 @@
 
 void ml::D3D11VertexShader::load(
-	GraphicsDevice &g, 
-	const std::string &filename, 
-	const std::string& entryPoint, 
+	GraphicsDevice &g,
+	const std::string &filename,
+	const std::string& entryPoint,
 	const std::string& shaderModel,
 	const std::vector<std::pair<std::string, std::string>>& shaderMacros)
 {
