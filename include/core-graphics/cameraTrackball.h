@@ -40,6 +40,16 @@ public:
 		m_modelTranslation = t;
 		update();
 	}
+	void setModelRotation(const Matrix4x4<FloatType>& r) {
+		m_modelRotation = r;
+		update();
+	}
+	void setModel(const Matrix4x4<FloatType>& t) {
+		m_modelRotation.setIdentity();
+		m_modelRotation.setRotation(t.getRotation());
+		m_modelTranslation = t.getTranslation();
+		update();
+	}
 
 	const point3d<FloatType>& getModelTranslation() const { return m_modelTranslation; }
 	const Matrix4x4<FloatType>& getModelRotation() const { return m_modelRotation; }
