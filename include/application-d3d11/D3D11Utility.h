@@ -7,7 +7,11 @@ namespace ml {
 class D3D11Utility
 {
 public:
-	static ID3DBlob* CompileShader(const std::string &filename, const std::string &entryPoint, const std::string &shaderModel);
+	static ID3DBlob* CompileShader(
+    const std::string &filename, 
+    const std::string &entryPoint, 
+    const std::string &shaderModel, 
+    const std::vector<std::pair<std::string, std::string>>& macros = std::vector<std::pair<std::string, std::string>>());
 };
 
 }  // namespace ml
