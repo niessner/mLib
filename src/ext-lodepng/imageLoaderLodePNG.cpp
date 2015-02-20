@@ -26,7 +26,7 @@ Bitmap LodePNG::load(const std::string &filename)
 
 void LodePNG::save(const Bitmap &bmp, const std::string &filename)
 {
-	const UINT pixelCount = bmp.rows() * bmp.cols();
+	const UINT pixelCount = bmp.size();
 	
 	//
 	// images should be saved with no transparency, which unfortunately requires us to make a copy of the bitmap data.
@@ -36,7 +36,7 @@ void LodePNG::save(const Bitmap &bmp, const std::string &filename)
 	for(UINT i = 0; i < pixelCount; i++)
 		copy[i].a = 255;
 
-	lodepng::encode(filename, (const BYTE *)copy, bmp.cols(), bmp.rows(), LodePNGColorType::LCT_RGBA);
+	lodepng::encode(filename, (const BYTE *)copy, bmp.dimX(), bmp.dimY(), LodePNGColorType::LCT_RGBA);
 	delete[] copy;
 }
 

@@ -35,9 +35,7 @@ template <class T> Grid2<T>::Grid2(const Grid2<T> &G)
 	const size_t totalEntries = m_dimX * m_dimY;
 	m_data = new T[totalEntries];
 	for(size_t i = 0; i < totalEntries; i++)
-	{
 		m_data[i] = G.m_data[i];
-	}
 }
 
 template <class T> Grid2<T>::Grid2(Grid2<T> &&G)
@@ -83,7 +81,8 @@ template <class T> Grid2<T>& Grid2<T>::operator = (const Grid2<T> &G)
 
 	const size_t totalEntries = m_dimX * m_dimY;
 	m_data = new T[totalEntries];
-	for(size_t i = 0; i < totalEntries; i++) m_data[i] = G.m_data[i];
+	for(size_t i = 0; i < totalEntries; i++)
+        m_data[i] = G.m_data[i];
 
 	return *this;
 }
@@ -113,15 +112,16 @@ template <class T> void Grid2<T>::allocate(size_t dimX, size_t dimY, const T &cl
 template <class T> void Grid2<T>::clear(const T &clearValue)
 {
 	const size_t totalEntries = m_dimX * m_dimY;
-	for(size_t i = 0; i < totalEntries; i++) m_data[i] = clearValue;
+	for(size_t i = 0; i < totalEntries; i++)
+        m_data[i] = clearValue;
 }
 
 template <class T> void Grid2<T>::fill(const std::function< T(size_t, size_t) > &fillFunction)
 {
-    for (size_t rowIndex = 0; rowIndex < m_dimX; rowIndex++)
-        for (size_t colIndex = 0; colIndex < m_dimY; colIndex++)
+    for (size_t y = 0; y < m_dimY; y++)
+        for (size_t x = 0; x < m_dimX; x++)
         {
-            m_data[rowIndex * m_dimY + colIndex] = fillFunction(rowIndex, colIndex);
+            m_data[y * m_dimX + x] = fillFunction(x, y);
         }
 }
 
@@ -129,10 +129,10 @@ template <class T> std::pair<size_t, size_t> Grid2<T>::maxIndex() const
 {
 	std::pair<size_t, size_t> maxIndex(0, 0);
 	const T *maxValue = m_data;
-	for(size_t rowIndex = 0; rowIndex < m_dimX; rowIndex++)
-		for(size_t colIndex = 0; colIndex < m_dimY; colIndex++)
+    for (size_t y = 0; y < m_dimY; y++)
+        for (size_t x = 0; x < m_dimX; x++)
 		{
-			const T *curValue = &m_data[rowIndex * m_dimY + colIndex];
+			const T *curValue = &m_data[y * m_dimX + x];
 			if(*curValue > *maxValue)
 			{
 				maxIndex = std::make_pair(rowIndex, colIndex);
@@ -152,18 +152,16 @@ template <class T> std::pair<size_t, size_t> Grid2<T>::minIndex() const
 {
 	std::pair<size_t, size_t> minIndex(0, 0);
 	const T *minValue = &m_data[0];
-	for(size_t rowIndex = 0; rowIndex < m_dimX; rowIndex++)
-	{
-		for(size_t colIndex = 0; colIndex < m_dimY; colIndex++)
+    for (size_t y = 0; y < m_dimY; y++)
+        for (size_t x = 0; x < m_dimX; x++)
 		{
-			const T *curValue = &m_data[rowIndex * m_dimY + colIndex];
+			const T *curValue = &m_data[y * m_dimX + x];
 			if(*curValue < *minValue)
 			{
 				minIndex = std::make_pair(rowIndex, colIndex);
 				minValue = curValue;
 			}
 		}
-	}
 	return minIndex;
 }
 

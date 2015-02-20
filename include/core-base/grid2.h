@@ -4,10 +4,150 @@
 
 namespace ml
 {
-
     template <class T> class Grid2
     {
     public:
+        //
+        // Grid2 iterators
+        //
+
+        struct iteratorEntry
+        {
+            iteratorEntry(size_t _x, size_t _y, T &_value)
+                : x(_x), y(_y), value(_value)
+            {
+
+            }
+            size_t x;
+            size_t y;
+            T &value;
+        };
+
+        struct constIteratorEntry
+        {
+            constIteratorEntry(size_t _x, size_t _y, const T &_value)
+                : x(_x), y(_y), value(_value)
+            {
+
+            }
+            size_t x;
+            size_t y;
+            const T &value;
+        };
+
+
+        struct iterator
+        {
+            iterator(Grid2<T> *_grid)
+            {
+                x = 0;
+                y = 0;
+                grid = _grid;
+            }
+            iterator(const iterator &i)
+            {
+                x = i.x;
+                y = i.x;
+                grid = i.grid;
+            }
+            ~iterator() {}
+            iterator& operator=(const iterator &i)
+            {
+                x = i.x;
+                y = i.y;
+                grid = i.grid;
+                return *this;
+            }
+            iterator& operator++()
+            {
+                x++;
+                if (x == grid->dimX())
+                {
+                    x = 0;
+                    y++;
+                    if (y == grid->dimY())
+                    {
+                        grid = NULL;
+                    }
+                }
+                return *this;
+            }
+            iteratorEntry operator* () const
+            {
+                return iteratorEntry(x, y, (*grid)(x, y));
+            }
+
+            bool operator != (const iterator &i) const
+            {
+                return i.grid != grid;
+            }
+            
+            friend void swap(iterator &a, iterator &b);
+
+            size_t x, y;
+
+        private:
+            Grid2<T> *grid;
+        };
+
+        struct constIterator
+        {
+            constIterator(const Grid2<T> *_grid)
+            {
+                x = 0;
+                y = 0;
+                grid = _grid;
+            }
+            constIterator(const constIterator &i)
+            {
+                x = i.x;
+                y = i.x;
+                grid = i.grid;
+            }
+            ~constIterator() {}
+            constIterator& operator=(const constIterator &i)
+            {
+                x = i.x;
+                y = i.y;
+                grid = i.grid;
+                return *this;
+            }
+            constIterator& operator++()
+            {
+                x++;
+                if (x == grid->dimX())
+                {
+                    x = 0;
+                    y++;
+                    if (y == grid->dimY())
+                    {
+                        grid = NULL;
+                    }
+                }
+                return *this;
+            }
+            constIteratorEntry operator* () const
+            {
+                return constIteratorEntry(x, y, (*grid)(x, y));
+            }
+
+            bool operator != (const constIterator &i) const
+            {
+                return i.grid != grid;
+            }
+
+            friend void swap(const constIterator &a, const constIterator &b);
+
+            size_t x, y;
+
+        private:
+            const Grid2<T> *grid;
+        };
+
+        //
+        // Grid2 implementation
+        //
+
         Grid2();
         Grid2(size_t dimX, size_t dimY);
         Grid2(size_t dimX, size_t dimY, const T &clearValue);
@@ -28,55 +168,63 @@ namespace ml
         void allocate(size_t dimX, size_t dimY, const T &clearValue);
         void fill(const std::function< T(size_t row, size_t col) > &fillFunction);
 
-        inline Grid2<T>& operator += (const Grid2<T> &right)
+        inline Grid2<T>& operator += (const Grid2<T> &value)
         {
             MLIB_ASSERT_STR(m_dimX == right.m_dimX && m_dimY == right.m_dimY, "grid dimensions must be equal");
-            for (size_t r = 0; r < m_dimX; r++)
-                for (size_t c = 0; c < m_dimY; c++)
-                    m_data[r * m_dimY + c] += right(r, c);
-            return *this;
-        }
-        inline Grid2<T>& operator *= (T right)
-        {
-            for (size_t r = 0; r < m_dimX; r++)
-                for (size_t c = 0; c < m_dimY; c++)
-                    m_data[r * m_dimY + c] *= right;
+            for (size_t y = 0; y < m_dimY; y++)
+                for (size_t x = 0; x < m_dimX; x++)
+                    m_data[y * m_dimX + x] += value(x, y);
             return *this;
         }
 
-        inline Grid2<T> operator * (T x)
+        inline Grid2<T>& operator *= (T value)
+        {
+            for (size_t y = 0; y < m_dimY; y++)
+                for (size_t x = 0; x < m_dimX; x++)
+                    m_data[y * m_dimX + x] *= value;
+            return *this;
+        }
+
+        inline Grid2<T> operator * (T value)
         {
             Grid2<T> result(m_dimX, m_dimY);
-            for (size_t r = 0; r < m_dimX; r++)
-                for (size_t c = 0; c < m_dimY; c++)
-                    result(r, c) = m_data[r * m_dimY + c] * x;
+            for (size_t y = 0; y < m_dimY; y++)
+                for (size_t x = 0; x < m_dimX; x++)
+                    result(x, y) = m_data[y * m_dimX + x] * value;
             return result;
         }
 
         //
         // Accessors
         //
-        inline T& operator() (size_t row, size_t col)
+        inline T& operator() (size_t x, size_t y)
         {
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-            MLIB_ASSERT_STR( (row < m_dimX) && (col < m_dimY), "Out-of-bounds grid access");
+            MLIB_ASSERT_STR( (x < m_dimX) && (y < m_dimY), "Out-of-bounds grid access");
 #endif
-            return m_data[row * m_dimY + col];
+            return m_data[y * m_dimX + x];
         }
-        inline const T& operator() (size_t row, size_t col) const
+        inline const T& operator() (size_t x, size_t y) const
         {
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-            MLIB_ASSERT_STR( (row < m_dimX) && (col < m_dimY), "Out-of-bounds grid access");
+            MLIB_ASSERT_STR( (x < m_dimX) && (y < m_dimY), "Out-of-bounds grid access");
 #endif
-            return m_data[row * m_dimY + col];
+            return m_data[y * m_dimX + x];
         }
 
-        inline size_t dimX() const {
+        inline size_t dimX() const
+        {
             return m_dimX;
         }
 
-        inline size_t dimY() const {
+        inline size_t dimY() const
+        {
             return m_dimY;
+        }
+
+        inline size_t size() const
+        {
+            return m_dimX * m_dimY;
         }
 
         inline std::pair<size_t, size_t> dimensions() const
@@ -92,10 +240,12 @@ namespace ml
         {
             return (m_dimX == m_dimY);
         }
+
         inline T* ptr()
         {
             return m_data;
         }
+
         inline const T* ptr() const
         {
             return m_data;
@@ -104,39 +254,39 @@ namespace ml
         //
         // Query
         //
-        inline bool isValidCoordinate(int row, int col) const
+        inline bool isValidCoordinate(int x, int y) const
         {
-            return (row >= 0 && row < int(m_dimX) && col >= 0 && col < int(m_dimY));
+            return (x >= 0 && x < int(m_dimX) && y >= 0 && y < int(m_dimY));
         }
 
         void setRow(size_t row, const std::vector<T> &values)
         {
-            for (size_t col = 0; col < m_dimY; col++) m_data[row * m_dimY + col] = values[col];
+            for (size_t col = 0; col < m_dimY; col++) m_data[row * m_dimX + col] = values[col];
         }
 
         void setCol(size_t col, const std::vector<T> &values)
         {
-            for (size_t row = 0; row < m_dimX; row++) m_data[row * m_dimY + col] = values[row];
+            for (size_t row = 0; row < m_dimX; row++) m_data[row * m_dimX + col] = values[row];
         }
 
-        std::vector<T> getRow(size_t row) const
+        std::vector<T> getRow(size_t y) const
         {
-            std::vector<T> result(m_dimY);
+            std::vector<T> result(m_dimX);
             const T *CPtr = m_data;
-            for (size_t col = 0; col < m_dimY; col++)
+            for (size_t x = 0; x < m_dimX; x++)
             {
-                result[col] = CPtr[row * m_dimY + col];
+                result[x] = CPtr[y * m_dimX + x];
             }
             return result;
         }
 
-        std::vector<T> getCol(size_t col) const
+        std::vector<T> getCol(size_t x) const
         {
-            std::vector<T> result(m_dimX);
+            std::vector<T> result(m_dimY);
             const T *CPtr = m_data;
-            for (size_t row = 0; row < m_dimX; row++)
+            for (size_t y = 0; y < m_dimY; y++)
             {
-                result[row] = CPtr[row * m_dimY + col];
+                result[y] = CPtr[y * m_dimX + x];
             }
             return result;
         }
@@ -151,7 +301,7 @@ namespace ml
         //
         void clear(const T &clearValue);
 
-        const T* begin() const
+        /*const T* begin() const
         {
             return m_data;
         }
@@ -166,6 +316,26 @@ namespace ml
         T* end()
         {
             return m_data + m_dimX * m_dimY;
+        }*/
+
+        iterator begin()
+        {
+            return iterator(this);
+        }
+
+        iterator end()
+        {
+            return iterator(NULL);
+        }
+
+        constIterator begin() const
+        {
+            return constIterator(this);
+        }
+
+        constIterator end() const
+        {
+            return constIterator(NULL);
         }
 
     protected:
@@ -176,9 +346,9 @@ namespace ml
     template <class T> inline bool operator == (const Grid2<T> &a, const Grid2<T> &b)
     {
         if (a.dimX() != b.dimX() || a.dimY() != b.dimY()) return false;
-        for (size_t row = 0; row < a.dimX(); row++)
-            for (size_t col = 0; col < a.dimY(); col++)
-                if (a(row, col) != b(row, col))
+        for (size_t y = 0; y < a.dimY(); y++)
+            for (size_t x = 0; x < a.dimX(); x++)
+                if (a(x, y) != b(x, y))
                     return false;
         return true;
     }
