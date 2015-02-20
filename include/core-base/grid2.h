@@ -70,14 +70,6 @@ namespace ml
 #endif
             return m_data[row * m_dimY + col];
         }
-        inline size_t rows() const
-        {
-            return m_dimX;
-        }
-        inline size_t cols() const
-        {
-            return m_dimY;
-        }
 
         inline size_t dimX() const {
             return m_dimX;
