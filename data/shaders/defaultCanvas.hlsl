@@ -34,13 +34,12 @@ VertexShaderOutput circleVS(
 
 float4 circlePS(VertexShaderOutput input) : SV_Target
 {
-	float dist = (input.position.dist.xy - center.xy).length();
+	float dist = length(input.position.xy - center.xy);
 	if (dist > radius) {
 		discard;
 	}
-	else {
-		return float4(modelColor.xyz, 1.0f);
-	}
+	return float4(color.xyz, 1.0f);
+
 }
 
 /*
