@@ -62,10 +62,11 @@ public:
 			float radius;
 			float dummy;
 		};
-		ElementCircle(GraphicsDevice &g, const vec2f& center, float radius, float depth) : Element(g, ELEMENT_TYPE_CIRCLE, depth) {
+		ElementCircle(GraphicsDevice &g, const vec2f& center, float radius, const vec4f& color, float depth) : Element(g, ELEMENT_TYPE_CIRCLE, depth) {
 			ElementCircleConstants constants;
 			constants.center = center;
 			constants.radius = radius;
+			constants.color = color;
 			m_constantBuffer.init(g);
 			m_constantBuffer.update(constants);
 
@@ -102,8 +103,8 @@ public:
 
     void init(GraphicsDevice &g);
 
-	void addCircle(const vec2f& center, float radius, float depth) {
-		m_elements.push_back(new ElementCircle(*m_graphics, center, radius, depth));
+	void addCircle(const vec2f& center, float radius, const vec4f& color, float depth) {
+		m_elements.push_back(new ElementCircle(*m_graphics, center, radius, color, depth));
 	}
 
 	void addElement(const bbox2i& box, const Bitmap &bmp, float depth) {
