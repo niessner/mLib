@@ -2,7 +2,7 @@
 namespace ml
 {
 
-void D3D11Texture::load(GraphicsDevice &g, const Bitmap &bmp)
+void D3D11Texture2D::load(GraphicsDevice &g, const Bitmap &bmp)
 {
     m_graphics = &g.castD3D11();
     release(g);
@@ -13,7 +13,7 @@ void D3D11Texture::load(GraphicsDevice &g, const Bitmap &bmp)
     reset(g);
 }
 
-void D3D11Texture::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
+void D3D11Texture2D::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
 {
     Bitmap bmp(image.getHeight(), image.getWidth(), [&](size_t row, size_t col) {
         auto p = image(row, col);
@@ -22,13 +22,13 @@ void D3D11Texture::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
     load(g, bmp);
 }
 
-void D3D11Texture::release(GraphicsDevice &g)
+void D3D11Texture2D::release(GraphicsDevice &g)
 {
     SAFE_RELEASE(m_texture);
     SAFE_RELEASE(m_view);
 }
 
-void D3D11Texture::reset(GraphicsDevice &g)
+void D3D11Texture2D::reset(GraphicsDevice &g)
 {
     release(g);
 
@@ -59,7 +59,7 @@ void D3D11Texture::reset(GraphicsDevice &g)
     context.GenerateMips(m_view);
 }
 
-void D3D11Texture::bind() const
+void D3D11Texture2D::bind() const
 {
     if (m_view == nullptr)
         return;

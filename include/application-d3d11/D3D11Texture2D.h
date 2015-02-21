@@ -1,16 +1,16 @@
 
-#ifndef APPLICATION_D3D11_D3D11TEXTURE_H_
-#define APPLICATION_D3D11_D3D11TEXTURE_H_
+#ifndef APPLICATION_D3D11_D3D11TEXTURE2D_H_
+#define APPLICATION_D3D11_D3D11TEXTURE2D_H_
 
 namespace ml {
 
 //
 // TODO: rename this to D3D11Texture2D
 //
-class D3D11Texture : public GraphicsAsset
+class D3D11Texture2D : public GraphicsAsset
 {
 public:
-    D3D11Texture()
+    D3D11Texture2D()
 	{
         m_graphics = nullptr;
         m_texture = nullptr;
@@ -19,21 +19,21 @@ public:
     //
     // TODO: implement other copy constructors similar to D3D11Mesh
     //
-    D3D11Texture(D3D11Texture &&t)
+    D3D11Texture2D(D3D11Texture2D &&t)
     {
         m_bmp = std::move(t.m_bmp);
         m_graphics = t.m_graphics;
         m_view = t.m_view; t.m_view = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
     }
-    void operator = (D3D11Texture &&t)
+    void operator = (D3D11Texture2D &&t)
     {
         m_bmp = std::move(t.m_bmp);
         m_graphics = t.m_graphics;
         m_view = t.m_view; t.m_view = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
     }
-    ~D3D11Texture()
+    ~D3D11Texture2D()
 	{
         SAFE_RELEASE(m_texture);
         SAFE_RELEASE(m_view);
@@ -42,7 +42,7 @@ public:
         m_view = nullptr;
         
 	}
-    D3D11Texture(GraphicsDevice &g, const Bitmap &bmp)
+    D3D11Texture2D(GraphicsDevice &g, const Bitmap &bmp)
     {
         m_texture = nullptr;
         m_view = nullptr;
@@ -75,4 +75,4 @@ private:
 
 }  // namespace ml
 
-#endif  // APPLICATION_D3D11_D3D11TEXTURE_H_
+#endif  // APPLICATION_D3D11_D3D11TEXTURE2D_H_

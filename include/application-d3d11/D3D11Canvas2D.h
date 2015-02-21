@@ -12,7 +12,7 @@ public:
         std::string id;
         bbox2i box;
         float depth; // value should be between 0 and 1
-        D3D11Texture tex;
+        D3D11Texture2D tex;
         D3D11TriMesh mesh;
     };
     struct UIEvent
