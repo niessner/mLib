@@ -166,7 +166,7 @@ namespace ml
 
         void allocate(size_t dimX, size_t dimY);
         void allocate(size_t dimX, size_t dimY, const T &clearValue);
-        void fill(const std::function< T(size_t row, size_t col) > &fillFunction);
+        void fill(const std::function< T(size_t x, size_t y) > &fillFunction);
 
         inline Grid2<T>& operator += (const Grid2<T> &value)
         {
@@ -227,6 +227,9 @@ namespace ml
             return m_dimX * m_dimY;
         }
 
+        //
+        // TODO: make this vec2ul
+        //
         inline std::pair<size_t, size_t> dimensions() const
         {
             return std::make_pair(m_dimX, m_dimY);
@@ -259,6 +262,9 @@ namespace ml
             return (x >= 0 && x < int(m_dimX) && y >= 0 && y < int(m_dimY));
         }
 
+        //
+        // TODO: rename
+        //
         void setRow(size_t row, const std::vector<T> &values)
         {
             for (size_t col = 0; col < m_dimY; col++) m_data[row * m_dimX + col] = values[col];
@@ -291,6 +297,9 @@ namespace ml
             return result;
         }
 
+        //
+        // TODO: replace with vec2ul
+        //
         std::pair<size_t, size_t> maxIndex() const;
         const T& maxValue() const;
         std::pair<size_t, size_t> minIndex() const;
@@ -300,23 +309,6 @@ namespace ml
         // Modifiers
         //
         void clear(const T &clearValue);
-
-        /*const T* begin() const
-        {
-            return m_data;
-        }
-        T* begin()
-        {
-            return m_data;
-        }
-        const T* end() const
-        {
-            return m_data + m_dimX * m_dimY;
-        }
-        T* end()
-        {
-            return m_data + m_dimX * m_dimY;
-        }*/
 
         iterator begin()
         {
