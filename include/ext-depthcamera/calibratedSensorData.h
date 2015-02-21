@@ -102,7 +102,7 @@ public:
 	vec3f getWorldPos(unsigned int ux, unsigned int uy, unsigned int frame) const {
 		const float depth = getDepth(ux, uy, frame);
 		vec4f world = m_CalibrationDepth.m_IntrinsicInverse*vec4f((float)ux*depth, (float)uy*depth, depth, 0.0f);
-		return world.getPoint3d();
+        return world.getVec3();
 
 		//const float fx = m_CalibrationDepth.m_Intrinsic(0,0);
 		//const float fy = m_CalibrationDepth.m_Intrinsic(1,1);

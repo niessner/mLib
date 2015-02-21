@@ -490,8 +490,8 @@ namespace ml {
 							if (voxel.intersects(v0, v1, v2)) {
 								if (solid) {
 									//project to xy-plane
-									point2d<FloatType> pv = v.getPoint2d();
-									if (intersection::intersectTrianglePoint(v0.getPoint2d(), v1.getPoint2d(), v2.getPoint2d(), pv)) {
+									point2d<FloatType> pv = v.getVec2();
+                                    if (intersection::intersectTrianglePoint(v0.getVec2(), v1.getVec2(), v2.getVec2(), pv)) {
 										Ray<FloatType> r0(point3d<FloatType>(v), point3d<FloatType>(0,0,1));
 										Ray<FloatType> r1(point3d<FloatType>(v), point3d<FloatType>(0,0,-1));
 										FloatType t0, t1, _u0, _u1, _v0, _v1;

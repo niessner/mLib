@@ -200,7 +200,7 @@ public:
 	static const point2d<T> eX;
 	static const point2d<T> eY;
 
-	inline point1d<T> getPoint1d() const {
+	inline point1d<T> getVec1() const {
 		return point1d<T>(x);
 	}
 

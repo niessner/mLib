@@ -261,10 +261,10 @@ public:
 	static const point3d<T> eY;
 	static const point3d<T> eZ;
 
-	inline point1d<T> getPoint1d() const {
+	inline point1d<T> getVec1() const {
 		return point1d<T>(x);
 	}
-	inline point2d<T> getPoint2d() const {
+	inline point2d<T> getVec2() const {
 		return point2d<T>(x,y);
 	}
 

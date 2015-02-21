@@ -269,13 +269,13 @@ class point4d : public BinaryDataSerialize< point4d<T> >
 		static const point4d<T> eZ;
 		static const point4d<T> eW;
 
-		inline point1d<T> getPoint1d() const {
+		inline point1d<T> getVec1() const {
 			return point1d<T>(x);
 		}
-		inline point2d<T> getPoint2d() const {
+		inline point2d<T> getVec2() const {
 			return point2d<T>(x,y);
 		}
-		inline point3d<T> getPoint3d() const {
+		inline point3d<T> getVec3() const {
 			return point3d<T>(x,y,z);
 		}
 
