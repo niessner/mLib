@@ -367,19 +367,19 @@ void AppTest::render(ml::ApplicationData &app)
     mat4f model = mat4f::translation(0, 2, 0);
     ConstantBuffer constants;
     constants.worldViewProj = m_camera.cameraPerspective() * model;
-    m_constants.update(app.graphics, constants);
+    m_constants.update(constants);
 
-    m_vsColor.bind(app.graphics);
-    m_psColor.bind(app.graphics);
-    m_constants.bindVertexShader(app.graphics, 0);
+    m_vsColor.bind();
+    m_psColor.bind();
+    m_constants.bindVertexShader(0);
 
-    m_mesh.render(app.graphics);
+    m_mesh.render();
 
-    m_vsPointCloud.bind(app.graphics);
-    m_psPointCloud.bind(app.graphics);
-    m_constants.bindVertexShader(app.graphics, 0);
+    m_vsPointCloud.bind();
+    m_psPointCloud.bind();
+    m_constants.bindVertexShader(0);
 
-    m_pointCloud.render(app.graphics);
+    m_pointCloud.render();
 
     m_font.drawString(app.graphics, "FPS: " + ml::convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
 }
@@ -459,7 +459,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-j)*depth1, (float)i*depth1, depth1, 1.0f);
 
 				vec3f eye = m_camera.getEye();
-				Rayf r(m_camera.getEye(), (p0.getPoint3d()-p1.getPoint3d()).getNormalized());
+				Rayf r(m_camera.getEye(), (p0.getVec3() - p1.getVec3()).getNormalized());
 
 				mat4f tmp = mat4f::rotationZ(45.0f);
 				r = tmp * r;
@@ -484,7 +484,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				tri = intersect.triangle;
 
 				if (tri) {
-					image(i,j) = tri->getSurfaceColor(u,v).getPoint3d();
+					image(i,j) = tri->getSurfaceColor(u,v).getVec3();
 				} else {
 					image(i,j) = 0;
 				}
