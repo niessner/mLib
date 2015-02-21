@@ -4,11 +4,15 @@ namespace ml
 
 void D3D11GraphicsDevice::init(const WindowWin32 &window)
 {
-    //
-    // Instead of reconstructing the backbuffer everytime the window is resized, we construct a generic, large backbuffer.
-    //
-    m_width = 2560;
-    m_height = m_width * window.height() / window.width();
+	//TODO this should all go into resize
+	m_width = window.width();
+	m_height = window.height();
+	//TODO this is vile
+	////
+    //// Instead of reconstructing the backbuffer everytime the window is resized, we construct a generic, large backbuffer.
+    ////
+    //m_width = 2560;
+    //m_height = m_width * window.height() / window.width();
 
     UINT createDeviceFlags = 0;
 #ifdef _DEBUG
@@ -169,7 +173,9 @@ void D3D11GraphicsDevice::registerDefaultShaders()
 
 void D3D11GraphicsDevice::resize(UINT width, UINT height)
 {
-
+	//TODO resize the back buffer
+	m_width = width;
+	m_height = height;
 }
 
 void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)

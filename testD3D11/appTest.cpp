@@ -356,14 +356,17 @@ void AppTest::init(ml::ApplicationData &app)
 
     m_font.init(app.graphics, "Calibri");
 
+
+	m_canvas.init(app.graphics);
+	m_canvas.addCircle(vec2f(500, 500), 50, RGBColor::Green, 0.5f);
 }
 
 void AppTest::render(ml::ApplicationData &app)
 {
     m_timer.frame();
 
-    std::cout << m_camera.camera() << std::endl;
-    std::cout << m_camera.getEye() << std::endl;
+	m_canvas.render();
+
     mat4f model = mat4f::translation(0, 2, 0);
     ConstantBuffer constants;
     constants.worldViewProj = m_camera.cameraPerspective() * model;
@@ -387,6 +390,7 @@ void AppTest::render(ml::ApplicationData &app)
 void AppTest::resize(ml::ApplicationData &app)
 {
     m_camera.updateAspectRatio((float)app.window.width() / app.window.height());
+	
 }
 
 void AppTest::keyDown(ml::ApplicationData &app, UINT key)

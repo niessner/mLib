@@ -70,9 +70,9 @@ public:
 			m_constantBuffer.init(g);
 			m_constantBuffer.update(constants);
 
-			bbox2i box;
-			box.include(math::floor(center - radius));
-			box.include(math::ceil(center + radius));
+			bbox2f box;
+			box.include(m_graphics->pixelToNDC(math::floor(center - radius)));
+			box.include(m_graphics->pixelToNDC(math::ceil(center + radius)));
 			m_mesh.load(g, ml::shapes::plane(vec3f(box.getMin(), depth), vec3f(box.getMax(), depth), vec3f::eZ));
 		}
 
@@ -103,8 +103,8 @@ public:
 
     void init(GraphicsDevice &g);
 
-	void addCircle(const vec2f& center, float radius, const vec4f& color, float depth) {
-		m_elements.push_back(new ElementCircle(*m_graphics, center, radius, color, depth));
+	void addCircle(const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
+		m_elements.push_back(new ElementCircle(*m_graphics, centerInPixels, radiusInPixels, color, depth));
 	}
 
 	void addElement(const bbox2i& box, const Bitmap &bmp, float depth) {
