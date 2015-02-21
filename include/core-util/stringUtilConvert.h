@@ -48,7 +48,7 @@ namespace convert {
         return result;
     }
     template<class T>
-    inline std::string toString(const point3d<T>& p) {
+    inline std::string toString(const vec3<T>& p) {
         std::string result;
         for (const auto &e : p.array)
         {
@@ -60,20 +60,20 @@ namespace convert {
 	inline std::string toString(const T& val) {
 		return std::to_string(val);
 	}
-	template<class U> inline point2d<U> toPoint2D(const std::string& s) {
-		point3d<U> ret;
+	template<class U> inline vec2<U> toPoint2D(const std::string& s) {
+		vec3<U> ret;
 		std::stringstream ss(util::removeChar(s, 'f'));
 		ss >> ret.x >> ret.y;
 		return ret;
 	}
-	template<class U> inline point3d<U> toPoint3D(const std::string& s) {
-		point3d<U> ret;
+	template<class U> inline vec3<U> toPoint3D(const std::string& s) {
+		vec3<U> ret;
 		std::stringstream ss(util::removeChar(s, 'f'));
 		ss >> ret.x >> ret.y >> ret.z;
 		return ret;
 	}
-	template<class U> inline point4d<U> toPoint4D(const std::string& s) {
-		point4d<U> ret;
+	template<class U> inline vec4<U> toPoint4D(const std::string& s) {
+		vec4<U> ret;
 		std::stringstream ss(util::removeChar(s, 'f'));
 		ss >> ret.x >> ret.y >> ret.z >> ret.w;
 		return ret;
@@ -103,15 +103,15 @@ namespace convert {
 	template<> inline void to<bool>(const std::string& s, bool& res) {
 		res = toBool(s);
 	}
-	template<class U> inline void to(const std::string& s, point2d<U>& res) {
+	template<class U> inline void to(const std::string& s, vec2<U>& res) {
 		std::stringstream ss(util::removeChar(s, 'f'));
 		ss >> res.x >> res.y;
 	}
-	template<class U> inline void to(const std::string& s, point3d<U>& res) {
+	template<class U> inline void to(const std::string& s, vec3<U>& res) {
 		std::stringstream ss(util::removeChar(s, 'f'));
 		ss >> res.x >> res.y >> res.z;
 	}
-	template<class U> inline void to(const std::string& s, point4d<U>& res) {
+	template<class U> inline void to(const std::string& s, vec4<U>& res) {
 		std::stringstream ss(util::removeChar(s, 'f'));
 		ss >> res.x >> res.y >> res.z >> res.w;
 	} 
@@ -140,13 +140,13 @@ namespace util {
 		convert::to<T>(s, res);
 	}
 
-	template<class U> inline void convertTo(const std::string& s, point2d<U>& res) {
+	template<class U> inline void convertTo(const std::string& s, vec2<U>& res) {
 		convert::to(s, res);
 	}
-	template<class U> inline void convertTo(const std::string& s, point3d<U>& res) {
+	template<class U> inline void convertTo(const std::string& s, vec3<U>& res) {
 		convert::to(s, res);
 	}
-	template<class U> inline void convertTo(const std::string& s, point4d<U>& res) {
+	template<class U> inline void convertTo(const std::string& s, vec4<U>& res) {
 		convert::to(s, res);
 	}
 

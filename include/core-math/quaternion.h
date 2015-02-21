@@ -15,14 +15,14 @@ template <class FloatType> class Quaternion {
 
 		Quaternion(FloatType r, FloatType i, FloatType j, FloatType k) {
 			m_Real = r;
-			m_Imag = point3d<FloatType>(i,j,k);
+			m_Imag = vec3<FloatType>(i,j,k);
 		}
 
 		//! construct a quaternion explicitly
-		Quaternion( FloatType real, const point3d<FloatType>& imag ) : m_Real(real), m_Imag(imag) {}
+		Quaternion( FloatType real, const vec3<FloatType>& imag ) : m_Real(real), m_Imag(imag) {}
 
 		//! construct a quaternion given a rotation-axis and an angle (in degrees)
-		Quaternion( const point3d<FloatType>& axis, FloatType angle ) {
+		Quaternion( const vec3<FloatType>& axis, FloatType angle ) {
 			FloatType halfAngleRad = ( FloatType ) math::PI * angle / ( FloatType ) 360.0;
 			FloatType axisLength = axis.length();
 			if ( axisLength > Quaternion<FloatType>::EPSILON ) {
@@ -30,18 +30,18 @@ template <class FloatType> class Quaternion {
 				m_Imag = axis * ( sin( halfAngleRad ) / axisLength );
 			} else {
 				m_Real = 1;
-				m_Imag = point3d<FloatType>( 0, 0, 0 );
+				m_Imag = vec3<FloatType>( 0, 0, 0 );
 			}
 		}
 
 		//! Constructs a quaternion between a start and end point
-		Quaternion(const point3d<FloatType>& from, const point3d<FloatType>& to) {
-			//point3d<FloatType> vecHalf = (from + to).getNormalized();
+		Quaternion(const vec3<FloatType>& from, const vec3<FloatType>& to) {
+			//vec3<FloatType> vecHalf = (from + to).getNormalized();
 			//m_Real = vecHalf | to;
 			//m_Imag = vecHalf ^ to;
 
-			point3d<FloatType> v0 = from.getNormalized();
-			point3d<FloatType> v1 = to.getNormalized();
+			vec3<FloatType> v0 = from.getNormalized();
+			vec3<FloatType> v1 = to.getNormalized();
 
 			const FloatType d = v0 | v1;
 			if (d >= (FloatType)1.0) // If dot == 1, vectors are the same
@@ -51,11 +51,11 @@ template <class FloatType> class Quaternion {
 			}
 			else if (d <= (FloatType)-1.0) // exactly opposite
 			{
-				point3d<FloatType> axis(1.0, 0.0, 0.0);
+				vec3<FloatType> axis(1.0, 0.0, 0.0);
 				axis = axis ^ v0;
 				if (axis.length()==0)
 				{
-					axis = point3d<FloatType>(0.0,1.0,0.0);
+					axis = vec3<FloatType>(0.0,1.0,0.0);
 					axis = axis ^ v0;
 				}
 				m_Imag = axis.getNormalized();
@@ -67,7 +67,7 @@ template <class FloatType> class Quaternion {
 
 			const FloatType s = sqrt( (1+d)*2 ); // optimize inv_sqrt
 			const FloatType invs = (FloatType)1.0 / s;
-			const point3d<FloatType> c = (v0^v1)*invs;
+			const vec3<FloatType> c = (v0^v1)*invs;
 			m_Imag = c;
 			m_Real = s*(FloatType)0.5;
 			normalize();
@@ -90,13 +90,13 @@ template <class FloatType> class Quaternion {
 		//! sets the quaternion to 1,0,0,0 (i.e., no rotation)
 		inline void setIdentity() {
 			m_Real = 1;
-			m_Imag = point3d<FloatType>(0,0,0);
+			m_Imag = vec3<FloatType>(0,0,0);
 		}
 
 		//! query the real part of the quaternion
 		inline FloatType real() const;
 		//! query the imaginary part of the quaternion
-		inline point3d<FloatType> imag() const;
+		inline vec3<FloatType> imag() const;
 
 		//! return quaternion as LinAl vector
 		//inline doubleVec LinAlVec() const;
@@ -105,10 +105,10 @@ template <class FloatType> class Quaternion {
 		inline void setReal( const FloatType r );
 
 		//! set imaginary part of the quaternion
-		inline void setImag( const point3d<FloatType>& imag );
+		inline void setImag( const vec3<FloatType>& imag );
 
 		//! query the axis of the rotation described by the quaternion
-		point3d<FloatType> axis() const;
+		vec3<FloatType> axis() const;
 		//! query the angle of the rotation described by the quaternion in radians
 		inline FloatType angleRad() const;
 		//! query the angle of the rotation described by the quaternion in degrees
@@ -157,9 +157,9 @@ template <class FloatType> class Quaternion {
 		//! add quaternion b to operand
 		inline void operator+=( const Quaternion& b );
 
-		inline point3d<FloatType> operator* (const point3d<FloatType>& v) const {
-			point3d<FloatType> uv = m_Imag ^ v;
-			point3d<FloatType> uuv = m_Imag ^ uv;
+		inline vec3<FloatType> operator* (const vec3<FloatType>& v) const {
+			vec3<FloatType> uv = m_Imag ^ v;
+			vec3<FloatType> uuv = m_Imag ^ uv;
 			uv *= ((FloatType)2.0 * m_Real);
 			uuv *= (FloatType)2.0f;
 			return v + uv + uuv;
@@ -235,7 +235,7 @@ template <class FloatType> class Quaternion {
 				qz = (FloatType)0.25 * S;
 			}
 			m_Real = qw;
-			m_Imag = point3d<FloatType>(qx,qy,qz);
+			m_Imag = vec3<FloatType>(qx,qy,qz);
 
 			/*
 			FloatType r11 = m(0,0);	FloatType r12 = m(0,1);	FloatType r13 = m(0,2);
@@ -277,20 +277,20 @@ template <class FloatType> class Quaternion {
 			} else {
 			printf("coding error\n");
 			}
-			FloatType r = point4d<FloatType>(q0, q1, q2, q3).length();
+			FloatType r = vec4<FloatType>(q0, q1, q2, q3).length();
 			q0 /= r;
 			q1 /= r;
 			q2 /= r;
 			q3 /= r;
 
 			re = q3;
-			im = point3d<FloatType>(q0,q1,q2);
+			im = vec3<FloatType>(q0,q1,q2);
 			*/
 		}
 
 
 		FloatType m_Real;			//! the real part of the quaternion
-		point3d<FloatType> m_Imag;	//! the imaginary part of the quaternion
+		vec3<FloatType> m_Imag;	//! the imaginary part of the quaternion
 
 		//! read a quaternion from a stream
 		template <class t> friend std::istream& operator>> ( std::istream& s, Quaternion<FloatType>& q );
@@ -328,7 +328,7 @@ template <class FloatType> inline std::istream& operator>>( std::istream& s, Qua
 
 template <class FloatType> inline FloatType Quaternion<FloatType>::real() const { return m_Real; }
 
-template <class FloatType> inline point3d<FloatType> Quaternion<FloatType>::imag() const { return m_Imag; }
+template <class FloatType> inline vec3<FloatType> Quaternion<FloatType>::imag() const { return m_Imag; }
 
 // inline doubleVec Quaternion<FloatType>::LinAlVec() const
 // {
@@ -343,7 +343,7 @@ template <class FloatType> inline point3d<FloatType> Quaternion<FloatType>::imag
 
 template <class FloatType> inline void Quaternion<FloatType>::setReal( const FloatType r ) { m_Real = r; }
 
-template <class FloatType> inline void Quaternion<FloatType>::setImag( const point3d<FloatType>& imag ) { m_Imag = imag; }
+template <class FloatType> inline void Quaternion<FloatType>::setImag( const vec3<FloatType>& imag ) { m_Imag = imag; }
 
 template <class FloatType> inline FloatType Quaternion<FloatType>::angleRad() const { return acos( m_Real ); }
 
@@ -387,7 +387,7 @@ template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::g
 	if ( thisLength > Quaternion<FloatType>::EPSILON )
 		return Quaternion( m_Real / thisLength, m_Imag / thisLength );
 	else
-		return Quaternion( 1, point3d<FloatType>( 0, 0, 0 ) );
+		return Quaternion( 1, vec3<FloatType>( 0, 0, 0 ) );
 	}
 
 template <class FloatType> inline void Quaternion<FloatType>::normalize() {
@@ -398,7 +398,7 @@ template <class FloatType> inline void Quaternion<FloatType>::normalize() {
 		m_Imag /= thisLength;
 		} else {
 		m_Real = 1;
-		m_Imag = point3d<FloatType>( 0, 0, 0 );
+		m_Imag = vec3<FloatType>( 0, 0, 0 );
 		}
 	}
 
@@ -408,7 +408,7 @@ template <class FloatType> inline void Quaternion<FloatType>::operator+=( const 
 
 template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::operator* ( const Quaternion& b ) const {
 	FloatType re2 = ( m_Real * b.real() ) - ( m_Imag | b.imag() );	// | = dot product
-	point3d<FloatType> im2 = ( b.imag() * m_Real ) + ( m_Imag * b.real() ) + ( m_Imag ^ b.imag() ); // ^ = cross product
+	vec3<FloatType> im2 = ( b.imag() * m_Real ) + ( m_Imag * b.real() ) + ( m_Imag ^ b.imag() ); // ^ = cross product
 	return Quaternion( re2, im2 );
 	}
 
@@ -435,13 +435,13 @@ template <class FloatType> inline FloatType Quaternion<FloatType>::scalarProd( c
 	return ( m_Real * b.re + (m_Imag | b.im ) ); 
 }
 
-template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::getConjugated() const { return Quaternion( m_Real, point3d<FloatType>( -m_Imag[ 0 ], -m_Imag[ 1 ], -m_Imag[ 2 ] ) ); }
+template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::getConjugated() const { return Quaternion( m_Real, vec3<FloatType>( -m_Imag[ 0 ], -m_Imag[ 1 ], -m_Imag[ 2 ] ) ); }
 
 template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::getInverse() const {
 		FloatType l = length();
 		assert(l != (FloatType)0.0);
 		//assert( !isZero( l ) );
-		return Quaternion( m_Real / l, point3d<FloatType>( -m_Imag[ 0 ], -m_Imag[ 1 ], -m_Imag[ 2 ] ) / l );
+		return Quaternion( m_Real / l, vec3<FloatType>( -m_Imag[ 0 ], -m_Imag[ 1 ], -m_Imag[ 2 ] ) / l );
 	}
 
 template <class FloatType> inline void Quaternion<FloatType>::invert() { *this = getInverse(); }
@@ -452,10 +452,10 @@ template <class FloatType> inline void Quaternion<FloatType>::invert() { *this =
 
 
 
-template <class FloatType> point3d<FloatType> Quaternion<FloatType>::axis() const {
+template <class FloatType> vec3<FloatType> Quaternion<FloatType>::axis() const {
 	FloatType halfAngle = acos( m_Real );
 	FloatType s = sin( halfAngle );
-	point3d<FloatType> a;
+	vec3<FloatType> a;
 	if ( isZero( s ) ) {
 		a[ 0 ] = 1.0;
 		a[ 1 ] = 0.0;

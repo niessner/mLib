@@ -9,9 +9,9 @@ namespace math {
 // returns the <axis, eigenvalue> pairs for the PCA of the given 3D points.
 //
 template <class T>
-vector< std::pair<point3d<T>, T> > pointSetPCA(const std::vector< point3d<T> > &points)
+vector< std::pair<vec3<T>, T> > pointSetPCA(const std::vector< vec3<T> > &points)
 {
-    auto mean = std::accumulate(points.begin(), points.end(), point3d<T>::origin) / (T)points.size();
+    auto mean = std::accumulate(points.begin(), points.end(), vec3<T>::origin) / (T)points.size();
 
     DenseMatrix<T> covariance(3, 3, (T)0.0);
     
@@ -29,10 +29,10 @@ vector< std::pair<point3d<T>, T> > pointSetPCA(const std::vector< point3d<T> > &
     auto system = covariance.eigenSystem();
     const auto &v = system.eigenvectors;
     
-    vector< std::pair<point3d<T>, T> > result;
-    result.push_back(std::make_pair(point3d<T>(v(0, 0), v(0, 1), v(0, 2)), system.eigenvalues[0]));
-    result.push_back(std::make_pair(point3d<T>(v(1, 0), v(1, 1), v(1, 2)), system.eigenvalues[1]));
-    result.push_back(std::make_pair(point3d<T>(v(2, 0), v(2, 1), v(2, 2)), system.eigenvalues[2]));
+    vector< std::pair<vec3<T>, T> > result;
+    result.push_back(std::make_pair(vec3<T>(v(0, 0), v(0, 1), v(0, 2)), system.eigenvalues[0]));
+    result.push_back(std::make_pair(vec3<T>(v(1, 0), v(1, 1), v(1, 2)), system.eigenvalues[1]));
+    result.push_back(std::make_pair(vec3<T>(v(2, 0), v(2, 1), v(2, 2)), system.eigenvalues[2]));
     return result;
 }
 
@@ -40,9 +40,9 @@ vector< std::pair<point3d<T>, T> > pointSetPCA(const std::vector< point3d<T> > &
 // returns the <axis, eigenvalue> pairs for the PCA of the given 2D points.
 //
 template <class T>
-vector< std::pair<point2d<T>, T> > pointSetPCA(const std::vector< point2d<T> > &points)
+vector< std::pair<vec2<T>, T> > pointSetPCA(const std::vector< vec2<T> > &points)
 {
-    auto mean = std::accumulate(points.begin(), points.end(), point2d<T>::origin) / (T)points.size();
+    auto mean = std::accumulate(points.begin(), points.end(), vec2<T>::origin) / (T)points.size();
 
     DenseMatrix<T> covariance(2, 2, (T)0.0);
 
@@ -68,9 +68,9 @@ vector< std::pair<point2d<T>, T> > pointSetPCA(const std::vector< point2d<T> > &
     auto system = covariance.eigenSystem();
     const auto &v = system.eigenvectors;
 
-    vector< std::pair<point2d<T>, T> > result;
-    result.push_back(std::make_pair(point2d<T>(v(0, 0), v(1, 0)), system.eigenvalues[0]));
-    result.push_back(std::make_pair(point2d<T>(v(0, 1), v(1, 1)), system.eigenvalues[1]));
+    vector< std::pair<vec2<T>, T> > result;
+    result.push_back(std::make_pair(vec2<T>(v(0, 0), v(1, 0)), system.eigenvalues[0]));
+    result.push_back(std::make_pair(vec2<T>(v(0, 1), v(1, 1)), system.eigenvalues[1]));
     return result;
 }
 

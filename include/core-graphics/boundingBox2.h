@@ -23,20 +23,20 @@ namespace ml {
 			reset();
 		}
 
-		BoundingBox2(const std::vector< point2d<FloatType> >& verts) {
+		BoundingBox2(const std::vector< vec2<FloatType> >& verts) {
 			reset();
 			for (const auto &v : verts)
 				include(v);
 		}
 
-		BoundingBox2(const point2d<FloatType>& p0, const point2d<FloatType>& p1, const point2d<FloatType>& p2) {
+		BoundingBox2(const vec2<FloatType>& p0, const vec2<FloatType>& p1, const vec2<FloatType>& p2) {
 			reset();
 			include(p0);
 			include(p1);
 			include(p2);
 		}
 
-		BoundingBox2(const point2d<FloatType>& minBound, const point2d<FloatType>& maxBound) {
+		BoundingBox2(const vec2<FloatType>& minBound, const vec2<FloatType>& maxBound) {
 			reset();
 			minB = minBound;
 			maxB = maxBound;
@@ -62,7 +62,7 @@ namespace ml {
 			if (other.maxY > maxY)	maxY = other.maxY;
 		}
 
-		void include(const point2d<FloatType> &v) {
+		void include(const vec2<FloatType> &v) {
 			if (v.x < minX)	minX = v.x;
 			if (v.y < minY)	minY = v.y;
 
@@ -70,7 +70,7 @@ namespace ml {
 			if (v.y > maxY)	maxY = v.y;
 		}
 
-		void include(const std::vector<point2d<FloatType>> &v) {
+		void include(const std::vector<vec2<FloatType>> &v) {
 			for (const auto &p : v)
 				include(p);
 		}
@@ -83,15 +83,15 @@ namespace ml {
 			return (minX <= maxX && minY <= maxY);
 		}
 
-		void getVertices(point2d<FloatType> *result) const {
-			result[0] = point2d<FloatType>(minX, minY);
-			result[1] = point2d<FloatType>(maxX, minY);
-			result[2] = point2d<FloatType>(maxX, maxY);
-			result[3] = point2d<FloatType>(minX, maxY);
+		void getVertices(vec2<FloatType> *result) const {
+			result[0] = vec2<FloatType>(minX, minY);
+			result[1] = vec2<FloatType>(maxX, minY);
+			result[2] = vec2<FloatType>(maxX, maxY);
+			result[3] = vec2<FloatType>(minX, maxY);
 		}
 
-		std::vector< point2d<FloatType> > getVertices() const {
-			std::vector< point2d<FloatType> > result;
+		std::vector< vec2<FloatType> > getVertices() const {
+			std::vector< vec2<FloatType> > result;
 			result.resize(4);
 
 			getVertices(result.data());
@@ -125,14 +125,14 @@ namespace ml {
 		}
 
 		//! point collision
-		bool intersects(const point2d<FloatType>& p) const {
+		bool intersects(const vec2<FloatType>& p) const {
 			if (p.x >= minX && p.x <= maxX &&
 				p.y >= minY && p.y <= maxY) return true;
 			else  return false;
 		}
 
 		//! triangle collision
-		bool intersects(const point2d<FloatType>& p0, const point2d<FloatType>& p1, const point2d<FloatType>& p2) const {
+		bool intersects(const vec2<FloatType>& p0, const vec2<FloatType>& p1, const vec2<FloatType>& p2) const {
 			return intersection::intersectTriangleABBB(minB, maxB, p0, p1, p2);
 		}
 
@@ -163,30 +163,30 @@ namespace ml {
 			return maxY - minY;
 		}
 
-		point2d<FloatType> getExtent() const {
-			return point2d<FloatType>(maxX - minX, maxY - minY);
+		vec2<FloatType> getExtent() const {
+			return vec2<FloatType>(maxX - minX, maxY - minY);
 		}
 
-		point2d<FloatType> getMin() const {
-			return point2d<FloatType>(minX, minY);
+		vec2<FloatType> getMin() const {
+			return vec2<FloatType>(minX, minY);
 		}
 
-		point2d<FloatType> getMax() const {
-			return point2d<FloatType>(maxX, maxY);
+		vec2<FloatType> getMax() const {
+			return vec2<FloatType>(maxX, maxY);
 		}
 
-		point2d<FloatType> getCenter() const {
-			point2d<FloatType> center = getMin() + getMax();
+		vec2<FloatType> getCenter() const {
+			vec2<FloatType> center = getMin() + getMax();
 			center *= (FloatType)0.5;
 			return center;
 		}
 
-		void setMin(const point2d<FloatType>& minValue) {
+		void setMin(const vec2<FloatType>& minValue) {
 			minX = minValue.x;
 			minY = minValue.y;
 		}
 
-		void setMax(const point2d<FloatType>& maxValue) {
+		void setMax(const vec2<FloatType>& maxValue) {
 			maxX = maxValue.x;
 			maxY = maxValue.y;
 		}
@@ -229,7 +229,7 @@ namespace ml {
 
 		//! transforms the bounding box (conservatively)
 		void transform(const Matrix2x2<FloatType>& m) {
-			point2d<FloatType> verts[8];
+			vec2<FloatType> verts[8];
 			getVertices(verts);
 			reset();
 			for (const auto& p : verts) {
@@ -237,7 +237,7 @@ namespace ml {
 			}
 		}
 
-		void translate(const point2d<FloatType>& t) {
+		void translate(const vec2<FloatType>& t) {
 			minB += t;
 			maxB += t;
 		}
@@ -264,8 +264,8 @@ namespace ml {
 	protected:
 		union {
 			struct {
-				point2d<FloatType> minB;
-				point2d<FloatType> maxB;
+				vec2<FloatType> minB;
+				vec2<FloatType> maxB;
 			};
 			struct {
 				FloatType minX, minY;

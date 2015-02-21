@@ -9,7 +9,7 @@ namespace ml {
     public:
         Camera() {}
         Camera(const std::string &s);
-        Camera(const point3d<FloatType>& eye, const point3d<FloatType>& worldUp, const point3d<FloatType>& right, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar);
+        Camera(const vec3<FloatType>& eye, const vec3<FloatType>& worldUp, const vec3<FloatType>& right, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar);
 
         //! Construct camera from extrinsics matrix m (columns are x, y, z vectors and origin of camera in that order).
         //! If flipRight is set, flip x to correct for sensor horizontal flipping
@@ -25,7 +25,7 @@ namespace ml {
         void move(FloatType delta);
 
         Ray<FloatType> getScreenRay(FloatType screenX, FloatType screenY) const;
-        point3d<FloatType> getScreenRayDirection(FloatType screenX, FloatType screenY) const;
+        vec3<FloatType> getScreenRayDirection(FloatType screenX, FloatType screenY) const;
 
         Matrix4x4<FloatType> camera() const {
             return m_camera;
@@ -43,19 +43,19 @@ namespace ml {
             return m_cameraPerspective;
         }
 
-        point3d<FloatType> getEye() const {
+        vec3<FloatType> getEye() const {
             return m_eye;
         }
 
-        point3d<FloatType> getLook() const {
+        vec3<FloatType> getLook() const {
             return m_look;
         }
 
-        point3d<FloatType> getRight() const {
+        vec3<FloatType> getRight() const {
             return m_right;
         }
 
-        point3d<FloatType> getUp() const {
+        vec3<FloatType> getUp() const {
             return m_up;
         }
 
@@ -73,10 +73,10 @@ namespace ml {
     private:
         void update();
         Matrix4x4<FloatType> perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar);
-        Matrix4x4<FloatType> viewMatrix(const point3d<FloatType>& eye, const point3d<FloatType>& look, const point3d<FloatType>& up, const point3d<FloatType>& right);
+        Matrix4x4<FloatType> viewMatrix(const vec3<FloatType>& eye, const vec3<FloatType>& look, const vec3<FloatType>& up, const vec3<FloatType>& right);
 
-        point3d<FloatType> m_eye, m_right, m_look, m_up;
-        point3d<FloatType> m_worldUp;
+        vec3<FloatType> m_eye, m_right, m_look, m_up;
+        vec3<FloatType> m_worldUp;
         Matrix4x4<FloatType> m_camera;
         Matrix4x4<FloatType> m_perspective;
         Matrix4x4<FloatType> m_cameraPerspective;

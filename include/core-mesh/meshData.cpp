@@ -107,7 +107,7 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 
 
 template <class FloatType>
-static inline bool VertexLess(const point3d<FloatType>& v0, const point3d<FloatType>& v1)
+static inline bool VertexLess(const vec3<FloatType>& v0, const vec3<FloatType>& v1)
 {
 	if (v0[0] < v1[0]) return true;
 	if (v0[0] > v1[0]) return false;
@@ -124,19 +124,19 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 	unsigned int numV = (unsigned int)m_Vertices.size();
 	//int numT = (int)tris.size();
 
-	std::map<point3d<FloatType>, unsigned int, bool(*)(const point3d<FloatType>&, const point3d<FloatType>&)> pts(VertexLess);
+	std::map<vec3<FloatType>, unsigned int, bool(*)(const vec3<FloatType>&, const vec3<FloatType>&)> pts(VertexLess);
 
 	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
-	std::vector<point3d<FloatType>> new_verts; new_verts.reserve(numV);
-	std::vector<point4d<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
-	std::vector<point3d<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
-	std::vector<point2d<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
+	std::vector<vec3<FloatType>> new_verts; new_verts.reserve(numV);
+	std::vector<vec4<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
+	std::vector<vec3<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
+	std::vector<vec2<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
 
 	unsigned int cnt = 0;
 	for (size_t i1 = 0; i1 < numV; i1++) {
-		const point3d<FloatType>& pt = m_Vertices[i1];
+		const vec3<FloatType>& pt = m_Vertices[i1];
 
-		std::map<point3d<FloatType> , unsigned int, bool(*)(const point3d<FloatType>&, const point3d<FloatType>&) >::iterator it = pts.find(pt);
+		std::map<vec3<FloatType> , unsigned int, bool(*)(const vec3<FloatType>&, const vec3<FloatType>&) >::iterator it = pts.find(pt);
 
 		if (it != pts.end()) {
 			vertexLookUp[i1] = it->second;
@@ -162,10 +162,10 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 	//std::cout << "Removed " << numV-cnt << " duplicate vertices of " << numV << " vertices" << std::endl;
 
 	if (m_Vertices != new_verts) {
-		m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
-		if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
-		if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
-		if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
+		m_Vertices = std::vector<vec3<FloatType>>(new_verts.begin(), new_verts.end());
+		if (hasPerVertexColors())		m_Colors = std::vector<vec4<FloatType>>(new_color.begin(), new_color.end());
+		if (hasPerVertexNormals())		m_Normals = std::vector<vec3<FloatType>>(new_normals.begin(), new_normals.end());
+		if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<vec2<FloatType>>(new_tex.begin(), new_tex.end());
 	}
 
 	return cnt;
@@ -174,7 +174,7 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 
 
 template <class FloatType>
-unsigned int MeshData<FloatType>::hasNearestNeighbor( const vec3i& coord, SparseGrid3<std::list<std::pair<point3d<FloatType>,unsigned int> > > &neighborQuery, const point3d<FloatType>& v, FloatType thresh )
+unsigned int MeshData<FloatType>::hasNearestNeighbor( const vec3i& coord, SparseGrid3<std::list<std::pair<vec3<FloatType>,unsigned int> > > &neighborQuery, const vec3<FloatType>& v, FloatType thresh )
 {
 	FloatType threshSq = thresh*thresh;
 	for (int i = -1; i <= 1; i++) {
@@ -182,8 +182,8 @@ unsigned int MeshData<FloatType>::hasNearestNeighbor( const vec3i& coord, Sparse
 			for (int k = -1; k <= 1; k++) {
 				vec3i c = coord + vec3i(i,j,k);
 				if (neighborQuery.exists(c)) {
-					for (const std::pair<point3d<FloatType>, unsigned int>& n : neighborQuery[c]) {
-						if (point3d<FloatType>::distSq(v,n.first) < threshSq) {
+					for (const std::pair<vec3<FloatType>, unsigned int>& n : neighborQuery[c]) {
+						if (vec3<FloatType>::distSq(v,n.first) < threshSq) {
 							return n.second;
 						}
 					}
@@ -220,17 +220,17 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 	unsigned int numV = (unsigned int)m_Vertices.size();
 
 	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
-	std::vector<point3d<FloatType>> new_verts; new_verts.reserve(numV);
-	std::vector<point4d<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
-	std::vector<point3d<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
-	std::vector<point2d<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
+	std::vector<vec3<FloatType>> new_verts; new_verts.reserve(numV);
+	std::vector<vec4<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
+	std::vector<vec3<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
+	std::vector<vec2<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
 
 	unsigned int cnt = 0;
 	if (approx) {
 		SparseGrid3<unsigned int> neighborQuery(0.6f, numV*2);
 		for (unsigned int v = 0; v < numV; v++) {
 
-			const point3d<FloatType>& vert = m_Vertices[v];
+			const vec3<FloatType>& vert = m_Vertices[v];
 			vec3i coord = toVirtualVoxelPos(vert, thresh);		
 			unsigned int nn = hasNearestNeighborApprox(coord, neighborQuery, thresh);
 
@@ -247,10 +247,10 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 			}
 		}
 	} else {
-		SparseGrid3<std::list<std::pair<point3d<FloatType>, unsigned int> > > neighborQuery(0.6f, numV*2);
+		SparseGrid3<std::list<std::pair<vec3<FloatType>, unsigned int> > > neighborQuery(0.6f, numV*2);
 		for (unsigned int v = 0; v < numV; v++) {
 
-			const point3d<FloatType>& vert = m_Vertices[v];
+			const vec3<FloatType>& vert = m_Vertices[v];
 			vec3i coord = toVirtualVoxelPos(vert, thresh);		
 			unsigned int nn = hasNearestNeighbor(coord, neighborQuery, vert, thresh);
 
@@ -276,11 +276,11 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 	}
 
 	if (m_Vertices.size() != new_verts.size()) {
-		m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
+		m_Vertices = std::vector<vec3<FloatType>>(new_verts.begin(), new_verts.end());
 
-		if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
-		if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
-		if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
+		if (hasPerVertexColors())		m_Colors = std::vector<vec4<FloatType>>(new_color.begin(), new_color.end());
+		if (hasPerVertexNormals())		m_Normals = std::vector<vec3<FloatType>>(new_normals.begin(), new_normals.end());
+		if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<vec2<FloatType>>(new_tex.begin(), new_tex.end());
 	}
 
 	removeDegeneratedFaces();
@@ -325,10 +325,10 @@ unsigned int MeshData<FloatType>::removeIsolatedVertices()
 {
 	unsigned int numV = (unsigned int)m_Vertices.size();
 	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
-	std::vector<point3d<FloatType>> new_verts; new_verts.reserve(numV);
-	std::vector<point4d<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
-	std::vector<point3d<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
-	std::vector<point2d<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
+	std::vector<vec3<FloatType>> new_verts; new_verts.reserve(numV);
+	std::vector<vec4<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
+	std::vector<vec3<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
+	std::vector<vec2<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
 
 	std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
 	unsigned int cnt = 0;
@@ -349,11 +349,11 @@ unsigned int MeshData<FloatType>::removeIsolatedVertices()
 		}
 	}
 	
-	m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
+	m_Vertices = std::vector<vec3<FloatType>>(new_verts.begin(), new_verts.end());
 
-	if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
-	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
-	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
+	if (hasPerVertexColors())		m_Colors = std::vector<vec4<FloatType>>(new_color.begin(), new_color.end());
+	if (hasPerVertexNormals())		m_Normals = std::vector<vec3<FloatType>>(new_normals.begin(), new_normals.end());
+	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<vec2<FloatType>>(new_tex.begin(), new_tex.end());
 	
 	return (unsigned int)m_Vertices.size();
 }
@@ -366,11 +366,11 @@ unsigned int MeshData<FloatType>::removeVerticesInFrontOfPlane( const Plane<Floa
 	unsigned int numF = (unsigned int)m_FaceIndicesVertices.size();
 
 	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
-	std::vector<point3d<FloatType>> new_verts;	new_verts.reserve(numV);
+	std::vector<vec3<FloatType>> new_verts;	new_verts.reserve(numV);
 	Indices new_faces;	new_faces.reserve(numF);
-	std::vector<point4d<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
-	std::vector<point3d<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
-	std::vector<point2d<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
+	std::vector<vec4<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
+	std::vector<vec3<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
+	std::vector<vec2<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
 
 	std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
 	unsigned int cnt = 0;
@@ -402,11 +402,11 @@ unsigned int MeshData<FloatType>::removeVerticesInFrontOfPlane( const Plane<Floa
 		}
 	}
 
-	m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
+	m_Vertices = std::vector<vec3<FloatType>>(new_verts.begin(), new_verts.end());
 
-	if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
-	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
-	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
+	if (hasPerVertexColors())		m_Colors = std::vector<vec4<FloatType>>(new_color.begin(), new_color.end());
+	if (hasPerVertexNormals())		m_Normals = std::vector<vec3<FloatType>>(new_normals.begin(), new_normals.end());
+	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<vec2<FloatType>>(new_tex.begin(), new_tex.end());
 
 	m_FaceIndicesVertices = new_faces;
 
@@ -422,11 +422,11 @@ unsigned int MeshData<FloatType>::removeFacesInFrontOfPlane( const Plane<FloatTy
 	unsigned int numF = (unsigned int)m_FaceIndicesVertices.size();
 
 	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
-	std::vector<point3d<FloatType>> new_verts;	new_verts.reserve(numV);
+	std::vector<vec3<FloatType>> new_verts;	new_verts.reserve(numV);
 	std::vector<std::vector<unsigned int>> new_faces;	new_faces.reserve(numF);
-	std::vector<point4d<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
-	std::vector<point3d<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
-	std::vector<point2d<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
+	std::vector<vec4<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
+	std::vector<vec3<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
+	std::vector<vec2<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
 
 	std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
 	unsigned int cnt = 0;
@@ -458,11 +458,11 @@ unsigned int MeshData<FloatType>::removeFacesInFrontOfPlane( const Plane<FloatTy
 		}
 	}
 
-	m_Vertices = std::vector<point3d<FloatType>>(new_verts.begin(), new_verts.end());
+	m_Vertices = std::vector<vec3<FloatType>>(new_verts.begin(), new_verts.end());
 
-	if (hasPerVertexColors())		m_Colors = std::vector<point4d<FloatType>>(new_color.begin(), new_color.end());
-	if (hasPerVertexNormals())		m_Normals = std::vector<point3d<FloatType>>(new_normals.begin(), new_normals.end());
-	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<point2d<FloatType>>(new_tex.begin(), new_tex.end());
+	if (hasPerVertexColors())		m_Colors = std::vector<vec4<FloatType>>(new_color.begin(), new_color.end());
+	if (hasPerVertexNormals())		m_Normals = std::vector<vec3<FloatType>>(new_normals.begin(), new_normals.end());
+	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<vec2<FloatType>>(new_tex.begin(), new_tex.end());
 
 	m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(new_faces.begin(), new_faces.end());
 
@@ -566,7 +566,7 @@ void MeshData<FloatType>::subdivideFacesMidpoint()
 
 	Indices newFaces;
 	for (auto& face : m_FaceIndicesVertices) {
-		point3d<FloatType> centerP = point3d<FloatType>(0,0,0);
+		vec3<FloatType> centerP = vec3<FloatType>(0,0,0);
 		for (auto& idx : face) {
 			centerP += m_Vertices[idx];
 		}
@@ -574,7 +574,7 @@ void MeshData<FloatType>::subdivideFacesMidpoint()
 		m_Vertices.push_back(centerP);
 
 		if (hasPerVertexColors()) {
-			point4d<FloatType> centerC = point4d<FloatType>(0,0,0,0);
+			vec4<FloatType> centerC = vec4<FloatType>(0,0,0,0);
 			for (auto& idx : face) {
 				centerC += m_Colors[idx];
 			}
@@ -582,7 +582,7 @@ void MeshData<FloatType>::subdivideFacesMidpoint()
 			m_Colors.push_back(centerC);
 		}
 		if (hasPerVertexNormals()) {
-			point3d<FloatType> centerN = point3d<FloatType>(0,0,0);
+			vec3<FloatType> centerN = vec3<FloatType>(0,0,0);
 			for (auto& idx : face) {
 				centerN += m_Normals[idx];
 			}
@@ -590,7 +590,7 @@ void MeshData<FloatType>::subdivideFacesMidpoint()
 			m_Normals.push_back(centerN);
 		}
 		if (hasPerVertexTexCoords()) {
-			point2d<FloatType> centerT = point2d<FloatType>(0,0);
+			vec2<FloatType> centerT = vec2<FloatType>(0,0);
 			for (auto& idx : face) {
 				centerT += m_TextureCoords[idx];
 			}
@@ -635,14 +635,14 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 			return v0==other.v0 && v1==other.v1;
 		}
 
-		bool needEdgeVertex(float thresh, const std::vector<point3d<FloatType>>& vertices) const {
+		bool needEdgeVertex(float thresh, const std::vector<vec3<FloatType>>& vertices) const {
 			if (thresh == 0.0f) return true;
 			else {
 				return ((vertices[v0] - vertices[v1]).lengthSq() > thresh*thresh);
 			}
 		}
 
-		float edgeLength(const std::vector<point3d<FloatType>>& vertices) const {
+		float edgeLength(const std::vector<vec3<FloatType>>& vertices) const {
 			return (vertices[v0] - vertices[v1]).length();
 		} 
 
@@ -733,7 +733,7 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 			}
 
 			//centroid based vertex insertion
-			point3d<FloatType> centerP = point3d<FloatType>(0,0,0);
+			vec3<FloatType> centerP = vec3<FloatType>(0,0,0);
 			for (auto& idx : face) {
 				centerP += m_Vertices[idx];
 			}
@@ -741,7 +741,7 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 			m_Vertices.push_back(centerP);
 
 			if (hasPerVertexColors()) {
-				point4d<FloatType> centerC = point4d<FloatType>(0,0,0,0);
+				vec4<FloatType> centerC = vec4<FloatType>(0,0,0,0);
 				for (auto& idx : face) {
 					centerC += m_Colors[idx];
 				}
@@ -749,7 +749,7 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 				m_Colors.push_back(centerC);
 			}
 			if (hasPerVertexNormals()) {
-				point3d<FloatType> centerN = point3d<FloatType>(0,0,0);
+				vec3<FloatType> centerN = vec3<FloatType>(0,0,0);
 				for (auto& idx : face) {
 					centerN += m_Normals[idx];
 				}
@@ -757,7 +757,7 @@ FloatType MeshData<FloatType>::subdivideFacesLoop( float edgeThresh /*= 0.0f*/ )
 				m_Normals.push_back(centerN);
 			}
 			if (hasPerVertexTexCoords()) {
-				point2d<FloatType> centerT = point2d<FloatType>(0,0);
+				vec2<FloatType> centerT = vec2<FloatType>(0,0);
 				for (auto& idx : face) {
 					centerT += m_TextureCoords[idx];
 				}

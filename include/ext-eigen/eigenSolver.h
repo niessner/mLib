@@ -188,7 +188,7 @@ template<class FloatType> class EigenWrapper
 {
 public:
 	//! given a set of 3d correspondences determine a rotation and translation vector
-	static Matrix4x4<FloatType> kabsch(const std::vector<point3d<FloatType>>& source, const std::vector<point3d<FloatType>>& target) {
+	static Matrix4x4<FloatType> kabsch(const std::vector<vec3<FloatType>>& source, const std::vector<vec3<FloatType>>& target) {
 		if (source.size() != target.size()) throw MLIB_EXCEPTION("invalid dimensions");
 		if (source.size() < 3) throw MLIB_EXCEPTION("need at least 3 points");
 		//{
@@ -196,14 +196,14 @@ public:
 		//	const auto& Q = target;
 
 		//	//compute mean p0
-		//	point3d<FloatType> p0(0, 0, 0);
+		//	vec3<FloatType> p0(0, 0, 0);
 		//	for (size_t i = 0; i < P.size(); i++) {
 		//		p0 += P[i];
 		//	}
 		//	p0 /= (FloatType)P.size();
 
 		//	//compute mean p1
-		//	point3d<FloatType> q0(0, 0, 0);
+		//	vec3<FloatType> q0(0, 0, 0);
 		//	for (size_t i = 0; i < Q.size(); i++) {
 		//		q0 += Q[i];
 		//	}
@@ -326,12 +326,12 @@ public:
 	}
 
 
-	static FloatType reProjectionError(const std::vector < point3d<FloatType> >& source, const std::vector < point3d<FloatType> >& target, const Matrix4x4<FloatType>& trans) {
+	static FloatType reProjectionError(const std::vector < vec3<FloatType> >& source, const std::vector < vec3<FloatType> >& target, const Matrix4x4<FloatType>& trans) {
 		if (source.size() != target.size()) throw MLIB_EXCEPTION("invalid dimension");
 
 		FloatType res = 0;
 		for (size_t i = 0; i < source.size(); i++) {
-			FloatType distSq = point3d<FloatType>::distSq(trans * source[i], target[i]);
+			FloatType distSq = vec3<FloatType>::distSq(trans * source[i], target[i]);
 			res += distSq;
 		}
 		return res;

@@ -23,27 +23,27 @@ public:
 		reset();
 	}
 
-	explicit BoundingBox3(const std::vector< point3d<FloatType> >& verts) {
+	explicit BoundingBox3(const std::vector< vec3<FloatType> >& verts) {
 		reset();
         for (const auto &v : verts)
 			include(v);
 	}
 
-	explicit BoundingBox3(typename std::vector<point3d<FloatType>>::const_iterator pBegin, typename std::vector<point3d<FloatType>>::const_iterator pEnd) {
+	explicit BoundingBox3(typename std::vector<vec3<FloatType>>::const_iterator pBegin, typename std::vector<vec3<FloatType>>::const_iterator pEnd) {
 		reset();
 		for (const auto& iter = pBegin; iter != pEnd; iter++) {
 			include(*iter);
 		}
 	}
 
-	BoundingBox3(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) {
+	BoundingBox3(const vec3<FloatType>& p0, const vec3<FloatType>& p1, const vec3<FloatType>& p2) {
 		reset();
 		include(p0);
 		include(p1);
 		include(p2);
 	}
 
-	BoundingBox3(const point3d<FloatType>& minBound, const point3d<FloatType>& maxBound) {
+	BoundingBox3(const vec3<FloatType>& minBound, const vec3<FloatType>& maxBound) {
 		reset();
 		minB = minBound;
 		maxB = maxBound;
@@ -51,7 +51,7 @@ public:
 
     explicit BoundingBox3(const OrientedBoundingBox3<FloatType> &obb) {
         reset();
-		std::vector< point3d <FloatType > > vertices = obb.getVertices();
+		std::vector< vec3 <FloatType > > vertices = obb.getVertices();
         for (const auto &v : vertices)
 		//for (const auto &v : obb.getVertices())
             include(v);
@@ -72,7 +72,7 @@ public:
 		if (other.maxZ > maxZ)	maxZ = other.maxZ;
 	}
 
-	void include(const point3d<FloatType> &v) {
+	void include(const vec3<FloatType> &v) {
 		if (v.x < minX)	minX = v.x;
 		if (v.y < minY)	minY = v.y;
 		if (v.z < minZ)	minZ = v.z;
@@ -82,7 +82,7 @@ public:
 		if (v.z > maxZ)	maxZ = v.z;
 	}
 
-    void include(const std::vector<point3d<FloatType>> &v) {
+    void include(const std::vector<vec3<FloatType>> &v) {
         for (const auto &p : v)
             include(p);
     }
@@ -134,19 +134,19 @@ public:
 	}
 
 
-	void getVertices(point3d<FloatType> *result) const {
-		result[0] = point3d<FloatType>(minX, minY, minZ);
-		result[1] = point3d<FloatType>(maxX, minY, minZ);
-		result[2] = point3d<FloatType>(maxX, maxY, minZ);
-		result[3] = point3d<FloatType>(minX, maxY, minZ);
-		result[4] = point3d<FloatType>(minX, minY, maxZ);
-		result[5] = point3d<FloatType>(maxX, minY, maxZ);
-		result[6] = point3d<FloatType>(maxX, maxY, maxZ);
-		result[7] = point3d<FloatType>(minX, maxY, maxZ);
+	void getVertices(vec3<FloatType> *result) const {
+		result[0] = vec3<FloatType>(minX, minY, minZ);
+		result[1] = vec3<FloatType>(maxX, minY, minZ);
+		result[2] = vec3<FloatType>(maxX, maxY, minZ);
+		result[3] = vec3<FloatType>(minX, maxY, minZ);
+		result[4] = vec3<FloatType>(minX, minY, maxZ);
+		result[5] = vec3<FloatType>(maxX, minY, maxZ);
+		result[6] = vec3<FloatType>(maxX, maxY, maxZ);
+		result[7] = vec3<FloatType>(minX, maxY, maxZ);
 	}
 
-	std::vector< point3d<FloatType> > getVertices() const {
-		std::vector< point3d<FloatType> > result;
+	std::vector< vec3<FloatType> > getVertices() const {
+		std::vector< vec3<FloatType> > result;
 		result.resize(8);
 
 		getVertices(result.data());
@@ -183,7 +183,7 @@ public:
 	}
 
 	//! point collision
-	bool intersects(const point3d<FloatType>& p) const {
+	bool intersects(const vec3<FloatType>& p) const {
         if (p.x >= minX && p.x <= maxX &&
             p.y >= minY && p.y <= maxY &&
             p.z >= minZ && p.z <= maxZ)
@@ -192,7 +192,7 @@ public:
 	}
 
 	//! triangle collision
-	bool intersects(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) const {
+	bool intersects(const vec3<FloatType>& p0, const vec3<FloatType>& p1, const vec3<FloatType>& p2) const {
 		return intersection::intersectTriangleAABB(minB, maxB, p0, p1, p2);
 	}
 
@@ -229,31 +229,31 @@ public:
 		return maxZ - minZ;
 	}
 
-	point3d<FloatType> getExtent() const {
-		return point3d<FloatType>(maxX - minX, maxY - minY, maxZ - minZ);
+	vec3<FloatType> getExtent() const {
+		return vec3<FloatType>(maxX - minX, maxY - minY, maxZ - minZ);
 	}
 
-	point3d<FloatType> getMin() const {
-		return point3d<FloatType>(minX, minY, minZ);
+	vec3<FloatType> getMin() const {
+		return vec3<FloatType>(minX, minY, minZ);
 	}
 
-	point3d<FloatType> getMax() const {
-		return point3d<FloatType>(maxX, maxY, maxZ);
+	vec3<FloatType> getMax() const {
+		return vec3<FloatType>(maxX, maxY, maxZ);
 	}
 
-	point3d<FloatType> getCenter() const {
-		point3d<FloatType> center = getMin() + getMax();
+	vec3<FloatType> getCenter() const {
+		vec3<FloatType> center = getMin() + getMax();
 		center *= (FloatType)0.5;
 		return center;
 	}
 
-	void setMin(const point3d<FloatType>& minValue) {
+	void setMin(const vec3<FloatType>& minValue) {
 		minX = minValue.x;
 		minY = minValue.y;
 		minZ = minValue.z;
 	}
 
-	void setMax(const point3d<FloatType>& maxValue) {
+	void setMax(const vec3<FloatType>& maxValue) {
 		maxX = maxValue.x;
 		maxY = maxValue.y;
 		maxZ = maxValue.z;
@@ -301,7 +301,7 @@ public:
 
 	//! transforms the bounding box (conservatively)
 	void transform(const Matrix4x4<FloatType>& m) {
-        point3d<FloatType> verts[8];
+        vec3<FloatType> verts[8];
 		getVertices(verts);
 		reset();
 		for (const auto& p : verts) {
@@ -309,7 +309,7 @@ public:
 		}
 	}
 
-	void translate(const point3d<FloatType>& t) {
+	void translate(const vec3<FloatType>& t) {
 		minB += t;
 		maxB += t;
 	}
@@ -330,90 +330,90 @@ public:
 
 
 	Plane<FloatType> getBottomPlane() const {
-		std::vector<point3d<FloatType>> vertices; vertices.resize(3);
-		vertices[0] = point3d<FloatType>(minX, minY, minZ);
-		vertices[2] = point3d<FloatType>(maxX, minY, minZ);
-		vertices[1] = point3d<FloatType>(maxX, maxY, minZ);
+		std::vector<vec3<FloatType>> vertices; vertices.resize(3);
+		vertices[0] = vec3<FloatType>(minX, minY, minZ);
+		vertices[2] = vec3<FloatType>(maxX, minY, minZ);
+		vertices[1] = vec3<FloatType>(maxX, maxY, minZ);
 		return Plane<FloatType>(&vertices[0]);
 	}
 
 	Plane<FloatType> getTopPlane() const {
-		std::vector<point3d<FloatType>> vertices; vertices.resize(3);
-		vertices[0] = point3d<FloatType>(minX, minY, maxZ);
-		vertices[1] = point3d<FloatType>(maxX, minY, maxZ);
-		vertices[2] = point3d<FloatType>(maxX, maxY, maxZ);
+		std::vector<vec3<FloatType>> vertices; vertices.resize(3);
+		vertices[0] = vec3<FloatType>(minX, minY, maxZ);
+		vertices[1] = vec3<FloatType>(maxX, minY, maxZ);
+		vertices[2] = vec3<FloatType>(maxX, maxY, maxZ);
 		return Plane<FloatType>(&vertices[0]);
 	}
 
-	void makeTriMeshBottomPlane(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<point3d<FloatType>>& normals) const {
+	void makeTriMeshBottomPlane(std::vector<vec3<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<vec3<FloatType>>& normals) const {
 		vertices.resize(4);
 		normals.resize(4);
 		indices.resize(2);
 
-		vertices[0] = point3d<FloatType>(minX, minY, minZ);
-		vertices[1] = point3d<FloatType>(maxX, minY, minZ);
-		vertices[2] = point3d<FloatType>(maxX, maxY, minZ);
-		vertices[3] = point3d<FloatType>(minX, maxY, minZ);
+		vertices[0] = vec3<FloatType>(minX, minY, minZ);
+		vertices[1] = vec3<FloatType>(maxX, minY, minZ);
+		vertices[2] = vec3<FloatType>(maxX, maxY, minZ);
+		vertices[3] = vec3<FloatType>(minX, maxY, minZ);
 		indices[0].x = 0;	indices[0].y = 1;	indices[0].z = 2;
 		indices[1].x = 2;	indices[1].y = 3;	indices[1].z = 0;
-		normals[0] = normals[1] = normals[2] = normals[3] = point3d<FloatType>(0,0,-1);
+		normals[0] = normals[1] = normals[2] = normals[3] = vec3<FloatType>(0,0,-1);
 	}
 
 	//! generates vertices, indices, and normals which can be used to initialize a triMesh
-	void makeTriMesh(point3d<FloatType>* vertices, vec3ui* indices, point3d<FloatType>* normals) const {
+	void makeTriMesh(vec3<FloatType>* vertices, vec3ui* indices, vec3<FloatType>* normals) const {
 
 		//bottom
-		vertices[0] = point3d<FloatType>(minX, minY, minZ);
-		vertices[1] = point3d<FloatType>(maxX, minY, minZ);
-		vertices[2] = point3d<FloatType>(maxX, maxY, minZ);
-		vertices[3] = point3d<FloatType>(minX, maxY, minZ);
+		vertices[0] = vec3<FloatType>(minX, minY, minZ);
+		vertices[1] = vec3<FloatType>(maxX, minY, minZ);
+		vertices[2] = vec3<FloatType>(maxX, maxY, minZ);
+		vertices[3] = vec3<FloatType>(minX, maxY, minZ);
 		indices[0].x = 0;	indices[0].y = 1;	indices[0].z = 2;
 		indices[1].x = 2;	indices[1].y = 3;	indices[1].z = 0;
-		normals[0] = normals[1] = normals[2] = normals[3] = point3d<FloatType>(0,0,-1);
+		normals[0] = normals[1] = normals[2] = normals[3] = vec3<FloatType>(0,0,-1);
 		//front
-		vertices[4] = point3d<FloatType>(minX, minY, minZ);
-		vertices[5] = point3d<FloatType>(maxX, minY, minZ);
-		vertices[6] = point3d<FloatType>(maxX, minY, maxZ);
-		vertices[7] = point3d<FloatType>(minX, minY, maxZ);
+		vertices[4] = vec3<FloatType>(minX, minY, minZ);
+		vertices[5] = vec3<FloatType>(maxX, minY, minZ);
+		vertices[6] = vec3<FloatType>(maxX, minY, maxZ);
+		vertices[7] = vec3<FloatType>(minX, minY, maxZ);
 		indices[2].x = 4;	indices[2].y = 5;	indices[2].z = 6;
 		indices[3].x = 6;	indices[3].y = 7;	indices[3].z = 4;
-		normals[4] = normals[5] = normals[6] = normals[7] = point3d<FloatType>(0,-1,0);
+		normals[4] = normals[5] = normals[6] = normals[7] = vec3<FloatType>(0,-1,0);
 		//left
-		vertices[8] = point3d<FloatType>(minX, minY, minZ);
-		vertices[9] = point3d<FloatType>(minX, minY, maxZ);
-		vertices[10] = point3d<FloatType>(minX, maxY, maxZ);
-		vertices[11] = point3d<FloatType>(minX, maxY, minZ);
+		vertices[8] = vec3<FloatType>(minX, minY, minZ);
+		vertices[9] = vec3<FloatType>(minX, minY, maxZ);
+		vertices[10] = vec3<FloatType>(minX, maxY, maxZ);
+		vertices[11] = vec3<FloatType>(minX, maxY, minZ);
 		indices[4].x = 8;	indices[4].y = 9;	indices[4].z = 10;
 		indices[5].x = 10;	indices[5].y = 11;	indices[5].z = 8;
-		normals[8] = normals[9] = normals[10] = normals[11] = point3d<FloatType>(-1,0,0);
+		normals[8] = normals[9] = normals[10] = normals[11] = vec3<FloatType>(-1,0,0);
 		//right
-		vertices[12] = point3d<FloatType>(maxX, minY, minZ);
-		vertices[13] = point3d<FloatType>(maxX, minY, maxZ);
-		vertices[14] = point3d<FloatType>(maxX, maxY, maxZ);
-		vertices[15] = point3d<FloatType>(maxX, maxY, minZ);
+		vertices[12] = vec3<FloatType>(maxX, minY, minZ);
+		vertices[13] = vec3<FloatType>(maxX, minY, maxZ);
+		vertices[14] = vec3<FloatType>(maxX, maxY, maxZ);
+		vertices[15] = vec3<FloatType>(maxX, maxY, minZ);
 		indices[6].x = 12;	indices[6].y = 13;	indices[6].z = 14;
 		indices[7].x = 14;	indices[7].y = 15;	indices[7].z = 12;
-		normals[12] = normals[13] = normals[14] = normals[15] = point3d<FloatType>(1,0,0);
+		normals[12] = normals[13] = normals[14] = normals[15] = vec3<FloatType>(1,0,0);
 		//back
-		vertices[16] = point3d<FloatType>(minX, maxY, minZ);
-		vertices[17] = point3d<FloatType>(maxX, maxY, minZ);
-		vertices[18] = point3d<FloatType>(maxX, maxY, maxZ);
-		vertices[19] = point3d<FloatType>(minX, maxY, maxZ);
+		vertices[16] = vec3<FloatType>(minX, maxY, minZ);
+		vertices[17] = vec3<FloatType>(maxX, maxY, minZ);
+		vertices[18] = vec3<FloatType>(maxX, maxY, maxZ);
+		vertices[19] = vec3<FloatType>(minX, maxY, maxZ);
 		indices[8].x = 16;	indices[8].y = 17;	indices[8].z = 18;
 		indices[9].x = 18;	indices[9].y = 19;	indices[9].z = 16;
-		normals[16] = normals[17] = normals[18] = normals[19] = point3d<FloatType>(0,1,0);
+		normals[16] = normals[17] = normals[18] = normals[19] = vec3<FloatType>(0,1,0);
 		//top
-		vertices[20] = point3d<FloatType>(minX, minY, maxZ);
-		vertices[21] = point3d<FloatType>(maxX, minY, maxZ);
-		vertices[22] = point3d<FloatType>(maxX, maxY, maxZ);
-		vertices[23] = point3d<FloatType>(minX, maxY, maxZ);
+		vertices[20] = vec3<FloatType>(minX, minY, maxZ);
+		vertices[21] = vec3<FloatType>(maxX, minY, maxZ);
+		vertices[22] = vec3<FloatType>(maxX, maxY, maxZ);
+		vertices[23] = vec3<FloatType>(minX, maxY, maxZ);
 		indices[10].x = 20;	indices[10].y = 21;	indices[10].z = 22;
 		indices[11].x = 22;	indices[11].y = 23;	indices[11].z = 20;
-		normals[20] = normals[21] = normals[22] = normals[23] = point3d<FloatType>(0,0,1);
+		normals[20] = normals[21] = normals[22] = normals[23] = vec3<FloatType>(0,0,1);
 	}
 
 	//! generates vertices, indices, and normals which can be used to initialize a triMesh
-	void makeTriMesh(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<point3d<FloatType>>& normals) const {
+	void makeTriMesh(std::vector<vec3<FloatType>>& vertices, std::vector<vec3ui>& indices, std::vector<vec3<FloatType>>& normals) const {
 		//TODO check face and normal orientation
 		vertices.resize(24);
 		normals.resize(24);
@@ -422,15 +422,15 @@ public:
     makeTriMesh(vertices.data(), indices.data(), normals.data());
 	}
 
-	void makeTriMesh(point3d<FloatType>* vertices, vec3ui* indices) const {
-		vertices[0] = point3d<FloatType>(maxX, maxY, maxZ);
-		vertices[1] = point3d<FloatType>(minX, maxY, maxZ);
-		vertices[2] = point3d<FloatType>(minX, minY, maxZ);
-		vertices[3] = point3d<FloatType>(maxX, minY, maxZ);
-		vertices[4] = point3d<FloatType>(maxX, maxY, minZ);
-		vertices[5] = point3d<FloatType>(minX, maxY, minZ);
-		vertices[6] = point3d<FloatType>(minX, minY, minZ);
-		vertices[7] = point3d<FloatType>(maxX, minY, minZ);
+	void makeTriMesh(vec3<FloatType>* vertices, vec3ui* indices) const {
+		vertices[0] = vec3<FloatType>(maxX, maxY, maxZ);
+		vertices[1] = vec3<FloatType>(minX, maxY, maxZ);
+		vertices[2] = vec3<FloatType>(minX, minY, maxZ);
+		vertices[3] = vec3<FloatType>(maxX, minY, maxZ);
+		vertices[4] = vec3<FloatType>(maxX, maxY, minZ);
+		vertices[5] = vec3<FloatType>(minX, maxY, minZ);
+		vertices[6] = vec3<FloatType>(minX, minY, minZ);
+		vertices[7] = vec3<FloatType>(maxX, minY, minZ);
 
 		indices[0].x = 1;	indices[0].y = 2;	indices[0].z = 3; 
 		indices[1].x = 1;	indices[1].y = 3;	indices[1].z = 0; 
@@ -447,7 +447,7 @@ public:
 	}
 
 	//! generates vertices, indices which can be used to initialize a triMesh
-	void makeTriMesh(std::vector<point3d<FloatType>>& vertices, std::vector<vec3ui>& indices) const {
+	void makeTriMesh(std::vector<vec3<FloatType>>& vertices, std::vector<vec3ui>& indices) const {
 		//TODO check face and normal orientation
 		vertices.resize(8);
 		indices.resize(12);
@@ -480,8 +480,8 @@ protected:
 
 	union {
 		struct {
-			point3d<FloatType> minB;
-			point3d<FloatType> maxB;
+			vec3<FloatType> minB;
+			vec3<FloatType> maxB;
 		};
 		struct {
 			FloatType minX, minY, minZ;

@@ -16,10 +16,10 @@ namespace ml {
 		template<class FloatType>
 		class Vertex {
 		public:
-			Vertex() : position(point3d<FloatType>::origin), normal(point3d<FloatType>::origin), color(point4d<FloatType>::origin), texCoord(point2d<FloatType>::origin) { }
-			Vertex(const point3d<FloatType>& _position) : position(_position) { }
-			Vertex(const point3d<FloatType>& _p, const point3d<FloatType>& _n) : position(_p), normal(_n) { }
-			Vertex(const point3d<FloatType>& _p, const point3d<FloatType>& _n, const point4d<FloatType>& _c, const point2d<FloatType>& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
+			Vertex() : position(vec3<FloatType>::origin), normal(vec3<FloatType>::origin), color(vec4<FloatType>::origin), texCoord(vec2<FloatType>::origin) { }
+			Vertex(const vec3<FloatType>& _position) : position(_position) { }
+			Vertex(const vec3<FloatType>& _p, const vec3<FloatType>& _n) : position(_p), normal(_n) { }
+			Vertex(const vec3<FloatType>& _p, const vec3<FloatType>& _n, const vec4<FloatType>& _c, const vec2<FloatType>& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
 
 			Vertex operator*(FloatType t) const {
 				return Vertex(position*t, normal*t, color*t, texCoord*t);
@@ -50,10 +50,10 @@ namespace ml {
 			//
 			// If you change the order of these fields, you must update the layout fields in D3D11TriMesh::layout 
 			//
-			point3d<FloatType> position;
-			point3d<FloatType> normal;
-			point4d<FloatType> color;
-			point2d<FloatType> texCoord;
+			vec3<FloatType> position;
+			vec3<FloatType> normal;
+			vec4<FloatType> color;
+			vec2<FloatType> texCoord;
 		private:
 		};
 		typedef Vertex<float> Vertexf;
@@ -80,16 +80,16 @@ namespace ml {
 			Vertex<FloatType> getSurfaceVertex(FloatType u, FloatType v) const {
 				return *v0 *((FloatType)1.0 - u - v) + *v1 *u + *v2 *v;
 			}
-			point3d<FloatType> getSurfacePosition(FloatType u, FloatType v) const 	{
+			vec3<FloatType> getSurfacePosition(FloatType u, FloatType v) const 	{
 				return v0->position*((FloatType)1.0 - u - v) + v1->position*u + v2->position*v;
 			}
-			point4d<FloatType> getSurfaceColor(FloatType u, FloatType v) const {
+			vec4<FloatType> getSurfaceColor(FloatType u, FloatType v) const {
 				return v0->color*((FloatType)1.0 - u - v) + v1->color*u + v2->color*v;
 			}
-			point3d<FloatType> getSurfaceNormal(FloatType u, FloatType v) const {
+			vec3<FloatType> getSurfaceNormal(FloatType u, FloatType v) const {
 				return v0->normal*((FloatType)1.0 - u - v) + v1->normal*u + v2->normal*v;
 			}
-			point2d<FloatType> getSurfaceTexCoord(FloatType u, FloatType v) const {
+			vec2<FloatType> getSurfaceTexCoord(FloatType u, FloatType v) const {
 				return v0->texCoord*((FloatType)1.0 - u - v) + v1->texCoord*u + v2->texCoord*v;
 			}
 
@@ -113,7 +113,7 @@ namespace ml {
 				return bb;
 			}
 
-			const point3d<FloatType>& getCenter() const {
+			const vec3<FloatType>& getCenter() const {
 				return m_Center;
 			}
 
@@ -136,7 +136,7 @@ namespace ml {
 
 		private:
 			const Vertex<FloatType> *v0, *v1, *v2;			
-			point3d<FloatType> m_Center;	//TODO check if we want to store the center
+			vec3<FloatType> m_Center;	//TODO check if we want to store the center
 			unsigned int m_TriangleIndex;	//! 0-based triangle index within it's mesh 
 			unsigned int m_MeshIndex;		//! 0-based mesh index; used for accelerators that take an std::vector of triMeshes 
 		};
@@ -182,11 +182,11 @@ namespace ml {
 		}
 
 		TriMesh(
-			const std::vector<point3d<FloatType>>& vertices, 
+			const std::vector<vec3<FloatType>>& vertices, 
 			const std::vector<unsigned int>& indices, 
-			const std::vector<point4d<FloatType>>& colors,
-			const std::vector<point3d<FloatType>>& normals,
-			const std::vector<point3d<FloatType>>& texCoords) :
+			const std::vector<vec4<FloatType>>& colors,
+			const std::vector<vec3<FloatType>>& normals,
+			const std::vector<vec3<FloatType>>& texCoords) :
 		TriMesh(vertices.size(), indices.size(), 
 			&vertices[0], &indices[0],
 			colors.size() > 0 ? &colors[0] : nullptr,
@@ -195,15 +195,15 @@ namespace ml {
 		{
 		}
 
-		TriMesh(const std::vector<point3d<FloatType> >& vertices, const std::vector<unsigned int>& indices) : TriMesh(vertices.size(), indices.size(), &vertices[0], &indices[0]) {}
+		TriMesh(const std::vector<vec3<FloatType> >& vertices, const std::vector<unsigned int>& indices) : TriMesh(vertices.size(), indices.size(), &vertices[0], &indices[0]) {}
 
 		TriMesh(
 			size_t numVertices, size_t numIndices,
-			const point3d<FloatType>* vertices, 
+			const vec3<FloatType>* vertices, 
 			const unsigned int* indices, 
-			const point4d<FloatType>* colors = nullptr, 
-			const point3d<FloatType>* normals = nullptr, 
-			const point2d<FloatType>* texCoords = nullptr) 
+			const vec4<FloatType>* colors = nullptr, 
+			const vec3<FloatType>* normals = nullptr, 
+			const vec2<FloatType>* texCoords = nullptr) 
 		{
 			if (numIndices % 3 != 0) throw MLIB_EXCEPTION("not a tri mesh");
 			m_bHasColors = colors != nullptr;
@@ -222,10 +222,10 @@ namespace ml {
 			}
 		}
 
-		TriMesh(const BoundingBox3<FloatType>& bbox, const point4d<FloatType>& color = point4d<FloatType>(1.0,1.0,1.0,1.0)) {
-			std::vector<point3d<FloatType>> vertices;
+		TriMesh(const BoundingBox3<FloatType>& bbox, const vec4<FloatType>& color = vec4<FloatType>(1.0,1.0,1.0,1.0)) {
+			std::vector<vec3<FloatType>> vertices;
 			std::vector<vec3ui> indices;
-			std::vector<point3d<FloatType>> normals;
+			std::vector<vec3<FloatType>> normals;
 			bbox.makeTriMesh(vertices, indices, normals);
 
 			m_Vertices.resize(vertices.size());
@@ -254,14 +254,14 @@ namespace ml {
 		}
 
 
-		TriMesh(const BinaryGrid3& grid, Matrix4x4<FloatType> voxelToWorld = Matrix4x4<FloatType>::identity(), bool withNormals = false, const point4d<FloatType>& color = point4d<FloatType>(0.5,0.5,0.5,0.5)) {
+		TriMesh(const BinaryGrid3& grid, Matrix4x4<FloatType> voxelToWorld = Matrix4x4<FloatType>::identity(), bool withNormals = false, const vec4<FloatType>& color = vec4<FloatType>(0.5,0.5,0.5,0.5)) {
 			for (unsigned int z = 0; z < grid.dimZ(); z++) {
 				for (unsigned int y = 0; y < grid.dimY(); y++) {
 					for (unsigned int x = 0; x < grid.dimX(); x++) {
 						if (grid.isVoxelSet(x,y,z)) {
-							point3d<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
-							point3d<FloatType> pMin = p - (FloatType)0.5;
-							point3d<FloatType> pMax = p + (FloatType)0.5;
+							vec3<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
+							vec3<FloatType> pMin = p - (FloatType)0.5;
+							vec3<FloatType> pMax = p + (FloatType)0.5;
 							p = voxelToWorld * p;
 
 							BoundingBox3<FloatType> bb;
@@ -269,9 +269,9 @@ namespace ml {
 							bb.include(voxelToWorld * pMax);
 
 							if (withNormals) {
-								point3d<FloatType> verts[24];
+								vec3<FloatType> verts[24];
 								vec3ui indices[12];
-								point3d<FloatType> normals[24];
+								vec3<FloatType> normals[24];
 								bb.makeTriMesh(verts,indices,normals);
 
 								unsigned int vertIdxBase = (unsigned int)m_Vertices.size();
@@ -283,7 +283,7 @@ namespace ml {
 									m_Indices.push_back(indices[i]);
 								}
 							} else {
-								point3d<FloatType> verts[8];
+								vec3<FloatType> verts[8];
 								vec3ui indices[12];
 								bb.makeTriMesh(verts, indices);
 
@@ -341,14 +341,14 @@ namespace ml {
       }
 		}
 
-		void scale(FloatType s) { scale(point3d<FloatType>(s, s, s)); }
+		void scale(FloatType s) { scale(vec3<FloatType>(s, s, s)); }
 
-		void scale(const point3d<FloatType>& v) {
+		void scale(const vec3<FloatType>& v) {
 			for (Vertex<FloatType>& mv : m_Vertices) for (UINT i = 0; i < 3; i++) { mv.position[i] *= v[i]; }
 		}
 
 		//! overwrites/sets the mesh color
-		void setColor(const point4d<FloatType>& c) {
+		void setColor(const vec4<FloatType>& c) {
 			for (auto& v : m_Vertices) {
 				v.color = c;
 			}
@@ -449,15 +449,15 @@ namespace ml {
 
 		void voxelize(BinaryGrid3& grid, const mat4f& worldToVoxel = mat4f::identity(), bool solid = false) const {
 			for (size_t i = 0; i < m_Indices.size(); i++) {
-				point3d<FloatType> p0 = worldToVoxel * m_Vertices[m_Indices[i].x].position;
-				point3d<FloatType> p1 = worldToVoxel * m_Vertices[m_Indices[i].y].position;
-				point3d<FloatType> p2 = worldToVoxel * m_Vertices[m_Indices[i].z].position;
+				vec3<FloatType> p0 = worldToVoxel * m_Vertices[m_Indices[i].x].position;
+				vec3<FloatType> p1 = worldToVoxel * m_Vertices[m_Indices[i].y].position;
+				vec3<FloatType> p2 = worldToVoxel * m_Vertices[m_Indices[i].z].position;
 
 				BoundingBox3<FloatType> bb0(p0, p1, p2);
                 //
                 // TODO MATTHIAS: this + 1.0f should be investigated more.
                 //
-				BoundingBox3<FloatType> bb1(point3d<FloatType>(0,0,0), point3d<FloatType>((FloatType)grid.dimX() + 1.0f, (FloatType)grid.dimY() + 1.0f, (FloatType)grid.dimZ() + 1.0f));
+				BoundingBox3<FloatType> bb1(vec3<FloatType>(0,0,0), vec3<FloatType>((FloatType)grid.dimX() + 1.0f, (FloatType)grid.dimY() + 1.0f, (FloatType)grid.dimZ() + 1.0f));
 				if (bb0.intersects(bb1)) {
 					voxelizeTriangle(p0, p1, p2, grid, solid);
 				} else {
@@ -470,7 +470,7 @@ namespace ml {
 		}
 	private:
 
-		void voxelizeTriangle(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2, BinaryGrid3& grid, bool solid = false) const {
+		void voxelizeTriangle(const vec3<FloatType>& v0, const vec3<FloatType>& v1, const vec3<FloatType>& v2, BinaryGrid3& grid, bool solid = false) const {
 
 			FloatType diagLenSq = (FloatType)3.0;
 			if ((v0-v1).lengthSq() < diagLenSq && (v0-v2).lengthSq() < diagLenSq &&	(v1-v2).lengthSq() < diagLenSq) {
@@ -482,7 +482,7 @@ namespace ml {
 				for (unsigned int i = minI.x; i <= maxI.x; i++) {
 					for (unsigned int j = minI.y; j <= maxI.y; j++) {
 						for (unsigned int k = minI.z; k <= maxI.z; k++) {
-							point3d<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
+							vec3<FloatType> v((FloatType)i,(FloatType)j,(FloatType)k);
 							BoundingBox3<FloatType> voxel;
 							const FloatType eps = (FloatType)0.0000;
 							voxel.include((v - (FloatType)0.5-eps));
@@ -490,10 +490,10 @@ namespace ml {
 							if (voxel.intersects(v0, v1, v2)) {
 								if (solid) {
 									//project to xy-plane
-									point2d<FloatType> pv = v.getVec2();
+									vec2<FloatType> pv = v.getVec2();
                                     if (intersection::intersectTrianglePoint(v0.getVec2(), v1.getVec2(), v2.getVec2(), pv)) {
-										Ray<FloatType> r0(point3d<FloatType>(v), point3d<FloatType>(0,0,1));
-										Ray<FloatType> r1(point3d<FloatType>(v), point3d<FloatType>(0,0,-1));
+										Ray<FloatType> r0(vec3<FloatType>(v), vec3<FloatType>(0,0,1));
+										Ray<FloatType> r1(vec3<FloatType>(v), vec3<FloatType>(0,0,-1));
 										FloatType t0, t1, _u0, _u1, _v0, _v1;
 										bool b0 = intersection::intersectRayTriangle(v0,v1,v2,r0,t0,_u0,_v0);
 										bool b1 = intersection::intersectRayTriangle(v0,v1,v2,r1,t1,_u1,_v1);
@@ -514,9 +514,9 @@ namespace ml {
 					}
 				} 
 			} else {
-				point3d<FloatType> e0 = (FloatType)0.5*(v0 + v1);
-				point3d<FloatType> e1 = (FloatType)0.5*(v1 + v2);
-				point3d<FloatType> e2 = (FloatType)0.5*(v2 + v0);
+				vec3<FloatType> e0 = (FloatType)0.5*(v0 + v1);
+				vec3<FloatType> e1 = (FloatType)0.5*(v1 + v2);
+				vec3<FloatType> e2 = (FloatType)0.5*(v2 + v0);
 				voxelizeTriangle(v0,e0,e2, grid, solid);
 				voxelizeTriangle(e0,v1,e1, grid, solid);
 				voxelizeTriangle(e1,v2,e2, grid, solid);

@@ -27,16 +27,16 @@ public:
 		typename TriMesh<FloatType>::Vertex<FloatType> getSurfaceVertex() const {
 			return triangle->getSurfaceVertex(u,v);
 		}
-		point3d<FloatType> getSurfacePosition() const {
+		vec3<FloatType> getSurfacePosition() const {
 			return triangle->getSurfacePosition(u,v);
 		}
-		point4d<FloatType> getSurfaceColor() const {
+		vec4<FloatType> getSurfaceColor() const {
 			return triangle->getSurfaceColor(u,v);
 		}
-		point3d<FloatType> getSurfaceNormal() const {
+		vec3<FloatType> getSurfaceNormal() const {
 			return triangle->getSurfaceNormal(u,v);
 		}
-		point2d<FloatType> getSurfaceTexCoord() const {
+		vec2<FloatType> getSurfaceTexCoord() const {
 			return triangle->getSurfaceTexCoord(u,v); 
 		}
 
@@ -176,14 +176,14 @@ public:
 
     struct Triangle
     {
-        point3d<FloatType> pos[3];
+        vec3<FloatType> pos[3];
         UINT meshIndex;
 
-        point3d<FloatType> getPos(const point2d<FloatType> &uv) const
+        vec3<FloatType> getPos(const vec2<FloatType> &uv) const
         {
             return (pos[0] + (pos[1] - pos[0]) * uv.x + (pos[2] - pos[0]) * uv.y);
         }
-        point3d<FloatType> normal() const
+        vec3<FloatType> normal() const
         {
             return math::triangleNormal(pos[0], pos[1], pos[2]);
         }

@@ -31,7 +31,7 @@ public:
 	}
 
 	//! Initialize from 3 row vectors
-	Matrix2x2(const point2d<FloatType>& v0, const point2d<FloatType>& v1) {
+	Matrix2x2(const vec2<FloatType>& v0, const vec2<FloatType>& v1) {
 		matrix[0] = v0.x;	matrix[1] = v0.y;
 		matrix[2] = v1.x;	matrix[3] = v1.y;
 	}
@@ -125,11 +125,11 @@ public:
 	}
 	
 	//! overwrite the matrix with a scale-matrix
-	void setScale(const point2d<FloatType>& v) {
+	void setScale(const vec2<FloatType>& v) {
 		matrix[0] = v.x; matrix[1] = 0.0;
 		matrix[2] = 0.0; matrix[3] = v.y;
 	}
-	static Matrix2x2 scale(const point2d<FloatType>& v) {
+	static Matrix2x2 scale(const vec2<FloatType>& v) {
 		Matrix2x2 res;	res.setScale(v);
 		return res;
 	}
@@ -200,8 +200,8 @@ public:
 		return *this;
 	}
 	//! transform a 2D-vector with the matrix
-	point2d<FloatType> operator* (const point2d<FloatType>& v) const {
-		return point3d<FloatType>(
+	vec2<FloatType> operator* (const vec2<FloatType>& v) const {
+		return vec3<FloatType>(
 			matrix[0]*v[0] + matrix[1]*v[1],
 			matrix[2]*v[0] + matrix[3]*v[1]
 		);
@@ -246,20 +246,20 @@ public:
 
 
 	//! get the x column out of the matrix
-	point2d<FloatType> xcol() const {
-		return point2d<FloatType>(matrix[0],matrix[2]);
+	vec2<FloatType> xcol() const {
+		return vec2<FloatType>(matrix[0],matrix[2]);
 	}
 	//! get the y column out of the matrix
-	point3d<FloatType> ycol() const {
-		return point2d<FloatType>(matrix[1],matrix[3]);
+	vec3<FloatType> ycol() const {
+		return vec2<FloatType>(matrix[1],matrix[3]);
 	}
 	//! get the x row out of the matrix
-	point2d<FloatType> xrow() const {
-		return point2d<FloatType>(matrix[0],matrix[1]);
+	vec2<FloatType> xrow() const {
+		return vec2<FloatType>(matrix[0],matrix[1]);
 	}
 	//! get the y row out of the matrix
-	point2d<FloatType> yrow() const {
-		return point2d<FloatType>(matrix[2],matrix[3]);
+	vec2<FloatType> yrow() const {
+		return vec2<FloatType>(matrix[2],matrix[3]);
 	}
 
 	//! return the inverse matrix; but does not change the current matrix
@@ -305,7 +305,7 @@ public:
 	}
 
 	//! computes the tensor product between two vectors
-	static Matrix2x2 tensorProduct(const point2d<FloatType> &v0, const point2d<FloatType> &v1) {
+	static Matrix2x2 tensorProduct(const vec2<FloatType> &v0, const vec2<FloatType> &v1) {
 		Matrix2x2 ret;
 		ret._m00 = v0.x * v1.x;		ret._m01 = v0.x * v1.y;
 		ret._m10 = v0.y * v1.x;		ret._m11 = v0.y * v1.y;

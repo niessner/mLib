@@ -28,11 +28,11 @@
 // core-math headers
 //
 #include "core-math/nr_templates.h"
-#include "core-math/point1d.h"
-#include "core-math/point2d.h"
-#include "core-math/point3d.h"
-#include "core-math/point4d.h"
-#include "core-math/point6d.h"
+#include "core-math/vec1.h"
+#include "core-math/vec2.h"
+#include "core-math/vec3.h"
+#include "core-math/vec4.h"
+#include "core-math/vec6.h"
 #include "core-math/matrix2x2.h"
 #include "core-math/matrix3x3.h"
 #include "core-math/matrix4x4.h"

@@ -7,7 +7,7 @@ namespace ml {
 template <class FloatType>
 class CGALWrapper {
 public:
-	static std::vector<point3d<FloatType>> convexHull(typename std::vector<point3d<FloatType>>::const_iterator pBegin, typename std::vector<point3d<FloatType>>::const_iterator pEnd) {
+	static std::vector<vec3<FloatType>> convexHull(typename std::vector<vec3<FloatType>>::const_iterator pBegin, typename std::vector<vec3<FloatType>>::const_iterator pEnd) {
 
 		typedef CGAL::Exact_predicates_inexact_constructions_kernel  K;
 		typedef CGAL::Polyhedron_3<K>                                Polyhedron_3;
@@ -24,11 +24,11 @@ public:
 		Polyhedron_3 poly;
 		CGAL::convex_hull_3(std::begin(cgalPoints), std::end(cgalPoints), poly);
 		poly.vertices_begin();
-		std::vector<point3d<FloatType>> out(poly.size_of_vertices());
+		std::vector<vec3<FloatType>> out(poly.size_of_vertices());
 
 		size_t i = 0;
 		for (auto it = poly.vertices_begin(); it != poly.vertices_end(); ++it, ++i) {
-			point3d<FloatType>& v = out[i];
+			vec3<FloatType>& v = out[i];
 			const auto& p = it->point();
 			v[0] = static_cast<FloatType>(p[0]);
 			v[1] = static_cast<FloatType>(p[1]);
@@ -38,14 +38,14 @@ public:
 		return out;
 	}
 
-	static std::vector<point3d<FloatType>> convexHull(const std::vector<point3d<FloatType>>& points) {
+	static std::vector<vec3<FloatType>> convexHull(const std::vector<vec3<FloatType>>& points) {
 		return convexHull(points.begin(), points.end());
 	}
 
 
 
 
-	static std::vector<point2d<FloatType>> minRectangle2D(typename std::vector<point2d<FloatType>>::const_iterator pBegin, typename std::vector<point2d<FloatType>>::const_iterator pEnd) {
+	static std::vector<vec2<FloatType>> minRectangle2D(typename std::vector<vec2<FloatType>>::const_iterator pBegin, typename std::vector<vec2<FloatType>>::const_iterator pEnd) {
 		typedef CGAL::Simple_cartesian<float>        K;
 		typedef K::Point_2                           Point_2;
 		typedef K::Line_2                            Line_2;
@@ -67,17 +67,17 @@ public:
 		CGAL::min_rectangle_2(p.vertices_begin(), p.vertices_end(),
 			std::back_inserter(p_m));
 
-		std::vector<point2d<FloatType>> out(p_m.size());
+		std::vector<vec2<FloatType>> out(p_m.size());
 		size_t i = 0;
 		for (auto it = p_m.vertices_begin(); it != p_m.vertices_end(); ++it, ++i) {
-			point2d<FloatType>& v = out[i];
+			vec2<FloatType>& v = out[i];
 			v[0] = static_cast<float>(it->x());
 			v[1] = static_cast<float>(it->y());
 		}
 		return out;
 	}
 
-	static std::vector<point2d<FloatType> > minRectangle2D(const std::vector < point2d<FloatType> >& points) { 
+	static std::vector<vec2<FloatType> > minRectangle2D(const std::vector < vec2<FloatType> >& points) { 
 		return minRectangle2D(points.begin(), points.end());  
 	}
 
@@ -92,9 +92,9 @@ public:
 	typedef FlagSet<FitOpts> FitOptFlags;
 
 	static OrientedBoundingBox3<FloatType> computeOrientedBoundingBox(
-		const std::vector<point3d<FloatType>>& points, 
+		const std::vector<vec3<FloatType>>& points, 
 		const FitOptFlags opts = DEFAULT_OPTS, 
-		const point3d<FloatType>& axisConstrain = point3d<FloatType>(0,0,1)) 
+		const vec3<FloatType>& axisConstrain = vec3<FloatType>(0,0,1)) 
 	{
 
 		if (opts[PCA]) {
@@ -104,10 +104,10 @@ public:
 		}
 		else if (opts[CONSTRAIN_Z]) {
 			// Get centroid, z range and x-y points for 2D rect fitting
-			std::vector<point2d<FloatType>> projPs(points.size());
+			std::vector<vec2<FloatType>> projPs(points.size());
 			size_t i = 0;
 			FloatType big = std::numeric_limits<FloatType>::max();
-			point3d<FloatType> pMin(big, big, big), pMax(-big, -big, -big);
+			vec3<FloatType> pMin(big, big, big), pMax(-big, -big, -big);
 			for (auto it = points.begin(); it != points.end(); it++, i++) {
 				const FloatType x = (*it)[0], y = (*it)[1], z = (*it)[2];
 				if (x < pMin[0]) { pMin[0] = x; }
@@ -120,69 +120,69 @@ public:
 			}
 
 			// Find minimum rectangle in x-y plane
-			const std::vector<point2d<FloatType>>& rectPts = minRectangle2D(projPs);
+			const std::vector<vec2<FloatType>>& rectPts = minRectangle2D(projPs);
 
 			// Set x and y bbox axes from 2D rectangle axes
-			const point2d<FloatType>& v0 = rectPts[1] - rectPts[0], v1 = rectPts[2] - rectPts[1];
+			const vec2<FloatType>& v0 = rectPts[1] - rectPts[0], v1 = rectPts[2] - rectPts[1];
 			const FloatType v0norm2 = v0.lengthSq(), v1norm2 = v1.lengthSq();
 			size_t v0idx = (v0norm2 > v1norm2) ? 0 : 1;
 			size_t v1idx = (v0idx + 1) % 2;
-			const point2d<FloatType>& v0n = v0.getNormalized(), v1n = v1.getNormalized();
-			//R_.col(v0idx) = point3d<FloatType>(v0n[0], v0n[1], 0);  r_[v0idx] = sqrt(v0norm2) * (FloatType)0.5;
-			//R_.col(v1idx) = point3d<FloatType>(v1n[0], v1n[1], 0);  r_[v1idx] = sqrt(v1norm2) * (FloatType)0.5;
-			//R_.col(2) = point3d<FloatType>(0, 0, 1);                r_[2] = (pMax[2] - pMin[2]) * (FloatType)0.5;
+			const vec2<FloatType>& v0n = v0.getNormalized(), v1n = v1.getNormalized();
+			//R_.col(v0idx) = vec3<FloatType>(v0n[0], v0n[1], 0);  r_[v0idx] = sqrt(v0norm2) * (FloatType)0.5;
+			//R_.col(v1idx) = vec3<FloatType>(v1n[0], v1n[1], 0);  r_[v1idx] = sqrt(v1norm2) * (FloatType)0.5;
+			//R_.col(2) = vec3<FloatType>(0, 0, 1);                r_[2] = (pMax[2] - pMin[2]) * (FloatType)0.5;
 			//c_ = (pMin + pMax) * (FloatType)0.5;
 
-			return OrientedBoundingBox3<FloatType>(points, point3d<FloatType>(v0n[0], v0n[1], 0), point3d<FloatType>(v1n[0], v1n[1], 0), point3d<FloatType>(0, 0, 1));
+			return OrientedBoundingBox3<FloatType>(points, vec3<FloatType>(v0n[0], v0n[1], 0), vec3<FloatType>(v1n[0], v1n[1], 0), vec3<FloatType>(0, 0, 1));
 		}
 		else if (opts[MIN_PCA]) {
 			// Project points into 2D plane formed by the first two eigenvector
 			// in R's columns. The plane normal is the last eigenvector
-			vector< std::pair<point3d<FloatType>, FloatType> > pca = math::pointSetPCA(points);
+			vector< std::pair<vec3<FloatType>, FloatType> > pca = math::pointSetPCA(points);
 			Matrix3x3<FloatType> proj3x3(pca[0].first, pca[1].first, pca[2].first);		proj3x3.transpose();
-			std::vector<point2d<FloatType>> projPs(points.size());
+			std::vector<vec2<FloatType>> projPs(points.size());
 			size_t i = 0;
 			for (auto it = points.begin(); it != points.end(); it++, i++) {
-				const point3d<FloatType>& p = proj3x3 * *it;
-				projPs[i] = point2d<FloatType>(p.x, p.y);
+				const vec3<FloatType>& p = proj3x3 * *it;
+				projPs[i] = vec2<FloatType>(p.x, p.y);
 			}
 
 			// Find minimum rectangle in that plane
-			const std::vector<point2d<FloatType>>& rectPts = minRectangle2D(projPs);
+			const std::vector<vec2<FloatType>>& rectPts = minRectangle2D(projPs);
 
 			// Set new bbox axes v0 and v1 from 2D rectangle's axes by first getting
 			// back their 3D world space coordinates and then ordering by length so
 			// that v0 remains largest OBB dimension, followed by v1
-			//const point2d<FloatType> pV0 = rectPts[1] - rectPts[0], pV1 = rectPts[2] - rectPts[1];
-			//const point3d<FloatType> bv0 = Mproj.transpose() * pV0, bv1 = Mproj.transpose() * pV1;
+			//const vec2<FloatType> pV0 = rectPts[1] - rectPts[0], pV1 = rectPts[2] - rectPts[1];
+			//const vec3<FloatType> bv0 = Mproj.transpose() * pV0, bv1 = Mproj.transpose() * pV1;
 			//const float bv0norm = bv0.squaredNorm(), bv1norm = bv1.squaredNorm();
 			//R_.col(0) = (bv0norm > bv1norm) ? bv0.normalized() : bv1.normalized();
 			//R_.col(1) = (bv0norm > bv1norm) ? bv1.normalized() : bv0.normalized();
 			//R_.col(2) = R_.col(0).cross(R_.col(1));
 
-			const point2d<FloatType> pV0 = rectPts[1] - rectPts[0], pV1 = rectPts[2] - rectPts[1];
-			const point3d<FloatType> bv0 = proj3x3.getTranspose() * point3d<FloatType>(pV0, (FloatType)0), bv1 = proj3x3.getTranspose() * point3d<FloatType>(pV1, (FloatType)0);
+			const vec2<FloatType> pV0 = rectPts[1] - rectPts[0], pV1 = rectPts[2] - rectPts[1];
+			const vec3<FloatType> bv0 = proj3x3.getTranspose() * vec3<FloatType>(pV0, (FloatType)0), bv1 = proj3x3.getTranspose() * vec3<FloatType>(pV1, (FloatType)0);
 
 			return OrientedBoundingBox3<FloatType>(points, bv0, bv1, (bv0 ^ bv1).getNormalized());
 		}
 		else if (opts[CONSTRAIN_AXIS]) {
-			point3d<FloatType> e(axisConstrain.z, -axisConstrain.x, axisConstrain.y);
-			point3d<FloatType> a0 = axisConstrain^e;
+			vec3<FloatType> e(axisConstrain.z, -axisConstrain.x, axisConstrain.y);
+			vec3<FloatType> a0 = axisConstrain^e;
 			if (a0.lengthSq() < (FloatType)0.0001)	throw MLIB_EXCEPTION("invalid axis");
-			point3d<FloatType> a1 = (a0 ^ axisConstrain).getNormalized();
+			vec3<FloatType> a1 = (a0 ^ axisConstrain).getNormalized();
 			Matrix3x3<FloatType> proj3x3(a0, a1, axisConstrain.getNormalized());		proj3x3.transpose();
-			std::vector<point2d<FloatType>> projPs(points.size());
+			std::vector<vec2<FloatType>> projPs(points.size());
 			size_t i = 0;
 			for (auto it = points.begin(); it != points.end(); it++, i++) {
-				const point3d<FloatType>& p = proj3x3 * *it;
-				projPs[i] = point2d<FloatType>(p.x, p.y);
+				const vec3<FloatType>& p = proj3x3 * *it;
+				projPs[i] = vec2<FloatType>(p.x, p.y);
 			}
 
 			// Find minimum rectangle in that plane
-			const std::vector<point2d<FloatType>>& rectPts = minRectangle2D(projPs);
+			const std::vector<vec2<FloatType>>& rectPts = minRectangle2D(projPs);
 
-			const point2d<FloatType> pV0 = rectPts[1] - rectPts[0], pV1 = rectPts[2] - rectPts[1];
-			const point3d<FloatType> bv0 = proj3x3.getTranspose() * point3d<FloatType>(pV0, (FloatType)0), bv1 = proj3x3.getTranspose() * point3d<FloatType>(pV1, (FloatType)0);
+			const vec2<FloatType> pV0 = rectPts[1] - rectPts[0], pV1 = rectPts[2] - rectPts[1];
+			const vec3<FloatType> bv0 = proj3x3.getTranspose() * vec3<FloatType>(pV0, (FloatType)0), bv1 = proj3x3.getTranspose() * vec3<FloatType>(pV1, (FloatType)0);
 
 			return OrientedBoundingBox3<FloatType>(points, bv0, bv1, (bv0 ^ bv1).getNormalized());
 		}

@@ -33,7 +33,7 @@ public:
 	}
 
 	//! Initializes the matrix row wise (given 3 row vectors); that last row and column are initialized with 0,0,0,1
-	Matrix4x4(const point3d<FloatType> &v0, const point3d<FloatType> &v1, const point3d<FloatType> &v2) {
+	Matrix4x4(const vec3<FloatType> &v0, const vec3<FloatType> &v1, const vec3<FloatType> &v2) {
 		matrix2[0][0] = v0.x;	matrix2[0][1] = v0.y;	matrix2[0][2] = v0.z;	matrix2[0][3] = 0.0;
 		matrix2[1][0] = v1.x;	matrix2[1][1] = v1.y;	matrix2[1][2] = v1.z;	matrix2[1][3] = 0.0;
 		matrix2[2][0] = v2.x;	matrix2[2][1] = v2.y;	matrix2[2][2] = v2.z;	matrix2[2][3] = 0.0;
@@ -41,7 +41,7 @@ public:
 	}
 
 	//! Initializes the matrix row wise (given 3 row vectors); that last row is initialized with 0,0,0,1
-	Matrix4x4(const point3d<FloatType> &v0, const point3d<FloatType> &v1, const point3d<FloatType> &v2, const point3d<FloatType> &v3) {
+	Matrix4x4(const vec3<FloatType> &v0, const vec3<FloatType> &v1, const vec3<FloatType> &v2, const vec3<FloatType> &v3) {
 		matrix2[0][0] = v0.x;	matrix2[0][1] = v0.y;	matrix2[0][2] = v0.z;	matrix2[0][3] = v0.w;
 		matrix2[1][0] = v1.x;	matrix2[1][1] = v1.y;	matrix2[1][2] = v1.z;	matrix2[1][3] = v1.w;
 		matrix2[2][0] = v2.x;	matrix2[2][1] = v2.y;	matrix2[2][2] = v2.z;	matrix2[2][3] = v2.w;
@@ -49,7 +49,7 @@ public:
 	}
 
 	//! Initializes the matrix row wise (given 4 row vectors)
-	Matrix4x4(const point4d<FloatType> &v0, const point4d<FloatType> &v1, const point4d<FloatType> &v2, const point4d<FloatType> &v3) {
+	Matrix4x4(const vec4<FloatType> &v0, const vec4<FloatType> &v1, const vec4<FloatType> &v2, const vec4<FloatType> &v3) {
 		matrix2[0][0] = v0.x;	matrix2[0][1] = v0.y;	matrix2[0][2] = v0.z;	matrix2[0][3] = v0.w;
 		matrix2[1][0] = v1.x;	matrix2[1][1] = v1.y;	matrix2[1][2] = v1.z;	matrix2[1][3] = v1.w;
 		matrix2[2][0] = v2.x;	matrix2[2][1] = v2.y;	matrix2[2][2] = v2.z;	matrix2[2][3] = v2.w;
@@ -88,7 +88,7 @@ public:
 	}
 
 	//! initializes a matrix from a 3x3 matrix + translation (last row set to 0,0,0,1)
-	Matrix4x4(const Matrix3x3<FloatType>& other, const point3d<FloatType>& t) {
+	Matrix4x4(const Matrix3x3<FloatType>& other, const vec3<FloatType>& t) {
 		for (unsigned char i = 0; i < 3; i++) {
 			for (unsigned char j = 0; j < 3; j++) {
 				at(i,j) = other.at(i,j);
@@ -152,7 +152,7 @@ public:
 	}
 	
 	//! overwrites the translation vector; all other values remain unchanged
-	void setTranslationVector(const point3d<FloatType>& t) {
+	void setTranslationVector(const vec3<FloatType>& t) {
 		at(0,3) = t.x;
 		at(1,3) = t.y;
 		at(2,3) = t.z;
@@ -175,8 +175,8 @@ public:
 	}
 
 	//! returns the translation part of the matrix
-	point3d<FloatType> getTranslation() const {
-		return point3d<FloatType>(at(0,3), at(1,3), at(2,3));
+	vec3<FloatType> getTranslation() const {
+		return vec3<FloatType>(at(0,3), at(1,3), at(2,3));
 	}
 
 
@@ -214,13 +214,13 @@ public:
 	}
 
 	//! overwrite the matrix with a translation-matrix
-	void setTranslation(const point3d<FloatType>& v) {
+	void setTranslation(const vec3<FloatType>& v) {
 		matrix[0 ] = 1.0;  matrix[1 ] = 0.0;  matrix[2 ] = 0.0;  matrix[3 ] = v.x;
 		matrix[4 ] = 0.0;  matrix[5 ] = 1.0;  matrix[6 ] = 0.0;  matrix[7 ] = v.y;
 		matrix[8 ] = 0.0;  matrix[9 ] = 0.0;  matrix[10] = 1.0;  matrix[11] = v.z;
 		matrix[12] = 0.0;  matrix[13] = 0.0;  matrix[14] = 0.0;  matrix[15] = 1.0;
 	}
-	static Matrix4x4 translation(const point3d<FloatType>& v) {
+	static Matrix4x4 translation(const vec3<FloatType>& v) {
 		Matrix4x4 res;	res.setTranslation(v);
 		return res;
 	}
@@ -283,19 +283,19 @@ public:
 	}
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
-	void setRotation(const point3d<FloatType> &axis, FloatType angle) {
+	void setRotation(const vec3<FloatType> &axis, FloatType angle) {
 		*this = Matrix3x3<FloatType>::rotation(axis, angle);
 	}
-	static Matrix4x4 rotation(const point3d<FloatType> &axis, FloatType angle) {
+	static Matrix4x4 rotation(const vec3<FloatType> &axis, FloatType angle) {
 		Matrix4x4 res;	res.setRotation(axis, angle);
 		return res;
 	}
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
-	void setRotation(const point3d<FloatType> &axis, FloatType angle, const point3d<FloatType>& center) {
+	void setRotation(const vec3<FloatType> &axis, FloatType angle, const vec3<FloatType>& center) {
 		*this = translation(-center) * rotation(axis, angle) * translation(center);
 	}
-	static Matrix4x4 rotation(const point3d<FloatType> &axis, FloatType angle, const point3d<FloatType>& center) {
+	static Matrix4x4 rotation(const vec3<FloatType> &axis, FloatType angle, const vec3<FloatType>& center) {
 		Matrix4x4 ret;
 		ret.setRotation(axis, angle, center);
 		return ret;
@@ -323,20 +323,20 @@ public:
 	}
 
 	//! overwrite the matrix with a scale-matrix
-	void setScale(const point3d<FloatType>& v) {
+	void setScale(const vec3<FloatType>& v) {
 		matrix[0 ] = v.x; matrix[1 ] = 0.0; matrix[2 ] = 0.0; matrix[3 ] = 0.0;
 		matrix[4 ] = 0.0; matrix[5 ] = v.y; matrix[6 ] = 0.0; matrix[7 ] = 0.0;
 		matrix[8 ] = 0.0; matrix[9 ] = 0.0; matrix[10] = v.z; matrix[11] = 0.0;
 		matrix[12] = 0.0; matrix[13] = 0.0; matrix[14] = 0.0; matrix[15] = 1.0;
 	}
-	static Matrix4x4 scale(const point3d<FloatType>& v) {
+	static Matrix4x4 scale(const vec3<FloatType>& v) {
 		Matrix4x4 res;	res.setScale(v);
 		return res;
 	}
 
-    static Matrix4x4 face(const point3d<FloatType>& vA, const point3d<FloatType>& vB)
+    static Matrix4x4 face(const vec3<FloatType>& vA, const vec3<FloatType>& vB)
     {
-        typedef point3d<FloatType> vec3;
+        typedef vec3<FloatType> vec3;
         auto a = vA.getNormalized();
         auto b = vB.getNormalized();
         auto axis = b ^ a;
@@ -425,8 +425,8 @@ public:
 		return *this;
 	}
 	//! transform a 4D-vector with the matrix
-	point4d<FloatType> operator* (const point4d<FloatType>& v) const {
-		return point4d<FloatType>(
+	vec4<FloatType> operator* (const vec4<FloatType>& v) const {
+		return vec4<FloatType>(
 			matrix[0 ]*v.x + matrix[1 ]*v.y + matrix[2 ]*v.z + matrix[3 ]*v.w,
 			matrix[4 ]*v.x + matrix[5 ]*v.y + matrix[6 ]*v.z + matrix[7 ]*v.w,
 			matrix[8 ]*v.x + matrix[9 ]*v.y + matrix[10]*v.z + matrix[11]*v.w,
@@ -434,8 +434,8 @@ public:
 		);
 	}
 	////! transform a 3D-vector with the matrix (implicit w=1)
-	//point4d<FloatType> operator* (const point3d<FloatType>& v) const {
-	//	return point4d<FloatType>(
+	//vec4<FloatType> operator* (const vec3<FloatType>& v) const {
+	//	return vec4<FloatType>(
 	//		matrix[0 ]*v[0] + matrix[1 ]*v[1] + matrix[2 ]*v[2] + matrix[3],
 	//		matrix[4 ]*v[0] + matrix[5 ]*v[1] + matrix[6 ]*v[2] + matrix[7],
 	//		matrix[8 ]*v[0] + matrix[9 ]*v[1] + matrix[10]*v[2] + matrix[11],
@@ -443,27 +443,27 @@ public:
 	//	);
 	//}
 	//! transform a 3D-vector with the matrix (implicit w=1 and implicit subsequent de-homogenization)
-	point3d<FloatType> operator* (const point3d<FloatType>& v) const {
-		point4d<FloatType> result(
+	vec3<FloatType> operator* (const vec3<FloatType>& v) const {
+		vec4<FloatType> result(
 			matrix[0 ]*v.x + matrix[1 ]*v.y + matrix[2 ]*v.z + matrix[3 ],
 			matrix[4 ]*v.x + matrix[5 ]*v.y + matrix[6 ]*v.z + matrix[7 ],
 			matrix[8 ]*v.x + matrix[9 ]*v.y + matrix[10]*v.z + matrix[11],
 			matrix[12]*v.x + matrix[13]*v.y + matrix[14]*v.z + matrix[15]
 		);
 		result.dehomogenize();
-		return point3d<FloatType>(result.x, result.y, result.z);
+		return vec3<FloatType>(result.x, result.y, result.z);
 	}
 
-    point3d<FloatType> transformAffine(const point3d<FloatType>& v) const {
-        return point3d<FloatType>(
+    vec3<FloatType> transformAffine(const vec3<FloatType>& v) const {
+        return vec3<FloatType>(
             matrix[0] * v.x + matrix[1] * v.y + matrix[2] * v.z + matrix[3],
             matrix[4] * v.x + matrix[5] * v.y + matrix[6] * v.z + matrix[7],
             matrix[8] * v.x + matrix[9] * v.y + matrix[10] * v.z + matrix[11]
             );
     }
 
-    point3d<FloatType> transformNormalAffine(const point3d<FloatType>& v) const {
-        return point3d<FloatType>(
+    vec3<FloatType> transformNormalAffine(const vec3<FloatType>& v) const {
+        return vec3<FloatType>(
             matrix[0] * v.x + matrix[1] * v.y + matrix[2] * v.z,
             matrix[4] * v.x + matrix[5] * v.y + matrix[6] * v.z,
             matrix[8] * v.x + matrix[9] * v.y + matrix[10] * v.z
@@ -517,36 +517,36 @@ public:
 
 
 	//! get the x column out of the matrix
-	point4d<FloatType> xcol() const {
-		return point4d<FloatType>(matrix[0],matrix[4],matrix[8],matrix[12]);
+	vec4<FloatType> xcol() const {
+		return vec4<FloatType>(matrix[0],matrix[4],matrix[8],matrix[12]);
 	}
 	//! get the y column out of the matrix
-	point4d<FloatType> ycol() const {
-		return point4d<FloatType>(matrix[1],matrix[5],matrix[9],matrix[13]);
+	vec4<FloatType> ycol() const {
+		return vec4<FloatType>(matrix[1],matrix[5],matrix[9],matrix[13]);
 	}
 	//! get the y column out of the matrix
-	point4d<FloatType> zcol() const {
-		return point4d<FloatType>(matrix[2],matrix[6],matrix[10],matrix[14]);
+	vec4<FloatType> zcol() const {
+		return vec4<FloatType>(matrix[2],matrix[6],matrix[10],matrix[14]);
 	}
 	//! get the t column out of the matrix
-	point4d<FloatType> tcol() const {
-		return point4d<FloatType>(matrix[3],matrix[7],matrix[11],matrix[15]);
+	vec4<FloatType> tcol() const {
+		return vec4<FloatType>(matrix[3],matrix[7],matrix[11],matrix[15]);
 	}
 	//! get the x row out of the matrix
-	point4d<FloatType> xrow() const {
-		return point4d<FloatType>(matrix[0],matrix[1],matrix[2],matrix[3]);
+	vec4<FloatType> xrow() const {
+		return vec4<FloatType>(matrix[0],matrix[1],matrix[2],matrix[3]);
 	}
 	//! get the y row out of the matrix
-	point4d<FloatType> yrow() const {
-		return point4d<FloatType>(matrix[4],matrix[5],matrix[6],matrix[7]);
+	vec4<FloatType> yrow() const {
+		return vec4<FloatType>(matrix[4],matrix[5],matrix[6],matrix[7]);
 	}
 	//! get the y row out of the matrix
-	point4d<FloatType> zrow() const {
-		return point4d<FloatType>(matrix[8],matrix[9],matrix[10],matrix[11]);
+	vec4<FloatType> zrow() const {
+		return vec4<FloatType>(matrix[8],matrix[9],matrix[10],matrix[11]);
 	}
 	//! get the t row out of the matrix
-	inline point4d<FloatType> trow() const {
-		return point4d<FloatType>(matrix[12],matrix[13],matrix[14],matrix[15]);
+	inline vec4<FloatType> trow() const {
+		return vec4<FloatType>(matrix[12],matrix[13],matrix[14],matrix[15]);
 	}
 
 
@@ -782,7 +782,7 @@ public:
 
 
 	//! constructs a matrix from a normal vector (TODO check if it is not transposed...)
-	static Matrix4x4 frame(const point3d<FloatType>& n) {
+	static Matrix4x4 frame(const vec3<FloatType>& n) {
 		return Matrix4x4(Matrix3x3<FloatType>::frame(n));
 	}
 

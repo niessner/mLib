@@ -171,7 +171,7 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 	{
 		// read points
 		for(unsigned int i = 0; i < numV; i++) {
-			point3d<FloatType> v;
+			vec3<FloatType> v;
 			file >> v.x >> v.y >> v.z;
 			mesh.m_Vertices[i] = v;
 			mesh.m_Colors[i] = vec4f::origin;
@@ -181,8 +181,8 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 	{	// ignore color
 		// read points
 		for (unsigned int i = 0; i < numV; i++) {
-			point3d<FloatType> v;
-			point4d<FloatType> c;
+			vec3<FloatType> v;
+			vec4<FloatType> c;
 			file >> v.x >> v.y >> v.z;
 			file >> c.x >> c.y >> c.z >> c.w;
 			mesh.m_Vertices[i] = v;
@@ -257,10 +257,10 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 					//vertex, 3 or 4 components
 					val[3] = 1.0f;  //default w coordinate
 					match = fscanf( fp, "%f %f %f %f %f %f", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5]);	//meshlab stores colors right after vertex pos (3 xyz, 3 rgb)
-					mesh.m_Vertices.push_back(point3d<FloatType>(val[0], val[1], val[2]));
+					mesh.m_Vertices.push_back(vec3<FloatType>(val[0], val[1], val[2]));
 
 					if (match == 6) {  //we found color data
-						mesh.m_Colors.push_back(point4d<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
+						mesh.m_Colors.push_back(vec4<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
 					}
 					assert( match == 3 || match == 4 || match == 6);
 					break;
@@ -268,7 +268,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 				case 'n':
 					//normal, 3 components
 					match = fscanf( fp, "%f %f %f", &val[0], &val[1], &val[2]);
-					mesh.m_Normals.push_back(point3d<FloatType>(val[0], val[1], val[2]));
+					mesh.m_Normals.push_back(vec3<FloatType>(val[0], val[1], val[2]));
 
 					assert( match == 3);
 					break;
@@ -277,7 +277,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 					//texcoord, 2 or 3 components
 					val[2] = 0.0f;  //default r coordinate
 					match = fscanf( fp, "%f %f %f %f", &val[0], &val[1], &val[2], &val[3]);
-					mesh.m_TextureCoords.push_back(point2d<FloatType>(val[0], val[1]));
+					mesh.m_TextureCoords.push_back(vec2<FloatType>(val[0], val[1]));
 
 					assert( match > 1 && match < 4);
 					assert( match == 2);

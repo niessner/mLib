@@ -12,26 +12,26 @@ public:
 
 	}
 
-	Plane(const point3d<FloatType>& p0, const point3d<FloatType>& p1, const point3d<FloatType>& p2) {
-		const point3d<FloatType> p[] = {p0,p1,p2};
+	Plane(const vec3<FloatType>& p0, const vec3<FloatType>& p1, const vec3<FloatType>& p2) {
+		const vec3<FloatType> p[] = {p0,p1,p2};
 		createFromPoints(p);
 	}
 
-	Plane(const point3d<FloatType> *points) {
+	Plane(const vec3<FloatType> *points) {
 		createFromPoints(points);
 	}
 
-	Plane(const point3d<FloatType>& normal, FloatType dist) {
+	Plane(const vec3<FloatType>& normal, FloatType dist) {
 		m_Normal = normal;
 		m_Distance = dist;
 	}
 
-	Plane(const point3d<FloatType> &normal, const point3d<FloatType>& p) {
+	Plane(const vec3<FloatType> &normal, const vec3<FloatType>& p) {
 		m_Normal = normal;
 		m_Distance = m_Normal | p;
 	}
 
-	inline point3d<FloatType> getNormal() const {
+	inline vec3<FloatType> getNormal() const {
 		return m_Normal;
 	}
 
@@ -39,26 +39,26 @@ public:
 		return m_Distance;
 	}
 
-	inline FloatType distanceToPoint(const point3d<FloatType>& point) const {
+	inline FloatType distanceToPoint(const vec3<FloatType>& point) const {
 		return (m_Normal | point) - m_Distance;
 	}
 
-	inline FloatType distanceToPointAbs(const point3d<FloatType>& point) const {
+	inline FloatType distanceToPointAbs(const vec3<FloatType>& point) const {
 		return std::abs(distanceToPoint(point));
 	}
 
-	inline point3d<FloatType> projectPointToPlane(const point3d<FloatType>& point) const {
+	inline vec3<FloatType> projectPointToPlane(const vec3<FloatType>& point) const {
 		return point - distanceToPoint(point) * getNormal();
 	}
 
 	inline static Plane<FloatType> xyPlane() {
-		return Plane<FloatType>(point3d<FloatType>(0,0,1), 0);
+		return Plane<FloatType>(vec3<FloatType>(0,0,1), 0);
 	}
 	inline static Plane<FloatType> xzPlane() {
-		return Plane<FloatType>(point3d<FloatType>(0,1,0), 0);
+		return Plane<FloatType>(vec3<FloatType>(0,1,0), 0);
 	}
 	inline static Plane<FloatType> yzPlane() {
-		return Plane<FloatType>(point3d<FloatType>(1,0,0), 0);
+		return Plane<FloatType>(vec3<FloatType>(1,0,0), 0);
 	}
 
 	inline Plane<FloatType> operator-() const {
@@ -66,7 +66,7 @@ public:
 	}
 
 private:
-	void createFromPoints( const point3d<FloatType>* points ) 
+	void createFromPoints( const vec3<FloatType>* points ) 
 	{
 		m_Normal = ((points[1] - points[0])^(points[2] - points[0])).getNormalized();
 		m_Distance = (m_Normal | points[0]);
@@ -77,7 +77,7 @@ private:
 		}	
 	}
 
-	point3d<FloatType> m_Normal;
+	vec3<FloatType> m_Normal;
 	FloatType m_Distance;
 };
 

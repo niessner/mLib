@@ -196,9 +196,9 @@ public:
 			}
 		}
 
-		//point3d<FloatType> vec1(v[1][1], v[2][1], v[3][1]);
-		//point3d<FloatType> vec2(v[1][2], v[2][2], v[3][2]);
-		//point3d<FloatType> vec3(v[1][3], v[2][3], v[3][3]);
+		//vec3<FloatType> vec1(v[1][1], v[2][1], v[3][1]);
+		//vec3<FloatType> vec2(v[1][2], v[2][2], v[3][2]);
+		//vec3<FloatType> vec3(v[1][3], v[2][3], v[3][3]);
 
 		//// Sort eigenvectors such the ev[0] is the smallest...
 		//if (fabs(lambda[1]) < fabs(lambda[2]) && fabs(lambda[1]) < fabs(lambda[3])) {

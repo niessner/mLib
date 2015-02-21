@@ -22,7 +22,7 @@ public:
     }
 
 	//! constructs an oriented bounding box using PCA
-	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points) {
+	OrientedBoundingBox3(const std::vector<vec3<FloatType>>& points) {
 
 		auto pca = math::pointSetPCA(points);
 		m_AxesScaled[0] = pca[0].first.getNormalized();
@@ -33,7 +33,7 @@ public:
 	}
 
 	//! creates an object oriented bounding for a given set of points with the same axes as the other OBB
-	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points, const OrientedBoundingBox3& other) {
+	OrientedBoundingBox3(const std::vector<vec3<FloatType>>& points, const OrientedBoundingBox3& other) {
 		m_AxesScaled[0] = other.m_AxesScaled[0].getNormalized();
 		m_AxesScaled[1] = other.m_AxesScaled[1].getNormalized();
 		m_AxesScaled[2] = other.m_AxesScaled[2].getNormalized();
@@ -42,7 +42,7 @@ public:
 	}
 
 	//! creates an object oriented bounding box given a set of points and 3 axes
-	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
+	OrientedBoundingBox3(const std::vector<vec3<FloatType>>& points, const vec3<FloatType>& xAxis, const vec3<FloatType>& yAxis, const vec3<FloatType>& zAxis) {
 		m_AxesScaled[0] = xAxis.getNormalized();
 		m_AxesScaled[1] = yAxis.getNormalized();
 		m_AxesScaled[2] = zAxis.getNormalized();
@@ -51,30 +51,30 @@ public:
 	}
 
 	//! creates an object oriented bounding box around a set of points with a given zAxis
-	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points, const point3d<FloatType>& zAxis) {
+	OrientedBoundingBox3(const std::vector<vec3<FloatType>>& points, const vec3<FloatType>& zAxis) {
 
 		m_AxesScaled[2] = zAxis.getNormalized();
 
-		point3d<FloatType> v, v0, v1;
-		if (m_AxesScaled[2].x != (FloatType)0)		v = point3d<FloatType>(m_AxesScaled[2].z, -m_AxesScaled[2].x, m_AxesScaled[2].y);
-		else if (m_AxesScaled[2].y != (FloatType)0)	v = point3d<FloatType>(m_AxesScaled[2].z, m_AxesScaled[2].x, -m_AxesScaled[2].y);
-		else										v = point3d<FloatType>(-m_AxesScaled[2].z, m_AxesScaled[2].x, m_AxesScaled[2].y);
+		vec3<FloatType> v, v0, v1;
+		if (m_AxesScaled[2].x != (FloatType)0)		v = vec3<FloatType>(m_AxesScaled[2].z, -m_AxesScaled[2].x, m_AxesScaled[2].y);
+		else if (m_AxesScaled[2].y != (FloatType)0)	v = vec3<FloatType>(m_AxesScaled[2].z, m_AxesScaled[2].x, -m_AxesScaled[2].y);
+		else										v = vec3<FloatType>(-m_AxesScaled[2].z, m_AxesScaled[2].x, m_AxesScaled[2].y);
 		v0 = (v ^ m_AxesScaled[2]);
 		v1 = (v0 ^ m_AxesScaled[2]);
 		v0.normalize();
 		v1.normalize();
 
-		std::vector < point2d<FloatType> > pointsProj(points.size());
+		std::vector < vec2<FloatType> > pointsProj(points.size());
 
-		point2d<FloatType> pointsProjMean((FloatType)0, (FloatType)0);
+		vec2<FloatType> pointsProjMean((FloatType)0, (FloatType)0);
 		for (size_t i = 0; i < points.size(); i++) {
-			pointsProj[i] = point2d<FloatType>(points[i] | v0, points[i] | v1);
+			pointsProj[i] = vec2<FloatType>(points[i] | v0, points[i] | v1);
 		}
 
-		vector< std::pair<point3d<FloatType>, FloatType> > pca = math::pointSetPCA(points);
+		vector< std::pair<vec3<FloatType>, FloatType> > pca = math::pointSetPCA(points);
 
-		const point2d<FloatType>& ev0 = pca[0].first;
-		const point2d<FloatType>& ev1 = pca[1].first;
+		const vec2<FloatType>& ev0 = pca[0].first;
+		const vec2<FloatType>& ev1 = pca[1].first;
 		
 
 		//Eigenvector computation has some numerical issues...
@@ -90,7 +90,7 @@ public:
 	}
 
 	//! creates an object oriented bounding box given an anchor and 3 axes
-	OrientedBoundingBox3(const point3d<FloatType>& anchor, const point3d<FloatType>& xAxis, const point3d<FloatType>& yAxis, const point3d<FloatType>& zAxis) {
+	OrientedBoundingBox3(const vec3<FloatType>& anchor, const vec3<FloatType>& xAxis, const vec3<FloatType>& yAxis, const vec3<FloatType>& zAxis) {
 		m_AxesScaled[0] = xAxis;
 		m_AxesScaled[1] = yAxis;
 		m_AxesScaled[2] = zAxis;
@@ -108,9 +108,9 @@ public:
 		m_Anchor.x = m_Anchor.y = m_Anchor.z = -std::numeric_limits<FloatType>::max();
 	}
 
-	std::vector< point3d<FloatType> > getVertices() const
+	std::vector< vec3<FloatType> > getVertices() const
 	{
-		std::vector< point3d<FloatType> > result(8);
+		std::vector< vec3<FloatType> > result(8);
 
 		result[0] = (m_Anchor + m_AxesScaled[0] * (FloatType)0.0 + m_AxesScaled[1] * (FloatType)0.0 + m_AxesScaled[2] * (FloatType)0.0);
 		result[1] = (m_Anchor + m_AxesScaled[0] * (FloatType)1.0 + m_AxesScaled[1] * (FloatType)0.0 + m_AxesScaled[2] * (FloatType)0.0);
@@ -147,7 +147,7 @@ public:
 		worldToOBB3x3(1, 0) /= scaleValues[1];	worldToOBB3x3(1, 1) /= scaleValues[1];	worldToOBB3x3(1, 2) /= scaleValues[1];
 		worldToOBB3x3(2, 0) /= scaleValues[2];	worldToOBB3x3(2, 1) /= scaleValues[2];	worldToOBB3x3(2, 2) /= scaleValues[2];
 
-		point3d<FloatType> trans = worldToOBB3x3 * (-m_Anchor);
+		vec3<FloatType> trans = worldToOBB3x3 * (-m_Anchor);
 		Matrix4x4<FloatType> worldToOBB = worldToOBB3x3;
 		worldToOBB.at(0, 3) = trans.x;
 		worldToOBB.at(1, 3) = trans.y;
@@ -157,40 +157,40 @@ public:
 	}
 
 	//! returns the center of the OBB
-	point3d<FloatType> getCenter() const {
+	vec3<FloatType> getCenter() const {
 		return m_Anchor + (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]) * (FloatType)0.5;
 	}
 
 	//! returns the n'th axis of the OBB
-	const point3d<FloatType>& getAxis(unsigned int n) const {
+	const vec3<FloatType>& getAxis(unsigned int n) const {
 		return m_AxesScaled[n];
 	}
 
 	//! returns the first axis of the OBB
-	const point3d<FloatType>& getAxisX() const {
+	const vec3<FloatType>& getAxisX() const {
 		return m_AxesScaled[0];
 	}
 
 	//! returns the second axis of the OBB
-	const point3d<FloatType>& getAxisY() const {
+	const vec3<FloatType>& getAxisY() const {
 		return m_AxesScaled[1];
 	}
 
 	//! returns the third axis of the OBB
-	const point3d<FloatType>& getAxisZ() const {
+	const vec3<FloatType>& getAxisZ() const {
 		return m_AxesScaled[2];
 	}
 
-	point3d<FloatType> getExtent() const {
-		return point3d<FloatType>(m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length());
+	vec3<FloatType> getExtent() const {
+		return vec3<FloatType>(m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length());
 	}
 
-	point3d<FloatType> getAnchor() const {
+	vec3<FloatType> getAnchor() const {
 		return m_Anchor;
 	}
 
 	FloatType getVolume() const {
-		point3d<FloatType> extent = getExtent();
+		vec3<FloatType> extent = getExtent();
 		return extent.x * extent.y * extent.z;
 	}
 
@@ -199,7 +199,7 @@ public:
 		return (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]).length();
 	}
 
-	void getCornerPoints(std::vector<point3d<FloatType>>& points) const {
+	void getCornerPoints(std::vector<vec3<FloatType>>& points) const {
 		points.resize(8);
 		getCornerPoints(&points[0]);
 	} 
@@ -229,7 +229,7 @@ public:
 
 	//! scales the OBB
 	void operator*=(const FloatType& scale) {
-		point3d<FloatType> center = getCenter();
+		vec3<FloatType> center = getCenter();
 		m_AxesScaled[0] *= scale;
 		m_AxesScaled[1] *= scale;
 		m_AxesScaled[2] *= scale;
@@ -245,7 +245,7 @@ public:
 	//! extends the OBB
 	void operator+=(const FloatType& ext) {
 		FloatType scaleValues[3] = { m_AxesScaled[0].length(), m_AxesScaled[1].length(), m_AxesScaled[2].length() };
-		point3d<FloatType> center = getCenter();
+		vec3<FloatType> center = getCenter();
 		m_AxesScaled[0] *= (scaleValues[0] + ext) / scaleValues[0];
 		m_AxesScaled[1] *= (scaleValues[1] + ext) / scaleValues[1];
 		m_AxesScaled[2] *= (scaleValues[2] + ext) / scaleValues[2];
@@ -275,9 +275,9 @@ public:
 
 	//! scales the bounding box by the factor t (for t=1 the bb remains unchanged)
 	void scale(FloatType x, FloatType y, FloatType z) {
-		point3d<FloatType> extent = getExtent();
+		vec3<FloatType> extent = getExtent();
 		FloatType scale[] = { x, y, z };
-		point3d<FloatType> center(0, 0, 0);
+		vec3<FloatType> center(0, 0, 0);
 		for (unsigned int i = 0; i < 3; i++) {
 			center += (FloatType)0.5 * m_AxesScaled[i];
 			m_AxesScaled[i] *= scale[i];
@@ -291,7 +291,7 @@ public:
 	}
 private:
 
-	void computeAnchorAndExtentsForGivenNormalizedAxis(const std::vector<point3d<FloatType>>& points)
+	void computeAnchorAndExtentsForGivenNormalizedAxis(const std::vector<vec3<FloatType>>& points)
 	{
 		assert((m_AxesScaled[0] | m_AxesScaled[1]) < (FloatType)0.001);
 		assert((m_AxesScaled[1] | m_AxesScaled[2]) < (FloatType)0.001);
@@ -300,11 +300,11 @@ private:
 		Matrix3x3<FloatType> worldToOBBSpace(m_AxesScaled[0], m_AxesScaled[1], m_AxesScaled[2]);
 		Matrix3x3<FloatType> OBBSpaceToWorld = worldToOBBSpace.getTranspose();	//is an orthogonal matrix
 
-		point3d<FloatType> minValues(std::numeric_limits<FloatType>::max(), std::numeric_limits<FloatType>::max(), std::numeric_limits<FloatType>::max());
-		point3d<FloatType> maxValues(-std::numeric_limits<FloatType>::max(), -std::numeric_limits<FloatType>::max(), -std::numeric_limits<FloatType>::max());
+		vec3<FloatType> minValues(std::numeric_limits<FloatType>::max(), std::numeric_limits<FloatType>::max(), std::numeric_limits<FloatType>::max());
+		vec3<FloatType> maxValues(-std::numeric_limits<FloatType>::max(), -std::numeric_limits<FloatType>::max(), -std::numeric_limits<FloatType>::max());
 
 		for (size_t i = 0; i < points.size(); i++) {
-			point3d<FloatType> curr = worldToOBBSpace * points[i];
+			vec3<FloatType> curr = worldToOBBSpace * points[i];
 			if (curr.x < minValues.x)	minValues.x = curr.x;
 			if (curr.y < minValues.y)	minValues.y = curr.y;
 			if (curr.z < minValues.z)	minValues.z = curr.z;
@@ -336,23 +336,23 @@ private:
 		m_AxesScaled[2] *= extent[2];
 	}
 
-	point3d<FloatType>	m_Anchor;
-	point3d<FloatType>	m_AxesScaled[3];	//these axes are not normalized; they are scaled according to the extent
+	vec3<FloatType>	m_Anchor;
+	vec3<FloatType>	m_AxesScaled[3];	//these axes are not normalized; they are scaled according to the extent
 
 	/*
 
-	OrientedBoundingBox3(const point3d<FloatType>* points, unsigned int numPoints) {
+	OrientedBoundingBox3(const vec3<FloatType>* points, unsigned int numPoints) {
 		computeFromPCA(points, numPoints);
 	}
 
-	OrientedBoundingBox3(const std::vector<point3d<FloatType>>& points) {
+	OrientedBoundingBox3(const std::vector<vec3<FloatType>>& points) {
 		computeFromPCA(points);
 	}
 
 
 
 	//! computes the bounding box using a pca
-	void computeFromPCA(const std::vector<point3d<FloatType>>& points) {
+	void computeFromPCA(const std::vector<vec3<FloatType>>& points) {
 		if (points.size() < 4) {
 			setInvalid();
 			return;
@@ -360,7 +360,7 @@ private:
 		computeFromPCA(&points[0], points.size());
 	}
 
-	void computeFromPCA(const point3d<FloatType>* points, size_t numPoints) {
+	void computeFromPCA(const vec3<FloatType>* points, size_t numPoints) {
 
 		//at least 4 points are required for a valid bounding box
 		if (numPoints < 4)	{
@@ -368,7 +368,7 @@ private:
 			return;
 		}
 
-		point3d<FloatType> mean(0.0, 0.0, 0.0);
+		vec3<FloatType> mean(0.0, 0.0, 0.0);
 		for (unsigned int i = 0; i < numPoints; i++) {
 			mean += points[i];
 		}
@@ -377,7 +377,7 @@ private:
 		Matrix3x3<FloatType> cov;
 		cov.setZero();
 		for (unsigned int i = 0; i < numPoints; i++) {
-			point3d<FloatType> curr = points[i] - mean;
+			vec3<FloatType> curr = points[i] - mean;
 			cov += Matrix3x3<FloatType>::tensorProduct(curr, curr);
 		}
 		cov /= (FloatType)(numPoints - 1);
@@ -399,7 +399,7 @@ private:
 	}
 
 
-	void getCornerPoints(point3d<FloatType>* points) const {
+	void getCornerPoints(vec3<FloatType>* points) const {
 		points[0] = m_Anchor;
 		points[1] = m_Anchor + m_AxesScaled[0];
 		points[2] = m_Anchor + m_AxesScaled[0] + m_AxesScaled[1];
@@ -458,15 +458,15 @@ private:
 		edgeIndexList[23] = 4;
 	}
 
-	void getEdgeList(std::vector<point3d<FloatType>> &edges) const {
+	void getEdgeList(std::vector<vec3<FloatType>> &edges) const {
 		edges.resize(24);
 		getEdgeList(&edges[0]);
 	}
 
-	void getEdgeList(point3d<FloatType>* edges) const {
+	void getEdgeList(vec3<FloatType>* edges) const {
 		unsigned int indices[24];
 		getEdgeIndices(indices);
-		point3d<FloatType> corners[8];
+		vec3<FloatType> corners[8];
 		getCornerPoints(corners);
 		for (unsigned int i = 0; i < 24; i++) {
 			edges[i] = corners[indices[i]];
@@ -480,7 +480,7 @@ private:
 	//! returns a matrix that transforms to OOBB space [0;extentX]x[0;extentY]x[0;extentZ]
 	inline Matrix4x4<FloatType>  getWorldToOOBBNormalized() const {
 		Matrix4x4<FloatType> worldToOOBB(m_AxesScaled[0].getNormalized(), m_AxesScaled[1].getNormalized(), m_AxesScaled[2].getNormalized());
-		point3d<FloatType> trans = worldToOOBB * (-m_Anchor);
+		vec3<FloatType> trans = worldToOOBB * (-m_Anchor);
 		worldToOOBB.at(0,3) = trans.x;
 		worldToOOBB.at(1,3) = trans.y;
 		worldToOOBB.at(2,3) = trans.z;
@@ -488,17 +488,17 @@ private:
 	}
 
 	//! tests whether a point lies within the bounding box or not
-	inline bool contains(const point3d<FloatType>& p ) const {
+	inline bool contains(const vec3<FloatType>& p ) const {
 		return isInUnitCube(getWorldToOOBB() * p);
 	}
 
 	//! tests whether a point is outside of the bounding box or not
-	inline bool outside(const point3d<FloatType>& p) const {
+	inline bool outside(const vec3<FloatType>& p) const {
 		return !contains(p);
 	}
 
 	//! tests whether a set of points lies within the bounding box or not
-	inline bool contains(const point3d<FloatType>* points, unsigned int numPoints, FloatType eps = (FloatType)0.00001) const {
+	inline bool contains(const vec3<FloatType>* points, unsigned int numPoints, FloatType eps = (FloatType)0.00001) const {
 		assert(numPoints);
 		Matrix4x4<FloatType> worldToOOBB = getWorldToOOBB();
 		for (unsigned int i = 0; i < numPoints; i++) {
@@ -508,13 +508,13 @@ private:
 	}
 
 	inline bool contains(const OrientedBoundingBox3<FloatType> &other) {
-		point3d<FloatType> cornerPoints[8];
+		vec3<FloatType> cornerPoints[8];
 		other.getCornerPoints(cornerPoints);
 		return contains(cornerPoints, 8);
 	}
 
 	//! tests whether a set of points lies outside of the bounding box or not
-	inline bool outside(const point3d<FloatType>* points, unsigned int numPoints, FloatType eps = (FloatType)0.00001) const {
+	inline bool outside(const vec3<FloatType>* points, unsigned int numPoints, FloatType eps = (FloatType)0.00001) const {
 		assert(numPoints);
 		Matrix4x4<FloatType> worldToOOBB = getWorldToOOBB();
 		for (unsigned int i = 0; i < numPoints; i++) {
@@ -525,7 +525,7 @@ private:
 
 	//! returns the signed distance of the box to a plane (negative if plane is inside; positive if outside)
 	inline FloatType planeDistance(const Plane<FloatType> &p) const {
-		point3d<FloatType> extent = getExtent();
+		vec3<FloatType> extent = getExtent();
 
 		FloatType r = (FloatType)0.5 * (
 			extent.x * std::abs(p.getNormal() | (m_AxesScaled[0] / extent.x)) +
@@ -538,8 +538,8 @@ private:
 	}
 
 	//! tests a face against the box
-	inline bool testFace(const point3d<FloatType>* points, FloatType eps = (FloatType)0.00001) const {
-		//point3d<FloatType> planeNormal = ((points[1] - points[0])^(points[2] - points[0])).getNormalized();
+	inline bool testFace(const vec3<FloatType>* points, FloatType eps = (FloatType)0.00001) const {
+		//vec3<FloatType> planeNormal = ((points[1] - points[0])^(points[2] - points[0])).getNormalized();
 		//FloatType planeDistance = (planeNormal | points[0]);
 		//if (planeDistance < (FloatType)0) {	//make sure normal points away from origin (i.e., distance is positive)
 		//	planeDistance = -planeDistance;
@@ -548,8 +548,8 @@ private:
 
 		//assert(floatEqual(planeDistance, planeNormal | points[3], (FloatType)0.0001));
 
-		//point3d<FloatType> center = getCenter();
-		//point3d<FloatType> extent = getExtent();
+		//vec3<FloatType> center = getCenter();
+		//vec3<FloatType> extent = getExtent();
 		//
 		//FloatType r = (FloatType)0.5 * (
 		//	extent.x * std::abs(planeNormal | (m_AxesScaled[0] / extent.x)) +
@@ -564,7 +564,7 @@ private:
 		FloatType planeDist = planeDistance(p);
 		if (planeDist <= -eps) {
 			Matrix4x4<FloatType> worldToOOBB = getWorldToOOBB();
-			point3d<FloatType> pointsOOBB[4];
+			vec3<FloatType> pointsOOBB[4];
 			for (unsigned int i = 0; i < 4; i++) {
 				pointsOOBB[i] = worldToOOBB * points[i];
 			}
@@ -583,7 +583,7 @@ private:
 
 	}
 
-	FloatType getMinPlaneExtension(const OrientedBoundingBox3& box, point3d<FloatType>* facePoints, const point3d<FloatType>& faceNormal) {
+	FloatType getMinPlaneExtension(const OrientedBoundingBox3& box, vec3<FloatType>* facePoints, const vec3<FloatType>& faceNormal) {
 		FloatType minPlaneExtension = FLT_MAX;
 		for (unsigned int i = 0; i < 6; i++) {
 			OOBB_PLANE which = (OOBB_PLANE)i;
@@ -615,7 +615,7 @@ private:
 	void makeZPlaneOutsideBoxes(const OrientedBoundingBox3& box0, const OrientedBoundingBox3& box1) {
 
 		////swap axis until z is min extent
-		//point3d<FloatType> extent = getExtent();
+		//vec3<FloatType> extent = getExtent();
 		//FloatType minExt = std::min(std::min(extent.x, extent.y), extent.z);
 		//if (minExt == extent.x)	{
 		//	swapAxes();
@@ -682,12 +682,12 @@ private:
 			//FloatType extBack = dist1back;
 			//extendInZBack(std::abs(extBack) + eps);
 
-			point3d<FloatType> zFront[4];
+			vec3<FloatType> zFront[4];
 			getFaceZFront(zFront);
 			FloatType extFront = std::min(getMinPlaneExtension(box0, zFront, front.getNormal()), std::abs(dist0front));
 			extendInZFront(std::abs(extFront) + eps);
 
-			point3d<FloatType> zBack[4];
+			vec3<FloatType> zBack[4];
 			getFaceZBack(zBack);
 			FloatType extBack = std::min(getMinPlaneExtension(box1, zBack, back.getNormal()), std::abs(dist1back));
 			extendInZBack(std::abs(extBack) + eps);
@@ -699,12 +699,12 @@ private:
 			//FloatType extFront = dist1front;
 			//extendInZFront(std::abs(extFront) + eps);
 
-			point3d<FloatType> zBack[4];
+			vec3<FloatType> zBack[4];
 			getFaceZBack(zBack);
 			FloatType extBack = std::min(getMinPlaneExtension(box0, zBack, back.getNormal()), std::abs(dist0back));
 			extendInZBack(std::abs(extBack) + eps);
 
-			point3d<FloatType> zFront[4];
+			vec3<FloatType> zFront[4];
 			getFaceZFront(zFront);
 			FloatType extFront = std::min(getMinPlaneExtension(box1, zFront, front.getNormal()), std::abs(dist1front));
 			extendInZFront(std::abs(extFront) + eps);
@@ -722,8 +722,8 @@ private:
 		//FloatType resdist1back = box1.planeDistance(back);
 
 
-		//point3d<FloatType> zFront[4];
-		//point3d<FloatType> zBack[4];
+		//vec3<FloatType> zFront[4];
+		//vec3<FloatType> zBack[4];
 		//getFaceZFront(zFront);
 		//getFaceZBack(zBack);
 		//assert(
@@ -744,10 +744,10 @@ private:
 		//try early reject (if there is no intersection)
 		if ((getCenter() - other.getCenter()).length() > (FloatType)0.5 * (getDiagonalLength() + other.getDiagonalLength()))	return res;
 	
-		std::vector<point3d<FloatType>> contactPoints;
+		std::vector<vec3<FloatType>> contactPoints;
 		computeContactPoints(other, contactPoints);
 
-		std::vector<point3d<FloatType>> contactPointsOther;
+		std::vector<vec3<FloatType>> contactPointsOther;
 		other.computeContactPoints(*this, contactPointsOther);
 
 		contactPoints.insert(contactPoints.end(), contactPointsOther.begin(), contactPointsOther.end());
@@ -757,8 +757,8 @@ private:
 		//make sure either front and back plane is outside of either input OOBB
 		if (res.isValid()) {
 			for (unsigned int i = 0; i < 4; i++) {
-				point3d<FloatType> zFront[4];
-				point3d<FloatType> zBack[4];
+				vec3<FloatType> zFront[4];
+				vec3<FloatType> zBack[4];
 				res.getFaceZFront(zFront);
 				res.getFaceZBack(zBack);
 				if (
@@ -782,14 +782,14 @@ private:
 
 	//! swaps the axes of the OOBB (x->z; z->y; y->x)
 	inline void swapAxes() {
-		point3d<FloatType> tmp = m_AxesScaled[0];
+		vec3<FloatType> tmp = m_AxesScaled[0];
 		m_AxesScaled[0] = m_AxesScaled[1];
 		m_AxesScaled[1] = m_AxesScaled[2];
 		m_AxesScaled[2] = tmp;
 	}
 
 	//! returns the four corner pointds of the z = 0; front plane
-	inline void getFaceZFront(point3d<FloatType>* points) const {
+	inline void getFaceZFront(vec3<FloatType>* points) const {
 		points[0] = m_Anchor;
 		points[1] = m_Anchor + m_AxesScaled[0];
 		points[2] = m_Anchor + m_AxesScaled[0] + m_AxesScaled[1];
@@ -845,7 +845,7 @@ private:
 
 
 	//! returns the four corner points of the z = 1; back plane
-	inline void getFaceZBack(point3d<FloatType>* points) const {
+	inline void getFaceZBack(vec3<FloatType>* points) const {
 		points[0] = m_Anchor + m_AxesScaled[2];
 		points[1] = m_Anchor + m_AxesScaled[0] + m_AxesScaled[2];
 		points[2] = m_Anchor + m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2];
@@ -884,23 +884,23 @@ private:
 		if (v >= -eps && v <= 1 + eps) return true;
 		return false;
 	}
-	static inline bool isInUnitCube(const point3d<FloatType>& p, FloatType eps = (FloatType)0.00001) {
+	static inline bool isInUnitCube(const vec3<FloatType>& p, FloatType eps = (FloatType)0.00001) {
 		if (p.x >= -eps && p.x <= 1 + eps &&
 			p.y >= -eps && p.y <= 1 + eps &&
 			p.z >= -eps && p.z <= 1 + eps) return true;
 		return false;
 	}
-	point3d<FloatType>	m_Anchor;
-	point3d<FloatType>	m_AxesScaled[3];
+	vec3<FloatType>	m_Anchor;
+	vec3<FloatType>	m_AxesScaled[3];
 
 	//! computes the contact points of edges
-	inline void computeContactPoints( const OrientedBoundingBox3 &other, std::vector<point3d<FloatType>> &contactPoints ) const
+	inline void computeContactPoints( const OrientedBoundingBox3 &other, std::vector<vec3<FloatType>> &contactPoints ) const
 	{
 		Matrix4x4<FloatType> OOBBToWorld = getOOBBToWorld();
 		Matrix4x4<FloatType> worldToOOBB = getWorldToOOBB();
 
 
-		point3d<FloatType> otherPoints[8];
+		vec3<FloatType> otherPoints[8];
 		other.getCornerPoints(otherPoints);
 
 		for (unsigned int i = 0; i < 8; i++) {
@@ -912,32 +912,32 @@ private:
 		getEdgeIndices(edgeIndices);
 
 		for (unsigned int i = 0; i < 12; i++) {
-			point3d<FloatType> o = otherPoints[edgeIndices[2*i+0]];
-			point3d<FloatType> d = otherPoints[edgeIndices[2*i+1]] - o;
+			vec3<FloatType> o = otherPoints[edgeIndices[2*i+0]];
+			vec3<FloatType> d = otherPoints[edgeIndices[2*i+1]] - o;
 
 			//test against all 6 planes
 			FloatType tx0 = -o.x/d.x;
-			point3d<FloatType> px0 = o + tx0 * d;
+			vec3<FloatType> px0 = o + tx0 * d;
 			if (isInUnitInterval(tx0) && isInUnitCube(px0)) contactPoints.push_back(px0);
 
 			FloatType tx1 = ((FloatType)1.0 - o.x)/d.x;
-			point3d<FloatType> px1 = o + tx1 * d;
+			vec3<FloatType> px1 = o + tx1 * d;
 			if (isInUnitInterval(tx1) && isInUnitCube(px1)) contactPoints.push_back(px1);
 
 			FloatType ty0 = -o.y/d.y;
-			point3d<FloatType> py0 = o + ty0 * d;
+			vec3<FloatType> py0 = o + ty0 * d;
 			if (isInUnitInterval(ty0) && isInUnitCube(py0)) contactPoints.push_back(py0);
 
 			FloatType ty1 = ((FloatType)1.0 - o.y)/d.y;
-			point3d<FloatType> py1 = o + ty1 * d;
+			vec3<FloatType> py1 = o + ty1 * d;
 			if (isInUnitInterval(ty1) && isInUnitCube(py1)) contactPoints.push_back(py1);
 
 			FloatType tz0 = -o.z/d.z;
-			point3d<FloatType> pz0 = o + tz0 * d;
+			vec3<FloatType> pz0 = o + tz0 * d;
 			if (isInUnitInterval(tz0) && isInUnitCube(pz0)) contactPoints.push_back(pz0);
 
 			FloatType tz1 = ((FloatType)1.0 - o.z)/d.z;
-			point3d<FloatType> pz1 = o + tz1 * d;
+			vec3<FloatType> pz1 = o + tz1 * d;
 			if (isInUnitInterval(tz1) && isInUnitCube(pz1)) contactPoints.push_back(pz1);
 		}
 

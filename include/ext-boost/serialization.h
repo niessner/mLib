@@ -63,69 +63,69 @@ namespace boost {
 namespace serialization {
 
     /*template<class Archive, class T>
-    void save(Archive & ar, const ml::point2d<T>& p, const unsigned int version)
+    void save(Archive & ar, const ml::vec2<T>& p, const unsigned int version)
     {
         ar & p.array;
     }
     template<class Archive, class T>
-    void load(Archive & ar, ml::point2d<T>& p, const unsigned int version)
+    void load(Archive & ar, ml::vec2<T>& p, const unsigned int version)
     {
         ar & p.array;
         //ar & p.x & p.y;
     }
 
     template<class Archive, class T>
-    void save(Archive & ar, const ml::point3d<T>& p, const unsigned int version)
+    void save(Archive & ar, const ml::vec3<T>& p, const unsigned int version)
     {
         ar & p.array;
     }
     template<class Archive, class T>
-    void load(Archive & ar, ml::point3d<T>& p, const unsigned int version)
+    void load(Archive & ar, ml::vec3<T>& p, const unsigned int version)
     {
         ar & p.array;
         //ar & p.x & p.y & p.z;
     }
 
     template<class Archive, class T>
-    void save(Archive & ar, const ml::point4d<T>& p, const unsigned int version)
+    void save(Archive & ar, const ml::vec4<T>& p, const unsigned int version)
     {
         ar & p.array;
     }
     template<class Archive, class T>
-    void load(Archive & ar, ml::point4d<T>& p, const unsigned int version)
+    void load(Archive & ar, ml::vec4<T>& p, const unsigned int version)
     {
         ar & p.array;
         //ar & p.x & p.y & p.z & p.w;
     }
 
     template<class Archive, class T>
-    inline void serialize(Archive& ar, ml::point2d<T>& p, const unsigned int version) {
+    inline void serialize(Archive& ar, ml::vec2<T>& p, const unsigned int version) {
         boost::serialization::split_free(ar, p, version);
     }
 
     template<class Archive, class T>
-    inline void serialize(Archive& ar, ml::point3d<T>& p, const unsigned int version) {
+    inline void serialize(Archive& ar, ml::vec3<T>& p, const unsigned int version) {
         boost::serialization::split_free(ar, p, version);
     }
 
     template<class Archive, class T>
-    inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version) {
+    inline void serialize(Archive& ar, ml::vec4<T>& p, const unsigned int version) {
         boost::serialization::split_free(ar, p, version);
     }*/
 /*#else // MLIB_USE_ARRAY_SERIALIZATION
 
 template<class Archive, class T>
-inline void serialize(Archive& ar, ml::point2d<T>& p, const unsigned int version) {
+inline void serialize(Archive& ar, ml::vec2<T>& p, const unsigned int version) {
     ar & p.x & p.y;
 }
 
 template<class Archive, class T>
-inline void serialize(Archive& ar, ml::point3d<T>& p, const unsigned int version) {
+inline void serialize(Archive& ar, ml::vec3<T>& p, const unsigned int version) {
     ar & p.x & p.y & p.z;
 }
 
 template<class Archive, class T>
-inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version) {
+inline void serialize(Archive& ar, ml::vec4<T>& p, const unsigned int version) {
     ar & p.x & p.y & p.z & p.w;
 }
 
@@ -137,17 +137,17 @@ inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version
 //
 
 template<class Archive, class T>
-inline void serialize(Archive& ar, ml::point2d<T>& p, const unsigned int version) {
+inline void serialize(Archive& ar, ml::vec2<T>& p, const unsigned int version) {
     ar & p.array;
 }
 
 template<class Archive, class T>
-inline void serialize(Archive& ar, ml::point3d<T>& p, const unsigned int version) {
+inline void serialize(Archive& ar, ml::vec3<T>& p, const unsigned int version) {
 	ar & p.array;
 }
 
 template<class Archive, class T>
-inline void serialize(Archive& ar, ml::point4d<T>& p, const unsigned int version) {
+inline void serialize(Archive& ar, ml::vec4<T>& p, const unsigned int version) {
   ar & p.array;
 }
 

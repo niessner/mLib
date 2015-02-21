@@ -9,32 +9,32 @@ class LineSegment2
 {
 public:
 
-    LineSegment2(const point2d<T> &p0, const point2d<T> &p1)
+    LineSegment2(const vec2<T> &p0, const vec2<T> &p1)
     {
         m_p0 = p0;
         m_p1 = p1;
         m_delta = m_p1 - m_p0;
 	}
 
-	const point2d<T>& p0() const
+	const vec2<T>& p0() const
     {
         return m_p0;
 	}
 
-	const point2d<T>& p1() const
+	const vec2<T>& p1() const
     {
         return m_p1;
 	}
 
-	const point2d<T>& delta() const
+	const vec2<T>& delta() const
     {
         return m_delta;
 	}
 
 private:
-	point2d<T> m_p0;
-	point2d<T> m_p1;
-	point2d<T> m_delta;  //p1 - p0
+	vec2<T> m_p0;
+	vec2<T> m_p1;
+	vec2<T> m_delta;  //p1 - p0
 };
 
 typedef LineSegment2<float> LineSegment2f;

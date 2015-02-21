@@ -38,13 +38,13 @@ private:
     {
         return triangleArea(mesh, mesh.first->getIndices()[triangleIndex]);
     }
-    static point3d<T> triangleNormal(const MeshData &mesh, UINT triangleIndex)
+    static vec3<T> triangleNormal(const MeshData &mesh, UINT triangleIndex)
     {
         return triangleNormal(mesh, mesh.first->getIndices()[triangleIndex]);
     }
 
     static double triangleArea(const MeshData &mesh, const vec3ui &tri);
-    static point3d<T> triangleNormal(const MeshData &mesh, const vec3ui &tri);
+    static vec3<T> triangleNormal(const MeshData &mesh, const vec3ui &tri);
     static Sample sampleTriangle(const MeshData &mesh, UINT meshIndex, UINT triangleIndex, double sampleValue);
     static vec2f stratifiedSample2D(double s, UINT depth = 0);
 };
@@ -121,16 +121,16 @@ double TriMeshSampler<T>::directionalSurfaceArea(const MeshData &mesh, const std
 template<class T>
 double TriMeshSampler<T>::triangleArea(const MeshData &mesh, const vec3ui &tri)
 {
-    ml::point3d<T> v[3];
+    ml::vec3<T> v[3];
     for (int i = 0; i < 3; i++)
         v[i] = mesh.second.transformAffine(mesh.first->getVertices()[tri[i]].position);
     return math::triangleArea(v[0], v[1], v[2]);
 }
 
 template<class T>
-point3d<T> TriMeshSampler<T>::triangleNormal(const MeshData &mesh, const vec3ui &tri)
+vec3<T> TriMeshSampler<T>::triangleNormal(const MeshData &mesh, const vec3ui &tri)
 {
-    ml::point3d<T> v[3];
+    ml::vec3<T> v[3];
     for (int i = 0; i < 3; i++)
         v[i] = mesh.second.transformAffine(mesh.first->getVertices()[tri[i]].position);
     return math::triangleNormal(v[0], v[1], v[2]);
@@ -141,7 +141,7 @@ typename TriMeshSampler<T>::Sample TriMeshSampler<T>::sampleTriangle(const MeshD
 {
     vec3ui tri = mesh.first->getIndices()[triangleIndex];
 
-    point3d<T> v[3];
+    vec3<T> v[3];
     for (int i = 0; i < 3; i++)
         v[i] = mesh.second.transformAffine(mesh.first->getVertices()[tri[i]].position);
 

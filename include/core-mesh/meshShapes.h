@@ -34,7 +34,7 @@ TriMeshf wireframeBox(const mat4f& unitCubeToWorld, const vec4f& color, float th
 TriMeshf sphere(const float radius, const ml::vec3f& pos, const size_t stacks = 10, const size_t slices = 10, const ml::vec4f& color = ml::vec4f(1,1,1,1));
 
 template<class FloatType>
-MeshData<FloatType> toMeshData(const BoundingBox3<FloatType>& s, const point4d<FloatType>& color = vec4f(1,1,1,1), bool bottomPlaneOnly = false) {
+MeshData<FloatType> toMeshData(const BoundingBox3<FloatType>& s, const vec4<FloatType>& color = vec4f(1,1,1,1), bool bottomPlaneOnly = false) {
 	MeshData<FloatType> meshData;	std::vector<vec3ui> indices;
 	if (bottomPlaneOnly) {
 		s.makeTriMeshBottomPlane(meshData.m_Vertices, indices, meshData.m_Normals);

@@ -8,7 +8,7 @@ class PointCloud {
 public:
 	PointCloud() {}
 
-	PointCloud(const std::vector < point3d<FloatType>>& points) {
+	PointCloud(const std::vector < vec3<FloatType>>& points) {
 		m_points = points;
 	}
 
@@ -18,7 +18,7 @@ public:
 			for (unsigned int y = 0; y < grid.dimY(); y++) {
 				for (unsigned int x = 0; x < grid.dimX(); x++) {
 					if (grid.isVoxelSet(x,y,z)) {
-						point3d<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
+						vec3<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
 						m_points.push_back(p * voxelSize);
 					}
 				}
@@ -61,9 +61,9 @@ public:
 		return m_points.size() == 0;
 	}
 
-	std::vector<point3d<FloatType>> m_points;
-	std::vector<point3d<FloatType>> m_normals;
-	std::vector<point4d<FloatType>> m_colors;
+	std::vector<vec3<FloatType>> m_points;
+	std::vector<vec3<FloatType>> m_normals;
+	std::vector<vec4<FloatType>> m_colors;
 private:
 };
 

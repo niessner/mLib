@@ -14,25 +14,25 @@ public:
         m_p0 = segment.p0();
         m_dir = segment.delta();
     }
-    Line2(const point2d<T> &p0, const point2d<T> &p1)
+    Line2(const vec2<T> &p0, const vec2<T> &p1)
     {
         m_p0 = p0;
         m_dir = p1 - p0;
 	}
 
-	const point2d<T>& p0() const
+	const vec2<T>& p0() const
     {
         return m_p0;
 	}
 
-	const point2d<T>& dir() const
+	const vec2<T>& dir() const
     {
         return m_dir;
 	}
 
 private:
-	point2d<T> m_p0;
-	point2d<T> m_dir;
+	vec2<T> m_p0;
+	vec2<T> m_dir;
 };
 
 typedef Line2<float> Line2f;

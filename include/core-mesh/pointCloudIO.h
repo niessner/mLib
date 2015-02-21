@@ -31,7 +31,7 @@ public:
 	}
 
 
-	static void saveToFile(const std::string& filename, const std::vector<point3d<FloatType>> &points) {
+	static void saveToFile(const std::string& filename, const std::vector<vec3<FloatType>> &points) {
 		PointCloud<FloatType> pc;
 		pc.m_points = points;
 		saveToFile(filename, pc);
@@ -118,7 +118,7 @@ public:
 
 
 /*
-	static void saveToFile(const std::string &filename, const std::vector<point3d<FloatType>> &points) {
+	static void saveToFile(const std::string &filename, const std::vector<vec3<FloatType>> &points) {
 		std::string extension = getFileExtension(filename);
 
 		if (extension == "ply") {
@@ -132,7 +132,7 @@ public:
 		}
 	}
 
-	static void saveToFile(const std::string &filename, const std::vector<point3d<FloatType>>* points, const std::vector<point3d<FloatType>>* normals = nullptr, const std::vector<point3d<FloatType>>* colors = nullptr) {
+	static void saveToFile(const std::string &filename, const std::vector<vec3<FloatType>>* points, const std::vector<vec3<FloatType>>* normals = nullptr, const std::vector<vec3<FloatType>>* colors = nullptr) {
 		std::string extension = getFileExtension(filename);
 
 		assert(points);
@@ -152,7 +152,7 @@ public:
 
 private:
 
-	static void saveToPLYNoNormals(const std::string &filename, const std::vector<point3d<FloatType>> &points) {
+	static void saveToPLYNoNormals(const std::string &filename, const std::vector<vec3<FloatType>> &points) {
 		std::ofstream file(filename);
 		if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);	
 
@@ -173,7 +173,7 @@ private:
 		file.close();
 	}
 
-	static void saveToPLYColors(const std::string &filename, const std::vector<point3d<FloatType>> &points, const std::vector<point3d<FloatType>> &colors) {
+	static void saveToPLYColors(const std::string &filename, const std::vector<vec3<FloatType>> &points, const std::vector<vec3<FloatType>> &colors) {
 		std::ofstream file(filename);
 		if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);
 
@@ -201,7 +201,7 @@ private:
 		file.close();
 	}
 
-	static void saveToPWN(const std::string &filename, const std::vector<point3d<FloatType>> &points) {
+	static void saveToPWN(const std::string &filename, const std::vector<vec3<FloatType>> &points) {
 		std::ofstream file(filename);
 		if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);	
 			
@@ -226,7 +226,7 @@ private:
 		file.close();
 	}
 
-	static void saveToPCC(const std::string &filename, const std::vector<point3d<FloatType>> &points) {
+	static void saveToPCC(const std::string &filename, const std::vector<vec3<FloatType>> &points) {
 		std::ofstream file(filename);
 		if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);	
 			

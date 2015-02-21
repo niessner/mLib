@@ -32,20 +32,20 @@ namespace ml {
             Vertex<FloatType>& vert = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
 						bool vertexSplit = false;
 						if (bFaceHasNormals) { //split if normal is different than the one found before
-							const point3d<FloatType>& n = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
-							if (vert.normal != point3d<FloatType>::origin && vert.normal != n) {
+							const vec3<FloatType>& n = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (vert.normal != vec3<FloatType>::origin && vert.normal != n) {
                 vertexSplit = true;
               }
 						}
 						if (bFaceHasTexCoords) { //split if texcoord is different than the one found before
-							const point2d<FloatType>& t = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
-							if (vert.texCoord != point2d<FloatType>::origin && vert.texCoord != t) {
+							const vec2<FloatType>& t = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
+							if (vert.texCoord != vec2<FloatType>::origin && vert.texCoord != t) {
                 vertexSplit = true;
               }
 						}
 						if (bFaceHasColors) { //split if texcoord is different than the one found before
-							const point4d<FloatType>& c = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
-							if (vert.color != point4d<FloatType>::origin && vert.color != c) {
+							const vec4<FloatType>& c = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
+							if (vert.color != vec4<FloatType>::origin && vert.color != c) {
                 vertexSplit = true;
               }
 						}
@@ -94,11 +94,11 @@ namespace ml {
 	void TriMesh<FloatType>::computeNormals()
 	{
 		for (int i = 0; i < (int)m_Vertices.size(); i++) {
-			m_Vertices[i].normal = point3d<FloatType>::origin;
+			m_Vertices[i].normal = vec3<FloatType>::origin;
 		}
 
 		for (int i = 0; i < (int)m_Indices.size(); i++) {
-			point3d<FloatType> faceNormal = 
+			vec3<FloatType> faceNormal = 
 				(m_Vertices[m_Indices[i].y].position - m_Vertices[m_Indices[i].x].position)^(m_Vertices[m_Indices[i].z].position - m_Vertices[m_Indices[i].x].position);
 
 			m_Vertices[m_Indices[i].x].normal += faceNormal;

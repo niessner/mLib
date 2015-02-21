@@ -34,14 +34,14 @@ namespace ml {
 
 
 			BoundingBox3<int> bbBox;
-            bbBox.include(DFToGrid*point3d<FloatType>((FloatType)0,             (FloatType)0,           (FloatType)0));
-            bbBox.include(DFToGrid*point3d<FloatType>((FloatType)grid.dimX(),   (FloatType)0,           (FloatType)0));
-            bbBox.include(DFToGrid*point3d<FloatType>((FloatType)grid.dimX(),   (FloatType)grid.dimY(), (FloatType)0));
-            bbBox.include(DFToGrid*point3d<FloatType>((FloatType)0,             (FloatType)grid.dimY(), (FloatType)0));
-            bbBox.include(DFToGrid*point3d<FloatType>((FloatType)0,             (FloatType)0,           (FloatType)grid.dimZ()));
-            bbBox.include(DFToGrid*point3d<FloatType>((FloatType)grid.dimX(),   (FloatType)0,           (FloatType)grid.dimZ()));
-            bbBox.include(DFToGrid*point3d<FloatType>((FloatType)grid.dimX(),   (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
-            bbBox.include(DFToGrid*point3d<FloatType>((FloatType)0,             (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)0,           (FloatType)0));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.dimX(),   (FloatType)0,           (FloatType)0));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.dimX(),   (FloatType)grid.dimY(), (FloatType)0));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)grid.dimY(), (FloatType)0));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)0,           (FloatType)grid.dimZ()));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.dimX(),   (FloatType)0,           (FloatType)grid.dimZ()));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.dimX(),   (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
 
 			bbBox.setMin(math::max(bbBox.getMin() - 1, 0));      
 			bbBox.setMax(math::min(bbBox.getMax() + 1, vec3i(grid.getDimensions())));
@@ -52,7 +52,7 @@ namespace ml {
 			for (size_t z = bbBox.getMinZ(); z < bbBox.getMaxZ(); z++) {
 				for (size_t y = bbBox.getMinY(); y < bbBox.getMaxY(); y++) {
 					for (size_t x = bbBox.getMinZ(); x < bbBox.getMaxX(); x++) {
-						point3d<FloatType> p = gridToDF * point3d<FloatType>((FloatType)x, (FloatType)y, (FloatType)z);
+						vec3<FloatType> p = gridToDF * vec3<FloatType>((FloatType)x, (FloatType)y, (FloatType)z);
 						vec3ul pi(math::round(p));
 						if (isValidCoordinate(pi.x, pi.y, pi.z)) {
 							const FloatType& d = (*this)(pi.x, pi.y, pi.z);
@@ -84,7 +84,7 @@ namespace ml {
 			for (int k = -1; k <= 1; k++) {
 				for (int j = -1; j <= 1; j++) {
 					for (int i = -1; i <= 1; i++) {
-						FloatType d = point3d<FloatType>((FloatType)k, (FloatType)j, (FloatType)i).length();
+						FloatType d = vec3<FloatType>((FloatType)k, (FloatType)j, (FloatType)i).length();
 						kernel[k+1][j+1][i+1] = d;
 					}
 				}
@@ -200,8 +200,8 @@ namespace ml {
 									if (k == 1 && j == 1 && i == 1) continue;	//don't consider itself
 									vec3ul n(top.x - 1 + i, top.y - 1 + j, top.z - 1 + k);
 									if (isValidCoordinate(n.x, n.y, n.z) && !visited.isVoxelSet(n)) {
-										FloatType d = (point3d<FloatType>((FloatType)top.x, (FloatType)top.y, (FloatType)top.z) -
-													   point3d<FloatType>((FloatType)n.x, (FloatType)n.y, (FloatType)n.z)).length();
+										FloatType d = (vec3<FloatType>((FloatType)top.x, (FloatType)top.y, (FloatType)top.z) -
+													   vec3<FloatType>((FloatType)n.x, (FloatType)n.y, (FloatType)n.z)).length();
 										FloatType dToN = (*this)(top.x, top.y, top.z)+d;
 										if (dToN < (*this)(n.x, n.y, n.z)) {
 											queue.push(Voxel(n.x, n.y, n.z, dToN));
@@ -228,8 +228,8 @@ namespace ml {
 						if (k == 1 && j == 1 && i == 1) continue;	//don't consider itself
 						vec3ul n(x - 1 + i, y - 1 + j, z - 1 + k);
 						if (isValidCoordinate(n.x, n.y, n.z)) {
-							FloatType d = (point3d<FloatType>((FloatType)x, (FloatType)y, (FloatType)z) -
-											point3d<FloatType>((FloatType)n.x, (FloatType)n.y, (FloatType)n.z)).length();
+							FloatType d = (vec3<FloatType>((FloatType)x, (FloatType)y, (FloatType)z) -
+											vec3<FloatType>((FloatType)n.x, (FloatType)n.y, (FloatType)n.z)).length();
 							FloatType dToN = (*this)(n.x, n.y, n.z)+d;
 							if (dToN < (*this)(x, y, z)) {
 								(*this)(x, y, z) = dToN;
@@ -252,8 +252,8 @@ namespace ml {
 						vec3ul v(x - 1 + i, y - 1 + j, z - 1 + k);
 						if (grid.isValidCoordinate(v)) {
 							if (grid.isVoxelSet(v)) {
-								d = (point3d<FloatType>((FloatType)x, (FloatType)y, (FloatType)z) - 
-									point3d<FloatType>((FloatType)v.x, (FloatType)v.y, (FloatType)v.z)).length();
+								d = (vec3<FloatType>((FloatType)x, (FloatType)y, (FloatType)z) - 
+									vec3<FloatType>((FloatType)v.x, (FloatType)v.y, (FloatType)v.z)).length();
 								//TODO avoid the costly sqrt computation and just check for 1, sqrt(2), or, sqrt(3)
 								return true;
 							}

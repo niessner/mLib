@@ -32,7 +32,7 @@ public:
 	}
 
 	//! Initialize from 3 row vectors
-	Matrix3x3(const point3d<FloatType>& v0, const point3d<FloatType>& v1, const point3d<FloatType>& v2) {
+	Matrix3x3(const vec3<FloatType>& v0, const vec3<FloatType>& v1, const vec3<FloatType>& v2) {
 		matrix[0] = v0.x;	matrix[1] = v0.y;	matrix[2] = v0.z;
 		matrix[3] = v1.x;	matrix[4] = v1.y;	matrix[5] = v1.z;
 		matrix[6] = v2.x;	matrix[7] = v2.y;	matrix[8] = v2.z;
@@ -165,13 +165,13 @@ public:
 	}
 
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees, ccw)
-	void setRotation(const point3d<FloatType> &axis, FloatType angle) {
+	void setRotation(const vec3<FloatType> &axis, FloatType angle) {
 		FloatType anglerad = math::degreesToRadians(angle);
 		FloatType c = cos(-anglerad);
 		FloatType s = sin(-anglerad);
 		FloatType t = (FloatType)1.0f - c;
 
-		point3d<FloatType> normalizedAxis = axis.getNormalized();
+		vec3<FloatType> normalizedAxis = axis.getNormalized();
 		FloatType x = normalizedAxis.x;
 		FloatType y = normalizedAxis.y;
 		FloatType z = normalizedAxis.z;
@@ -190,7 +190,7 @@ public:
 	}
 
 	//! generates a rotation matrix (angle in degree, ccw)
-	static Matrix3x3 rotation(const point3d<FloatType> &axis, FloatType angle) {
+	static Matrix3x3 rotation(const vec3<FloatType> &axis, FloatType angle) {
 		Matrix3x3 res;	res.setRotation(axis, angle);
 		return res;
 	}
@@ -216,12 +216,12 @@ public:
 	}
 	
 	//! overwrite the matrix with a scale-matrix
-	void setScale(const point3d<FloatType>& v) {
+	void setScale(const vec3<FloatType>& v) {
 		matrix[0] = v.x; matrix[1] = 0.0; matrix[2] = 0.0;
 		matrix[3] = 0.0; matrix[4] = v.y; matrix[5] = 0.0;
 		matrix[6] = 0.0; matrix[7] = 0.0; matrix[8] = v.z;
 	}
-	static Matrix3x3 scale(const point3d<FloatType>& v) {
+	static Matrix3x3 scale(const vec3<FloatType>& v) {
 		Matrix3x3 res;	res.setScale(v);
 		return res;
 	}
@@ -292,8 +292,8 @@ public:
 		return *this;
 	}
 	//! transform a 3D-vector with the matrix
-	point3d<FloatType> operator* (const point3d<FloatType>& v) const {
-		return point3d<FloatType>(
+	vec3<FloatType> operator* (const vec3<FloatType>& v) const {
+		return vec3<FloatType>(
 			matrix[0]*v[0] + matrix[1]*v[1] + matrix[2]*v[2],
 			matrix[3]*v[0] + matrix[4]*v[1] + matrix[5]*v[2],
 			matrix[6]*v[0] + matrix[7]*v[1] + matrix[8]*v[2]
@@ -339,28 +339,28 @@ public:
 
 
 	//! get the x column out of the matrix
-	point3d<FloatType> xcol() const {
-		return point3d<FloatType>(matrix[0],matrix[3],matrix[6]);
+	vec3<FloatType> xcol() const {
+		return vec3<FloatType>(matrix[0],matrix[3],matrix[6]);
 	}
 	//! get the y column out of the matrix
-	point3d<FloatType> ycol() const {
-		return point3d<FloatType>(matrix[1],matrix[4],matrix[7]);
+	vec3<FloatType> ycol() const {
+		return vec3<FloatType>(matrix[1],matrix[4],matrix[7]);
 	}
 	//! get the y column out of the matrix
-	point3d<FloatType> zcol() const {
-		return point3d<FloatType>(matrix[2],matrix[5],matrix[8]);
+	vec3<FloatType> zcol() const {
+		return vec3<FloatType>(matrix[2],matrix[5],matrix[8]);
 	}
 	//! get the x row out of the matrix
-	point3d<FloatType> xrow() const {
-		return point3d<FloatType>(matrix[0],matrix[1],matrix[2]);
+	vec3<FloatType> xrow() const {
+		return vec3<FloatType>(matrix[0],matrix[1],matrix[2]);
 	}
 	//! get the y row out of the matrix
-	point3d<FloatType> yrow() const {
-		return point3d<FloatType>(matrix[3],matrix[4],matrix[5]);
+	vec3<FloatType> yrow() const {
+		return vec3<FloatType>(matrix[3],matrix[4],matrix[5]);
 	}
 	//! get the y row out of the matrix
-	point3d<FloatType> zrow() const {
-		return point3d<FloatType>(matrix[6],matrix[7],matrix[8]);
+	vec3<FloatType> zrow() const {
+		return vec3<FloatType>(matrix[6],matrix[7],matrix[8]);
 	}
 
 	//! return the inverse matrix; but does not change the current matrix
@@ -416,7 +416,7 @@ public:
 	}
 
 	//! computes the tensor product between two vectors
-	static Matrix3x3 tensorProduct(const point3d<FloatType> &v0, const point3d<FloatType> &v1) {
+	static Matrix3x3 tensorProduct(const vec3<FloatType> &v0, const vec3<FloatType> &v1) {
 		Matrix3x3 ret;
 		ret._m00 = v0.x * v1.x;		ret._m01 = v0.x * v1.y;		ret._m02 = v0.x * v1.z;
 		ret._m10 = v0.y * v1.x;		ret._m11 = v0.y * v1.y;		ret._m12 = v0.y * v1.z;
@@ -488,11 +488,11 @@ public:
 
 
 	//! constructs a matrix from a normal vector (TODO check if it is not transposed...)
-	static inline Matrix3x3 frame(const point3d<FloatType>& n) {
-		point3d<FloatType> dx0 = point3d<FloatType>(1,0,0) ^ n;
-		point3d<FloatType> dx1 = point3d<FloatType>(0,1,0) ^ n;
-		point3d<FloatType> dx = (dx0.lengthSq() > dx1.lengthSq() ? dx0 : dx1).getNormalized();
-		point3d<FloatType> dy = (n^dx).getNormalized();
+	static inline Matrix3x3 frame(const vec3<FloatType>& n) {
+		vec3<FloatType> dx0 = vec3<FloatType>(1,0,0) ^ n;
+		vec3<FloatType> dx1 = vec3<FloatType>(0,1,0) ^ n;
+		vec3<FloatType> dx = (dx0.lengthSq() > dx1.lengthSq() ? dx0 : dx1).getNormalized();
+		vec3<FloatType> dy = (n^dx).getNormalized();
 		return Matrix3x3(dx,dy,n).getTranspose();
 	}
 

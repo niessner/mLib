@@ -16,22 +16,22 @@ namespace ml {
 
 
 template <class T>
-T distSq(const point2d<T> &ptA, const point2d<T> &ptB)
+T distSq(const vec2<T> &ptA, const vec2<T> &ptB)
 {
-    return point2d<T>::distSq(ptA, ptB);
+    return vec2<T>::distSq(ptA, ptB);
 }
 
 template <class T>
-T distSq(const point3d<T> &ptA, const point3d<T> &ptB)
+T distSq(const vec3<T> &ptA, const vec3<T> &ptB)
 {
-    return point3d<T>::distSq(ptA, ptB);
+    return vec3<T>::distSq(ptA, ptB);
 }
 
 template <class T>
-T distSq(const LineSegment2<T> &seg, const point2d<T> &p)
+T distSq(const LineSegment2<T> &seg, const vec2<T> &p)
 {
-    const point2d<T> &v = seg.p0();
-    const point2d<T> &w = seg.p1();
+    const vec2<T> &v = seg.p0();
+    const vec2<T> &w = seg.p1();
     
     //
     // http://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
@@ -48,32 +48,32 @@ T distSq(const LineSegment2<T> &seg, const point2d<T> &p)
     const T t = ((p - v) | (w - v)) / l2;
     if (t < (T)0.0) return distSq(p, v);      // Beyond the 'v' end of the segment
     else if (t > (T)1.0) return distSq(p, w); // Beyond the 'w' end of the segment
-    const point2d<T> projection = v + t * (w - v);  // Projection falls on the segment
+    const vec2<T> projection = v + t * (w - v);  // Projection falls on the segment
     return distSq(p, projection);
 }
 
 template <class T>
-T distSq(const Line2<T> &line, const point2d<T> &pt)
+T distSq(const Line2<T> &line, const vec2<T> &pt)
 {
-    const point2d<T> diff = line.dir();
+    const vec2<T> diff = line.dir();
     const T d = diff.lengthSq();
-    const point2d<T> p0 = line.p0();
-    const point2d<T> p1 = line.p0() + line.dir();
+    const vec2<T> p0 = line.p0();
+    const vec2<T> p1 = line.p0() + line.dir();
     T n = fabs(diff.y * pt.x - diff.x * pt.y + p1.x * p0.y - p1.y * p0.x);
     return n / d;
 }
 
 template <class T>
-T distSq(const OrientedBoundingBox3<T> &box, const point3d<T> &pt)
+T distSq(const OrientedBoundingBox3<T> &box, const vec3<T> &pt)
 {
     //
     // This is wrong, this file is just meant as an example of the dist interface
     //
-    return point3d<T>::distSq(box.getCenter(), pt);
+    return vec3<T>::distSq(box.getCenter(), pt);
 }
 
 template <class T>
-T distSq(const point3d<T> &pt, const OrientedBoundingBox3<T> &box)
+T distSq(const vec3<T> &pt, const OrientedBoundingBox3<T> &box)
 {
     return distSq(box, pt);
 }
@@ -84,14 +84,14 @@ T distSq(const point3d<T> &pt, const OrientedBoundingBox3<T> &box)
 template <class T>
 double distSq(const LineSegment2<T> &s0, const LineSegment2<T> &s1)
 {
-    const point2d<T> u = s0.delta();
-    const point2d<T> v = s1.delta();
-    const point2d<T> w = s0.p0() - s1.p0();
-    double a = point2d<T>::dot(u, u);         // always >= 0
-    double b = point2d<T>::dot(u, v);
-    double c = point2d<T>::dot(v, v);         // always >= 0
-    double d = point2d<T>::dot(u, w);
-    double e = point2d<T>::dot(v, w);
+    const vec2<T> u = s0.delta();
+    const vec2<T> v = s1.delta();
+    const vec2<T> w = s0.p0() - s1.p0();
+    double a = vec2<T>::dot(u, u);         // always >= 0
+    double b = vec2<T>::dot(u, v);
+    double c = vec2<T>::dot(v, v);         // always >= 0
+    double d = vec2<T>::dot(u, w);
+    double e = vec2<T>::dot(v, w);
     double D = a * c - b * b;        // always >= 0
     double sc, sN, sD = D;       // sc = sN / sD, default sD = D >= 0
     double tc, tN, tD = D;       // tc = tN / tD, default tD = D >= 0
@@ -147,7 +147,7 @@ double distSq(const LineSegment2<T> &s0, const LineSegment2<T> &s1)
     tc = (abs(tN) < 1e-6 ? 0.0 : tN / tD);
 
     // get the difference of the two closest points
-    const point2d<T> dP = w + ((float)sc * u) - ((float)tc * v);  // =  S1(sc) - S2(tc)
+    const vec2<T> dP = w + ((float)sc * u) - ((float)tc * v);  // =  S1(sc) - S2(tc)
 
     return dP.lengthSq();   // return the closest distance
 }

@@ -2,7 +2,7 @@
 #ifndef CORE_MATH_POINT2D_H_
 #define CORE_MATH_POINT2D_H_
 
-#include "point1d.h"
+#include "vec1.h"
 
 #include <iostream>
 #include <cmath>
@@ -13,68 +13,68 @@ namespace ml {
 
 //! 2D vector
 template <class T>
-class point2d : public BinaryDataSerialize< point2d<T> >
+class vec2 : public BinaryDataSerialize< vec2<T> >
 {
 public:
-	explicit point2d(T v) {
+	explicit vec2(T v) {
 		array[0] = array[1] = v;
 	}
 
-	point2d() {
+	vec2() {
 		array[0] = array[1] = 0;
 	}
 
-	point2d(T x, T y) {
+	vec2(T x, T y) {
 		array[0] = x;
 		array[1] = y;
 	}
 
 	template <class U>
-	point2d(const point2d<U>& other) {
+	vec2(const vec2<U>& other) {
 		array[0] = (T)other.array[0];
 		array[1] = (T)other.array[1];
 	}
 
-	point2d(const point2d& other) {
+	vec2(const vec2& other) {
 		array[0] = other.array[0];
 		array[1] = other.array[1];
 	}
 
-	point2d(const T* other) {
+	vec2(const T* other) {
 		array[0] = other[0];
 		array[1] = other[1];
 	}
 
-	inline const point2d<T>& operator=(const point2d& other) {
+	inline const vec2<T>& operator=(const vec2& other) {
 		array[0] = other.array[0];
 		array[1] = other.array[1];
 		return *this;
 	}
 
-	inline const point2d<T>& operator=(T other) {
+	inline const vec2<T>& operator=(T other) {
 		array[0] = other;
 		array[1] = other;
 		return *this;
 	}
 
-	inline point2d<T> operator-() const {
-		return point2d<T>(-array[0], -array[1]);
+	inline vec2<T> operator-() const {
+		return vec2<T>(-array[0], -array[1]);
 	}
 
-	inline point2d<T> operator+(const point2d& other) const {
-		return point2d<T>(array[0]+other.array[0], array[1]+other.array[1]);
+	inline vec2<T> operator+(const vec2& other) const {
+		return vec2<T>(array[0]+other.array[0], array[1]+other.array[1]);
 	}
 
-	inline point2d<T> operator+(T val) const {
-		return point2d<T>(array[0]+val, array[1]+val);
+	inline vec2<T> operator+(T val) const {
+		return vec2<T>(array[0]+val, array[1]+val);
 	}
 
-	inline void operator+=(const point2d& other) {
+	inline void operator+=(const vec2& other) {
 		array[0] += other.array[0];
 		array[1] += other.array[1];
 	}
 
-	inline void operator-=(const point2d& other) {
+	inline void operator-=(const vec2& other) {
 		array[0] -= other.array[0];
 		array[1] -= other.array[1];
 	}
@@ -100,40 +100,40 @@ public:
 		array[1] *= inv;
 	}
 
-	inline point2d<T> operator*(T val) const {
-		return point2d<T>(array[0]*val, array[1]*val);
+	inline vec2<T> operator*(T val) const {
+		return vec2<T>(array[0]*val, array[1]*val);
 	}
 
-	inline point2d<T> operator/(T val) const {
+	inline vec2<T> operator/(T val) const {
 		T inv = (T)1/val;
-		return point2d<T>(array[0]*inv, array[1]*inv);
+		return vec2<T>(array[0]*inv, array[1]*inv);
 	}
 
-	inline point2d<T> operator-(const point2d& other) const {
-		return point2d<T>(array[0]-other.array[0], array[1]-other.array[1]);
+	inline vec2<T> operator-(const vec2& other) const {
+		return vec2<T>(array[0]-other.array[0], array[1]-other.array[1]);
 	}
 
-	inline point2d<T> operator-(T val) const {
-		return point2d<T>(array[0]-val, array[1]-val);
+	inline vec2<T> operator-(T val) const {
+		return vec2<T>(array[0]-val, array[1]-val);
 	}
 
-	inline bool operator==(const point2d& other) const {
+	inline bool operator==(const vec2& other) const {
 		if ((array[0] == other.array[0]) && (array[1] == other.array[1]))
 			return true;
 
 		return false;
 	}
 
-	inline bool operator!=(const point2d& other) const {
+	inline bool operator!=(const vec2& other) const {
 		return !(*this == other);
 	}
 
 	//! dot product
-	inline T operator|(const point2d& other) const {
+	inline T operator|(const vec2& other) const {
 		return (array[0]*other.array[0] + array[1]*other.array[1]);
 	}
 
-    static inline T dot(const point2d& l, const point2d& r) {
+    static inline T dot(const vec2& l, const vec2& r) {
         return(l.array[0] * r.array[0] + l.array[1] * r.array[1]);
     }
 
@@ -147,7 +147,7 @@ public:
 		return array[i];
 	}
 
-	inline bool operator<(const point2d& other) const {
+	inline bool operator<(const vec2& other) const {
 		if ((x < other.x) && (y < other.y))
 			return true;
 
@@ -162,11 +162,11 @@ public:
 		return sqrt(array[0]*array[0] + array[1]*array[1]);
 	}
 
-	static T distSq(const point2d& v0, const point2d& v1) {
+	static T distSq(const vec2& v0, const vec2& v1) {
 		return ((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]));
 	}
 
-	static T dist(const point2d& v0, const point2d& v1) {
+	static T dist(const vec2& v0, const vec2& v1) {
 		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]));
 	}
 
@@ -176,9 +176,9 @@ public:
 		array[1] *= val;
 	}
 
-	inline point2d<T> getNormalized() const {
+	inline vec2<T> getNormalized() const {
 		T val = (T)1.0 / length();
-		return point2d<T>(array[0] * val, array[1] * val);
+		return vec2<T>(array[0] * val, array[1] * val);
 	}
 
 	inline void print() const {
@@ -196,12 +196,12 @@ public:
         return result;
     }
 
-	static const point2d<T> origin;
-	static const point2d<T> eX;
-	static const point2d<T> eY;
+	static const vec2<T> origin;
+	static const vec2<T> eX;
+	static const vec2<T> eY;
 
-	inline point1d<T> getVec1() const {
-		return point1d<T>(x);
+	inline vec1<T> getVec1() const {
+		return vec1<T>(x);
 	}
 
 	union {
@@ -217,50 +217,50 @@ public:
 
 //! operator for scalar * vector
 template <class T>
-inline point2d<T> operator*(T s, const point2d<T>& v)
+inline vec2<T> operator*(T s, const vec2<T>& v)
 {
 	return v * s;
 }
 template <class T>
-inline point2d<T> operator/(T s, const point2d<T>& v)
+inline vec2<T> operator/(T s, const vec2<T>& v)
 {
-	return point2d<T>(s/v.x, s/v.y);
+	return vec2<T>(s/v.x, s/v.y);
 }
 template <class T>
-inline point2d<T> operator+(T s, const point2d<T>& v)
+inline vec2<T> operator+(T s, const vec2<T>& v)
 {
 	return v + s;
 }
 template <class T>
-inline point2d<T> operator-(T s, const point2d<T>& v)
+inline vec2<T> operator-(T s, const vec2<T>& v)
 {
-	return point2d<T>(s-v.x, s-v.y);
+	return vec2<T>(s-v.x, s-v.y);
 }
 
 namespace math {
 	template<class T>
-	inline point2d<int> sign(const point2d<T>& v) {
-		return point2d<int>(sign(v.x), sign(v.y));
+	inline vec2<int> sign(const vec2<T>& v) {
+		return vec2<int>(sign(v.x), sign(v.y));
 	}
 }
 
-//! write a point2d to a stream
-template <class T> inline std::ostream& operator<<(std::ostream& s, const point2d<T>& v) {
+//! write a vec2 to a stream
+template <class T> inline std::ostream& operator<<(std::ostream& s, const vec2<T>& v) {
   return (s << v[0] << " " << v[1]);
 }
 
-//! read a point2d from a stream
-template <class T> inline std::istream& operator>>(std::istream& s, point2d<T>& v) {
+//! read a vec2 from a stream
+template <class T> inline std::istream& operator>>(std::istream& s, vec2<T>& v) {
   return (s >> v[0] >> v[1]);
 }
 
-typedef point2d<double> vec2d;
-typedef point2d<float> vec2f;
-typedef point2d<int> vec2i;
-typedef point2d<unsigned int> vec2ui;
-typedef point2d<unsigned char> vec2uc;
-typedef point2d<UINT64> vec2ul;
-typedef point2d<INT64> vec2l;
+typedef vec2<double> vec2d;
+typedef vec2<float> vec2f;
+typedef vec2<int> vec2i;
+typedef vec2<unsigned int> vec2ui;
+typedef vec2<unsigned char> vec2uc;
+typedef vec2<UINT64> vec2ul;
+typedef vec2<INT64> vec2l;
 
 template<> const vec2f vec2f::origin(0.0f, 0.0f);
 template<> const vec2f vec2f::eX(1.0f, 0.0f);
@@ -273,40 +273,40 @@ template<> const vec2d vec2d::eY(0.0, 1.0);
 
 namespace math {
 	template<class T>
-	inline vec2i round(const point2d<T>& f) {
+	inline vec2i round(const vec2<T>& f) {
 		return vec2i(round(f.x), round(f.y));
 	}
 	template<class T>
-	inline vec2i ceil(const point2d<T>& f) {
+	inline vec2i ceil(const vec2<T>& f) {
 		return vec2i(ceil(f.x), ceil(f.y));
 	}
 	template<class T>
-	inline vec2i floor(const point2d<T>& f) {
+	inline vec2i floor(const vec2<T>& f) {
 		return vec2i(floor(f.x), floor(f.y));
 	}
 	template<class T>
-	inline point2d<T> abs(const point2d<T>& p) {
-		return point2d<T>(abs(p.x), abs(p.y));
+	inline vec2<T> abs(const vec2<T>& p) {
+		return vec2<T>(abs(p.x), abs(p.y));
 	}
 	template<class T>
-	inline point2d<T> max(const point2d<T>& p, T v) {
-		return point2d<T>(std::max(p.x, v),
+	inline vec2<T> max(const vec2<T>& p, T v) {
+		return vec2<T>(std::max(p.x, v),
 			std::max(p.y, v));
 	}
 	template<class T>
-	inline point2d<T> max(const point2d<T>& p, const point2d<T>& v) {
-		return point2d<T>(
+	inline vec2<T> max(const vec2<T>& p, const vec2<T>& v) {
+		return vec2<T>(
 			std::max(p.x, v.x),
 			std::max(p.y, v.y));
 	}
 	template<class T>
-	inline point2d<T> min(const point2d<T>& p, T v) {
-		return point2d<T>(std::min(p.x, v),
+	inline vec2<T> min(const vec2<T>& p, T v) {
+		return vec2<T>(std::min(p.x, v),
 			std::min(p.y, v));
 	}
 	template<class T>
-	inline point2d<T> min(const point2d<T>& p, const point2d<T>& v) {
-		return point2d<T>(
+	inline vec2<T> min(const vec2<T>& p, const vec2<T>& v) {
+		return vec2<T>(
 			std::min(p.x, v.x),
 			std::min(p.y, v.y));
 	}

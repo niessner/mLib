@@ -56,24 +56,24 @@ bool TriMeshRayAccelerator<FloatType>::getFirstIntersectionDirect(const Ray<Floa
 template<class FloatType>
 bool TriMeshRayAcceleratorBruteForce<FloatType>::Triangle::intersect(const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max()) const
 {
-    const point3d<FloatType> &d = r.direction();
-    const point3d<FloatType> &p = r.origin();
+    const vec3<FloatType> &d = r.direction();
+    const vec3<FloatType> &p = r.origin();
 
-    point3d<FloatType> e1 = pos[1] - pos[0];
-    point3d<FloatType> e2 = pos[2] - pos[0];
+    vec3<FloatType> e1 = pos[1] - pos[0];
+    vec3<FloatType> e2 = pos[2] - pos[0];
 
-    point3d<FloatType> h = d ^ e2;
+    vec3<FloatType> h = d ^ e2;
     FloatType a = e1 | h;
 
     if (a == (FloatType)0.0 || a == -(FloatType)0.0) return false;
 
     FloatType f = (FloatType)1.0 / a;
-    point3d<FloatType> s = p - pos[0];
+    vec3<FloatType> s = p - pos[0];
     FloatType u = f * (s | h);
 
     if (u < (FloatType)0.0 || u >(FloatType)1.0) return false;
 
-    point3d<FloatType> q = s ^ e1;
+    vec3<FloatType> q = s ^ e1;
     FloatType v = f * (d | q);
 
     if (v < (FloatType)0.0 || u + v >(FloatType)1.0) return false;

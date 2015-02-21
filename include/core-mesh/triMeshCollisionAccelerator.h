@@ -72,7 +72,7 @@ class TriMeshCollisionAcceleratorBruteForce : public TriMeshCollisionAccelerator
 public:
 	struct Triangle
 	{
-		point3d<T> pos[3];
+		vec3<T> pos[3];
 	};
 
 	void initInternal(const std::vector< std::pair<const TriMesh<T> *, mat4f> > &meshes, bool storeLocalCopy);

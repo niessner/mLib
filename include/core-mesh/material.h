@@ -86,9 +86,9 @@ public:
 
 	void reset() {
 		m_name = "";
-		m_ambient = point4d<FloatType>(0,0,0,0);
-		m_diffuse = point4d<FloatType>(0,0,0,0);
-		m_specular = point4d<FloatType>(0,0,0,0);
+		m_ambient = vec4<FloatType>(0,0,0,0);
+		m_diffuse = vec4<FloatType>(0,0,0,0);
+		m_specular = vec4<FloatType>(0,0,0,0);
 		m_shiny = 0;
 		m_TextureFilename_Ka = "";
 		m_TextureFilename_Kd = "";
@@ -99,9 +99,9 @@ public:
 	}
 
 	std::string			m_name;
-	point4d<FloatType>	m_ambient;
-	point4d<FloatType>	m_diffuse;
-	point4d<FloatType>	m_specular;
+	vec4<FloatType>	m_ambient;
+	vec4<FloatType>	m_diffuse;
+	vec4<FloatType>	m_specular;
 	FloatType			m_shiny;
 
 	std::string			m_TextureFilename_Ka;

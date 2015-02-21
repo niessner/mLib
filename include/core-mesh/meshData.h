@@ -545,10 +545,10 @@ public:
 	//! larger thresh removes less / negative thresh removes more
 	unsigned int removeFacesInFrontOfPlane(const Plane<FloatType>& plane, FloatType thresh = 0.0f);
 
-	std::vector<point3d<FloatType>>	m_Vertices;			//vertices are indexed (see below)
-	std::vector<point3d<FloatType>>	m_Normals;			//normals are indexed (see below/or per vertex)
-	std::vector<point2d<FloatType>>	m_TextureCoords;	//tex coords are indexed (see below/or per vertex)
-	std::vector<point4d<FloatType>>	m_Colors;			//colors are not indexed (see below/or per vertex) 
+	std::vector<vec3<FloatType>>	m_Vertices;			//vertices are indexed (see below)
+	std::vector<vec3<FloatType>>	m_Normals;			//normals are indexed (see below/or per vertex)
+	std::vector<vec2<FloatType>>	m_TextureCoords;	//tex coords are indexed (see below/or per vertex)
+	std::vector<vec4<FloatType>>	m_Colors;			//colors are not indexed (see below/or per vertex) 
 	//std::vector<std::vector<unsigned int>>	m_FaceIndicesVertices;		//indices in face array
 	//std::vector<std::vector<unsigned int>>	m_FaceIndicesNormals;		//indices in normal array (if size==0, indicesVertices is used)
 	//std::vector<std::vector<unsigned int>>	m_FaceIndicesTextureCoords;	//indices in texture array (if size==0, indicesVertices is used)
@@ -699,10 +699,10 @@ public:
 		m_Normals.clear();
 		m_FaceIndicesNormals.clear();
 
-		m_Normals.resize(m_Vertices.size(), point3d<FloatType>(0,0,0));
+		m_Normals.resize(m_Vertices.size(), vec3<FloatType>(0,0,0));
 		for (const auto& face : m_FaceIndicesVertices) {
 
-			point3d<FloatType> n = point3d<FloatType>(0,0,0);
+			vec3<FloatType> n = vec3<FloatType>(0,0,0);
 			unsigned int first = face[0];
 			for (unsigned int i = 1; i < face.size() - 1; i++) {
 				n += (m_Vertices[face[i]] - m_Vertices[first]) ^ (m_Vertices[face[i+1]] - m_Vertices[first]);
@@ -730,11 +730,11 @@ public:
 		if (m_FaceIndicesVertices == m_FaceIndicesTextureCoords)	m_FaceIndicesTextureCoords.clear();
 	}
 private:
-	inline vec3i toVirtualVoxelPos(const point3d<FloatType>& v, FloatType voxelSize) {
-		return vec3i(v/voxelSize+(FloatType)0.5*point3d<FloatType>(math::sign(v)));
+	inline vec3i toVirtualVoxelPos(const vec3<FloatType>& v, FloatType voxelSize) {
+		return vec3i(v/voxelSize+(FloatType)0.5*vec3<FloatType>(math::sign(v)));
 	} 
 	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned
-	unsigned int hasNearestNeighbor(const vec3i& coord, SparseGrid3<std::list<std::pair<point3d<FloatType>,unsigned int> > > &neighborQuery, const point3d<FloatType>& v, FloatType thresh );
+	unsigned int hasNearestNeighbor(const vec3i& coord, SparseGrid3<std::list<std::pair<vec3<FloatType>,unsigned int> > > &neighborQuery, const vec3<FloatType>& v, FloatType thresh );
 
 	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned (manhattan distance)
 	unsigned int hasNearestNeighborApprox(const vec3i& coord, SparseGrid3<unsigned int> &neighborQuery, FloatType thresh );
