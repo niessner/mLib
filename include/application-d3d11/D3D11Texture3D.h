@@ -52,10 +52,6 @@ public:
 
     void bind() const;
 
-    GraphicsAssetType type() const
-    {
-        return GraphicsAssetTexture;
-    }
 
     const Grid3<RGBColor>& data() const
     {

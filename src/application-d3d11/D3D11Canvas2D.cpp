@@ -1,23 +1,18 @@
 
 namespace ml {
 
-void D3D11Canvas2D::init(GraphicsDevice &g, UINT width, UINT height)
+void D3D11Canvas2D::init(GraphicsDevice &g)
 {
     m_graphics = &g.castD3D11();
 
-    m_renderTarget.load(*m_graphics, width, height);
+
+	const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
+
+	m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasMesh", "meshVS", "vs_4_0", "meshPS", "ps_4_0");
+	m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasCircle", "circleVS", "vs_4_0", "circlePS", "ps_4_0");
 }
 
-void D3D11Canvas2D::addElement(const std::string &elementId, const bbox2i &box, float depth, const Bitmap &bmp)
-{
-    Element &e = m_elements[elementId];
 
-    e.id = elementId;
-    e.box = box;
-    e.depth = depth;
-    e.tex.load(*m_graphics, bmp);
-    e.mesh.load(*m_graphics, ml::shapes::plane(vec3f(box.getMin(), depth), vec3f(box.getMax(), depth), vec3f::eZ));
-}
 
 bool D3D11Canvas2D::intersects(const vec2i &mouseCoord, const vec2i &windowDimensions, const Cameraf &camera, const UIEvent &event)
 {
@@ -35,12 +30,20 @@ void D3D11Canvas2D::reset(GraphicsDevice &g)
 }
 
 void D3D11Canvas2D::render()
-{
-    m_renderTarget.bind();
-    
-    for (const auto &e : m_elements)
+{    
+    for (auto *e : m_elements)
     {
-        e.second.mesh.render();
+		if (e->getType() == ELEMENT_TYPE_MESH) {
+			m_graphics->getShaderManager().bindShaders("defaultCanvasMesh");
+		}
+		else if (e->getType() == ELEMENT_TYPE_CIRCLE) {
+			m_graphics->getShaderManager().bindShaders("defaultCanvasCircle");
+		}
+		else
+		{
+			throw MLIB_EXCEPTION("unknown shader");
+		}
+		e->render();
     }
 }
 

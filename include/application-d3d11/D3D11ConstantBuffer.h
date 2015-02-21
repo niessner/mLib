@@ -38,29 +38,34 @@ public:
 		desc.ByteWidth = sizeof(T);
 		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		desc.CPUAccessFlags = 0;
-		D3D_VALIDATE(g.castD3D11().device().CreateBuffer( &desc, nullptr, &m_buffer ));
+		D3D_VALIDATE(g.castD3D11().getDevice().CreateBuffer( &desc, nullptr, &m_buffer ));
 	}
 
     void updateAndBind(const T &data, UINT constantBufferIndex)
     {
         update(data);
-        bindVertexShader(constantBufferIndex);
-        bindPixelShader(constantBufferIndex);
+		bind(constantBufferIndex);
     }
 
 	void update(const T &data)
 	{
-        m_graphics->context().UpdateSubresource(m_buffer, 0, nullptr, &data, 0, 0);
+        m_graphics->getContext().UpdateSubresource(m_buffer, 0, nullptr, &data, 0, 0);
+	}
+
+	void bind(UINT constantBufferIndex) 
+	{
+		bindVertexShader(constantBufferIndex);
+		bindPixelShader(constantBufferIndex);
 	}
 
 	void bindVertexShader(UINT constantBufferIndex)
 	{
-        m_graphics->context().VSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);
+        m_graphics->getContext().VSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);
 	}
 
 	void bindPixelShader(UINT constantBufferIndex)
 	{
-        m_graphics->context().PSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);
+        m_graphics->getContext().PSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);
 	}
 
 private:

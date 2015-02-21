@@ -23,6 +23,7 @@ public:
         m_samplerState = nullptr;
         m_featureLevel = D3D_FEATURE_LEVEL_9_1;
     }
+
     ~D3D11GraphicsDevice()
     {
         SAFE_RELEASE(m_rasterState);
@@ -42,6 +43,7 @@ public:
         }
         SAFE_RELEASE(m_debug);
     }
+
     void init(const WindowWin32 &window);
     void resize(UINT width, UINT height);
     void renderBeginFrame();
@@ -54,17 +56,17 @@ public:
     void clear(const ml::vec4f &clearColor);
     void bindRenderDepth();
 
-    D3D11ShaderManager& shaderManager()
-    {
+    D3D11ShaderManager& getShaderManager()
+	{
         return m_shaderManager;
     }
 
-    ID3D11Device& device()
+    ID3D11Device& getDevice()
     {
         return *m_device;
     }
 
-    ID3D11DeviceContext& context()
+    ID3D11DeviceContext& getContext()
     {
         return *m_context;
     }

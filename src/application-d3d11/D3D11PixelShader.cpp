@@ -29,12 +29,12 @@ void ml::D3D11PixelShader::reset(GraphicsDevice &g)
 {
 	release(g);
 
-	auto &device = g.castD3D11().device();
+	auto &device = g.castD3D11().getDevice();
 
 	D3D_VALIDATE(device.CreatePixelShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &m_shader));
 }
 
 void ml::D3D11PixelShader::bind() const
 {
-    m_graphics->context().PSSetShader(m_shader, nullptr, 0);
+	m_graphics->getContext().PSSetShader(m_shader, nullptr, 0);
 }

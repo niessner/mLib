@@ -35,8 +35,8 @@ void D3D11Texture2D::reset(GraphicsDevice &g)
     if (m_bmp.dimX() == 0 || m_bmp.dimY() == 0)
         return;
 
-    auto &device = g.castD3D11().device();
-    auto &context = g.castD3D11().context();
+    auto &device = g.castD3D11().getDevice();
+	auto &context = g.castD3D11().getContext();
 
     D3D11_TEXTURE2D_DESC desc;
     desc.Width = (UINT)m_bmp.dimX();
@@ -63,7 +63,7 @@ void D3D11Texture2D::bind() const
 {
     if (m_view == nullptr)
         return;
-    m_graphics->context().PSSetShaderResources(0, 1, &m_view);
+    m_graphics->getContext().PSSetShaderResources(0, 1, &m_view);
 }
 
 }

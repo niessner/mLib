@@ -87,10 +87,6 @@ public:
     void captureDepthBuffer(ColorImageR32 &result);
     void captureDepthBuffer(ColorImageR32 &result, const mat4f &perspectiveTransform);
 
-    GraphicsAssetType type() const
-    {
-        return GraphicsAssetTexture;
-    }
 
 private:
     D3D11GraphicsDevice *m_graphics;

@@ -56,11 +56,6 @@ public:
 
     void bind() const;
 
-    GraphicsAssetType type() const
-    {
-        return GraphicsAssetTexture;
-    }
-
     const Bitmap& bmp() const
     {
         return m_bmp;

@@ -28,8 +28,8 @@ void D3D11RenderTarget::reset(GraphicsDevice &g)
     if (m_width == 0 || m_height == 0)
         return;
 
-    auto &device = g.castD3D11().device();
-    auto &context = g.castD3D11().context();
+    auto &device = g.castD3D11().getDevice();
+	auto &context = g.castD3D11().getContext();
 
     //
     // Create the render target
@@ -103,7 +103,7 @@ void D3D11RenderTarget::bind()
     if (m_texture == nullptr)
         return;
 
-    auto &context = m_graphics->context();
+	auto &context = m_graphics->getContext();
     context.OMSetRenderTargets(1, &m_renderView, m_depthView);
 
     D3D11_VIEWPORT viewport;
@@ -118,14 +118,14 @@ void D3D11RenderTarget::bind()
 
 void D3D11RenderTarget::clear(const ml::vec4f &clearColor)
 {
-    auto &context = m_graphics->context();
+	auto &context = m_graphics->getContext();
     context.ClearRenderTargetView(m_renderView, clearColor.array);
     context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void D3D11RenderTarget::clearColorBuffer(const ml::vec4f &clearColor)
 {
-    auto &context = m_graphics->context();
+	auto &context = m_graphics->getContext();
     context.ClearRenderTargetView(m_renderView, clearColor.array);
 }
 
@@ -154,7 +154,7 @@ void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result, const mat4f &p
 
 void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result)
 {
-    auto &context = m_graphics->context();
+	auto &context = m_graphics->getContext();
     context.CopyResource(m_captureDepth, m_depthBuffer);
 
     result.allocateToSize(m_height, m_width);
@@ -174,7 +174,7 @@ void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result)
 
 void D3D11RenderTarget::captureColorBuffer(ColorImageR8G8B8A8 &result)
 {
-    auto &context = m_graphics->context();
+	auto &context = m_graphics->getContext();
     context.CopyResource(m_captureTexture, m_texture);
 
     result.allocateToSize(m_height, m_width);
@@ -194,7 +194,7 @@ void D3D11RenderTarget::captureColorBuffer(ColorImageR8G8B8A8 &result)
 
 void D3D11RenderTarget::captureBitmap(Bitmap &result)
 {
-    auto &context = m_graphics->context();
+    auto &context = m_graphics->getContext();
     context.CopyResource(m_captureTexture, m_texture);
 
     result.allocate(m_height, m_width);

@@ -4,11 +4,6 @@
 
 namespace ml {
 
-enum GraphicsAssetType
-{
-    GraphicsAssetGeneric,
-    GraphicsAssetTexture,
-};
 
 class GraphicsDevice;
 class GraphicsAsset
@@ -16,10 +11,6 @@ class GraphicsAsset
 public:
 	virtual void release(GraphicsDevice &g) = 0;
 	virtual void reset(GraphicsDevice &g) = 0;
-    virtual GraphicsAssetType type() const
-    {
-        return GraphicsAssetGeneric;
-    }
 };
 
 }  // namespace ml

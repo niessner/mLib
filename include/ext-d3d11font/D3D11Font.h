@@ -31,7 +31,7 @@ public:
     {
         std::wstring wText(text.begin(), text.end());
         m_fontWrapper->DrawString(
-            &g.castD3D11().context(),
+            &g.castD3D11().getContext(),
             wText.c_str(),
             fontHeight,
             (FLOAT)pos.x,
@@ -61,7 +61,7 @@ public:
         //Console::log() << "resetting fonts" << std::endl;
         release(g);
         D3D_VALIDATE(FW1CreateFactory(FW1_VERSION, &m_factory));
-        D3D_VALIDATE(m_factory->CreateFontWrapper(&g.castD3D11().device(), m_fontName.c_str(), &m_fontWrapper));
+        D3D_VALIDATE(m_factory->CreateFontWrapper(&g.castD3D11().getDevice(), m_fontName.c_str(), &m_fontWrapper));
     }
 
 private:

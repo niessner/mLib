@@ -34,7 +34,7 @@ void ml::D3D11VertexShader::reset(GraphicsDevice &g)
 {
 	release(g);
 
-	auto &device = g.castD3D11().device();
+	auto &device = g.castD3D11().getDevice();
 
 	D3D_VALIDATE(device.CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &m_shader));
 
@@ -43,7 +43,7 @@ void ml::D3D11VertexShader::reset(GraphicsDevice &g)
 
 void ml::D3D11VertexShader::bind() const
 {
-	auto &context = m_graphics->context();
+	auto &context = m_graphics->getContext();
 	context.VSSetShader(m_shader, nullptr, 0);
 	context.IASetInputLayout(m_standardLayout);
 }

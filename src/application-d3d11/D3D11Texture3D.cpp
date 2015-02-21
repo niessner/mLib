@@ -26,8 +26,8 @@ void D3D11Texture3D::reset(GraphicsDevice &g)
     if (m_data.dimX() == 0)
         return;
 
-    auto &device = g.castD3D11().device();
-    auto &context = g.castD3D11().context();
+    auto &device = g.castD3D11().getDevice();
+	auto &context = g.castD3D11().getContext();
 
     D3D11_TEXTURE3D_DESC desc;
     desc.Width = (UINT)m_data.dimX();
@@ -52,7 +52,7 @@ void D3D11Texture3D::bind() const
 {
     if (m_view == nullptr)
         return;
-    m_graphics->context().PSSetShaderResources(0, 1, &m_view);
+	m_graphics->getContext().PSSetShaderResources(0, 1, &m_view);
 }
 
 }

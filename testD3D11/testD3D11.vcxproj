@@ -94,9 +94,14 @@
     <ClInclude Include="..\include\application-base\graphicsAsset.h" />
     <ClInclude Include="..\include\application-base\graphicsDevice.h" />
     <ClInclude Include="..\include\application-base\windowWin32.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11Canvas2D.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11ConstantBuffer.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11GraphicsDevice.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11PixelShader.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11RenderTarget.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11ShaderManager.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11Texture2D.h" />
+    <ClInclude Include="..\include\application-d3d11\D3D11Texture3D.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11TriMesh.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11Utility.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11VertexShader.h" />
@@ -153,6 +158,7 @@
     <ClInclude Include="..\include\core-util\stringUtil.h" />
     <ClInclude Include="..\include\core-util\stringUtilConvert.h" />
     <ClInclude Include="..\include\core-util\utility.h" />
+    <ClInclude Include="..\include\ext-d3d11font\D3D11Font.h" />
     <ClInclude Include="..\include\ext-openmesh\loader.h" />
     <ClInclude Include="..\include\mLibCore.h" />
     <ClInclude Include="..\include\mLibD3D11.h" />
