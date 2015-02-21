@@ -57,8 +57,10 @@ public:
 	{
 	public:
 		struct ElementCircleConstants {
+			vec4f color;
 			vec2f center;
-			float radius;			
+			float radius;
+			float dummy;
 		};
 		ElementCircle(GraphicsDevice &g, const vec2f& center, float radius, float depth) : Element(g, ELEMENT_TYPE_CIRCLE, depth) {
 			ElementCircleConstants constants;
