@@ -16,12 +16,14 @@ void D3D11ShaderManager::registerShader(
   const std::vector<std::pair<std::string, std::string>>& shaderMacros
   )
 {
-	//TODO this should check if the shader already exists in order to avoid registering the same shader multiple times
     MLIB_ASSERT_STR(m_graphics != NULL, "shader manager not initialized");
 
-    auto &shaders = m_shaders[shaderName];
-    shaders.vs.load(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
-    shaders.ps.load(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
+	// in case the shader exists return
+	if (m_shaders.count(shaderName) == 0) {
+		auto &shaders = m_shaders[shaderName];
+		shaders.vs.load(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
+		shaders.ps.load(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
+	}
 }
 
 }

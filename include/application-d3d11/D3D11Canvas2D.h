@@ -37,6 +37,10 @@ public:
     { 
 	public:
 		ElementMesh(GraphicsDevice& g, const bbox2i& box, const Bitmap &bmp, float depth) : Element(g, ELEMENT_TYPE_MESH, depth) {
+
+			const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
+			m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasMesh", "meshVS", "vs_4_0", "meshPS", "ps_4_0");
+
 			//m_box = box;
 			bbox2f boxNdc;
 			boxNdc.include(m_graphics->pixelToNDC(box.getMin()));
@@ -47,6 +51,7 @@ public:
 		 }
 
 		void render() {
+			m_graphics->getShaderManager().bindShaders("defaultCanvasMesh");
 			m_tex.bind();
 			m_mesh.render();
 		}
@@ -67,6 +72,10 @@ public:
 			float dummy;
 		};
 		ElementCircle(GraphicsDevice &g, const vec2f& center, float radius, const vec4f& color, float depth) : Element(g, ELEMENT_TYPE_CIRCLE, depth) {
+
+			const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
+			m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasCircle", "circleVS", "vs_4_0", "circlePS", "ps_4_0");
+
 			ElementCircleConstants constants;
 			constants.center = center;
 			constants.radius = radius;
@@ -81,6 +90,7 @@ public:
 		}
 
 		void render() {
+			m_graphics->getShaderManager().bindShaders("defaultCanvasCircle");
 			m_constantBuffer.bind(0);
 			m_mesh.render();
 		}

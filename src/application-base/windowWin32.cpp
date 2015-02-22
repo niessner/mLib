@@ -50,6 +50,7 @@ LRESULT WINAPI WindowCallback( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
         break;
 
 	case WM_SIZE:
+		parent.data().graphics.resize(parent.data().window);
 		parent.callback().resize(parent.data());
 		break;
 
