@@ -63,7 +63,7 @@ float4 meshPS(VertexShaderOutput input) : SV_Target
 	if (texColor.w == 0.0f) {
 		discard;
 	}
-	return float4(texColor.xyz, 1.0f);
+	return texColor;
 
 }
 
