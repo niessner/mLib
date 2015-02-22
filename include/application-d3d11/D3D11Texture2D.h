@@ -60,7 +60,7 @@ public:
     }
 
 private:
-    D3D11GraphicsDevice *m_graphics;
+	D3D11GraphicsDevice *m_graphics;
     Bitmap m_bmp;
     ID3D11Texture2D *m_texture;
     ID3D11ShaderResourceView *m_view;

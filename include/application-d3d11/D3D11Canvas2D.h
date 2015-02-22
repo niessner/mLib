@@ -154,8 +154,7 @@ public:
 		m_elements.clear();
 	}
 private:
-
-    D3D11GraphicsDevice *m_graphics;
+	D3D11GraphicsDevice *m_graphics;
     std::vector<Element*> m_elements;
 };
 

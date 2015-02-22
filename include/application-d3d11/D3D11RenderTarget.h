@@ -84,8 +84,7 @@ public:
 
 
 private:
-    D3D11GraphicsDevice *m_graphics;
-
+	D3D11GraphicsDevice *m_graphics;
     UINT m_width, m_height;
     ID3D11Texture2D *m_texture;
     ID3D11Texture2D *m_captureTexture;

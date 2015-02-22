@@ -32,12 +32,7 @@ public:
     }
     ~D3D11Texture3D()
 	{
-        SAFE_RELEASE(m_texture);
-        SAFE_RELEASE(m_view);
-
-        // m_view does not seem to be a correctly reference-counted object.
-        m_view = nullptr;
-        
+		release();
 	}
     D3D11Texture3D(GraphicsDevice &g, const Grid3<RGBColor> &data)
     {
@@ -59,7 +54,7 @@ public:
     }
 
 private:
-    D3D11GraphicsDevice *m_graphics;
+	D3D11GraphicsDevice *m_graphics;
     Grid3<RGBColor> m_data;
     ID3D11Texture3D *m_texture;
     ID3D11ShaderResourceView *m_view;

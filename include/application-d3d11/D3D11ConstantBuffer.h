@@ -71,7 +71,7 @@ public:
 	}
 
 private:
-    D3D11GraphicsDevice *m_graphics;
+	D3D11GraphicsDevice *m_graphics;
 	ID3D11Buffer *m_buffer;
 };
 

@@ -116,10 +116,9 @@ public:
     }
 
 private:
+	D3D11GraphicsDevice *m_graphics;
     void initVB(GraphicsDevice &g);
 	void initIB(GraphicsDevice &g);
-
-    D3D11GraphicsDevice *m_graphics;
 
 	ID3D11Buffer *m_vertexBuffer;
 	ID3D11Buffer *m_indexBuffer;
