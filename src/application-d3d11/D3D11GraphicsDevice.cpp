@@ -167,10 +167,6 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 	m_width = window.width();
 	m_height = window.height();
 
-	std::cout << "resize " << m_width << " " << m_height << std::endl;
-
-
-
 	SAFE_RELEASE(m_depthBuffer);
 	SAFE_RELEASE(m_depthStencilView);
 	SAFE_RELEASE(m_renderTargetView);
@@ -191,6 +187,11 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 	m_swapChain->ResizeBuffers(m_swapChainDesc.BufferCount, m_width, m_height, m_swapChainDesc.BufferDesc.Format, flags);
 
 	createViews();
+
+
+	for (auto* asset : m_assets) {
+		asset->resize(*this);
+	}
 }
 
 void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)

@@ -9,8 +9,10 @@ class GraphicsDevice;
 class GraphicsAsset
 {
 public:
+	//TODO i think the graphics device parameters should go away as the device is stored anyway...
 	virtual void release(GraphicsDevice &g) = 0;
 	virtual void reset(GraphicsDevice &g) = 0;
+	virtual void resize(GraphicsDevice &g) {}
 };
 
 }  // namespace ml

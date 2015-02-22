@@ -18,12 +18,15 @@ public:
 			m_elementType = elementType;
 		}
 
+		virtual ~Element() {}
+
 		//! render the element: takes care for shader binding, etc.,
 		virtual void render() = 0;
-		
+		virtual void resize() {};
+
 		ElementType getType() const {
 			return m_elementType;
-		}
+		}		
 		
 	protected:
 		D3D11GraphicsDevice* m_graphics;
@@ -41,14 +44,18 @@ public:
 			const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 			m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasMesh", "meshVS", "vs_4_0", "meshPS", "ps_4_0");
 
-			//m_box = box;
-			bbox2f boxNdc;
-			boxNdc.include(m_graphics->pixelToNDC(box.getMin()));
-			boxNdc.include(m_graphics->pixelToNDC(box.getMax()));
-
+			m_box = box;
 			m_tex.load(g, bmp);
-			m_mesh.load(g, ml::shapes::plane(vec3f(boxNdc.getMin(), depth), vec3f(boxNdc.getMax(), depth), vec3f::eZ));
+			resize();
 		 }
+
+		void resize() 
+		{
+			bbox2f boxNdc;
+			boxNdc.include(m_graphics->pixelToNDC(m_box.getMin()));
+			boxNdc.include(m_graphics->pixelToNDC(m_box.getMax()));
+			m_mesh.load(*m_graphics, ml::shapes::plane(vec3f(boxNdc.getMin(), m_depth), vec3f(boxNdc.getMax(), m_depth), vec3f::eZ));
+		}
 
 		void render() {
 			m_graphics->getShaderManager().bindShaders("defaultCanvasMesh");
@@ -57,7 +64,7 @@ public:
 		}
 
 	private:
-		//bbox2i m_box;
+		bbox2i m_box;
         D3D11Texture2D m_tex;
         D3D11TriMesh m_mesh;
     };
@@ -76,17 +83,21 @@ public:
 			const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 			m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasCircle", "circleVS", "vs_4_0", "circlePS", "ps_4_0");
 
-			ElementCircleConstants constants;
-			constants.center = center;
-			constants.radius = radius;
-			constants.color = color;
+			
+			m_constants.center = center;
+			m_constants.radius = radius;
+			m_constants.color = color;
 			m_constantBuffer.init(g);
-			m_constantBuffer.update(constants);
+			m_constantBuffer.update(m_constants);
 
+			resize();
+		}
+
+		void resize() {
 			bbox2f box;
-			box.include(m_graphics->pixelToNDC(math::floor(center - radius)));
-			box.include(m_graphics->pixelToNDC(math::ceil(center + radius)));
-			m_mesh.load(g, ml::shapes::plane(vec3f(box.getMin(), depth), vec3f(box.getMax(), depth), vec3f::eZ));
+			box.include(m_graphics->pixelToNDC(math::floor(m_constants.center - m_constants.radius)));
+			box.include(m_graphics->pixelToNDC(math::ceil(m_constants.center + m_constants.radius)));
+			m_mesh.load(*m_graphics, ml::shapes::plane(vec3f(box.getMin(), m_depth), vec3f(box.getMax(), m_depth), vec3f::eZ));
 		}
 
 		void render() {
@@ -95,8 +106,10 @@ public:
 			m_mesh.render();
 		}
 	private:
+		ElementCircleConstants m_constants;
 		D3D11ConstantBuffer<ElementCircleConstants> m_constantBuffer;		
 		D3D11TriMesh m_mesh;
+
 	};
 
 
@@ -129,6 +142,7 @@ public:
 
 	void release(GraphicsDevice &g);
 	void reset(GraphicsDevice &g);
+	void resize(GraphicsDevice &g);
 
     void render();
 
