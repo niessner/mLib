@@ -22,24 +22,27 @@ int cubeEData[12][2] = {
 
 TriMeshf plane(const vec3f &start, const vec3f &end, const vec3f &normal)
 {
-    std::vector<TriMeshf::Vertexf> vertices(4);
-    std::vector<UINT> indices(6);
+	std::vector<vec3f> vertices(4);
+	std::vector<UINT> indices(6);
+	std::vector<vec3f> normals(4, normal);
+	std::vector<vec2f> texCoords(4);
+	std::vector<vec4f> colors(4, vec4f(1.0f));
 
-    for (auto &v : vertices)
-    {
-        v.color = vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-        v.normal = normal;
-    }
-
-    vertices[0].position = vec3f(start.x, start.y, 0.0f);
-    vertices[1].position = vec3f(end.x, start.y, 0.0f);
-    vertices[2].position = vec3f(end.x, end.y, 0.0f);
-    vertices[3].position = vec3f(start.x, end.y, 0.0f);
+	vertices[0] = vec3f(start.x, start.y, 0.0f);
+	vertices[1] = vec3f(end.x, start.y, 0.0f);
+	vertices[2] = vec3f(end.x, end.y, 0.0f);
+	vertices[3] = vec3f(start.x, end.y, 0.0f);
 
     indices[0] = 0; indices[1] = 1; indices[2] = 2;
     indices[3] = 0; indices[4] = 2; indices[5] = 3;
 
-    return TriMeshf(vertices, indices);
+	texCoords[0] = vec2f(1.0f, 1.0f);
+	texCoords[1] = vec2f(0.0f, 1.0f);
+	texCoords[2] = vec2f(0.0f, 0.0f);
+	texCoords[3] = vec2f(1.0f, 0.0f);
+
+	return TriMeshf(vertices.size(), indices.size(), vertices.data(), indices.data(),
+		colors.data(), normals.data(), texCoords.data());
 }
 
 TriMeshf box(const bbox3f &bbox, const vec4f& color)

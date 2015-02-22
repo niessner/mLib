@@ -359,6 +359,19 @@ void AppTest::init(ml::ApplicationData &app)
 
 	m_canvas.init(app.graphics);
 	m_canvas.addCircle(vec2f(500, 500), 50, RGBColor::Green, 0.5f);
+	Bitmap bmp(500, 500);
+	bmp.clear(RGBColor::Blue);
+	for (unsigned int x = 0; x < 500; x++) {
+		for (unsigned int y = 0; y < 250; y++)
+			bmp(x, y) = RGBColor::Red;
+	}
+	//ColorImageR8G8B8A8 image; FreeImageWrapper::loadImage("refined.png", image);
+	//Bitmap bmp(image.getWidth(), image.getHeight());
+	//for (unsigned int i = 0; i < image.getWidth()*image.getHeight(); i++) {
+	//	const vec4uc& p = image.getDataPointer()[i];
+	//	bmp.ptr()[i] = RGBColor(p.x, p.y, p.z, p.w);
+	//}
+	m_canvas.addElement(bbox2i(vec2i(100, 100), vec2i(500, 500)), bmp, 0.5f);
 }
 
 void AppTest::render(ml::ApplicationData &app)

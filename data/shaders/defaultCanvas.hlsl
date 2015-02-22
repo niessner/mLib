@@ -42,6 +42,31 @@ float4 circlePS(VertexShaderOutput input) : SV_Target
 
 }
 
+
+VertexShaderOutput meshVS(
+float4 position : position,
+float3 normal : normal,
+float4 color : color,
+float2 texCoord : texCoord)
+{
+	VertexShaderOutput output;
+	output.position = position;
+	output.texCoord = texCoord.xy;
+	output.normal = normal;
+	output.worldPos = position.xyz;
+	return output;
+}
+
+float4 meshPS(VertexShaderOutput input) : SV_Target
+{
+	float4 texColor = modelTexture.Sample(modelSampler, float2(1.0 - input.texCoord.x, input.texCoord.y));
+	if (texColor.w == 0.0f) {
+		discard;
+	}
+	return float4(texColor.xyz, 1.0f);
+
+}
+
 /*
 cbuffer ConstantBuffer : register(b0)
 {

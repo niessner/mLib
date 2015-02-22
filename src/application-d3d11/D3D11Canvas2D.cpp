@@ -8,7 +8,7 @@ void D3D11Canvas2D::init(GraphicsDevice &g)
 
 	const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 
-	//m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasMesh", "meshVS", "vs_4_0", "meshPS", "ps_4_0");
+	m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasMesh", "meshVS", "vs_4_0", "meshPS", "ps_4_0");
 	m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasCircle", "circleVS", "vs_4_0", "circlePS", "ps_4_0");
 }
 

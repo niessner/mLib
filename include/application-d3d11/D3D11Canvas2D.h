@@ -37,9 +37,13 @@ public:
     { 
 	public:
 		ElementMesh(GraphicsDevice& g, const bbox2i& box, const Bitmap &bmp, float depth) : Element(g, ELEMENT_TYPE_MESH, depth) {
-			m_box = box;
+			//m_box = box;
+			bbox2f boxNdc;
+			boxNdc.include(m_graphics->pixelToNDC(box.getMin()));
+			boxNdc.include(m_graphics->pixelToNDC(box.getMax()));
+
 			m_tex.load(g, bmp);
-			m_mesh.load(g, ml::shapes::plane(vec3f(box.getMin(), depth), vec3f(box.getMax(), depth), vec3f::eZ));
+			m_mesh.load(g, ml::shapes::plane(vec3f(boxNdc.getMin(), depth), vec3f(boxNdc.getMax(), depth), vec3f::eZ));
 		 }
 
 		void render() {
@@ -48,7 +52,7 @@ public:
 		}
 
 	private:
-		bbox2i m_box;
+		//bbox2i m_box;
         D3D11Texture2D m_tex;
         D3D11TriMesh m_mesh;
     };
