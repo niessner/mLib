@@ -13,11 +13,12 @@ namespace ml {
 			m_blob = nullptr;
 			m_graphics = nullptr;
 		}
+
 		~D3D11PixelShader()
 		{
-			SAFE_RELEASE(m_shader);
-			SAFE_RELEASE(m_blob);
+			release();
 		}
+
 		void load(
 			GraphicsDevice &g, 
 			const std::string &filename, 
@@ -25,8 +26,8 @@ namespace ml {
 			const std::string& shaderModel = "ps_4_0",
 			const std::vector<std::pair<std::string, std::string>>& shaderMacros = std::vector<std::pair<std::string, std::string>>());
 
-		void release(GraphicsDevice &g);
-		void reset(GraphicsDevice &g);
+		void release();
+		void reset();
 
 		void bind() const;
 

@@ -35,14 +35,13 @@ public:
 
 	~D3D11TriMesh()
 	{
-		SAFE_RELEASE(m_vertexBuffer);
-		SAFE_RELEASE(m_indexBuffer);
+		release();
 	}
 
     void load(GraphicsDevice &g, const D3D11TriMesh& mesh)
     {
         m_triMesh = mesh.m_triMesh;
-        reset(g);
+        reset();
     }
 
 	template<class T>
@@ -50,7 +49,7 @@ public:
     {
         m_graphics = &g.castD3D11();
         m_triMesh = triMesh;
-		reset(g);
+		reset();
 	}
 
 	template<class T>
@@ -59,8 +58,8 @@ public:
         load(g, TriMesh<T>(meshData));
 	}
 
-	void release(GraphicsDevice &g);
-	void reset(GraphicsDevice &g);
+	void release();
+	void reset();
 
 	void render() const;
 

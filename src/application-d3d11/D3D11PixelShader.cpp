@@ -8,7 +8,7 @@ void ml::D3D11PixelShader::load(
 {
     m_graphics = &g.castD3D11();
 
-	release(g);
+	release();
 	SAFE_RELEASE(m_blob);
 
 	m_filename = filename;
@@ -17,19 +17,19 @@ void ml::D3D11PixelShader::load(
 	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel, shaderMacros);
 	MLIB_ASSERT_STR(m_blob != nullptr, "CompileShader failed");
 
-	reset(g);
+	reset();
 }
 
-void ml::D3D11PixelShader::release(GraphicsDevice &g)
+void ml::D3D11PixelShader::release()
 {
 	SAFE_RELEASE(m_shader);
 }
 
-void ml::D3D11PixelShader::reset(GraphicsDevice &g)
+void ml::D3D11PixelShader::reset()
 {
-	release(g);
+	release();
 
-	auto &device = g.castD3D11().getDevice();
+	auto &device = m_graphics->getDevice();
 
 	D3D_VALIDATE(device.CreatePixelShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &m_shader));
 }

@@ -10,26 +10,28 @@ void D3D11RenderTarget::load(GraphicsDevice &g, const UINT width, const UINT hei
     
     g.castD3D11().registerAsset(this);
 
-    reset(g);
+    reset();
 }
 
-void D3D11RenderTarget::release(GraphicsDevice &g)
+void D3D11RenderTarget::release()
 {
-    SAFE_RELEASE(m_renderView);
-    SAFE_RELEASE(m_depthView);
-    SAFE_RELEASE(m_texture);
-    SAFE_RELEASE(m_depthBuffer);
+	SAFE_RELEASE(m_renderView);
+	SAFE_RELEASE(m_depthView);
+	SAFE_RELEASE(m_texture);
+	SAFE_RELEASE(m_captureTexture);
+	SAFE_RELEASE(m_depthBuffer);
+	SAFE_RELEASE(m_captureDepth);
 }
 
-void D3D11RenderTarget::reset(GraphicsDevice &g)
+void D3D11RenderTarget::reset()
 {
-    release(g);
+    release();
 
     if (m_width == 0 || m_height == 0)
         return;
 
-    auto &device = g.castD3D11().getDevice();
-	auto &context = g.castD3D11().getContext();
+    auto &device = m_graphics->getDevice();
+	auto &context = m_graphics->getContext();
 
     //
     // Create the render target

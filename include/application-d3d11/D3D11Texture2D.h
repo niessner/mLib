@@ -26,6 +26,7 @@ public:
         m_view = t.m_view; t.m_view = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
     }
+
     void operator = (D3D11Texture2D &&t)
     {
         m_bmp = std::move(t.m_bmp);
@@ -33,15 +34,12 @@ public:
         m_view = t.m_view; t.m_view = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
     }
+
     ~D3D11Texture2D()
 	{
-        SAFE_RELEASE(m_texture);
-        SAFE_RELEASE(m_view);
-
-        // m_view does not seem to be a correctly reference-counted object.
-        m_view = nullptr;
-        
+		release();
 	}
+
     D3D11Texture2D(GraphicsDevice &g, const Bitmap &bmp)
     {
         m_texture = nullptr;
@@ -51,8 +49,8 @@ public:
 	void load(GraphicsDevice &g, const Bitmap &bmp);
     void load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image);
 
-	void release(GraphicsDevice &g);
-	void reset(GraphicsDevice &g);
+	void release();
+	void reset();
 
     void bind() const;
 

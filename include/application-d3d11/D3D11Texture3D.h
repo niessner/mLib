@@ -47,8 +47,8 @@ public:
     }
     void load(GraphicsDevice &g, const Grid3<RGBColor> &data);
 
-	void release(GraphicsDevice &g);
-	void reset(GraphicsDevice &g);
+	void release();
+	void reset();
 
     void bind() const;
 

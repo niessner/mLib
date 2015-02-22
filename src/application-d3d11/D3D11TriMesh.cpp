@@ -16,21 +16,21 @@ void ml::D3D11TriMesh::updateColors(GraphicsDevice &g, const std::vector<vec4f> 
     for (size_t i = 0; i < newValues.size(); i++)
 		vertices[i].color = newValues[i];
 
-    reset(g);
+    reset();
 }
 
 
-void ml::D3D11TriMesh::release(GraphicsDevice &g)
+void ml::D3D11TriMesh::release()
 {
 	SAFE_RELEASE(m_vertexBuffer);
 	SAFE_RELEASE(m_indexBuffer);
 }
 
-void ml::D3D11TriMesh::reset(GraphicsDevice &g)
+void ml::D3D11TriMesh::reset()
 {
-	release(g);
-	initVB(g);
-	initIB(g);
+	release();
+	initVB(*m_graphics);
+	initIB(*m_graphics);
 }
 
 void ml::D3D11TriMesh::initVB(GraphicsDevice &g)

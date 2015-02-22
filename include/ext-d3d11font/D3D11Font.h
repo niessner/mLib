@@ -22,9 +22,10 @@ public:
 
     void init(GraphicsDevice &g, const std::string &fontName)
     {
+		m_graphics = &g.castD3D11();
         g.castD3D11().registerAsset(this);
         m_fontName = std::wstring(fontName.begin(), fontName.end());
-        reset(g);
+        reset();
     }
 
     void drawString(GraphicsDevice &g, const std::string &text, const ml::vec2i &pos, const float fontHeight, RGBColor color) const
@@ -51,20 +52,21 @@ public:
         }
     }
 
-    void release(GraphicsDevice &g)
+    void release()
     {
         SAFE_RELEASE(m_factory);
         SAFE_RELEASE(m_fontWrapper);
     }
-    void reset(GraphicsDevice &g)
+    void reset()
     {
         //Console::log() << "resetting fonts" << std::endl;
-        release(g);
+        release();
         D3D_VALIDATE(FW1CreateFactory(FW1_VERSION, &m_factory));
-        D3D_VALIDATE(m_factory->CreateFontWrapper(&g.castD3D11().getDevice(), m_fontName.c_str(), &m_fontWrapper));
+        D3D_VALIDATE(m_factory->CreateFontWrapper(&m_graphics->getDevice(), m_fontName.c_str(), &m_fontWrapper));
     }
 
 private:
+	D3D11GraphicsDevice *m_graphics;
     IFW1Factory *m_factory;
     IFW1FontWrapper *m_fontWrapper;
     std::wstring m_fontName;

@@ -13,24 +13,26 @@ public:
         m_graphics = nullptr;
 		m_buffer = nullptr;
 	}
+
 	~D3D11ConstantBuffer()
 	{
-		SAFE_RELEASE(m_buffer);
+		release();
 	}
+
 	void init(GraphicsDevice &g)
 	{
         m_graphics = &g.castD3D11();
-		reset(g);
+		reset();
 	}
 
-	void release(GraphicsDevice &g)
+	void release()
 	{
 		SAFE_RELEASE(m_buffer);
 	}
 
-	void reset(GraphicsDevice &g)
+	void reset()
 	{
-		release(g);
+		release();
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory( &desc, sizeof(desc) );
@@ -38,7 +40,7 @@ public:
 		desc.ByteWidth = sizeof(T);
 		desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 		desc.CPUAccessFlags = 0;
-		D3D_VALIDATE(g.castD3D11().getDevice().CreateBuffer( &desc, nullptr, &m_buffer ));
+		D3D_VALIDATE(m_graphics->getDevice().CreateBuffer( &desc, nullptr, &m_buffer ));
 	}
 
     void updateAndBind(const T &data, UINT constantBufferIndex)

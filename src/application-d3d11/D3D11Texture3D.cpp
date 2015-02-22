@@ -5,29 +5,29 @@ namespace ml
 void D3D11Texture3D::load(GraphicsDevice &g, const Grid3<RGBColor> &data)
 {
     m_graphics = &g.castD3D11();
-    release(g);
+    release();
     
     g.castD3D11().registerAsset(this);
     m_data = data;
 
-    reset(g);
+    reset();
 }
 
-void D3D11Texture3D::release(GraphicsDevice &g)
+void D3D11Texture3D::release()
 {
     SAFE_RELEASE(m_texture);
     SAFE_RELEASE(m_view);
 }
 
-void D3D11Texture3D::reset(GraphicsDevice &g)
+void D3D11Texture3D::reset()
 {
-    release(g);
+    release();
 
     if (m_data.dimX() == 0)
         return;
 
-    auto &device = g.castD3D11().getDevice();
-	auto &context = g.castD3D11().getContext();
+    auto &device = m_graphics->getDevice();
+	auto &context = m_graphics->getContext();
 
     D3D11_TEXTURE3D_DESC desc;
     desc.Width = (UINT)m_data.dimX();

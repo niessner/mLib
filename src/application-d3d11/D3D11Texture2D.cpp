@@ -5,12 +5,12 @@ namespace ml
 void D3D11Texture2D::load(GraphicsDevice &g, const Bitmap &bmp)
 {
     m_graphics = &g.castD3D11();
-    release(g);
+    release();
     
     g.castD3D11().registerAsset(this);
     m_bmp = bmp;
 
-    reset(g);
+    reset();
 }
 
 void D3D11Texture2D::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
@@ -22,21 +22,21 @@ void D3D11Texture2D::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
     load(g, bmp);
 }
 
-void D3D11Texture2D::release(GraphicsDevice &g)
+void D3D11Texture2D::release()
 {
     SAFE_RELEASE(m_texture);
     SAFE_RELEASE(m_view);
 }
 
-void D3D11Texture2D::reset(GraphicsDevice &g)
+void D3D11Texture2D::reset()
 {
-    release(g);
+    release();
 
     if (m_bmp.dimX() == 0 || m_bmp.dimY() == 0)
         return;
 
-    auto &device = g.castD3D11().getDevice();
-	auto &context = g.castD3D11().getContext();
+    auto &device = m_graphics->getDevice();
+	auto &context = m_graphics->getContext();
 
     D3D11_TEXTURE2D_DESC desc;
     desc.Width = (UINT)m_bmp.dimX();

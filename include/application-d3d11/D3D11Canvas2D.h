@@ -140,9 +140,9 @@ public:
 
     bool intersects(const vec2i &mouseCoord, const vec2i &windowDimensions, const Cameraf &camera, const UIEvent &event);
 
-	void release(GraphicsDevice &g);
-	void reset(GraphicsDevice &g);
-	void resize(GraphicsDevice &g);
+	void release();
+	void reset();
+	void resize();
 
     void render();
 

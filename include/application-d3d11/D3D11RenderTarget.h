@@ -48,12 +48,7 @@ public:
     }
     ~D3D11RenderTarget()
 	{
-        SAFE_RELEASE(m_renderView);
-        SAFE_RELEASE(m_depthView);
-        SAFE_RELEASE(m_texture);
-        SAFE_RELEASE(m_captureTexture);
-        SAFE_RELEASE(m_depthBuffer);
-        SAFE_RELEASE(m_captureDepth);
+		release();
 	}
     D3D11RenderTarget(GraphicsDevice &g, const UINT width, const UINT height)
     {
@@ -69,8 +64,8 @@ public:
     // create a new render target with given width and height. Also creates an equal-sized depth buffer.
     void load(GraphicsDevice &g, const UINT width, const UINT height);
 
-	void release(GraphicsDevice &g);
-	void reset(GraphicsDevice &g);
+	void release();
+	void reset();
 
     // sets the render and depth buffers as the render target for the current device.
     // to return to the original graphics device render target, call bindRenderDepth() on the graphics device.

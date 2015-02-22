@@ -190,7 +190,7 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 
 
 	for (auto* asset : m_assets) {
-		asset->resize(*this);
+		asset->resize();
 	}
 }
 
