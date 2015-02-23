@@ -183,7 +183,11 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 	m_swapChainDesc.OutputWindow = window.handle();
 	m_swapChainDesc.BufferDesc.Width = m_width;
 	m_swapChainDesc.BufferDesc.Height = m_height;
-	m_swapChain->ResizeBuffers(m_swapChainDesc.BufferCount, m_width, m_height, m_swapChainDesc.BufferDesc.Format, flags);
+	HRESULT hr = m_swapChain->ResizeBuffers(m_swapChainDesc.BufferCount, m_width, m_height, m_swapChainDesc.BufferDesc.Format, flags);
+    if (FAILED(hr))
+    {
+        std::cerr << "Failed to resize buffers, there are probably outstanding buffer references to the swap chain" << std::endl;
+    }
 
 	createViews();
 
@@ -298,6 +302,7 @@ void D3D11GraphicsDevice::captureBackBufferInternal(Bitmap &result)
     }
 
     m_context->Unmap(m_captureBuffer, subresource);
+    frameBuffer->Release();
 }
 
 }
