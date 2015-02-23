@@ -221,6 +221,29 @@ namespace util
 		return base;
 	}
 
+#ifdef UNICODE
+	inline std::wstring windowsStr(const std::string& s) 
+	{
+		std::wstring ret(s.begin(), s.end());
+		return ret;
+	}
+	inline std::wstring windowsStr(const std::wstring& s) 
+	{
+		return s;
+	}
+#else
+	inline std::string windowsStr(const std::string& s)
+	{
+		return s;
+	}
+	inline std::string windowsStr(const std::wstring& s)
+	{
+		std::string ret(s.begin(), s.end());
+		return ret;
+
+	}
+#endif
+
 }  // namespace util
 
 template<class T>

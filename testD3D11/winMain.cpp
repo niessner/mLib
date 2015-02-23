@@ -7,6 +7,8 @@ int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	AppTest callback;
 	ml::ApplicationWin32 app(hInstance, 1280, 1024, "D3D11 Test", ml::GraphicsDeviceTypeD3D11, callback);
 	app.messageLoop();
+
+	return EXIT_SUCCESS;
 }
 
 int main()
@@ -14,4 +16,6 @@ int main()
     AppTest callback;
     ml::ApplicationWin32 app(nullptr, 1280, 1024, "D3D11 Test", ml::GraphicsDeviceTypeD3D11, callback);
     app.messageLoop();
+
+	return EXIT_SUCCESS;
 }
