@@ -98,6 +98,10 @@ ml::WindowWin32::~WindowWin32()
 
 void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std::string &name)
 {
+	// width/height need to be client width/height
+	RECT wr = {0, 0, width, height};
+	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false); // adjust window size
+
 	m_className = std::wstring(name.begin(), name.end());
 	m_class.style = CS_HREDRAW | CS_VREDRAW;
 	m_class.lpfnWndProc = (WNDPROC) WindowCallback; 
@@ -118,8 +122,8 @@ void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std:
 		WS_OVERLAPPEDWINDOW, 
 		0, //CW_USEDEFAULT
 		0, //CW_USEDEFAULT
-		width, 
-		height, 
+		wr.right - wr.left,    // width of the window
+		wr.bottom - wr.top,    // height of the window
 		(HWND) nullptr, 
 		(HMENU) nullptr, 
 		instance,
