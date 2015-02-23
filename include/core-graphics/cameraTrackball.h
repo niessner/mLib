@@ -57,8 +57,14 @@ public:
 	const Matrix4x4<FloatType>& getWorldViewProj() const { return m_worldViewProj; }
 	const Matrix4x4<FloatType>& getWorldView() const { return m_worldView; }
 	const Matrix4x4<FloatType>& getWorld() const { return m_world; }
+	
+	void updateAspectRatio(FloatType newAspect) {
+		Camera<FloatType>::updateAspectRatio(newAspect);
+		update();
+	}
 
 private:
+
 	void update() {
 		m_world = mat4f::translation(m_modelTranslation) * m_modelRotation;
 		m_worldView = camera() * m_world;

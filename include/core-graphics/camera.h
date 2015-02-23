@@ -15,7 +15,7 @@ namespace ml {
         //! If flipRight is set, flip x to correct for sensor horizontal flipping
         Camera(const Matrix4x4<FloatType>& m, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar, const bool flipRight = false);
 
-        void updateAspectRatio(FloatType newAspect);
+        virtual void updateAspectRatio(FloatType newAspect);
         void lookRight(FloatType theta);
         void lookUp(FloatType theta);
         void roll(FloatType theta);
