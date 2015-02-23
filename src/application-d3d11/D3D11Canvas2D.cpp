@@ -24,11 +24,11 @@ void D3D11Canvas2D::reset()
 
 }
 
-void D3D11Canvas2D::resize()
+void D3D11Canvas2D::onDeviceResize()
 {
 	for (auto *e : m_elements)
 	{
-		e->resize();
+        e->onDeviceResize();
 	}
 }
 

@@ -22,7 +22,7 @@ public:
 
 		//! render the element: takes care for shader binding, etc.,
 		virtual void render() = 0;
-		virtual void resize() {};
+        virtual void onDeviceResize() {};
 
 		ElementType getType() const {
 			return m_elementType;
@@ -46,10 +46,10 @@ public:
 
 			m_box = box;
 			m_tex.load(g, bmp);
-			resize();
+            onDeviceResize();
 		 }
 
-		void resize() 
+        void onDeviceResize()
 		{
 			bbox2f boxNdc;
 			boxNdc.include(m_graphics->pixelToNDC(m_box.getMin()));
@@ -90,10 +90,10 @@ public:
 			m_constantBuffer.init(g);
 			m_constantBuffer.update(m_constants);
 
-			resize();
+            onDeviceResize();
 		}
 
-		void resize() {
+        void onDeviceResize() {
 			bbox2f box;
 			box.include(m_graphics->pixelToNDC(math::floor(m_constants.center - m_constants.radius)));
 			box.include(m_graphics->pixelToNDC(math::ceil(m_constants.center + m_constants.radius)));
@@ -142,7 +142,7 @@ public:
 
 	void release();
 	void reset();
-	void resize();
+    void onDeviceResize();
 
     void render();
 

@@ -180,7 +180,6 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 	//if (bFullScreen)
 	//	Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-
 	m_swapChainDesc.OutputWindow = window.handle();
 	m_swapChainDesc.BufferDesc.Width = m_width;
 	m_swapChainDesc.BufferDesc.Height = m_height;
@@ -188,9 +187,8 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 
 	createViews();
 
-
 	for (auto* asset : m_assets) {
-		asset->resize();
+        asset->onDeviceResize();
 	}
 }
 
