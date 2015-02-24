@@ -40,7 +40,7 @@ namespace ml {
         unsigned int bytesPerPixel = nBits / 8;
         MLIB_ASSERT(bytesPerPixel == 2);
         for (unsigned int y = 0; y < height; y++) {
-          const BYTE* dataRowStart = data + (height - 1 - i)*pitch;
+          const BYTE* dataRowStart = data + (height - 1 - y)*pitch;
           for (unsigned int x = 0; x < width; x++) {
             convertFromUSHORT(resultImage(x, y), (USHORT*)&dataRowStart[x*bytesPerPixel]);
           }
@@ -51,7 +51,7 @@ namespace ml {
         unsigned int bytesPerPixel = nBits / 8;
         if (bytesPerPixel == 1) {
           for (unsigned int y = 0; y < height; y++) {
-            const BYTE* dataRowStart = data + (height - 1 - i)*pitch;
+            const BYTE* dataRowStart = data + (height - 1 - y)*pitch;
             for (unsigned int x = 0; x < width; x++) {
               convertFromBYTE(resultImage(x, y), &dataRowStart[x*bytesPerPixel]);
             }
@@ -59,7 +59,7 @@ namespace ml {
         }
         else if (bytesPerPixel == 3) {
           for (unsigned int y = 0; y < height; y++) {
-            const BYTE* dataRowStart = data + (height - 1 - i)*pitch;
+            const BYTE* dataRowStart = data + (height - 1 - y)*pitch;
             for (unsigned int x = 0; x < width; x++) {
               convertFromBYTE3(resultImage(x, y), &dataRowStart[x*bytesPerPixel]);
             }
@@ -67,7 +67,7 @@ namespace ml {
         }
         else if (bytesPerPixel == 4) {
           for (unsigned int y = 0; y < height; y++) {
-            const BYTE* dataRowStart = data + (height - 1 - i)*pitch;
+            const BYTE* dataRowStart = data + (height - 1 - y)*pitch;
             for (unsigned int x = 0; x < width; x++) {
               convertFromBYTE4(resultImage(x, y), &dataRowStart[x*bytesPerPixel]);
             }
