@@ -47,6 +47,14 @@ int main()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 #endif
+
+  ColorImageRGB image(2,2);
+  image(0, 0) = (vec3f)RGBColor::Red.getVec3()/255.0f;
+  image(0, 1) = (vec3f)RGBColor::Blue.getVec3()/255.0f;
+  image(1, 0) = (vec3f)RGBColor::Green.getVec3()/255.0f;
+  image(1, 1) = (vec3f)RGBColor::Yellow.getVec3()/255.0f;
+  FreeImageWrapper::saveImage("bla.png", *(Image*)&image, true);
+
 	//{
 	// REMOVE ISOLATED VERTICES TEST
 	//	MeshDataf meshData = MeshIOf::loadFromFile("dining1d.ply");

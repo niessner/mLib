@@ -16,7 +16,7 @@ public:
 			}
 		}
 
-		grid.clear();
+		grid.clearVoxels();
 		for (unsigned int i = 0; i < s; i++) {
 			grid.setVoxel(i,i,i);
 		}

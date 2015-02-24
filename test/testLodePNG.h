@@ -4,12 +4,12 @@ public:
 	void test0()
 	{
 		using namespace ml;
-		ColorImageR8G8B8A8 bmp(41, 17);
+		ColorImageR8G8B8A8 bmp(17, 41);
 		bmp.setPixels(RGBColor::Magenta);
 		bmp(1, 1) = RGBColor::Blue;
-		bmp(0, 1) = RGBColor::Red;
-		bmp(6, 13) = RGBColor::Green;
-		bmp(7, 2) = RGBColor::White;
+		bmp(1, 0) = RGBColor::Red;
+		bmp(13, 6) = RGBColor::Green;
+		bmp(2, 7) = RGBColor::White;
 
 		LodePNG::save(bmp, "test.png");
     ColorImageR8G8B8A8 bmpReloaded = LodePNG::load("test.png");

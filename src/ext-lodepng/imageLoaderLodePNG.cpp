@@ -18,7 +18,7 @@ namespace ml
 
     MLIB_ASSERT_STR(!error, std::string(lodepng_error_text(error)) + ": " + filename);
 
-    result.allocate(height, width);
+    result.allocate(width, height);
     memcpy(result.getPointer(), &image[0], 4 * width * height);
 
     return result;

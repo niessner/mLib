@@ -8,6 +8,34 @@ namespace ml {
   class FreeImageWrapper {
   public:
 
+    static void loadImage(const std::string& filename, Image& image, bool debugPrint = false) {
+      
+      //TODO get the image format from file
+      Image::Format format = image.getFormat();
+
+      switch (format) {
+      case Image::FORMAT_ColorImageR8G8B8A8:
+        loadImage(filename, *(ColorImageR8G8B8A8*)&image, debugPrint);
+        break;
+      case Image::FORMAT_ColorImageR32G32B32A32:
+        loadImage(filename, *(ColorImageR32G32B32A32*)&image, debugPrint);
+        break;
+      case Image::FORMAT_ColorImageR32G32B32:
+        loadImage(filename, *(ColorImageR32G32B32*)&image, debugPrint);
+        break;
+      case Image::FORMAT_DepthImage:
+        loadImage(filename, *(DepthImage*)&image, debugPrint);
+        break;
+      case Image::FORMAT_DepthImage16:
+        loadImage(filename, *(DepthImage16*)&image, debugPrint);
+        break;
+      default: 
+        throw MLIB_EXCEPTION("unknown image format");
+      }
+
+      image.setFormat(format);
+    }
+
     template<class T>
     static void loadImage(const std::string &filename, BaseImage<T>& resultImage, bool debugPrint = false) {
       if (util::getFileExtension(filename) == "mbinRGB" || util::getFileExtension(filename) == "mbindepth") {
@@ -85,6 +113,33 @@ namespace ml {
       FreeImage_DeInitialise();
     }
 
+
+
+    static void saveImage(const std::string &filename, const Image& image, bool debugPrint = false) {
+      
+      Image::Format format = image.getFormat();
+
+      switch (format) {
+      case Image::FORMAT_ColorImageR8G8B8A8:
+        saveImage(filename, *(const ColorImageR8G8B8A8*)&image, debugPrint);
+        break;
+      case Image::FORMAT_ColorImageR32G32B32A32:
+        saveImage(filename, *(const ColorImageR32G32B32A32*)&image, debugPrint);
+        break;
+      case Image::FORMAT_ColorImageR32G32B32:
+        saveImage(filename, *(const ColorImageR32G32B32*)&image, debugPrint);
+        break;
+      case Image::FORMAT_DepthImage:
+        saveImage(filename, *(const DepthImage*)&image, debugPrint);
+        break;
+      case Image::FORMAT_DepthImage16:
+        saveImage(filename, *(const DepthImage16*)&image, debugPrint);
+        break;
+      default:
+        throw MLIB_EXCEPTION("unknown image format");
+      }
+
+    }
 
 
     template<class T>
