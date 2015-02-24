@@ -28,6 +28,7 @@
 // core-util source files
 //
 #include "../src/core-util/utility.cpp"
+#include "../src/core-util/windowsUtil.cpp"
 #include "../src/core-util/directory.cpp"
 #include "../src/core-util/timer.cpp"
 #include "../src/core-util/pipe.cpp"

@@ -252,6 +252,9 @@
     <ClInclude Include="..\include\ext-d3d11font\D3D11Font.h">
       <Filter>mLibHeader\ext-d3d11font</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-util\windowsUtil.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
