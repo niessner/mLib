@@ -1,7 +1,7 @@
 
 namespace ml {
 
-bool D3D11Canvas2D::ElementBillboard::intersects(const vec2i &mouseCoord, const vec2i &windowDimensions, const Cameraf &camera, D3D11Canvas2D::Intersection &intersection)
+bool D3D11Canvas2D::ElementBillboard::intersects(const vec2i &mouseCoord, D3D11Canvas2D::Intersection &intersection) const
 {
     if (m_box.intersects(mouseCoord))
     {
@@ -32,22 +32,23 @@ void D3D11Canvas2D::init(GraphicsDevice &g)
 	m_graphics->registerAsset(this);	//register to get resize, reset, and release events
 }
 
-bool D3D11Canvas2D::intersects(const vec2i &mouseCoord, const vec2i &windowDimensions, const Cameraf &camera, Intersection &intersection)
+D3D11Canvas2D::Intersection D3D11Canvas2D::intersectionFirst(const vec2i &mouseCoord) const
 {
+    D3D11Canvas2D::Intersection result;
     //
     // TODO: compute the closest interesection, instead of the first
     //
     for (auto &e : m_namedElements)
     {
-        if (e.second->intersects(mouseCoord, windowDimensions, camera, intersection))
-            return true;
+        if (e.second->intersects(mouseCoord, result))
+            return result;
     }
     for (Element *e : m_unnamedElements)
     {
-        if (e->intersects(mouseCoord, windowDimensions, camera, intersection))
-            return true;
+        if (e->intersects(mouseCoord, result))
+            return result;
     }
-    return false;
+    return result;
 }
 
 void D3D11Canvas2D::release()
