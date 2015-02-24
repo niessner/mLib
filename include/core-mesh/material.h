@@ -93,9 +93,9 @@ public:
 		m_TextureFilename_Ka = "";
 		m_TextureFilename_Kd = "";
 		m_TextureFilename_Ks = "";
-		m_Texture_Ka.clear();
-		m_Texture_Kd.clear();
-		m_Texture_Ks.clear();
+		m_Texture_Ka.free();
+		m_Texture_Kd.free();
+		m_Texture_Ks.free();
 	}
 
 	std::string			m_name;

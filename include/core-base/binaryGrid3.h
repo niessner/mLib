@@ -13,27 +13,28 @@ namespace ml {
 		}
 		BinaryGrid3(size_t width, size_t height, size_t depth) {
 			m_data = nullptr;
-			allocate(width,height,depth);
-			clear();
+			allocate(width, height, depth);
+			free();
 		}
 
 		BinaryGrid3(const vec3ui& dim) {
 			m_data = nullptr;
 			allocate(dim);
-			clear();
+			free();
 		}
 
 		BinaryGrid3(const BinaryGrid3& other) {
-      m_data = nullptr;
-      if (other.m_data != nullptr) {
-        allocate(other.m_width, other.m_height, other.m_depth);
-        memcpy(m_data, other.m_data, getNumUInts()*sizeof(unsigned int));
-      } else {
-        m_data = nullptr;
-        m_width = other.m_width;
-        m_height = other.m_height;
-        m_depth = other.m_depth;
-      }
+			m_data = nullptr;
+			if (other.m_data != nullptr) {
+				allocate(other.m_width, other.m_height, other.m_depth);
+				memcpy(m_data, other.m_data, getNumUInts()*sizeof(unsigned int));
+			}
+			else {
+				m_data = nullptr;
+				m_width = other.m_width;
+				m_height = other.m_height;
+				m_depth = other.m_depth;
+			}
 		}
 
 		BinaryGrid3(BinaryGrid3&& other) {
@@ -51,54 +52,68 @@ namespace ml {
 		}
 
 		~BinaryGrid3() {
-			SAFE_DELETE_ARRAY(m_data)
+			free();
 		}
 
-		inline void allocate(size_t width, size_t height, size_t depth) {
-			SAFE_DELETE_ARRAY(m_data);
-			m_width = width;
-			m_height = height;
-			m_depth = depth;
 
-      size_t dataSize = getNumUInts();
-			m_data = new unsigned int[dataSize];
+		inline void allocate(size_t width, size_t height, size_t depth) {
+			if (width == 0 || height == 0 || depth == 0) {
+				free();
+				return;
+			}
+			else {
+				SAFE_DELETE_ARRAY(m_data);
+				m_width = width;
+				m_height = height;
+				m_depth = depth;
+
+				size_t dataSize = getNumUInts();
+				m_data = new unsigned int[dataSize];
+			}
 		}
 
 		inline void allocate(const vec3ul& dim) {
 			allocate(dim.x, dim.y, dim.z);
 		}
 
+		//! frees all the data
+		inline void free() {
+			SAFE_DELETE_ARRAY(m_data);
+			m_width = m_height = m_depth = 0;
+		}
+
 		inline BinaryGrid3& operator=(const BinaryGrid3& other) {
-      if (this != &other) {
-        if (other.m_data != nullptr) {
-          allocate(other.m_width, other.m_height, other.m_depth);
-          memcpy(m_data, other.m_data, getNumUInts()*sizeof(unsigned int));
-        } else {
-          SAFE_DELETE_ARRAY(m_data);
-          m_data = nullptr;
-          m_width = other.m_width;
-          m_height = other.m_height;
-          m_depth = other.m_depth;
-        }
-      }
-      return *this;
+			if (this != &other) {
+				if (other.m_data != nullptr) {
+					allocate(other.m_width, other.m_height, other.m_depth);
+					memcpy(m_data, other.m_data, getNumUInts()*sizeof(unsigned int));
+				}
+				else {
+					SAFE_DELETE_ARRAY(m_data);
+					m_data = nullptr;
+					m_width = other.m_width;
+					m_height = other.m_height;
+					m_depth = other.m_depth;
+				}
+			}
+			return *this;
 		}
 
 		inline BinaryGrid3& operator=(BinaryGrid3&& other) {
-      if (this != &other) {
-        SAFE_DELETE_ARRAY(m_data);
+			if (this != &other) {
+				SAFE_DELETE_ARRAY(m_data);
 
-        m_width = other.m_width;
-        m_height = other.m_height;
-        m_depth = other.m_depth;
-        m_data = other.m_data;
+				m_width = other.m_width;
+				m_height = other.m_height;
+				m_depth = other.m_depth;
+				m_data = other.m_data;
 
-        other.m_width = 0;
-        other.m_height = 0;
-        other.m_depth = 0;
-        other.m_data = nullptr;
-      }
-      return *this;
+				other.m_width = 0;
+				other.m_height = 0;
+				other.m_depth = 0;
+				other.m_data = nullptr;
+			}
+			return *this;
 		}
 
 		inline bool operator==(const BinaryGrid3& other) const {
@@ -119,7 +134,7 @@ namespace ml {
 		}
 
 		//! clears all voxels
-		inline void clear() {
+		inline void clearVoxels() {
 			size_t numUInts = getNumUInts();
 			for (size_t i = 0; i < numUInts; i++) {
 				m_data[i] = 0;
@@ -193,9 +208,10 @@ namespace ml {
 				std::cout << "slice0" << std::endl;
 				for (size_t y = 0; y < m_height; y++) {
 					for (size_t x = 0; x < m_width; x++) {
-						if (isVoxelSet(x,y,z)) {
+						if (isVoxelSet(x, y, z)) {
 							std::cout << "1";
-						} else {
+						}
+						else {
 							std::cout << "0";
 						}
 
@@ -219,7 +235,7 @@ namespace ml {
 			return vec3ul(getDimX(), getDimY(), getDimZ());
 		}
 
-		inline size_t getNumTotalEntries() const {
+		inline size_t size() const {
 			return m_width*m_height*m_depth;
 		}
 
@@ -243,29 +259,29 @@ namespace ml {
 		}
 
 	private:
-    // boost archive serialization functions
-    friend class boost::serialization::access;
-    template <class Archive>
-    void save(Archive& ar, const unsigned int version) const {
-      ar << m_width << m_height << m_depth << boost::serialization::make_array(m_data, getNumUInts());
-    }
-    template<class Archive>
-    void load(Archive& ar, const unsigned int version) {
-      ar >> m_width >> m_height >> m_depth;
-      allocate(m_width, m_height, m_depth);
-      ar >> boost::serialization::make_array(m_data, getNumUInts());
-    }
-    template<class Archive>
-    void serialize(Archive &ar, const unsigned int version) {
-      boost::serialization::split_member(ar, *this, version);
-    }
+		// boost archive serialization functions
+		friend class boost::serialization::access;
+		template <class Archive>
+		void save(Archive& ar, const unsigned int version) const {
+			ar << m_width << m_height << m_depth << boost::serialization::make_array(m_data, getNumUInts());
+		}
+		template<class Archive>
+		void load(Archive& ar, const unsigned int version) {
+			ar >> m_width >> m_height >> m_depth;
+			allocate(m_width, m_height, m_depth);
+			ar >> boost::serialization::make_array(m_data, getNumUInts());
+		}
+		template<class Archive>
+		void serialize(Archive &ar, const unsigned int version) {
+			boost::serialization::split_member(ar, *this, version);
+		}
 
 		inline size_t getNumUInts() const {
-			size_t numEntries = getNumTotalEntries();
+			size_t numEntries = size();
 			return (numEntries + bitsPerUInt - 1) / bitsPerUInt;
 		}
 
-    static const unsigned int bitsPerUInt = sizeof(unsigned int)*8;
+		static const unsigned int bitsPerUInt = sizeof(unsigned int) * 8;
 		size_t			m_width, m_height, m_depth;
 		unsigned int*	m_data;
 	};

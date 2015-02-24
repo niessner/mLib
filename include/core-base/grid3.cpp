@@ -27,7 +27,7 @@ template <class T> Grid3<T>::Grid3(size_t dimX, size_t dimY, size_t dimZ, const 
 	m_dimY = dimY;
 	m_dimZ = dimZ;
 	m_data = new T[dimX * dimY * dimZ];
-	clear(clearValue);
+	setValues(clearValue);
 }
 
 template <class T> Grid3<T>::Grid3(const Grid3<T> &G)
@@ -36,7 +36,7 @@ template <class T> Grid3<T>::Grid3(const Grid3<T> &G)
   m_dimY = G.m_dimY;
   m_dimZ = G.m_dimZ;
 
-	const size_t totalEntries = getNumTotalEntries();
+	const size_t totalEntries = size();
 	m_data = new T[totalEntries];
 	for(size_t i = 0; i < totalEntries; i++) {
 		m_data[i] = G.m_data[i];
@@ -60,10 +60,10 @@ template <class T> Grid3<T>::Grid3(Grid3<T> &&G)
 
 template <class T> Grid3<T>::~Grid3()
 {
-	deleteMemory();
+	free();
 }
 
-template <class T> void Grid3<T>::deleteMemory()
+template <class T> void Grid3<T>::free()
 {
 	m_dimX = 0;
 	m_dimY = 0;
@@ -82,7 +82,7 @@ template <class T> Grid3<T>& Grid3<T>::operator = (const Grid3<T> &G)
   m_dimY = G.m_dimY;
   m_dimZ = G.m_dimZ;
 
-	const size_t totalEntries = getNumTotalEntries();
+	const size_t totalEntries = size();
 	m_data = new T[totalEntries];
 	for (size_t i = 0; i < totalEntries; i++) {
 		m_data[i] = G.m_data[i];
@@ -102,23 +102,33 @@ template <class T> Grid3<T>& Grid3<T>::operator = (Grid3<T> &&G)
 
 template <class T> void Grid3<T>::allocate(size_t dimX, size_t dimY, size_t dimZ)
 {
-	m_dimX = dimX;
-	m_dimY = dimY;
-	m_dimZ = dimZ;
-	if(m_data) delete[] m_data;
-	m_data = new T[dimX * dimY * dimZ];
+	if (dimX == 0 || dimY == 0 || dimZ == 0) {
+		free();
+	}
+	else {
+		m_dimX = dimX;
+		m_dimY = dimY;
+		m_dimZ = dimZ;
+		if (m_data) delete[] m_data;
+		m_data = new T[dimX * dimY * dimZ];
+	}
 }
 
 template <class T> void Grid3<T>::allocate(size_t dimX, size_t dimY, size_t dimZ, const T &clearValue)
 {
-	allocate(dimX, dimY, dimZ);
-	clear(clearValue);
+	if (dimX == 0 || dimY == 0 || dimZ == 0) {
+		free();
+	}
+	else {
+		allocate(dimX, dimY, dimZ);
+		setValues(clearValue);
+	}
 }
 
-template <class T> void Grid3<T>::clear(const T &clearValue)
+template <class T> void Grid3<T>::setValues(const T &value)
 {
-	const size_t totalEntries = getNumTotalEntries();
-	for (size_t i = 0; i < totalEntries; i++) m_data[i] = clearValue;
+	const size_t totalEntries = size();
+	for (size_t i = 0; i < totalEntries; i++) m_data[i] = value;
 }
 
 }  // namespace ml
