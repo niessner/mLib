@@ -10,12 +10,12 @@ namespace ml {
         DistanceField3() : Grid3() {
         }
 
-        DistanceField3(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) : Grid3(grid.dimX(), grid.dimY(), grid.dimZ()) {
+        DistanceField3(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) : Grid3(grid.getDimX(), grid.getDimY(), grid.getDimZ()) {
             generateFromBinaryGrid(grid, trunc);
 		}
 
         void generateFromBinaryGrid(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) {
-            allocate(grid.dimX(), grid.dimY(), grid.dimZ());
+            allocate(grid.getDimX(), grid.getDimY(), grid.getDimZ());
 
             m_truncation = trunc;
 
@@ -35,20 +35,20 @@ namespace ml {
 
 			BoundingBox3<int> bbBox;
             bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)0,           (FloatType)0));
-            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.dimX(),   (FloatType)0,           (FloatType)0));
-            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.dimX(),   (FloatType)grid.dimY(), (FloatType)0));
-            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)grid.dimY(), (FloatType)0));
-            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)0,           (FloatType)grid.dimZ()));
-            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.dimX(),   (FloatType)0,           (FloatType)grid.dimZ()));
-            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.dimX(),   (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
-            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)grid.dimY(), (FloatType)grid.dimZ()));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.getDimX(),   (FloatType)0,           (FloatType)0));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.getDimX(),   (FloatType)grid.getDimY(), (FloatType)0));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)grid.getDimY(), (FloatType)0));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)0,           (FloatType)grid.getDimZ()));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.getDimX(),   (FloatType)0,           (FloatType)grid.getDimZ()));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)grid.getDimX(),   (FloatType)grid.getDimY(), (FloatType)grid.getDimZ()));
+            bbBox.include(DFToGrid*vec3<FloatType>((FloatType)0,             (FloatType)grid.getDimY(), (FloatType)grid.getDimZ()));
 
 			bbBox.setMin(math::max(bbBox.getMin() - 1, 0));      
 			bbBox.setMax(math::min(bbBox.getMax() + 1, vec3i(grid.getDimensions())));
 
-			//for (size_t z = 0; z < grid.dimZ(); z++) {
-			//	for (size_t y = 0; y < grid.dimY(); y++) {
-			//		for (size_t x = 0; x < grid.dimX(); x++) {
+			//for (size_t z = 0; z < grid.getDimZ(); z++) {
+			//	for (size_t y = 0; y < grid.getDimY(); y++) {
+			//		for (size_t x = 0; x < grid.getDimX(); x++) {
 			for (size_t z = bbBox.getMinZ(); z < bbBox.getMaxZ(); z++) {
 				for (size_t y = bbBox.getMinY(); y < bbBox.getMaxY(); y++) {
 					for (size_t x = bbBox.getMinZ(); x < bbBox.getMaxX(); x++) {
@@ -92,9 +92,9 @@ namespace ml {
 
 			//initialize with grid distances
 			m_numZeroVoxels = 0;
-			for (size_t z = 0; z < grid.dimZ(); z++) {
-				for (size_t y = 0; y < grid.dimY(); y++) {
-					for (size_t x = 0; x < grid.dimX(); x++) {
+			for (size_t z = 0; z < grid.getDimZ(); z++) {
+				for (size_t y = 0; y < grid.getDimY(); y++) {
+					for (size_t x = 0; x < grid.getDimX(); x++) {
 						if (grid.isVoxelSet(x, y, z)) {
 							(*this)(x, y, z) = (FloatType)0;
 							m_numZeroVoxels++;
@@ -109,9 +109,9 @@ namespace ml {
 			bool found = true;
 			while (found) {
 				found = false;
-				for (size_t z = 0; z < dimZ(); z++) {
-					for (size_t y = 0; y < dimY(); y++) {
-						for (size_t x = 0; x < dimX(); x++) {
+				for (size_t z = 0; z < getDimZ(); z++) {
+					for (size_t y = 0; y < getDimY(); y++) {
+						for (size_t x = 0; x < getDimX(); x++) {
 
 							FloatType dMin = (*this)(x, y, z);
 							for (int k = -1; k <= 1; k++) {
@@ -142,9 +142,9 @@ namespace ml {
 
 			//initialize with grid distances
 			m_numZeroVoxels = 0;
-			for (size_t z = 0; z < grid.dimZ(); z++) {
-				for (size_t y = 0; y < grid.dimY(); y++) {
-					for (size_t x = 0; x < grid.dimX(); x++) {
+			for (size_t z = 0; z < grid.getDimZ(); z++) {
+				for (size_t y = 0; y < grid.getDimY(); y++) {
+					for (size_t x = 0; x < grid.getDimX(); x++) {
 						if (grid.isVoxelSet(x, y, z)) {
 							(*this)(x, y, z) = (FloatType)0;
 							visited.setVoxel(x, y, z);
@@ -169,9 +169,9 @@ namespace ml {
 				FloatType dist;
 			};
 			std::priority_queue<Voxel> queue;
-			for (size_t z = 0; z < dimZ(); z++) {
-				for (size_t y = 0; y < dimY(); y++) {
-					for (size_t x = 0; x < dimX(); x++) {
+			for (size_t z = 0; z < getDimZ(); z++) {
+				for (size_t y = 0; y < getDimY(); y++) {
+					for (size_t x = 0; x < getDimX(); x++) {
 						if (!grid.isVoxelSet(x, y, z)) {
 							FloatType d;
 							if (isNeighborSet(grid, x, y, z, d)) {

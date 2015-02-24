@@ -360,7 +360,7 @@ void AppTest::init(ml::ApplicationData &app)
 	m_canvas.init(app.graphics);
 	m_canvas.addCircle(vec2f(500, 500), 50, RGBColor::Green, 0.5f);
 	ColorImageR8G8B8A8 image(500, 500);
-	image.clear(RGBColor::Blue);
+	image.setPixels(RGBColor::Blue);
 	for (unsigned int x = 0; x < 500; x++) {
 		for (unsigned int y = 0; y < 250; y++)
 			image(x, y) = RGBColor::Red;

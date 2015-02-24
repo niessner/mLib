@@ -205,18 +205,18 @@ namespace ml {
 			}
 		}
 
-		inline size_t dimX() const {
+		inline size_t getDimX() const {
 			return m_width;
 		}
-		inline size_t dimY() const {
+		inline size_t getDimY() const {
 			return m_height;
 		}
-		inline size_t dimZ() const {
+		inline size_t getDimZ() const {
 			return m_depth;
 		}
 
 		inline vec3ul getDimensions() const {
-			return vec3ul(dimX(), dimY(), dimZ());
+			return vec3ul(getDimX(), getDimY(), getDimZ());
 		}
 
 		inline size_t getNumTotalEntries() const {

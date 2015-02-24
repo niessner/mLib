@@ -255,9 +255,9 @@ namespace ml {
 
 
 		TriMesh(const BinaryGrid3& grid, Matrix4x4<FloatType> voxelToWorld = Matrix4x4<FloatType>::identity(), bool withNormals = false, const vec4<FloatType>& color = vec4<FloatType>(0.5,0.5,0.5,0.5)) {
-			for (unsigned int z = 0; z < grid.dimZ(); z++) {
-				for (unsigned int y = 0; y < grid.dimY(); y++) {
-					for (unsigned int x = 0; x < grid.dimX(); x++) {
+			for (unsigned int z = 0; z < grid.getDimZ(); z++) {
+				for (unsigned int y = 0; y < grid.getDimY(); y++) {
+					for (unsigned int x = 0; x < grid.getDimX(); x++) {
 						if (grid.isVoxelSet(x,y,z)) {
 							vec3<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
 							vec3<FloatType> pMin = p - (FloatType)0.5;
@@ -457,7 +457,7 @@ namespace ml {
                 //
                 // TODO MATTHIAS: this + 1.0f should be investigated more.
                 //
-				BoundingBox3<FloatType> bb1(vec3<FloatType>(0,0,0), vec3<FloatType>((FloatType)grid.dimX() + 1.0f, (FloatType)grid.dimY() + 1.0f, (FloatType)grid.dimZ() + 1.0f));
+				BoundingBox3<FloatType> bb1(vec3<FloatType>(0,0,0), vec3<FloatType>((FloatType)grid.getDimX() + 1.0f, (FloatType)grid.getDimY() + 1.0f, (FloatType)grid.getDimZ() + 1.0f));
 				if (bb0.intersects(bb1)) {
 					voxelizeTriangle(p0, p1, p2, grid, solid);
 				} else {
@@ -498,14 +498,14 @@ namespace ml {
 										bool b0 = intersection::intersectRayTriangle(v0,v1,v2,r0,t0,_u0,_v0);
 										bool b1 = intersection::intersectRayTriangle(v0,v1,v2,r1,t1,_u1,_v1);
 										if ((b0 && t0 <= (FloatType)0.5) || (b1 && t1 <= (FloatType)0.5)) {
-											if (i < grid.dimX() && j < grid.dimY() && k < grid.dimZ()) {
+											if (i < grid.getDimX() && j < grid.getDimY() && k < grid.getDimZ()) {
 												grid.toggleVoxelAndBehindSlice(i, j, k);
 											}
 										}
 										//grid.setVoxel(i,j,k);
 									}
 								} else {
-									if (i < grid.dimX() && j < grid.dimY() && k < grid.dimZ()) {
+									if (i < grid.getDimX() && j < grid.getDimY() && k < grid.getDimZ()) {
 										grid.setVoxel(i, j, k);
 									}
 								}

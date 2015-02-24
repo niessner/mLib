@@ -105,10 +105,14 @@
     <ClInclude Include="..\include\application-d3d11\D3D11TriMesh.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11Utility.h" />
     <ClInclude Include="..\include\application-d3d11\D3D11VertexShader.h" />
+    <ClInclude Include="..\include\core-base\baseImage.h" />
+    <ClInclude Include="..\include\core-base\binaryGrid3.h" />
     <ClInclude Include="..\include\core-base\classList.h" />
     <ClInclude Include="..\include\core-base\common.h" />
     <ClInclude Include="..\include\core-base\console.h" />
-    <ClInclude Include="..\include\core-base\grid.h" />
+    <ClInclude Include="..\include\core-base\distanceField3.h" />
+    <ClInclude Include="..\include\core-base\grid2.h" />
+    <ClInclude Include="..\include\core-base\grid3.h" />
     <ClInclude Include="..\include\core-graphics\boundingBox3d.h" />
     <ClInclude Include="..\include\core-graphics\camera.h" />
     <ClInclude Include="..\include\core-graphics\intersection.h" />

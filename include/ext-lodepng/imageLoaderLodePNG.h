@@ -6,8 +6,8 @@ namespace ml {
 class LodePNG
 {
 public:
-	static Bitmap load(const std::string &filename);
-	static void save(const Bitmap &bmp, const std::string &filename);
+  static ColorImageR8G8B8A8 load(const std::string &filename);
+	static void save(const ColorImageR8G8B8A8 &image, const std::string &filename);
 };
 
 }  // namespace ml

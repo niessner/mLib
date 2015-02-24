@@ -68,21 +68,21 @@ public:
 #endif
 		return m_data[slice*m_dimY*m_dimX + dimX*m_dimY + dimY];
 	}
-	inline size_t dimX() const
+	inline size_t getDimX() const
 	{
 		return m_dimX;
 	}
-	inline size_t dimY() const
+	inline size_t getDimY() const
 	{
 		return m_dimY;
 	}
-	inline size_t dimZ() const 
+	inline size_t getDimZ() const 
 	{
 		return m_dimZ;
 	}
 
 	//inline vec3ul getDimensions() const {
-	//	return vec3ul(dimX(), dimY(), dimZ());
+	//	return vec3ul(getDimX(), getDimY(), getDimZ());
 	//}
 
 	inline bool square() const
@@ -131,7 +131,7 @@ protected:
 
 template <class T> inline bool operator == (const Grid3<T> &a, const Grid3<T> &b)
 {
-	if(a.dimX() != b.dimX() || a.dimY() != b.dimY() || a.dimZ() != b.dimZ()) return false;
+	if(a.getDimX() != b.getDimX() || a.getDimY() != b.getDimY() || a.getDimZ() != b.getDimZ()) return false;
 	const size_t totalEntries = a.getNumTotalEntries();
 	for (size_t i = 0; i < totalEntries; i++) {
 		if (a.ptr()[i] != b.ptr()[i])	return false;

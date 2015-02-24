@@ -61,11 +61,11 @@ namespace ml
             iterator& operator++()
             {
                 x++;
-                if (x == grid->dimX())
+                if (x == grid->getDimX())
                 {
                     x = 0;
                     y++;
-                    if (y == grid->dimY())
+                    if (y == grid->getDimY())
                     {
                         grid = NULL;
                     }
@@ -115,11 +115,11 @@ namespace ml
             constIterator& operator++()
             {
                 x++;
-                if (x == grid->dimX())
+                if (x == grid->getDimX())
                 {
                     x = 0;
                     y++;
-                    if (y == grid->dimY())
+                    if (y == grid->getDimY())
                     {
                         grid = NULL;
                     }
@@ -212,12 +212,12 @@ namespace ml
             return m_data[y * m_dimX + x];
         }
 
-        inline size_t dimX() const
+        inline size_t getDimX() const
         {
             return m_dimX;
         }
 
-        inline size_t dimY() const
+        inline size_t getDimY() const
         {
             return m_dimY;
         }
@@ -239,17 +239,17 @@ namespace ml
         //	return vec2ul(m_rows, m_cols);
         //}
 
-        inline bool square() const
+        inline bool isSquare() const
         {
             return (m_dimX == m_dimY);
         }
 
-        inline T* ptr()
+        inline T* getPointer()
         {
             return m_data;
         }
 
-        inline const T* ptr() const
+		inline const T* getPointer() const
         {
             return m_data;
         }
@@ -337,9 +337,9 @@ namespace ml
 
     template <class T> inline bool operator == (const Grid2<T> &a, const Grid2<T> &b)
     {
-        if (a.dimX() != b.dimX() || a.dimY() != b.dimY()) return false;
-        for (size_t y = 0; y < a.dimY(); y++)
-            for (size_t x = 0; x < a.dimX(); x++)
+        if (a.getDimX() != b.getDimX() || a.getDimY() != b.getDimY()) return false;
+        for (size_t y = 0; y < a.getDimY(); y++)
+            for (size_t x = 0; x < a.getDimX(); x++)
                 if (a(x, y) != b(x, y))
                     return false;
         return true;
