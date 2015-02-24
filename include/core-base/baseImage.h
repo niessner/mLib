@@ -6,42 +6,50 @@
 
 namespace ml {
 
+
+class Image {
+public:
+	Image() {}
+	virtual ~Image() {}
+private:
+};
+
 template <class T>
-class BaseImage {
+class BaseImage : Image {
 public:
 	BaseImage() {
-		m_Data = nullptr;
-		m_Height = m_Width = 0;
+		m_data = nullptr;
+		m_width = m_height = 0;
 	}
 
-	BaseImage(unsigned int height, unsigned int width, const T *data = nullptr) {
-		create(height, width);
+	BaseImage(unsigned int width, unsigned int height, const T *data = nullptr) {
+		create(width, height);
 
 		if (data) {
-			memcpy(m_Data, data, sizeof(T) * height * width);
+			memcpy(m_data, data, sizeof(T) * height * width);
 		}
 	}
 
 	//! Copy constructor
 	BaseImage(const BaseImage& other) {
-		create(other.m_Height, other.m_Width);
-		memcpy(m_Data, other.m_Data, sizeof(T) * m_Height * m_Width);
+		create(other.m_width, other.m_height);
+		memcpy(m_data, other.m_data, sizeof(T) * m_width * m_height);
 		m_InvalidValue = other.getInvalidValue();
 	}
 
 	//! Move constructor
 	BaseImage(BaseImage&& other) {
-		m_Data = nullptr;
-		m_Height = m_Width = 0;
+		m_data = nullptr;
+		m_width = m_height = 0;
 		swap(*this, other);
 	}
 
 	//! Copy constructor for other classes
 	template<class U>
 	BaseImage(const BaseImage<U>& other) {
-		create(other.getHeight(), other.getWidth());
-		for (unsigned int i = 0; i < m_Width*m_Height; i++) {
-			BaseImageHelper::convertBaseImagePixel<T,U>(m_Data[i], other.getDataPointer()[i]);
+		create(other.m_width, other.m_height);
+		for (unsigned int i = 0; i < m_height*m_width; i++) {
+			BaseImageHelper::convertBaseImagePixel<T,U>(m_data[i], other.getDataPointer()[i]);
 		}
 		const U& otherInvalidValue = other.getInvalidValue();
 		BaseImageHelper::convertBaseImagePixel<T,U>(m_InvalidValue, otherInvalidValue);
@@ -49,122 +57,123 @@ public:
 
 	//! clears the image; and release all memory
 	void clear() {
-		SAFE_DELETE_ARRAY(m_Data);
-		m_Width = m_Height = 0;
+		SAFE_DELETE_ARRAY(m_data);
+		m_height = m_width = 0;
 	}
 
 
 	//! adl swap
 	friend void swap(BaseImage& a, BaseImage& b) {
-		std::swap(a.m_Data, b.m_Data);
-		std::swap(a.m_Width, b.m_Width);
-		std::swap(a.m_Height, b.m_Height);
+		std::swap(a.m_data, b.m_data);
+		std::swap(a.m_height, b.m_height);
+		std::swap(a.m_width, b.m_width);
 		std::swap(a.m_InvalidValue, b.m_InvalidValue);
 	}
 
 	void initialize(const T *data = nullptr)
 	{
 		if (data) {
-			memcpy(m_Data, data, sizeof(T) * m_Width * m_Height);
+			memcpy(m_data, data, sizeof(T) * m_height * m_width);
 		}
 	}
 
 	~BaseImage(void) {
-		SAFE_DELETE_ARRAY(m_Data);
+		SAFE_DELETE_ARRAY(m_data);
 	}
 
 	//! Returns the difference of two images (current - other)
 	BaseImage<T> operator-(const BaseImage<T> &other) const {
-		if (other.m_Width != m_Width || other.m_Height != m_Height)	throw EXCEPTION("Invalid image dimensions");
-		BaseImage<T> im(m_Height, m_Width);
-		for (unsigned int i = 0; i < m_Height * m_Width; i++) {
-			im.m_Data[i] = m_Data[i] - other.m_Data[i];
+		if (other.m_width != m_width || other.m_height != m_height)	throw MLIB_EXCEPTION("Invalid image dimensions");
+		BaseImage<T> im(m_width, m_height);
+		for (unsigned int i = 0; i < m_width * m_height; i++) {
+			im.m_data[i] = m_data[i] - other.m_data[i];
 		}
 		return im;
 	}
 	//! Returns the sum of two images (current + other)
 	BaseImage<T> operator+(const BaseImage<T> &other) const {
-		if (other.m_Width != m_Width || other.m_Height != m_Height)	throw EXCEPTION("Invalid image dimensions");
-		BaseImage<T> im(m_Height, m_Width);
-		for (unsigned int i = 0; i < m_Height * m_Width; i++) {
-			im.m_Data[i] = m_Data[i] + other.m_Data[i];
+		if (other.m_width != m_width || other.m_height != m_height)	throw MLIB_EXCEPTION("Invalid image dimensions");
+		BaseImage<T> im(m_width, m_height);
+		for (unsigned int i = 0; i < m_width * m_height; i++) {
+			im.m_data[i] = m_data[i] + other.m_data[i];
 		}
 		return im;
 	}
 
 	//! Mutator Operator (unsigned int)
-	T& operator()(unsigned int y, unsigned int x) {
-		assert(y < m_Height && x < m_Width);
-		return m_Data[y*m_Width + x];
+	T& operator()(unsigned int x, unsigned int y) {
+		MLIB_ASSERT(x < m_width && y < m_height);
+		return m_data[y*m_width + x];
 	}
 
 	//! Mutator Operator (int)
-	T& operator()(int y, int x) {
-		assert((unsigned int)y < m_Height && (unsigned int)x < m_Width);
-		return m_Data[y*m_Width + x];
+	T& operator()(int x, int y) {
+		MLIB_ASSERT((unsigned int)x < m_width && (unsigned int)y < m_height);
+		return m_data[y*m_width + x];
 	}
 
 	//! Mutator Operator (double); x,y \in [0;1]
-	T& operator()(double y, double x) {
-		return (*this)((unsigned int)math::round(y*(m_Height-1)), (unsigned int)math::round(x*(m_Width-1)));
+	T& operator()(double x, double y) {
+		return (*this)((unsigned int)math::round(x*(m_width - 1)), (unsigned int)math::round(y*(m_height - 1)));
 	}
 
 	//! Mutator Operator (float); x,y \in [0;1]
-	T& operator()(float y, float x) {
-		return (*this)((unsigned int)math::round(y*(m_Height-1)), (unsigned int)math::round(x*(m_Width-1)));
+	T& operator()(float x, float y) {
+		return (*this)((unsigned int)math::round(x*(m_width - 1)), (unsigned int)math::round(y*(m_height - 1)));
 	}
 
 	template <class S>
-	void setPixel(S y, S x, const T& value) {
-		(*this)(y,x) = value;
+	void setPixel(S x, S y, const T& value) {
+		(*this)(x, y) = value;
 	}
 
 	//! Access Operator (unsigned int)
-	const T& operator()(unsigned int y, unsigned int x) const {
-		assert(y < m_Height && x < m_Width);
-		return m_Data[y*m_Width + x];
+	const T& operator()(unsigned int x, unsigned int y) const {
+		MLIB_ASSERT(x < m_width && y < m_height);
+		return m_data[y*m_width + x];
 	}
 
-    //! Access Operator (size_t)
-    const T& operator()(size_t y, size_t x) const {
-        assert(y < m_Height && x < m_Width);
-        return m_Data[y*m_Width + x];
-    }
+	//! Access Operator (size_t)
+	const T& operator()(size_t x, size_t y) const {
+		MLIB_ASSERT(x < m_width && y < m_height);
+		return m_data[y*m_width + x];
+	}
 
 	//! Access Operator (int)
-	const T& operator()(int y, int x) const {
-		assert((unsigned int)y < m_Height && (unsigned int)x < m_Width);
-		return m_Data[y*m_Width + x];
+	const T& operator()(int x, int y) const {
+		MLIB_ASSERT((unsigned int)x < m_width && (unsigned int)y < m_height);
+		return m_data[y*m_width + x];
 	}
 
 	//! Access Operator (double); x,y \in [0;1]
-	const T& operator()(double y, double x) const {
-		return (*this)((unsigned int)round(y*(m_Height-1)), (unsigned int)round(x*(m_Width-1)));
+	const T& operator()(double x, double y) const {
+		return (*this)((unsigned int)round(x*(m_width - 1)), (unsigned int)round(y*(m_height - 1)));
 	}
 
 	//! Access Operator (float); x,y \in [0;1]
-	const T& operator()(float y, float x) const {
-		return (*this)((unsigned int)round(y*(m_Height-1)), (unsigned int)round(x*(m_Width-1)));
+	const T& operator()(float x, float y) const {
+		return (*this)((unsigned int)round(x*(m_width - 1)), (unsigned int)round(y*(m_height - 1)));
 	}
 
 	//! Returns the Pixel value at that position (calls the function corresponding to the parameter type)
 	template <class S>
-	const T& getPixel(S y, S x) const {
-		return (*this)(y,x);
+	const T& getPixel(S x, S y) const {
+		return (*this)(x, y);
 	}
 
 	//! returns the bi-linearly interpolated pixel; S must be float or double; ; x,y \in [0;width/height[
 	template<class S>
-	T getInterpolated(S y, S x) const {
+	T getInterpolated(S x, S y) const {
 		static_assert(std::is_same<float, S>::value || std::is_same<double, S>::value, "must be double or float");
 
-		uint yl = math::floor(y);	uint yh = math::ceil(y);
-		uint xl = math::floor(x);	uint xh = math::ceil(x);
-		S s = y - (S)yl;	//y interpolation parameter
-		S t = x - (S)xl;	//x interpolation parameter
+		unsigned int xl = math::floor(x);	unsigned int xh = math::ceil(x);
+		unsigned int yl = math::floor(y);	unsigned int yh = math::ceil(y);
 
-		T p0 = math::lerp(getPixel(yl, xl), getPixel(yh, xl), s);	// lerp between p_00 and p_10
-		T p1 = math::lerp(getPixel(yl, xh), getPixel(yh, xh), s);	// lerp between P_01 and p_11
+		S t = x - (S)xl;	//x interpolation parameter
+		S s = y - (S)yl;	//y interpolation parameter
+
+		T p0 = math::lerp(getPixel(xl, yl), getPixel(xh, yl), s);	// lerp between p_00 and p_10
+		T p1 = math::lerp(getPixel(xl, yh), getPixel(xh, yh), s);	// lerp between P_01 and p_11
 		return math::lerp(p0, p1, t);
 	}
 
@@ -172,17 +181,16 @@ public:
 	//! Assignment operator
 	BaseImage& operator=(const BaseImage& other) {
 		if (this != &other) {
-			if (m_Width != other.m_Width || m_Height != other.m_Height) {
-				SAFE_DELETE_ARRAY(m_Data);
-				create(other.m_Height, other.m_Width);
+			if (other.m_width != m_width || other.m_height != m_height)	{
+				SAFE_DELETE_ARRAY(m_data);
+				create(other.m_width, other.m_height);
 			}
 
-			memcpy(m_Data, other.m_Data, sizeof(T) * m_Width * m_Height);
+			memcpy(m_data, other.m_data, sizeof(T) * m_height * m_width);
 			m_InvalidValue = other.getInvalidValue();
 		}
 		return *this;
 	}
-
 
 	//! Assignment operator r-value
 	BaseImage& operator=(BaseImage&& other) {
@@ -192,84 +200,84 @@ public:
 
 	//! Comparison operator
 	bool operator==(const BaseImage& other) {
-		if (m_Width != other.m_Width || m_Height != other.m_Height)	return false;
-		for (unsigned int i = 0; i < m_Height * m_Width; i++) {
-			if (m_Data[i] != other.m_Data[i])	return false;
+		if (other.m_width != m_width || other.m_height != m_height) return false;
+		for (unsigned int i = 0; i < m_width * m_height; i++) {
+			if (m_data[i] != other.m_data[i])	return false;
 		}
 		return true;
 	}
 
 	//! Allocates data so that the current image and other have the same size
 	void allocateSameSize(const BaseImage& other) {
-		if (m_Width != other.m_Width || m_Height != other.m_Height) {
-			SAFE_DELETE_ARRAY(m_Data);
-			create(other.m_Height, other.m_Width);
+		if (other.m_width != m_width || other.m_height != m_height) {
+			SAFE_DELETE_ARRAY(m_data);
+			create(other.m_width, other.m_height);
 		}
 	}
 
 	//! Allocates the images to the given size
-	void allocateToSize(unsigned int height, unsigned int width) {
-		if (m_Width != width || m_Height != height) {
-			SAFE_DELETE_ARRAY(m_Data);
-			create(height, width);
+	void allocate(unsigned int width, unsigned int height) {
+		if (m_width != width || m_height != height) {
+			SAFE_DELETE_ARRAY(m_data);
+			create(width, height);
 		}
 	}
 
 	//! Copies a source image into a region of the current image
-	void copyIntoImage(const BaseImage &source, unsigned int startY, unsigned int startX) {
-		assert(source.getWidth() + startX <= getWidth() && source.getHeight() + startY <= getHeight());
+	void copyIntoImage(const BaseImage &source, unsigned int startX, unsigned int startY) {
+		MLIB_ASSERT(source.getWidth() + startX <= getWidth() && source.getHeight() + startY <= getHeight());
 		for (unsigned int y = startY; y < startY + source.getHeight(); y++) {
 			for (unsigned int x = startX; x < startX + source.getWidth(); x++) {
-				(*this)(y,x) = source(y-startY, x-startX);
+				(*this)(x, y) = source(x - startX, y - startY);
 			}
 		}
 	}
 
 	//! Returns the width of the image
 	unsigned int getWidth() const {
-		return m_Width;
+		return m_width;
 	}
 
 	//! Returns the height of the image
 	unsigned int getHeight() const {
-		return m_Height;
+		return m_height;
 	}
 
 	//! Returns the image data (linearized array)
-	const T* getDataPointer() const {
-		return m_Data;
+	const T* getPointer() const {
+		return m_data;
 	}
 
 	//! Returns the image data (linearized array)
-	T* getDataPointer() {
-		return m_Data;
+	T* getPointer() {
+		return m_data;
 	}
 
 
 	//! saves a file to a binary depth image (.mbindepth) or a binary color image (.binRGB); could be any bytes per pixel
 	void saveAsBinaryMImage(const std::string &filename) const {
-		saveBinaryMImage(filename, m_Data, m_Height, m_Width);
+		saveBinaryMImage(filename, m_data, m_width, m_height);
 	}
 
 	//! saves a binary m image
-	static void saveBinaryMImage(const std::string& filename, const void* data, unsigned int height, unsigned int width) {
-		saveBinaryMImageArray(filename, &data, height, width, 1);
+	static void saveBinaryMImage(const std::string& filename, const void* data, unsigned int width, unsigned int height) {
+		saveBinaryMImageArray(filename, &data, width, height, 1);
 	}
 
 	static void saveBinaryMImageArray(const std::string& filename, const std::vector<BaseImage<T>>& images) {
-		assert(images.size() >= 1);
+		MLIB_ASSERT(images.size() >= 1);
 		void** data = new data*[images.size()];
 		for (unsigned int i = 0; i < images.size(); i++) {
-			assert(images[0].getWidth() == images[i].getWidth());
-			assert(images[0].getHeight() == images[i].getHeight());
+			MLIB_ASSERT(images[0].getWidth() == images[i].getWidth());
+			MLIB_ASSERT(images[0].getHeight() == images[i].getHeight());
 			data[i] = images[i].getDataPointer();
 		}
-		saveBinaryMImageArray(filename, data, images[0].getHeight(), images[0].getWidth(), images.size());
+		saveBinaryMImageArray(filename, data, images[0].getWidth(), images[0].getHeight(), images.size());
 		SAFE_DELETE_ARRAY(data);
  	}
 
 	//! saves an array of binary m images
-	static void saveBinaryMImageArray(const std::string& filename, const void** data, unsigned int height, unsigned int width, unsigned int numImages = 1) {
+	static void saveBinaryMImageArray(const std::string& filename, const void** data, unsigned int width, unsigned int height, unsigned int numImages = 1) {
 		if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinRGB") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
 
 		std::ofstream file(filename, std::ios::binary);
@@ -277,8 +285,8 @@ public:
 
 		unsigned int bytesPerPixel = sizeof(T);
 		file.write((char*)&numImages, sizeof(unsigned int));
-		file.write((char*)&height, sizeof(unsigned int));
 		file.write((char*)&width, sizeof(unsigned int));
+		file.write((char*)&height, sizeof(unsigned int));
 		file.write((char*)&bytesPerPixel, sizeof(unsigned int));
 		for (unsigned int i = 0; i < numImages; i++) {
 			file.write((char*)data[i], width * height * bytesPerPixel);
@@ -288,19 +296,19 @@ public:
 
 	//! loads a file from a binary depth image (.mbindepth) or a binary color image (.binRGB)
 	void loadFromBinaryMImage(const std::string& filename) {
-		loadBinaryMImage(filename, (void**)&m_Data, m_Height, m_Width);
+		loadBinaryMImage(filename, (void**)&m_data, m_width, m_height);
 	}
 
-	static void loadBinaryMImage(const std::string& filename, void** data, unsigned int& height, unsigned int& width) {
+	static void loadBinaryMImage(const std::string& filename, void** data, unsigned int& width, unsigned int& height) {
 		std::vector<void*> dataArray;
-		loadBinaryMImageArray(filename, dataArray, height, width);
-		assert(dataArray.size() == 1);
-		if (*data)	delete[] data;
+		loadBinaryMImageArray(filename, dataArray, width, height);
+		MLIB_ASSERT(dataArray.size() == 1);
+		SAFE_DELETE_ARRAY(data);
 		*data = dataArray[0];
 	}
 
 	//! loads a binary array of m images
-	static void loadBinaryMImageArray(const std::string& filename, std::vector<void*>& data, unsigned int& height, unsigned int& width) {
+	static void loadBinaryMImageArray(const std::string& filename, std::vector<void*>& data, unsigned int& width, unsigned int& height) {
 		if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinRGB") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
 
 		std::ifstream file(filename, std::ios::binary);
@@ -308,8 +316,8 @@ public:
 
 		unsigned int bytesPerPixel, numImages;
 		file.read((char*)&numImages, sizeof(unsigned int));
-		file.read((char*)&height, sizeof(unsigned int));
 		file.read((char*)&width, sizeof(unsigned int));
+		file.read((char*)&height, sizeof(unsigned int));
 		file.read((char*)&bytesPerPixel, sizeof(unsigned int));
 		assert(sizeof(T) == bytesPerPixel);
 		for (unsigned int i = 0; i < numImages; i++) {
@@ -323,48 +331,47 @@ public:
 	//! counts the number of pixels not equal to value
 	unsigned int getNumPixelsNotEqualTo(const T &value) {
 		unsigned int count = 0;
-		for (unsigned int i = 0; i < m_Height * m_Width; i++) {
-			if (value != m_Data[i])	count++;
+		for (unsigned int i = 0; i < m_width * m_height; i++) {
+			if (value != m_data[i])	count++;
 		}
 		return count;
 	}
 
 	//! sets all pixels with a specific value (oldValue); to a new value (newValue)
 	void setPixelsWithValueToNewValue(const T& oldValue, const T& newValue) {
-		for (unsigned int i = 0; i < m_Height * m_Width; i++) {
-			if (m_Data[i] == oldValue)	m_Data[i] = newValue;
+		for (unsigned int i = 0; i < m_width * m_height; i++) {
+			if (m_data[i] == oldValue)	m_data[i] = newValue;
 		}
 	}
 
 	//! sets all pixels to value
-	void setToValue(const T &value) {
-		for (unsigned int i = 0; i < m_Height * m_Width; i++) {
-			m_Data[i] = value;
+	void clear(const T &value = getInvalidValue()) {
+		for (unsigned int i = 0; i < m_width * m_height; i++) {
+			m_data[i] = value;
 		}
 	}
 
 	//! flips the image vertically
 	void flipY() {
-		for (int i = 0; i < (int)m_Width; i++) {
-			for (int j = 0; j < (int)m_Height/2; j++) {
-				T tmp = (*this)(j, i);
-				(*this)(j, i) = (*this)((int)m_Height - j - 1, i);
-				(*this)((int)m_Height - j - 1, i) = tmp;
+		for (unsigned int y = 0; y < m_height/2; y++) {
+			for (unsigned int x = 0; x < m_width; x++) {
+				T tmp = (*this)(x, y);
+				(*this)(x, y) = (*this)(x, m_height-y-1);
+				(*this)(x, m_height-y-1) = tmp;
 			}
 		}
 	}
 
 	//! flips the image horizontally
 	void flipX() {
-		for (int i = 0; i < (int)m_Width/2; i++) {
-			for (int j = 0; j < (int)m_Height; j++) {
-				T tmp = (*this)(j, i);
-				(*this)(j, i) = (*this)(j, (int)m_Width - i - 1);
-				(*this)(j, (int)m_Width - i - 1) = tmp;
+		for (unsigned int y = 0; y < m_height; y++) {
+			for (unsigned int x = 0; x < m_width/2; x++) {
+				T tmp = (*this)(x, y);
+				(*this)(x, y) = (*this)(m_width-x-1, y);
+				(*this)(m_width-x-1, y) = tmp;
 			}
 		}
 	}
-
 
 	//! returns the invalid value
 	T getInvalidValue() const {
@@ -378,8 +385,8 @@ public:
 
 	//! sets a pixel to the invalid value
 	template <class S>
-	void setInvalidValue(S y, S x) {
-		setPixel(y, x, getInvalidValue());
+	void setInvalid(S x, S y) {
+		setPixel(x, y, getInvalidValue());
 	}
 
 	//! returns true if a value is valid
@@ -389,12 +396,12 @@ public:
 
 	//! returns true if the depth value at position (x,y) is valid
 	template <class S>
-	bool isValidValue(S y, S x) const {
-		return getPixel(y,x) != m_InvalidValue;
+	bool isValid(S x, S y) const {
+		return getPixel(x, y) != m_InvalidValue;
 	}
 
-	bool isValidCoordinate(unsigned int y, unsigned int x) const {
-		return (y < m_Height && x < m_Width);
+	bool isValidCoordinate(unsigned int x, unsigned int y) const {
+		return (x < m_width && y < m_height);
 	}
 
 	//! returns the number of channels per pixel (-1 if unknown)
@@ -428,41 +435,41 @@ public:
 
 	//! computes the next mip map level of the image (box filtered image)
 	void mipMap(BaseImage& result, bool ignoreInvalidPixels = false) const {
-		result.allocateToSize(m_Height / 2, m_Width / 2);
+		result.allocate(m_width / 2, m_height / 2);
 		result.setInvalidValue(m_InvalidValue);
 
 		if (!ignoreInvalidPixels) {
-			for (int i = 0; (unsigned int)i < result.getHeight(); i++) {
-				for (int j = 0; (unsigned int)j < result.getWidth(); j++) {
-					result(i,j) = getPixel(2*i + 0, 2*j + 0) + getPixel(2*i + 1, 2*j + 0) + getPixel(2*i + 0, 2*j + 1) + getPixel(2*i + 1, 2*j + 1); 
-					result(i,j) /= 4;
+			for (unsigned int y = 0; y < result.m_height; y++) {
+				for (unsigned int x = 0; x < result.m_width; x++) {
+					result(x,y) = getPixel(2*x + 0, 2*y + 0) + getPixel(2*x + 1, 2*y + 0) + getPixel(2*x + 0, 2*y + 1) + getPixel(2*x + 1, 2*y + 1); 
+					result(x,y) /= 4;
 				}
 			}
 		} else {
-			for (int i = 0; (unsigned int)i < result.getHeight(); i++) {
-				for (int j = 0; (unsigned int)j < result.getWidth(); j++) {
+			for (unsigned int y = 0; y < result.m_height; y++) {
+				for (unsigned int x = 0; x < result.m_width; x++) {
 					unsigned int valid = 0;
 					T value = T();
-					if (isValidValue(2*i + 0, 2*j + 0))	{
+					if (isValidValue(2*x + 0, 2*y + 0))	{
 						valid++;
-						value += getPixel(2*i + 0, 2*j + 0);
+						value += getPixel(2*x + 0, 2*y + 0);
 					}
-					if (isValidValue(2*i + 1, 2*j + 0))	{
+					if (isValidValue(2*x + 1, 2*y + 0))	{
 						valid++;
-						value += getPixel(2*i + 1, 2*j + 0);
+						value += getPixel(2*x + 1, 2*y + 0);
 					}
-					if (isValidValue(2*i + 0, 2*j + 1))	{
+					if (isValidValue(2*x + 0, 2*y + 1))	{
 						valid++;
-						value += getPixel(2*i + 0, 2*j + 1);
+						value += getPixel(2*x + 0, 2*y + 1);
 					}
-					if (isValidValue(2*i + 1, 2*j + 1))	{
+					if (isValidValue(2*x + 1, 2*y + 1))	{
 						valid++;
-						value += getPixel(2*i + 1, 2*j + 1);
+						value += getPixel(2*x + 1, 2*y + 1);
 					}
 					if (valid == 0) {
-						result(i,j) = result.getInvalidValue();
+						result(x,y) = result.getInvalidValue();
 					} else {
-						result(i,j) = value / (float)valid;	//this cast is not ideal but works for most classes...
+						result(x,y) = value / (float)valid;	//this cast is not ideal but works for most classes...
 					}
 				}
 			}
@@ -470,15 +477,15 @@ public:
 	}
 
 	//! nearest neighbor re-sampling
-	void reSample(unsigned int newHeight, unsigned int newWidth) {
-		if (m_Width != newWidth || m_Height != newHeight) {
-			BaseImage res(newHeight, newWidth);
+	void reSample(unsigned int newWidth, unsigned int newHeight) {
+		if (m_width != newWidth || m_height != newHeight) {
+			BaseImage res(newWidth, newHeight);
 			res.setInvalidValue(m_InvalidValue);
 			for (unsigned int i = 0; i < newHeight; i++) {
 				for (unsigned int j = 0; j < newWidth; j++) {
-					const float y = (float)i/(newHeight-1);
-					const float x = (float)j/(newWidth-1);
-					res(i,j) = getPixel(y,x);
+					const float x = (float)j / (newWidth - 1);
+					const float y = (float)i/(newHeight-1);					
+					res(j,i) = getPixel(x,y);
 				}
 			}
 			swap(*this, res);
@@ -489,33 +496,32 @@ public:
 	//! smooth (laplacian smoothing step)
 	void smooth(unsigned int steps = 1) {
 		for (unsigned int i = 0; i < steps; i++) {
-			BaseImage<T> other(m_Height, m_Width);
+			BaseImage<T> other(m_width, m_height);
 			other.setInvalidValue(m_InvalidValue);
 
-			for (unsigned int y = 0; y < m_Height; y++) {
-				for (unsigned int x = 0; x < m_Width; x++) {
+			for (unsigned int y = 0; y < m_height; y++) {
+				for (unsigned int x = 0; x < m_width; x++) {
 					unsigned int valid = 0;
 					T value = T();
-					if (isValidCoordinate(y - 1, x + 0) && isValidValue(y - 1, x + 0))	{
+					if (isValidCoordinate(x - 1, y + 0) && isValidValue(x - 1, y + 0))	{
 						valid++;
-						value += getPixel(y - 1, x + 0);
+						value += getPixel(x - 1, y + 0);
 					}
-					if (isValidCoordinate(y + 1, x + 0) && isValidValue(y + 1, x + 0))	{
+					if (isValidCoordinate(x + 1, y + 0) && isValidValue(x + 1, y + 0))	{
 						valid++;
-						value += getPixel(y + 1, x + 0);
+						value += getPixel(x + 1, y + 0);
 					}
-					if (isValidCoordinate(y + 0, x + 1) && isValidValue(y + 0, x + 1))	{
+					if (isValidCoordinate(x + 0, y + 1) && isValidValue(x + 0, y + 1))	{
 						valid++;
-						value += getPixel(y + 0, x + 1);
+						value += getPixel(x + 0, y + 1);
 					}
-					if (isValidCoordinate(y + 0, x - 1) && isValidValue(y + 0, x - 1))	{
+					if (isValidCoordinate(x + 0, y - 1) && isValidValue(x + 0, y - 1))	{
 						valid++;
-						value += getPixel(y + 0, x - 1);
+						value += getPixel(x + 0, y - 1);
 					}
 
-					if (isValidValue(y, x)) {
-						//other.setPixel(y, x, (getPixel(y, x) + value) / ((float)valid + 1));
-						other.setPixel(y, x, ((float)valid*getPixel(y, x) + value) / (2*(float)valid));
+					if (isValidValue(x, y)) {
+						other.setPixel(x, y, ((float)valid*getPixel(x, y) + value) / (2*(float)valid));
 					}
 				}
 			}
@@ -527,8 +533,8 @@ public:
 	//! various operator overloads
 	template<class U>
 	void scale(const U& s) {
-		for (unsigned int i = 0; i < m_Width*m_Height; i++) {
-			m_Data[i] *= s;
+		for (unsigned int i = 0; i < m_height*m_width; i++) {
+			m_data[i] *= s;
 		}
 	}
 
@@ -539,62 +545,62 @@ public:
 	}
 	template<class U>
 	BaseImage& operator/=(const U& s) {
-		for (unsigned int i = 0; i < m_Width*m_Height; i++) {
-			m_Data[i] /= s;
+		for (unsigned int i = 0; i < m_height*m_width; i++) {
+			m_data[i] /= s;
 		}
 		return *this;
 	}
 	template<class U>
 	BaseImage& operator+=(const U& s) {
-		for (unsigned int i = 0; i < m_Width*m_Height; i++) {
-			m_Data[i] += s;
+		for (unsigned int i = 0; i < m_height*m_width; i++) {
+			m_data[i] += s;
 		}
 		return *this;
 	}
 	template<class U>
 	BaseImage& operator-=(const U& s) {
-		for (unsigned int i = 0; i < m_Width*m_Height; i++) {
-			m_Data[i] -= s;
+		for (unsigned int i = 0; i < m_height*m_width; i++) {
+			m_data[i] -= s;
 		}
 		return *this;
 	}
 
     T* begin()
     {
-        return m_Data;
+        return m_data;
     }
 
     T* end()
     {
-        return m_Data + m_Width * m_Height;
+        return m_data + m_height * m_width;
     }
 
     const T* begin() const
     {
-        return m_Data;
+        return m_data;
     }
 
     const T* end() const
     {
-        return m_Data + m_Width * m_Height;
+        return m_data + m_height * m_width;
     }
 
 protected:
 	//! Allocates memory and sets the image size accordingly
-	void create(unsigned int height, unsigned int width) {
-		m_Height = height;
-		m_Width = width;
-		m_Data = new T[m_Width * m_Height];
+	void create(unsigned int width, unsigned int height) {
+		m_width = width;
+		m_height = height;
+		m_data = new T[m_height * m_width];
 	}
 
 	//! Image data
-	T* m_Data;
+	T* m_data;
 
 	//! Image width
-	unsigned int m_Width;
+	unsigned int m_height;
 
 	//! Image height
-	unsigned int m_Height;
+	unsigned int m_width;
 
 	//! Invalid image value
 	T m_InvalidValue;
@@ -603,23 +609,23 @@ protected:
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 __forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BaseImage<T>& image) {
-	s.writeData(image.getHeight());
 	s.writeData(image.getWidth());
+	s.writeData(image.getHeight());
 	s.writeData(image.getInvalidValue());
-	s.writeData((BYTE*)image.getDataPointer(), sizeof(T)*image.getWidth()*image.getHeight());
+	s.writeData((BYTE*)image.getPointer(), sizeof(T)*image.getWidth()*image.getHeight());
 	return s;
 }
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 __forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BaseImage<T>& image) {
-	unsigned int height, width;
+	unsigned int width, height;
 	T invalidValue;
-	s.readData(&height);
 	s.readData(&width);
+	s.readData(&height);
 	s.readData(&invalidValue);
-	image.allocateToSize(height, width);
+	image.allocate(width, height);
 	image.setInvalidValue(invalidValue);
-	s.readData((BYTE*)image.getDataPointer(), sizeof(T)*width*height);
+	s.readData((BYTE*)image.getPointer(), sizeof(T)*width*height);
 	return s;
 }
 
@@ -628,10 +634,10 @@ public:
 	DepthImage16() : BaseImage() {
 		m_InvalidValue = 0;
 	}
-	DepthImage16(unsigned int height, unsigned int width, const unsigned short *data) : BaseImage(height, width, data) {
+	DepthImage16(unsigned int width, unsigned int height, const unsigned short *data) : BaseImage(width, height, data) {
 		m_InvalidValue = 0;
 	}
-	DepthImage16(unsigned int height, unsigned int width) : BaseImage(height, width) {
+	DepthImage16(unsigned int width, unsigned int height) : BaseImage(width, height) {
 		m_InvalidValue = 0;
 	}
 
@@ -644,10 +650,10 @@ public:
 		m_InvalidValue = -std::numeric_limits<float>::infinity();
 	}
 
-	DepthImage(unsigned int height, unsigned int width, const float *data) : BaseImage(height, width, data) {
+	DepthImage(unsigned int width, unsigned int height, const float *data) : BaseImage(width, height, data) {
 		m_InvalidValue = -std::numeric_limits<float>::infinity();
 	}
-	DepthImage(unsigned int height, unsigned int width) : BaseImage(height, width) {
+	DepthImage(unsigned int width, unsigned int height) : BaseImage(width, height) {
 		m_InvalidValue = -std::numeric_limits<float>::infinity();
 	}
 
@@ -664,13 +670,14 @@ public:
 
 		out << "P3" << std::endl;
 		out << "#" << filename << std::endl;
-		out << m_Width << " " << m_Height << std::endl;
+		out << m_height << " " << m_width << std::endl;
 
 		out << "255" << std::endl;
 
-		for (unsigned int i = 0; i < m_Height; i++)	{
-			for (unsigned int j = 0; j < m_Width; j++)	{
-				float res = getPixel(i,j);
+
+		for (unsigned int y = 0; y < m_height; y++)	{
+			for (unsigned int x = 0; x < m_width; x++)	{
+				float res = getPixel(x,y);
 				out <<	
 					(int)convertValueToExternalPPMFormat(res) << " " <<
 					(int)convertValueToExternalPPMFormat(res) << " " <<
@@ -697,12 +704,12 @@ public:
 		std::stringstream wh(s);
 		wh >> width;
 		wh >> height;
-		allocateToSize(height, width);
+		allocate(width, height);
 
 		getline(file, s); // Max Value
 
-		for (unsigned int i = 0; i < m_Height; i++) {
-			for (unsigned int j = 0; j < m_Width; j++) {
+		for (unsigned int y = 0; y < m_height; y++)	{
+			for (unsigned int x = 0; x < m_width; x++)	{
 				unsigned int c;
 				vec3f color;
 
@@ -710,10 +717,10 @@ public:
 				file >> c; color.y = convertValueFromExternalPPMFormat((unsigned char)c);
 				file >> c; color.z = convertValueFromExternalPPMFormat((unsigned char)c);
 
-				assert(c <= 255);
-				assert(color.x == color.y && color.y == color.z);
+				MLIB_ASSERT(c <= 255);
+				MLIB_ASSERT(color.x == color.y && color.y == color.z);
 				
-				(*this)(i, j) = color.x;
+				(*this)(x, y) = color.x;
 			}
 		}
 
@@ -750,31 +757,32 @@ public:
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 	}
 
-	ColorImageRGB(unsigned int height, unsigned int width, const vec3f *data) : BaseImage(height, width, data) {
+	ColorImageRGB(unsigned int width, unsigned int height, const vec3f *data) : BaseImage(width, height, data) {
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 	}
 
-	ColorImageRGB(unsigned int height, unsigned int width, const vec3uc *data, float scale = 255.0f) : BaseImage(height, width) {
+	ColorImageRGB(unsigned int width, unsigned int height, const vec3uc *data, float scale = 255.0f) : BaseImage(width, height) {
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-		for (int i = 0; i < (int)height; i++) {
-			for (int j = 0; j < (int)width; j++) {
-				vec3f value(	(float)data[i*width + j].x / scale,
-								(float)data[i*width + j].y / scale,
-								(float)data[i*width + j].z / scale
+
+		for (unsigned int y = 0; y < m_height; y++) {
+			for (unsigned int x = 0; x < m_width; x++) {
+				vec3f value(	(float)data[y*m_width + x].x / scale,
+								(float)data[y*m_width + x].y / scale,
+								(float)data[y*m_width + x].z / scale
 							);
-				setPixel(i, j, value);
+				setPixel(x, y, value);
 			}
 		}
 	}
-	ColorImageRGB(unsigned int height, unsigned int width) : BaseImage(height, width) {
+	ColorImageRGB(unsigned int width, unsigned int height) : BaseImage(width, height) {
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 	}
 
-	ColorImageRGB(const DepthImage& depthImage, bool debugPrint = true) : BaseImage(depthImage.getHeight(), depthImage.getWidth()) {
+	ColorImageRGB(const DepthImage& depthImage, bool debugPrint = false) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-		const float* data = depthImage.getDataPointer();
+		const float* data = depthImage.getPointer();
 		float maxDepth = -FLT_MAX;
 		float minDepth = +FLT_MAX;
 		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -789,30 +797,30 @@ public:
 		}
 		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 			if (data[i] != depthImage.getInvalidValue()) {
-				m_Data[i] = BaseImageHelper::convertDepthToRGB(data[i], minDepth, maxDepth);
+				m_data[i] = BaseImageHelper::convertDepthToRGB(data[i], minDepth, maxDepth);
 			} else {
-				m_Data[i] = getInvalidValue();
+				m_data[i] = getInvalidValue();
 			}
 		}
 	}
-	ColorImageRGB(const DepthImage& depthImage, float minDepth, float maxDepth) : BaseImage(depthImage.getHeight(), depthImage.getWidth()) {
+	ColorImageRGB(const DepthImage& depthImage, float minDepth, float maxDepth) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-		const float* data = depthImage.getDataPointer();
+		const float* data = depthImage.getPointer();
 		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 			if (data[i] != depthImage.getInvalidValue()) {
-				m_Data[i] = BaseImageHelper::convertDepthToRGB(data[i], minDepth, maxDepth);
+				m_data[i] = BaseImageHelper::convertDepthToRGB(data[i], minDepth, maxDepth);
 			} else {
-				m_Data[i] = getInvalidValue();
+				m_data[i] = getInvalidValue();
 			}
 		}
 	}
-	ColorImageRGB(const BaseImage<float>& image) : BaseImage(image.getHeight(), image.getWidth()) {
+	ColorImageRGB(const BaseImage<float>& image) : BaseImage(image.getWidth(), image.getHeight()) {
 		m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-		const float* data = image.getDataPointer();
+		const float* data = image.getPointer();
 		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
-			m_Data[i] = ml::vec3f(data[i]);
+			m_data[i] = ml::vec3f(data[i]);
 		}
 	}
 };
@@ -824,33 +832,33 @@ public:
 		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 	}
 
-	ColorImageRGBA(unsigned int height, unsigned int width, const vec4f *data) : BaseImage(height, width, data) {
+	ColorImageRGBA(unsigned int width, unsigned int height, const vec4f *data) : BaseImage(width, height, data) {
 		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 	}
 
-	ColorImageRGBA(unsigned int height, unsigned int width, const vec4uc *data, float scale = 255.0f) : BaseImage(height, width) {
+	ColorImageRGBA(unsigned int width, unsigned int height, const vec4uc *data, float scale = 255.0f) : BaseImage(width, height) {
 		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-		for (int i = 0; i < (int)height; i++) {
-			for (int j = 0; j < (int)width; j++) {
+		for (unsigned int y = 0; y < m_height; y++) {
+			for (unsigned int x = 0; x < m_width; x++) {
 				vec4f value(
-					(float)data[i*width + j].x / scale,
-					(float)data[i*width + j].y / scale,
-					(float)data[i*width + j].z / scale,
-					(float)data[i*width + j].w / scale
+					(float)data[y*m_width + x].x / scale,
+					(float)data[y*m_width + x].y / scale,
+					(float)data[y*m_width + x].z / scale,
+					(float)data[y*m_width + x].w / scale
 					);
-				setPixel(i, j, value);
+				setPixel(x, y, value);
 			}
 		}
 	}
-	ColorImageRGBA(unsigned int height, unsigned int width) : BaseImage(height, width) {
+	ColorImageRGBA(unsigned int width, unsigned int height) : BaseImage(width, height) {
 		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 	}
 
-	ColorImageRGBA(const DepthImage& depthImage) : BaseImage(depthImage.getHeight(), depthImage.getWidth()) {
+	ColorImageRGBA(const DepthImage& depthImage, bool debugPrint = false) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 		m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(),-std::numeric_limits<float>::infinity());
 
-		const float* data = depthImage.getDataPointer();
+		const float* data = depthImage.getPointer();
 		float maxDepth = -FLT_MAX;
 		float minDepth = +FLT_MAX;
 		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -859,14 +867,15 @@ public:
 				if (data[i] < minDepth) minDepth = data[i];
 			}
 		}
-		std::cout << "max Depth " << maxDepth << std::endl;
-		std::cout << "min Depth " << minDepth << std::endl;
-
+		if (debugPrint) {
+			std::cout << "max Depth " << maxDepth << std::endl;
+			std::cout << "min Depth " << minDepth << std::endl;
+		}
 		for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 			if (data[i] != depthImage.getInvalidValue()) {
-				m_Data[i] = BaseImageHelper::convertDepthToRGBA(data[i], minDepth, maxDepth);
+				m_data[i] = BaseImageHelper::convertDepthToRGBA(data[i], minDepth, maxDepth);
 			} else {
-				m_Data[i] = getInvalidValue();
+				m_data[i] = getInvalidValue();
 			}
 		}
 	}

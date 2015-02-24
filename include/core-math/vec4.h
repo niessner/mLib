@@ -285,9 +285,9 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
             {
                 T x, y, z, w; // standard names for components
             };
-            //struct {
-            //  T r,g,b,w;  // colors
-            //};
+            struct {
+				T r, g, b, a;  // colors
+            };
             T array[4];     // array access
         };
 };

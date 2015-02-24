@@ -21,7 +21,7 @@ public:
     //
     D3D11Texture2D(D3D11Texture2D &&t)
     {
-        m_bmp = std::move(t.m_bmp);
+        m_image = std::move(t.m_image);
         m_graphics = t.m_graphics;
         m_view = t.m_view; t.m_view = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
@@ -29,7 +29,7 @@ public:
 
     void operator = (D3D11Texture2D &&t)
     {
-        m_bmp = std::move(t.m_bmp);
+        m_image = std::move(t.m_image);
         m_graphics = t.m_graphics;
         m_view = t.m_view; t.m_view = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
@@ -40,13 +40,12 @@ public:
 		release();
 	}
 
-    D3D11Texture2D(GraphicsDevice &g, const Bitmap &bmp)
+	D3D11Texture2D(GraphicsDevice &g, const ColorImageR8G8B8A8 &bmp)
     {
         m_texture = nullptr;
         m_view = nullptr;
         load(g, bmp);
     }
-	void load(GraphicsDevice &g, const Bitmap &bmp);
     void load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image);
 
 	void release();
@@ -54,14 +53,14 @@ public:
 
     void bind() const;
 
-    const Bitmap& bmp() const
+	const ColorImageR8G8B8A8& getImage() const
     {
-        return m_bmp;
+        return m_image;
     }
 
 private:
 	D3D11GraphicsDevice *m_graphics;
-    Bitmap m_bmp;
+	ColorImageR8G8B8A8 m_image;
     ID3D11Texture2D *m_texture;
     ID3D11ShaderResourceView *m_view;
 };

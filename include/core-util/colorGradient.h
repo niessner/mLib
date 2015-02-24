@@ -9,9 +9,12 @@ class ColorGradient
 {
 public:
     ColorGradient() {}
-    ColorGradient(const Bitmap &bmp, RGBColor leftColor = RGBColor::Black, RGBColor rightColor = RGBColor::White)
+    ColorGradient(const ColorImageR8G8B8A8 &bmp, RGBColor leftColor = RGBColor::Black, RGBColor rightColor = RGBColor::White)
     {
-        m_colors = bmp.getRow(0);
+		m_colors.resize(bmp.getWidth());
+		for (unsigned int i = 0; i < bmp.getWidth(); i++) {
+			m_colors[i] = bmp(i,0u);
+		}
     }
 
     RGBColor value(double x) const

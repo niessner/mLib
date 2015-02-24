@@ -359,11 +359,11 @@ void AppTest::init(ml::ApplicationData &app)
 
 	m_canvas.init(app.graphics);
 	m_canvas.addCircle(vec2f(500, 500), 50, RGBColor::Green, 0.5f);
-	Bitmap bmp(500, 500);
-	bmp.clear(RGBColor::Blue);
+	ColorImageR8G8B8A8 image(500, 500);
+	image.clear(RGBColor::Blue);
 	for (unsigned int x = 0; x < 500; x++) {
 		for (unsigned int y = 0; y < 250; y++)
-			bmp(x, y) = RGBColor::Red;
+			image(x, y) = RGBColor::Red;
 	}
 	//ColorImageR8G8B8A8 image; FreeImageWrapper::loadImage("refined.png", image);
 	//Bitmap bmp(image.getWidth(), image.getHeight());
@@ -371,7 +371,7 @@ void AppTest::init(ml::ApplicationData &app)
 	//	const vec4uc& p = image.getDataPointer()[i];
 	//	bmp.ptr()[i] = RGBColor(p.x, p.y, p.z, p.w);
 	//}
-	m_canvas.addElement(bbox2i(vec2i(100, 100), vec2i(500, 500)), bmp, 0.5f);
+	m_canvas.addElement(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
 }
 
 void AppTest::render(ml::ApplicationData &app)
@@ -465,15 +465,15 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		ml::Timer c;
 		c.start();
 #pragma omp parallel for
-		for (int i_ = 0; i_ < (int)app.window.height(); i_++) {
-			unsigned int i = (unsigned int)i_;
-			for (unsigned int j = 0; j < app.window.width(); j++) {
+		for (int y_ = 0; y_ < (int)app.window.height(); y_++) {
+			unsigned int y = (unsigned int)y_;
+			for (unsigned int x = 0; x < app.window.width(); x++) {
 				//std::cout << " tyring ray " << i << " " << j << std::endl;
 
 				float depth0 = 0.5f;
 				float depth1 = 1.0f;
-				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-j)*depth0, (float)i*depth0, depth0, 1.0f);
-				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-j)*depth1, (float)i*depth1, depth1, 1.0f);
+				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-x)*depth0, (float)y*depth0, depth0, 1.0f);
+				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-x)*depth1, (float)y*depth1, depth1, 1.0f);
 
 				vec3f eye = m_camera.getEye();
 				Rayf r(m_camera.getEye(), (p0.getVec3() - p1.getVec3()).getNormalized());
@@ -501,9 +501,9 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 				tri = intersect.triangle;
 
 				if (tri) {
-					image(i,j) = tri->getSurfaceColor(u,v).getVec3();
+					image(x,y) = tri->getSurfaceColor(u,v).getVec3();
 				} else {
-					image(i,j) = 0;
+					image(x,y) = 0;
 				}
 			
 			}

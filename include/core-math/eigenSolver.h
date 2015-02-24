@@ -260,6 +260,6 @@ public:
 
 }  // namespace ml
 
-#include "eigenSolver.inl"
+#include "eigenSolver.cpp"
 
 #endif  // CORE_MATH_EIGENSOLVER_H_

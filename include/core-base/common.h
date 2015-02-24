@@ -111,6 +111,7 @@ private:
 #define MLIB_EXCEPTION(s) ml::MLibException(std::string(__FUNCTION__).append(":").append(std::to_string(__LINE__)).append(": ").append(s).c_str())
 #endif
 
+//TODO clean that stuff up: we should have checks in debug but not in release... (i don't like 100 defines that change the behavior)
 #ifdef MLIB_ERROR_CHECK
 
 

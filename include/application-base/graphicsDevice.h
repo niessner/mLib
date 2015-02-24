@@ -20,14 +20,14 @@ public:
     virtual void clear(const vec4f &clearColor) = 0;
 	virtual void renderEndFrame() = 0;
 
-    void captureBackBuffer(Bitmap &result)
+    void captureBackBuffer(ColorImageR8G8B8A8 &result)
     {
         captureBackBufferInternal(result);
     }
 
-    Bitmap captureBackBuffer()
+	ColorImageR8G8B8A8 captureBackBuffer()
     {
-        Bitmap result;
+		ColorImageR8G8B8A8 result;
         captureBackBuffer(result);
         return result;
     }
@@ -43,7 +43,7 @@ public:
 	}
 
 protected:
-    virtual void captureBackBufferInternal(Bitmap &result) = 0;
+	virtual void captureBackBufferInternal(ColorImageR8G8B8A8 &result) = 0;
 	GraphicsDeviceType m_type;
 };
 

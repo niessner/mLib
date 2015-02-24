@@ -4,7 +4,7 @@
 namespace ml
 {
 
-struct RGBColor
+struct RGBColor : public vec4uc
 {
     RGBColor() {}
     RGBColor(BYTE _r, BYTE _g, BYTE _b)
@@ -23,6 +23,18 @@ struct RGBColor
 	}
 	
 	RGBColor(const std::string &hex);
+	RGBColor(vec4uc v) {	//this one should not be explicit as it's the same class
+		r = v.r;
+		g = v.g;
+		b = v.b;
+		a = v.a;
+	}
+	explicit RGBColor(vec3uc v) {
+		r = v.r;
+		g = v.g;
+		b = v.b;
+		a = 255;
+	}
     explicit RGBColor(const vec3f &v);
     explicit RGBColor(const vec4f &v);
 
@@ -86,8 +98,6 @@ struct RGBColor
     static const RGBColor Black;
     static const RGBColor Cyan;
     static const RGBColor Purple;
-
-    BYTE r, g, b, a;
 };
 
 //
@@ -102,8 +112,6 @@ inline bool operator != (RGBColor left, RGBColor right)
 {
     return ((left.r != right.r) || (left.g != right.g) || (left.b != right.b));
 }
-
-typedef Grid2<RGBColor> Bitmap;
 
 }  // namespace ml
 

@@ -269,7 +269,7 @@ void D3D11GraphicsDevice::toggleCullMode()
     m_context->RSSetState(m_rasterState);
 }
 
-void D3D11GraphicsDevice::captureBackBufferInternal(Bitmap &result)
+void D3D11GraphicsDevice::captureBackBufferInternal(ColorImageR8G8B8A8 &result)
 {
     ID3D11Texture2D* frameBuffer;
 
@@ -296,9 +296,9 @@ void D3D11GraphicsDevice::captureBackBufferInternal(Bitmap &result)
     const BYTE *data = (BYTE *)resource.pData;
     //resource.pData; // TEXTURE DATA IS HERE
 
-    for (UINT row = 0; row < desc.Height; row++)
+    for (UINT y = 0; y < desc.Height; y++)
     {
-        memcpy(&result(row, 0), data + resource.RowPitch * row, desc.Width * sizeof(RGBColor));
+        memcpy(&result(0u, y), data + resource.RowPitch * y, desc.Width * sizeof(vec4uc));
     }
 
     m_context->Unmap(m_captureBuffer, subresource);

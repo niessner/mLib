@@ -138,7 +138,7 @@ private:
 	
 
 protected:
-    void captureBackBufferInternal(Bitmap &result);
+	void captureBackBufferInternal(ColorImageR8G8B8A8 &result);
 };
 
 }  // namespace ml

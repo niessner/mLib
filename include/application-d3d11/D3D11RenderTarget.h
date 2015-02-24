@@ -75,9 +75,7 @@ public:
     void clear(const ml::vec4f &clearColor);
     void clearColorBuffer(const ml::vec4f &clearColor);
 
-    // save the render target data as a bitmap
-    void captureBitmap(Bitmap &result);
-    
+  
     void captureColorBuffer(ColorImageR8G8B8A8 &result);
     void captureDepthBuffer(ColorImageR32 &result);
     void captureDepthBuffer(ColorImageR32 &result, const mat4f &perspectiveTransform);

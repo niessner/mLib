@@ -141,7 +141,7 @@ void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result, const mat4f &p
     {
         for (UINT x = 0; x < result.getWidth(); x++)
         {
-            float &v = result(y, x);
+            float &v = result(x, y);
             if (v >= 1.0f)
                 v = std::numeric_limits<float>::infinity();
             else
@@ -159,16 +159,16 @@ void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result)
 	auto &context = m_graphics->getContext();
     context.CopyResource(m_captureDepth, m_depthBuffer);
 
-    result.allocateToSize(m_height, m_width);
+	result.allocate(m_width, m_height);
 
     D3D11_MAPPED_SUBRESOURCE resource;
     UINT subresource = D3D11CalcSubresource(0, 0, 0);
     HRESULT hr = context.Map(m_captureDepth, subresource, D3D11_MAP_READ, 0, &resource);
     const BYTE *data = (BYTE *)resource.pData;
 
-    for (UINT row = 0; row < m_height; row++)
+    for (UINT y = 0; y < m_height; y++)
     {
-        memcpy(&result(row, 0U), data + resource.RowPitch * row, m_width * sizeof(float));
+        memcpy(&result(0U, y), data + resource.RowPitch * y, m_width * sizeof(float));
     }
 
     context.Unmap(m_captureDepth, subresource);
@@ -179,36 +179,16 @@ void D3D11RenderTarget::captureColorBuffer(ColorImageR8G8B8A8 &result)
 	auto &context = m_graphics->getContext();
     context.CopyResource(m_captureTexture, m_texture);
 
-    result.allocateToSize(m_height, m_width);
+	result.allocate(m_width, m_height);
 
     D3D11_MAPPED_SUBRESOURCE resource;
     UINT subresource = D3D11CalcSubresource(0, 0, 0);
     HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ, 0, &resource);
     const BYTE *data = (BYTE *)resource.pData;
 
-    for (UINT row = 0; row < m_height; row++)
+    for (UINT y = 0; y < m_height; y++)
     {
-        memcpy(&result(row, 0U), data + resource.RowPitch * row, m_width * sizeof(ml::vec4uc));
-    }
-
-    context.Unmap(m_captureTexture, subresource);
-}
-
-void D3D11RenderTarget::captureBitmap(Bitmap &result)
-{
-    auto &context = m_graphics->getContext();
-    context.CopyResource(m_captureTexture, m_texture);
-
-    result.allocate(m_height, m_width);
-
-    D3D11_MAPPED_SUBRESOURCE resource;
-    UINT subresource = D3D11CalcSubresource(0, 0, 0);
-    HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ, 0, &resource);
-    const BYTE *data = (BYTE *)resource.pData;
-    
-    for (UINT row = 0; row < m_height; row++)
-    {
-        memcpy(&result(row, 0), data + resource.RowPitch * row, m_width * sizeof(RGBColor));
+        memcpy(&result(0U, y), data + resource.RowPitch * y, m_width * sizeof(ml::vec4uc));
     }
 
     context.Unmap(m_captureTexture, subresource);

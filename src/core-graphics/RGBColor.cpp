@@ -40,7 +40,7 @@ RGBColor::RGBColor(const vec3f &V)
     r = util::boundToByte(V.x * 255.0f);
     g = util::boundToByte(V.y * 255.0f);
     b = util::boundToByte(V.z * 255.0f);
-	a = 0;
+	a = 255;
 }
 
 RGBColor::RGBColor(const vec4f &V)

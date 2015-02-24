@@ -75,21 +75,6 @@
     <ClInclude Include="..\include\core-math\linearSolver.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\core-math\point1d.h">
-      <Filter>mLibHeader\core-math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\core-math\point2d.h">
-      <Filter>mLibHeader\core-math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\core-math\point3d.h">
-      <Filter>mLibHeader\core-math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\core-math\point4d.h">
-      <Filter>mLibHeader\core-math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\core-math\point6d.h">
-      <Filter>mLibHeader\core-math</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\core-math\sparseMatrix.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
@@ -254,6 +239,21 @@
     </ClInclude>
     <ClInclude Include="..\include\core-util\windowsUtil.h">
       <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\vec3.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\vec4.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\vec6.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\vec1.h">
+      <Filter>mLibHeader\core-math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\core-math\vec2.h">
+      <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

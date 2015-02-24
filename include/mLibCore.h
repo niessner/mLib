@@ -63,7 +63,7 @@
 #include "core-util/sparseGrid3.h"
 #include "core-base/binaryGrid3.h"
 #include "core-base/distanceField3.h"
-#include "core-util/baseImage.h"
+#include "core-base/baseImage.h"
 
 //
 // core-multithreading headers
