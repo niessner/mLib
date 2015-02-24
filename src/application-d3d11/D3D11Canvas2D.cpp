@@ -1,16 +1,52 @@
 
 namespace ml {
 
+bool D3D11Canvas2D::ElementBillboard::intersects(const vec2i &mouseCoord, const vec2i &windowDimensions, const Cameraf &camera, D3D11Canvas2D::Intersection &intersection)
+{
+    if (m_box.intersects(mouseCoord))
+    {
+        intersection = D3D11Canvas2D::Intersection(m_id, mouseCoord - m_box.getMin());
+        return true;
+    }
+    return false;
+}
+
+void D3D11Canvas2D::ElementBillboard::onDeviceResize()
+{
+    bbox2f boxNdc;
+    boxNdc.include(m_graphics->pixelToNDC(m_box.getMin()));
+    boxNdc.include(m_graphics->pixelToNDC(m_box.getMax()));
+    m_mesh.load(*m_graphics, ml::shapes::plane(vec3f(boxNdc.getMin(), m_depth), vec3f(boxNdc.getMax(), m_depth), vec3f::eZ));
+}
+
+void D3D11Canvas2D::ElementBillboard::render()
+{
+    m_graphics->getShaderManager().bindShaders("defaultCanvasMesh");
+    m_tex.bind();
+    m_mesh.render();
+}
+
 void D3D11Canvas2D::init(GraphicsDevice &g)
 {
     m_graphics = &g.castD3D11();
 	m_graphics->registerAsset(this);	//register to get resize, reset, and release events
 }
 
-
-
-bool D3D11Canvas2D::intersects(const vec2i &mouseCoord, const vec2i &windowDimensions, const Cameraf &camera, const UIEvent &event)
+bool D3D11Canvas2D::intersects(const vec2i &mouseCoord, const vec2i &windowDimensions, const Cameraf &camera, Intersection &intersection)
 {
+    //
+    // TODO: compute the closest interesection, instead of the first
+    //
+    for (auto &e : m_namedElements)
+    {
+        if (e.second->intersects(mouseCoord, windowDimensions, camera, intersection))
+            return true;
+    }
+    for (Element *e : m_unnamedElements)
+    {
+        if (e->intersects(mouseCoord, windowDimensions, camera, intersection))
+            return true;
+    }
     return false;
 }
 
@@ -26,18 +62,18 @@ void D3D11Canvas2D::reset()
 
 void D3D11Canvas2D::onDeviceResize()
 {
-	for (auto *e : m_elements)
-	{
+    for (auto &e : m_namedElements)
+        e.second->onDeviceResize();
+    for (Element *e : m_unnamedElements)
         e->onDeviceResize();
-	}
 }
 
 void D3D11Canvas2D::render()
 {    
-    for (auto *e : m_elements)
-    {
-		e->render();
-    }
+    for (auto &e : m_namedElements)
+        e.second->render();
+    for (Element *e : m_unnamedElements)
+        e->render();
 }
 
 }  // namespace ml
