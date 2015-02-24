@@ -36,10 +36,10 @@ public:
 		ElementType m_elementType;
 	};
 
-    class ElementMesh : public Element
+    class ElementBillboard : public Element
     { 
 	public:
-		ElementMesh(GraphicsDevice& g, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) : Element(g, ELEMENT_TYPE_MESH, depth) {
+        ElementBillboard(GraphicsDevice& g, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) : Element(g, ELEMENT_TYPE_MESH, depth) {
 
 			const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 			m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasMesh", "meshVS", "vs_4_0", "meshPS", "ps_4_0");
@@ -134,8 +134,8 @@ public:
 		m_elements.push_back(new ElementCircle(*m_graphics, centerInPixels, radiusInPixels, color, depth));
 	}
 
-	void addElement(const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
-		m_elements.push_back(new ElementMesh(*m_graphics, box, image, depth));
+	void addBillboard(const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
+        m_elements.push_back(new ElementBillboard(*m_graphics, box, image, depth));
 	}
 
     bool intersects(const vec2i &mouseCoord, const vec2i &windowDimensions, const Cameraf &camera, const UIEvent &event);

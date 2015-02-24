@@ -186,6 +186,12 @@ namespace ml {
 			return m_data[y*m_width + x];
 		}
 
+        //! Access Operator (size_t)
+        T& operator()(size_t x, size_t y) {
+            MLIB_ASSERT(x < m_width && y < m_height);
+            return m_data[y*m_width + x];
+        }
+
 		//! Access Operator (double); x,y \in [0;1]
 		const T& operator()(double x, double y) const {
 			return (*this)((unsigned int)round(x*(m_width - 1)), (unsigned int)round(y*(m_height - 1)));
