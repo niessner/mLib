@@ -209,6 +209,10 @@ public:
 		array[2] *= val;
 	}
 
+    static inline void normalize(const vec3 &v) {
+        return v.getNormalized();
+    }
+
   //! If this vec3 is non-zero, then normalize it, else return
 	inline void normalizeIfNonzero() {
 		const T l = length();

@@ -48,5 +48,4 @@
 //
 // core-mesh source files
 //
-#include "../src/core-mesh/meshShapes.cpp"
 #include "../src/core-mesh/meshUtil.cpp"

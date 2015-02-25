@@ -3,7 +3,7 @@ class TestOpenMesh : public Test {
 public:
 	void test0() 
 	{
-		TriMeshf s = shapes::sphere(0.1f, vec3f(0.0f), 50, 50);
+		TriMeshf s = Shapesf::sphere(0.1f, vec3f(0.0f), 50, 50);
 		MeshIOf::saveToFile("bla0.ply",s.getMeshData());
 		OpenMeshTriMesh::Mesh omesh;
 		OpenMeshTriMesh::convertToOpenMesh(s, omesh);

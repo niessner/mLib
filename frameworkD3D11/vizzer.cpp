@@ -3,7 +3,7 @@
 
 void Vizzer::init(ml::ApplicationData &app)
 {
-    m_mesh.load(app.graphics, ml::TriMeshf(ml::shapes::torus(ml::vec3f::origin, 1.0f, 0.2f, 20, 20)));
+    m_mesh.load(app.graphics, ml::TriMeshf(ml::Shapesf::torus(ml::vec3f::origin, 1.0f, 0.2f, 20, 20)));
 	
     m_vsColor.load(app.graphics, "shaders/test.shader");
     m_psColor.load(app.graphics, "shaders/test.shader");

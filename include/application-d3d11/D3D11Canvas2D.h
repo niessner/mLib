@@ -120,7 +120,7 @@ public:
             bbox2f box;
             box.include(m_graphics->pixelToNDC(math::floor(m_constants.center - m_constants.radius)));
             box.include(m_graphics->pixelToNDC(math::ceil(m_constants.center + m_constants.radius)));
-            m_mesh.load(*m_graphics, ml::shapes::plane(vec3f(box.getMin(), m_depth), vec3f(box.getMax(), m_depth), vec3f::eZ));
+            m_mesh.load(*m_graphics, ml::Shapesf::rectangleZ(box.getMin(), box.getMax(), m_depth));
         }
 
         void render() {

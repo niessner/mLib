@@ -183,6 +183,10 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
             return sqrt(lengthSq());
         }
 
+        static inline void normalize(const vec4 &v) {
+            return v.getNormalized();
+        }
+
         static T distSq(const vec4& v0, const vec4& v1) {
             return (
                        (v0.array[0] - v1.array[0]) * (v0.array[0] - v1.array[0]) +

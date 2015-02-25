@@ -94,8 +94,8 @@ void testCollisions() {
 
 	{
 		Timer cTime;
-		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + 1300*0.002f), 50, 50);
-		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 15, 15);
+		TriMeshf s0 = Shapesf::sphere(0.5f, vec3f(-2.0f + 1300*0.002f), 50, 50);
+		TriMeshf s1 = Shapesf::sphere(0.5f, vec3f(1.0f), 15, 15);
 		TriMeshAcceleratorBVHf accels0(s0);
 		TriMeshAcceleratorBVHf accels1(s1);
 		unsigned int numCols = 0;
@@ -109,8 +109,8 @@ void testCollisions() {
 
 	Timer tbvh;
 	for (unsigned int i = 0; i < 10000; i++) {
-		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
-		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 15, 15);
+		TriMeshf s0 = Shapesf::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
+		TriMeshf s1 = Shapesf::sphere(0.5f, vec3f(1.0f), 15, 15);
 		TriMeshAcceleratorBVHf accels0(s0);
 		TriMeshAcceleratorBVHf accels1(s1);
 		//std::cout << i << std::endl;
@@ -123,8 +123,8 @@ void testCollisions() {
 	
 	Timer tbrute;
 	for (unsigned int i = 0; i < 10000; i++) {
-		TriMeshf s0 = shapes::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
-		TriMeshf s1 = shapes::sphere(0.5f, vec3f(1.0f), 15, 15);
+		TriMeshf s0 = Shapesf::sphere(0.5f, vec3f(-2.0f + i*0.002f), 50, 50);
+		TriMeshf s1 = Shapesf::sphere(0.5f, vec3f(1.0f), 15, 15);
 		TriMeshAcceleratorBruteForcef accels0(s0);
 		TriMeshAcceleratorBruteForcef accels1(s1);
 		//std::cout << i << std::endl;
@@ -141,7 +141,7 @@ void AppTest::init(ml::ApplicationData &app)
 	//testCollisions();
 
 
-	//TriMeshf s = shapes::sphere(0.1f, vec3f(0.0f), 50, 50);
+	//TriMeshf s = Shapesf::sphere(0.1f, vec3f(0.0f), 50, 50);
 	//MeshIOf::saveToFile("bla0.ply",s.getMeshData());
 	//OpenMeshTriMesh::Mesh omesh;
 	//OpenMeshTriMesh::convertToOpenMesh(s, omesh);
@@ -299,7 +299,7 @@ void AppTest::init(ml::ApplicationData &app)
 	////MeshDataf copy = meshData;
 	////copy.applyTransform(mat4f::translation(vec3f(-2,1,1)));
 	////meshData.merge(copy);
-	//MeshDataf bbData = shapes::toMeshData(meshData.getBoundingBox(), vec4f(1,1,1,1), true);
+	//MeshDataf bbData = Shapesf::toMeshData(meshData.getBoundingBox(), vec4f(1,1,1,1), true);
 	//bbData.subdivideFacesMidpoint();
 	//bbData.subdivideFacesLoop();
 	////bbData.print();
@@ -339,7 +339,7 @@ void AppTest::init(ml::ApplicationData &app)
 	std::vector<ml::vec3f> points(5000);
 	std::for_each(points.begin(), points.end(), lambdaPoints);
 
-    m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::shapes::box(0.01f), points));
+    m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::Shapesf::box(0.01f), points));
 
     m_vsColor.load(app.graphics, "shaders/test.shader");
     m_psColor.load(app.graphics, "shaders/test.shader");
