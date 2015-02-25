@@ -1,13 +1,13 @@
 namespace ml {
 
 template<class FloatType>
-TriMesh<FloatType> Shapes<FloatType>::rectangleZ(const vec2<FloatType> &start, const vec2<FloatType> &end, FloatType zValue = FloatType())
+TriMesh<FloatType> Shapes<FloatType>::rectangleZ(const vec2<FloatType> &start, const vec2<FloatType> &end, FloatType zValue, const vec4<FloatType>& color)
 {
 	std::vector<vec3<FloatType>> vertices(4);
     std::vector<UINT> indices = { 0, 1, 2, 0, 2, 3 };
 	std::vector<vec3<FloatType>> normals(4, vec3f::eZ);
 	std::vector<vec2<FloatType>> texCoords(4);
-	std::vector<vec4<FloatType>> colors(4, vec4<FloatType>(1.0f));
+	std::vector<vec4<FloatType>> colors = { color, color, color, color };
 
     vertices[0] = vec3<FloatType>(start.x, start.y, zValue);
     vertices[1] = vec3<FloatType>(end.x, start.y, zValue);
@@ -24,7 +24,7 @@ TriMesh<FloatType> Shapes<FloatType>::rectangleZ(const vec2<FloatType> &start, c
 }
 
 template<class FloatType>
-TriMesh<FloatType> Shapes<FloatType>::quad(const vec3<FloatType> &p0, const vec3<FloatType> &p1, const vec3<FloatType> &p2, const vec3<FloatType> &p3)
+TriMesh<FloatType> Shapes<FloatType>::quad(const vec3<FloatType> &p0, const vec3<FloatType> &p1, const vec3<FloatType> &p2, const vec3<FloatType> &p3, const vec4<FloatType>& color)
 {
     std::vector<vec3<FloatType>> vertices(4) = { p0, p1, p2, p3 };
     std::vector<UINT> indices = { 0, 1, 2, 0, 2, 3 };
@@ -33,7 +33,7 @@ TriMesh<FloatType> Shapes<FloatType>::quad(const vec3<FloatType> &p0, const vec3
                                              vec3f::normalize((p1 - p2) ^ (p3 - p2)), 
                                              vec3f::normalize((p0 - p3) ^ (p2 - p3))};
     std::vector<vec2<FloatType>> texCoords(4);
-    std::vector<vec4<FloatType>> colors(4, vec4<FloatType>(1.0f));
+	std::vector<vec4<FloatType>> colors = { color, color, color, color };
 
     texCoords[0] = vec2<FloatType>(1.0f, 1.0f);
     texCoords[1] = vec2<FloatType>(0.0f, 1.0f);

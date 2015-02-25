@@ -4,194 +4,246 @@
 
 namespace ml {
 
-class D3D11Canvas2D : public GraphicsAsset
-{
-public:
-    struct Intersection
-    {
-        Intersection()
-        {
-            coord.x = coord.y = std::numeric_limits<int>::min();
-        }
-        bool valid() const
-        {
-            return (coord.x != std::numeric_limits<int>::min());
-        }
-        Intersection(const std::string &id, const vec2i &_coord) : elementId(id), coord(_coord) {}
-        std::string elementId;
-        vec2i coord;
-    };
+	class D3D11Canvas2D : public GraphicsAsset
+	{
+	public:
+		struct Intersection
+		{
+			Intersection()
+			{
+				coord.x = coord.y = std::numeric_limits<int>::min();
+			}
+			bool isValid() const
+			{
+				return (coord.x != std::numeric_limits<int>::min());
+			}
+			Intersection(const std::string &id, const vec2i &_coord) : elementId(id), coord(_coord) {}
+			std::string elementId;
+			vec2i coord;
+		};
 
-    enum ElementType
-    {
-        ELEMENT_TYPE_BILLBOARD = 0,
-        ELEMENT_TYPE_CIRCLE = 1
-    };
+		enum ElementType
+		{
+			ELEMENT_TYPE_BILLBOARD,
+			ELEMENT_TYPE_CIRCLE,
+			ELEMENT_TYPE_BOX
+		};
 
-    class ElementBillboard;
-    class Element
-    {
-    public:
-        Element(GraphicsDevice& g, const std::string &id, ElementType elementType, float depth) : m_graphics(&g.castD3D11()), m_id(id), m_depth(depth) {
-            m_elementType = elementType;
-        }
+		class ElementBillboard;
+		class Element
+		{
+		public:
+			Element(GraphicsDevice& g, const std::string &id, ElementType elementType, float depth) : m_graphics(&g.castD3D11()), m_id(id), m_depth(depth) {
+				m_elementType = elementType;
+			}
 
-        virtual ~Element() {}
+			virtual ~Element() {}
 
-        //! render the element: takes care for shader binding, etc.,
-        virtual void render() = 0;
-        virtual void onDeviceResize() {};
-        virtual bool intersects(const vec2i &mouseCoord, Intersection &intersection) const
-        {
-            return false;
-        }
+			//! render the element: takes care for shader binding, etc.,
+			virtual void render() = 0;
+			virtual void onDeviceResize() {};
+			virtual bool intersects(const vec2i &mouseCoord, Intersection &intersection) const
+			{
+				return false;
+			}
 
-        ElementType getType() const {
-            return m_elementType;
-        }
+			ElementType getType() const {
+				return m_elementType;
+			}
 
-        const ElementBillboard& castBillboard() const {
-            MLIB_ASSERT(m_elementType == ELEMENT_TYPE_BILLBOARD);
-            return *((ElementBillboard*)this);
-        }
+			const ElementBillboard& castBillboard() const {
+				MLIB_ASSERT(m_elementType == ELEMENT_TYPE_BILLBOARD);
+				return *((ElementBillboard*)this);
+			}
 
-    protected:
-        D3D11GraphicsDevice* m_graphics;
-        float m_depth; // value should be between 0 and 1
-        std::string m_id;
+		protected:
+			D3D11GraphicsDevice* m_graphics;
+			float m_depth; // value should be between 0 and 1
+			std::string m_id;
 
-    private:
-        ElementType m_elementType;
-    };
+		private:
+			ElementType m_elementType;
+		};
 
-    class ElementBillboard : public Element
-    {
-    public:
-        ElementBillboard(GraphicsDevice& g, const std::string &id, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) : Element(g, id, ELEMENT_TYPE_BILLBOARD, depth)
-        {
-            const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
-            m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasMesh", "meshVS", "vs_4_0", "meshPS", "ps_4_0");
+		class ElementBillboard : public Element
+		{
+		public:
+			ElementBillboard(GraphicsDevice& g, const std::string &id, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) : Element(g, id, ELEMENT_TYPE_BILLBOARD, depth)
+			{
+				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
+				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasBillboard", "billboardVS", "vs_4_0", "billboardPS", "ps_4_0");
 
-            m_id = id;
-            m_box = box;
-            m_tex.load(g, image);
-            onDeviceResize();
-        }
+				m_id = id;
+				m_box = box;
+				m_tex.load(g, image);
+				onDeviceResize();
+			}
 
-        void onDeviceResize();
-        void render();
-        bool intersects(const vec2i &mouseCoord, Intersection &intersection) const;
+			void onDeviceResize();
+			void render();
+			bool intersects(const vec2i &mouseCoord, Intersection &intersection) const;
 
-        const bbox2i& getBox() const
-        {
-            return m_box;
-        }
+			const bbox2i& getBox() const
+			{
+				return m_box;
+			}
 
-    private:
-        bbox2i m_box;
-        D3D11Texture2D m_tex;
-        D3D11TriMesh m_mesh;
-    };
+		private:
+			bbox2i m_box;
+			D3D11Texture2D m_tex;
+			D3D11TriMesh m_mesh;
+		};
 
-    class ElementCircle : public Element
-    {
-    public:
-        struct ElementCircleConstants {
-            vec4f color;
-            vec2f center;
-            float radius;
-            float dummy;
-        };
-        ElementCircle(GraphicsDevice &g, const std::string &id, const vec2f& center, float radius, const vec4f& color, float depth) : Element(g, id, ELEMENT_TYPE_CIRCLE, depth) {
+		class ElementCircle : public Element
+		{
+		public:
+			struct ElementCircleConstants {
+				vec4f color;
+				vec2f center;
+				float radius;
+				float dummy;
+			};
+			ElementCircle(GraphicsDevice &g, const std::string &id, const vec2f& center, float radius, const vec4f& color, float depth) : Element(g, id, ELEMENT_TYPE_CIRCLE, depth) {
 
-            const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
-            m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasCircle", "circleVS", "vs_4_0", "circlePS", "ps_4_0");
+				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
+				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasCircle", "circleVS", "vs_4_0", "circlePS", "ps_4_0");
 
-            m_constants.center = center;
-            m_constants.radius = radius;
-            m_constants.color = color;
-            m_constantBuffer.init(g);
-            m_constantBuffer.update(m_constants);
+				m_constants.center = center;
+				m_constants.radius = radius;
+				m_constants.color = color;
+				m_constantBuffer.init(g);
+				m_constantBuffer.update(m_constants);
 
-            onDeviceResize();
-        }
+				onDeviceResize();
+			}
 
-        void onDeviceResize() {
-            bbox2f box;
-            box.include(m_graphics->pixelToNDC(math::floor(m_constants.center - m_constants.radius)));
-            box.include(m_graphics->pixelToNDC(math::ceil(m_constants.center + m_constants.radius)));
-            m_mesh.load(*m_graphics, ml::Shapesf::rectangleZ(box.getMin(), box.getMax(), m_depth));
-        }
+			void onDeviceResize() {
+				bbox2f box;
+				box.include(m_graphics->pixelToNDC(math::floor(m_constants.center - m_constants.radius)));
+				box.include(m_graphics->pixelToNDC(math::ceil(m_constants.center + m_constants.radius)));
+				m_mesh.load(*m_graphics, ml::Shapesf::rectangleZ(box.getMin(), box.getMax(), m_depth));
+			}
 
-        void render() {
-            m_graphics->getShaderManager().bindShaders("defaultCanvasCircle");
-            m_constantBuffer.bind(0);
-            m_mesh.render();
-        }
-    private:
-        ElementCircleConstants m_constants;
-        D3D11ConstantBuffer<ElementCircleConstants> m_constantBuffer;
-        D3D11TriMesh m_mesh;
-    };
+			void render() {
+				m_graphics->getShaderManager().bindShaders("defaultCanvasCircle");
+				m_constantBuffer.bind(0);
+				m_mesh.render();
+			}
+		private:
+			ElementCircleConstants m_constants;
+			D3D11ConstantBuffer<ElementCircleConstants> m_constantBuffer;
+			D3D11TriMesh m_mesh;
+		};
 
-    D3D11Canvas2D()
-    {
-        m_graphics = nullptr;
-    }
-    ~D3D11Canvas2D()
-    {
-        clearElements();
-    }
+		class ElementBox : public Element
+		{
+		public:
+			ElementBox(GraphicsDevice& g, const std::string &id, const bbox2i& box, const vec4f& color, float depth) : Element(g, id, ELEMENT_TYPE_BOX, depth)
+			{
+				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
+				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasBox", "boxVS", "vs_4_0", "boxPS", "ps_4_0");
+				m_id = id;
+				m_box = box;
+				m_color = color;
+				onDeviceResize();
+			}
 
-    void init(GraphicsDevice &g);
+			void onDeviceResize() {
+				bbox2f boxNdc;
+				boxNdc.include(m_graphics->pixelToNDC(m_box.getMin()));
+				boxNdc.include(m_graphics->pixelToNDC(m_box.getMax()));
+				m_mesh.load(*m_graphics, ml::Shapesf::rectangleZ(boxNdc.getMin(), boxNdc.getMax(), m_depth, m_color));
+			}
 
-    void addCircle(const std::string &elementId, const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
-        m_namedElements[elementId] = new ElementCircle(*m_graphics, elementId, centerInPixels, radiusInPixels, color, depth);
-    }
+			void render() {
+				m_graphics->getShaderManager().bindShaders("defaultCanvasBox");
+				m_mesh.render();
+			}
+			bool intersects(const vec2i &mouseCoord, Intersection &intersection) const {
+				if (m_box.intersects(mouseCoord))
+				{
+					intersection = D3D11Canvas2D::Intersection(m_id, mouseCoord - m_box.getMin());
+					return true;
+				}
+				return false;
+			}
 
-    void addBillboard(const std::string &elementId, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
-        m_namedElements[elementId] = new ElementBillboard(*m_graphics, elementId, box, image, depth);
-    }
+			const bbox2i& getBox() const
+			{
+				return m_box;
+			}
 
-    void addCircle(const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
-        m_unnamedElements.push_back(new ElementCircle(*m_graphics, "", centerInPixels, radiusInPixels, color, depth));
-    }
+		private:
+			bbox2i m_box;
+			D3D11TriMesh m_mesh;
+			vec4f m_color;
+		};
 
-    void addBillboard(const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
-        m_unnamedElements.push_back(new ElementBillboard(*m_graphics, "", box, image, depth));
-    }
+		D3D11Canvas2D()
+		{
+			m_graphics = nullptr;
+		}
+		~D3D11Canvas2D()
+		{
+			clearElements();
+		}
 
-    Intersection intersectionFirst(const vec2i &mouseCoord) const;
-    vector<Intersection> intersectionAll(const vec2i &mouseCoord) const;
+		void init(GraphicsDevice &g);
 
-    void release();
-    void reset();
-    void onDeviceResize();
+		void addCircle(const std::string &elementId, const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
+			m_namedElements[elementId] = new ElementCircle(*m_graphics, elementId, centerInPixels, radiusInPixels, color, depth);
+		}
 
-    void render();
+		void addBillboard(const std::string &elementId, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
+			m_namedElements[elementId] = new ElementBillboard(*m_graphics, elementId, box, image, depth);
+		}
+		void addBox(const std::string &elementId, const bbox2i& box, const vec4f& color, float depth) {
+			m_namedElements[elementId] = new ElementBox(*m_graphics, elementId, box, color, depth);
+		}
 
-    void clearElements()
-    {
-        for (Element *e : m_unnamedElements)
-            SAFE_DELETE(e);
-        for (auto &e : m_namedElements)
-            SAFE_DELETE(e.second);
-        m_namedElements.clear();
-        m_unnamedElements.clear();
-    }
+		void addCircle(const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
+			m_unnamedElements.push_back(new ElementCircle(*m_graphics, "", centerInPixels, radiusInPixels, color, depth));
+		}
 
-    const Element& getElementById(const std::string &elementId) const
-    {
-        auto it = m_namedElements.find(elementId);
-        MLIB_ASSERT_STR(it != m_namedElements.end(), "Element not found");
-        return *(it->second);
-    }
+		void addBillboard(const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
+			m_unnamedElements.push_back(new ElementBillboard(*m_graphics, "", box, image, depth));
+		}
 
-private:
-    D3D11GraphicsDevice *m_graphics;
-    std::map<std::string, Element*> m_namedElements;
-    std::vector<Element*> m_unnamedElements;
-};
+		void addBox(const bbox2i& box, const vec4f& color, float depth) {
+			m_unnamedElements.push_back(new ElementBox(*m_graphics, "", box, color, depth));
+		}
+
+		Intersection intersectionFirst(const vec2i &mouseCoord) const;
+		vector<Intersection> intersectionAll(const vec2i &mouseCoord) const;
+
+		void release();
+		void reset();
+		void onDeviceResize();
+
+		void render();
+
+		void clearElements()
+		{
+			for (Element *e : m_unnamedElements)
+				SAFE_DELETE(e);
+			for (auto &e : m_namedElements)
+				SAFE_DELETE(e.second);
+			m_namedElements.clear();
+			m_unnamedElements.clear();
+		}
+
+		const Element& getElementById(const std::string &elementId) const
+		{
+			auto it = m_namedElements.find(elementId);
+			MLIB_ASSERT_STR(it != m_namedElements.end(), "Element not found");
+			return *(it->second);
+		}
+
+	private:
+		D3D11GraphicsDevice *m_graphics;
+		std::map<std::string, Element*> m_namedElements;
+		std::vector<Element*> m_unnamedElements;
+	};
 
 }  // namespace ml
 

@@ -358,7 +358,7 @@ void AppTest::init(ml::ApplicationData &app)
 
 
 	m_canvas.init(app.graphics);
-	m_canvas.addCircle(vec2f(500, 500), 50, RGBColor::Green, 0.5f);
+	m_canvas.addCircle(vec2f(500, 100), 50, RGBColor::Green, 0.51f);
 	ColorImageR8G8B8A8 image(500, 500);
 	image.setPixels(RGBColor::Blue);
 	for (unsigned int x = 0; x < 500; x++) {
@@ -371,7 +371,8 @@ void AppTest::init(ml::ApplicationData &app)
 	//	const vec4uc& p = image.getDataPointer()[i];
 	//	bmp.ptr()[i] = RGBColor(p.x, p.y, p.z, p.w);
 	//}
-	m_canvas.addElement(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
+	m_canvas.addBillboard(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
+	m_canvas.addBox(bbox2i(vec2i(50, 50), vec2i(10, 10)), RGBColor::Yellow, 0.4f);
 }
 
 void AppTest::render(ml::ApplicationData &app)

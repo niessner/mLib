@@ -7,9 +7,9 @@ template<class FloatType>
 class Shapes {
 public:
 
-    static TriMesh<FloatType> rectangleZ(const vec2<FloatType> &start, const vec2<FloatType> &end, FloatType zValue = FloatType());
+	static TriMesh<FloatType> rectangleZ(const vec2<FloatType> &start, const vec2<FloatType> &end, FloatType zValue = FloatType(), const vec4<FloatType>& color = ml::vec4<FloatType>(1, 1, 1, 1));
 
-    static TriMesh<FloatType> quad(const vec3<FloatType> &p0, const vec3<FloatType> &p1, const vec3<FloatType> &p2, const vec3<FloatType> &p3);
+	static TriMesh<FloatType> quad(const vec3<FloatType> &p0, const vec3<FloatType> &p1, const vec3<FloatType> &p2, const vec3<FloatType> &p3, const vec4<FloatType>& color = ml::vec4<FloatType>(1, 1, 1, 1));
 
     static TriMesh<FloatType> box(FloatType xDim, FloatType yDim, FloatType zDim, const vec4<FloatType>& color = ml::vec4<FloatType>(1, 1, 1, 1));
 
