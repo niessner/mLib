@@ -372,6 +372,7 @@ void AppTest::init(ml::ApplicationData &app)
 	//	bmp.ptr()[i] = RGBColor(p.x, p.y, p.z, p.w);
 	//}
 	m_canvas.addBillboard(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
+	m_canvas.addBillboard(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
 	m_canvas.addBox(bbox2i(vec2i(50, 50), vec2i(10, 10)), RGBColor::Yellow, 0.4f);
 }
 
