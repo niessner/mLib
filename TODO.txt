@@ -1,3 +1,6 @@
+mat4 setRotation/setTranslation
+
+
 Go over BaseImageTypes (remove ColorImageRGB -> instead: only keep ColorImageR32G32B32)
 Update triMeshAcceleratorBVH to parameterize parallel build and possibly support parelll build for midpoint.
 toString for vec1/2/4
