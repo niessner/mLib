@@ -62,8 +62,11 @@ namespace ml {
 			m_width = m_height = 0;
 		}
 
-		BaseImage(unsigned int width, unsigned int height, const T *data = nullptr) : Image(formatFromTemplate<T>()) {
-			create(width, height);
+        BaseImage(size_t width, size_t height, const T *data = nullptr) : Image(formatFromTemplate<T>()) {
+            //
+            // TODO: size_t is probably the more appropriate type here
+            //
+			create((UINT)width, (UINT)height);
 
 			if (data) {
 				memcpy(m_data, data, sizeof(T) * height * width);
