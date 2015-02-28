@@ -393,6 +393,16 @@ namespace ml {
 			return count;
 		}
 
+        //! fills the image with the given function of (x,y) pixel index
+        void fill(const std::function< T(size_t, size_t) > &fillFunction)
+        {
+            for (size_t y = 0; y < m_height; y++)
+                for (size_t x = 0; x < m_width; x++)
+                {
+                    (*this)(x, y) = fillFunction(x, y);
+                }
+        }
+
 		//! sets all pixels with a specific value (oldValue); to a new value (newValue)
 		void replacePixelValue(const T& oldValue, const T& newValue) {
 			for (unsigned int i = 0; i < m_width * m_height; i++) {
