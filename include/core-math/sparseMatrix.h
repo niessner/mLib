@@ -74,17 +74,17 @@ public:
 		m_data = std::move(s.m_data);
 	}
 
-	explicit SparseMatrix(UINT squareDimension)
+    explicit SparseMatrix(size_t squareDimension)
 	{
 		m_rows = squareDimension;
 		m_cols = squareDimension;
 		m_data.allocate(m_rows);
 	}
 
-	SparseMatrix(UINT rows, UINT cols)
+    SparseMatrix(size_t rows, size_t cols)
 	{
-		m_rows = rows;
-		m_cols = cols;
+		m_rows = (UINT)rows;
+        m_cols = (UINT)cols;
 		m_data.resize(m_rows);
 	}
 
@@ -247,8 +247,8 @@ SparseMatrix<FloatType> operator * (const SparseMatrix<FloatType> &A, FloatType 
 	return SparseMatrix<FloatType>::multiply(A, val);
 }
 
-//typedef SparseMatrix<float> SparseMatrixf;
-//typedef SparseMatrix<double> SparseMatrixd;
+typedef SparseMatrix<float> SparseMatrixf;
+typedef SparseMatrix<double> SparseMatrixd;
 
 }  // namespace ml
 
