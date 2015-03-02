@@ -310,6 +310,14 @@ namespace ml
     //
     void setValues(const T &value);
 
+    std::vector<T> toStdVector() const
+    {
+        std::vector<T> result;
+        for (size_t i = 0; i < m_dimX * m_dimY; i++)
+            result.push_back(i);
+        return result;
+    }
+
     iterator begin()
     {
       return iterator(this);
