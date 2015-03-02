@@ -46,23 +46,41 @@ namespace eigenutil
 	}
 
 
-	template<class D>
-	static Eigen::VectorXd makeEigenVector(const MathVector<D> &v)
+	static Eigen::VectorXd makeEigenVector(const MathVector<double> &v)
 	{
 		const UINT n = (UINT)v.size();
 		Eigen::VectorXd result(n);
-		for(UINT i = 0; i < n; i++) result[i] = v[i];
+		for(UINT i = 0; i < n; i++)
+            result[i] = v[i];
 		return result;
 	}
 
-	template<class D>
-	static MathVector<D> dumpEigenVector(const Eigen::VectorXd &v)
+    static Eigen::VectorXf makeEigenVector(const MathVector<float> &v)
+    {
+        const UINT n = (UINT)v.size();
+        Eigen::VectorXf result(n);
+        for (UINT i = 0; i < n; i++)
+            result[i] = v[i];
+        return result;
+    }
+
+	static MathVector<double> dumpEigenVector(const Eigen::VectorXd &v)
 	{
 		const UINT n = (UINT)v.size();
 		MathVector<double> result(n);
-		for(UINT i = 0; i < n; i++) result[i] = v[i];
+		for(UINT i = 0; i < n; i++)
+            result[i] = v[i];
 		return result;
 	}
+
+    static MathVector<float> dumpEigenVector(const Eigen::VectorXf &v)
+    {
+        const UINT n = (UINT)v.size();
+        MathVector<float> result(n);
+        for (UINT i = 0; i < n; i++)
+            result[i] = v[i];
+        return result;
+    }
 
 	template<class D>
 	static void dumpEigenMatrix(const Eigen::MatrixXd &m, DenseMatrix<D>& result)

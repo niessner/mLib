@@ -57,6 +57,140 @@ namespace ml {
 	template <class T>
 	class BaseImage : public Image {
 	public:
+
+		// TODO: use templating to collapse iterator and const-iterator
+        struct iteratorEntry
+        {
+            iteratorEntry(size_t _x, size_t _y, T &_value)
+                : x(_x), y(_y), value(_value)
+            {
+
+            }
+            size_t x;
+            size_t y;
+            T &value;
+        };
+
+        struct constIteratorEntry
+        {
+            constIteratorEntry(size_t _x, size_t _y, const T &_value)
+                : x(_x), y(_y), value(_value)
+            {
+
+            }
+            size_t x;
+            size_t y;
+            const T &value;
+        };
+
+        struct iterator
+        {
+            iterator(BaseImage<T> *_image)
+            {
+                x = 0;
+                y = 0;
+                image = _image;
+            }
+            iterator(const iterator &i)
+            {
+                x = i.x;
+                y = i.x;
+                image = i.image;
+            }
+            ~iterator() {}
+            iterator& operator=(const iterator &i)
+            {
+                x = i.x;
+                y = i.y;
+                image = i.image;
+                return *this;
+            }
+            iterator& operator++()
+            {
+                x++;
+                if (x == image->getWidth())
+                {
+                    x = 0;
+                    y++;
+                    if (y == image->getHeight())
+                    {
+                        image = NULL;
+                    }
+                }
+                return *this;
+            }
+            iteratorEntry operator* () const
+            {
+                return iteratorEntry(x, y, (*image)(x, y));
+            }
+
+            bool operator != (const iterator &i) const
+            {
+                return i.image != image;
+            }
+
+            friend void swap(iterator &a, iterator &b);
+
+            size_t x, y;
+
+        private:
+            BaseImage<T> *image;
+        };
+
+        struct constIterator
+        {
+            constIterator(const BaseImage<T> *_image)
+            {
+                x = 0;
+                y = 0;
+                image = _image;
+            }
+            constIterator(const iterator &i)
+            {
+                x = i.x;
+                y = i.x;
+                image = i.image;
+            }
+            ~constIterator() {}
+            constIterator& operator=(const iterator &i)
+            {
+                x = i.x;
+                y = i.y;
+                image = i.image;
+                return *this;
+            }
+            constIterator& operator++()
+            {
+                x++;
+                if (x == image->getWidth())
+                {
+                    x = 0;
+                    y++;
+                    if (y == image->getHeight())
+                    {
+                        image = NULL;
+                    }
+                }
+                return *this;
+            }
+            constIteratorEntry operator* () const
+            {
+                return constIteratorEntry(x, y, (*image)(x, y));
+            }
+
+            bool operator != (const constIterator &i) const
+            {
+                return i.image != image;
+            }
+
+            friend void swap(constIterator &a, constIterator &b);
+
+            size_t x, y;
+
+        private:
+            const BaseImage<T> *image;
+        };
+
 		BaseImage() : Image(formatFromTemplate<T>()) {
 			m_data = nullptr;
 			m_width = m_height = 0;
@@ -124,6 +258,26 @@ namespace ml {
 		~BaseImage(void) {
 			SAFE_DELETE_ARRAY(m_data);
 		}
+
+        iterator begin()
+        {
+            return iterator(this);
+        }
+
+        iterator end()
+        {
+            return iterator(NULL);
+        }
+
+        constIterator begin() const
+        {
+            return constIterator(this);
+        }
+
+        constIterator end() const
+        {
+            return constIterator(NULL);
+        }
 
 		//! Returns the difference of two images (current - other)
 		BaseImage<T> operator-(const BaseImage<T> &other) const {
@@ -634,26 +788,6 @@ namespace ml {
 				m_data[i] -= s;
 			}
 			return *this;
-		}
-
-		T* begin()
-		{
-			return m_data;
-		}
-
-		T* end()
-		{
-			return m_data + m_height * m_width;
-		}
-
-		const T* begin() const
-		{
-			return m_data;
-		}
-
-		const T* end() const
-		{
-			return m_data + m_height * m_width;
 		}
 
 	protected:

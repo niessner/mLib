@@ -22,9 +22,10 @@ public:
 		Profile,
 	};
 
-	LinearSolverEigen(Method method = ConjugateGradient_Diag)
+	LinearSolverEigen(Method method = ConjugateGradient_Diag, double tolerance = 1e-10)
 	{
 		m_method = method;
+        m_tolerance = tolerance;
 	}
 
 	MathVector<D> solve(const SparseMatrix<D> &A, const MathVector<D> &b)
@@ -53,11 +54,11 @@ public:
 	{
 		Console::log("Solving least-squares problem using QR");
 
-		const Eigen::VectorXd bEigen = eigenutil::makeEigenVector(b);
-		Eigen::SparseQR< Eigen::SparseMatrix<D>, Eigen::COLAMDOrdering<int> > factorization(A);
-		Eigen::VectorXd x = factorization.solve(bEigen);
+        const Eigen::Matrix<D, Eigen::Dynamic, 1> bEigen = eigenutil::makeEigenVector(b);
+        Eigen::SparseQR< Eigen::SparseMatrix<D>, Eigen::COLAMDOrdering<int> > factorization(A);
+		Eigen::Matrix<D, Eigen::Dynamic, 1> x = factorization.solve(bEigen);
 
-		return eigenutil::dumpEigenVector<D>(x);
+		return eigenutil::dumpEigenVector(x);
 	}
 
 private:
@@ -65,33 +66,33 @@ private:
 	{
 		ComponentTimer timer("Solving using method: " + getMethodName(method));
 		
-		const Eigen::VectorXd bEigen = eigenutil::makeEigenVector(b);
-		Eigen::VectorXd x;
+		const auto bEigen = eigenutil::makeEigenVector(b);
+		Eigen::VectorXf x;
 
 		if(method == LLT)
 		{
-			Eigen::SimplicialLLT< Eigen::SparseMatrix<double> > factorization(A);
+			Eigen::SimplicialLLT< Eigen::SparseMatrix<D> > factorization(A);
 			x = factorization.solve(bEigen);
 		}
 		else if(method == LDLT)
 		{
-			Eigen::SimplicialLDLT< Eigen::SparseMatrix<double> > factorization(A);
+			Eigen::SimplicialLDLT< Eigen::SparseMatrix<D> > factorization(A);
 			x = factorization.solve(bEigen);
 		}
 		else if(method == LU)
 		{
-			Eigen::SparseLU< Eigen::SparseMatrix<double> > factorization(A);
+			Eigen::SparseLU< Eigen::SparseMatrix<D> > factorization(A);
 			x = factorization.solve(bEigen);
 		}
 		else if(method == QR)
 		{
-			Eigen::SparseQR< Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int> > factorization(A);
+			Eigen::SparseQR< Eigen::SparseMatrix<D>, Eigen::COLAMDOrdering<int> > factorization(A);
 			x = factorization.solve(bEigen);
 		}
 		else if(method == ConjugateGradient_Diag)
 		{
-			Eigen::ConjugateGradient< Eigen::SparseMatrix<double>, Eigen::Lower, Eigen::DiagonalPreconditioner<double > > solver;
-			solver.setTolerance(1e-20);
+			Eigen::ConjugateGradient< Eigen::SparseMatrix<D>, Eigen::Lower, Eigen::DiagonalPreconditioner<D> > solver;
+            solver.setTolerance((D)m_tolerance);
 			solver.compute(A);
 			x = solver.solve(bEigen);
 			//Console::log("Iterations: " + std::string(solver.iterations()));
@@ -99,8 +100,8 @@ private:
 		}
 		else if(method == BiCGSTAB_Diag)
 		{
-			Eigen::BiCGSTAB< Eigen::SparseMatrix<double>, Eigen::DiagonalPreconditioner<double > > solver;
-			solver.setTolerance(1e-10);
+			Eigen::BiCGSTAB< Eigen::SparseMatrix<D>, Eigen::DiagonalPreconditioner<D > > solver;
+            solver.setTolerance((D)m_tolerance);
 			solver.compute(A);
 			x = solver.solve(bEigen);
 			//Console::log("Iterations: " + std::string(solver.iterations()));
@@ -108,8 +109,8 @@ private:
 		}
 		else if(method == BiCGSTAB_LUT)
 		{
-			Eigen::BiCGSTAB< Eigen::SparseMatrix<double>, Eigen::IncompleteLUT<double > > solver;
-			solver.setTolerance(1e-10);
+			Eigen::BiCGSTAB< Eigen::SparseMatrix<D>, Eigen::IncompleteLUT<D > > solver;
+            solver.setTolerance((D)m_tolerance);
 			solver.compute(A);
 			x = solver.solve(bEigen);
 			//Console::log("Iterations: " + std::string(solver.iterations()));
@@ -127,7 +128,7 @@ private:
 				{
 					double maxDeviation = 0.0;
 					for(UINT variableIndex = 0; variableIndex < b.size(); variableIndex++)
-						maxDeviation = std::max(maxDeviation, fabs(results[methodIndex][variableIndex] - results[0][variableIndex]));
+						maxDeviation = std::max<double>(maxDeviation, fabs(results[methodIndex][variableIndex] - results[0][variableIndex]));
 					Console::log("Max deviation from LLT: " + std::to_string(maxDeviation));
 				}
 			}
@@ -138,7 +139,7 @@ private:
 			MLIB_ERROR("Unknown method");
 		}
 
-		return eigenutil::dumpEigenVector<D>(x);
+		return eigenutil::dumpEigenVector(x);
 	}
 
 	static std::string getMethodName(Method m)
@@ -158,6 +159,7 @@ private:
 	}
 
 	Method m_method;
+    double m_tolerance;
 };
 
 

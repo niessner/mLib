@@ -45,11 +45,11 @@ struct SparseRow
 	std::vector< SparseRowEntry<FloatType> > entries;
 };
 
-template<class FloatType, class = typename std::enable_if<std::is_arithmetic<FloatType>::value, FloatType>::type>
-class SparseMatrix;
+//template<class FloatType, class = typename std::enable_if<std::is_arithmetic<FloatType>::value, FloatType>::type>
+//class SparseMatrix;
 
 template<class FloatType>
-class SparseMatrix<FloatType>
+class SparseMatrix
 {
 public:
 	SparseMatrix()
@@ -144,6 +144,12 @@ public:
 	{
 		return m_data[row](col);
 	}
+    // insert is a more efficient version of operator() that assumes the entry
+    // does not exist.
+    void insert(UINT row, UINT col, FloatType val)
+    {
+        m_data[row].entries.push_back(SparseRowEntry<FloatType>(col, val));
+    }
 	UINT rows() const
 	{
 		return m_rows;
@@ -208,13 +214,6 @@ public:
 private:
 	UINT m_rows, m_cols;
     std::vector< SparseRow<FloatType> > m_data;
-
-	// set is a more efficient version of operator() that assumes the entry
-	// does not exist.
-	void insert(UINT row, UINT col, double val)
-	{
-		m_data[row].entries.push_back(SparseRowEntry<FloatType>(col, val));
-	}
 };
 
 template<class FloatType>
