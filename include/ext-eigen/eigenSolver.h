@@ -32,7 +32,9 @@ public:
 	{
 		MLIB_ASSERT_STR(A.square() && b.size() == A.rows(), "invalid solve dimensions");
 		Eigen::SparseMatrix<D> eigenMatrix;
+        std::cout << "Making eigen matrix...";
 		eigenutil::makeEigenMatrix(A, eigenMatrix);
+        std::cout << "done" << std::endl;
 		return solve(eigenMatrix, b);
 	}
 
@@ -43,19 +45,25 @@ public:
 
 	MathVector<D> solveLeastSquares(const SparseMatrix<D> &A, const MathVector<D> &b)
 	{
-		//return solve(A.transpose() * A, b);
-
 		Eigen::SparseMatrix<D> eigenMatrix;
 		eigenutil::makeEigenMatrix(A, eigenMatrix);
-		return solveLeastSquares(eigenMatrix, b);
+        return solveLeastSquaresQR(eigenMatrix, b);
 	}
 
-	MathVector<D> solveLeastSquares(const Eigen::SparseMatrix<D> &A, const MathVector<D> &b)
+    MathVector<D> solveLeastSquaresNormalEquations(const SparseMatrix<D> &A, const MathVector<D> &b)
+    {
+        Eigen::SparseMatrix<D> eigenMatrix;
+        eigenutil::makeEigenMatrix(A, eigenMatrix);
+        return solveUsingMethod(eigenMatrix.transpose() * eigenMatrix, A.transpose() * b, m_method);
+    }
+
+	MathVector<D> solveLeastSquaresQR(const Eigen::SparseMatrix<D> &A, const MathVector<D> &b)
 	{
 		Console::log("Solving least-squares problem using QR");
 
         const Eigen::Matrix<D, Eigen::Dynamic, 1> bEigen = eigenutil::makeEigenVector(b);
         Eigen::SparseQR< Eigen::SparseMatrix<D>, Eigen::COLAMDOrdering<int> > factorization(A);
+        //Eigen::SparseQR< Eigen::SparseMatrix<D>, Eigen::NaturalOrdering<int> > factorization(A);
 		Eigen::Matrix<D, Eigen::Dynamic, 1> x = factorization.solve(bEigen);
 
 		return eigenutil::dumpEigenVector(x);
