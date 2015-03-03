@@ -101,6 +101,31 @@ SparseMatrix<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const Sparse
 	return result;
 }
 
+template <class D>
+MathVector<D> SparseMatrix<D>::selfTransposeDiagonal() const
+{
+    MathVector<D> result(m_cols, 0.0);
+
+    const SparseMatrix<D> A = transpose();
+    const SparseMatrix<D> &B = *this;
+
+    const UINT rows = A.rows();
+    
+    for (UINT row = 0; row < rows; row++)
+    {
+        for (const SparseRowEntry<D> &eA : A.m_data[row].entries)
+        {
+            for (const SparseRowEntry<D> &eB : B.m_data[eA.col].entries)
+            {
+                if (eB.col == row)
+                    result[row] += eA.val * eB.val;
+            }
+        }
+    }
+
+    return result;
+}
+
 template <class D> 
 void SparseMatrix<D>::invertInPlace()
 {

@@ -196,6 +196,9 @@ public:
 	}
 	void invertInPlace();
 
+    // computes the diagonal of A^T * A
+    MathVector<FloatType> selfTransposeDiagonal() const;
+
 	//
 	// overloaded operator helpers
 	//

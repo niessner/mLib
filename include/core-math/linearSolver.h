@@ -38,7 +38,7 @@ public:
 
 		//std::vector<D> dInverse = A.diagonal().map([](D x) {return (D)1.0 / x;});
 		MathVector<FloatType> dInverse = A.diagonal();
-		auto invert = [=] (FloatType& x) { x = (FloatType)1.0/x; };
+		auto invert = [] (FloatType& x) { x = (FloatType)1.0/x; };
 		for_each(dInverse.begin(), dInverse.end(), invert);
 
 		MathVector<FloatType> x(n, 0.0);

@@ -57,6 +57,56 @@ public:
         return solveUsingMethod(eigenMatrix.transpose() * eigenMatrix, A.transpose() * b, m_method);
     }
 
+    MathVector<D> solveLeastSquaresManualCG(const SparseMatrix<D> &A, const MathVector<D> &bBase, UINT maxIterations, bool verbose = false)
+    {
+        SparseMatrix<D> ATranspose = A.transpose();
+        const MathVector<D> &b = ATranspose * bBase;
+
+        Eigen::SparseMatrix<D> eigenA, eigenAt;
+        eigenutil::makeEigenMatrix(A, eigenA);
+        eigenAt = eigenA.transpose();
+
+        const UINT n = (UINT)b.size();
+
+        MathVector<D> dInverse = A.selfTransposeDiagonal();
+        auto invert = [](D& x) { x = (D)1.0 / x; };
+        for_each(dInverse.begin(), dInverse.end(), invert);
+
+        auto eigenMultiply = [&](const MathVector<D> &x) {
+            Eigen::VectorXf temp = eigenAt * (eigenA * eigenutil::makeEigenVector(x));
+            return eigenutil::dumpEigenVector(temp);
+        };
+
+        MathVector<D> x(n, 0.0);
+        MathVector<D> r = b - eigenMultiply(x);
+        MathVector<D> z = dInverse * r;
+        MathVector<D> p = z;
+
+        for (UINT iteration = 0; iteration < maxIterations; iteration++)
+        {
+            const D gamma = r | z;
+
+            if (fabs(gamma) < 1e-20) break;
+            
+            //FloatType alpha = gamma / SparseMatrix<FloatType>::quadratic(A, p);
+            const D alphaDenom = MathVector<D>::dot(p, eigenMultiply(p));
+            
+            cout << "alphaDenom: " << alphaDenom << endl;
+
+            const D alpha = gamma / alphaDenom;
+
+            x = x + alpha * p;
+            r = r - alpha * eigenMultiply(p);
+
+            if (*std::max_element(r.begin(), r.end()) <= m_tolerance && *std::min_element(r.begin(), r.end()) >= -m_tolerance)	break;
+
+            z = dInverse * r;
+            const D beta = (z | r) / gamma;
+            p = z + beta * p;
+        }
+        return x;
+    }
+
 	MathVector<D> solveLeastSquaresQR(const Eigen::SparseMatrix<D> &A, const MathVector<D> &b)
 	{
 		Console::log("Solving least-squares problem using QR");
