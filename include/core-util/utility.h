@@ -509,6 +509,32 @@ namespace util
 		else                { return end; }
 	}
 
+	//! uses the <, >, = , and - operator of the key type, returns two iterators surrounding
+	template<typename Iterator, typename T>
+	inline std::pair<Iterator, Iterator> binarySearchClosestElement(Iterator begin, Iterator end, const T& key) {
+		Iterator invalid = end;
+
+		while (begin + 1 < end) {
+			Iterator middle = begin + (std::distance(begin, end) / 2);
+
+			//std::cout << "range (" << *begin << ", " << *middle << ", ";
+			//if (end != invalid) std::cout << *end << ")" << std::endl;
+			//else std::cout << "END)" << std::endl;
+
+			if (*middle == key) {   // in that case we exactly found the value
+				return std::make_pair(middle, middle);
+			}
+			else if (*middle > key) {
+				end = middle;
+			}
+			else {
+				begin = middle + 1;
+			}
+		}
+
+		return std::make_pair(begin, end); // still possible that begin == key or end == key
+	}
+
 
 
 	template<class Matrix, class FloatType>
