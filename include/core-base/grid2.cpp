@@ -130,9 +130,9 @@ namespace ml
 			}
 	}
 
-	template <class T> std::pair<size_t, size_t> Grid2<T>::maxIndex() const
+	template <class T> vec2ul Grid2<T>::getMaxIndex() const
 	{
-		std::pair<size_t, size_t> maxIndex(0, 0);
+		vec2ul maxIndex(0, 0);
 		const T *maxValue = m_data;
 		for (size_t y = 0; y < m_dimY; y++)
 			for (size_t x = 0; x < m_dimX; x++)
@@ -140,22 +140,22 @@ namespace ml
 				const T *curValue = &m_data[y * m_dimX + x];
 				if (*curValue > *maxValue)
 				{
-					maxIndex = std::make_pair(rowIndex, colIndex);
+					maxIndex = vec2ul(x, y);
 					maxValue = curValue;
 				}
 			}
 		return maxIndex;
 	}
 
-	template <class T> const T& Grid2<T>::maxValue() const
+	template <class T> const T& Grid2<T>::getMaxValue() const
 	{
-		std::pair<size_t, size_t> index = maxIndex();
-		return m_data[index.first * m_dimY + index.second];
+		vec2ul index = getMaxIndex();
+		return m_data[index.y * m_dimX + index.x];
 	}
 
-	template <class T> std::pair<size_t, size_t> Grid2<T>::minIndex() const
+	template <class T> vec2ul Grid2<T>::getMinIndex() const
 	{
-		std::pair<size_t, size_t> minIndex(0, 0);
+		vec2ul minIndex(0, 0);
 		const T *minValue = &m_data[0];
 		for (size_t y = 0; y < m_dimY; y++)
 			for (size_t x = 0; x < m_dimX; x++)
@@ -163,17 +163,17 @@ namespace ml
 				const T *curValue = &m_data[y * m_dimX + x];
 				if (*curValue < *minValue)
 				{
-					minIndex = std::make_pair(rowIndex, colIndex);
+					minIndex = vec2ul(x, y);
 					minValue = curValue;
 				}
 			}
 		return minIndex;
 	}
 
-	template <class T> const T& Grid2<T>::minValue() const
+	template <class T> const T& Grid2<T>::getMinValue() const
 	{
-		std::pair<size_t, size_t> index = minIndex();
-		return m_data[index.first * m_dimY + index.second];
+		vec2ul index = getMinIndex();
+		return m_data[y * m_dimX + x];
 	}
 
 }  // namespace ml

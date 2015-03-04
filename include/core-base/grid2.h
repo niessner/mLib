@@ -151,9 +151,12 @@ namespace ml
     Grid2();
     Grid2(size_t dimX, size_t dimY);
     Grid2(size_t dimX, size_t dimY, const T &value);
+	Grid2(const vec2ul& dim) : Grid3(dim.x, dim.y) {}
+	Grid2(const vec2ul& dim, const T& value) : Grid2(dim.x, dim.y, value) {}
+
     Grid2(const Grid2<T> &G);
     Grid2(Grid2<T> &&G);
-    Grid2(size_t dimX, size_t dimY, const std::function< T(size_t row, size_t col) > &fillFunction);
+    Grid2(size_t dimX, size_t dimY, const std::function< T(size_t x, size_t y) > &fillFunction);
 
     ~Grid2();
 
@@ -166,7 +169,8 @@ namespace ml
 
     void allocate(size_t dimX, size_t dimY);
     void allocate(size_t dimX, size_t dimY, const T &value);
-    void fill(const std::function< T(size_t x, size_t y) > &fillFunction);
+	void allocate(const vec2ul& dim) { allocate(dim.x, dim.y); }
+	void allocate(const vec2ul& dim, const T& value) { allocate(dim.x, dim.y, value); }
 
     inline Grid2<T>& operator += (const Grid2<T> &value)
     {
@@ -222,22 +226,14 @@ namespace ml
       return m_dimY;
     }
 
-    inline size_t size() const
-    {
-      return m_dimX * m_dimY;
+    inline vec2ul getDimensions() const {
+    	return vec2ul(m_dimX, m_dimY);
     }
 
-    //
-    // TODO: make this vec2ul
-    //
-    inline std::pair<size_t, size_t> dimensions() const
-    {
-      return std::make_pair(m_dimX, m_dimY);
-    }
-
-    //inline vec2ul getDimensions() const {
-    //	return vec2ul(m_rows, m_cols);
-    //}
+	inline size_t getNumEntries() const
+	{
+		return m_dimX * m_dimY;
+	}
 
     inline bool isSquare() const
     {
@@ -297,18 +293,18 @@ namespace ml
       return result;
     }
 
-    //
-    // TODO: replace with vec2ul
-    //
-    std::pair<size_t, size_t> maxIndex() const;
-    const T& maxValue() const;
-    std::pair<size_t, size_t> minIndex() const;
-    const T& minValue() const;
+  
+    vec2ul getMaxIndex() const;
+    const T& getMaxValue() const;
+    vec2ul getMinIndex() const;
+    const T& getMinValue() const;
 
     //
     // Modifiers
     //
     void setValues(const T &value);
+
+	void fill(const std::function< T(size_t x, size_t y) > &fillFunction);
 
     std::vector<T> toStdVector() const
     {
@@ -356,6 +352,28 @@ namespace ml
   template <class T> inline bool operator != (const Grid2<T> &a, const Grid2<T> &b)
   {
     return !(a == b);
+  }
+
+
+  template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+  inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Grid2<T>& g) {
+	  s << (UINT64)g.getDimX() << (UINT64)g.getDimY();
+	  s.reserve(sizeof(T) * g.getDimX() * g.getDimY());
+	  for (UINT64 y = 0; y < g.getDimY(); y++)
+		  for (UINT64 x = 0; x < g.getDimX(); x++)
+			  s << g(x, y);
+	  return s;
+  }
+
+  template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
+  inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Grid2<T>& g) {
+	  UINT64 dimX, dimY;
+	  s >> dimX >> dimY;
+	  g.allocate(dimX, dimY);
+	  for (UINT64 y = 0; y < g.getDimY(); y++)
+		  for (UINT64 x = 0; x < g.getDimX(); x++)
+			  s << g(x, y);
+	  return s;
   }
 
   typedef Grid2<float> Grid2f;

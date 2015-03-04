@@ -10,8 +10,6 @@
 //
 #include "core-base/common.h"
 #include "core-base/console.h"
-#include "core-base/grid2.h"
-#include "core-base/grid3.h"
 
 //
 // core-util headers (these are required by matrices)
@@ -47,6 +45,12 @@
 #include "core-math/kMeansClustering.h"
 #include "core-math/sampling.h"
 #include "core-math/mathUtil.h"
+
+//
+// core-base headers
+//
+#include "core-base/grid2.h"
+#include "core-base/grid3.h"
 
 //
 // core-util headers
