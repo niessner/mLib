@@ -230,7 +230,7 @@ namespace ml
     	return vec2ul(m_dimX, m_dimY);
     }
 
-	inline size_t getNumEntries() const
+	inline size_t getNumElements() const
 	{
 		return m_dimX * m_dimY;
 	}

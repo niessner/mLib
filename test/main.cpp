@@ -39,21 +39,24 @@ void App::go()
 	ml::Console::log("All tests completed");
 	std::cin.get();
 }
- 
+
 int main()
 {
+	vec3f v(1.0f, 2.0f, 3.0f);
+	vec3ul c = v;
+
 	// Enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
 #endif
 
-  ColorImageRGB image(2,2);
-  image(0, 0) = (vec3f)RGBColor::Red.getVec3()/255.0f;
-  image(0, 1) = (vec3f)RGBColor::Blue.getVec3()/255.0f;
-  image(1, 0) = (vec3f)RGBColor::Green.getVec3()/255.0f;
-  image(1, 1) = (vec3f)RGBColor::Yellow.getVec3()/255.0f;
-  FreeImageWrapper::saveImage("bla.png", *(Image*)&image, true);
+	ColorImageRGB image(2, 2);
+	image(0, 0) = (vec3f)RGBColor::Red.getVec3() / 255.0f;
+	image(0, 1) = (vec3f)RGBColor::Blue.getVec3() / 255.0f;
+	image(1, 0) = (vec3f)RGBColor::Green.getVec3() / 255.0f;
+	image(1, 1) = (vec3f)RGBColor::Yellow.getVec3() / 255.0f;
+	FreeImageWrapper::saveImage("bla.png", *(Image*)&image, true);
 
 	//{
 	// REMOVE ISOLATED VERTICES TEST
@@ -191,14 +194,14 @@ int main()
 	int* data = new int[numElements]; //1024 byte of data
 	const size_t numBuckets = 1024*4 + 1;
 	//const size_t numBuckets = 2;
-	
+
 	ml::BinaryDataStreamFile streamOut("test.out", true);
 	for (size_t i = 0; i < numElements; i++) {
-		data[i] = (int)i;
+	data[i] = (int)i;
 	}
 	//const size_t numBuckets = 10;
 	for (size_t i = 0; i < numBuckets; i++) {
-		streamOut.writeData((const BYTE*)&data[0], sizeof(int)*numElements);
+	streamOut.writeData((const BYTE*)&data[0], sizeof(int)*numElements);
 	}
 	streamOut.flush();
 	streamOut.closeStream();
@@ -208,17 +211,17 @@ int main()
 
 	ml::BinaryDataStreamFile streamIn("test.out", false);
 	for (size_t i = 0; i < numBuckets; i++) {
-		streamIn.readData((BYTE*)&data[0], sizeof(int)*numElements);
-		for (SIZE_T j = 0; j < numElements; j++) {
-			if (data[j] != j) std::cout << "i " << i << " error match while read: " << data[50] << std::endl;
-		}
+	streamIn.readData((BYTE*)&data[0], sizeof(int)*numElements);
+	for (SIZE_T j = 0; j < numElements; j++) {
+	if (data[j] != j) std::cout << "i " << i << " error match while read: " << data[50] << std::endl;
+	}
 	}
 	std::cout << "read done" << std::endl;
 	SAFE_DELETE_ARRAY(data);
 	//ml::SparseGrid3D<float> signedDistanceField, in;
 	//for (unsigned int i = 0; i < 5; i++) {
 	//	ml::vec3i c(i, 2*i, 3*i);
-	//	signedDistanceField(c) = (float)i+5.0f; 
+	//	signedDistanceField(c) = (float)i+5.0f;
 	//}
 	//s << signedDistanceField;
 	//s >> in;

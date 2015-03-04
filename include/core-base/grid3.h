@@ -35,14 +35,14 @@ namespace ml
 		inline Grid3<T>& operator += (const Grid3<T> &right)
 		{
 			MLIB_ASSERT_STR(m_dimX == right.m_dimX && m_dimY == right.m_dimY && m_dimZ == right.m_dimZ, "grid dimensions must be equal");
-			for (size_t i = 0; i < getNumEntries(); i++) {
+			for (size_t i = 0; i < getNumElements(); i++) {
 				m_data[i] += right.m_data[i];
 			}
 			return *this;
 		}
 		inline Grid3<T>& operator *= (T right)
 		{
-			for (size_t i = 0; i < getNumEntries(); i++) {
+			for (size_t i = 0; i < getNumElements(); i++) {
 				m_data[i] *= right.m_data[i];
 			}
 			return *this;
@@ -51,7 +51,7 @@ namespace ml
 		inline Grid3<T> operator * (T x)
 		{
 			Grid3<T> result(m_dimX, m_dimY, m_dimZ);
-			for (size_t i = 0; i < getNumEntries(); i++) {
+			for (size_t i = 0; i < getNumElements(); i++) {
 				result.m_data = m_data * x;
 			}
 			return result;
@@ -91,7 +91,7 @@ namespace ml
 			return vec3ul(getDimX(), getDimY(), getDimZ());
 		}
 
-		size_t getNumEntries() const {
+		size_t getNumElements() const {
 			return m_dimX * m_dimY * m_dimZ;
 		}
 
@@ -144,7 +144,7 @@ namespace ml
 	template <class T> inline bool operator == (const Grid3<T> &a, const Grid3<T> &b)
 	{
 		if (a.getDimX() != b.getDimX() || a.getDimY() != b.getDimY() || a.getDimZ() != b.getDimZ()) return false;
-		const size_t totalEntries = a.getNumEntries();
+		const size_t totalEntries = a.getNumElements();
 		for (size_t i = 0; i < totalEntries; i++) {
 			if (a.ptr()[i] != b.ptr()[i])	return false;
 		}

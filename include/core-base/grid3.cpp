@@ -36,7 +36,7 @@ namespace ml
 		m_dimY = G.m_dimY;
 		m_dimZ = G.m_dimZ;
 
-		const size_t totalEntries = getNumEntries();
+		const size_t totalEntries = getNumElements();
 		m_data = new T[totalEntries];
 		for (size_t i = 0; i < totalEntries; i++) {
 			m_data[i] = G.m_data[i];
@@ -91,7 +91,7 @@ namespace ml
 		m_dimY = G.m_dimY;
 		m_dimZ = G.m_dimZ;
 
-		const size_t totalEntries = getNumEntries();
+		const size_t totalEntries = getNumElements();
 		m_data = new T[totalEntries];
 		for (size_t i = 0; i < totalEntries; i++) {
 			m_data[i] = G.m_data[i];
@@ -136,7 +136,7 @@ namespace ml
 
 	template <class T> void Grid3<T>::setValues(const T &value)
 	{
-		const size_t totalEntries = getNumEntries();
+		const size_t totalEntries = getNumElements();
 		for (size_t i = 0; i < totalEntries; i++) m_data[i] = value;
 	}
 
