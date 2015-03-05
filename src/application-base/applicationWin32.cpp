@@ -50,7 +50,6 @@ void ml::ApplicationWin32::messageLoop()
 		}
 		else
 		{
-			std::cout << "loop" << Timer::getTime() <<  std::endl;
 			if (m_bResizeEvent) {
 				m_bResizeEvent = false;	//not 100% sure if that doesn't lead to a raise condition and may cause resize misses...
 				data().graphics.resize(data().window);
