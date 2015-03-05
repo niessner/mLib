@@ -15,6 +15,8 @@ namespace ml {
 
 			m_handle = nullptr;
 			ZeroMemory(&m_class, sizeof(m_class));
+
+			m_bResizeEvent = false;
 		}
 		~WindowWin32();
 
@@ -40,6 +42,8 @@ namespace ml {
 		ApplicationWin32&	m_parent;
 		WNDCLASS			m_class;
 		HWND				m_handle;
+
+		bool				m_bResizeEvent;
 	};
 
 }  // namespace ml

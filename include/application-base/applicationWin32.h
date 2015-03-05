@@ -85,6 +85,9 @@ public:
 		return m_initialized;
 	}
 
+	void setResizeEvent() {
+		m_bResizeEvent = true;
+	}
 private:
 	//
 	// m_data is just a view to encapsulate all externally-visible application
@@ -100,6 +103,8 @@ private:
 	HINSTANCE m_instance;
 
 	ApplicationCallback &m_callback;
+
+	bool m_bResizeEvent;
 };
 
 }  // namespace ml
