@@ -38,7 +38,6 @@
     <ClInclude Include="..\include\mLibD3D11.h">
       <Filter>mLibHeader</Filter>
     </ClInclude>
-    <ClInclude Include="appTest.h" />
     <ClInclude Include="..\include\application-base\applicationWin32.h">
       <Filter>mLibHeader</Filter>
     </ClInclude>
@@ -216,11 +215,12 @@
     <ClInclude Include="..\include\core-math\nr_templates.h">
       <Filter>mLibHeader\core-math</Filter>
     </ClInclude>
+    <ClInclude Include="vizzer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
     <ClCompile Include="winMain.cpp" />
-    <ClCompile Include="appTest.cpp" />
+    <ClCompile Include="vizzer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="console.txt" />

@@ -24,13 +24,13 @@ void Vizzer::render(ml::ApplicationData &app)
 
     ConstantBuffer constants;
     constants.worldViewProj = m_camera.cameraPerspective();
-    m_constants.update(app.graphics, constants);
+    m_constants.update(constants);
 
-    m_vsColor.bind(app.graphics);
-    m_psColor.bind(app.graphics);
-    m_constants.bindVertexShader(app.graphics, 0);
+    m_vsColor.bind();
+    m_psColor.bind();
+    m_constants.bindVertexShader(0);
 
-    m_mesh.render(app.graphics);
+    m_mesh.render();
 
     m_font.drawString(app.graphics, "FPS: " + ml::convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
 }
