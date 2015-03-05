@@ -332,10 +332,10 @@ namespace ml {
 		}
 
 		//! Access Operator (size_t)
-		//const T& operator()(size_t x, size_t y) const {
-		//	MLIB_ASSERT(x < m_width && y < m_height);
-		//	return m_data[y*m_width + x];
-		//}
+		const T& operator()(size_t x, size_t y) const {
+			MLIB_ASSERT(x < m_width && y < m_height);
+			return m_data[y*m_width + x];
+		}
 
 		//! Access Operator (int)
 		const T& operator()(int x, int y) const {
@@ -344,10 +344,10 @@ namespace ml {
 		}
 
         //! Access Operator (size_t)
-       // T& operator()(size_t x, size_t y) {
-       //     MLIB_ASSERT(x < m_width && y < m_height);
-       //     return m_data[y*m_width + x];
-       // }
+        T& operator()(size_t x, size_t y) {
+            MLIB_ASSERT(x < m_width && y < m_height);
+            return m_data[y*m_width + x];
+        }
 
 		//! Access Operator (double); x,y \in [0;1]
 		const T& operator()(double x, double y) const {
