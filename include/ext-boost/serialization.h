@@ -57,10 +57,29 @@ class InOutArchive {
 	boost::archive::binary_iarchive m_ia;
 };
 
+template<class T>
+void serializeToBoostFile(const std::string &filename, const T &object)
+{
+    std::ofstream file(filename, std::ios::binary | std::ios::out);
+    boost::archive::binary_oarchive archive(file);
+    archive << object;
+    file.close();
+}
+
+template<class T>
+void deserializeFromBoostFile(const std::string &filename, T &object)
+{
+    std::ifstream file(filename, std::ios::binary | std::ios::in);
+    boost::archive::binary_iarchive archive(file);
+    archive >> object;
+    file.close();
+}
+
 }  // namespace ml
 
 namespace boost {
 namespace serialization {
+
 
     /*template<class Archive, class T>
     void save(Archive & ar, const ml::vec2<T>& p, const unsigned int version)
