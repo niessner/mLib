@@ -370,6 +370,7 @@ namespace ml {
         TriMesh<FloatType> flatLoopSubdivision(float minEdgeLength) const;
         TriMesh<FloatType> flatLoopSubdivision(UINT iterations, float minEdgeLength) const;
 
+        TriMesh<FloatType> flatten() const;
 
 		const std::vector<Vertex<FloatType>>& getVertices() const { return m_Vertices; }
 		const std::vector<vec3ui>& getIndices() const { return m_Indices; }

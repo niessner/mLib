@@ -121,6 +121,25 @@ namespace ml {
         return result;
     }
 
+    template < class FloatType >
+    TriMesh<FloatType> TriMesh<FloatType>::flatten() const
+    {
+        TriMesh<FloatType> result;
+
+        int index = 0;
+        for (const vec3ui &t : m_Indices)
+        {
+            result.m_Vertices.push_back(m_Vertices[t[0]]);
+            result.m_Vertices.push_back(m_Vertices[t[1]]);
+            result.m_Vertices.push_back(m_Vertices[t[2]]);
+
+            result.m_Indices.push_back( vec3ui(index + 0, index + 1, index + 2) );
+            index += 3;
+        }
+        
+        return result;
+    }
+
     template<class FloatType>
     TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(float minEdgeLength) const
     {
