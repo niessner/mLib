@@ -182,6 +182,7 @@ namespace ml {
           for (unsigned int y = 0; y < height; y++) {
             BYTE* bitsRowStart = bits + (height - 1 - y)*pitch;
             for (unsigned int x = 0; x < width; x++) {
+              //TODO: a 32-bit float can't fit into a vec3uc
               vec3uc color;		convertToVEC3UC(color, image(x, y));
               bitsRowStart[x*numChannels + FI_RGBA_RED] = (unsigned char)color.x;
               bitsRowStart[x*numChannels + FI_RGBA_GREEN] = (unsigned char)color.y;

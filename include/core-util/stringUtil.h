@@ -74,6 +74,13 @@ namespace util
         return replace(str, find, "");
     }
 
+    inline std::string remove(const std::string& str, const std ::vector< std::string >& find) {
+        std::string result = str;
+        for (const auto &s : find)
+            result = replace(result, s, "");
+        return result;
+    }
+
 	inline std::string replace(const std::string& str, char find, char replace) {
 		return util::replace(str, std::string(1, find), std::string(1, replace));
 	}
