@@ -19,6 +19,24 @@ namespace ml {
 		update();
 	}
 
+    template <class FloatType>
+    Camera<FloatType>::Camera(const vec3<FloatType>& eye, const vec3<FloatType>& worldUp, const vec3<FloatType>& lookAt, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, bool unused) {
+        m_eye = eye;
+        m_worldUp = worldUp.getNormalized();
+        m_look = (lookAt - eye).getNormalized();
+        m_right = (m_look ^ m_worldUp).getNormalized();
+        m_up = (m_right ^ m_look).getNormalized();
+
+        m_fieldOfView = fieldOfView;
+        m_aspect = aspect;
+        m_zNear = zNear;
+        m_zFar = zFar;
+
+        m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);
+
+        update();
+    }
+
 	template <class FloatType>
 	Camera<FloatType>::Camera(const Matrix4x4<FloatType>& m, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, const bool flipRight) {
 		m_eye = vec3<FloatType>(m(0, 3), m(1, 3), m(2, 3));

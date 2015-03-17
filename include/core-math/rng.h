@@ -264,7 +264,15 @@ namespace ml {
         {
             return RNG::global.rand_int() % (max - min + 1) + min;
         }
-        inline double randomUniform(double min = 0.0, double max = 1.0)
+        inline double randomUniform()
+        {
+            return RNG::global.uniform(0.0, 1.0);
+        }
+        inline float randomUniform(float min, float max)
+        {
+            return (float)RNG::global.uniform(min, max);
+        }
+        inline double randomUniform(double min, double max)
         {
             return RNG::global.uniform(min, max);
         }

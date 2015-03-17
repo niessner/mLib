@@ -9,10 +9,19 @@ namespace ml {
     public:
         Camera() {}
         Camera(const std::string &s);
+
+        //
+        // TODO: this camera constructor is bad but is retained for legacy.  There is no way to cast a standard look-at matrix in this form -- it cannot capture pitch and will always be looking straight.
+        //
         Camera(const vec3<FloatType>& eye, const vec3<FloatType>& worldUp, const vec3<FloatType>& right, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar);
 
+        //
+        // this is one possible better camera constructor.
+        //
+        Camera(const vec3<FloatType>& eye, const vec3<FloatType>& worldUp, const vec3<FloatType>& lookAt, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, bool unused);
+
         //! Construct camera from extrinsics matrix m (columns are x, y, z vectors and origin of camera in that order).
-        //! If flipRight is set, flip x to correct for sensor horizontal flipping
+        //! If flipRight is set, flip the x coordinate
         Camera(const Matrix4x4<FloatType>& m, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar, const bool flipRight = false);
 
         virtual void updateAspectRatio(FloatType newAspect);
