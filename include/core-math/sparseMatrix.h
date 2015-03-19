@@ -76,9 +76,9 @@ public:
 
     explicit SparseMatrix(size_t squareDimension)
 	{
-		m_rows = squareDimension;
-		m_cols = squareDimension;
-		m_data.allocate(m_rows);
+		m_rows = (UINT)squareDimension;
+        m_cols = (UINT)squareDimension;
+        m_data.resize(m_rows);
 	}
 
     SparseMatrix(size_t rows, size_t cols)
@@ -144,6 +144,14 @@ public:
 	{
 		return m_data[row](col);
 	}
+    FloatType& operator()(size_t row, size_t col)
+    {
+        return m_data[row]((UINT)col);
+    }
+    FloatType operator()(size_t row, size_t col) const
+    {
+        return m_data[row](col);
+    }
     // insert is a more efficient version of operator() that assumes the entry
     // does not exist.
     void insert(UINT row, UINT col, FloatType val)

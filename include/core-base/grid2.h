@@ -216,6 +216,16 @@ namespace ml
 			return m_data[y * m_dimX + x];
 		}
 
+        inline T& operator() (const vec2i &coord)
+        {
+            return (*this)(coord.x, coord.y);
+        }
+
+        inline const T& operator() (const vec2i &coord) const
+        {
+            return (*this)(coord.x, coord.y);
+        }
+
 		inline size_t getDimX() const
 		{
 			return m_dimX;

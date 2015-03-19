@@ -31,7 +31,7 @@ public:
 		m_dataPtr = &m_data[0];
 	}
 
-    explicit DenseMatrix(UINT squareDimension)
+    explicit DenseMatrix(size_t squareDimension)
 	{
 		m_rows = squareDimension;
 		m_cols = squareDimension;
@@ -54,10 +54,10 @@ public:
 
 	}
 
-	DenseMatrix(UINT rows, UINT cols, T clearValue = (T)0.0)
+    DenseMatrix(size_t rows, size_t cols, T clearValue = (T)0.0)
 	{
-		m_rows = rows;
-		m_cols = cols;
+		m_rows = (UINT)rows;
+        m_cols = (UINT)cols;
         m_data.resize(m_rows * m_cols, clearValue);
 		m_dataPtr = &m_data[0];
 	}

@@ -125,7 +125,7 @@ private:
 		ComponentTimer timer("Solving using method: " + getMethodName(method));
 		
 		const auto bEigen = eigenutil::makeEigenVector(b);
-		Eigen::VectorXf x;
+        Eigen::Matrix<D, Eigen::Dynamic, 1> x;
 
 		if(method == LLT)
 		{
