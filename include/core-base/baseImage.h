@@ -674,19 +674,19 @@ namespace ml {
 					for (unsigned int x = 0; x < result.m_width; x++) {
 						unsigned int valid = 0;
 						T value = T();
-						if (isValidValue(2 * x + 0, 2 * y + 0))	{
+						if (isValid(2 * x + 0, 2 * y + 0))	{
 							valid++;
 							value += getPixel(2 * x + 0, 2 * y + 0);
 						}
-						if (isValidValue(2 * x + 1, 2 * y + 0))	{
+						if (isValid(2 * x + 1, 2 * y + 0))	{
 							valid++;
 							value += getPixel(2 * x + 1, 2 * y + 0);
 						}
-						if (isValidValue(2 * x + 0, 2 * y + 1))	{
+						if (isValid(2 * x + 0, 2 * y + 1))	{
 							valid++;
 							value += getPixel(2 * x + 0, 2 * y + 1);
 						}
-						if (isValidValue(2 * x + 1, 2 * y + 1))	{
+						if (isValid(2 * x + 1, 2 * y + 1))	{
 							valid++;
 							value += getPixel(2 * x + 1, 2 * y + 1);
 						}
@@ -728,24 +728,24 @@ namespace ml {
 					for (unsigned int x = 0; x < m_width; x++) {
 						unsigned int valid = 0;
 						T value = T();
-						if (isValidCoordinate(x - 1, y + 0) && isValidValue(x - 1, y + 0))	{
+						if (isValidCoordinate(x - 1, y + 0) && isValid(x - 1, y + 0))	{
 							valid++;
 							value += getPixel(x - 1, y + 0);
 						}
-						if (isValidCoordinate(x + 1, y + 0) && isValidValue(x + 1, y + 0))	{
+						if (isValidCoordinate(x + 1, y + 0) && isValid(x + 1, y + 0))	{
 							valid++;
 							value += getPixel(x + 1, y + 0);
 						}
-						if (isValidCoordinate(x + 0, y + 1) && isValidValue(x + 0, y + 1))	{
+						if (isValidCoordinate(x + 0, y + 1) && isValid(x + 0, y + 1))	{
 							valid++;
 							value += getPixel(x + 0, y + 1);
 						}
-						if (isValidCoordinate(x + 0, y - 1) && isValidValue(x + 0, y - 1))	{
+						if (isValidCoordinate(x + 0, y - 1) && isValid(x + 0, y - 1))	{
 							valid++;
 							value += getPixel(x + 0, y - 1);
 						}
 
-						if (isValidValue(x, y)) {
+						if (isValid(x, y)) {
 							other.setPixel(x, y, ((float)valid*getPixel(x, y) + value) / (2 * (float)valid));
 						}
 					}

@@ -360,6 +360,65 @@ template<> const vec4d vec4d::eY(0.0, 1.0, 0.0, 0.0);
 template<> const vec4d vec4d::eZ(0.0, 0.0, 1.0, 0.0);
 template<> const vec4d vec4d::eW(0.0, 0.0, 0.0, 1.0);
 
+namespace math {
+	template<class T>
+	inline vec4i round(const vec4<T>& f) {
+		return vec4i(round(f.x), round(f.y), round(f.z), round(f.w));
+	}
+	template<class T>
+	inline vec4i ceil(const vec4<T>& f) {
+		return vec4i(ceil(f.x), ceil(f.y), ceil(f.z), ceil(f.w));
+	}
+	template<class T>
+	inline vec4i floor(const vec4<T>& f) {
+		return vec4i(floor(f.x), floor(f.y), floor(f.z), floor(f.w));
+	}
+	template<class T>
+	inline vec4<T> abs(const vec4<T>& p) {
+		return vec4<T>(abs(p.x), abs(p.y), abs(p.z), abs(p.w));
+	}
+	template<class T>
+	inline vec4<T> max(const vec4<T>& p, T v) {
+		return vec4<T>(
+			std::max(p.x, v),
+			std::max(p.y, v),
+			std::max(p.z, v),
+			std::max(p.w, v));
+	}
+	template<class T>
+	inline vec4<T> max(const vec4<T>& p, const vec4<T>& v) {
+		return vec4<T>(
+			std::max(p.x, v.x),
+			std::max(p.y, v.y),
+			std::max(p.z, v.z),
+			std::max(p.w, v.w));
+	}
+	template<class T>
+	inline vec4<T> min(const vec4<T>& p, T v) {
+		return vec4<T>(
+			std::min(p.x, v),
+			std::min(p.y, v),
+			std::min(p.z, v),
+			std::min(p.w, v));
+	}
+	template<class T>
+	inline vec4<T> min(const vec4<T>& p, const vec4<T>& v) {
+		return vec4<T>(
+			std::min(p.x, v.x),
+			std::min(p.y, v.y),
+			std::min(p.z, v.z),
+			std::min(p.w, v.w));
+	}
+	template<class T>
+	inline vec4<T> clamp(const vec4<T>& p, T pMin, T pMax) {
+		return vec4<T>(
+			clamp(p.x, pMin, pMax),
+			clamp(p.y, pMin, pMax),
+			clamp(p.z, pMin, pMax),
+			clamp(p.w, pMin, pMax));
+	}
+}
+
 }  // namespace ml
 
 #endif  // CORE_MATH_POINT4D_H_

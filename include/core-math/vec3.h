@@ -388,6 +388,14 @@ namespace math {
 			std::min(p.y, v.y),
 			std::min(p.z, v.z));
 	}
+	template<class T>
+	inline vec3<T> clamp(const vec3<T>& p, T pMin, T pMax) {
+		return vec3<T>(
+			clamp(p.x, pMin, pMax),
+			clamp(p.y, pMin, pMax),
+			clamp(p.z, pMin, pMax));
+	}
+
 
 
     template<class T>
