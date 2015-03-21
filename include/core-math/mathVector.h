@@ -23,6 +23,8 @@ public:
 	MathVector(size_t size, const T& val) {
 		std::vector<T>::resize(size, val);
 	}
+    MathVector(const std::vector<T>& v) : std::vector<T>(v) {
+    }
 	MathVector(const MathVector& v) : std::vector<T>(v) {
 	}
 	MathVector(MathVector&& v) : std::vector<T>(v) {
@@ -111,7 +113,13 @@ public:
 		return res;
 	}
 
-
+    T squaredSum() const
+    {
+        T result = (T)0.0;
+        for (auto &x : (*this))
+            result += x * x;
+        return result;
+    }
 
 	//! dot product
 	T operator|(const MathVector& other) const {

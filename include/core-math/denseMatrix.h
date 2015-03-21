@@ -33,8 +33,8 @@ public:
 
     explicit DenseMatrix(size_t squareDimension)
 	{
-		m_rows = squareDimension;
-		m_cols = squareDimension;
+		m_rows = (UINT)squareDimension;
+        m_cols = (UINT)squareDimension;
 		m_data.resize(m_rows * m_cols);
 		m_dataPtr = &m_data[0];
 	}
@@ -257,6 +257,15 @@ public:
         T rcp = (T)1.0 / x;
         for (T &e : m_data)
             e *= rcp;
+    }
+
+    T* begin()
+    {
+        return m_dataPtr;
+    }
+    T* end()
+    {
+        return m_dataPtr + (m_rows * m_cols);
     }
 
 private:
