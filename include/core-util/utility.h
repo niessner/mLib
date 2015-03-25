@@ -253,6 +253,7 @@ namespace util
 	//! returns the file size in bytes
 	UINT64 getFileSize(const std::string& filename);
 	void copyFile(const std::string& sourceFile, const std::string& destFile);
+	void renameFile(const std::string& oldFilename, const std::string& newFilename);
 
 	//
 	// There are OS-specific functions

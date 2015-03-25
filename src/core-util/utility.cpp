@@ -177,6 +177,11 @@ namespace util
 		fclose(file);
 	}
 
+	void renameFile(const std::string& oldFilename, const std::string& newFilename) 
+	{
+		rename(oldFilename.c_str(), newFilename.c_str());
+	}
+
 #ifdef WIN32
 	void copyStringToClipboard(const std::string &S)
 	{
