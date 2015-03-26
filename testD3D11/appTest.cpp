@@ -352,7 +352,7 @@ void AppTest::init(ml::ApplicationData &app)
     //vec3f eye(1.0f, 2.0f, 3.0f);
     ml::vec3f eye(-0.5f, -0.5f, 1.5f);
     ml::vec3f worldUp(0.0f, 0.0f, 1.0f);
-    m_camera = ml::Cameraf(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 1000.0f);
+    m_camera = ml::Cameraf(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 10.0f);
 
     m_font.init(app.graphics, "Calibri");
 
@@ -383,10 +383,16 @@ void AppTest::render(ml::ApplicationData &app)
 	m_canvas.render();
 
     ConstantBuffer constants;
-	mat4f proj = Cameraf::visionToGraphicsProj(app.window.getWidth(), app.window.getHeight(), 1108.51f, 1108.51f, 0.01f, 50.0f);
+	mat4f proj = Cameraf::visionToGraphicsProj(app.window.getWidth(), app.window.getHeight(), 1108.51f, 1108.51f, 0.1f, 10.0f);
+	//for (unsigned int i = 0; i < 100; i++) {
+	//	vec3f p = vec3f(0.0f, 0.0f, 10.0f - (float)i*0.1f);
+	//	std::cout << p << "\t\t" << proj * p << std::endl;
+	//	std::cout << p << "\t\t" << m_camera.getPerspective() * p << std::endl;
+ //	}
 	constants.worldViewProj = proj * m_camera.getCamera();
     m_constants.update(constants);
 
+	//getchar();
     //m_vsColor.bind();
     //m_psColor.bind();
 	app.graphics.castD3D11().getShaderManager().bindShaders("defaultBasic");
@@ -478,11 +484,11 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 
 				float depth0 = 0.5f;
 				float depth1 = 1.0f;
-				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.getWidth()-1-x)*depth0, (float)y*depth0, depth0, 1.0f);
-				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.getWidth()-1-x)*depth1, (float)y*depth1, depth1, 1.0f);
+				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)x*depth0, (float)(app.window.getHeight() - 1 - y)*depth0, depth0, 1.0f);
+				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)x*depth1, (float)(app.window.getHeight() - 1 - y)*depth1, depth1, 1.0f);
 
 				vec3f eye = m_camera.getEye();
-				Rayf r(m_camera.getEye(), (p0.getVec3() - p1.getVec3()).getNormalized());
+				Rayf r(m_camera.getEye(), (p1.getVec3() - p0.getVec3()).getNormalized());
 
 				//mat4f tmp = mat4f::rotationZ(45.0f);
 				//r = tmp * r;

@@ -162,10 +162,11 @@ namespace ml {
 		FloatType width = 1.0f / tanf(math::degreesToRadians(fieldOfView) * 0.5f);
 		FloatType height = aspectRatio / tanf(math::degreesToRadians(fieldOfView) * 0.5f);
 
-		return Matrix4x4<FloatType>(width, 0.0f, 0.0f, 0.0f,
+		return Matrix4x4<FloatType>(
+			width, 0.0f, 0.0f, 0.0f,
 			0.0f, height, 0.0f, 0.0f,
-			0.0f, 0.0f, zFar / (zNear - zFar), zFar * zNear / (zNear - zFar),
-			0.0f, 0.0f, -1.0f, 0.0f);
+			0.0f, 0.0f, zFar / (zFar - zNear), zFar * zNear / (zNear - zFar),
+			0.0f, 0.0f, 1.0f, 0.0f);
 	}
 
 	template <class FloatType>
@@ -176,8 +177,7 @@ namespace ml {
 
 		return Matrix4x4<FloatType>(r.x, r.y, r.z, -vec3<FloatType>::dot(r, eye),
 			u.x, u.y, u.z, -vec3<FloatType>::dot(u, eye),
-			//l.x, l.y, l.z, -vec3<FloatType>::dot(l, eye),
-			-l.x, -l.y, -l.z, vec3<FloatType>::dot(l, eye),  // Negation of look to create right-handed view matrix
+			l.x, l.y, l.z, -vec3<FloatType>::dot(l, eye),
 			0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
