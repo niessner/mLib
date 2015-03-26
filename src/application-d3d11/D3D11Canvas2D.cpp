@@ -36,7 +36,7 @@ D3D11Canvas2D::Intersection D3D11Canvas2D::intersectionFirst(const vec2i &mouseC
 {
     D3D11Canvas2D::Intersection result;
     //
-    // TODO: compute the closest interesection, instead of the first
+    // TODO: compute the closest intersection, instead of the first
     //
     for (auto &e : m_namedElements)
     {

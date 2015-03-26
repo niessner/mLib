@@ -38,29 +38,52 @@ public:
 		//m_swapChainDesc.BufferDesc.Width = m_width;
 		//m_swapChainDesc.BufferDesc.Height = m_height;
 
+		m_bExternallyCreated = false;
     }
 
     ~D3D11GraphicsDevice()
     {
-        SAFE_RELEASE(m_rasterState);
-        SAFE_RELEASE(m_context);
-        SAFE_RELEASE(m_renderTargetView);
-        SAFE_RELEASE(m_swapChain);
-        SAFE_RELEASE(m_device);
-        SAFE_RELEASE(m_depthBuffer);
-        SAFE_RELEASE(m_depthState);
-        SAFE_RELEASE(m_depthStencilView);
-        SAFE_RELEASE(m_captureBuffer);
-        SAFE_RELEASE(m_samplerState);
+		if (!m_bExternallyCreated) {
+			SAFE_RELEASE(m_rasterState);
+			SAFE_RELEASE(m_context);
+			SAFE_RELEASE(m_renderTargetView);
+			SAFE_RELEASE(m_swapChain);
+			SAFE_RELEASE(m_device);
+			SAFE_RELEASE(m_depthBuffer);
+			SAFE_RELEASE(m_depthState);
+			SAFE_RELEASE(m_depthStencilView);
+			SAFE_RELEASE(m_captureBuffer);
+			SAFE_RELEASE(m_samplerState);
 
-        if (m_debug)
-        {
-            //m_debug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY);
-        }
-        SAFE_RELEASE(m_debug);
+			if (m_debug)
+			{
+				//m_debug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY);
+			}
+			SAFE_RELEASE(m_debug);
+		}
     }
+	
+	
+	void init(ID3D11Device* device, ID3D11DeviceContext* context, IDXGISwapChain* swapChain, ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv) {
+		m_swapChain = swapChain;
+		swapChain->GetDesc(&m_swapChainDesc);
+		m_device = device;
+		m_context = context;
+		
+		m_renderTargetView = rtv;
+		m_depthStencilView = dsv;
+
+		m_shaderManager.init(*this);
+		registerDefaultShaders();
+	
+		m_width = m_swapChainDesc.BufferDesc.Width;
+		m_height = m_swapChainDesc.BufferDesc.Height;
+
+		m_bExternallyCreated = true;
+	} 
 
     void init(const WindowWin32 &window);
+
 	void resize(const WindowWin32 &window);
     void renderBeginFrame();
     void renderEndFrame();
@@ -69,7 +92,9 @@ public:
     void setCullMode(D3D11_CULL_MODE mode);
     void toggleCullMode();
     void toggleWireframe();
-    void clear(const ml::vec4f &clearColor);
+
+	//! clears the back buffer (color and depth)
+	void clear(const ml::vec4f &clearColor = vec4f(0, 0, 0, 0), float clearDepth = 1.0f);
     void bindRenderDepth();
 
     D3D11ShaderManager& getShaderManager()
@@ -136,7 +161,7 @@ private:
 
 	D3D_FEATURE_LEVEL m_featureLevel;
 	
-
+	bool m_bExternallyCreated; 
 protected:
 	void captureBackBufferInternal(ColorImageR8G8B8A8 &result);
 };

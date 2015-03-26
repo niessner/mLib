@@ -352,7 +352,7 @@ void AppTest::init(ml::ApplicationData &app)
     //vec3f eye(1.0f, 2.0f, 3.0f);
     ml::vec3f eye(-0.5f, -0.5f, 1.5f);
     ml::vec3f worldUp(0.0f, 0.0f, 1.0f);
-    m_camera = ml::Cameraf(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
+    m_camera = ml::Cameraf(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 1000.0f);
 
     m_font.init(app.graphics, "Calibri");
 
@@ -382,13 +382,14 @@ void AppTest::render(ml::ApplicationData &app)
 
 	m_canvas.render();
 
-    mat4f model = mat4f::translation(0, 2, 0);
     ConstantBuffer constants;
-    constants.worldViewProj = m_camera.cameraPerspective() * model;
+	mat4f proj = Cameraf::visionToGraphicsProj(app.window.getWidth(), app.window.getHeight(), 1108.51f, 1108.51f, 0.01f, 50.0f);
+	constants.worldViewProj = proj * m_camera.getCamera();
     m_constants.update(constants);
 
-    m_vsColor.bind();
-    m_psColor.bind();
+    //m_vsColor.bind();
+    //m_psColor.bind();
+	app.graphics.castD3D11().getShaderManager().bindShaders("defaultBasic");
     m_constants.bindVertexShader(0);
 
     m_mesh.render();
@@ -404,7 +405,7 @@ void AppTest::render(ml::ApplicationData &app)
 
 void AppTest::resize(ml::ApplicationData &app)
 {
-    m_camera.updateAspectRatio((float)app.window.width() / app.window.height());
+    m_camera.updateAspectRatio((float)app.window.getWidth() / app.window.getHeight());
 	
 }
 
@@ -431,22 +432,25 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
     if(key == KEY_RIGHT) m_camera.lookRight(-theta);
 
 	if(key == 'R') {
-		float fovX = m_camera.getFoV();
-		float fovY = fovX/m_camera.getAspect();
-		float focalLengthX = 0.5f * (float)app.window.width() / tan(0.5f * math::degreesToRadians(fovX));
-		float focalLengthY = 0.5f * (float)app.window.height() / tan(0.5f * math::degreesToRadians(fovY));
-		mat4f intrinsics = 
-			ml::mat4f(
-			focalLengthX, 0.0f, (float)app.window.width()/2.f, 0.0f,
-			0.0f, focalLengthY, (float)app.window.height()/2.f, 0.0f,
-			0.0f, 0.0f, 1.0f, 0.0f,
-			0.0f, 0.0f, 0.0f, 1.0f);
+		//float fovX = m_camera.getFoV();
+		//float fovY = fovX/m_camera.getAspect();
+		//float focalLengthX = 0.5f * (float)app.window.width() / tan(0.5f * math::degreesToRadians(fovX));
+		//float focalLengthY = 0.5f * (float)app.window.height() / tan(0.5f * math::degreesToRadians(fovY));
+		//mat4f intrinsics = 
+		//	ml::mat4f(
+		//	focalLengthX, 0.0f, (float)app.window.width()/2.f, 0.0f,
+		//	0.0f, focalLengthY, (float)app.window.height()/2.f, 0.0f,
+		//	0.0f, 0.0f, 1.0f, 0.0f,
+		//	0.0f, 0.0f, 0.0f, 1.0f);
+		//std::cout << intrinsics << std::endl;
+		mat4f intrinsics = Cameraf::graphicsToVisionProj(m_camera.getPerspective(), app.window.getWidth(), app.window.getHeight());
+		//std::cout << intrinsics << std::endl;
 		mat4f intrinsicsInverse = intrinsics.getInverse();
 
-		ml::mat4f projToCam = m_camera.perspective().getInverse();
-		ml::mat4f camToWorld = m_camera.camera().getInverse();
+		ml::mat4f projToCam = m_camera.getPerspective().getInverse();
+		ml::mat4f camToWorld = m_camera.getCamera().getInverse();
 		ml::mat4f trans =  camToWorld * projToCam;
-		ml::ColorImageRGB image(app.window.height(), app.window.width());
+		ml::ColorImageRGB image(app.window.getWidth(), app.window.getHeight());
 
 		const std::string testFilename = "scans/gates381.ply";
 		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
@@ -467,21 +471,21 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		ml::Timer c;
 		c.start();
 #pragma omp parallel for
-		for (int y_ = 0; y_ < (int)app.window.height(); y_++) {
+		for (int y_ = 0; y_ < (int)app.window.getHeight(); y_++) {
 			unsigned int y = (unsigned int)y_;
-			for (unsigned int x = 0; x < app.window.width(); x++) {
+			for (unsigned int x = 0; x < app.window.getWidth(); x++) {
 				//std::cout << " tyring ray " << i << " " << j << std::endl;
 
 				float depth0 = 0.5f;
 				float depth1 = 1.0f;
-				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-x)*depth0, (float)y*depth0, depth0, 1.0f);
-				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.width()-1-x)*depth1, (float)y*depth1, depth1, 1.0f);
+				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.getWidth()-1-x)*depth0, (float)y*depth0, depth0, 1.0f);
+				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)(app.window.getWidth()-1-x)*depth1, (float)y*depth1, depth1, 1.0f);
 
 				vec3f eye = m_camera.getEye();
 				Rayf r(m_camera.getEye(), (p0.getVec3() - p1.getVec3()).getNormalized());
 
-				mat4f tmp = mat4f::rotationZ(45.0f);
-				r = tmp * r;
+				//mat4f tmp = mat4f::rotationZ(45.0f);
+				//r = tmp * r;
 
 				//ml::vec4f p((float)j, (float)i, 0.5f, 1.0f);
 				//p.x /= app.window.width();
@@ -512,7 +516,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		}
 		double elapsed = c.getElapsedTimeMS();
 		std::cout << "time trace " << elapsed << std::endl;
-		unsigned int raysPerSec = (unsigned int)((double)(app.window.height()*app.window.width())/(elapsed/1000.0));
+		unsigned int raysPerSec = (unsigned int)((double)(app.window.getHeight()*app.window.getWidth())/(elapsed/1000.0));
 		std::cout << "million rays/s " << (float)raysPerSec/1000000.0 << std::endl;
 
 		ml::FreeImageWrapper::saveImage("test.jpg", image);

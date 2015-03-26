@@ -5,10 +5,10 @@ namespace ml
 void D3D11GraphicsDevice::init(const WindowWin32 &window)
 {
 
-	m_width = window.width();
-	m_height = window.height();
+	m_width = window.getWidth();
+	m_height = window.getHeight();
 
-	m_swapChainDesc.OutputWindow = window.handle();
+	m_swapChainDesc.OutputWindow = window.getHandle();
 	m_swapChainDesc.BufferDesc.Width = m_width;
 	m_swapChainDesc.BufferDesc.Height = m_height;
 
@@ -160,12 +160,15 @@ void D3D11GraphicsDevice::registerDefaultShaders()
     const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 
     m_shaderManager.registerShader(mLibShaderDir + "defaultBasicTexture.hlsl", "defaultBasicTexture");
+	m_shaderManager.registerShader(mLibShaderDir + "defaultBasic.hlsl", "defaultBasic");
 }
 
 void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 {
-	m_width = window.width();
-	m_height = window.height();
+	m_width = window.getWidth();
+	m_height = window.getHeight();
+
+	if (m_width == 0 || m_height == 0) return;	//when its minimized don't do anything (it'll get focused eventually)
 
 	SAFE_RELEASE(m_depthBuffer);
 	SAFE_RELEASE(m_depthStencilView);
@@ -180,7 +183,7 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 	//if (bFullScreen)
 	//	Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	m_swapChainDesc.OutputWindow = window.handle();
+	m_swapChainDesc.OutputWindow = window.getHandle();
 	m_swapChainDesc.BufferDesc.Width = m_width;
 	m_swapChainDesc.BufferDesc.Height = m_height;
 	HRESULT hr = m_swapChain->ResizeBuffers(m_swapChainDesc.BufferCount, m_width, m_height, m_swapChainDesc.BufferDesc.Format, flags);
@@ -222,10 +225,10 @@ void D3D11GraphicsDevice::bindRenderDepth()
     m_context->RSSetViewports(1, &viewport);
 }
 
-void D3D11GraphicsDevice::clear(const ml::vec4f &clearColor)
+void D3D11GraphicsDevice::clear(const ml::vec4f &clearColor, float clearDepth)
 {
     m_context->ClearRenderTargetView(m_renderTargetView, clearColor.array);
-    m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, clearDepth, 0);
 }
 
 void D3D11GraphicsDevice::renderEndFrame()
@@ -288,7 +291,7 @@ void D3D11GraphicsDevice::captureBackBufferInternal(ColorImageR8G8B8A8 &result)
 
     m_context->CopyResource(m_captureBuffer, frameBuffer);
 
-    result.allocate(desc.Height, desc.Width);
+    result.allocate(desc.Width, desc.Height);
 
     D3D11_MAPPED_SUBRESOURCE resource;
     UINT subresource = D3D11CalcSubresource(0, 0, 0);

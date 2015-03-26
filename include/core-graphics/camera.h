@@ -36,7 +36,7 @@ namespace ml {
         Ray<FloatType> getScreenRay(FloatType screenX, FloatType screenY) const;
         vec3<FloatType> getScreenRayDirection(FloatType screenX, FloatType screenY) const;
 
-        Matrix4x4<FloatType> camera() const {
+        Matrix4x4<FloatType> getCamera() const {
             return m_camera;
         }
 
@@ -44,11 +44,11 @@ namespace ml {
             m_camera = c;
         }
 
-        Matrix4x4<FloatType> perspective() const {
+        Matrix4x4<FloatType> getPerspective() const {
             return m_perspective;
         }
 
-        Matrix4x4<FloatType> cameraPerspective() const {
+        Matrix4x4<FloatType> getCameraPerspective() const {
             return m_cameraPerspective;
         }
 
@@ -79,10 +79,34 @@ namespace ml {
         std::string toString() const;
 
         void applyTransform(const Matrix4x4<FloatType>& transform);
+
+		static Matrix4x4<FloatType> visionToGraphicsProj(unsigned int width, unsigned int height, FloatType fx, FloatType fy, FloatType zNear, FloatType zFar) 
+		{
+			FloatType fov = (FloatType)2.0 * atan((FloatType)width / ((FloatType)2 * fx));
+			FloatType aspect = (FloatType)width / (FloatType)height;
+			return perspectiveFov(math::radiansToDegrees(fov), aspect, zNear, zFar);
+		}
+
+		static Matrix4x4<FloatType> graphicsToVisionProj(const Matrix4x4<FloatType>& m, unsigned int width, unsigned int height)
+		{
+			FloatType fov = (FloatType)2.0 * atan((FloatType)1 / m(0,0));
+			FloatType aspect = (FloatType)width / height;
+			FloatType t = tan((FloatType)0.5 * fov);
+			FloatType focalLengthX = (FloatType)0.5 * (FloatType)width / t;
+			FloatType focalLengthY = (FloatType)0.5 * (FloatType)height / t * aspect;
+			return  Matrix4x4<FloatType>(
+				focalLengthX, 0.0f, (FloatType)width / 2.0f, 0.0f,
+				0.0f, focalLengthY, (FloatType)height / 2.0f, 0.0f,
+				0.0f, 0.0f, 1.0f, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f);
+		}
+
     private:
         void update();
-        Matrix4x4<FloatType> perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar);
-        Matrix4x4<FloatType> viewMatrix(const vec3<FloatType>& eye, const vec3<FloatType>& look, const vec3<FloatType>& up, const vec3<FloatType>& right);
+		
+		//! field of view is in degrees
+        static Matrix4x4<FloatType> perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar);
+        static Matrix4x4<FloatType> viewMatrix(const vec3<FloatType>& eye, const vec3<FloatType>& look, const vec3<FloatType>& up, const vec3<FloatType>& right);
 
         vec3<FloatType> m_eye, m_right, m_look, m_up;
         vec3<FloatType> m_worldUp;

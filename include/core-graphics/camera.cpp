@@ -157,7 +157,6 @@ namespace ml {
 		update();
 	}
 
-	// field of view is in degrees
 	template <class FloatType>
 	Matrix4x4<FloatType> Camera<FloatType>::perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar) {
 		FloatType width = 1.0f / tanf(math::degreesToRadians(fieldOfView) * 0.5f);
@@ -194,7 +193,7 @@ namespace ml {
 		vec3<T> perspectivePoint(math::linearMap((T)0.0, (T)1.0, (T)-1.0, (T)1.0, screenX),
 			math::linearMap((T)0.0, (T)1.0, (T)1.0, (T)-1.0, screenY),
 			(T)-0.5);
-		return cameraPerspective().getInverse() * perspectivePoint - m_eye;
+		return getCameraPerspective().getInverse() * perspectivePoint - m_eye;
 	}
 
 }  // namespace ml

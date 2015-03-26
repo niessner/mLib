@@ -25,14 +25,14 @@ namespace ml {
 		void resize(UINT newWidth, UINT newHeight);
 		void rename(const std::string &name);
 
-		UINT width() const;
-		UINT height() const;
+		UINT getWidth() const;
+		UINT getHeight() const;
 
-		HWND handle() const
+		HWND getHandle() const
 		{
 			return m_handle;
 		}
-		ApplicationWin32& parent()
+		ApplicationWin32& getParent()
 		{
 			return m_parent;
 		}

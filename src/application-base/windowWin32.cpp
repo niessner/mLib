@@ -9,9 +9,9 @@ namespace ml {
 
 	LRESULT WINAPI WindowCallback(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
-		if (s_mainWindow == nullptr || !s_mainWindow->parent().initialized()) return DefWindowProc(hWnd, msg, wParam, lParam);
+		if (s_mainWindow == nullptr || !s_mainWindow->getParent().initialized()) return DefWindowProc(hWnd, msg, wParam, lParam);
 
-		auto &parent = s_mainWindow->parent();
+		auto &parent = s_mainWindow->getParent();
 
 		switch (msg)
 		{
@@ -149,14 +149,14 @@ namespace ml {
 		UnregisterClass(className.c_str(), m_class.hInstance);
 	}
 
-	UINT ml::WindowWin32::width() const
+	UINT ml::WindowWin32::getWidth() const
 	{
 		RECT rect;
 		GetClientRect(m_handle, &rect);
 		return rect.right - rect.left;
 	}
 
-	UINT ml::WindowWin32::height() const
+	UINT ml::WindowWin32::getHeight() const
 	{
 		RECT rect;
 		GetClientRect(m_handle, &rect);
