@@ -14,13 +14,15 @@ namespace ml {
 			m_className = "uninitialized";
 
 			m_handle = nullptr;
+			msgProcCallback = nullptr;
 			ZeroMemory(&m_class, sizeof(m_class));
 
 			m_bResizeEvent = false;
 		}
 		~WindowWin32();
 
-		void init(HINSTANCE instance, int width, int height, const std::string &name);
+		typedef LRESULT (*MsgProcCallback)(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		void init(HINSTANCE instance, int width, int height, const std::string &name, MsgProcCallback fun = nullptr);
 		void destroy();
 		void resize(UINT newWidth, UINT newHeight);
 		void rename(const std::string &name);
@@ -36,6 +38,8 @@ namespace ml {
 		{
 			return m_parent;
 		}
+
+		MsgProcCallback msgProcCallback;  // Called before messages are processed
 
 	private:
 		std::string			m_className;

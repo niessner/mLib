@@ -9,8 +9,12 @@ namespace ml {
 
 	LRESULT WINAPI WindowCallback(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
+
 		if (s_mainWindow == nullptr || !s_mainWindow->getParent().initialized()) return DefWindowProc(hWnd, msg, wParam, lParam);
 
+		if (s_mainWindow->msgProcCallback != nullptr) {
+				if (s_mainWindow->msgProcCallback(hWnd, msg, wParam, lParam)) { return 0; }  // Return if handled
+		}
 		auto &parent = s_mainWindow->getParent();
 
 		switch (msg)
@@ -99,7 +103,7 @@ namespace ml {
 
 
 
-	void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std::string &name)
+	void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std::string &name, MsgProcCallback msgProcFun /* = nullptr*/)
 	{
 		// width/height need to be client width/height
 		RECT wr = { 0, 0, width, height };
@@ -107,6 +111,8 @@ namespace ml {
 
 		m_className = name;
 		auto className = util::windowsStr(m_className);
+
+		if (msgProcFun != nullptr) { msgProcCallback = msgProcFun; }
 
 		m_class.style = CS_HREDRAW | CS_VREDRAW;
 		m_class.lpfnWndProc = (WNDPROC)WindowCallback;

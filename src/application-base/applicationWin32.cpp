@@ -4,7 +4,7 @@ ml::ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UIN
 	m_window(*this)
 {
 	m_initialized = false;
-	m_window.init(instance, windowWidth, windowHeight, name);
+	m_window.init(instance, windowWidth, windowHeight, name, m_callback.msgProcCallback);
 
 	switch(graphicsType)
 	{

@@ -62,6 +62,8 @@ public:
 	virtual void mouseMove(ApplicationData &app) = 0;
 	virtual void mouseWheel(ApplicationData &app, int wheelDelta) = 0;
 	virtual void resize(ApplicationData &app) = 0;
+
+	WindowWin32::MsgProcCallback msgProcCallback = nullptr;  // Called before messages are processed
 };
 
 class ApplicationWin32
@@ -88,6 +90,7 @@ public:
 	void setResizeEvent() {
 		m_bResizeEvent = true;
 	}
+
 private:
 	//
 	// m_data is just a view to encapsulate all externally-visible application
