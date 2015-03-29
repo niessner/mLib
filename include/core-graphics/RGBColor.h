@@ -87,6 +87,16 @@ struct RGBColor : public vec4uc
         return vec4f(r * scale, g * scale, b * scale, a * scale);
     }
 
+	vec3f toVec3f() const {
+		const float scale = 1.0f / 255.0f;
+		return vec3f(r * scale, g * scale, b * scale);
+	}
+
+	vec4f toVec4f() const {
+		const float scale = 1.0f / 255.0f;
+		return vec4f(r * scale, g * scale, b * scale, a * scale);
+	}
+
     static const RGBColor White;
     static const RGBColor Red;
     static const RGBColor Green;
