@@ -63,7 +63,11 @@ public:
 
 	void render() const;
 
+	//! \deprecated Backwards-compatible version of updateColors with unused GraphicsDevice& argument
 	void updateColors(GraphicsDevice &g, const std::vector<vec4f> &vertexColors);
+
+	//! Updates colors of this D3D11TriMesh to vertexColors. Precondition: vertexColors has same length as vertices otherwise exception is thrown
+	void updateColors(const std::vector<vec4f> &vertexColors);
 
     bbox3f boundingBox() const
     {

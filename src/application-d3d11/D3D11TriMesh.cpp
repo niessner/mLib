@@ -9,14 +9,18 @@ const D3D11_INPUT_ELEMENT_DESC ml::D3D11TriMesh::layout[layoutElementCount] =
 
 void ml::D3D11TriMesh::updateColors(GraphicsDevice &g, const std::vector<vec4f> &newValues)
 {
-    auto &vertices = m_triMesh.getVertices();
-	if (newValues.size() != vertices.size())
-        throw MLIB_EXCEPTION("vertex buffer size doesn't match");
+	updateColors(newValues);
+}
 
-    for (size_t i = 0; i < newValues.size(); i++)
+void ml::D3D11TriMesh::updateColors(const std::vector<vec4f> &newValues) {
+	auto &vertices = m_triMesh.getVertices();
+	if (newValues.size() != vertices.size()) {
+		throw MLIB_EXCEPTION("vertex buffer size doesn't match");
+	}
+	for (size_t i = 0; i < newValues.size(); i++) {
 		vertices[i].color = newValues[i];
-
-    reset();
+	}
+	reset();
 }
 
 
