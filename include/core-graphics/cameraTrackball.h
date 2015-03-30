@@ -67,8 +67,8 @@ private:
 
 	void update() {
 		m_world = mat4f::translation(m_modelTranslation) * m_modelRotation;
-		m_worldView = camera() * m_world;
-		m_worldViewProj = perspective() * m_worldView;
+		m_worldView = getCamera() * m_world;
+		m_worldViewProj = getPerspective() * m_worldView;
 	}
 
 	vec3<FloatType> m_modelTranslation;
