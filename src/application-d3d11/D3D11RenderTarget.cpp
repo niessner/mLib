@@ -137,13 +137,15 @@ void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result, const mat4f &p
 
     auto inv = perspectiveTransform.getInverse();
 
+    result.setInvalidValue(std::numeric_limits<float>::infinity());
+
     for (UINT y = 0; y < result.getHeight(); y++)
     {
         for (UINT x = 0; x < result.getWidth(); x++)
         {
             float &v = result(x, y);
             if (v >= 1.0f)
-                v = std::numeric_limits<float>::infinity();
+                v = result.getInvalidValue();
             else
             {
                 float dx = math::linearMap(0.0f, result.getWidth() - 1.0f, -1.0f, 1.0f, (float)x);

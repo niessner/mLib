@@ -49,6 +49,15 @@ namespace util
         return false;
     }
 
+    inline bool contains(const std::string& str, unsigned char find) {
+        for (size_t i = 0; i < str.length(); i++)
+        {
+            if (str[i] == find)
+                return true;
+        }
+        return false;
+    }
+
     //TODO TEST
     inline std::string zeroPad(UINT value, UINT totalLength) {
         std::string result = std::to_string(value);

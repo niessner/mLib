@@ -196,6 +196,10 @@ namespace ml {
 			m_width = m_height = 0;
 		}
 
+        BaseImage(const vec2i &dimensions) {
+            create((UINT)dimensions.x, (UINT)dimensions.y);
+        }
+        
         BaseImage(size_t width, size_t height, const T *data = nullptr) : Image(formatFromTemplate<T>()) {
             //
             // TODO: size_t is probably the more appropriate type here
@@ -450,6 +454,11 @@ namespace ml {
 		unsigned int getHeight() const {
 			return m_height;
 		}
+
+        //! Returns the dimensions of the image
+        vec2i getDimensions() const {
+            return vec2i(m_width, m_height);
+        }
 
 		//! Returns the number of pixels of the image
 		unsigned int size() const {

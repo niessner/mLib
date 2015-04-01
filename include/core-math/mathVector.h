@@ -135,7 +135,6 @@ public:
 	}
 };
 
-
 template<class T>
 inline MathVector<T> operator*(const T& v, const MathVector<T>& other)  {
 	MathVector<T> res(other.size());
