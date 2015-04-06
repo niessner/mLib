@@ -9,8 +9,6 @@ namespace ml
       Console::log("LodePNG::load file not found: " + filename);
       return ColorImageR8G8B8A8();
     }
-    ColorImageR8G8B8A8 result;
-
     std::vector<BYTE> image;
     UINT width, height;
 
@@ -18,8 +16,13 @@ namespace ml
 
     MLIB_ASSERT_STR(!error, std::string(lodepng_error_text(error)) + ": " + filename);
 
-    result.allocate(width, height);
-    memcpy(result.getPointer(), &image[0], 4 * width * height);
+    ColorImageR8G8B8A8 result;
+
+    if (!error)
+    {
+        result.allocate(width, height);
+        memcpy(result.getPointer(), &image[0], 4 * width * height);
+    }
 
     return result;
   }
