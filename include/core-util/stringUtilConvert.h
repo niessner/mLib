@@ -109,7 +109,7 @@ namespace convert {
 	}
 	template<class U> inline void to(const std::string& s, vec3<U>& res) {
         // TODO: abstract and extend to other vecN::"to"
-        string sFixed = util::removeChar(s, 'f');
+        std::string sFixed = util::removeChar(s, 'f');
         if (util::contains(sFixed, ','))
             sFixed = util::replace(sFixed, ',', ' ');
         std::stringstream ss(sFixed);
