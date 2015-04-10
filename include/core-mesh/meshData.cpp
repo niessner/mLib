@@ -83,7 +83,7 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 	unsigned int count = 0; unsigned int ordered = 0;
 	std::unordered_set<std::vector<unsigned int>, vecHash> _set;
 	for (size_t i = 0; i < numFaces; i++) {
-		Indices::Face f = m_FaceIndicesVertices[i]; // same pointer
+		auto f = m_FaceIndicesVertices[i]; // same pointer
 		std::vector<unsigned int> face(f.size()); // copy so that m_FaceIndicesVertices[i] remains unsorted
 		for (unsigned int j = 0; j < f.size(); j++)
 			face[j] = f[j];
@@ -136,7 +136,7 @@ unsigned int MeshData<FloatType>::removeDuplicateVertices() {
 	for (size_t i1 = 0; i1 < numV; i1++) {
 		const vec3<FloatType>& pt = m_Vertices[i1];
 
-		std::map<vec3<FloatType> , unsigned int, bool(*)(const vec3<FloatType>&, const vec3<FloatType>&) >::iterator it = pts.find(pt);
+		auto it = pts.find(pt);
 
 		if (it != pts.end()) {
 			vertexLookUp[i1] = it->second;

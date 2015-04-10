@@ -13,18 +13,18 @@ namespace ml {
 		// ********************************
 		// Vertex class of the Tri Mesh
 		// ********************************
-		template<class FloatType>
+		template<class FloatTypeInner>
 		class Vertex {
 		public:
-			Vertex() : position(vec3<FloatType>::origin), normal(vec3<FloatType>::origin), color(vec4<FloatType>::origin), texCoord(vec2<FloatType>::origin) { }
-			Vertex(const vec3<FloatType>& _position) : position(_position) { }
-			Vertex(const vec3<FloatType>& _p, const vec3<FloatType>& _n) : position(_p), normal(_n) { }
-			Vertex(const vec3<FloatType>& _p, const vec3<FloatType>& _n, const vec4<FloatType>& _c, const vec2<FloatType>& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
+			Vertex() : position(vec3<FloatTypeInner>::origin), normal(vec3<FloatTypeInner>::origin), color(vec4<FloatTypeInner>::origin), texCoord(vec2<FloatTypeInner>::origin) { }
+			Vertex(const vec3<FloatTypeInner>& _position) : position(_position) { }
+			Vertex(const vec3<FloatTypeInner>& _p, const vec3<FloatTypeInner>& _n) : position(_p), normal(_n) { }
+			Vertex(const vec3<FloatTypeInner>& _p, const vec3<FloatTypeInner>& _n, const vec4<FloatTypeInner>& _c, const vec2<FloatTypeInner>& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
 
-			Vertex operator*(FloatType t) const {
+			Vertex operator*(FloatTypeInner t) const {
 				return Vertex(position*t, normal*t, color*t, texCoord*t);
 			}
-			Vertex operator/(FloatType t) const {
+			Vertex operator/(FloatTypeInner t) const {
 				return Vertex(position/t, normal/t, color/t, texCoord/t);
 			}
 			Vertex operator+(const Vertex& other) const {
@@ -34,10 +34,10 @@ namespace ml {
 				return Vertex(position-other.position, normal-other.normal, color-other.color, texCoord-other.texCoord);
 			}
 
-			void operator*=(FloatType t) {
+			void operator*=(FloatTypeInner t) {
 				*this = *this * t;
 			}
-			void operator/=(FloatType t) const {
+			void operator/=(FloatTypeInner t) const {
 				*this = *this / t;
 			}
 			void operator+=(const Vertex& other) const {
@@ -50,10 +50,10 @@ namespace ml {
 			//
 			// If you change the order of these fields, you must update the layout fields in D3D11TriMesh::layout 
 			//
-			vec3<FloatType> position;
-			vec3<FloatType> normal;
-			vec4<FloatType> color;
-			vec2<FloatType> texCoord;
+			vec3<FloatTypeInner> position;
+			vec3<FloatTypeInner> normal;
+			vec4<FloatTypeInner> color;
+			vec2<FloatTypeInner> texCoord;
 		private:
 		};
 		typedef Vertex<float> Vertexf;
