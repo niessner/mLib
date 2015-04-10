@@ -2,7 +2,7 @@
 #ifndef CORE_GRAPHICS_BOUNDINGBOX3_H_
 #define CORE_GRAPHICS_BOUNDINGBOX3_H_
 
-#include "Ray.h"
+#include "ray.h"
 
 #include <cfloat>
 #include <vector>
