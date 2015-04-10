@@ -2,7 +2,7 @@
 #ifndef CORE_UTIL_BINARYDATASERIALIZE_H_
 #define CORE_UTIL_BINARYDATASERIALIZE_H_
 
-#include "BinaryDataStream.h"
+#include "binaryDataStream.h"
 
 namespace ml
 {
