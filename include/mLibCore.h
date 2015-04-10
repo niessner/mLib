@@ -114,11 +114,14 @@
 #include "core-mesh/triMesh.h"
 #include "core-mesh/triMeshSampler.h"
 
+// TODO MATTHIAS: the references from triMeshAccelerator to TriMesh::Vertex are broken in clang
+#ifdef _WIN32
 #include "core-mesh/triMeshAccelerator.h"
 #include "core-mesh/triMeshRayAccelerator.h"
 #include "core-mesh/triMeshCollisionAccelerator.h"
 #include "core-mesh/triMeshAcceleratorBruteForce.h"
 #include "core-mesh/triMeshAcceleratorBVH.h"
+#endif
 
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"
