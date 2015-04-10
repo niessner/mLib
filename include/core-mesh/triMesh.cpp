@@ -168,7 +168,7 @@ namespace ml {
             }
         };
         
-        map<Edge, UINT, edgeCompare> edgeToNewVertexMap;
+        std::map<Edge, UINT, edgeCompare> edgeToNewVertexMap;
 
         TriMesh<FloatType> result;
         
