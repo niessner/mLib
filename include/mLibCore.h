@@ -66,7 +66,6 @@
 #include "core-util/UIConnection.h"
 #include "core-util/sparseGrid3.h"
 #include "core-base/binaryGrid3.h"
-#include "core-base/distanceField3.h"
 #include "core-base/baseImage.h"
 
 //
@@ -96,6 +95,7 @@
 #include "core-graphics/orientedBoundingBox3.h"
 #include "core-graphics/dist.h"
 #include "core-util/colorGradient.h"
+#include "core-base/distanceField3.h"
 
 //
 // core-mesh headers
