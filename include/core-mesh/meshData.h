@@ -561,7 +561,7 @@ public:
 	std::string		m_MaterialFile;	// in case of objs, refers to the filename
 	struct MaterialIndex {
 		MaterialIndex() {}
-		MaterialIndex(unsigned int s, unsigned int e, const std::string& name) : start(s), end(e), materialName(s) {}
+		MaterialIndex(unsigned int s, unsigned int e, const std::string& name) : start(s), end(e), materialName(name) {}
 		unsigned int start;
 		unsigned int end;	//end index NOT included (similar to iterators)
 		std::string materialName;
@@ -645,7 +645,7 @@ public:
 				unsigned int cnt = 0;
 				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
 					meshData.m_FaceIndicesNormals.push_back(getFaceIndicesNormals()[j]);
-					Indices::Face& face = meshData.m_FaceIndicesNormals.back();				
+					auto &face = meshData.m_FaceIndicesNormals.back();				
 					for (auto& idx : face) {
 						if (_map.find(idx) != _map.end()) {
 							idx = _map[idx];	//set to new idx, which already exists
@@ -663,7 +663,7 @@ public:
 				unsigned int cnt = 0;
 				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
 					meshData.m_FaceIndicesTextureCoords.push_back(getFaceIndicesTexCoords()[j]);
-					Indices::Face& face = meshData.m_FaceIndicesTextureCoords.back();				
+                    auto &face = meshData.m_FaceIndicesTextureCoords.back();
 					for (auto& idx : face) {
 						if (_map.find(idx) != _map.end()) {
 							idx = _map[idx];	//set to new idx, which already exists
