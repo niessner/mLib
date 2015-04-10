@@ -86,7 +86,7 @@ namespace ml {
 
 		bool any() const { return flags_ > 0; }
 
-		bool none() const { return flags == 0; }
+		bool none() const { return flags_ == 0; }
 
 	private:
 		store_type flags_;

@@ -94,13 +94,6 @@ namespace util
 		return util::replace(str, std::string(1, find), std::string(1, replace));
 	}
 
-    template <class T>
-    inline const T& randomElement(const std::vector<T>& v) {
-        MLIB_ASSERT_STR(v.size() > 0, "empty vector in randomElement");
-        return v[ randomInteger(0, (long)v.size() - 1) ];
-    }
-
-
 	//TODO TEST
 	inline std::vector<std::string> split(const std::string& str, const std::string& separator, bool pushEmptyStrings = false) {
 		MLIB_ASSERT_STR(separator.length() >= 1, "empty seperator");
