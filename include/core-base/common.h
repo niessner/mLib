@@ -34,8 +34,8 @@
 #define DEBUG_BREAK assert(false)
 #endif
 
-//#include <cstring>
-//#include <exception>
+#include <cstring>
+#include <exception>
 #include <iostream>
 #include <sstream>
 #include <vector>
