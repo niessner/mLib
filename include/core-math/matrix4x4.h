@@ -757,7 +757,7 @@ public:
 		for (unsigned int i = 0; i < 3; i++)
 			degrees[i] = (FloatType)ml::math::radiansToDegrees(ksi[i]);
 		res.setRotation(Matrix3x3<FloatType>::rotationZ(degrees[2])*Matrix3x3<FloatType>::rotationY(degrees[1])*Matrix3x3<FloatType>::rotationX(degrees[0]));
-		res.setTranslationVector(point3d<FloatType>(ksi[3], ksi[4], ksi[5]));
+		res.setTranslationVector(vec3<FloatType>(ksi[3], ksi[4], ksi[5]));
 		return res;
 	}
 

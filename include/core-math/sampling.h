@@ -128,7 +128,7 @@ namespace ml {
 		}
 
 		static inline FloatType squareToStdNormalPdf(const vec2<FloatType> &pos) {
-			return INV_TWOPI * math::fastexp(-(pos.x*pos.x + pos.y*pos.y)/2.0f);
+			return (1.0f / (2.0f * math::PIf)) * expf(-(pos.x*pos.x + pos.y*pos.y)/2.0f);
 		}
 
 		static inline FloatType intervalToTent(FloatType sample) {

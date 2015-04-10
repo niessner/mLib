@@ -73,13 +73,13 @@ public:
 
 #ifdef _WIN32
 	template<class U, class V, class W>
-#endif
+//#endif
 	friend BinaryDataStream<U,V>& operator>> <>(BinaryDataStream<U,V>& s, SparseGrid3<T>& g);
-#ifdef _WIN32
+//#ifdef _WIN32
 	template<class U, class V, class W>
-#endif
+//#endif
 	friend BinaryDataStream<U,V>& operator<< <>(BinaryDataStream<U,V>& s, const SparseGrid3<T>& g);
-
+#endif
 
 
 	void writeBinaryDump(const std::string& s) const {

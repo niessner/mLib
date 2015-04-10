@@ -259,6 +259,8 @@ namespace ml {
 		}
 
 	private:
+
+#ifdef _WIN32
 		// boost archive serialization functions
 		friend class boost::serialization::access;
 		template <class Archive>
@@ -275,6 +277,7 @@ namespace ml {
 		void serialize(Archive &ar, const unsigned int version) {
 			boost::serialization::split_member(ar, *this, version);
 		}
+#endif
 
 		inline size_t getNumUInts() const {
 			size_t numEntries = size();

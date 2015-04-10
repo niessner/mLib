@@ -185,7 +185,7 @@ namespace ml
 	template <class T> const T& Grid3<T>::getMinValue() const
 	{
 		vec3ul index = getMinIndex();
-		return m_data[z * m_dimX * m_dimY + y * m_dimX + x];
+        return m_data[index.z * m_dimX * m_dimY + index.y * m_dimX + index.x];
 	}
 
 }  // namespace ml

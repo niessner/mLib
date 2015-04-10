@@ -173,7 +173,7 @@ namespace ml
 	template <class T> const T& Grid2<T>::getMinValue() const
 	{
 		vec2ul index = getMinIndex();
-		return m_data[y * m_dimX + x];
+        return m_data[index.y * m_dimX + index.x];
 	}
 
 }  // namespace ml

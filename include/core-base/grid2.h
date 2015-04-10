@@ -151,7 +151,7 @@ namespace ml
 		Grid2();
 		Grid2(size_t dimX, size_t dimY);
 		Grid2(size_t dimX, size_t dimY, const T &value);
-		Grid2(const vec2ul& dim) : Grid3(dim.x, dim.y) {}
+		Grid2(const vec2ul& dim) : Grid2(dim.x, dim.y) {}
 		Grid2(const vec2ul& dim, const T& value) : Grid2(dim.x, dim.y, value) {}
 
 		Grid2(const Grid2<T> &G);
@@ -174,7 +174,7 @@ namespace ml
 
 		inline Grid2<T>& operator += (const Grid2<T> &value)
 		{
-			MLIB_ASSERT_STR(m_dimX == right.m_dimX && m_dimY == right.m_dimY, "grid dimensions must be equal");
+            MLIB_ASSERT_STR(m_dimX == value.m_dimX && m_dimY == value.m_dimY, "grid dimensions must be equal");
 			for (size_t y = 0; y < m_dimY; y++)
 				for (size_t x = 0; x < m_dimX; x++)
 					m_data[y * m_dimX + x] += value(x, y);
