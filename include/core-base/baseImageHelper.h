@@ -49,7 +49,7 @@ public:
 	}
 
 	template<> __forceinline static void convertBaseImagePixel<vec4uc, float>(vec4uc& out, const float& in) {
-		vec4f tmp = convertDepthToRGB(in);
+		vec4f tmp(convertDepthToRGB(in));
 		convertBaseImagePixel(out, tmp);
 	}
 

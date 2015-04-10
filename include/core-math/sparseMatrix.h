@@ -117,6 +117,14 @@ public:
 		}
 	}
 
+    static SparseMatrix identity(size_t n)
+    {
+        SparseMatrix result(n);
+        for (size_t i = 0; i < n; i++)
+            result(i, i) = (FloatType)1.0;
+        return result;
+    }
+
 	void operator=(const SparseMatrix<FloatType>& s)
 	{
 		m_rows = s.m_rows;

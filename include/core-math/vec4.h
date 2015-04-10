@@ -53,7 +53,7 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
             array[3] = other.array[3];
         }
 
-		vec4(const T* other) {
+        explicit vec4(const T* other) {
 			array[0] = other[0];
 			array[1] = other[1];
 			array[2] = other[2];
@@ -67,15 +67,6 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
             array[3] = other.array[3];
             return *this;
         }
-
-        inline const vec4<T>& operator=(T other) {
-            array[0] = other;
-            array[1] = other;
-            array[2] = other;
-            array[3] = other;
-            return *this;
-        }
-
 
         inline vec4<T> operator-() const {
             return vec4<T>(-array[0], -array[1], -array[2], -array[3]);

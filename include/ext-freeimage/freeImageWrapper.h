@@ -8,6 +8,12 @@ namespace ml {
   class FreeImageWrapper {
   public:
 
+    static Image loadImage(const std::string& filename, bool debugPrint = false) {
+        Image img;
+        loadImage(filename, img, debugPrint);
+        return img;
+    }
+
     static void loadImage(const std::string& filename, Image& image, bool debugPrint = false) {
       
       //TODO get the image format from file
