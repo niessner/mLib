@@ -822,7 +822,7 @@ namespace ml {
 	};
 
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-	__forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BaseImage<T>& image) {
+	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BaseImage<T>& image) {
 		s.writeData(image.getWidth());
 		s.writeData(image.getHeight());
 		s.writeData(image.getInvalidValue());
@@ -831,7 +831,7 @@ namespace ml {
 	}
 
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-	__forceinline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BaseImage<T>& image) {
+	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BaseImage<T>& image) {
 		unsigned int width, height;
 		T invalidValue;
 		s.readData(&width);
