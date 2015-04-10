@@ -95,7 +95,11 @@
 #include "core-graphics/orientedBoundingBox3.h"
 #include "core-graphics/dist.h"
 #include "core-util/colorGradient.h"
+
+// TODO MATTHIAS: this class is horribly broken with clang.
+#ifdef _WIN32
 #include "core-base/distanceField3.h"
+#endif
 
 //
 // core-mesh headers
