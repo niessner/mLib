@@ -4,7 +4,11 @@
 
 namespace ml {
 
-template <class FloatType>
+//
+// MATT: I am commenting out this class because it is out of-date with Camera -- it is easy to fix, but I am currently trying to get things to run with clang.  Feel free to un-comment this at any time.
+//
+
+/*template <class FloatType>
 class CameraTrackball : public Camera<FloatType> {
 public:
 	CameraTrackball() {}
@@ -81,7 +85,7 @@ private:
 };
 
 typedef CameraTrackball<float> CameraTrackballf;
-typedef CameraTrackball<double> CameraTrackballd;
+typedef CameraTrackball<double> CameraTrackballd;*/
 
 }  // namespace ml
 

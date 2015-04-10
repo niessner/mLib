@@ -39,22 +39,22 @@ namespace ml {
 	};
 
     namespace BaseImageHelper {
-        template<class T> Image::Format formatFromTemplate() {
+        template<class T> inline Image::Format formatFromTemplate() {
             return Image::FORMAT_Unknown;
         }
-        template<> Image::Format formatFromTemplate<vec4uc>() {
+        template<> inline Image::Format formatFromTemplate<vec4uc>() {
             return Image::FORMAT_ColorImageR8G8B8A8;
         }
-        template<> Image::Format formatFromTemplate<vec4f>() {
+        template<> inline Image::Format formatFromTemplate<vec4f>() {
             return Image::FORMAT_ColorImageR32G32B32A32;
         }
-        template<> Image::Format formatFromTemplate<vec3f>() {
+        template<> inline Image::Format formatFromTemplate<vec3f>() {
             return Image::FORMAT_ColorImageR32G32B32;
         }
-        template<> Image::Format formatFromTemplate<float>() {
+        template<> inline Image::Format formatFromTemplate<float>() {
             return Image::FORMAT_DepthImage;
         }
-        template<> Image::Format formatFromTemplate<unsigned short>() {
+        template<> inline Image::Format formatFromTemplate<unsigned short>() {
             return Image::FORMAT_DepthImage16;
         }
     };
