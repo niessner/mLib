@@ -723,7 +723,7 @@ public:
 	//! TODO these functions assume radians
 	vec6<FloatType> convertToEulerAnglesPose() const {
 		Matrix3x3<FloatType> R = getRotation();
-		point3d<FloatType> tr = getTranslation();
+		vec3<FloatType> tr = getTranslation();
 
 		FloatType eps = (FloatType)0.00001;
 
