@@ -19,7 +19,8 @@ public:
 
 	//! zoom
 	void moveModel(FloatType delta) {
-		m_modelTranslation += getLook() * delta;
+        MLIB_ERROR("getLook() not defined");
+		//m_modelTranslation += getLook() * delta;
 		update();
 	}
 	//! rotate

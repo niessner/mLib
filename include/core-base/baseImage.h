@@ -9,14 +9,15 @@ namespace ml {
 
 	class Image {
 	public:
-		enum Format {
-			FORMAT_ColorImageR8G8B8A8,
-			FORMAT_ColorImageR32G32B32A32,
-			FORMAT_ColorImageR32G32B32,
-			FORMAT_DepthImage,
-			FORMAT_DepthImage16,
-			FORMAT_Unknown
-		};
+
+        enum Format {
+            FORMAT_ColorImageR8G8B8A8,
+            FORMAT_ColorImageR32G32B32A32,
+            FORMAT_ColorImageR32G32B32,
+            FORMAT_DepthImage,
+            FORMAT_DepthImage16,
+            FORMAT_Unknown
+        };
 
 		Image(Format format = FORMAT_Unknown) {
 			m_format = format;
@@ -32,27 +33,31 @@ namespace ml {
 			m_format = format;
 		}
 	protected:
-		template<class T> Format formatFromTemplate() const {
-			return FORMAT_Unknown;
-		}
-		template<> Format formatFromTemplate<vec4uc>() const {
-			return FORMAT_ColorImageR8G8B8A8;
-		}
-		template<> Format formatFromTemplate<vec4f>() const {
-			return FORMAT_ColorImageR32G32B32A32;
-		}
-		template<> Format formatFromTemplate<vec3f>() const {
-			return FORMAT_ColorImageR32G32B32;
-		}
-		template<> Format formatFromTemplate<float>() const {
-			return FORMAT_DepthImage;
-		}
-		template<> Format formatFromTemplate<unsigned short>() const {
-			return FORMAT_DepthImage16;
-		}
+		
 
 		Format m_format;
 	};
+
+    namespace BaseImageHelper {
+        template<class T> Image::Format formatFromTemplate() {
+            return Image::FORMAT_Unknown;
+        }
+        template<> Image::Format formatFromTemplate<vec4uc>() {
+            return Image::FORMAT_ColorImageR8G8B8A8;
+        }
+        template<> Image::Format formatFromTemplate<vec4f>() {
+            return Image::FORMAT_ColorImageR32G32B32A32;
+        }
+        template<> Image::Format formatFromTemplate<vec3f>() {
+            return Image::FORMAT_ColorImageR32G32B32;
+        }
+        template<> Image::Format formatFromTemplate<float>() {
+            return Image::FORMAT_DepthImage;
+        }
+        template<> Image::Format formatFromTemplate<unsigned short>() {
+            return Image::FORMAT_DepthImage16;
+        }
+    };
 
 	template <class T>
 	class BaseImage : public Image {
@@ -191,7 +196,7 @@ namespace ml {
             const BaseImage<T> *image;
         };
 
-		BaseImage() : Image(formatFromTemplate<T>()) {
+		BaseImage() : Image(BaseImageHelper::formatFromTemplate<T>()) {
 			m_data = nullptr;
 			m_width = m_height = 0;
 		}
@@ -200,7 +205,7 @@ namespace ml {
             create((UINT)dimensions.x, (UINT)dimensions.y);
         }
         
-        BaseImage(size_t width, size_t height, const T *data = nullptr) : Image(formatFromTemplate<T>()) {
+        BaseImage(size_t width, size_t height, const T *data = nullptr) : Image(BaseImageHelper::formatFromTemplate<T>()) {
             //
             // TODO: size_t is probably the more appropriate type here
             //
@@ -219,7 +224,7 @@ namespace ml {
 		}
 
 		//! Move constructor
-		BaseImage(BaseImage&& other) : Image(formatFromTemplate<T>()) {
+        BaseImage(BaseImage&& other) : Image(BaseImageHelper::formatFromTemplate<T>()) {
 			m_data = nullptr;
 			m_width = m_height = 0;
 			swap(*this, other);
@@ -227,7 +232,7 @@ namespace ml {
 
 		//! Copy constructor for other classes
 		template<class U>
-		BaseImage(const BaseImage<U>& other) : Image(formatFromTemplate<T>()) {
+        BaseImage(const BaseImage<U>& other) : Image(BaseImageHelper::formatFromTemplate<T>()) {
 			create(other.m_width, other.m_height);
 			for (unsigned int i = 0; i < m_height*m_width; i++) {
 				BaseImageHelper::convertBaseImagePixel<T, U>(m_data[i], other.getDataPointer()[i]);
@@ -488,7 +493,7 @@ namespace ml {
 
 		static void saveBinaryMImageArray(const std::string& filename, const std::vector<BaseImage<T>>& images) {
 			MLIB_ASSERT(images.size() >= 1);
-			void** data = new data*[images.size()];
+			T** data = new T*[images.size()];
 			for (unsigned int i = 0; i < images.size(); i++) {
 				MLIB_ASSERT(images[0].getWidth() == images[i].getWidth());
 				MLIB_ASSERT(images[0].getHeight() == images[i].getHeight());
@@ -577,7 +582,7 @@ namespace ml {
 		}
 
 		//! sets all pixels to value
-		void setPixels(const T &value = getInvalidValue()) {
+		void setPixels(const T &value) {
 			for (unsigned int i = 0; i < m_width * m_height; i++) {
 				m_data[i] = value;
 			}
@@ -1008,8 +1013,8 @@ namespace ml {
 			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = depthImage.getPointer();
-			float maxDepth = -FLT_MAX;
-			float minDepth = +FLT_MAX;
+            float maxDepth = -std::numeric_limits<float>::max();
+            float minDepth = std::numeric_limits<float>::max();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				if (data[i] != depthImage.getInvalidValue()) {
 					if (data[i] > maxDepth) maxDepth = data[i];
@@ -1093,8 +1098,8 @@ namespace ml {
 			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = depthImage.getPointer();
-			float maxDepth = -FLT_MAX;
-			float minDepth = +FLT_MAX;
+            float maxDepth = -std::numeric_limits<float>::max();
+            float minDepth = +std::numeric_limits<float>::max();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				if (data[i] != depthImage.getInvalidValue()) {
 					if (data[i] > maxDepth) maxDepth = data[i];

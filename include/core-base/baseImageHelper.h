@@ -4,9 +4,8 @@
 namespace ml {
 
 namespace BaseImageHelper {
-///public:
 
-    inline static vec3f convertHSVtoRGB(const vec3f& hsv) {
+    inline vec3f convertHSVtoRGB(const vec3f& hsv) {
         float H = hsv[0];
         float S = hsv[1];
         float V = hsv[2];
@@ -45,7 +44,7 @@ namespace BaseImageHelper {
         }
     }
 
-    inline static vec3f convertDepthToRGB(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
+    inline vec3f convertDepthToRGB(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
         float depthZeroOne = (depth - depthMin) / (depthMax - depthMin);
         float x = 1.0f - depthZeroOne;
         if (x < 0.0f)	x = 0.0f;
@@ -53,7 +52,7 @@ namespace BaseImageHelper {
         return convertHSVtoRGB(vec3f(240.0f*x, 1.0f, 0.5f));
     }
 
-    inline static vec4f convertDepthToRGBA(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
+    inline vec4f convertDepthToRGBA(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
         vec3f d = convertDepthToRGB(depth, depthMin, depthMax);
         return vec4f(d, 1.0f);
     }
@@ -61,53 +60,53 @@ namespace BaseImageHelper {
 	template<class T, class S> 
 	inline static void convertBaseImagePixel(T& out, const S& in);
 
-	template<> inline static void convertBaseImagePixel<vec3f, vec3uc>(vec3f& out, const vec3uc& in) {
+	template<> inline void convertBaseImagePixel<vec3f, vec3uc>(vec3f& out, const vec3uc& in) {
 		out.x = in.x / 255.0f;
 		out.y = in.y / 255.0f;
 		out.z = in.z / 255.0f;
 	}
 
-	template<> inline static void convertBaseImagePixel<vec3uc, vec3f>(vec3uc& out, const vec3f& in) {
+	template<> inline void convertBaseImagePixel<vec3uc, vec3f>(vec3uc& out, const vec3f& in) {
 		out.x = (unsigned char)(in.x * 255);
 		out.y = (unsigned char)(in.y * 255);
 		out.z = (unsigned char)(in.z * 255);
 	}
 
-	template<> inline static void convertBaseImagePixel<vec4f, vec4uc>(vec4f& out, const vec4uc& in) {
+	template<> inline void convertBaseImagePixel<vec4f, vec4uc>(vec4f& out, const vec4uc& in) {
 		out.x = in.x / 255.0f;
 		out.y = in.y / 255.0f;
 		out.z = in.z / 255.0f;
 		out.w = in.w / 255.0f;
 	}
 
-	template<> inline static void convertBaseImagePixel<vec4uc, vec4f>(vec4uc& out, const vec4f& in) {
+	template<> inline void convertBaseImagePixel<vec4uc, vec4f>(vec4uc& out, const vec4f& in) {
 		out.x = (unsigned char)(in.x * 255);
 		out.y = (unsigned char)(in.y * 255);
 		out.z = (unsigned char)(in.z * 255);
 		out.w = (unsigned char)(in.w * 255);
 	}
 
-	template<> inline static void convertBaseImagePixel<vec3f, float>(vec3f& out, const float& in) {
+	template<> inline void convertBaseImagePixel<vec3f, float>(vec3f& out, const float& in) {
 		out = convertDepthToRGB(in);
 	}
 
-	template<> inline static void convertBaseImagePixel<vec3uc, float>(vec3uc& out, const float& in) {
+	template<> inline void convertBaseImagePixel<vec3uc, float>(vec3uc& out, const float& in) {
 		vec3f tmp = convertDepthToRGB(in);
 		convertBaseImagePixel(out, tmp);
 	}
-	template<> inline static void convertBaseImagePixel<vec4f, float>(vec4f& out, const float& in) {
+	template<> inline void convertBaseImagePixel<vec4f, float>(vec4f& out, const float& in) {
 		out = vec4f(convertDepthToRGB(in), 1.0f);
 		out.w = 0.0f;
 	}
 
-	template<> inline static void convertBaseImagePixel<vec4uc, float>(vec4uc& out, const float& in) {
+	template<> inline void convertBaseImagePixel<vec4uc, float>(vec4uc& out, const float& in) {
 		vec4f tmp(convertDepthToRGB(in));
 		convertBaseImagePixel(out, tmp);
 	}
 
 
 
-	template<> inline static void convertBaseImagePixel<vec3uc, vec4uc>(vec3uc& out, const vec4uc& in) {
+	template<> inline void convertBaseImagePixel<vec3uc, vec4uc>(vec3uc& out, const vec4uc& in) {
 		out.x = in.x;
 		out.y = in.y;
 		out.z = in.z;
