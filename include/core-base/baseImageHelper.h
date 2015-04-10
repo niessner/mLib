@@ -3,9 +3,61 @@
 
 namespace ml {
 
-class BaseImageHelper {
-public:
-	
+namespace BaseImageHelper {
+///public:
+
+    inline static vec3f convertHSVtoRGB(const vec3f& hsv) {
+        float H = hsv[0];
+        float S = hsv[1];
+        float V = hsv[2];
+
+        float hd = H / 60.0f;
+        unsigned int h = (unsigned int)hd;
+        float f = hd - h;
+
+        float p = V*(1.0f - S);
+        float q = V*(1.0f - S*f);
+        float t = V*(1.0f - S*(1.0f - f));
+
+        if (h == 0 || h == 6)
+        {
+            return vec3f(V, t, p);
+        }
+        else if (h == 1)
+        {
+            return vec3f(q, V, p);
+        }
+        else if (h == 2)
+        {
+            return vec3f(p, V, t);
+        }
+        else if (h == 3)
+        {
+            return vec3f(p, q, V);
+        }
+        else if (h == 4)
+        {
+            return vec3f(t, p, V);
+        }
+        else
+        {
+            return vec3f(V, p, q);
+        }
+    }
+
+    inline static vec3f convertDepthToRGB(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
+        float depthZeroOne = (depth - depthMin) / (depthMax - depthMin);
+        float x = 1.0f - depthZeroOne;
+        if (x < 0.0f)	x = 0.0f;
+        if (x > 1.0f)	x = 1.0f;
+        return convertHSVtoRGB(vec3f(240.0f*x, 1.0f, 0.5f));
+    }
+
+    inline static vec4f convertDepthToRGBA(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
+        vec3f d = convertDepthToRGB(depth, depthMin, depthMax);
+        return vec4f(d, 1.0f);
+    }
+
 	template<class T, class S> 
 	inline static void convertBaseImagePixel(T& out, const S& in);
 
@@ -59,62 +111,6 @@ public:
 		out.x = in.x;
 		out.y = in.y;
 		out.z = in.z;
-	}
-
-
-
-
-
-	inline static vec3f convertHSVtoRGB(const vec3f& hsv) {
-		float H = hsv[0];
-		float S = hsv[1];
-		float V = hsv[2];
-
-		float hd = H/60.0f;
-		unsigned int h = (unsigned int)hd;
-		float f = hd-h;
-
-		float p = V*(1.0f-S);
-		float q = V*(1.0f-S*f);
-		float t = V*(1.0f-S*(1.0f-f));
-
-		if(h == 0 || h == 6)
-		{
-			return vec3f(V, t, p);
-		}
-		else if(h == 1)
-		{
-			return vec3f(q, V, p);
-		}
-		else if(h == 2)
-		{
-			return vec3f(p, V, t);
-		}
-		else if(h == 3)
-		{
-			return vec3f(p, q, V);
-		}
-		else if(h == 4)
-		{
-			return vec3f(t, p, V);
-		}
-		else
-		{
-			return vec3f(V, p, q);
-		}
-	}
-
-	inline static vec3f convertDepthToRGB(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
-		float depthZeroOne = (depth - depthMin)/(depthMax - depthMin);
-		float x = 1.0f-depthZeroOne;
-		if (x < 0.0f)	x = 0.0f;
-		if (x > 1.0f)	x = 1.0f;
-		return convertHSVtoRGB(vec3f(240.0f*x, 1.0f, 0.5f));
-	}
-
-	inline static vec4f convertDepthToRGBA(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
-		vec3f d = convertDepthToRGB(depth, depthMin, depthMax);
-		return vec4f(d, 1.0f);
 	}
 
 };
