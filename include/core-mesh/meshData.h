@@ -605,7 +605,7 @@ public:
 				unsigned int cnt = 0;
 				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
 					meshData.m_FaceIndicesVertices.push_back(getFaceIndicesVertices()[j]);
-					MeshData::Indices::Face& face = meshData.m_FaceIndicesVertices.back();				
+					auto &face = meshData.m_FaceIndicesVertices.back();				
 					for (auto& idx : face) {
 						if (_map.find(idx) != _map.end()) {
 							idx = _map[idx];	//set to new idx, which already exists
@@ -627,7 +627,7 @@ public:
 				unsigned int cnt = 0;
 				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
 					meshData.m_FaceIndicesColors.push_back(getFaceIndicesColors()[j]);
-                    MeshData::Indices::Face& face = meshData.m_FaceIndicesColors.back();
+                    auto &face = meshData.m_FaceIndicesColors.back();
 					for (auto& idx : face) {
 						if (_map.find(idx) != _map.end()) {
 							idx = _map[idx];	//set to new idx, which already exists
