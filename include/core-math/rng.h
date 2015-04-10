@@ -264,6 +264,11 @@ namespace ml {
         {
             return RNG::global.rand_int() % (max - min + 1) + min;
         }
+        template <class T>
+        inline const T& randomElement(const std::vector<T> &v)
+        {
+            return v[randomInteger(0, v.size())];
+        }
         inline double randomUniform()
         {
             return RNG::global.uniform(0.0, 1.0);
