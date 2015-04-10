@@ -133,7 +133,7 @@ namespace ml {
 
 		//! triangle collision
 		bool intersects(const vec2<FloatType>& p0, const vec2<FloatType>& p1, const vec2<FloatType>& p2) const {
-			return intersection::intersectTriangleABBB(minB, maxB, p0, p1, p2);
+			return intersection::intersectTriangleAABB(minB, maxB, p0, p1, p2);
 		}
 
 		//! bounding box collision
