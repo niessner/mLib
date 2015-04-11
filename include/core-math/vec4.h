@@ -338,19 +338,6 @@ typedef vec4<unsigned char> vec4uc;
 typedef vec4<UINT64> vec4ul;
 typedef vec4<INT64> vec4l;
 
-
-template<> const vec4f vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);
-template<> const vec4f vec4f::eX(1.0f, 0.0f, 0.0f, 0.0f);
-template<> const vec4f vec4f::eY(0.0f, 1.0f, 0.0f, 0.0f);
-template<> const vec4f vec4f::eZ(0.0f, 0.0f, 1.0f, 0.0f);
-template<> const vec4f vec4f::eW(0.0f, 0.0f, 0.0f, 1.0f);
-
-template<> const vec4d vec4d::origin(0.0, 0.0, 0.0, 0.0);
-template<> const vec4d vec4d::eX(1.0, 0.0, 0.0, 0.0);
-template<> const vec4d vec4d::eY(0.0, 1.0, 0.0, 0.0);
-template<> const vec4d vec4d::eZ(0.0, 0.0, 1.0, 0.0);
-template<> const vec4d vec4d::eW(0.0, 0.0, 0.0, 1.0);
-
 namespace math {
 	template<class T>
 	inline vec4i round(const vec4<T>& f) {

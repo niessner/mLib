@@ -323,8 +323,7 @@ typedef vec6<unsigned char> vec6uc;
 typedef vec6<UINT64> vec6ul;
 typedef vec6<INT64> vec6l;
 
-template<> const vec6d vec6d::origin(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-template<> const vec6f vec6f::origin(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+
 
 }  // namespace ml
 

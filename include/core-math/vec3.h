@@ -333,18 +333,6 @@ typedef vec3<unsigned char> vec3uc;
 typedef vec3<UINT64> vec3ul;
 typedef vec3<INT64> vec3l;
 
-
-template<> const vec3f vec3f::origin(0.0f, 0.0f, 0.0f);
-template<> const vec3f vec3f::eX(1.0f, 0.0f, 0.0f);
-template<> const vec3f vec3f::eY(0.0f, 1.0f, 0.0f);
-template<> const vec3f vec3f::eZ(0.0f, 0.0f, 1.0f);
-
-template<> const vec3d vec3d::origin(0.0, 0.0, 0.0);
-template<> const vec3d vec3d::eX(1.0, 0.0, 0.0);
-template<> const vec3d vec3d::eY(0.0, 1.0, 0.0);
-template<> const vec3d vec3d::eZ(0.0, 0.0, 1.0);
-
-
 namespace math {
 	template<class T>
 	inline vec3i round(const vec3<T>& f) {

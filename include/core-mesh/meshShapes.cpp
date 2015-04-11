@@ -26,7 +26,7 @@ namespace ml {
 	template<class FloatType>
 	TriMesh<FloatType> Shapes<FloatType>::quad(const vec3<FloatType> &p0, const vec3<FloatType> &p1, const vec3<FloatType> &p2, const vec3<FloatType> &p3, const vec4<FloatType>& color)
 	{
-		std::vector<vec3<FloatType>> vertices(4) = { p0, p1, p2, p3 };
+		std::vector<vec3<FloatType>> vertices = { p0, p1, p2, p3 };
 		std::vector<UINT> indices = { 0, 1, 2, 0, 2, 3 };
 		std::vector<vec3<FloatType>> normals = { vec3f::normalize((p1 - p0) ^ (p3 - p0)),
 			vec3f::normalize((p0 - p1) ^ (p2 - p1)),
@@ -88,7 +88,7 @@ namespace ml {
 			{ 0, 4 }, { 1, 5 }, { 2, 6 }, { 3, 7 }
 		};
 
-		std::vector<TriMesh<FloatType>::Vertexf> vv(8);
+		typename std::vector<typename TriMesh<FloatType>::Vertexf> vv(8);
 		std::vector<UINT> vi(12 * 3);
 
 		// Vertices
@@ -113,7 +113,7 @@ namespace ml {
 
 	template<class FloatType>
 	TriMesh<FloatType> Shapes<FloatType>::cylinder(FloatType radius, FloatType height, UINT stacks, UINT slices, const vec4<FloatType>& color) {
-		std::vector<TriMesh<FloatType>::Vertexf> vertices((stacks + 1) * slices);
+		std::vector<typename TriMesh<FloatType>::Vertexf> vertices((stacks + 1) * slices);
 		std::vector<UINT> indices(stacks * slices * 6);
 
 		UINT vIndex = 0;
@@ -164,7 +164,7 @@ namespace ml {
 	template<class FloatType>
 	TriMesh<FloatType> Shapes<FloatType>::torus(const vec3<FloatType> &center, FloatType majorRadius, FloatType minorRadius, UINT stacks, UINT slices, const std::function<vec4<FloatType>(unsigned int)> &stackIndexToColor)
 	{
-		std::vector<TriMesh<FloatType>::Vertexf> vertices(slices * stacks);
+		std::vector<typename TriMesh<FloatType>::Vertexf> vertices(slices * stacks);
 		std::vector<UINT> indices(stacks * slices * 6);
 
 		UINT vIndex = 0;

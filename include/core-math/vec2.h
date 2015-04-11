@@ -266,15 +266,6 @@ typedef vec2<unsigned char> vec2uc;
 typedef vec2<UINT64> vec2ul;
 typedef vec2<INT64> vec2l;
 
-template<> const vec2f vec2f::origin(0.0f, 0.0f);
-template<> const vec2f vec2f::eX(1.0f, 0.0f);
-template<> const vec2f vec2f::eY(0.0f, 1.0f);
-					
-template<> const vec2d vec2d::origin(0.0, 0.0);
-template<> const vec2d vec2d::eX(1.0, 0.0);
-template<> const vec2d vec2d::eY(0.0, 1.0);
-
-
 namespace math {
 	template<class T>
 	inline vec2i round(const vec2<T>& f) {

@@ -121,10 +121,10 @@
 #include "core-mesh/triMeshCollisionAccelerator.h"
 #include "core-mesh/triMeshAcceleratorBruteForce.h"
 #include "core-mesh/triMeshAcceleratorBVH.h"
-#endif
 
 #include "core-mesh/meshShapes.h"
 #include "core-mesh/meshUtil.h"
+#endif
 
 
 #endif  // MLIBCORE_H_

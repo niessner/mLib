@@ -215,12 +215,6 @@ typedef vec1<unsigned char> vec1uc;
 typedef vec1<UINT64> vec1ul;
 typedef vec1<INT64> vec1l;
 
-template<> const vec1f vec1f::origin(0.0f);
-template<> const vec1f vec1f::eX(1.0f);
-
-template<> const vec1d vec1d::origin(0.0);
-template<> const vec1d vec1d::eX(1.0);
-
 }  // namespace ml
 
 #endif  // CORE_MATH_POINT2D_H_

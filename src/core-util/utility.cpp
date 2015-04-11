@@ -320,7 +320,7 @@ namespace util
 		return "";
 	}
 
-	UINT getFileSize(const std::string &filename)
+	size_t getFileSize(const std::string &filename)
 	{
 		struct stat statbuf;
 		int success = stat(filename.c_str(), &statbuf);
