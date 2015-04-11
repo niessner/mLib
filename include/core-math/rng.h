@@ -267,7 +267,7 @@ namespace ml {
         template <class T>
         inline const T& randomElement(const std::vector<T> &v)
         {
-            return v[randomInteger(0, v.size())];
+            return v[randomInteger((long)0, (long)v.size())];
         }
         inline double randomUniform()
         {

@@ -7,6 +7,7 @@ namespace ml {
   class DistanceField3 : public Grid3 < FloatType > {
   public:
 
+      DistanceField3() {}
     DistanceField3(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) : Grid3(grid.getDimX(), grid.getDimY(), grid.getDimZ()) {
       generateFromBinaryGrid(grid, trunc);
     }

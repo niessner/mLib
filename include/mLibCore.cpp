@@ -52,40 +52,43 @@
 #include "../src/core-mesh/meshUtil.cpp"
 #endif
 
-template<> const vec3f vec3f::origin(0.0f, 0.0f, 0.0f);
-template<> const vec3f vec3f::eX(1.0f, 0.0f, 0.0f);
-template<> const vec3f vec3f::eY(0.0f, 1.0f, 0.0f);
-template<> const vec3f vec3f::eZ(0.0f, 0.0f, 1.0f);
+namespace ml
+{
+    template<> const vec3f vec3f::origin(0.0f, 0.0f, 0.0f);
+    template<> const vec3f vec3f::eX(1.0f, 0.0f, 0.0f);
+    template<> const vec3f vec3f::eY(0.0f, 1.0f, 0.0f);
+    template<> const vec3f vec3f::eZ(0.0f, 0.0f, 1.0f);
 
-template<> const vec3d vec3d::origin(0.0, 0.0, 0.0);
-template<> const vec3d vec3d::eX(1.0, 0.0, 0.0);
-template<> const vec3d vec3d::eY(0.0, 1.0, 0.0);
-template<> const vec3d vec3d::eZ(0.0, 0.0, 1.0);
-template<> const vec6d vec6d::origin(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-template<> const vec6f vec6f::origin(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    template<> const vec3d vec3d::origin(0.0, 0.0, 0.0);
+    template<> const vec3d vec3d::eX(1.0, 0.0, 0.0);
+    template<> const vec3d vec3d::eY(0.0, 1.0, 0.0);
+    template<> const vec3d vec3d::eZ(0.0, 0.0, 1.0);
+    template<> const vec6d vec6d::origin(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+    template<> const vec6f vec6f::origin(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
-template<> const vec4f vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);
-template<> const vec4f vec4f::eX(1.0f, 0.0f, 0.0f, 0.0f);
-template<> const vec4f vec4f::eY(0.0f, 1.0f, 0.0f, 0.0f);
-template<> const vec4f vec4f::eZ(0.0f, 0.0f, 1.0f, 0.0f);
-template<> const vec4f vec4f::eW(0.0f, 0.0f, 0.0f, 1.0f);
+    template<> const vec4f vec4f::origin(0.0f, 0.0f, 0.0f, 0.0f);
+    template<> const vec4f vec4f::eX(1.0f, 0.0f, 0.0f, 0.0f);
+    template<> const vec4f vec4f::eY(0.0f, 1.0f, 0.0f, 0.0f);
+    template<> const vec4f vec4f::eZ(0.0f, 0.0f, 1.0f, 0.0f);
+    template<> const vec4f vec4f::eW(0.0f, 0.0f, 0.0f, 1.0f);
 
-template<> const vec4d vec4d::origin(0.0, 0.0, 0.0, 0.0);
-template<> const vec4d vec4d::eX(1.0, 0.0, 0.0, 0.0);
-template<> const vec4d vec4d::eY(0.0, 1.0, 0.0, 0.0);
-template<> const vec4d vec4d::eZ(0.0, 0.0, 1.0, 0.0);
-template<> const vec4d vec4d::eW(0.0, 0.0, 0.0, 1.0);
+    template<> const vec4d vec4d::origin(0.0, 0.0, 0.0, 0.0);
+    template<> const vec4d vec4d::eX(1.0, 0.0, 0.0, 0.0);
+    template<> const vec4d vec4d::eY(0.0, 1.0, 0.0, 0.0);
+    template<> const vec4d vec4d::eZ(0.0, 0.0, 1.0, 0.0);
+    template<> const vec4d vec4d::eW(0.0, 0.0, 0.0, 1.0);
 
-template<> const vec2f vec2f::origin(0.0f, 0.0f);
-template<> const vec2f vec2f::eX(1.0f, 0.0f);
-template<> const vec2f vec2f::eY(0.0f, 1.0f);
-					
-template<> const vec2d vec2d::origin(0.0, 0.0);
-template<> const vec2d vec2d::eX(1.0, 0.0);
-template<> const vec2d vec2d::eY(0.0, 1.0);
+    template<> const vec2f vec2f::origin(0.0f, 0.0f);
+    template<> const vec2f vec2f::eX(1.0f, 0.0f);
+    template<> const vec2f vec2f::eY(0.0f, 1.0f);
 
-template<> const vec1f vec1f::origin(0.0f);
-template<> const vec1f vec1f::eX(1.0f);
+    template<> const vec2d vec2d::origin(0.0, 0.0);
+    template<> const vec2d vec2d::eX(1.0, 0.0);
+    template<> const vec2d vec2d::eY(0.0, 1.0);
 
-template<> const vec1d vec1d::origin(0.0);
-template<> const vec1d vec1d::eX(1.0);
+    template<> const vec1f vec1f::origin(0.0f);
+    template<> const vec1f vec1f::eX(1.0f);
+
+    template<> const vec1d vec1d::origin(0.0);
+    template<> const vec1d vec1d::eX(1.0);
+}
