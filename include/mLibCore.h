@@ -46,6 +46,47 @@
 #include "core-math/sampling.h"
 #include "core-math/mathUtil.h"
 
+namespace ml
+{
+    template<>  const vec3f vec3f::origin;
+    template<>  const vec3f vec3f::eX;
+    template<>  const vec3f vec3f::eY;
+    template<>  const vec3f vec3f::eZ;
+
+    template<>  const vec3d vec3d::origin;
+    template<>  const vec3d vec3d::eX;
+    template<>  const vec3d vec3d::eY;
+    template<>  const vec3d vec3d::eZ;
+    template<>  const vec6d vec6d::origin;
+    template<>  const vec6f vec6f::origin;
+
+    template<>  const vec4f vec4f::origin;
+    template<>  const vec4f vec4f::eX;
+    template<>  const vec4f vec4f::eY;
+    template<>  const vec4f vec4f::eZ;
+    template<>  const vec4f vec4f::eW;
+
+    template<>  const vec4d vec4d::origin;
+    template<>  const vec4d vec4d::eX;
+    template<>  const vec4d vec4d::eY;
+    template<>  const vec4d vec4d::eZ;
+    template<>  const vec4d vec4d::eW;
+
+    template<>  const vec2f vec2f::origin;
+    template<>  const vec2f vec2f::eX;
+    template<>  const vec2f vec2f::eY;
+
+    template<>  const vec2d vec2d::origin;
+    template<>  const vec2d vec2d::eX;
+    template<>  const vec2d vec2d::eY;
+
+    template<>  const vec1f vec1f::origin;
+    template<>  const vec1f vec1f::eX;
+
+    template<>  const vec1d vec1d::origin;
+    template<>  const vec1d vec1d::eX;
+}
+
 //
 // core-base headers
 //
