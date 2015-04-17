@@ -72,7 +72,12 @@ MathVector<D> SparseMatrix<D>::multiply(const SparseMatrix<D> &A, const MathVect
 	for(int row = 0; row < rows; row++)
 	{
 		D val = 0.0;
-		for(const SparseRowEntry<D> &e : A.m_data[row].entries) {
+        const auto &entries = A.m_data[row].entries;
+        const size_t entriesSize = entries.size();
+        const auto &entriesData = A.m_data[row].entries.data();
+        for (size_t entryIndex = 0; entryIndex < entriesSize; entryIndex++)
+        {
+            const SparseRowEntry<D> &e = entriesData[entryIndex];
 			val += e.val * BPtr[e.col];
 		}
 		resultPtr[row] = val;

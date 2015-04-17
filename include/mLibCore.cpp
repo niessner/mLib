@@ -52,6 +52,7 @@
 #include "../src/core-mesh/meshUtil.cpp"
 #endif
 
+#ifdef LINUX
 namespace ml
 {
     template<> const vec3f vec3f::origin(0.0f, 0.0f, 0.0f);
@@ -92,3 +93,4 @@ namespace ml
     template<> const vec1d vec1d::origin(0.0);
     template<> const vec1d vec1d::eX(1.0);
 }
+#endif
