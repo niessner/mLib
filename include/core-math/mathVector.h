@@ -163,6 +163,9 @@ inline std::ostream& operator<<(std::ostream& s, const MathVector<T>& v) {
 	return s;
 }
 
+typedef MathVector<float> MathVectorf;
+typedef MathVector<double> MathVectord;
+
 }  // namespace ml
 
 

@@ -233,9 +233,9 @@ namespace ml {
 		//! Copy constructor for other classes
 		template<class U>
         BaseImage(const BaseImage<U>& other) : Image(BaseImageHelper::formatFromTemplate<T>()) {
-			create(other.m_width, other.m_height);
+			create(other.getWidth(), other.getHeight());
 			for (unsigned int i = 0; i < m_height*m_width; i++) {
-				BaseImageHelper::convertBaseImagePixel<T, U>(m_data[i], other.getDataPointer()[i]);
+				BaseImageHelper::convertBaseImagePixel<T, U>(m_data[i], other.getPointer()[i]);
 			}
 			const U& otherInvalidValue = other.getInvalidValue();
 			BaseImageHelper::convertBaseImagePixel<T, U>(m_InvalidValue, otherInvalidValue);
@@ -812,14 +812,14 @@ namespace ml {
 			m_data = new T[m_height * m_width];
 		}
 
-		//! Image data
-		T* m_data;
-
 		//! Image width
-		unsigned int m_height;
+		unsigned int m_width;
 
 		//! Image height
-		unsigned int m_width;
+		unsigned int m_height;
+
+		//! Image data
+		T* m_data;
 
 		//! Invalid image value
 		T m_InvalidValue;
