@@ -262,12 +262,14 @@ namespace ml {
         //! Note that this has modulo bias!
         inline long randomInteger(long min, long max)
         {
+            if (max == min) return min;
             return RNG::global.rand_int() % (max - min + 1) + min;
         }
         template <class T>
         inline const T& randomElement(const std::vector<T> &v)
         {
-            return v[randomInteger((long)0, (long)v.size())];
+            long index = randomInteger((long)0, (long)v.size() - 1);
+            return v[index];
         }
         inline double randomUniform()
         {

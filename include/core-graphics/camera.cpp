@@ -157,6 +157,12 @@ namespace ml {
 		update();
 	}
 
+    template <class FloatType>
+    void Camera<FloatType>::translate(const vec3<FloatType> &v) {
+        m_eye += v;
+        update();
+    }
+
 	template <class FloatType>
 	Matrix4x4<FloatType> Camera<FloatType>::perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar) {
 		FloatType width = 1.0f / tanf(math::degreesToRadians(fieldOfView) * 0.5f);

@@ -32,6 +32,7 @@ namespace ml {
         void strafe(FloatType delta);
         void jump(FloatType delta);
         void move(FloatType delta);
+        void translate(const vec3<FloatType> &v);
 
         Ray<FloatType> getScreenRay(FloatType screenX, FloatType screenY) const;
         vec3<FloatType> getScreenRayDirection(FloatType screenX, FloatType screenY) const;
