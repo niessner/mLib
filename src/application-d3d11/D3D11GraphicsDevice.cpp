@@ -194,9 +194,10 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 
 	createViews();
 
-	for (auto* asset : m_assets) {
+    // this asset list is a bad design choice and does not work with most things (problems with pointers into active memory), but is needed for canvas
+	/*for (auto* asset : m_assets) {
         asset->onDeviceResize();
-	}
+	}*/
 }
 
 void D3D11GraphicsDevice::registerAsset(GraphicsAsset *asset)
