@@ -144,6 +144,14 @@ public:
 	//
 	// Accessors
 	//
+    FloatType& operator()(int row, int col)
+    {
+        return m_data[row](col);
+    }
+    FloatType operator()(int row, int col) const
+    {
+        return m_data[row](col);
+    }
 	FloatType& operator()(UINT row, UINT col)
 	{
 		return m_data[row](col);

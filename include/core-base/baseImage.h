@@ -460,6 +460,16 @@ namespace ml {
 			return m_height;
 		}
 
+        //! Returns the width of the image
+        unsigned int getDimX() const {
+            return m_width;
+        }
+
+        //! Returns the height of the image
+        unsigned int getDimY() const {
+            return m_height;
+        }
+
         //! Returns the dimensions of the image
         vec2i getDimensions() const {
             return vec2i(m_width, m_height);
