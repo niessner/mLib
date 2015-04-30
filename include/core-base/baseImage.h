@@ -565,6 +565,20 @@ namespace ml {
 			file.close();
 		}
 
+        //! counts the number of pixels
+        unsigned int getNumPixels() {
+            return m_width * m_height;
+        }
+
+        //! counts the number of pixels equal to value
+        unsigned int getNumPixelsEqualTo(const T &value) {
+            unsigned int count = 0;
+            for (unsigned int i = 0; i < m_width * m_height; i++) {
+                if (value == m_data[i])	count++;
+            }
+            return count;
+        }
+
 		//! counts the number of pixels not equal to value
 		unsigned int getNumPixelsNotEqualTo(const T &value) {
 			unsigned int count = 0;
