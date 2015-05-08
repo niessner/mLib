@@ -24,6 +24,11 @@ public:
     // The normalPredicate function determines whether a triangle with the given normal is acceptable for sampling.
     //
 
+    static std::vector<Sample> sample(const std::vector< std::pair<const TriMesh<T>*, mat4f> > &meshes, float sampleDensity, UINT maxSampleCount)
+    {
+        return sample(meshes, sampleDensity, maxSampleCount, [&](const vec3f &n) { return true; });
+    }
+
     static std::vector<Sample> sample(const std::vector< std::pair<const TriMesh<T>*, mat4f> > &meshes, float sampleDensity, UINT maxSampleCount, const vec3f &normal)
     {
         return sample(meshes, sampleDensity, maxSampleCount, [&](const vec3f &n) { return vec3f::distSq(normal, n) < 1e-3f; });
