@@ -112,6 +112,18 @@ namespace BaseImageHelper {
 		out.z = in.z;
 	}
 
+	template<> inline void convertBaseImagePixel<vec3f, vec4uc>(vec3f& out, const vec4uc& in) {
+		out.x = in.x / 255.0f;
+		out.y = in.y / 255.0f;
+		out.z = in.z / 255.0f;
+	}
+	template<> inline void convertBaseImagePixel<vec4uc, vec3f>(vec4uc& out, const vec3f& in) {
+		out.x = (unsigned char)(in.x * 255);
+		out.y = (unsigned char)(in.y * 255);
+		out.z = (unsigned char)(in.z * 255);
+		out.w = (unsigned char)255;
+	}
+
 };
 
 } // namespace ml

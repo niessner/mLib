@@ -396,6 +396,16 @@ public:
 		}
 		return res;
 	}
+
+	//! squared re-projection errors
+	static void reProjectionErrors(const std::vector < vec3<FloatType> >& source, const std::vector < vec3<FloatType> >& target, const Matrix4x4<FloatType>& trans, std::vector<FloatType>& residuals) {
+		if (source.size() != target.size()) throw MLIB_EXCEPTION("invalid dimension");
+
+		residuals.resize(source.size(), 0);
+		for (size_t i = 0; i < source.size(); i++) {
+			residuals[i] = vec3<FloatType>::distSq(trans * source[i], target[i]);
+		}
+	}
 };
 typedef EigenWrapper<float> EigenWrapperf;
 typedef EigenWrapper<double> EigenWrapperd;
