@@ -80,6 +80,8 @@ public:
     void captureDepthBuffer(ColorImageR32 &result);
     void captureDepthBuffer(ColorImageR32 &result, const mat4f &perspectiveTransform);
 
+    UINT getWidth() { return m_width; }
+    UINT getHeight() { return m_height; }
 
 private:
 	D3D11GraphicsDevice *m_graphics;
