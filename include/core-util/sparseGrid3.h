@@ -34,6 +34,10 @@ public:
 		m_Data.max_load_factor(maxLoadFactor);
 	}
 
+  size_t size() const {
+    return m_Data.size();
+  }
+
 	void clear() {
 		m_Data.clear();
 	}
