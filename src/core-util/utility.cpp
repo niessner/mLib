@@ -289,6 +289,24 @@ namespace util
 		}
 	}
 
+    void deleteDirectory(const std::string& directory) {
+        if (directoryExists(directory)) {
+            Directory dir(directory);
+
+            for (const auto& f : dir.files()) {
+                deleteFile(directory + "/" + f);
+            }
+            for (const auto& d : dir.directories()) {
+                deleteDirectory(directory + "/" + d);
+            }
+            RemoveDirectoryA(directory.c_str());
+        }
+    }
+
+    void deleteFile(const std::string& file) {
+        DeleteFileA(file.c_str());
+    }
+
 	bool directoryExists(const std::string& directory) {
 
 		DWORD ftyp = GetFileAttributesA(directory.c_str());
