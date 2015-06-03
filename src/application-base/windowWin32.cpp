@@ -103,7 +103,7 @@ namespace ml {
 
 
 
-	void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std::string &name, MsgProcCallback msgProcFun /* = nullptr*/)
+	void ml::WindowWin32::init(HINSTANCE instance, int width, int height, const std::string &name, MsgProcCallback msgProcFun /* = nullptr*/, unsigned int initWindowPosX  /* = 0 */, unsigned int initWindowPosY  /* = 0*/)
 	{
 		// width/height need to be client width/height
 		RECT wr = { 0, 0, width, height };
@@ -133,8 +133,8 @@ namespace ml {
 			className.c_str(),
 			className.c_str(),
 			WS_OVERLAPPEDWINDOW,
-			0, //CW_USEDEFAULT
-			0, //CW_USEDEFAULT
+			initWindowPosX, //CW_USEDEFAULT
+			initWindowPosY, //CW_USEDEFAULT
 			wr.right - wr.left,    // width of the window
 			wr.bottom - wr.top,    // height of the window
 			(HWND) nullptr,

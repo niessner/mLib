@@ -22,7 +22,7 @@ namespace ml {
 		~WindowWin32();
 
 		typedef LRESULT (*MsgProcCallback)(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		void init(HINSTANCE instance, int width, int height, const std::string &name, MsgProcCallback fun = nullptr);
+		void init(HINSTANCE instance, int width, int height, const std::string &name, MsgProcCallback fun = nullptr, unsigned int initWindowPosX = 0, unsigned int initWindowPosY = 0);
 		void destroy();
 		void resize(UINT newWidth, UINT newHeight);
 		void rename(const std::string &name);

@@ -1,10 +1,10 @@
 
-ml::ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const std::string &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback) :
+ml::ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const std::string &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback, unsigned int initWindowPosX, unsigned int initWindowPosY) :
 	m_callback(callback),
 	m_window(*this)
 {
 	m_initialized = false;
-	m_window.init(instance, windowWidth, windowHeight, name, m_callback.msgProcCallback);
+	m_window.init(instance, windowWidth, windowHeight, name, m_callback.msgProcCallback, initWindowPosX, initWindowPosY);
 
 	switch(graphicsType)
 	{
