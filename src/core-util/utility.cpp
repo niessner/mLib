@@ -139,6 +139,7 @@ namespace util
 
     std::string directoryFromPath(const std::string &path)
     {
+		if (path.back() == '\\' || path.back() == '/') return path;
         return replace(path, fileNameFromPath(path), "");
     }
 

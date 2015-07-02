@@ -360,12 +360,12 @@ namespace ml {
 
 		//! Access Operator (double); x,y \in [0;1]
 		const T& operator()(double x, double y) const {
-			return (*this)((unsigned int)round(x*(m_width - 1)), (unsigned int)round(y*(m_height - 1)));
+			return (*this)((unsigned int)math::round(x*(m_width - 1)), (unsigned int)math::round(y*(m_height - 1)));
 		}
 
 		//! Access Operator (float); x,y \in [0;1]
 		const T& operator()(float x, float y) const {
-			return (*this)((unsigned int)round(x*(m_width - 1)), (unsigned int)round(y*(m_height - 1)));
+			return (*this)((unsigned int)math::round(x*(m_width - 1)), (unsigned int)math::round(y*(m_height - 1)));
 		}
 
 		//! Returns the Pixel value at that position (calls the function corresponding to the parameter type)
@@ -752,6 +752,18 @@ namespace ml {
 					}
 				}
 				swap(*this, res);
+			}
+		}
+
+		void reSample(unsigned int newWidth, unsigned int newHeight, BaseImage& res) const {
+			res.allocate(newWidth, newHeight);
+			res.setInvalidValue(m_InvalidValue);
+			for (unsigned int i = 0; i < newHeight; i++) {
+				for (unsigned int j = 0; j < newWidth; j++) {
+					const float x = (float)j / (newWidth - 1);
+					const float y = (float)i / (newHeight - 1);
+					res(j, i) = getPixel(x, y);
+				}
 			}
 		}
 

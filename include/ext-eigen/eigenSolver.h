@@ -248,7 +248,7 @@ template<class FloatType> class EigenWrapper
 {
 public:
 	//! given a set of 3d correspondences determine a rotation and translation vector
-	static Matrix4x4<FloatType> kabsch(const std::vector<vec3<FloatType>>& source, const std::vector<vec3<FloatType>>& target) {
+	static Matrix4x4<FloatType> kabsch(const std::vector<vec3<FloatType>>& source, const std::vector<vec3<FloatType>>& target, vec3d& eigenvalues) {
 		if (source.size() != target.size()) throw MLIB_EXCEPTION("invalid dimensions");
 		if (source.size() < 3) throw MLIB_EXCEPTION("need at least 3 points");
 		//{
@@ -364,6 +364,10 @@ public:
 		Eigen::VectorXd S = svd.singularValues();
 		Eigen::MatrixXd W = svd.matrixV();
 		Eigen::MatrixXd I = Eigen::MatrixXd::Identity(D, D);
+
+		eigenvalues[0] = S[0];
+		eigenvalues[1] = S[1];
+		eigenvalues[2] = S[2];
 
 		if ((V * W.transpose()).determinant() < 0)
 			I(D - 1, D - 1) = -1;

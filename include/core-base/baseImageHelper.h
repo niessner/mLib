@@ -123,6 +123,17 @@ namespace BaseImageHelper {
 		out.z = (unsigned char)(in.z * 255);
 		out.w = (unsigned char)255;
 	}
+	template<> inline void convertBaseImagePixel<vec3f, vec4f>(vec3f& out, const vec4f& in) {
+		out.x = in.x;
+		out.y = in.y;
+		out.z = in.z;
+	}
+	template<> inline void convertBaseImagePixel<vec4f, vec3f>(vec4f& out, const vec3f& in) {
+		out.x = in.x;
+		out.y = in.y;
+		out.z = in.z;
+		out.w = 1.0f;
+	}
 
 };
 

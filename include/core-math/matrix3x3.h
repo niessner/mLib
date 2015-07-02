@@ -410,7 +410,7 @@ public:
 		*this = getTranspose();
 	}
 
-	FloatType* getRawData()
+	const FloatType* getRawData() const
 	{
 		return matrix;
 	}
