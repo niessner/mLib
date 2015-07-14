@@ -899,6 +899,20 @@ namespace ml {
 			m_InvalidValue = 0;
 		}
 
+		DepthImage16(const BaseImage<float>& image) : BaseImage(image.getWidth(), image.getHeight()) {
+			m_format = Image::FORMAT_DepthImage16;
+			m_InvalidValue = 0;
+
+			float INVALID = image.getInvalidValue();
+			for (unsigned int i = 0; i < m_width * m_height; i++) {
+				USHORT val;
+				float d = image.getPointer()[i];
+				if (d == INVALID) val = 0;
+				else val = (USHORT)(1000.0f * d);
+				m_data[i] = val;
+			}
+		}
+
 	private:
 	};
 
