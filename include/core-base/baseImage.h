@@ -932,6 +932,20 @@ namespace ml {
 			m_InvalidValue = -std::numeric_limits<float>::infinity();
 		}
 
+		DepthImage(const DepthImage16& image) : BaseImage(image.getWidth(), image.getHeight()) {
+			m_format = Image::FORMAT_DepthImage;
+			m_InvalidValue = -std::numeric_limits<float>::infinity();
+
+			float INVALID = image.getInvalidValue();
+			for (unsigned int i = 0; i < m_width * m_height; i++) {
+				float val;
+				USHORT d = image.getPointer()[i];
+				if (d == INVALID) val = m_InvalidValue;
+				else val = 0.001f * d;
+				m_data[i] = val;
+			}
+		}
+
 		//! Saves the depth image as a PPM file; note that there is a loss of precision
 		void saveAsPPM(const std::string &filename) const
 		{
