@@ -12,7 +12,7 @@ void Vizzer::init(ml::ApplicationData &app)
 
     ml::vec3f eye(-0.5f, -0.5f, 1.5f);
     ml::vec3f worldUp(0.0f, 0.0f, 1.0f);
-    m_camera = ml::Cameraf(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.width() / app.window.height(), 0.01f, 1000.0f);
+    m_camera = ml::Cameraf(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 1000.0f);
 
     m_font.init(app.graphics, "Calibri");
 
@@ -23,7 +23,7 @@ void Vizzer::render(ml::ApplicationData &app)
     m_timer.frame();
 
     ConstantBuffer constants;
-    constants.worldViewProj = m_camera.cameraPerspective();
+    constants.worldViewProj = m_camera.getCameraPerspective();
     m_constants.update(constants);
 
     m_vsColor.bind();
@@ -37,7 +37,7 @@ void Vizzer::render(ml::ApplicationData &app)
 
 void Vizzer::resize(ml::ApplicationData &app)
 {
-    m_camera.updateAspectRatio((float)app.window.width() / app.window.height());
+    m_camera.updateAspectRatio((float)app.window.getWidth() / app.window.getHeight());
 }
 
 void Vizzer::keyDown(ml::ApplicationData &app, UINT key)
