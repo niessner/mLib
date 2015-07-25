@@ -50,6 +50,7 @@ public:
 	{
 		release();
 	}
+
     D3D11RenderTarget(GraphicsDevice &g, const UINT width, const UINT height)
     {
         m_texture = nullptr;
@@ -72,13 +73,13 @@ public:
     void bind();
 
     // clears the render and depth buffers
-    void clear(const ml::vec4f &clearColor);
-    void clearColorBuffer(const ml::vec4f &clearColor);
-
-  
+    void clear(const vec4f &clearColor = vec4f(0.0f), float clearDepth = 1.0f);
+    void clearColorBuffer(const vec4f &clearColor = vec4f(0.0f));
+	  
     void captureColorBuffer(ColorImageR8G8B8A8 &result);
-    void captureDepthBuffer(ColorImageR32 &result);
-    void captureDepthBuffer(ColorImageR32 &result, const mat4f &perspectiveTransform);
+	void captureDepthBuffer(DepthImage32 &result);										//get the raw depth buffer
+	void captureDepthBuffer(DepthImage32 &result, const mat4f &perspectiveTransform);	//transforms the depth back to camera space
+	void captureDepthBuffer(PointImage &result, const mat4f& perspectiveTransform);		//transforms it back to 3d camera coordinate
 
     UINT getWidth() { return m_width; }
     UINT getHeight() { return m_height; }

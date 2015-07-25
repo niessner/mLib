@@ -83,13 +83,13 @@ void Vizzer::mouseMove(ml::ApplicationData &app)
 
     if(app.input.mouse.buttons[ml::MouseButtonRight])
     {
-        m_camera.strafe(-distance * posDelta.x);
+        m_camera.strafe(distance * posDelta.x);
         m_camera.jump(distance * posDelta.y);
     }
 
     if(app.input.mouse.buttons[ml::MouseButtonLeft])
     {
-        m_camera.lookRight(-theta * posDelta.x);
+        m_camera.lookRight(theta * posDelta.x);
         m_camera.lookUp(theta * posDelta.y);
     }
 

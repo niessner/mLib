@@ -118,11 +118,11 @@ void D3D11RenderTarget::bind()
     context.RSSetViewports(1, &viewport);
 }
 
-void D3D11RenderTarget::clear(const ml::vec4f &clearColor)
+void D3D11RenderTarget::clear(const ml::vec4f &clearColor, float clearDepth)
 {
 	auto &context = m_graphics->getContext();
     context.ClearRenderTargetView(m_renderView, clearColor.array);
-    context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, clearDepth, 0);
 }
 
 void D3D11RenderTarget::clearColorBuffer(const ml::vec4f &clearColor)
@@ -131,7 +131,7 @@ void D3D11RenderTarget::clearColorBuffer(const ml::vec4f &clearColor)
     context.ClearRenderTargetView(m_renderView, clearColor.array);
 }
 
-void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result, const mat4f &perspectiveTransform)
+void D3D11RenderTarget::captureDepthBuffer(DepthImage32 &result, const mat4f &perspectiveTransform)
 {
     captureDepthBuffer(result);
 
@@ -156,7 +156,7 @@ void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result, const mat4f &p
     }
 }
 
-void D3D11RenderTarget::captureDepthBuffer(ColorImageR32 &result)
+void D3D11RenderTarget::captureDepthBuffer(DepthImage32 &result)
 {
 	auto &context = m_graphics->getContext();
     context.CopyResource(m_captureDepth, m_depthBuffer);

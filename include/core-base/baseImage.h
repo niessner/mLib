@@ -916,23 +916,23 @@ namespace ml {
 	private:
 	};
 
-	class DepthImage : public BaseImage < float > {
+	class DepthImage32 : public BaseImage < float > {
 	public:
-		DepthImage() : BaseImage() {
+		DepthImage32() : BaseImage() {
 			m_format = Image::FORMAT_DepthImage;
 			m_InvalidValue = -std::numeric_limits<float>::infinity();
 		}
 
-		DepthImage(unsigned int width, unsigned int height, const float *data) : BaseImage(width, height, data) {
+		DepthImage32(unsigned int width, unsigned int height, const float *data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_DepthImage;
 			m_InvalidValue = -std::numeric_limits<float>::infinity();
 		}
-		DepthImage(unsigned int width, unsigned int height) : BaseImage(width, height) {
+		DepthImage32(unsigned int width, unsigned int height) : BaseImage(width, height) {
 			m_format = Image::FORMAT_DepthImage;
 			m_InvalidValue = -std::numeric_limits<float>::infinity();
 		}
 
-		DepthImage(const DepthImage16& image) : BaseImage(image.getWidth(), image.getHeight()) {
+		DepthImage32(const DepthImage16& image) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_DepthImage;
 			m_InvalidValue = -std::numeric_limits<float>::infinity();
 
@@ -1072,7 +1072,7 @@ namespace ml {
 			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
-		ColorImageRGB(const DepthImage& depthImage, bool debugPrint = false) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
+		ColorImageRGB(const DepthImage32& depthImage, bool debugPrint = false) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
 			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
@@ -1098,7 +1098,7 @@ namespace ml {
 				}
 			}
 		}
-		ColorImageRGB(const DepthImage& depthImage, float minDepth, float maxDepth) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
+		ColorImageRGB(const DepthImage32& depthImage, float minDepth, float maxDepth) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
 			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
@@ -1157,7 +1157,7 @@ namespace ml {
 			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
-		ColorImageRGBA(const DepthImage& depthImage, bool debugPrint = false) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
+		ColorImageRGBA(const DepthImage32& depthImage, bool debugPrint = false) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
 			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
@@ -1184,6 +1184,10 @@ namespace ml {
 			}
 		}
 	};
+
+	//TODO think about a global naming scheme:
+	// get rid of ColorImageRGB/RGBA
+	// ideally also just have ColorImageR32, ColorImageRGB32, ColorImageRGBA32, etc.
 
 	typedef ColorImageRGB	PointImage;
 	typedef ColorImageRGB	ColorImageR32G32B32;
