@@ -13,7 +13,7 @@ public:
 
     static TriMesh<FloatType> box(FloatType xDim, FloatType yDim, FloatType zDim, const vec4<FloatType>& color = ml::vec4<FloatType>(1, 1, 1, 1));
 
-    static TriMesh<FloatType> box(const OBBf &obb, const vec4<FloatType>& color = ml::vec4<FloatType>(1, 1, 1, 1));
+    static TriMesh<FloatType> box(const OrientedBoundingBox3f &obb, const vec4<FloatType>& color = ml::vec4<FloatType>(1, 1, 1, 1));
 
     static TriMesh<FloatType> box(const BoundingBox3<FloatType> &bbox, const vec4<FloatType>& color = vec4<FloatType>(1, 1, 1, 1));
 

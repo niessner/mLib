@@ -58,7 +58,7 @@ namespace ml {
 	}
 
 	template<class FloatType>
-	TriMesh<FloatType> Shapes<FloatType>::box(const OBBf &obb, const vec4<FloatType>& color)
+	TriMesh<FloatType> Shapes<FloatType>::box(const OrientedBoundingBox3f &obb, const vec4<FloatType>& color)
 	{
 		TriMesh<FloatType> result = box(BoundingBox3<FloatType>(vec3<FloatType>::origin, vec3<FloatType>(1.0f, 1.0f, 1.0f)), color);
 

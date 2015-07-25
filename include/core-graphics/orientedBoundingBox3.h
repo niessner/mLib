@@ -968,8 +968,8 @@ std::ostream& operator<<(std::ostream& os, const OrientedBoundingBox3<FloatType>
 typedef OrientedBoundingBox3<float> OrientedBoundingBox3f;
 typedef OrientedBoundingBox3<double> OrientedBoundingBox3d;
 
-typedef OrientedBoundingBox3<float> OBBf;
-typedef OrientedBoundingBox3<double> OBBd;
+typedef OrientedBoundingBox3<float> OBB3f;
+typedef OrientedBoundingBox3<double> OBB3d;
 
 } //namespace ml
 
