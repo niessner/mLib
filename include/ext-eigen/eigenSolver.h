@@ -248,7 +248,7 @@ template<class FloatType> class EigenWrapper
 {
 public:
 	//! given a set of 3d correspondences determine a rotation and translation vector
-	static Matrix4x4<FloatType> kabsch(const std::vector<vec3<FloatType>>& source, const std::vector<vec3<FloatType>>& target, vec3d& eigenvalues) {
+	static Matrix4x4<FloatType> kabsch(const std::vector<vec3<FloatType>>& source, const std::vector<vec3<FloatType>>& target, vec3<FloatType>& eigenvalues, bool printDebug = false) {
 		if (source.size() != target.size()) throw MLIB_EXCEPTION("invalid dimensions");
 		if (source.size() < 3) throw MLIB_EXCEPTION("need at least 3 points");
 		//{
@@ -364,10 +364,19 @@ public:
 		Eigen::VectorXd S = svd.singularValues();
 		Eigen::MatrixXd W = svd.matrixV();
 		Eigen::MatrixXd I = Eigen::MatrixXd::Identity(D, D);
+		if (printDebug) {
+			std::cout << "AtA:" << std::endl;
+			for (unsigned int i = 0; i < C.rows(); i++) {
+				for (unsigned int j = 0; j < C.cols(); j++)
+					std::cout << C(i, j) << " ";
+				std::cout << std::endl;
+			}
+			std::cout << "eigenvalues: " << S[0] << ", " << S[1] << ", " << S[2] << std::endl;
+		}
 
-		eigenvalues[0] = S[0];
-		eigenvalues[1] = S[1];
-		eigenvalues[2] = S[2];
+		eigenvalues[0] = (FloatType)S[0];
+		eigenvalues[1] = (FloatType)S[1];
+		eigenvalues[2] = (FloatType)S[2];
 
 		if ((V * W.transpose()).determinant() < 0)
 			I(D - 1, D - 1) = -1;
@@ -409,6 +418,58 @@ public:
 		for (size_t i = 0; i < source.size(); i++) {
 			residuals[i] = vec3<FloatType>::distSq(trans * source[i], target[i]);
 		}
+	}
+
+	//! returns eigenvalues
+	static vec3<FloatType> covarianceSVD(const std::vector<vec3<FloatType>>& points) {
+		if (points.size() < 3) throw MLIB_EXCEPTION("need at least 3 points");
+		vec3<FloatType> eigenvalues;
+
+		Eigen::MatrixXd P(3, points.size());
+		for (size_t i = 0; i < points.size(); i++) {
+			P(0, i) = points[i].x;
+			P(1, i) = points[i].y;
+			P(2, i) = points[i].z;
+		}
+		Eigen::VectorXd weights(points.size());
+		for (unsigned int i = 0; i < weights.size(); i++) {
+			weights[i] = 1.0;
+		}
+
+		size_t D = P.rows(); // dimension of the space
+		size_t N = P.cols(); // number of points
+		Eigen::VectorXd	normalizedWeights = Eigen::VectorXd(weights.size());
+
+		// normalize weights to sum to 1
+		{
+			double	sumWeights = 0;
+			for (unsigned int i = 0; i < weights.size(); i++)
+			{
+				sumWeights += weights(i);
+			}
+			normalizedWeights = weights * (1.0 / sumWeights);
+		}
+
+		// Centroids
+		Eigen::VectorXd	p0 = P * normalizedWeights;
+		Eigen::VectorXd v1 = Eigen::VectorXd::Ones(N);
+		Eigen::MatrixXd P_centred = P - p0*v1.transpose(); // translating P to center the origin
+
+		// Covariance between both matrices
+		Eigen::MatrixXd C = P_centred * normalizedWeights.asDiagonal() * P_centred.transpose();
+
+		// SVD
+		Eigen::JacobiSVD<Eigen::MatrixXd> svd(C, Eigen::ComputeThinU | Eigen::ComputeThinV);
+
+		//Eigen::MatrixXd V = svd.matrixU();
+		Eigen::VectorXd S = svd.singularValues();
+		//Eigen::MatrixXd W = svd.matrixV();
+
+		eigenvalues[0] = (FloatType)S[0];
+		eigenvalues[1] = (FloatType)S[1];
+		eigenvalues[2] = (FloatType)S[2];
+
+		return eigenvalues;
 	}
 };
 typedef EigenWrapper<float> EigenWrapperf;

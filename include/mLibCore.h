@@ -177,6 +177,7 @@ namespace ml
 #include "core-graphics/polygon.h"
 #include "core-graphics/boundingBox2.h"
 #include "core-graphics/boundingBox3.h"
+#include "core-graphics/orientedBoundingBox2.h"
 #include "core-graphics/orientedBoundingBox3.h"
 #include "core-graphics/dist.h"
 #include "core-util/colorGradient.h"

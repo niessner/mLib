@@ -199,10 +199,10 @@ public:
 		return (m_AxesScaled[0] + m_AxesScaled[1] + m_AxesScaled[2]).length();
 	}
 
-	void getCornerPoints(std::vector<vec3<FloatType>>& points) const {
-		points.resize(8);
-		getCornerPoints(&points[0]);
-	} 
+	//void getCornerPoints(std::vector<vec3<FloatType>>& points) const {
+	//	points.resize(8);
+	//	getCornerPoints(&points[0]);
+	//} 
 
 	std::vector< LineSegment3<FloatType> > getEdges() const
 	{
