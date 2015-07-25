@@ -203,7 +203,7 @@ public:
 	}
 	//! transform a 2D-vector with the matrix
 	vec2<FloatType> operator* (const vec2<FloatType>& v) const {
-		return vec3<FloatType>(
+		return vec2<FloatType>(
 			matrix[0]*v[0] + matrix[1]*v[1],
 			matrix[2]*v[0] + matrix[3]*v[1]
 		);
@@ -252,7 +252,7 @@ public:
 		return vec2<FloatType>(matrix[0],matrix[2]);
 	}
 	//! get the y column out of the matrix
-	vec3<FloatType> ycol() const {
+	vec2<FloatType> ycol() const {
 		return vec2<FloatType>(matrix[1],matrix[3]);
 	}
 	//! get the x row out of the matrix
