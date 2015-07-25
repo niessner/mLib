@@ -94,8 +94,8 @@ public:
     void toggleWireframe();
 
 	//! clears the back buffer (color and depth)
-	void clear(const ml::vec4f &clearColor = vec4f(0, 0, 0, 0), float clearDepth = 1.0f);
-    void bindRenderDepth();
+	void clear(const vec4f &clearColor = vec4f(0, 0, 0, 0), float clearDepth = 1.0f);
+    void bindRenderTarget();
 
     D3D11ShaderManager& getShaderManager()
 	{

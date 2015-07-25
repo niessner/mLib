@@ -213,7 +213,7 @@ void D3D11GraphicsDevice::renderBeginFrame()
     m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void D3D11GraphicsDevice::bindRenderDepth()
+void D3D11GraphicsDevice::bindRenderTarget()
 {
     m_context->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
     D3D11_VIEWPORT viewport;
@@ -226,7 +226,7 @@ void D3D11GraphicsDevice::bindRenderDepth()
     m_context->RSSetViewports(1, &viewport);
 }
 
-void D3D11GraphicsDevice::clear(const ml::vec4f &clearColor, float clearDepth)
+void D3D11GraphicsDevice::clear(const vec4f &clearColor, float clearDepth)
 {
     m_context->ClearRenderTargetView(m_renderTargetView, clearColor.array);
     m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, clearDepth, 0);

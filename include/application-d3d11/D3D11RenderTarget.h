@@ -69,8 +69,13 @@ public:
 	void reset();
 
     // sets the render and depth buffers as the render target for the current device.
-    // to return to the original graphics device render target, call bindRenderDepth() on the graphics device.
+    // to return to the original graphics device render target, call bindRenderTarget() on the graphics device.
     void bind();
+
+	//! restores the default render target
+	void unbind() {
+		m_graphics->bindRenderTarget();
+	}
 
     // clears the render and depth buffers
     void clear(const vec4f &clearColor = vec4f(0.0f), float clearDepth = 1.0f);
