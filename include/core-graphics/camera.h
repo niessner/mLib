@@ -5,7 +5,7 @@
 namespace ml {
 
     template <class FloatType>
-    class Camera {
+    class Camera : public BinaryDataSerialize< Camera<FloatType> > {
     public:
         Camera() {}
         Camera(const std::string &s);
