@@ -122,7 +122,7 @@ public:
 
 	//! maps from integer pixel coordinates to NDC space [-1;1]^2
 	vec2f pixelToNDC(const vec2i& p) const {
-		pixelToNDC(p, getWidth(), getHeight());
+		return pixelToNDC(p, getWidth(), getHeight());
 	}
 
 	//! maps from integer pixel coordinates to NDC space [-1;1]^2
