@@ -456,7 +456,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		ml::mat4f projToCam = m_camera.getPerspective().getInverse();
 		ml::mat4f camToWorld = m_camera.getCamera().getInverse();
 		ml::mat4f trans =  camToWorld * projToCam;
-		ml::ColorImageRGB image(app.window.getWidth(), app.window.getHeight());
+		ml::ColorImageR32G32B32 image(app.window.getWidth(), app.window.getHeight());
 
 		const std::string testFilename = "scans/gates381.ply";
 		ml::MeshDataf meshData = ml::MeshIOf::loadFromFile(testFilename);
