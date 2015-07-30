@@ -149,6 +149,7 @@ namespace ml
 #include "core-util/keycodes.h"
 #include "core-util/pipe.h"
 #include "core-util/UIConnection.h"
+#include "core-util/EventMap.h"
 #include "core-util/sparseGrid3.h"
 #include "core-base/binaryGrid3.h"
 #include "core-base/baseImage.h"
