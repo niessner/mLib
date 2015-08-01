@@ -437,6 +437,11 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
     if(key == KEY_LEFT) m_camera.lookRight(theta);
     if(key == KEY_RIGHT) m_camera.lookRight(-theta);
 
+	if (key == KEY_F1) {
+		auto color = app.graphics.castD3D11().captureBackBuffer();
+		FreeImageWrapper::saveImage("screenshot.png", color);
+	}
+
 	if(key == 'R') {
 		//float fovX = m_camera.getFoV();
 		//float fovY = fovX/m_camera.getAspect();
@@ -484,8 +489,8 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 
 				float depth0 = 0.5f;
 				float depth1 = 1.0f;
-				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)x*depth0, (float)(app.window.getHeight() - 1 - y)*depth0, depth0, 1.0f);
-				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)x*depth1, (float)(app.window.getHeight() - 1 - y)*depth1, depth1, 1.0f);
+				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)x*depth0, (float)y*depth0, depth0, 1.0f);
+				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)x*depth1, (float)y*depth1, depth1, 1.0f);
 
 				vec3f eye = m_camera.getEye();
 				Rayf r(m_camera.getEye(), (p1.getVec3() - p0.getVec3()).getNormalized());
@@ -528,6 +533,8 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		ml::FreeImageWrapper::saveImage("test.jpg", image);
 
 	}
+
+	
 }
 
 void AppTest::mouseDown(ml::ApplicationData &app, ml::MouseButtonType button)

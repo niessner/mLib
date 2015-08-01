@@ -83,11 +83,13 @@ namespace ml {
 
 		static Matrix4x4<FloatType> visionToGraphicsProj(unsigned int width, unsigned int height, FloatType fx, FloatType fy, FloatType zNear, FloatType zFar) 
 		{
+			//not entirely sure whether there is a '-1' for width/height somewhere
 			FloatType fov = (FloatType)2.0 * atan((FloatType)width / ((FloatType)2 * fx));
 			FloatType aspect = (FloatType)width / (FloatType)height;
 			return perspectiveFov(math::radiansToDegrees(fov), aspect, zNear, zFar);
 		}
 
+		//! note: this assumes the DX11/OGl structure of m (see NDC space)
 		static Matrix4x4<FloatType> graphicsToVisionProj(const Matrix4x4<FloatType>& m, unsigned int width, unsigned int height)
 		{
 			FloatType fov = (FloatType)2.0 * atan((FloatType)1 / m(0,0));
@@ -95,13 +97,24 @@ namespace ml {
 			FloatType t = tan((FloatType)0.5 * fov);
 			FloatType focalLengthX = (FloatType)0.5 * (FloatType)width / t;
 			FloatType focalLengthY = (FloatType)0.5 * (FloatType)height / t * aspect;
+
+			focalLengthY = -focalLengthY;
+
 			return  Matrix4x4<FloatType>(
-				focalLengthX, 0.0f, (FloatType)width / 2.0f, 0.0f,
-				0.0f, focalLengthY, (FloatType)height / 2.0f, 0.0f,
+				focalLengthX, 0.0f, (FloatType)(width-1) / 2.0f, 0.0f,
+				0.0f, focalLengthY, (FloatType)(height-1) / 2.0f, 0.0f,
 				0.0f, 0.0f, 1.0f, 0.0f,
 				0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
+
+		float getNearPlane() const {
+			return m_zNear;
+		}
+
+		float getFarPlane() const {
+			return m_zFar;
+		}
     private:
         void update();
 		
