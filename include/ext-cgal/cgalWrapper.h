@@ -7,7 +7,7 @@ namespace ml {
 template <class FloatType>
 class CGALWrapper {
 public:
-	static std::vector<vec3<FloatType>> convexHull(typename std::vector<vec3<FloatType>>::const_iterator pBegin, typename std::vector<vec3<FloatType>>::const_iterator pEnd) {
+	static std::vector<vec3<FloatType>> convexHull3(typename std::vector<vec3<FloatType>>::const_iterator pBegin, typename std::vector<vec3<FloatType>>::const_iterator pEnd) {
 
 		typedef CGAL::Exact_predicates_inexact_constructions_kernel  K;
 		typedef CGAL::Polyhedron_3<K>                                Polyhedron_3;
@@ -38,15 +38,60 @@ public:
 		return out;
 	}
 
-	static std::vector<vec3<FloatType>> convexHull(const std::vector<vec3<FloatType>>& points) {
-		return convexHull(points.begin(), points.end());
+	static std::vector<vec3<FloatType>> convexHull3(const std::vector<vec3<FloatType>>& points) {
+		return convexHull3(points.begin(), points.end());
 	}
 
+	static std::vector<vec2<FloatType>> convexHull2(typename std::vector<vec2<FloatType>>::const_iterator pBegin, typename std::vector<vec2<FloatType>>::const_iterator pEnd) {
+		typedef CGAL::Simple_cartesian<FloatType>        K;
+		typedef K::Point_2                           Point_2;
+		typedef CGAL::Polygon_2<K>                   Polygon_2;
 
+		const size_t nPoints = pEnd - pBegin;
+		std::vector<Point_2> cgalPoints;
+		cgalPoints.reserve(nPoints);
+		for (auto& it = pBegin; it != pEnd; ++it) {
+			const auto& p = *it;
+			cgalPoints.push_back(Point_2(p[0], p[1]));
+		}
 
+		Polygon_2 p;
+		CGAL::convex_hull_2(begin(cgalPoints), end(cgalPoints), std::back_inserter(p));
+		std::vector<vec2<FloatType>> out(p.size()); 
+
+		size_t i = 0;
+		for (auto it = p.vertices_begin(); it != p.vertices_end(); ++it, ++i) {
+			vec2<FloatType>& v = out[i];
+			v[0] = static_cast<FloatType>(it->x());
+			v[1] = static_cast<FloatType>(it->y());
+		}
+		return out;
+	}
+	static std::vector<vec2<FloatType>> convexHull2(const std::vector<vec2<FloatType>>& points) {
+		return convexHull2(points.begin(), points.end());
+	}
+
+	static FloatType polygonArea(typename std::vector<vec2<FloatType>>::const_iterator pBegin, typename std::vector<vec2<FloatType>>::const_iterator pEnd) {
+		typedef CGAL::Simple_cartesian<FloatType>        K;
+		typedef K::Point_2                           Point_2;
+		typedef CGAL::Polygon_2<K>                   Polygon_2;
+
+		const size_t nPoints = pEnd - pBegin;
+		std::vector<Point_2> cgalPoints;
+		cgalPoints.reserve(nPoints);
+		for (auto& it = pBegin; it != pEnd; ++it) {
+			const auto& p = *it;
+			cgalPoints.push_back(Point_2(p[0], p[1]));
+		}
+		Polygon_2 p(begin(cgalPoints), end(cgalPoints));
+		return (FloatType)p.area();
+	}
+	static FloatType polygonArea(const std::vector<vec2<FloatType>>& points) {
+		return polygonArea(points.begin(), points.end());
+	}
 
 	static std::vector<vec2<FloatType>> minRectangle2D(typename std::vector<vec2<FloatType>>::const_iterator pBegin, typename std::vector<vec2<FloatType>>::const_iterator pEnd) {
-		typedef CGAL::Simple_cartesian<float>        K;
+		typedef CGAL::Simple_cartesian<FloatType>        K;
 		typedef K::Point_2                           Point_2;
 		typedef K::Line_2                            Line_2;
 		typedef CGAL::Polygon_2<K>                   Polygon_2;
@@ -71,8 +116,8 @@ public:
 		size_t i = 0;
 		for (auto it = p_m.vertices_begin(); it != p_m.vertices_end(); ++it, ++i) {
 			vec2<FloatType>& v = out[i];
-			v[0] = static_cast<float>(it->x());
-			v[1] = static_cast<float>(it->y());
+			v[0] = static_cast<FloatType>(it->x());
+			v[1] = static_cast<FloatType>(it->y());
 		}
 		return out;
 	}

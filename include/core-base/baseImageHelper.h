@@ -44,6 +44,47 @@ namespace BaseImageHelper {
         }
     }
 
+	//! untested!
+	inline vec3f convertRGBtoHSV(const vec3f& rgb)
+	{
+		vec3f hsv;
+		const float r = rgb.r;
+		const float g = rgb.g;
+		const float b = rgb.b;
+
+		float min, max, delta;
+		min = std::min(std::min(r, g), b);
+		max = std::min(std::min(r, g), b);
+		hsv[2] = max;				// v
+		delta = max - min;
+		if (max != 0)
+			hsv[1] = delta / max;		// s
+		else {
+			// r = g = b = 0		// s = 0, v is undefined
+			hsv[1] = 0;
+			hsv[0] = -1; // undefined hue
+			return hsv;
+		}
+		if (r == max)
+			hsv[0] = (g - b) / delta;		// between yellow & magenta
+		else if (g == max)
+			hsv[0] = 2 + (b - r) / delta;	// between cyan & yellow
+		else
+			hsv[0] = 4 + (r - g) / delta;	// between magenta & cyan
+		hsv[0] *= 60;				// degrees
+		if (hsv[0] < 0)
+			hsv[0] += 360;
+		return hsv;
+	}
+
+	inline vec3f convertDepthToHSV(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
+		float depthZeroOne = (depth - depthMin) / (depthMax - depthMin);
+		float x = 1.0f - depthZeroOne;
+		if (x < 0.0f)	x = 0.0f;
+		if (x > 1.0f)	x = 1.0f;
+		return vec3f(240.0f*x, 1.0f, 0.5f);
+	}
+
     inline vec3f convertDepthToRGB(float depth, float depthMin = 0.0f, float depthMax = 1.0f) {
         float depthZeroOne = (depth - depthMin) / (depthMax - depthMin);
         float x = 1.0f - depthZeroOne;
