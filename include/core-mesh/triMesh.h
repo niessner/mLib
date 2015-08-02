@@ -469,7 +469,7 @@ namespace ml {
 				}
 			}
 		}
-	private:
+	//private:
 
 		void voxelizeTriangle(const vec3<FloatType>& v0, const vec3<FloatType>& v1, const vec3<FloatType>& v2, BinaryGrid3& grid, bool solid = false) const {
 
@@ -545,6 +545,25 @@ namespace ml {
 
 	typedef TriMesh<float> TriMeshf;
 	typedef TriMesh<double> TriMeshd;
+
+    //
+    // Matthias TODO: I made all these things public because I don't know how private serialization works on BinaryDataBuffer stuff!
+    //
+    template<class BinaryDataBuffer, class BinaryDataCompressor, class FloatType>
+    inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<< (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const TriMesh<FloatType> &m) {
+        s << m.m_bHasNormals << m.m_bHasTexCoords << m.m_bHasColors;
+        s.writePrimitiveVector(m.m_Vertices);
+        s.writePrimitiveVector(m.m_Indices);
+        return s;
+    }
+
+    template<class BinaryDataBuffer, class BinaryDataCompressor, class FloatType>
+    inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>> (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, TriMesh<FloatType> &m) {
+        s >> m.m_bHasNormals >> m.m_bHasTexCoords >> m.m_bHasColors;
+        s.readPrimitiveVector(m.m_Vertices);
+        s.readPrimitiveVector(m.m_Indices);
+        return s;
+    }
 
 }  // namespace ml
 

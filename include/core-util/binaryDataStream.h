@@ -26,6 +26,23 @@ public:
 		writeData((const BYTE*)&t, sizeof(T));
 	}
 
+    template<class T>
+    void writePrimitiveVector(const std::vector<T> &v)
+    {
+        writeData(v.size());
+        writeData((const BYTE *)v.data(), sizeof(T) * v.size());
+    }
+
+    template<class T>
+    void readPrimitiveVector(std::vector<T> &v)
+    {
+        size_t size;
+        readData(&size);
+        v.clear();
+        v.resize(size);
+        readData((BYTE *)v.data(), sizeof(T) * v.size());
+    }
+
 	//start compression after that byte size (only if compression is enabled)
 #define COMPRESSION_THRESHOLD_ 1024 
 	void writeData(const BYTE* t, size_t size) {
@@ -110,6 +127,11 @@ template<class BinaryDataBuffer, class BinaryDataCompressor>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, UINT64 i) {
 	s.writeData(i);
 	return s;
+}
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, bool i) {
+    s.writeData(i);
+    return s;
 }
 template<class BinaryDataBuffer, class BinaryDataCompressor>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, int i) {
@@ -209,6 +231,11 @@ template<class BinaryDataBuffer, class BinaryDataCompressor>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, int& i) {
 	s.readData(&i);
 	return s;
+}
+template<class BinaryDataBuffer, class BinaryDataCompressor>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, bool& i) {
+    s.readData(&i);
+    return s;
 }
 template<class BinaryDataBuffer, class BinaryDataCompressor>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, unsigned int& i) {

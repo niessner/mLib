@@ -28,9 +28,9 @@ public:
 		std::swap(a.m_TextureFilename_Ka, b.m_TextureFilename_Ka);
 		std::swap(a.m_TextureFilename_Kd, b.m_TextureFilename_Kd);
 		std::swap(a.m_TextureFilename_Ks, b.m_TextureFilename_Ks);
-		std::swap(a.m_Texture_Ka, b.m_Texture_Ka);
-		std::swap(a.m_Texture_Kd, b.m_Texture_Kd);
-		std::swap(a.m_Texture_Ks, b.m_Texture_Ks);
+		//std::swap(a.m_Texture_Ka, b.m_Texture_Ka);
+		//std::swap(a.m_Texture_Kd, b.m_Texture_Kd);
+		//std::swap(a.m_Texture_Ks, b.m_Texture_Ks);
 	}
 
 	static void loadFromMTL(const std::string& filename, std::vector<Material>& res) {
@@ -93,9 +93,9 @@ public:
 		m_TextureFilename_Ka = "";
 		m_TextureFilename_Kd = "";
 		m_TextureFilename_Ks = "";
-		m_Texture_Ka.free();
-		m_Texture_Kd.free();
-		m_Texture_Ks.free();
+		//m_Texture_Ka.free();
+		//m_Texture_Kd.free();
+		//m_Texture_Ks.free();
 	}
 
 	std::string			m_name;
@@ -107,13 +107,31 @@ public:
 	std::string			m_TextureFilename_Ka;
 	std::string			m_TextureFilename_Kd;
 	std::string			m_TextureFilename_Ks;
-	ColorImageR8G8B8A8	m_Texture_Ka;
-	ColorImageR8G8B8A8	m_Texture_Kd;
-	ColorImageR8G8B8A8	m_Texture_Ks;
+	//ColorImageR8G8B8A8	m_Texture_Ka;
+	//ColorImageR8G8B8A8	m_Texture_Kd;
+	//ColorImageR8G8B8A8	m_Texture_Ks;
 };
 
 typedef Material<float> Materialf;
 typedef Material<double> Materiald;
+
+template<class BinaryDataBuffer, class BinaryDataCompressor, class FloatType>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<< (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Material<FloatType> &m) {
+    s << m.m_name << m.m_ambient << m.m_diffuse << m.m_specular << m.m_shiny;
+    s << m.m_TextureFilename_Ka;
+    s << m.m_TextureFilename_Kd;
+    s << m.m_TextureFilename_Ks;
+    return s;
+}
+
+template<class BinaryDataBuffer, class BinaryDataCompressor, class FloatType>
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>> (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Material<FloatType> &m) {
+    s >> m.m_name >> m.m_ambient >> m.m_diffuse >> m.m_specular >> m.m_shiny;
+    s >> m.m_TextureFilename_Ka;
+    s >> m.m_TextureFilename_Kd;
+    s >> m.m_TextureFilename_Ks;
+    return s;
+}
 
 }
 
