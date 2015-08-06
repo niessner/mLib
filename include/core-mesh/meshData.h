@@ -694,7 +694,7 @@ public:
 
 	//! computes per vertex normals
 	void computeVertexNormals() {
-		MLIB_WARNING("untested");
+
 		if (m_FaceIndicesVertices.size() == 0) throw MLIB_EXCEPTION("must be an indexed face set");
 		m_Normals.clear();
 		m_FaceIndicesNormals.clear();
@@ -707,7 +707,8 @@ public:
 			for (unsigned int i = 1; i < face.size() - 1; i++) {
 				n += (m_Vertices[face[i]] - m_Vertices[first]) ^ (m_Vertices[face[i+1]] - m_Vertices[first]);
 			}
-			n.getNormalized();
+
+			n.normalize();
 
 			for (auto idx : face) {
 				m_Normals[idx] += n;

@@ -3,8 +3,14 @@
 
 void Vizzer::init(ml::ApplicationData &app)
 {
-    m_mesh.load(app.graphics, ml::TriMeshf(ml::Shapesf::torus(ml::vec3f::origin, 1.0f, 0.2f, 20, 20)));
+	TriMeshf torus = Shapesf::torus(vec3f::origin, 1.0f, 0.2f, 20, 20);
+	MeshDataf torusMesh = torus.getMeshData();
+	torusMesh.computeVertexNormals();
+	MeshIOf::saveToFile("test.obj", torusMesh);
+
+    m_mesh.load(app.graphics, torus);
 	
+
     m_vsColor.load(app.graphics, "shaders/test.shader");
     m_psColor.load(app.graphics, "shaders/test.shader");
 
