@@ -78,7 +78,7 @@ int main()
 
 #endif
 
-	ColorImageRGB image(2, 2);
+	ColorImageR32G32B32 image(2, 2);
 	image(0, 0) = (vec3f)RGBColor::Red.getVec3() / 255.0f;
 	image(0, 1) = (vec3f)RGBColor::Blue.getVec3() / 255.0f;
 	image(1, 0) = (vec3f)RGBColor::Green.getVec3() / 255.0f;
