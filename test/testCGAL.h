@@ -11,7 +11,7 @@ public:
 			points.push_back(vec3f(1, 0, 0));
 			points.push_back(vec3f(0.5f, 0.5f, 0));
 
-			std::vector<vec3f> convexHull = CGALWrapper<float>::convexHull(points);
+			std::vector<vec3f> convexHull = CGALWrapper<float>::convexHull3(points);
 		}
 
 		{
@@ -26,7 +26,7 @@ public:
 			}
 
 			PointCloudIOf::saveToFile("original.ply", PointCloudf(points));
-			std::vector<vec3f> convexHull = CGALWrapper<float>::convexHull(points);
+			std::vector<vec3f> convexHull = CGALWrapper<float>::convexHull3(points);
 			PointCloudIOf::saveToFile("convexHull.ply", PointCloudf(convexHull));
 		}
 		ml::Console::log() << "CGAL test0 passed" << std::endl;

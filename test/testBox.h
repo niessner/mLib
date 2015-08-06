@@ -14,7 +14,7 @@ public:
 			points[i] = mat3f::rotationZ(45) * points[i];
 		}
 
-		points = CGALWrapperf::convexHull(points);
+		points = CGALWrapperf::convexHull3(points);
 
 		std::cout << "PCA" << std::endl;
 		std::cout << CGALWrapperf::computeOrientedBoundingBox(points, CGALWrapperf::PCA) << std::endl;
