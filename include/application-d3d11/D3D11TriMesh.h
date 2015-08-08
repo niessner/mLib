@@ -40,6 +40,7 @@ public:
 
     void load(GraphicsDevice &g, const D3D11TriMesh& mesh)
     {
+		m_graphics = &g.castD3D11();
         m_triMesh = mesh.m_triMesh;
         reset();
     }
