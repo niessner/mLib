@@ -566,7 +566,7 @@ namespace ml {
 		}
 
         //! counts the number of pixels
-        unsigned int getNumPixels() {
+        unsigned int getNumPixels() const {
             return m_width * m_height;
         }
 
@@ -1120,6 +1120,17 @@ namespace ml {
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				m_data[i] = ml::vec3f(data[i]);
 			}
+		}
+
+		BaseImage<float> convertToGrayscale() const {
+			BaseImage<float> res(getWidth(), getHeight());
+
+			for (const auto& p : *this) {
+				float v = (0.2126f*p.value.x + 0.7152f*p.value.y + 0.0722f*p.value.z);
+				res(p.x, p.y) = v;
+			}
+
+			return res;
 		}
 	};
 
