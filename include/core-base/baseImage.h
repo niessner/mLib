@@ -1126,7 +1126,8 @@ namespace ml {
 			BaseImage<float> res(getWidth(), getHeight());
 
 			for (const auto& p : *this) {
-				float v = (0.2126f*p.value.x + 0.7152f*p.value.y + 0.0722f*p.value.z);
+				//float v = (0.2126f*p.value.x + 0.7152f*p.value.y + 0.0722f*p.value.z);
+				float v = (0.299f*p.value.x + 0.587f*p.value.y + 0.114f*p.value.z);
 				res(p.x, p.y) = v;
 			}
 
@@ -1196,11 +1197,54 @@ namespace ml {
 		}
 	};
 
+	class ColorImageR8G8B8A8 : public BaseImage < vec4uc > {
+	public:
+		ColorImageR8G8B8A8() : BaseImage() {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_InvalidValue = vec4uc(0, 0, 0, 0);
+		}
+		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4uc *data) : BaseImage(width, height, data) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_InvalidValue = vec4uc(0, 0, 0, 0);
+		}
+		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4f *data, float scale = 255.0f) : BaseImage(width, height) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_InvalidValue = vec4uc(0, 0, 0, 0);
+
+			for (unsigned int y = 0; y < m_height; y++) {
+				for (unsigned int x = 0; x < m_width; x++) {
+					vec4uc value(
+						(unsigned char)(data[y*m_width + x].x * scale),
+						(unsigned char)(data[y*m_width + x].y * scale),
+						(unsigned char)(data[y*m_width + x].z * scale),
+						(unsigned char)(data[y*m_width + x].w * scale)
+						);
+					setPixel(x, y, value);
+				}
+			}
+		}
+		ColorImageR8G8B8A8(unsigned int width, unsigned int height) : BaseImage(width, height) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_InvalidValue = vec4uc(0, 0, 0, 0);
+		}
+
+		BaseImage<float> convertToGrayscale() const {
+			BaseImage<float> res(getWidth(), getHeight());
+
+			for (const auto& p : *this) {
+				//float v = (0.2126f*p.value.x + 0.7152f*p.value.y + 0.0722f*p.value.z)  / 255.0f;
+				float v = (0.299f*p.value.x + 0.587f*p.value.y + 0.114f*p.value.z)  / 255.0f;
+				res(p.x, p.y) = v;
+			}
+
+			return res;
+		}
+	};
+
 	typedef ColorImageR32G32B32	PointImage;
 
 	typedef BaseImage<float>	ColorImageR32;
 	typedef BaseImage<vec3uc>	ColorImageR8G8B8;
-	typedef BaseImage<vec4uc>	ColorImageR8G8B8A8;
 
 } // namespace ml
 
