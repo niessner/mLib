@@ -1,3 +1,4 @@
+RNG rng -> normal() <- the normal distrubtion seems to be broken
 change naming scheme from getPointer to getData which sounds much better :)
 renderTarget -> multipleRenderTargets
 mat4 setRotation/setTranslation

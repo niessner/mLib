@@ -150,7 +150,18 @@ namespace util
 
     std::string removeExtensions(const std::string &path)
     {
-        return directoryFromPath(path) + '\\' + ml::util::split(fileNameFromPath(path), '.').front();
+		//std::vector<std::string> s = ml::util::split(path, '.', true);
+		//std::string res = s[0];
+		//for (size_t i = 1; i < s.size() - 1; i++) {
+		//	res = res + "." + s[i];
+		//}
+		//return res;
+
+		std::size_t found = path.find_last_of('.');
+		if (found != std::string::npos) {
+			return path.substr(0, found);
+		}
+		return path;
     }
 
 	std::vector<std::string> getFileLines(const std::string &filename, UINT minLineLength)
