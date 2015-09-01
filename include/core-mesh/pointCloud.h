@@ -61,6 +61,7 @@ public:
 		return m_points.size() == 0;
 	}
 
+
 	std::vector<vec3<FloatType>> m_points;
 	std::vector<vec3<FloatType>> m_normals;
 	std::vector<vec4<FloatType>> m_colors;

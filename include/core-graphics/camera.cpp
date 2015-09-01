@@ -1,31 +1,31 @@
 
 namespace ml {
 
-	template <class FloatType>
-	Camera<FloatType>::Camera(const vec3<FloatType>& eye, const vec3<FloatType>& worldUp, const vec3<FloatType>& right, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar) {
-		m_eye = eye;
-		m_worldUp = worldUp.getNormalized();
-		m_right = right.getNormalized();
-		m_look = (m_worldUp ^ m_right).getNormalized();
-		m_up = (m_right ^ m_look).getNormalized();
+	//template <class FloatType>
+	//Camera<FloatType>::Camera(const vec3<FloatType>& eye, const vec3<FloatType>& worldUp, const vec3<FloatType>& right, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar) {
+	//	m_eye = eye;
+	//	m_worldUp = worldUp.getNormalized();
+	//	m_right = right.getNormalized();
+	//	m_look = (m_worldUp ^ m_right).getNormalized();
+	//	m_up = (m_right ^ m_look).getNormalized();
 
-		m_fieldOfView = fieldOfView;
-		m_aspect = aspect;
-		m_zNear = zNear;
-		m_zFar = zFar;
+	//	m_fieldOfView = fieldOfView;
+	//	m_aspect = aspect;
+	//	m_zNear = zNear;
+	//	m_zFar = zFar;
 
-		m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);
+	//	m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);
 
-		update();
-	}
+	//	update();
+	//}
 
     template <class FloatType>
-    Camera<FloatType>::Camera(const vec3<FloatType>& eye, const vec3<FloatType>& worldUp, const vec3<FloatType>& lookAt, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, bool unused) {
+	Camera<FloatType>::Camera(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& worldUp, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar) {
         m_eye = eye;
         m_worldUp = worldUp.getNormalized();
-        m_look = (lookAt - eye).getNormalized();
+        m_look = lookDir.getNormalized();
         m_right = (m_look ^ m_worldUp).getNormalized();
-        m_up = (m_right ^ m_look).getNormalized();
+        m_up = worldUp;
 
         m_fieldOfView = fieldOfView;
         m_aspect = aspect;
@@ -38,13 +38,15 @@ namespace ml {
     }
 
 	template <class FloatType>
-	Camera<FloatType>::Camera(const Matrix4x4<FloatType>& m, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, const bool flipRight) {
-		m_eye = vec3<FloatType>(m(0, 3), m(1, 3), m(2, 3));
-		m_worldUp = vec3<FloatType>(m(0, 1), m(1, 1), m(2, 1));
-		m_right = vec3<FloatType>(m(0, 0), m(1, 0), m(2, 0));
+	Camera<FloatType>::Camera(const Matrix4x4<FloatType>& worldToCamera, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, bool flipRight = false) {
+		m_eye		= vec3<FloatType>(worldToCamera(0, 3), worldToCamera(1, 3), worldToCamera(2, 3));
+		m_worldUp	= vec3<FloatType>(worldToCamera(0, 1), worldToCamera(1, 1), worldToCamera(2, 1));
+		m_right		= vec3<FloatType>(worldToCamera(0, 0), worldToCamera(1, 0), worldToCamera(2, 0));
+		
 		if (flipRight) {
 			m_right = -m_right;
 		}
+		
 		m_look = (m_worldUp ^ m_right).getNormalized();
 		m_up = (m_right ^ m_look).getNormalized();
 
@@ -110,29 +112,28 @@ namespace ml {
 	void Camera<FloatType>::update() {
 		m_camera = viewMatrix(m_eye, m_look, m_up, m_right);
 		m_cameraPerspective = m_perspective * m_camera;
-		//m_cameraPerspective = m_perspective;
 	}
 
 	//! angle is specified in degrees
 	template <class FloatType>
 	void Camera<FloatType>::lookRight(FloatType theta) {
-		applyTransform(Matrix4x4<FloatType>::rotation(m_worldUp, theta));
+		applyTransform(Matrix3x3<FloatType>::rotation(m_worldUp, theta));
 	}
 
 	//! angle is specified in degrees
 	template <class FloatType>
 	void Camera<FloatType>::lookUp(FloatType theta) {
-		applyTransform(Matrix4x4<FloatType>::rotation(m_right, -theta));
+		applyTransform(Matrix3x3<FloatType>::rotation(m_right, -theta));
 	}
 
 	//! angle is specified in degrees
 	template <class FloatType>
 	void Camera<FloatType>::roll(FloatType theta) {
-		applyTransform(Matrix4x4<FloatType>::rotation(m_look, theta));
+		applyTransform(Matrix3x3<FloatType>::rotation(m_look, theta));
 	}
 
 	template <class FloatType>
-	void Camera<FloatType>::applyTransform(const Matrix4x4<FloatType>& transform) {
+	void Camera<FloatType>::applyTransform(const Matrix3x3<FloatType>& transform) {
 		m_up = transform * m_up;
 		m_right = transform * m_right;
 		m_look = transform * m_look;
@@ -163,6 +164,17 @@ namespace ml {
         update();
     }
 
+	// resets given a new eye, lookDir, up, and right vector
+	template <class FloatType>
+	void Camera<FloatType>::reset(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& worldUp) {
+		m_worldUp = worldUp.getNormalized();
+		m_look = lookDir.getNormalized();
+		m_right = (m_look ^ m_worldUp).getNormalized();
+		m_up = worldUp;
+		m_eye = eye;
+		update();
+	}
+
 	template <class FloatType>
 	Matrix4x4<FloatType> Camera<FloatType>::perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar) {
 		FloatType width = 1.0f / tanf(math::degreesToRadians(fieldOfView) * 0.5f);
@@ -176,10 +188,10 @@ namespace ml {
 	}
 
 	template <class FloatType>
-	Matrix4x4<FloatType> Camera<FloatType>::viewMatrix(const vec3<FloatType>& eye, const vec3<FloatType>& look, const vec3<FloatType>& up, const vec3<FloatType>& right) {
-		vec3<FloatType> l = look.getNormalized();
-		vec3<FloatType> r = right.getNormalized();
+	Matrix4x4<FloatType> Camera<FloatType>::viewMatrix(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& up, const vec3<FloatType>& right) {
+		vec3<FloatType> l = lookDir.getNormalized();
 		vec3<FloatType> u = up.getNormalized();
+		vec3<FloatType> r = right.getNormalized();
 
 		return Matrix4x4<FloatType>(r.x, r.y, r.z, -vec3<FloatType>::dot(r, eye),
 			u.x, u.y, u.z, -vec3<FloatType>::dot(u, eye),
@@ -196,9 +208,7 @@ namespace ml {
 	template <class T>
 	vec3<T> Camera<T>::getScreenRayDirection(T screenX, T screenY) const
 	{
-		vec3<T> perspectivePoint(math::linearMap((T)0.0, (T)1.0, (T)-1.0, (T)1.0, screenX),
-			math::linearMap((T)0.0, (T)1.0, (T)1.0, (T)-1.0, screenY),
-			(T)-0.5);
+		vec3<T> perspectivePoint(math::linearMap((T)0.0, (T)1.0, (T)-1.0, (T)1.0, screenX), math::linearMap((T)0.0, (T)1.0, (T)1.0, (T)-1.0, screenY), (T)-0.5);
 		return getCameraPerspective().getInverse() * perspectivePoint - m_eye;
 	}
 

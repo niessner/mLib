@@ -45,6 +45,7 @@ struct RGBColor : public vec4uc
 
     RGBColor grayscale() const
     {
+		MLIB_ASSERT_STR(false, "this function is actually wrong: a) it should return a float b) it should be like: return (0.2126f  c.x + 0.7152f  c.y + 0.0722f * c.z) / 255.f; ");
         BYTE avg = BYTE(((int)r + (int)g + (int)b) / 3);
         return RGBColor(avg, avg, avg, 255);
     }

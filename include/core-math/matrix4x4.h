@@ -40,13 +40,13 @@ public:
 		matrix2[3][0] = 0.0;	matrix2[3][1] = 0.0;	matrix2[3][2] = 0.0;	matrix2[3][3] = 1.0;
 	}
 
-	//! Initializes the matrix row wise (given 3 row vectors); that last row is initialized with 0,0,0,1
-	Matrix4x4(const vec3<FloatType> &v0, const vec3<FloatType> &v1, const vec3<FloatType> &v2, const vec3<FloatType> &v3) {
-		matrix2[0][0] = v0.x;	matrix2[0][1] = v0.y;	matrix2[0][2] = v0.z;	matrix2[0][3] = v0.w;
-		matrix2[1][0] = v1.x;	matrix2[1][1] = v1.y;	matrix2[1][2] = v1.z;	matrix2[1][3] = v1.w;
-		matrix2[2][0] = v2.x;	matrix2[2][1] = v2.y;	matrix2[2][2] = v2.z;	matrix2[2][3] = v2.w;
-		matrix2[3][0] = 0.0;	matrix2[3][1] = 0.0;	matrix2[3][2] = 0.0;	matrix2[3][3] = 1.0;
-	}
+	////! Initializes the matrix row wise (given 3 row vectors); that last row is initialized with 0,0,0,1
+	//Matrix4x4(const vec3<FloatType> &v0, const vec3<FloatType> &v1, const vec3<FloatType> &v2, const vec3<FloatType> &v3) {
+	//	matrix2[0][0] = v0.x;	matrix2[0][1] = v0.y;	matrix2[0][2] = v0.z;	matrix2[0][3] = v0.w;
+	//	matrix2[1][0] = v1.x;	matrix2[1][1] = v1.y;	matrix2[1][2] = v1.z;	matrix2[1][3] = v1.w;
+	//	matrix2[2][0] = v2.x;	matrix2[2][1] = v2.y;	matrix2[2][2] = v2.z;	matrix2[2][3] = v2.w;
+	//	matrix2[3][0] = 0.0;	matrix2[3][1] = 0.0;	matrix2[3][2] = 0.0;	matrix2[3][3] = 1.0;
+	//}
 
 	//! Initializes the matrix row wise (given 4 row vectors)
 	Matrix4x4(const vec4<FloatType> &v0, const vec4<FloatType> &v1, const vec4<FloatType> &v2, const vec4<FloatType> &v3) {
