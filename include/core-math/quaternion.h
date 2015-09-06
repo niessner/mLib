@@ -25,7 +25,7 @@ template <class FloatType> class Quaternion {
 		Quaternion( const vec3<FloatType>& axis, FloatType angle ) {
 			FloatType halfAngleRad = ( FloatType ) math::PI * angle / ( FloatType ) 360.0;
 			FloatType axisLength = axis.length();
-			if ( axisLength > Quaternion<FloatType>::EPSILON ) {
+			if ( axisLength > Quaternion<FloatType>::eps ) {
 				m_Real = cos( halfAngleRad );
 				m_Imag = axis * ( sin( halfAngleRad ) / axisLength );
 			} else {
@@ -295,7 +295,7 @@ template <class FloatType> class Quaternion {
 		//! read a quaternion from a stream
 		template <class t> friend std::istream& operator>> ( std::istream& s, Quaternion<FloatType>& q );
 
-		static const FloatType EPSILON;
+		static const FloatType eps;
 	};
 
 //};	// namespace Math
@@ -303,7 +303,7 @@ template <class FloatType> class Quaternion {
 
 //namespace Math {
 
-template <class FloatType> const FloatType Quaternion<FloatType>::EPSILON = ( FloatType ) 0.00001;
+template <class FloatType> const FloatType Quaternion<FloatType>::eps = ( FloatType ) 0.00001;
 
 // ********************************
 // INLINE-functions for general use
@@ -384,7 +384,7 @@ template <class FloatType> inline FloatType Quaternion<FloatType>::length() cons
 template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::getNormalized() const {
 	FloatType thisLength = length();
 	//if(!isZero(thisLength))
-	if ( thisLength > Quaternion<FloatType>::EPSILON )
+	if ( thisLength > Quaternion<FloatType>::eps )
 		return Quaternion( m_Real / thisLength, m_Imag / thisLength );
 	else
 		return Quaternion( 1, vec3<FloatType>( 0, 0, 0 ) );
@@ -393,7 +393,7 @@ template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::g
 template <class FloatType> inline void Quaternion<FloatType>::normalize() {
 	FloatType thisLength = length();
 	//if(!isZero(thisLength)) {
-	if ( thisLength > Quaternion<FloatType>::EPSILON ) {
+	if ( thisLength > Quaternion<FloatType>::eps ) {
 		m_Real /= thisLength;
 		m_Imag /= thisLength;
 		} else {
