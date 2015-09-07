@@ -15,7 +15,7 @@ void PCA<T>::init(const std::vector<const T*> &points, size_t dimension)
 		    _means[dimIndex] += point[dimIndex];
 	
     for(T &x : _means)
-		x /= (T)n;
+		x /= (T)n;	
 
 	for(size_t pointIndex = 0; pointIndex < n; pointIndex++)
 	{
@@ -31,7 +31,7 @@ void PCA<T>::init(const std::vector<const T*> &points, size_t dimension)
     DenseMatrix<T> C = B * B.transpose();
 	//DenseMatrix<T>::MultiplyMMTranspose(C, B);
 
-    const T norm = T(1.0) / T(n);
+    const T norm = T(1.0) / T(n);	//TODO (Matthias): I think this is wrong; I believe it  must be n-1
     for (auto &x : C)
         x *= norm;
 
