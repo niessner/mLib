@@ -25,7 +25,7 @@ namespace ml {
         m_worldUp = worldUp.getNormalized();
         m_look = lookDir.getNormalized();
         m_right = (m_look ^ m_worldUp).getNormalized();
-        m_up = worldUp;
+		m_up = (m_right ^ m_look).getNormalized();
 
         m_fieldOfView = fieldOfView;
         m_aspect = aspect;
