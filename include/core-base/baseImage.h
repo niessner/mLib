@@ -1121,6 +1121,15 @@ namespace ml {
 				m_data[i] = ml::vec3f(data[i]);
 			}
 		}
+		ColorImageR32G32B32(const BaseImage<vec4uc>& image, float scale = 255.0f) : BaseImage(image.getWidth(), image.getHeight()) {
+			m_format = Image::FORMAT_ColorImageR32G32B32;
+			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+
+			const vec4uc* data = image.getPointer();
+			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+				m_data[i] = ml::vec3f(data[i].x / scale, data[i].y / scale, data[i].z / scale);
+			}
+		}
 
 		BaseImage<float> convertToGrayscale() const {
 			BaseImage<float> res(getWidth(), getHeight());
@@ -1218,6 +1227,23 @@ namespace ml {
 						(unsigned char)(data[y*m_width + x].y * scale),
 						(unsigned char)(data[y*m_width + x].z * scale),
 						(unsigned char)(data[y*m_width + x].w * scale)
+						);
+					setPixel(x, y, value);
+				}
+			}
+		}
+		ColorImageR8G8B8A8(const BaseImage<float>& other, float scale = 255.0f) : BaseImage(other.getWidth(), other.getHeight()) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_InvalidValue = vec4uc(0, 0, 0, 0);
+
+			const float* data = other.getPointer();
+			for (unsigned int y = 0; y < m_height; y++) {
+				for (unsigned int x = 0; x < m_width; x++) {
+					vec4uc value(
+						(unsigned char)(data[y*m_width + x] * scale),
+						(unsigned char)(data[y*m_width + x] * scale),
+						(unsigned char)(data[y*m_width + x] * scale),
+						(unsigned char)(data[y*m_width + x] * scale)
 						);
 					setPixel(x, y, value);
 				}
