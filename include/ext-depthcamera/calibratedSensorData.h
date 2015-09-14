@@ -121,25 +121,29 @@ public:
 		for (unsigned int frame = frameFrom; frame < frameTo; frame++) {
 			mat4f transform = mat4f::identity();
 			if (m_trajectory.size() > 0) transform = m_trajectory[frame];
-
-			for (unsigned int i = 0; i < m_DepthImageWidth*m_DepthImageHeight; i++) {
-				float depth = getDepth(i%m_DepthImageWidth, i / m_DepthImageWidth, frame);
-				if (depth != -std::numeric_limits<float>::infinity() && depth != -FLT_MAX && depth != 0.0f) {
-
-					vec3f p = getWorldPos(i%m_DepthImageWidth, i / m_DepthImageWidth, frame);
-					pc.m_points.push_back(transform * p);
-					//if (m_ColorImageWidth == m_DepthImageWidth && m_ColorImageHeight == m_DepthImageHeight) {
-						//vec4uc c = m_ColorImages[frame][i];
-						unsigned int cx = (unsigned int)math::round((float)(i % m_DepthImageWidth) * (float)(m_ColorImageWidth - 1) / (float)(m_DepthImageWidth - 1));
-						unsigned int cy = (unsigned int)math::round((float)(i / m_DepthImageWidth) * (float)(m_ColorImageHeight - 1) / (float)(m_DepthImageHeight - 1));
-						vec4uc c = m_ColorImages[frame][cy * m_ColorImageWidth + cx];
-						pc.m_colors.push_back(vec4f(c) / 255.0f);
-					//}
-				}
-			}
+			recordFrameToPointCloud(frame, pc, transform);
 		}
 		PointCloudIOf::saveToFile(filename, pc);
-	} 
+	}
+
+	void recordFrameToPointCloud(unsigned int frame, PointCloudf &pc, mat4f transform) const
+	{
+		for (unsigned int i = 0; i < m_DepthImageWidth*m_DepthImageHeight; i++) {
+			float depth = getDepth(i%m_DepthImageWidth, i / m_DepthImageWidth, frame);
+			if (depth != -std::numeric_limits<float>::infinity() && depth != -FLT_MAX && depth != 0.0f) {
+
+				vec3f p = getWorldPos(i%m_DepthImageWidth, i / m_DepthImageWidth, frame);
+				pc.m_points.push_back(transform * p);
+				//if (m_ColorImageWidth == m_DepthImageWidth && m_ColorImageHeight == m_DepthImageHeight) {
+				//vec4uc c = m_ColorImages[frame][i];
+				unsigned int cx = (unsigned int)math::round((float)(i % m_DepthImageWidth) * (float)(m_ColorImageWidth - 1) / (float)(m_DepthImageWidth - 1));
+				unsigned int cy = (unsigned int)math::round((float)(i / m_DepthImageWidth) * (float)(m_ColorImageHeight - 1) / (float)(m_DepthImageHeight - 1));
+				vec4uc c = m_ColorImages[frame][cy * m_ColorImageWidth + cx];
+				pc.m_colors.push_back(vec4f(c) / 255.0f);
+				//}
+			}
+		}
+	}
 
 	unsigned int	m_VersionNumber;
 	std::string		m_SensorName;
