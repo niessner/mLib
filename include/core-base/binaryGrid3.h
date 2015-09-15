@@ -14,13 +14,13 @@ namespace ml {
 		BinaryGrid3(size_t width, size_t height, size_t depth) {
 			m_data = nullptr;
 			allocate(width, height, depth);
-      clearVoxels();
+			clearVoxels();
 		}
 
 		BinaryGrid3(const vec3ui& dim) {
 			m_data = nullptr;
 			allocate(dim);
-      clearVoxels();
+			clearVoxels();
 		}
 
 		BinaryGrid3(const BinaryGrid3& other) {
