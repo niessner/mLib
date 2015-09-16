@@ -268,6 +268,31 @@ public:
         return m_dataPtr + (m_rows * m_cols);
     }
 
+	inline operator Matrix4x4<T>(){
+		MLIB_ASSERT(m_rows == 4 && m_cols == 4);
+		Matrix4x4<T> res;
+		for (unsigned int i = 0; i < 12; i++) {
+			res[i] = m_data[i];
+		}
+		return res;
+	}
+	inline operator Matrix3x3<T>(){
+		MLIB_ASSERT(m_rows == 3 && m_cols == 3);
+		Matrix3x3<T> res;
+		for (unsigned int i = 0; i < 9; i++) {
+			res[i] = m_data[i];
+		}
+		return res;
+	}
+	inline operator Matrix2x2<T>(){
+		MLIB_ASSERT(m_rows == 2 && m_cols == 2);
+		Matrix2x2<T> res;
+		for (unsigned int i = 0; i < 4; i++) {
+			res[i] = m_data[i];
+		}
+		return res;
+	}
+
 private:
 	UINT m_rows, m_cols;
 	T* m_dataPtr;
