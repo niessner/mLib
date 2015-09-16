@@ -90,7 +90,7 @@ public:
 	template<SolverType solverType>
 	static EigenSystem<FloatType> solve(const DenseMatrix<FloatType> &M) {
 		// (the tuple maps to indices)
-		typename std::tuple_element<solverType, std::tuple<EigenSolverVTK<FloatType>, EigenSolverVTK<FloatType>, EigenSolverNR<FloatType>, EigenSolverEigen<FloatType> > >::type solver;
+		typename std::tuple_element<solverType, std::tuple<EigenSolverNR<FloatType>, EigenSolverVTK<FloatType>, EigenSolverNR<FloatType>, EigenSolverEigen<FloatType> > >::type solver;
 		EigenSystem<FloatType> system = solver.eigenSystem(M);
 		if (solverType == TYPE_NR) {
 			system.sortByAbsValue();
