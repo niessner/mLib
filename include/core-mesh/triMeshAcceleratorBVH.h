@@ -274,7 +274,7 @@ public:
 
 	
 	void printInfo() const {
-		std::cout << "Info: TriangleBVHAccelerator build done ( " << TriMeshRayAccelerator::m_TrianglePointers.size() << " tris )" << std::endl;
+		std::cout << "Info: TriangleBVHAccelerator build done ( " << TriMeshRayAccelerator<FloatType>::m_TrianglePointers.size() << " tris )" << std::endl;
 		std::cout << "Info: Tree depth " << m_Root->getTreeDepthRec() << std::endl;
 		std::cout << "Info: NumNodes " << m_Root->getNumNodesRec() << std::endl;
 		std::cout << "Info: NumLeaves " << m_Root->getNumLeaves() << std::endl;
@@ -306,9 +306,9 @@ private:
 
 		bool useParallelBuild = true;
 		if (useParallelBuild) {
-			buildParallel(TriMeshRayAccelerator::m_TrianglePointers);
+			buildParallel(TriMeshRayAccelerator<FloatType>::m_TrianglePointers);
 		} else {
-			buildRecursive(TriMeshRayAccelerator::m_TrianglePointers);
+			buildRecursive(TriMeshRayAccelerator<FloatType>::m_TrianglePointers);
 		}
 	}
 
