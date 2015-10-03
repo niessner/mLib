@@ -182,11 +182,7 @@ namespace ml
 #include "core-graphics/orientedBoundingBox3.h"
 #include "core-graphics/dist.h"
 #include "core-util/colorGradient.h"
-
-// TODO MATTHIAS: this class is horribly broken with clang.
-#ifdef _WIN32
 #include "core-base/distanceField3.h"
-#endif
 
 //
 // core-mesh headers
@@ -201,8 +197,6 @@ namespace ml
 #include "core-mesh/triMesh.h"
 #include "core-mesh/triMeshSampler.h"
 
-// TODO MATTHIAS: the references from triMeshAccelerator to TriMesh::Vertex are broken in clang
-#ifdef _WIN32
 #include "core-mesh/triMeshAccelerator.h"
 #include "core-mesh/triMeshRayAccelerator.h"
 #include "core-mesh/triMeshCollisionAccelerator.h"
@@ -211,7 +205,6 @@ namespace ml
 
 #include "core-mesh/meshUtil.h"
 #include "core-mesh/meshShapes.h"
-#endif
 
 
 #endif  // MLIBCORE_H_
