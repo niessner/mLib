@@ -38,7 +38,7 @@ namespace ml {
     }
 
 	template <class FloatType>
-	Camera<FloatType>::Camera(const Matrix4x4<FloatType>& worldToCamera, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, bool flipRight = false) {
+	Camera<FloatType>::Camera(const Matrix4x4<FloatType>& worldToCamera, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, bool flipRight) {
 		m_eye		= vec3<FloatType>(worldToCamera(0, 3), worldToCamera(1, 3), worldToCamera(2, 3));
 		m_worldUp	= vec3<FloatType>(worldToCamera(0, 1), worldToCamera(1, 1), worldToCamera(2, 1));
 		m_right		= vec3<FloatType>(worldToCamera(0, 0), worldToCamera(1, 0), worldToCamera(2, 0));

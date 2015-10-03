@@ -15,7 +15,7 @@ namespace ml {
 
 		//! Construct camera from extrinsics matrix m (columns are x, y, z vectors and origin of camera in that order).
 		//! If flipRight is set, flip the x coordinate
-		Camera(const Matrix4x4<FloatType>& m, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar, const bool flipRight = false);
+		Camera(const Matrix4x4<FloatType>& m, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar, bool flipRight = false);
 
 		virtual void updateAspectRatio(FloatType newAspect);
 		void lookRight(FloatType theta);
