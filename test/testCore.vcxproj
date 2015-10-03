@@ -157,6 +157,7 @@
     <ClInclude Include="..\include\core-util\clock.h" />
     <ClInclude Include="..\include\core-util\commandLineReader.h" />
     <ClInclude Include="..\include\core-util\directory.h" />
+    <ClInclude Include="..\include\core-util\eventMap.h" />
     <ClInclude Include="..\include\core-util\nearestNeighborSearch.h" />
     <ClInclude Include="..\include\core-util\pipe.h" />
     <ClInclude Include="..\include\core-util\sparseGrid3.h" />

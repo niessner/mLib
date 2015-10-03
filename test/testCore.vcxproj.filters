@@ -315,6 +315,9 @@
     <ClInclude Include="..\include\ext-eigen\eigenSolver.h">
       <Filter>mLibHeader\ext-eigen</Filter>
     </ClInclude>
+    <ClInclude Include="..\include\core-util\eventMap.h">
+      <Filter>mLibHeader\core-util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="notes.txt" />

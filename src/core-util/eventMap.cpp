@@ -7,13 +7,6 @@ void EventMap::registerEvent(const std::string &event, const std::function<void(
     _handlers[event] = handler;
 }
 
-void EventMap::dispatchEvents(ml::UIConnection &ui) const
-{
-    ui.readMessages();
-    dispatchEvents(ui.messages());
-    ui.messages().clear();
-}
-
 void EventMap::dispatchEvents(const vector<std::string> &messages) const
 {
     for (const std::string &message : messages)
@@ -29,5 +22,14 @@ void EventMap::dispatchEvents(const vector<std::string> &messages) const
         }
     }
 }
+
+#ifdef _WIN32
+void EventMap::dispatchEvents(ml::UIConnection &ui) const
+{
+	ui.readMessages();
+	dispatchEvents(ui.messages());
+	ui.messages().clear();
+}
+#endif
 
 }
