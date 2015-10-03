@@ -146,9 +146,9 @@ struct TriangleBVHNode {
 	}
     bool intersects(const typename TriMesh<FloatType>::Triangle* tri, const Matrix4x4<FloatType>& transform) const {
 
-        typename TriMesh<FloatType>::Vertex<FloatType> v0(transform * tri->getV0().position);
-        typename TriMesh<FloatType>::Vertex<FloatType> v1(transform * tri->getV1().position);
-        typename TriMesh<FloatType>::Vertex<FloatType> v2(transform * tri->getV2().position);
+        typename TriMesh<FloatType>::Vertex v0(transform * tri->getV0().position);
+        typename TriMesh<FloatType>::Vertex v1(transform * tri->getV1().position);
+        typename TriMesh<FloatType>::Vertex v2(transform * tri->getV2().position);
         typename TriMesh<FloatType>::Triangle triTrans(&v0,&v1,&v2);
 
         if (boundingBox.intersects(triTrans.getV0().position, triTrans.getV1().position, triTrans.getV2().position)) {
