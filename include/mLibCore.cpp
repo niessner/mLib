@@ -49,9 +49,7 @@
 //
 // core-mesh source files
 //
-#ifdef _WIN32
 #include "../src/core-mesh/meshUtil.cpp"
-#endif
 
 #ifdef LINUX
 namespace ml
