@@ -182,6 +182,8 @@ namespace ml
 
 	typedef Grid3<float> Grid3f;
 	typedef Grid3<double> Grid3d;
+	typedef Grid3<int> Grid3i;
+	typedef Grid3<unsigned int> Grid3ui;
 
 }  // namespace ml
 

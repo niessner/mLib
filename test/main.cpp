@@ -50,8 +50,35 @@ void pause_thread(int n)
 	std::cout << "pause of " << n << " seconds ended\n";
 }
 
+
+class A {
+public:
+	A() {
+		int a = 5;
+	}
+	~A() {
+		int a = 5;
+	}
+private:
+};
+
+class B : public A {
+public:
+	B() {}
+	~B() {}
+private:
+
+};
+
 int main()
 {
+	B* b = new B();
+
+	delete b;
+
+	Grid3f* grid = new Grid3f(1, 1, 1);
+	SAFE_DELETE(grid);
+
 	{
 		std::cout << "Spawning and detaching 3 threads...\n";
 		std::thread (pause_thread, 1).detach();
