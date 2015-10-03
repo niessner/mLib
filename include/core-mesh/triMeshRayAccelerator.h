@@ -52,7 +52,7 @@ public:
     };
 
 
-	typename const TriMesh<FloatType>::Triangle* intersect(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
+	const typename TriMesh<FloatType>::Triangle* intersect(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
 		return intersectInternal(r, t, u, v, tmin, tmax, onlyFrontFaces);
 	}
 
@@ -158,7 +158,7 @@ public:
 
 private:
 
-	virtual typename const TriMesh<FloatType>::Triangle* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const = 0;
+	virtual const typename TriMesh<FloatType>::Triangle* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const = 0;
 
 };
 

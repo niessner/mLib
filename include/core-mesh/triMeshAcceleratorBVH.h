@@ -114,7 +114,7 @@ struct TriangleBVHNode {
 		return !(lChild || rChild);
 	}
 
-	typename const TriMesh<FloatType>::Triangle* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType& tmin, FloatType& tmax, bool onlyFrontFaces = false) const {
+	const typename TriMesh<FloatType>::Triangle* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType& tmin, FloatType& tmax, bool onlyFrontFaces = false) const {
 		if (t < tmin || t > tmax)	return nullptr;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {
 			if (isLeaf()) {
@@ -123,8 +123,8 @@ struct TriangleBVHNode {
 					return leafTri;
 				}
 			} else {
-				typename const TriMesh<FloatType>::Triangle* t0 = lChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
-				typename const TriMesh<FloatType>::Triangle* t1 = rChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
+				const typename TriMesh<FloatType>::Triangle* t0 = lChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
+				const typename TriMesh<FloatType>::Triangle* t1 = rChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
 				if (t1)	return t1;
 				if (t0)	return t0;
 			}
@@ -294,7 +294,7 @@ private:
     }
 
 	//! defined by the interface
-	typename const TriMesh<FloatType>::Triangle* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
+	const typename TriMesh<FloatType>::Triangle* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
 		u = v = std::numeric_limits<FloatType>::max();	
 		t = tmax;	//TODO MATTHIAS: probably we don't have to track tmax since t must always be smaller than the prev
 		return m_Root->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
