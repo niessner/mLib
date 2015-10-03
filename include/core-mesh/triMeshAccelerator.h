@@ -111,7 +111,7 @@ private:
 			//loop over tris within a mesh
 			for (size_t i = 0; i < indices.size(); i++) {
 				//generate triangle with triangle and mesh index
-				m_Triangles.push_back(typename TriMesh<FloatType>::Triangle<FloatType>(&vertices[indices[i].x], &vertices[indices[i].y], &vertices[indices[i].z], (unsigned int)i, (unsigned int)m));
+				m_Triangles.push_back(typename TriMesh<FloatType>::Triangle(&vertices[indices[i].x], &vertices[indices[i].y], &vertices[indices[i].z], (unsigned int)i, (unsigned int)m));
 			}
 		}
 
