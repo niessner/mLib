@@ -26,7 +26,7 @@ public:
 
 	void build(const std::vector<const TriMesh<FloatType>* >& triMeshes, bool storeLocalCopy = false) {
 		destroy();
-		std::vector<const std::vector<typename TriMesh<FloatType>::Vertex<FloatType>>*> vertices(triMeshes.size());
+		std::vector<const std::vector<typename TriMesh<FloatType>::Vertex>*> vertices(triMeshes.size());
 		std::vector<const std::vector<vec3ui>*> indices(triMeshes.size());
 
 		if (storeLocalCopy) {
@@ -57,7 +57,7 @@ public:
 	void build(const std::vector<std::pair<const TriMesh<FloatType>*, Matrix4x4<FloatType>>>& triMeshPairs) {
 		destroy();
 
-		std::vector<const std::vector<typename TriMesh<FloatType>::Vertex<FloatType>>*> vertices(triMeshPairs.size());
+		std::vector<const std::vector<typename TriMesh<FloatType>::Vertex>*> vertices(triMeshPairs.size());
 		std::vector<const std::vector<vec3ui>*> indices(triMeshPairs.size());
 
 		m_VerticesCopy.resize(triMeshPairs.size());
@@ -82,15 +82,18 @@ public:
 
 protected:
 
-	std::vector<std::vector<typename TriMesh<FloatType>::Vertex<FloatType>> >			m_VerticesCopy;
-	std::vector<typename TriMesh<FloatType>::Triangle<FloatType>>						m_Triangles;
-	std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>						m_TrianglePointers;
+	//template <class FloatType = FloatType> using Vertex = typename TriMesh<FloatType>::Vertex;
+	//template <class FloatType = FloatType> using Triangle = typename TriMesh<FloatType>::Triangle;
+
+	std::vector<std::vector< typename TriMesh<FloatType>::Vertex> >	m_VerticesCopy;
+	std::vector<typename TriMesh<FloatType>::Triangle>				m_Triangles;
+	std::vector<typename TriMesh<FloatType>::Triangle*>				m_TrianglePointers;
 
 private:
 
 	//! takes a vector of meshes: including vertices and indices
 	void createTrianglePointers(
-		const std::vector<const std::vector<typename TriMesh<FloatType>::Vertex<FloatType>>*>& verticesVec,
+		const std::vector<const std::vector<typename TriMesh<FloatType>::Vertex>*>& verticesVec,
 		const std::vector<const std::vector<vec3ui>*>& indicesVec) 
 	{
 		//reserver memory

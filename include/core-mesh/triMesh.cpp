@@ -3,9 +3,9 @@
 #define CORE_MESH_TRIMESH_INL_H_
 
 namespace ml {
-	
+
 	template<class FloatType>
-	TriMesh<FloatType>::TriMesh( const MeshData<FloatType>& meshData )
+	TriMesh<FloatType>::TriMesh(const MeshData<FloatType>& meshData)
 	{
 
 		m_Vertices.resize(meshData.m_Vertices.size());
@@ -14,7 +14,7 @@ namespace ml {
 		m_bHasColors = meshData.m_Colors.size() > 0;
 		m_bHasTexCoords = meshData.m_TextureCoords.size() > 0;
 
-    // Initialize positions (normals, colors and texcoords to be initialized later)
+		// Initialize positions (normals, colors and texcoords to be initialized later)
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			m_Vertices[i].position = meshData.m_Vertices[i];
 		}
@@ -22,43 +22,44 @@ namespace ml {
 		for (unsigned int i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
 			if (meshData.m_FaceIndicesVertices[i].size() == 3) {
 				//we need to split vertices if the same vertex has different texcoords and/or normals
-				bool bFaceHasNormals	= m_bHasNormals && meshData.getFaceIndicesNormals()[i].size() > 0;
-				bool bFaceHasTexCoords	= m_bHasTexCoords && meshData.getFaceIndicesTexCoords()[i].size() > 0;
-				bool bFaceHasColors		= m_bHasColors && meshData.getFaceIndicesColors()[i].size() > 0;
+				bool bFaceHasNormals = m_bHasNormals && meshData.getFaceIndicesNormals()[i].size() > 0;
+				bool bFaceHasTexCoords = m_bHasTexCoords && meshData.getFaceIndicesTexCoords()[i].size() > 0;
+				bool bFaceHasColors = m_bHasColors && meshData.getFaceIndicesColors()[i].size() > 0;
 
 				if (bFaceHasNormals || bFaceHasTexCoords || bFaceHasColors) {
-					vec3ui coords = vec3ui(0,0,0);
+					vec3ui coords = vec3ui(0, 0, 0);
 					for (unsigned int j = 0; j < 3; j++) {
-            Vertex<FloatType>& vert = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
+						Vertex& vert = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
 						bool vertexSplit = false;
 						if (bFaceHasNormals) { //split if normal is different than the one found before
 							const vec3<FloatType>& n = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (vert.normal != vec3<FloatType>::origin && vert.normal != n) {
-                vertexSplit = true;
-              }
+								vertexSplit = true;
+							}
 						}
 						if (bFaceHasTexCoords) { //split if texcoord is different than the one found before
 							const vec2<FloatType>& t = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
 							if (vert.texCoord != vec2<FloatType>::origin && vert.texCoord != t) {
-                vertexSplit = true;
-              }
+								vertexSplit = true;
+							}
 						}
 						if (bFaceHasColors) { //split if texcoord is different than the one found before
 							const vec4<FloatType>& c = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							if (vert.color != vec4<FloatType>::origin && vert.color != c) {
-                vertexSplit = true;
-              }
+								vertexSplit = true;
+							}
 						}
 
 						if (vertexSplit) {
 							MLIB_WARNING("vertex split untested");
-							Vertex<FloatType> v = vert;  // copy of vert for splitting out
+							Vertex v = vert;  // copy of vert for splitting out
 							if (bFaceHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (bFaceHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
 							if (bFaceHasColors)		v.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							m_Vertices.push_back(v);
 							coords[j] = (unsigned int)m_Vertices.size() - 1;
-						} else {
+						}
+						else {
 							if (bFaceHasNormals)		vert.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (bFaceHasTexCoords)	vert.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
 							if (bFaceHasColors)		  vert.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
@@ -80,10 +81,12 @@ namespace ml {
 					//	m_Vertices[m_Indices[i][1]].texCoord = meshData.m_TextureCoords[meshData.m_FaceIndicesTextureCoords[i][1]];
 					//	m_Vertices[m_Indices[i][2]].texCoord = meshData.m_TextureCoords[meshData.m_FaceIndicesTextureCoords[i][2]];
 					//}
-				} else {
+				}
+				else {
 					m_Indices.push_back(vec3ui(meshData.m_FaceIndicesVertices[i][0], meshData.m_FaceIndicesVertices[i][1], meshData.m_FaceIndicesVertices[i][2]));
 				}
-			} else {
+			}
+			else {
 				MLIB_WARNING("non triangle face found - ignoring it");
 			}
 		}
@@ -98,8 +101,8 @@ namespace ml {
 		}
 
 		for (int i = 0; i < (int)m_Indices.size(); i++) {
-			vec3<FloatType> faceNormal = 
-				(m_Vertices[m_Indices[i].y].position - m_Vertices[m_Indices[i].x].position)^(m_Vertices[m_Indices[i].z].position - m_Vertices[m_Indices[i].x].position);
+			vec3<FloatType> faceNormal =
+				(m_Vertices[m_Indices[i].y].position - m_Vertices[m_Indices[i].x].position) ^ (m_Vertices[m_Indices[i].z].position - m_Vertices[m_Indices[i].x].position);
 
 			m_Vertices[m_Indices[i].x].normal += faceNormal;
 			m_Vertices[m_Indices[i].y].normal += faceNormal;
@@ -112,113 +115,113 @@ namespace ml {
 		m_bHasNormals = true;
 	}
 
-    template<class FloatType>
-    TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(UINT iterations, float minEdgeLength) const
-    {
-        TriMeshf result = *this;
-        for (UINT i = 0; i < iterations; i++)
-            result = result.flatLoopSubdivision(minEdgeLength);
-        return result;
-    }
+	template<class FloatType>
+	TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(UINT iterations, float minEdgeLength) const
+	{
+		TriMeshf result = *this;
+		for (UINT i = 0; i < iterations; i++)
+			result = result.flatLoopSubdivision(minEdgeLength);
+		return result;
+	}
 
-    template < class FloatType >
-    TriMesh<FloatType> TriMesh<FloatType>::flatten() const
-    {
-        TriMesh<FloatType> result;
+	template < class FloatType >
+	TriMesh<FloatType> TriMesh<FloatType>::flatten() const
+	{
+		TriMesh<FloatType> result;
 
-        int index = 0;
-        for (const vec3ui &t : m_Indices)
-        {
-            result.m_Vertices.push_back(m_Vertices[t[0]]);
-            result.m_Vertices.push_back(m_Vertices[t[1]]);
-            result.m_Vertices.push_back(m_Vertices[t[2]]);
+		int index = 0;
+		for (const vec3ui &t : m_Indices)
+		{
+			result.m_Vertices.push_back(m_Vertices[t[0]]);
+			result.m_Vertices.push_back(m_Vertices[t[1]]);
+			result.m_Vertices.push_back(m_Vertices[t[2]]);
 
-            result.m_Indices.push_back( vec3ui(index + 0, index + 1, index + 2) );
-            index += 3;
-        }
-        
-        return result;
-    }
+			result.m_Indices.push_back(vec3ui(index + 0, index + 1, index + 2));
+			index += 3;
+		}
 
-    template<class FloatType>
-    TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(float minEdgeLength) const
-    {
-        struct Edge
-        {
-            Edge(UINT32 _v0, UINT32 _v1)
-            {
-                v0 = std::min(_v0, _v1);
-                v1 = std::max(_v0, _v1);
-            }
+		return result;
+	}
 
-            union
-            {
-                struct {
-                    UINT32 v0, v1;
-                };
-                UINT64 val;
-            };
-        };
+	template<class FloatType>
+	TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(float minEdgeLength) const
+	{
+		struct Edge
+		{
+			Edge(UINT32 _v0, UINT32 _v1)
+			{
+				v0 = std::min(_v0, _v1);
+				v1 = std::max(_v0, _v1);
+			}
 
-        struct edgeCompare
-        {
-            bool operator() (const Edge &a, const Edge &b)
-            {
-                return a.val < b.val;
-            }
-        };
-        
-        std::map<Edge, UINT, edgeCompare> edgeToNewVertexMap;
+			union
+			{
+				struct {
+					UINT32 v0, v1;
+				};
+				UINT64 val;
+			};
+		};
 
-        TriMesh<FloatType> result;
-        
-        result.m_Vertices = m_Vertices;
-        result.m_Indices.reserve(m_Indices.size() * 4);
+		struct edgeCompare
+		{
+			bool operator() (const Edge &a, const Edge &b)
+			{
+				return a.val < b.val;
+			}
+		};
 
-        for (const vec3ui &tri : m_Indices)
-        {
-            /*bool subdivide = true;
-            for (UINT eIndex = 0; eIndex < 3; eIndex++)
-            {
-                const vec3f &v0 = m_Vertices[tri[eIndex]].position;
-                const vec3f &v1 = m_Vertices[tri[(eIndex + 1) % 3]].position;
-                float edgeLength = vec3f::dist(v0, v1);
-                if (edgeLength < minEdgeLength)
-                    subdivide = false;
-            }*/
-            bool subdivide = math::triangleArea(m_Vertices[tri[0]].position, m_Vertices[tri[1]].position, m_Vertices[tri[2]].position) >= (minEdgeLength * minEdgeLength);
+		std::map<Edge, UINT, edgeCompare> edgeToNewVertexMap;
 
-            if (subdivide)
-            {
-                UINT edgeMidpoints[3];
+		TriMesh<FloatType> result;
 
-                for (UINT eIndex = 0; eIndex < 3; eIndex++)
-                {
-                    const UINT v0 = tri[eIndex];
-                    const UINT v1 = tri[(eIndex + 1) % 3];
-                    Edge e = Edge(v0, v1);
-                    if (edgeToNewVertexMap.count(e) == 0)
-                    {
-                        edgeToNewVertexMap[e] = (UINT)result.m_Vertices.size();
-                        result.m_Vertices.push_back((m_Vertices[v0] + m_Vertices[v1]) * (FloatType)0.5);
-                    }
+		result.m_Vertices = m_Vertices;
+		result.m_Indices.reserve(m_Indices.size() * 4);
 
-                    edgeMidpoints[eIndex] = edgeToNewVertexMap[e];
-                }
+		for (const vec3ui &tri : m_Indices)
+		{
+			/*bool subdivide = true;
+			for (UINT eIndex = 0; eIndex < 3; eIndex++)
+			{
+			const vec3f &v0 = m_Vertices[tri[eIndex]].position;
+			const vec3f &v1 = m_Vertices[tri[(eIndex + 1) % 3]].position;
+			float edgeLength = vec3f::dist(v0, v1);
+			if (edgeLength < minEdgeLength)
+			subdivide = false;
+			}*/
+			bool subdivide = math::triangleArea(m_Vertices[tri[0]].position, m_Vertices[tri[1]].position, m_Vertices[tri[2]].position) >= (minEdgeLength * minEdgeLength);
 
-                result.m_Indices.push_back(vec3ui(tri[0], edgeMidpoints[0], edgeMidpoints[2]));
-                result.m_Indices.push_back(vec3ui(edgeMidpoints[0], tri[1], edgeMidpoints[1]));
-                result.m_Indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[1], tri[2]));
-                result.m_Indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[0], edgeMidpoints[1]));
-            }
-            else
-            {
-                result.m_Indices.push_back(tri);
-            }
-        }
+			if (subdivide)
+			{
+				UINT edgeMidpoints[3];
 
-        return result;
-    }
+				for (UINT eIndex = 0; eIndex < 3; eIndex++)
+				{
+					const UINT v0 = tri[eIndex];
+					const UINT v1 = tri[(eIndex + 1) % 3];
+					Edge e = Edge(v0, v1);
+					if (edgeToNewVertexMap.count(e) == 0)
+					{
+						edgeToNewVertexMap[e] = (UINT)result.m_Vertices.size();
+						result.m_Vertices.push_back((m_Vertices[v0] + m_Vertices[v1]) * (FloatType)0.5);
+					}
+
+					edgeMidpoints[eIndex] = edgeToNewVertexMap[e];
+				}
+
+				result.m_Indices.push_back(vec3ui(tri[0], edgeMidpoints[0], edgeMidpoints[2]));
+				result.m_Indices.push_back(vec3ui(edgeMidpoints[0], tri[1], edgeMidpoints[1]));
+				result.m_Indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[1], tri[2]));
+				result.m_Indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[0], edgeMidpoints[1]));
+			}
+			else
+			{
+				result.m_Indices.push_back(tri);
+			}
+		}
+
+		return result;
+	}
 
 
 }

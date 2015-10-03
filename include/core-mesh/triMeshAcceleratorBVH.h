@@ -18,7 +18,7 @@ struct TriangleBVHNode {
 	//using Triangle = TriMesh::Triangle<T>;
 
 	BoundingBox3<FloatType> boundingBox;
-	const typename TriMesh<FloatType>::Triangle<FloatType>* leafTri;
+	const typename TriMesh<FloatType>::Triangle* leafTri;
 
 
 	TriangleBVHNode<FloatType> *lChild;
@@ -41,7 +41,7 @@ struct TriangleBVHNode {
 		}
 	}
 
-	void splitMidPoint(typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& end) {
+	void splitMidPoint(typename std::vector<typename TriMesh<FloatType>::Triangle*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle*>::iterator& end) {
 		if (end - begin > 1) {
 			//determine longest axis
 			BoundingBox3<FloatType> bbox;
@@ -50,7 +50,7 @@ struct TriangleBVHNode {
 			}
 
 			FloatType maxExtent = bbox.getMaxExtent();
-			typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator midIter = begin + 1;
+			typename std::vector<typename TriMesh<FloatType>::Triangle*>::iterator midIter = begin + 1;
 			if (bbox.getExtentX() > bbox.getExtentY() && bbox.getExtentX() > bbox.getExtentZ())	{
 				//x
 				std::stable_sort(begin, end, cmpX);
@@ -89,7 +89,7 @@ struct TriangleBVHNode {
 		}
 	}
 
-	void splitMedian(typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>::iterator& end, unsigned int lastSortAxis) {
+	void splitMedian(typename std::vector<typename TriMesh<FloatType>::Triangle*>::iterator& begin, typename std::vector<typename TriMesh<FloatType>::Triangle*>::iterator& end, unsigned int lastSortAxis) {
 
 		if (end - begin > 1) {
 			if (lastSortAxis == 0)		std::stable_sort(begin, end, cmpX);
@@ -114,7 +114,7 @@ struct TriangleBVHNode {
 		return !(lChild || rChild);
 	}
 
-	typename const TriMesh<FloatType>::Triangle<FloatType>* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType& tmin, FloatType& tmax, bool onlyFrontFaces = false) const {
+	typename const TriMesh<FloatType>::Triangle* intersect(const Ray<FloatType> &r, FloatType& t, FloatType& u, FloatType& v, FloatType& tmin, FloatType& tmax, bool onlyFrontFaces = false) const {
 		if (t < tmin || t > tmax)	return nullptr;	//early out (warning t must be initialized)
 		if (boundingBox.intersect(r, tmin, tmax)) {
 			if (isLeaf()) {
@@ -123,8 +123,8 @@ struct TriangleBVHNode {
 					return leafTri;
 				}
 			} else {
-				typename const TriMesh<FloatType>::Triangle<FloatType>* t0 = lChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
-				typename const TriMesh<FloatType>::Triangle<FloatType>* t1 = rChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
+				typename const TriMesh<FloatType>::Triangle* t0 = lChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
+				typename const TriMesh<FloatType>::Triangle* t1 = rChild->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
 				if (t1)	return t1;
 				if (t0)	return t0;
 			}
@@ -133,7 +133,7 @@ struct TriangleBVHNode {
 	}
 
     // collisions with other Triangles
-	bool intersects(const typename TriMesh<FloatType>::Triangle<FloatType>* tri) const {
+	bool intersects(const typename TriMesh<FloatType>::Triangle* tri) const {
 		if (boundingBox.intersects(tri->getV0().position, tri->getV1().position, tri->getV2().position)) {
 			if (isLeaf()) {
 				return tri->intersects(*leafTri);
@@ -144,12 +144,12 @@ struct TriangleBVHNode {
 			return false;
 		}
 	}
-    bool intersects(const typename TriMesh<FloatType>::Triangle<FloatType>* tri, const Matrix4x4<FloatType>& transform) const {
+    bool intersects(const typename TriMesh<FloatType>::Triangle* tri, const Matrix4x4<FloatType>& transform) const {
 
         typename TriMesh<FloatType>::Vertex<FloatType> v0(transform * tri->getV0().position);
         typename TriMesh<FloatType>::Vertex<FloatType> v1(transform * tri->getV1().position);
         typename TriMesh<FloatType>::Vertex<FloatType> v2(transform * tri->getV2().position);
-        typename TriMesh<FloatType>::Triangle<FloatType> triTrans(&v0,&v1,&v2);
+        typename TriMesh<FloatType>::Triangle triTrans(&v0,&v1,&v2);
 
         if (boundingBox.intersects(triTrans.getV0().position, triTrans.getV1().position, triTrans.getV2().position)) {
             if (isLeaf()) {
@@ -233,15 +233,15 @@ struct TriangleBVHNode {
 	}
 
 
-	static bool cmpX(typename TriMesh<FloatType>::Triangle<FloatType> *t0, typename TriMesh<FloatType>::Triangle<FloatType> *t1) {
+	static bool cmpX(typename TriMesh<FloatType>::Triangle *t0, typename TriMesh<FloatType>::Triangle *t1) {
 		return t0->getCenter().x < t1->getCenter().x;
 	}
 
-	static bool cmpY(typename TriMesh<FloatType>::Triangle<FloatType> *t0, typename TriMesh<FloatType>::Triangle<FloatType> *t1) {
+	static bool cmpY(typename TriMesh<FloatType>::Triangle *t0, typename TriMesh<FloatType>::Triangle *t1) {
 		return t0->getCenter().y < t1->getCenter().y;
 	}
 
-	static bool cmpZ(typename TriMesh<FloatType>::Triangle<FloatType> *t0, typename TriMesh<FloatType>::Triangle<FloatType> *t1) {
+	static bool cmpZ(typename TriMesh<FloatType>::Triangle *t0, typename TriMesh<FloatType>::Triangle *t1) {
 		return t0->getCenter().z < t1->getCenter().z;
 	}
 };
@@ -294,7 +294,7 @@ private:
     }
 
 	//! defined by the interface
-	typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
+	typename const TriMesh<FloatType>::Triangle* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
 		u = v = std::numeric_limits<FloatType>::max();	
 		t = tmax;	//TODO MATTHIAS: probably we don't have to track tmax since t must always be smaller than the prev
 		return m_Root->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces);
@@ -312,7 +312,7 @@ private:
 		}
 	}
 
-	void buildParallel(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris) {
+	void buildParallel(std::vector<typename TriMesh<FloatType>::Triangle*>& tris) {
 		struct NodeEntry {
 			size_t begin;
 			size_t end;
@@ -372,7 +372,7 @@ private:
 		m_Root->computeBoundingBox();
 	}
 
-	void buildRecursive(std::vector<typename TriMesh<FloatType>::Triangle<FloatType>*>& tris) {
+	void buildRecursive(std::vector<typename TriMesh<FloatType>::Triangle*>& tris) {
 		assert(tris.size() > 2);
 		m_Root = new TriangleBVHNode<FloatType>;
 		//m_Root->splitMedian(tris.begin(), tris.end(), 0);

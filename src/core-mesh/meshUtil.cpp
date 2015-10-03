@@ -21,7 +21,7 @@ TriMeshf meshutil::createUnifiedMesh(const std::vector< std::pair<TriMeshf, mat4
   auto lambdaIndices = [](size_t total, const std::pair<TriMeshf, mat4f>& t) { return t.first.getIndices().size() + total; };
   const size_t totalIndices = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaIndices);
 
-  std::vector<TriMeshf::Vertexf> vertices(totalPoints);
+  std::vector<TriMeshf::Vertex> vertices(totalPoints);
   std::vector<vec3ui> indices(totalIndices);
 
   UINT vIndex = 0, iIndex = 0;
@@ -29,7 +29,7 @@ TriMeshf meshutil::createUnifiedMesh(const std::vector< std::pair<TriMeshf, mat4
     const UINT baseVertexIndex = vIndex;
 
     for (UINT vertexIndex = 0; vertexIndex < m.first.getVertices().size(); vertexIndex++) {
-      TriMeshf::Vertexf& v = vertices[vIndex++];
+      TriMeshf::Vertex& v = vertices[vIndex++];
       v = m.first.getVertices()[vertexIndex];
       v.position =  m.second * v.position;
     }
@@ -47,7 +47,7 @@ TriMeshf meshutil::createUnifiedMesh(const std::vector<TriMeshf>& meshes) {
   auto lambdaIndices = [](size_t total, const TriMeshf& t) { return t.getIndices().size() + total; };
   const size_t totalIndices = std::accumulate(meshes.begin(), meshes.end(), static_cast<size_t>(0), lambdaIndices);
 
-  std::vector<TriMeshf::Vertexf> vertices(totalPoints);
+  std::vector<TriMeshf::Vertex> vertices(totalPoints);
   std::vector<vec3ui> indices(totalIndices);
 
   UINT vIndex = 0, iIndex = 0;
@@ -55,7 +55,7 @@ TriMeshf meshutil::createUnifiedMesh(const std::vector<TriMeshf>& meshes) {
     const UINT baseVertexIndex = vIndex;
 
     for (UINT vertexIndex = 0; vertexIndex < m.getVertices().size(); vertexIndex++) {
-      TriMeshf::Vertexf& v = vertices[vIndex++];
+      TriMeshf::Vertex& v = vertices[vIndex++];
       v = m.getVertices()[vertexIndex];
     }
     for (UINT indexIndex = 0; indexIndex < m.getIndices().size(); indexIndex++) {
@@ -74,7 +74,7 @@ TriMeshf meshutil::createPointCloudTemplate(const TriMeshf& templateMesh,
   const UINT64 tIndices = templateMesh.getIndices().size();
   const vec4f defaultColor(1.f, 0.f, 0.f, 1.0f);
 
-  std::vector<TriMeshf::Vertexf> vertices(pointCount * tVertices);
+  std::vector<TriMeshf::Vertex> vertices(pointCount * tVertices);
   std::vector<vec3ui> indices(pointCount * tIndices);
 
   for (UINT pointIndex = 0; pointIndex < points.size(); pointIndex++) {
@@ -83,7 +83,7 @@ TriMeshf meshutil::createPointCloudTemplate(const TriMeshf& templateMesh,
     const UINT64 baseVertexIndex = pointIndex * tVertices;
 
     for (UINT vertexIndex = 0; vertexIndex < tVertices; vertexIndex++) {
-      TriMeshf::Vertexf& v = vertices[baseVertexIndex + vertexIndex];
+      TriMeshf::Vertex& v = vertices[baseVertexIndex + vertexIndex];
       v = templateMesh.getVertices()[vertexIndex];
       v.position += p;
       v.color = c;

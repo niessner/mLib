@@ -60,9 +60,9 @@ private:
 
 
 	//! interface definition
-	typename const TriMesh<FloatType>::Triangle<FloatType>* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
+	typename const TriMesh<FloatType>::Triangle* intersectInternal(const Ray<FloatType>& r, FloatType& t, FloatType& u, FloatType& v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool onlyFrontFaces = false) const {
 
-		typename TriMesh<FloatType>::Triangle<FloatType>* tri = nullptr;
+		typename TriMesh<FloatType>::Triangle* tri = nullptr;
 		for (size_t i = 0; i < m_TrianglePointers.size(); i++) {
 			if (m_TrianglePointers[i]->intersect(r, t, u, v, tmin, tmax, onlyFrontFaces)) {
 				tmax = t;
