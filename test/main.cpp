@@ -72,6 +72,8 @@ private:
 
 int main()
 {
+
+	DistanceField3f df(1, 1, 1);
 	B* b = new B();
 
 	delete b;
