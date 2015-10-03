@@ -211,6 +211,19 @@ namespace ml {
 
 	template<class FloatType>
 	TriMesh<FloatType> Shapes<FloatType>::wireframeBox(FloatType dim, const vec4<FloatType>& color, FloatType thickness) {
+		MLIB_WARNING("untested function");
+		FloatType cubeVData[8][3] = {
+			{ 1.0f, 1.0f, 1.0f }, { -1.0f, 1.0f, 1.0f }, { -1.0f, -1.0f, 1.0f },
+			{ 1.0f, -1.0f, 1.0f }, { 1.0f, 1.0f, -1.0f }, { -1.0f, 1.0f, -1.0f },
+			{ -1.0f, -1.0f, -1.0f }, { 1.0f, -1.0f, -1.0f }
+		};
+
+		int cubeEData[12][2] = {
+			{ 0, 1 }, { 1, 2 }, { 2, 3 }, { 3, 0 },
+			{ 4, 5 }, { 5, 6 }, { 6, 7 }, { 7, 4 },
+			{ 0, 4 }, { 1, 5 }, { 2, 6 }, { 3, 7 }
+		};
+
 		std::vector<ml::TriMesh<FloatType>> meshes;
 		ml::vec3<FloatType> v[8];  std::memmove(v, cubeVData, sizeof(v[0]) * 8);
 		for (uint i = 0; i < 12; i++) {
