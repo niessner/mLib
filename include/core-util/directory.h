@@ -15,32 +15,32 @@ public:
     {
         return m_path;
     }
-    inline const std::vector<std::string>& files() const
+    inline const std::vector<std::string>& getFiles() const
     {
         return m_files;
     }
-    inline const std::vector<std::string>& directories() const
+    inline const std::vector<std::string>& getDirectories() const
     {
         return m_directories;
     }
-    std::vector<std::string> filesWithSuffix(const std::string &suffix) const;
+    std::vector<std::string> getFilesWithSuffix(const std::string &suffix) const;
 
     static std::vector<std::string> enumerateDirectories(const std::string &path)
     {
         Directory dir(path);
-        return dir.directories();
+        return dir.getDirectories();
     }
 
     static std::vector<std::string> enumerateFiles(const std::string &path)
     {
         Directory dir(path);
-        return dir.files();
+        return dir.getFiles();
     }
 
     static std::vector<std::string> enumerateFiles(const std::string &path, const std::string &suffix)
     {
         Directory dir(path);
-        return dir.filesWithSuffix(suffix);
+        return dir.getFilesWithSuffix(suffix);
     }
 
 private:
