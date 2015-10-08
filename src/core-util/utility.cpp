@@ -305,10 +305,10 @@ namespace util
         if (directoryExists(directory)) {
             Directory dir(directory);
 
-            for (const auto& f : dir.files()) {
+            for (const auto& f : dir.getFiles()) {
                 deleteFile(directory + "/" + f);
             }
-            for (const auto& d : dir.directories()) {
+            for (const auto& d : dir.getDirectories()) {
                 deleteDirectory(directory + "/" + d);
             }
             RemoveDirectoryA(directory.c_str());

@@ -6,7 +6,7 @@ Directory::Directory(const std::string &path)
     load(path);
 }
 
-std::vector<std::string> Directory::filesWithSuffix(const std::string &suffix) const
+std::vector<std::string> Directory::getFilesWithSuffix(const std::string &suffix) const
 {
     std::vector<std::string> result;
     for(UINT fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
