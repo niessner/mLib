@@ -88,7 +88,7 @@ namespace ml {
 			{ 0, 4 }, { 1, 5 }, { 2, 6 }, { 3, 7 }
 		};
 
-		typename std::vector<typename TriMesh<FloatType>::Vertexf> vv(8);
+		typename std::vector<typename TriMesh<FloatType>::Vertex> vv(8);
 		std::vector<UINT> vi(12 * 3);
 
 		// Vertices

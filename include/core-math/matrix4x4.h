@@ -158,6 +158,13 @@ public:
 		at(2,3) = t.z;
 	}
 
+	//! overwrites the translation vector; all other values remain unchanged
+	void setTranslationVector(FloatType t) {
+		at(0, 3) = t;
+		at(1, 3) = t;
+		at(2, 3) = t;
+	}
+
 	//! returns the 3x3 matrix part
 	Matrix3x3<FloatType> getMatrix3x3() const {
 		Matrix3x3<FloatType> mat;
@@ -198,6 +205,18 @@ public:
 	}
 	static Matrix4x4 zero(FloatType v = (FloatType)0) {
 		Matrix4x4 res;	res.setZero(v);
+		return res;
+	}
+
+	//! overwrite the matrix with a translation-matrix
+	void setTranslation(FloatType t) {
+		matrix[0] = 1.0;	matrix[1] = 0.0;	matrix[2] = 0.0; matrix[3] = t;
+		matrix[4] = 0.0;	matrix[5] = 1.0;	matrix[6] = 0.0; matrix[7] = t;
+		matrix[8] = 0.0;	matrix[9] = 0.0;	matrix[10] = 1.0; matrix[11] = t;
+		matrix[12] = 0.0;	matrix[13] = 0.0;	matrix[14] = 0.0; matrix[15] = 1.0;
+	}
+	static Matrix4x4 translation(FloatType t) {
+		Matrix4x4 res;	res.setTranslation(t);
 		return res;
 	}
 

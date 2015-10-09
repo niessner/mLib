@@ -45,7 +45,7 @@ void ml::D3D11TriMesh::initVB(GraphicsDevice &g)
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.ByteWidth = sizeof(TriMeshf::Vertex<float>) * (UINT)m_triMesh.getVertices().size();
+    bufferDesc.ByteWidth = sizeof(TriMeshf::Vertex) * (UINT)m_triMesh.getVertices().size();
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
 
@@ -83,7 +83,7 @@ void ml::D3D11TriMesh::render() const
 
 	context.IASetIndexBuffer( m_indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
 
-    UINT stride = sizeof(TriMeshf::Vertex<float>);
+    UINT stride = sizeof(TriMeshf::Vertex);
 	UINT offset = 0;
 	context.IASetVertexBuffers( 0, 1, &m_vertexBuffer, &stride, &offset );
 
