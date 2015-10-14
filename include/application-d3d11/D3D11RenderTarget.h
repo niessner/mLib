@@ -86,7 +86,8 @@ public:
     void clearColor(const vec4f& clearColor = vec4f(0.0f));
 	void clearDepth(float clearDepth = 1.0f);
 	  
-    void captureColorBuffer(ColorImageR8G8B8A8& result, unsigned int which = 0);		//get the i-th color buffer
+	// get the i-th color buffer; could be ColorImageR8G8B8A8 or ColorImageR32G32B32A32
+	template <class T>	void captureColorBuffer(BaseImage<T>& result, unsigned int which = 0);
 	void captureDepthBuffer(DepthImage32& result);										//get the raw depth buffer
 	void captureDepthBuffer(DepthImage32& result, const mat4f& perspectiveTransform);	//transforms the depth back to camera space
 	void captureDepthBuffer(PointImage& result, const mat4f& perspectiveTransform);		//transforms it back to 3d camera coordinate

@@ -146,8 +146,23 @@ namespace ml
 	}
 
 
-	void D3D11RenderTarget::captureColorBuffer(ColorImageR8G8B8A8& result, unsigned int which)
+	//force explicit template instantiation
+	template void D3D11RenderTarget::captureColorBuffer<vec4uc>(BaseImage<vec4uc>& result, unsigned int which);
+	template void D3D11RenderTarget::captureColorBuffer<vec4f>(BaseImage<vec4f>& result, unsigned int which);
+
+	template <class T>	void D3D11RenderTarget::captureColorBuffer(BaseImage<T>& result, unsigned int which)
 	{
+		DXGI_FORMAT format = m_textureFormats[which];
+		if (format == DXGI_FORMAT_R8G8B8A8_UNORM) {
+			if (!std::is_same<vec4uc, T>::value)	throw MLIB_EXCEPTION("incompatible image format");
+		}
+		else if (format == DXGI_FORMAT_R32G32B32A32_FLOAT) {
+			if (!std::is_same<vec4f, T>::value)		throw MLIB_EXCEPTION("incompatible image format");
+		}
+		else {
+			throw MLIB_EXCEPTION("unknown image format");
+		}
+
 		auto &context = m_graphics->getContext();
 		context.CopyResource(m_captureTextures[which], m_targets[which]);
 
@@ -158,9 +173,8 @@ namespace ml
 		HRESULT hr = context.Map(m_captureTextures[which], subresource, D3D11_MAP_READ, 0, &resource);
 		const BYTE *data = (BYTE *)resource.pData;
 
-		for (UINT y = 0; y < m_height; y++)
-		{
-			memcpy(&result(0U, y), data + resource.RowPitch * y, m_width * sizeof(vec4uc));
+		for (unsigned int y = 0; y < m_height; y++)	{
+			memcpy(&result(0U, y), data + resource.RowPitch * y, m_width * sizeof(T));
 		}
 
 		context.Unmap(m_captureTextures[which], subresource);
