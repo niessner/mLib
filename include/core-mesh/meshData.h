@@ -436,6 +436,15 @@ public:
 		m_MaterialIndices.clear();
 	}
 
+	void clearAttributes() {
+		m_FaceIndicesColors.clear();
+		m_FaceIndicesNormals.clear();
+		m_FaceIndicesTextureCoords.clear();
+		m_Colors.clear();
+		m_Normals.clear();
+		m_TextureCoords.clear();
+	}
+
 	bool isConsistent(bool detailedCheck = false) const {
 
 		bool consistent = true;

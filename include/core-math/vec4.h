@@ -333,6 +333,8 @@ inline std::istream& operator>>(std::istream& s, vec4<T>& v) {
 typedef vec4<double> vec4d;
 typedef vec4<float> vec4f;
 typedef vec4<int> vec4i;
+typedef vec4<short> vec4s;
+typedef vec4<short> vec4us;
 typedef vec4<unsigned int> vec4ui;
 typedef vec4<unsigned char> vec4uc;
 typedef vec4<UINT64> vec4ul;

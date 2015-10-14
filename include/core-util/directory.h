@@ -11,7 +11,7 @@ public:
     Directory(const std::string &path);
     void load(const std::string &path);
 
-    inline const std::string& path() const
+    inline const std::string& getPath() const
     {
         return m_path;
     }

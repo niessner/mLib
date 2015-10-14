@@ -318,6 +318,8 @@ inline std::istream& operator>>(std::istream& s, vec6<T>& v) {
 typedef vec6<double> vec6d;
 typedef vec6<float> vec6f;
 typedef vec6<int> vec6i;
+typedef vec6<short> vec6s;
+typedef vec6<short> vec6us;
 typedef vec6<unsigned int> vec6ui;
 typedef vec6<unsigned char> vec6uc;
 typedef vec6<UINT64> vec6ul;

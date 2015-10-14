@@ -210,6 +210,8 @@ template <class T> inline std::istream& operator>>(std::istream& s, vec1<T>& v)
 typedef vec1<double> vec1d;
 typedef vec1<float> vec1f;
 typedef vec1<int> vec1i;
+typedef vec1<short> vec1s;
+typedef vec1<short> vec1us;
 typedef vec1<unsigned int> vec1ui;
 typedef vec1<unsigned char> vec1uc;
 typedef vec1<UINT64> vec1ul;

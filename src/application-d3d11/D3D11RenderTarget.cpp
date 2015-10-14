@@ -2,199 +2,215 @@
 namespace ml
 {
 
-void D3D11RenderTarget::load(GraphicsDevice &g, const UINT width, const UINT height)
-{
-    m_graphics = &g.castD3D11();
-    m_width = width;
-    m_height = height;
-    
-    g.castD3D11().registerAsset(this);
 
-    reset();
-}
+	void D3D11RenderTarget::release()
+	{
+		
+		for (unsigned int i = 0; i < getNumTargets(); i++) {
+			if (m_targets)		SAFE_RELEASE(m_targets[i]);
+			if (m_targetsRTV)	SAFE_RELEASE(m_targetsRTV[i]);
+			if (hasSRVs() && m_targetsSRV)	SAFE_RELEASE(m_targetsSRV[i]);
+		}
 
-void D3D11RenderTarget::release()
-{
-	SAFE_RELEASE(m_renderView);
-	SAFE_RELEASE(m_depthView);
-	SAFE_RELEASE(m_texture);
-	SAFE_RELEASE(m_captureTexture);
-	SAFE_RELEASE(m_depthBuffer);
-	SAFE_RELEASE(m_captureDepth);
-}
+		SAFE_DELETE_ARRAY(m_targets);
+		SAFE_DELETE_ARRAY(m_targetsRTV);
+		SAFE_DELETE_ARRAY(m_targetsSRV);
 
-void D3D11RenderTarget::reset()
-{
-    release();
+		SAFE_RELEASE(m_depthStencil);
+		SAFE_RELEASE(m_depthStencilDSV);
+		if (hasSRVs()) SAFE_RELEASE(m_depthStensilSRV);
 
-    if (m_width == 0 || m_height == 0)
-        return;
+		for (unsigned int i = 0; i < getNumTargets(); i++) {
+			if (m_captureTextures) SAFE_RELEASE(m_captureTextures[i]);
+		}
+		SAFE_DELETE_ARRAY(m_captureTextures);
 
-    auto &device = m_graphics->getDevice();
-	auto &context = m_graphics->getContext();
+		SAFE_RELEASE(m_captureDepth);
+	}
 
-    //
-    // Create the render target
-    //
-    D3D11_TEXTURE2D_DESC renderDesc;
-    renderDesc.Width = m_width;
-    renderDesc.Height = m_height;
-    renderDesc.MipLevels = 0;
-    renderDesc.ArraySize = 1;
-    renderDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    renderDesc.SampleDesc.Count = 1;
-    renderDesc.SampleDesc.Quality = 0;
-    renderDesc.Usage = D3D11_USAGE_DEFAULT;
-    renderDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
-    renderDesc.CPUAccessFlags = 0;
-    renderDesc.MiscFlags = 0;
+	void D3D11RenderTarget::reset()
+	{
+		release();
 
-    D3D_VALIDATE(device.CreateTexture2D(&renderDesc, nullptr, &m_texture));
-    
-    //
-    // Create the render target view
-    //
-    D3D_VALIDATE(device.CreateRenderTargetView(m_texture, nullptr, &m_renderView));
-    
-    //
-    // Create the depth buffer
-    //
-    D3D11_TEXTURE2D_DESC depthDesc;
-    depthDesc.Width = m_width;
-    depthDesc.Height = m_height;
-    depthDesc.MipLevels = 1;
-    depthDesc.ArraySize = 1;
-    depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
-    depthDesc.SampleDesc.Count = 1;
-    depthDesc.SampleDesc.Quality = 0;
-    depthDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthDesc.CPUAccessFlags = 0;
-    depthDesc.MiscFlags = 0;
-    D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_depthBuffer));
+		if (m_width == 0 || m_height == 0)
+			return;
 
-    //
-    // Create the depth view
-    //
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc;
-    depthViewDesc.Flags = 0;
-    depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
-    depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    depthViewDesc.Texture2D.MipSlice = 0;
-    D3D_VALIDATE(device.CreateDepthStencilView(m_depthBuffer, nullptr, &m_depthView));
+		auto &device = m_graphics->getDevice();
+		auto &context = m_graphics->getContext();
 
-    //
-    // Create the color capture buffer
-    //
-    renderDesc.BindFlags = 0;
-    renderDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-    renderDesc.Usage = D3D11_USAGE_STAGING;
-    D3D_VALIDATE(device.CreateTexture2D(&renderDesc, nullptr, &m_captureTexture));
+		//
+		// Create the render target
+		//
+		m_targets = new ID3D11Texture2D*[getNumTargets()];
+		m_targetsRTV = new ID3D11RenderTargetView*[getNumTargets()];
+		if (hasSRVs())	m_targetsSRV = new ID3D11ShaderResourceView*[getNumTargets()];
+		m_captureTextures = new ID3D11Texture2D*[getNumTargets()];
 
-    //
-    // Create the depth capture buffer
-    //
-    depthDesc.BindFlags = 0;
-    depthDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-    depthDesc.Usage = D3D11_USAGE_STAGING;
-    D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_captureDepth));
-}
+		for (unsigned int i = 0; i < getNumTargets(); i++) {
+			D3D11_TEXTURE2D_DESC renderDesc;
+			renderDesc.Width = m_width;
+			renderDesc.Height = m_height;
+			renderDesc.MipLevels = 0;
+			renderDesc.ArraySize = 1;
+			//renderDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			renderDesc.Format = m_textureFormats[i];
+			renderDesc.SampleDesc.Count = 1;
+			renderDesc.SampleDesc.Quality = 0;
+			renderDesc.Usage = D3D11_USAGE_DEFAULT;
+			renderDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+			renderDesc.CPUAccessFlags = 0;
+			renderDesc.MiscFlags = 0;
 
-void D3D11RenderTarget::bind()
-{
-    if (m_texture == nullptr)
-        return;
+			D3D_VALIDATE(device.CreateTexture2D(&renderDesc, nullptr, &m_targets[i]));				// create the texture
+			D3D_VALIDATE(device.CreateRenderTargetView(m_targets[i], nullptr, &m_targetsRTV[i]));	// create the render target view
+			if (hasSRVs())	D3D_VALIDATE(device.CreateShaderResourceView(m_targets[i], nullptr, &m_targetsSRV[i]));	// create the shader resource view
 
-	auto &context = m_graphics->getContext();
-    context.OMSetRenderTargets(1, &m_renderView, m_depthView);
 
-    D3D11_VIEWPORT viewport;
-    viewport.Width = (FLOAT)m_width;
-    viewport.Height = (FLOAT)m_height;
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    context.RSSetViewports(1, &viewport);
-}
+			// Create the color capture buffer
+			renderDesc.BindFlags = 0;
+			renderDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+			renderDesc.Usage = D3D11_USAGE_STAGING;
+			D3D_VALIDATE(device.CreateTexture2D(&renderDesc, nullptr, &m_captureTextures[i]));
+		}
 
-void D3D11RenderTarget::clear(const vec4f &clearColor, float clearDepth)
-{
-	auto &context = m_graphics->getContext();
-    context.ClearRenderTargetView(m_renderView, clearColor.array);
-    context.ClearDepthStencilView(m_depthView, D3D11_CLEAR_DEPTH, clearDepth, 0);
-}
+		// Create the depth buffer
+		D3D11_TEXTURE2D_DESC depthDesc;
+		depthDesc.Width = m_width;
+		depthDesc.Height = m_height;
+		depthDesc.MipLevels = 1;
+		depthDesc.ArraySize = 1;
+		depthDesc.Format = DXGI_FORMAT_D32_FLOAT;	//we just assume the depth buffer to always have 32 bit
+		depthDesc.SampleDesc.Count = 1;
+		depthDesc.SampleDesc.Quality = 0;
+		depthDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthDesc.CPUAccessFlags = 0;
+		depthDesc.MiscFlags = 0;
+		D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_depthStencil));
 
-void D3D11RenderTarget::clearColorBuffer(const vec4f &clearColor)
-{
-	auto &context = m_graphics->getContext();
-    context.ClearRenderTargetView(m_renderView, clearColor.array);
-}
+		// Create the depth view
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc;
+		depthViewDesc.Flags = 0;
+		depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthViewDesc.Texture2D.MipSlice = 0;
+		D3D_VALIDATE(device.CreateDepthStencilView(m_depthStencil, nullptr, &m_depthStencilDSV));
 
-void D3D11RenderTarget::captureDepthBuffer(DepthImage32 &result, const mat4f &perspectiveTransform)
-{
-    captureDepthBuffer(result);
 
-    auto inv = perspectiveTransform.getInverse();
+		// Create the depth capture buffer
+		depthDesc.BindFlags = 0;
+		depthDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+		depthDesc.Usage = D3D11_USAGE_STAGING;
+		D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_captureDepth));
+	}
 
-    result.setInvalidValue(std::numeric_limits<float>::infinity());
+	void D3D11RenderTarget::bind()
+	{
+		MLIB_ASSERT(m_targets != nullptr);
 
-    for (UINT y = 0; y < result.getHeight(); y++)
-    {
-        for (UINT x = 0; x < result.getWidth(); x++)
-        {
-            float &v = result(x, y);
-            if (v >= 1.0f)
-                v = result.getInvalidValue();
-            else
-            {
-                float dx = math::linearMap(0.0f, result.getWidth() - 1.0f, -1.0f, 1.0f, (float)x);
-                float dy = math::linearMap(0.0f, result.getHeight() - 1.0f, -1.0f, 1.0f, (float)y);
-                v = (inv * vec3f(dx, dy, v)).length();
-            }
-        }
-    }
-}
 
-void D3D11RenderTarget::captureDepthBuffer(DepthImage32 &result)
-{
-	auto &context = m_graphics->getContext();
-    context.CopyResource(m_captureDepth, m_depthBuffer);
+		auto &context = m_graphics->getContext();
+		context.OMSetRenderTargets(getNumTargets(), m_targetsRTV, m_depthStencilDSV);
 
-	result.allocate(m_width, m_height);
+		D3D11_VIEWPORT viewport;
+		viewport.Width = (FLOAT)m_width;
+		viewport.Height = (FLOAT)m_height;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		viewport.TopLeftX = 0;
+		viewport.TopLeftY = 0;
+		context.RSSetViewports(1, &viewport);
+	}
 
-    D3D11_MAPPED_SUBRESOURCE resource;
-    UINT subresource = D3D11CalcSubresource(0, 0, 0);
-    HRESULT hr = context.Map(m_captureDepth, subresource, D3D11_MAP_READ, 0, &resource);
-    const BYTE *data = (BYTE *)resource.pData;
+	void D3D11RenderTarget::clear(const vec4f& clearColor, float clearDepth)
+	{
+		auto &context = m_graphics->getContext();
+		for (unsigned int i = 0; i < getNumTargets(); i++) {
+			context.ClearRenderTargetView(m_targetsRTV[i], clearColor.array);
+		}
+		context.ClearDepthStencilView(m_depthStencilDSV, D3D11_CLEAR_DEPTH, clearDepth, 0);
+	}
 
-    for (UINT y = 0; y < m_height; y++)
-    {
-        memcpy(&result(0U, y), data + resource.RowPitch * y, m_width * sizeof(float));
-    }
+	void D3D11RenderTarget::clearColor(const vec4f& clearColor)
+	{
+		auto &context = m_graphics->getContext();
+		for (unsigned int i = 0; i < getNumTargets(); i++) {
+			context.ClearRenderTargetView(m_targetsRTV[i], clearColor.array);
+		}
+	}
 
-    context.Unmap(m_captureDepth, subresource);
-}
+	void D3D11RenderTarget::clearDepth(float clearDepth)
+	{
+		auto &context = m_graphics->getContext();
+		context.ClearDepthStencilView(m_depthStencilDSV, D3D11_CLEAR_DEPTH, clearDepth, 0);
+	}
 
-void D3D11RenderTarget::captureColorBuffer(ColorImageR8G8B8A8 &result)
-{
-	auto &context = m_graphics->getContext();
-    context.CopyResource(m_captureTexture, m_texture);
 
-	result.allocate(m_width, m_height);
+	void D3D11RenderTarget::captureColorBuffer(ColorImageR8G8B8A8& result, unsigned int which)
+	{
+		auto &context = m_graphics->getContext();
+		context.CopyResource(m_captureTextures[which], m_targets[which]);
 
-    D3D11_MAPPED_SUBRESOURCE resource;
-    UINT subresource = D3D11CalcSubresource(0, 0, 0);
-    HRESULT hr = context.Map(m_captureTexture, subresource, D3D11_MAP_READ, 0, &resource);
-    const BYTE *data = (BYTE *)resource.pData;
+		result.allocate(m_width, m_height);
 
-    for (UINT y = 0; y < m_height; y++)
-    {
-        memcpy(&result(0U, y), data + resource.RowPitch * y, m_width * sizeof(ml::vec4uc));
-    }
+		D3D11_MAPPED_SUBRESOURCE resource;
+		UINT subresource = D3D11CalcSubresource(0, 0, 0);
+		HRESULT hr = context.Map(m_captureTextures[which], subresource, D3D11_MAP_READ, 0, &resource);
+		const BYTE *data = (BYTE *)resource.pData;
 
-    context.Unmap(m_captureTexture, subresource);
-}
+		for (UINT y = 0; y < m_height; y++)
+		{
+			memcpy(&result(0U, y), data + resource.RowPitch * y, m_width * sizeof(vec4uc));
+		}
 
+		context.Unmap(m_captureTextures[which], subresource);
+	}
+
+
+
+
+	void D3D11RenderTarget::captureDepthBuffer(DepthImage32& result, const mat4f& perspectiveTransform)
+	{
+		captureDepthBuffer(result);
+
+		auto inv = perspectiveTransform.getInverse();
+
+		result.setInvalidValue(std::numeric_limits<float>::infinity());
+
+		for (UINT y = 0; y < result.getHeight(); y++)
+		{
+			for (UINT x = 0; x < result.getWidth(); x++)
+			{
+				float &v = result(x, y);
+				if (v >= 1.0f)
+					v = result.getInvalidValue();
+				else
+				{
+					float dx = math::linearMap(0.0f, result.getWidth() - 1.0f, -1.0f, 1.0f, (float)x);
+					float dy = math::linearMap(0.0f, result.getHeight() - 1.0f, -1.0f, 1.0f, (float)y);
+					v = (inv * vec3f(dx, dy, v)).length();
+				}
+			}
+		}
+	}
+
+	void D3D11RenderTarget::captureDepthBuffer(DepthImage32 &result)
+	{
+		auto &context = m_graphics->getContext();
+		context.CopyResource(m_captureDepth, m_depthStencil);
+
+		result.allocate(m_width, m_height);
+
+		D3D11_MAPPED_SUBRESOURCE resource;
+		UINT subresource = D3D11CalcSubresource(0, 0, 0);
+		HRESULT hr = context.Map(m_captureDepth, subresource, D3D11_MAP_READ, 0, &resource);
+		const BYTE *data = (BYTE *)resource.pData;
+
+		for (unsigned int y = 0; y < m_height; y++) {
+			memcpy(&result(0U, y), data + resource.RowPitch * y, m_width * sizeof(float));
+		}
+
+		context.Unmap(m_captureDepth, subresource);
+	}
 
 }

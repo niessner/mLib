@@ -328,6 +328,7 @@ typedef vec3<double> vec3d;
 typedef vec3<float> vec3f;
 typedef vec3<int> vec3i;
 typedef vec3<short> vec3s;
+typedef vec3<short> vec3us;
 typedef vec3<unsigned int> vec3ui;
 typedef vec3<unsigned char> vec3uc;
 typedef vec3<UINT64> vec3ul;

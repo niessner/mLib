@@ -16,7 +16,7 @@ void D3D11Canvas2D::ElementBillboard::onDeviceResize()
     bbox2f boxNdc;
     boxNdc.include(m_graphics->pixelToNDC(m_box.getMin()));
     boxNdc.include(m_graphics->pixelToNDC(m_box.getMax()));
-    m_mesh.load(*m_graphics, ml::Shapesf::rectangleZ(boxNdc.getMin(), boxNdc.getMax(), m_depth));
+    m_mesh.load(*m_graphics, Shapesf::rectangleZ(boxNdc.getMin(), boxNdc.getMax(), m_depth));
 }
 
 void D3D11Canvas2D::ElementBillboard::render()

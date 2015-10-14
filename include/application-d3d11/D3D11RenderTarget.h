@@ -7,63 +7,67 @@ namespace ml {
 class D3D11RenderTarget : public GraphicsAsset
 {
 public:
-    D3D11RenderTarget()
+	D3D11RenderTarget()
 	{
-        m_width = 0;
-        m_height = 0;
-        m_texture = nullptr;
-        m_captureTexture = nullptr;
-        m_depthBuffer = nullptr;
-        m_captureDepth = nullptr;
-        m_renderView = nullptr;
-        m_depthView = nullptr;
-        m_graphics = nullptr;
+		m_graphics = nullptr;
+		m_width = 0;
+		m_height = 0;
+
+		m_targets = nullptr;
+		m_targetsRTV = nullptr;
+		m_targetsSRV = nullptr;
+
+		m_depthStencil = nullptr;
+		m_depthStencilDSV = nullptr;
+		m_depthStensilSRV = nullptr;
+
+		m_captureTextures = nullptr;
+		m_captureDepth = nullptr;
+
+		m_bHasSRVs = false;
 	}
-    D3D11RenderTarget(D3D11RenderTarget &&t)
+
+	D3D11RenderTarget(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false)
     {
-        //
-        // TODO: swap semantics would be cleaner here
-        //
-        m_width = t.m_width;
-        m_height = t.m_height;
-        m_graphics = t.m_graphics;
-        m_texture = t.m_texture; t.m_texture = nullptr;
-        m_captureTexture = t.m_captureTexture; t.m_captureTexture = nullptr;
-        m_depthBuffer = t.m_depthBuffer; t.m_depthBuffer = nullptr;
-        m_captureDepth = t.m_captureDepth; t.m_captureDepth = nullptr;
-        m_renderView = t.m_renderView; t.m_renderView = nullptr;
-        m_depthView = t.m_depthView; t.m_depthView = nullptr;
+		m_graphics = nullptr;
+		m_width = 0;
+		m_height = 0;
+
+		m_targets = nullptr;
+		m_targetsRTV = nullptr;
+		m_targetsSRV = nullptr;
+
+		m_depthStencil = nullptr;
+		m_depthStencilDSV = nullptr;
+		m_depthStensilSRV = nullptr;
+
+		m_captureTextures = nullptr;
+		m_captureDepth = nullptr;
+
+		m_bHasSRVs = false;
+
+        load(g, width, height, formats, createSRVs);
     }
-    void operator = (D3D11RenderTarget &&t)
-    {
-        m_width = t.m_width;
-        m_height = t.m_height;
-        m_graphics = t.m_graphics;
-        m_texture = t.m_texture; t.m_texture = nullptr;
-        m_captureTexture = t.m_captureTexture; t.m_captureTexture = nullptr;
-        m_depthBuffer = t.m_depthBuffer; t.m_depthBuffer = nullptr;
-        m_captureDepth = t.m_captureDepth; t.m_captureDepth = nullptr;
-        m_renderView = t.m_renderView; t.m_renderView = nullptr;
-        m_depthView = t.m_depthView; t.m_depthView = nullptr;
-    }
-    ~D3D11RenderTarget()
+
+	~D3D11RenderTarget()
 	{
 		release();
 	}
 
-    D3D11RenderTarget(GraphicsDevice &g, const UINT width, const UINT height)
-    {
-        m_texture = nullptr;
-        m_captureTexture = nullptr;
-        m_depthBuffer = nullptr;
-        m_captureDepth = nullptr;
-        m_renderView = nullptr;
-        m_depthView = nullptr;
-        load(g, width, height);
-    }
-
     // create a new render target with given width and height. Also creates an equal-sized depth buffer.
-    void load(GraphicsDevice &g, const UINT width, const UINT height);
+	void load(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false) 
+	{
+		m_graphics = &g.castD3D11();
+		m_width = width;
+		m_height = height;
+
+		m_textureFormats = formats;
+		m_bHasSRVs = createSRVs;
+
+		g.castD3D11().registerAsset(this);
+
+		reset();
+	}
 
 	void release();
 	void reset();
@@ -78,27 +82,43 @@ public:
 	}
 
     // clears the render and depth buffers
-    void clear(const vec4f &clearColor = vec4f(0.0f), float clearDepth = 1.0f);
-    void clearColorBuffer(const vec4f &clearColor = vec4f(0.0f));
+    void clear(const vec4f& clearColor = vec4f(0.0f), float clearDepth = 1.0f);
+    void clearColor(const vec4f& clearColor = vec4f(0.0f));
+	void clearDepth(float clearDepth = 1.0f);
 	  
-    void captureColorBuffer(ColorImageR8G8B8A8 &result);
-	void captureDepthBuffer(DepthImage32 &result);										//get the raw depth buffer
-	void captureDepthBuffer(DepthImage32 &result, const mat4f &perspectiveTransform);	//transforms the depth back to camera space
-	void captureDepthBuffer(PointImage &result, const mat4f& perspectiveTransform);		//transforms it back to 3d camera coordinate
+    void captureColorBuffer(ColorImageR8G8B8A8& result, unsigned int which = 0);		//get the i-th color buffer
+	void captureDepthBuffer(DepthImage32& result);										//get the raw depth buffer
+	void captureDepthBuffer(DepthImage32& result, const mat4f& perspectiveTransform);	//transforms the depth back to camera space
+	void captureDepthBuffer(PointImage& result, const mat4f& perspectiveTransform);		//transforms it back to 3d camera coordinate
 
-    UINT getWidth() { return m_width; }
-    UINT getHeight() { return m_height; }
+    unsigned int getWidth() { return m_width; }
+    unsigned int getHeight() { return m_height; }
 
+	unsigned int getNumTargets() const {
+		return (unsigned int)m_textureFormats.size();
+	}
+	bool hasSRVs() const {
+		return m_bHasSRVs;
+	}
 private:
 	D3D11GraphicsDevice *m_graphics;
-    UINT m_width, m_height;
-    ID3D11Texture2D *m_texture;
-    ID3D11Texture2D *m_captureTexture;
-    ID3D11Texture2D *m_depthBuffer;
-    ID3D11Texture2D *m_captureDepth;
+	unsigned int m_width;
+	unsigned int m_height;
 
-    ID3D11RenderTargetView *m_renderView;
-    ID3D11DepthStencilView *m_depthView;
+	std::vector<DXGI_FORMAT>	m_textureFormats;
+
+    ID3D11Texture2D**			m_targets;
+	ID3D11RenderTargetView**	m_targetsRTV;
+	ID3D11ShaderResourceView**	m_targetsSRV;
+
+	ID3D11Texture2D*			m_depthStencil;
+	ID3D11DepthStencilView*		m_depthStencilDSV;
+	ID3D11ShaderResourceView*	m_depthStensilSRV;
+
+    ID3D11Texture2D **m_captureTextures;    
+    ID3D11Texture2D *m_captureDepth;   
+    
+	bool m_bHasSRVs;
 };
 
 }  // namespace ml
