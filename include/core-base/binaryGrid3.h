@@ -235,7 +235,7 @@ namespace ml {
 			return vec3ul(getDimX(), getDimY(), getDimZ());
 		}
 
-		inline size_t size() const {
+		inline size_t getNumElements() const {
 			return m_width*m_height*m_depth;
 		}
 
@@ -280,7 +280,7 @@ namespace ml {
 #endif
 
 		inline size_t getNumUInts() const {
-			size_t numEntries = size();
+			size_t numEntries = getNumElements();
 			return (numEntries + bitsPerUInt - 1) / bitsPerUInt;
 		}
 

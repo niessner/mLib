@@ -20,9 +20,9 @@ public:
 		MLIB_ASSERT_STR(util::loadStringFromClipboard() == data, "Clipboard test failed");
 
 		Directory dir("testDir");
-		auto filesWithSuffic = dir.filesWithSuffix(".txt");
+		auto filesWithSuffic = dir.getFilesWithSuffix(".txt");
 		MLIB_ASSERT_STR(
-			std::find(dir.files().begin(), dir.files().end(), "output.txt") != dir.files().end() &&
+			std::find(dir.getFiles().begin(), dir.getFiles().end(), "output.txt") != dir.getFiles().end() &&
 			std::find(filesWithSuffic.begin(), filesWithSuffic.end(), "output.txt") != filesWithSuffic.end(), 
 			"Directory failed");
 
