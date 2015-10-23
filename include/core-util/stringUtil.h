@@ -215,6 +215,30 @@ namespace util
 		}
 	}
 
+	//! returns the first integer found
+	inline unsigned int getFirstNumeric(const std::string& str) {
+		std::string number;
+		unsigned int i = 0;
+		bool found = false;
+		while (i < str.length()) {
+			char curr = str[i];
+			if (curr >= '0' && curr <= '9') {
+				number = number + curr;
+				found = true;
+			}
+			else if (found) {
+				break;
+			}
+			i++;
+		}
+		if (number.length() > 0) {
+			return std::atoi(number.c_str());
+		}
+		else {
+			return (unsigned int)(-1);
+		}
+	}
+
 	inline std::string getBaseBeforeNumericSuffix(const std::string& str) {
 		std::string base = str;
 		unsigned int i = 0;
