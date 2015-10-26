@@ -139,6 +139,15 @@ namespace ml {
 		m_look = transform * m_look;
 		update();
 	}
+	template <class FloatType>
+	void Camera<FloatType>::applyTransform(const Matrix4x4<FloatType>& transform) {
+		const Matrix3x3<FloatType> rot = transform.getRotation();
+		m_up = rot * m_up;
+		m_right = rot * m_right;
+		m_look = rot * m_look;
+		m_eye += transform.getTranslation();
+		update();
+	}
 
 	template <class FloatType>
 	void Camera<FloatType>::strafe(FloatType delta) {

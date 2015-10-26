@@ -69,6 +69,7 @@ namespace ml {
 		std::string toString() const;
 
 		void applyTransform(const Matrix3x3<FloatType>& transform);
+		void applyTransform(const Matrix4x4<FloatType>& transform);
 		void reset(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& up);
 
 		static Matrix4x4<FloatType> visionToGraphicsProj(unsigned int width, unsigned int height, FloatType fx, FloatType fy, FloatType zNear, FloatType zFar)

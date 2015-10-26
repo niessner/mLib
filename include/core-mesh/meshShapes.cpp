@@ -113,7 +113,7 @@ namespace ml {
 
 	template<class FloatType>
 	TriMesh<FloatType> Shapes<FloatType>::cylinder(FloatType radius, FloatType height, UINT stacks, UINT slices, const vec4<FloatType>& color) {
-		std::vector<typename TriMesh<FloatType>::Vertexf> vertices((stacks + 1) * slices);
+		std::vector<typename TriMesh<FloatType>::Vertex> vertices((stacks + 1) * slices);
 		std::vector<UINT> indices(stacks * slices * 6);
 
 		UINT vIndex = 0;
@@ -143,7 +143,7 @@ namespace ml {
 				indices[iIndex++] = (i + 1) * slices + i2p1;
 			}
 
-		return TriMesh<FloatType>(vertices, indices, true);
+		return TriMesh<FloatType>(vertices, indices, true, false, false, true); // has colors
 	}
 
 	template<class FloatType>

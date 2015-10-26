@@ -517,9 +517,9 @@ void MeshData<FloatType>::merge( const MeshData<FloatType>& other )
 	size_t colorBefore = m_Colors.size();
 	size_t texCoordsBefore = m_TextureCoords.size();
 	m_Vertices.insert(m_Vertices.end(), other.m_Vertices.begin(), other.m_Vertices.end());
-	if (hasColors())	m_Colors.insert(m_Colors.end(), other.m_Colors.begin(), other.m_Colors.end());
-	if (hasNormals())	m_Normals.insert(m_Normals.end(), other.m_Normals.begin(), other.m_Normals.end());
-	if (hasTexCoords())	m_TextureCoords.insert(m_TextureCoords.end(), other.m_TextureCoords.begin(), other.m_TextureCoords.end());
+	if (hasColors() || isEmpty())	m_Colors.insert(m_Colors.end(), other.m_Colors.begin(), other.m_Colors.end());
+	if (hasNormals() || isEmpty())	m_Normals.insert(m_Normals.end(), other.m_Normals.begin(), other.m_Normals.end());
+	if (hasTexCoords() || isEmpty())	m_TextureCoords.insert(m_TextureCoords.end(), other.m_TextureCoords.begin(), other.m_TextureCoords.end());
 
 	if (hasVertexIndices()) {
 		size_t indicesBefore = m_FaceIndicesVertices.size();
