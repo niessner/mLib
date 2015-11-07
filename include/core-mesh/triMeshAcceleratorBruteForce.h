@@ -22,7 +22,7 @@ private:
 
 	//! interface definition
 	bool collisionInternal(const TriMeshAcceleratorBruteForce<FloatType>& accel) const {
-		if (triangleCount() > 0) {
+		if (this->triangleCount() > 0) {
 			for (const auto* triA : TriMeshRayAccelerator<FloatType>::m_TrianglePointers)	{
 				for (const auto* triB : accel.TriMeshRayAccelerator<FloatType>::m_TrianglePointers) {
 					if (intersection::intersectTriangleTriangle(
@@ -37,7 +37,7 @@ private:
 
     //! interface definition
     bool collisionTransformInternal(const TriMeshAcceleratorBruteForce<FloatType>& accel, const Matrix4x4<FloatType>& transform) const {
-        if (triangleCount() > 0) {
+        if (this->triangleCount() > 0) {
 			for (const auto* triA : TriMeshRayAccelerator<FloatType>::m_TrianglePointers)	{
 				for (const auto* triB : accel.TriMeshRayAccelerator<FloatType>::m_TrianglePointers) {
                     if (intersection::intersectTriangleTriangle(

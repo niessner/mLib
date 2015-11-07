@@ -366,7 +366,7 @@ public:
         } else if (axis.lengthSq() == 0.0f) {  // Need any perpendicular axis
           
           float dotX = vec3::dot(vec3::eX, a);
-          if (abs(dotX) != (FloatType)1.0) {
+          if (std::abs(dotX) != (FloatType)1.0) {
             axis = vec3::eX - dotX * a;
           } else {
             axis = vec3::eY - vec3::dot(vec3::eY,a) * a;
@@ -747,7 +747,7 @@ public:
 		FloatType eps = (FloatType)0.00001;
 
 		FloatType psi, theta, phi; // x,y,z axis angles
-		if (abs(R(2, 0) - 1) > eps || abs(R(2, 0) + 1) > eps) {
+		if (std::abs(R(2, 0) - 1) > eps || std::abs(R(2, 0) + 1) > eps) {
 			theta = -asin(R(2, 0)); // \pi - theta
 			FloatType costheta = (FloatType)cos(theta);
 			psi = atan2(R(2, 1) / costheta, R(2, 2) / costheta);
@@ -756,7 +756,7 @@ public:
 		else {
 			phi = 0;
 			FloatType delta = (FloatType)atan2(R(0, 1), R(0, 2));
-			if (abs(R(2, 0) + 1) > eps) {
+			if (std::abs(R(2, 0) + 1) > eps) {
 				theta = (FloatType)(ml::math::PI / 2.0);
 				psi = phi + delta;
 			}

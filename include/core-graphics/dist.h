@@ -143,8 +143,8 @@ double distSq(const LineSegment2<T> &s0, const LineSegment2<T> &s1)
         }
     }
     // finally do the division to get sc and tc
-    sc = (abs(sN) < 1e-6 ? 0.0 : sN / sD);
-    tc = (abs(tN) < 1e-6 ? 0.0 : tN / tD);
+    sc = (std::abs(sN) < 1e-6 ? 0.0 : sN / sD);
+    tc = (std::abs(tN) < 1e-6 ? 0.0 : tN / tD);
 
     // get the difference of the two closest points
     const vec2<T> dP = w + ((float)sc * u) - ((float)tc * v);  // =  S1(sc) - S2(tc)

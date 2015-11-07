@@ -15,10 +15,11 @@ namespace ml {
 		}
 
 		BinaryGrid3 computeBinaryGrid(float distThres = 0.0001f) const {
-			BinaryGrid3 grid(getDimX(), getDimY(), getDimZ());
-			for (size_t z = 0; z < getDimZ(); z++) {
-				for (size_t y = 0; y < getDimY(); y++) {
-					for (size_t x = 0; x < getDimX(); x++) {
+
+		        BinaryGrid3 grid(this->getDimX(), this->getDimY(), this->getDimZ());
+			for (size_t z = 0; z < this->getDimZ(); z++) {
+				for (size_t y = 0; y < this->getDimY(); y++) {
+					for (size_t x = 0; x < this->getDimX(); x++) {
 						if ((*this)(x, y, z) <= distThres) {
 							grid.setVoxel(x, y, z);
 						}
@@ -29,7 +30,7 @@ namespace ml {
 		}
 
 		void generateFromBinaryGrid(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) {
-			allocate(grid.getDimX(), grid.getDimY(), grid.getDimZ());
+			this->allocate(grid.getDimX(), grid.getDimY(), grid.getDimZ());
 
 			m_truncation = trunc;
 
@@ -66,7 +67,7 @@ namespace ml {
 					for (size_t x = bbBox.getMinZ(); x < bbBox.getMaxX(); x++) {
 						vec3<FloatType> p = gridToDF * vec3<FloatType>((FloatType)x, (FloatType)y, (FloatType)z);
 						vec3ul pi(math::round(p));
-						if (isValidCoordinate(pi.x, pi.y, pi.z)) {
+						if (this->isValidCoordinate(pi.x, pi.y, pi.z)) {
 							const FloatType& d = (*this)(pi.x, pi.y, pi.z);
 							if (d < m_truncation) {
 								if (squaredSum) {
@@ -121,16 +122,16 @@ namespace ml {
 			bool found = true;
 			while (found) {
 				found = false;
-				for (size_t z = 0; z < getDimZ(); z++) {
-					for (size_t y = 0; y < getDimY(); y++) {
-						for (size_t x = 0; x < getDimX(); x++) {
+				for (size_t z = 0; z < this->getDimZ(); z++) {
+					for (size_t y = 0; y < this->getDimY(); y++) {
+						for (size_t x = 0; x < this->getDimX(); x++) {
 
 							FloatType dMin = (*this)(x, y, z);
 							for (int k = -1; k <= 1; k++) {
 								for (int j = -1; j <= 1; j++) {
 									for (int i = -1; i <= 1; i++) {
 										vec3ul n(x + i, y + j, z + k);
-										if (isValidCoordinate(n.x, n.y, n.z)) {
+										if (this->isValidCoordinate(n.x, n.y, n.z)) {
 											FloatType dCurr = (*this)(n.x, n.y, n.z) + kernel[i + 1][j + 1][k + 1];
 											if (dCurr < dMin && dCurr <= trunc) {
 												dMin = dCurr;
@@ -181,9 +182,9 @@ namespace ml {
 				FloatType dist;
 			};
 			std::priority_queue<Voxel> queue;
-			for (size_t z = 0; z < getDimZ(); z++) {
-				for (size_t y = 0; y < getDimY(); y++) {
-					for (size_t x = 0; x < getDimX(); x++) {
+			for (size_t z = 0; z < this->getDimZ(); z++) {
+				for (size_t y = 0; y < this->getDimY(); y++) {
+					for (size_t x = 0; x < this->getDimX(); x++) {
 						if (!grid.isVoxelSet(x, y, z)) {
 							FloatType d;
 							if (isNeighborSet(grid, x, y, z, d)) {
@@ -211,7 +212,7 @@ namespace ml {
 								for (size_t i = 0; i < 3; i++) {
 									if (k == 1 && j == 1 && i == 1) continue;	//don't consider itself
 									vec3ul n(top.x - 1 + i, top.y - 1 + j, top.z - 1 + k);
-									if (isValidCoordinate(n.x, n.y, n.z) && !visited.isVoxelSet(n)) {
+									if (this->isValidCoordinate(n.x, n.y, n.z) && !visited.isVoxelSet(n)) {
 										FloatType d = (vec3<FloatType>((FloatType)top.x, (FloatType)top.y, (FloatType)top.z) -
 											vec3<FloatType>((FloatType)n.x, (FloatType)n.y, (FloatType)n.z)).length();
 										FloatType dToN = (*this)(top.x, top.y, top.z) + d;
@@ -239,7 +240,7 @@ namespace ml {
 					for (size_t i = 0; i < 3; i++) {
 						if (k == 1 && j == 1 && i == 1) continue;	//don't consider itself
 						vec3ul n(x - 1 + i, y - 1 + j, z - 1 + k);
-						if (isValidCoordinate(n.x, n.y, n.z)) {
+						if (this->isValidCoordinate(n.x, n.y, n.z)) {
 							FloatType d = (vec3<FloatType>((FloatType)x, (FloatType)y, (FloatType)z) -
 								vec3<FloatType>((FloatType)n.x, (FloatType)n.y, (FloatType)n.z)).length();
 							FloatType dToN = (*this)(n.x, n.y, n.z) + d;
