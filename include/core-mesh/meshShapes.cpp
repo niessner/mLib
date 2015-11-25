@@ -164,7 +164,7 @@ namespace ml {
 	template<class FloatType>
 	TriMesh<FloatType> Shapes<FloatType>::torus(const vec3<FloatType> &center, FloatType majorRadius, FloatType minorRadius, UINT stacks, UINT slices, const std::function<vec4<FloatType>(unsigned int)> &stackIndexToColor)
 	{
-		std::vector<typename TriMesh<FloatType>::Vertexf> vertices(slices * stacks);
+		std::vector<typename TriMesh<FloatType>::Vertex> vertices(slices * stacks);
 		std::vector<UINT> indices(stacks * slices * 6);
 
 		UINT vIndex = 0;

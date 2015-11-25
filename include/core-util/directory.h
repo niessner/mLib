@@ -43,6 +43,30 @@ public:
         return dir.getFilesWithSuffix(suffix);
     }
 
+    static std::vector<std::string> enumerateFilesWithPath(const std::string &path)
+    {
+        std::string ending = "";
+        if (path.back() != '/' && path.back() != '\\')
+            ending = "/";
+
+        auto files = enumerateFiles(path);
+        for (auto &f : files)
+            f = path + ending + f;
+        return files;
+    }
+
+    static std::vector<std::string> enumerateFilesWithPath(const std::string &path, const std::string &suffix)
+    {
+        std::string ending = "";
+        if (path.back() != '/' && path.back() != '\\')
+            ending = "/";
+
+        auto files = enumerateFiles(path, suffix);
+        for (auto &f : files)
+            f = path + ending + f;
+        return files;
+    }
+
 private:
     std::string m_path;
     std::vector<std::string> m_files;

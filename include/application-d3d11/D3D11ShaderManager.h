@@ -30,11 +30,17 @@ namespace ml {
 			const std::string& shaderModelPS = "ps_4_0",
 			const std::vector<std::pair<std::string, std::string>>& shaderMacros = std::vector<std::pair<std::string, std::string>>());
 
-		const D3D11ShaderPair& getShaders(const std::string &shaderName) const
+		D3D11ShaderPair& getShaders(const std::string &shaderName)
 		{
 			MLIB_ASSERT_STR(m_shaders.count(shaderName) > 0, "shader not found in shader manager");
 			return m_shaders.find(shaderName)->second;
 		}
+
+        const D3D11ShaderPair& getShaders(const std::string &shaderName) const
+        {
+            MLIB_ASSERT_STR(m_shaders.count(shaderName) > 0, "shader not found in shader manager");
+            return m_shaders.find(shaderName)->second;
+        }
 
 		void bindShaders(const std::string &shaderName) const
 		{

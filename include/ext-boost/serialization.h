@@ -193,7 +193,7 @@ inline void serialize(Archive& ar, ml::OrientedBoundingBox3<T>& b, const unsigne
 }
 
 template<class Archive>
-inline void serialize(Archive& ar, ml::TriMesh<float>::Vertex<float>& v, const unsigned int version) {
+inline void serialize(Archive& ar, ml::TriMesh<float>::Vertex& v, const unsigned int version) {
     ar & v.position & v.normal & v.color & v.texCoord;
 }
 

@@ -4,6 +4,12 @@
 
 namespace ml {
 
+struct AssetRendererConstantBuffer
+{
+    mat4f worldViewProj;
+    vec4f modelColor;
+};
+
 class D3D11AssetRenderer
 {
 public:
@@ -35,6 +41,8 @@ public:
 
 private:
     D3D11GraphicsDevice *m_graphics;
+    const D3D11ShaderPair *m_shader;
+    D3D11ConstantBuffer<AssetRendererConstantBuffer> m_constants;
 
     D3D11TriMesh m_cylinder;
     D3D11TriMesh m_sphere;

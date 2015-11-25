@@ -1,9 +1,8 @@
 
-#include "C:\\Code\\d3d11-interceptor\\GameLearning\\main.h"
-
-
 void D3D11AssetRenderer::init(GraphicsDevice &g)
 {
+    m_constants.init(g);
+
     m_sphere.load(g, ml::Shapesf::sphere(1.0f, vec3f::origin));
     m_cylinder.load(g, ml::Shapesf::cylinder(0.01f, 1.0f, 2, 15, ml::vec4f(1.0f, 1.0f, 1.0f, 1.0f)));
     m_box.load(g, ml::Shapesf::box(1.0f));
