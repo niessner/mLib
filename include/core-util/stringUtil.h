@@ -162,7 +162,7 @@ namespace util
 
 	//! gets the file extension (ignoring case)
 	inline std::string getFileExtension(const std::string& filename) {
-		std::string extension = filename.substr(filename.find_last_of(".") + 1);
+		std::string extension = filename.substr(filename.rfind(".") + 1);
 		for (unsigned int i = 0; i < extension.size(); i++) {
 			extension[i] = tolower(extension[i]);
 		}
@@ -172,13 +172,13 @@ namespace util
 	//! returns substring from beginning of str up to before last occurrence of delim
 	inline std::string substrBeforeLast(const std::string& str, const std::string& delim) {
 		std::string trimmed = str;
-		return trimmed.erase(str.find_last_of(delim));
+		return trimmed.erase(str.rfind(delim));
 	}
 
     //! splits string about the first instance of delim
     inline std::pair<std::string, std::string> splitOnFirst(const std::string& str, const std::string& delim) {
         std::pair<std::string, std::string> result;
-        auto firstIndex = str.find_first_of(delim);
+        auto firstIndex = str.find(delim);
         result.first = str.substr(0, firstIndex);
         result.second = str.substr(firstIndex + delim.size());
         return result;

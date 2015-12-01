@@ -294,6 +294,7 @@ namespace ml {
 				for (unsigned int i = 0; i < m_Vertices.size(); i++) {
 					m_Vertices[i].color = color;
 				}
+				m_bHasColors = true;
 			}
 		}
 

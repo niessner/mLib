@@ -171,7 +171,7 @@ namespace ml
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Grid3<T>& g) {
 		UINT64 dimX, dimY, dimZ;
-		s >> dimX >> dimY, dimZ;
+		s >> dimX >> dimY >> dimZ;
 		g.allocate(dimX, dimY, dimZ);
 		for (UINT64 z = 0; z < g.getDimZ(); z++)
 			for (UINT64 y = 0; y < g.getDimY(); y++)
@@ -184,6 +184,7 @@ namespace ml
 	typedef Grid3<double> Grid3d;
 	typedef Grid3<int> Grid3i;
 	typedef Grid3<unsigned int> Grid3ui;
+	typedef Grid3<unsigned char> Grid3uc;
 
 }  // namespace ml
 
