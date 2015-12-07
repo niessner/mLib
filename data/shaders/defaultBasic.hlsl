@@ -2,7 +2,7 @@
 cbuffer ConstantBuffer : register(b0)
 {
     matrix worldViewProj;
-    //float4 modelColor;
+    float4 modelColor;
 }
 
 
@@ -26,5 +26,5 @@ VertexShaderOutput vertexShaderMain(
 
 float4 pixelShaderMain(VertexShaderOutput input) : SV_Target
 {
-	return float4(input.color.x, input.color.y, input.color.z, 1.0f);
+	return float4(input.color.xyz * modelColor, 1.0f);
 }

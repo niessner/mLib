@@ -14,10 +14,10 @@ namespace ml {
 		vertices[2] = vec3<FloatType>(end.x, end.y, zValue);
 		vertices[3] = vec3<FloatType>(start.x, end.y, zValue);
 
-		texCoords[0] = vec2<FloatType>(1.0f, 1.0f);
-		texCoords[1] = vec2<FloatType>(0.0f, 1.0f);
-		texCoords[2] = vec2<FloatType>(0.0f, 0.0f);
-		texCoords[3] = vec2<FloatType>(1.0f, 0.0f);
+		texCoords[0] = vec2<FloatType>(0.0f, 0.0f);
+		texCoords[1] = vec2<FloatType>(1.0f, 0.0f);
+		texCoords[2] = vec2<FloatType>(1.0f, 1.0f);
+		texCoords[3] = vec2<FloatType>(0.0f, 1.0f);
 
 		return TriMesh<FloatType>(vertices.size(), indices.size(), vertices.data(), indices.data(),
 			colors.data(), normals.data(), texCoords.data());

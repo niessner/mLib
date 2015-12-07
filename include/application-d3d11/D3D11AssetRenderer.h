@@ -13,7 +13,7 @@ struct AssetRendererConstantBuffer
 class D3D11AssetRenderer
 {
 public:
-    void init(GraphicsDevice &g);
+    void init(GraphicsDevice &g, bool useTexture = false);
     
     void renderMesh(const D3D11TriMesh &mesh, const mat4f &cameraPerspective, const vec3f &color = vec3f(1.0f, 1.0f, 1.0f));
     void renderMesh(const D3D11TriMesh &mesh, const mat4f &cameraPerspective, const mat4f &meshToWorld, const vec3f &color = vec3f(1.0f, 1.0f, 1.0f));

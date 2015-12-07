@@ -688,11 +688,11 @@ namespace ml {
 		}
 
 		////! computes the next mip map level of the image (box filtered image)
-		//BaseImage mipMap(bool ignoreInvalidPixels = false) const {
-		//	BaseImage result;
-		//	mipMap(result, ignoreInvalidPixels);
-		//	return result;
-		//}
+		BaseImage mipMap(bool ignoreInvalidPixels = false) const {
+			BaseImage result;
+			mipMap(result, ignoreInvalidPixels);
+			return result;
+		}
 
 		//! computes the next mip map level of the image (box filtered image)
 		void mipMap(BaseImage& result, bool ignoreInvalidPixels = false) const {
@@ -702,6 +702,7 @@ namespace ml {
 			if (!ignoreInvalidPixels) {
 				for (unsigned int y = 0; y < result.m_height; y++) {
 					for (unsigned int x = 0; x < result.m_width; x++) {
+                        // TODO: this produces black for 8-bit color channels
 						result(x, y) = getPixel(2 * x + 0, 2 * y + 0) + getPixel(2 * x + 1, 2 * y + 0) + getPixel(2 * x + 0, 2 * y + 1) + getPixel(2 * x + 1, 2 * y + 1);
 						result(x, y) /= 4;
 					}

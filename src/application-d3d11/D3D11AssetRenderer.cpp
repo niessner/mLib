@@ -1,5 +1,5 @@
 
-void D3D11AssetRenderer::init(GraphicsDevice &g)
+void D3D11AssetRenderer::init(GraphicsDevice &g, bool useTexture)
 {
     m_constants.init(g);
 
@@ -9,7 +9,10 @@ void D3D11AssetRenderer::init(GraphicsDevice &g)
 
     m_graphics = &g.castD3D11();
 
-    m_shader = &m_graphics->getShaderManager().getShaders("defaultBasic");
+    if (useTexture)
+        m_shader = &m_graphics->getShaderManager().getShaders("defaultBasicTexture");
+    else
+        m_shader = &m_graphics->getShaderManager().getShaders("defaultBasic");
 }
     
 void D3D11AssetRenderer::renderMesh(const D3D11TriMesh &mesh, const mat4f &cameraPerspective, const vec3f &color)

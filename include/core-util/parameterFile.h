@@ -68,6 +68,14 @@ public:
 		}
 	}
 
+    std::string readString(const std::string &paramName) const
+    {
+        std::string value;
+        if (!readParameter(paramName, value))
+            value = "<parameter not found>";
+        return value;
+    }
+
 	template<class T>
 	bool readParameter(const std::string& name, T& value) const {
 		if (m_CaseSensitive) {
