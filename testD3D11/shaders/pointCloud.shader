@@ -2,7 +2,11 @@
 cbuffer ConstantBuffer : register( b0 )
 {
 	matrix worldViewProj;
+	matrix world;
+	float4 lightDir;
+	float4 eye;
 }
+
 
 struct VertexShaderOutput
 {
