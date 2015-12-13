@@ -99,11 +99,11 @@ namespace ml
 		{
 			return (m_dimX == m_dimY && m_dimY == m_dimZ);
 		}
-		inline T* getPointer()
+		inline T* getData()
 		{
 			return m_data;
 		}
-		inline const T* getPointer() const
+		inline const T* getData() const
 		{
 			return m_data;
 		}

@@ -83,7 +83,7 @@ public:
 	template<class U>
 	Matrix4x4(const Matrix4x4<U>& other) {
 		for (unsigned int i = 0; i < 16; i++) {
-			getPointer()[i] = (FloatType)other.getPointer()[i];
+			getData()[i] = (FloatType)other.getData()[i];
 		}
 	}
 
@@ -697,12 +697,12 @@ public:
 
 	}
 
-	const FloatType* getPointer() const
+	const FloatType* getData() const
 	{
 		return matrix;
 	}
 
-	FloatType* getPointer()
+	FloatType* getData()
 	{
 		return matrix;
 	}

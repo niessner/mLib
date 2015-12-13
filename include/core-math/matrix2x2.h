@@ -50,7 +50,7 @@ public:
 	template<class U>
 	Matrix2x2(const Matrix2x2<U>& other) {
 		for (unsigned int i = 0; i < 4; i++) {
-			matrix[i] = (FloatType)other.getRawData()[i];
+			matrix[i] = (FloatType)other.getData()[i];
 		}
 	}
 
@@ -283,6 +283,16 @@ public:
 		return res;
 	}
 
+	const FloatType* getData() const
+	{
+		return matrix;
+	}
+
+	FloatType* getData()
+	{
+		return matrix;
+	}
+
 	//! overwrite the current matrix with its inverse
 	void invert() {
 		*this = getInverse();
@@ -299,11 +309,6 @@ public:
 	//! transpose the matrix in place
 	void transpose() {
 		*this = getTranspose();
-	}
-
-	FloatType* getRawData()
-	{
-		return matrix;
 	}
 
 	//! computes the tensor product between two vectors

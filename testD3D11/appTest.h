@@ -2,6 +2,7 @@
 struct ConstantBuffer
 {
 	ml::mat4f worldViewProj;
+	ml::vec4f modelColor;
 };
 
 class AppTest : public ml::ApplicationCallback
@@ -19,10 +20,7 @@ public:
 private:
 	ml::D3D11TriMesh m_mesh, m_pointCloud;
 	
-    ml::D3D11VertexShader m_vsColor;
-	ml::D3D11PixelShader m_psColor;
-    ml::D3D11VertexShader m_vsPointCloud;
-    ml::D3D11PixelShader m_psPointCloud;
+	ml::D3D11ShaderManager m_shaderManager;
 
     ml::D3D11Font m_font;
     ml::FrameTimer m_timer;

@@ -45,7 +45,7 @@ void D3D11Texture2D::reset()
     D3D_VALIDATE(device.CreateTexture2D(&desc, nullptr, &m_texture));
     D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_view));
 
-    context.UpdateSubresource(m_texture, 0, nullptr, m_image.getPointer(), (UINT)m_image.getWidth() * sizeof(vec4uc), (UINT)m_image.getWidth() * (UINT)m_image.getHeight() * sizeof(vec4uc));
+    context.UpdateSubresource(m_texture, 0, nullptr, m_image.getData(), (UINT)m_image.getWidth() * sizeof(vec4uc), (UINT)m_image.getWidth() * (UINT)m_image.getHeight() * sizeof(vec4uc));
 
     context.GenerateMips(m_view);
 }

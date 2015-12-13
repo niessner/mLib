@@ -92,7 +92,6 @@ int main()
 	// give the detached threads time to finish (but not guaranteed!):
 	pause_thread(5);
 
-	SAFE_DELETE_ARRAY;
 
 	getchar();
 	std::thread t1(foo, 1);

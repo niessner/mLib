@@ -235,7 +235,7 @@ namespace ml {
         BaseImage(const BaseImage<U>& other) : Image(BaseImageHelper::formatFromTemplate<T>()) {
 			create(other.getWidth(), other.getHeight());
 			for (unsigned int i = 0; i < m_height*m_width; i++) {
-				BaseImageHelper::convertBaseImagePixel<T, U>(m_data[i], other.getPointer()[i]);
+				BaseImageHelper::convertBaseImagePixel<T, U>(m_data[i], other.getData()[i]);
 			}
 			const U& otherInvalidValue = other.getInvalidValue();
 			BaseImageHelper::convertBaseImagePixel<T, U>(m_InvalidValue, otherInvalidValue);
@@ -481,12 +481,12 @@ namespace ml {
 		}
 
 		//! Returns the image data (linearized array)
-		const T* getPointer() const {
+		const T* getData() const {
 			return m_data;
 		}
 
 		//! Returns the image data (linearized array)
-		T* getPointer() {
+		T* getData() {
 			return m_data;
 		}
 
@@ -868,7 +868,7 @@ namespace ml {
 		s.writeData(image.getWidth());
 		s.writeData(image.getHeight());
 		s.writeData(image.getInvalidValue());
-		s.writeData((BYTE*)image.getPointer(), sizeof(T)*image.getWidth()*image.getHeight());
+		s.writeData((BYTE*)image.getData(), sizeof(T)*image.getWidth()*image.getHeight());
 		return s;
 	}
 
@@ -881,7 +881,7 @@ namespace ml {
 		s.readData(&invalidValue);
 		image.allocate(width, height);
 		image.setInvalidValue(invalidValue);
-		s.readData((BYTE*)image.getPointer(), sizeof(T)*width*height);
+		s.readData((BYTE*)image.getData(), sizeof(T)*width*height);
 		return s;
 	}
 
@@ -907,7 +907,7 @@ namespace ml {
 			float INVALID = image.getInvalidValue();
 			for (unsigned int i = 0; i < m_width * m_height; i++) {
 				USHORT val;
-				float d = image.getPointer()[i];
+				float d = image.getData()[i];
 				if (d == INVALID) val = 0;
 				else val = (USHORT)(1000.0f * d);
 				m_data[i] = val;
@@ -940,7 +940,7 @@ namespace ml {
 			float INVALID = image.getInvalidValue();
 			for (unsigned int i = 0; i < m_width * m_height; i++) {
 				float val;
-				USHORT d = image.getPointer()[i];
+				USHORT d = image.getData()[i];
 				if (d == INVALID) val = m_InvalidValue;
 				else val = 0.001f * d;
 				m_data[i] = val;
@@ -1077,7 +1077,7 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
 			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-			const float* data = depthImage.getPointer();
+			const float* data = depthImage.getData();
             float maxDepth = -std::numeric_limits<float>::max();
             float minDepth = std::numeric_limits<float>::max();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1103,7 +1103,7 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
 			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-			const float* data = depthImage.getPointer();
+			const float* data = depthImage.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				if (data[i] != depthImage.getInvalidValue()) {
 					m_data[i] = BaseImageHelper::convertDepthToRGB(data[i], minDepth, maxDepth);
@@ -1117,7 +1117,7 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
 			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-			const float* data = image.getPointer();
+			const float* data = image.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				m_data[i] = ml::vec3f(data[i]);
 			}
@@ -1126,7 +1126,7 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
 			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-			const vec4uc* data = image.getPointer();
+			const vec4uc* data = image.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				m_data[i] = ml::vec3f(data[i].x / scale, data[i].y / scale, data[i].z / scale);
 			}
@@ -1183,7 +1183,7 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
 			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
-			const float* data = depthImage.getPointer();
+			const float* data = depthImage.getData();
             float maxDepth = -std::numeric_limits<float>::max();
             float minDepth = +std::numeric_limits<float>::max();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1237,7 +1237,7 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
 
-			const float* data = other.getPointer();
+			const float* data = other.getData();
 			for (unsigned int y = 0; y < m_height; y++) {
 				for (unsigned int x = 0; x < m_width; x++) {
 					vec4uc value(

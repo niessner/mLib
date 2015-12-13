@@ -21,7 +21,7 @@ namespace ml
     if (!error)
     {
         result.allocate(width, height);
-        memcpy(result.getPointer(), &image[0], 4 * width * height);
+        memcpy(result.getData(), &image[0], 4 * width * height);
     }
 
     return result;
@@ -33,7 +33,7 @@ namespace ml
 
     if (saveTransparency)
     {
-        lodepng::encode(filename, (const BYTE *)image.getPointer(), image.getWidth(), image.getHeight(), LodePNGColorType::LCT_RGBA);
+        lodepng::encode(filename, (const BYTE *)image.getData(), image.getWidth(), image.getHeight(), LodePNGColorType::LCT_RGBA);
     }
     else
     {
@@ -41,7 +41,7 @@ namespace ml
         // images should be saved with no transparency, which unfortunately requires us to make a copy of the bitmap data.
         //
         RGBColor *copy = new RGBColor[pixelCount];
-        memcpy(copy, image.getPointer(), pixelCount * 4);
+        memcpy(copy, image.getData(), pixelCount * 4);
         for (UINT i = 0; i < pixelCount; i++)
             copy[i].a = 255;
 

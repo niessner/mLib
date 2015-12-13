@@ -43,7 +43,7 @@ void D3D11Texture3D::reset()
     D3D_VALIDATE(device.CreateTexture3D(&desc, nullptr, &m_texture));
     D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_view));
 
-	context.UpdateSubresource(m_texture, 0, nullptr, m_data.getPointer(), (UINT)m_data.getDimX() * sizeof(RGBColor), (UINT)m_data.getDimX() * (UINT)m_data.getDimY() * sizeof(RGBColor));
+	context.UpdateSubresource(m_texture, 0, nullptr, m_data.getData(), (UINT)m_data.getDimX() * sizeof(RGBColor), (UINT)m_data.getDimX() * (UINT)m_data.getDimY() * sizeof(RGBColor));
 
     context.GenerateMips(m_view);
 }
