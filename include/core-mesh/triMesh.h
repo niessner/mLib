@@ -102,7 +102,7 @@ namespace ml {
 				bb.include(v2->position);
 			}
 
-			BoundingBox3<FloatType> getBoundingBox() const {
+            BoundingBox3<FloatType> computeBoundingBox() const {
 				BoundingBox3<FloatType> bb;
 				includeInBoundingBox(bb);
 				return bb;
@@ -427,7 +427,7 @@ namespace ml {
 			if (bounds.isInitialized()) {
 				bb = bounds;
 			} else {
-				bb = getBoundingBox();
+                bb = computeBoundingBox();
 				bb.scale((FloatType)1 + (FloatType)3.0*voxelSize);	//safety margin
 			}
 
