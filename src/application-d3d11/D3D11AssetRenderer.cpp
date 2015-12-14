@@ -1,4 +1,6 @@
 
+namespace ml {
+	
 void D3D11AssetRenderer::init(GraphicsDevice &g, bool useTexture)
 {
     m_constants.init(g);
@@ -47,3 +49,5 @@ void D3D11AssetRenderer::renderBox(const mat4f &cameraPerspective, const vec3f &
 {
     renderMesh(m_box, cameraPerspective, mat4f::translation(center) * mat4f::scale(radius), color);
 }
+
+}	// namespace ml
