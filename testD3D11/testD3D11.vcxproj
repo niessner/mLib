@@ -179,10 +179,6 @@
   <ItemGroup>
     <Text Include="console.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="shaders\pointCloud.shader" />
-    <None Include="shaders\test.shader" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

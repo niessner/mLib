@@ -146,8 +146,8 @@ public:
 		}
 	}
 
-	//TODO this function should be called set rotation matrix
-	void setRotation(const Matrix3x3<FloatType>& m) {
+	//! overwrites the 3x3 rotation part of the matrix; all other values remain unchanced
+	void setRotationMatrix(const Matrix3x3<FloatType>& m) {
 		setMatrix3x3(m);
 	}
 	

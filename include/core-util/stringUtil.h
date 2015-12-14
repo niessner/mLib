@@ -9,6 +9,7 @@ namespace ml
 
 namespace util
 {
+
 	//TODO TEST
 	inline bool startsWith(const std::string& str, const std::string& startCandidate) {
 		if (str.length() < startCandidate.length()) { return false; }

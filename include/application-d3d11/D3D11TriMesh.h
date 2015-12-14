@@ -70,9 +70,10 @@ public:
 	//! Updates colors of this D3D11TriMesh to vertexColors. Precondition: vertexColors has same length as vertices otherwise exception is thrown
 	void updateColors(const std::vector<vec4f> &vertexColors);
 
-    bbox3f boundingBox() const
+	//! computes and returns the bounding box; no caching
+    bbox3f computeBoundingBox() const
     {
-        return m_triMesh.getBoundingBox();
+        return m_triMesh.computeBoundingBox();
     }
 
     const TriMeshf& getTriMesh() const

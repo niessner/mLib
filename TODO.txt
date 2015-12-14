@@ -1,7 +1,3 @@
-renderTarget -> multipleRenderTargets
-mat4 setRotation/setTranslation
-
-
 
 Update triMeshAcceleratorBVH to parameterize parallel build and possibly support parelll build for midpoint.
 toString for vec1/2/4
@@ -24,11 +20,5 @@ Mesh - OBB (get NR eigenvalue computation into matrix3x3)
 
 OnMeshLoad: reduces to lower res mesh for collisison (maybe in quadedge)`
 
-
-
-
 D3D11: Culling + Shading
 Shapes: Cylinder, Torus, Sphere
-
-Matthias:
-util::concatenate a vector of strings

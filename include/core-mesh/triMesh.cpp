@@ -8,15 +8,15 @@ namespace ml {
 	TriMesh<FloatType>::TriMesh(const MeshData<FloatType>& meshData)
 	{
 
-		m_Vertices.resize(meshData.m_Vertices.size());
+		m_vertices.resize(meshData.m_Vertices.size());
 
 		m_bHasNormals = meshData.m_Normals.size() > 0;
 		m_bHasColors = meshData.m_Colors.size() > 0;
 		m_bHasTexCoords = meshData.m_TextureCoords.size() > 0;
 
 		// Initialize positions (normals, colors and texcoords to be initialized later)
-		for (size_t i = 0; i < m_Vertices.size(); i++) {
-			m_Vertices[i].position = meshData.m_Vertices[i];
+		for (size_t i = 0; i < m_vertices.size(); i++) {
+			m_vertices[i].position = meshData.m_Vertices[i];
 		}
 
 		for (unsigned int i = 0; i < meshData.m_FaceIndicesVertices.size(); i++) {
@@ -29,7 +29,7 @@ namespace ml {
 				if (bFaceHasNormals || bFaceHasTexCoords || bFaceHasColors) {
 					vec3ui coords = vec3ui(0, 0, 0);
 					for (unsigned int j = 0; j < 3; j++) {
-						Vertex& vert = m_Vertices[meshData.getFaceIndicesVertices()[i][j]];
+						Vertex& vert = m_vertices[meshData.getFaceIndicesVertices()[i][j]];
 						bool vertexSplit = false;
 						if (bFaceHasNormals) { //split if normal is different than the one found before
 							const vec3<FloatType>& n = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
@@ -56,8 +56,8 @@ namespace ml {
 							if (bFaceHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (bFaceHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
 							if (bFaceHasColors)		v.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
-							m_Vertices.push_back(v);
-							coords[j] = (unsigned int)m_Vertices.size() - 1;
+							m_vertices.push_back(v);
+							coords[j] = (unsigned int)m_vertices.size() - 1;
 						}
 						else {
 							if (bFaceHasNormals)		vert.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
@@ -96,20 +96,20 @@ namespace ml {
 	template<class FloatType>
 	void TriMesh<FloatType>::computeNormals()
 	{
-		for (int i = 0; i < (int)m_Vertices.size(); i++) {
-			m_Vertices[i].normal = vec3<FloatType>::origin;
+		for (int i = 0; i < (int)m_vertices.size(); i++) {
+			m_vertices[i].normal = vec3<FloatType>::origin;
 		}
 
 		for (int i = 0; i < (int)m_Indices.size(); i++) {
 			vec3<FloatType> faceNormal =
-				(m_Vertices[m_Indices[i].y].position - m_Vertices[m_Indices[i].x].position) ^ (m_Vertices[m_Indices[i].z].position - m_Vertices[m_Indices[i].x].position);
+				(m_vertices[m_Indices[i].y].position - m_vertices[m_Indices[i].x].position) ^ (m_vertices[m_Indices[i].z].position - m_vertices[m_Indices[i].x].position);
 
-			m_Vertices[m_Indices[i].x].normal += faceNormal;
-			m_Vertices[m_Indices[i].y].normal += faceNormal;
-			m_Vertices[m_Indices[i].z].normal += faceNormal;
+			m_vertices[m_Indices[i].x].normal += faceNormal;
+			m_vertices[m_Indices[i].y].normal += faceNormal;
+			m_vertices[m_Indices[i].z].normal += faceNormal;
 		}
-		for (int i = 0; i < (int)m_Vertices.size(); i++) {
-			m_Vertices[i].normal.normalize();
+		for (int i = 0; i < (int)m_vertices.size(); i++) {
+			m_vertices[i].normal.normalize();
 		}
 
 		m_bHasNormals = true;
@@ -132,9 +132,9 @@ namespace ml {
 		int index = 0;
 		for (const vec3ui &t : m_Indices)
 		{
-			result.m_Vertices.push_back(m_Vertices[t[0]]);
-			result.m_Vertices.push_back(m_Vertices[t[1]]);
-			result.m_Vertices.push_back(m_Vertices[t[2]]);
+			result.m_Vertices.push_back(m_vertices[t[0]]);
+			result.m_Vertices.push_back(m_vertices[t[1]]);
+			result.m_Vertices.push_back(m_vertices[t[2]]);
 
 			result.m_Indices.push_back(vec3ui(index + 0, index + 1, index + 2));
 			index += 3;
@@ -175,7 +175,7 @@ namespace ml {
 
 		TriMesh<FloatType> result;
 
-		result.m_Vertices = m_Vertices;
+		result.m_Vertices = m_vertices;
 		result.m_Indices.reserve(m_Indices.size() * 4);
 
 		for (const vec3ui &tri : m_Indices)
@@ -189,7 +189,7 @@ namespace ml {
 			if (edgeLength < minEdgeLength)
 			subdivide = false;
 			}*/
-			bool subdivide = math::triangleArea(m_Vertices[tri[0]].position, m_Vertices[tri[1]].position, m_Vertices[tri[2]].position) >= (minEdgeLength * minEdgeLength);
+			bool subdivide = math::triangleArea(m_vertices[tri[0]].position, m_vertices[tri[1]].position, m_vertices[tri[2]].position) >= (minEdgeLength * minEdgeLength);
 
 			if (subdivide)
 			{
@@ -203,7 +203,7 @@ namespace ml {
 					if (edgeToNewVertexMap.count(e) == 0)
 					{
 						edgeToNewVertexMap[e] = (UINT)result.m_Vertices.size();
-						result.m_Vertices.push_back((m_Vertices[v0] + m_Vertices[v1]) * (FloatType)0.5);
+						result.m_Vertices.push_back((m_vertices[v0] + m_vertices[v1]) * (FloatType)0.5);
 					}
 
 					edgeMidpoints[eIndex] = edgeToNewVertexMap[e];

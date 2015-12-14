@@ -161,7 +161,7 @@ void AppTest::init(ml::ApplicationData &app)
 
 	m_constants.init(app.graphics);
 
-	bbox3f bb = ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)).getBoundingBox();
+	bbox3f bb = ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)).computeBoundingBox();
 	std::cout << bb << std::endl;
 
 
@@ -250,6 +250,21 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 	if (key == KEY_F1) {
 		auto color = app.graphics.castD3D11().captureBackBuffer();
 		FreeImageWrapper::saveImage("screenshot.png", color);
+	}
+	
+	if (key == KEY_F2) {
+		ml::D3D11RenderTarget renderTarget;
+		renderTarget.load(app.graphics.castD3D11(), app.window.getWidth(), app.window.getHeight());
+		renderTarget.clear();
+		renderTarget.bind();
+		render(app);
+		renderTarget.unbind();
+		ml::ColorImageR8G8B8A8 color;
+		ml::DepthImage32 depth;
+		renderTarget.captureColorBuffer(color);
+		renderTarget.captureDepthBuffer(depth);
+		FreeImageWrapper::saveImage("color.png", color);
+		FreeImageWrapper::saveImage("depth.png", ml::ColorImageR32G32B32A32(depth));
 	}
 
 	if (key == 'R') {
