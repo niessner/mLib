@@ -66,7 +66,7 @@ namespace ml {
 							coords[j] = meshData.getFaceIndicesVertices()[i][j];
 						}
 					}
-					m_Indices.push_back(coords);
+					m_indices.push_back(coords);
 
 					//m_Indices.push_back(vec3ui(meshData.m_FaceIndicesVertices[i][0], meshData.m_FaceIndicesVertices[i][1], meshData.m_FaceIndicesVertices[i][2]));
 					//if (hasNormals) {
@@ -83,7 +83,7 @@ namespace ml {
 					//}
 				}
 				else {
-					m_Indices.push_back(vec3ui(meshData.m_FaceIndicesVertices[i][0], meshData.m_FaceIndicesVertices[i][1], meshData.m_FaceIndicesVertices[i][2]));
+					m_indices.push_back(vec3ui(meshData.m_FaceIndicesVertices[i][0], meshData.m_FaceIndicesVertices[i][1], meshData.m_FaceIndicesVertices[i][2]));
 				}
 			}
 			else {
@@ -100,13 +100,13 @@ namespace ml {
 			m_vertices[i].normal = vec3<FloatType>::origin;
 		}
 
-		for (int i = 0; i < (int)m_Indices.size(); i++) {
+		for (int i = 0; i < (int)m_indices.size(); i++) {
 			vec3<FloatType> faceNormal =
-				(m_vertices[m_Indices[i].y].position - m_vertices[m_Indices[i].x].position) ^ (m_vertices[m_Indices[i].z].position - m_vertices[m_Indices[i].x].position);
+				(m_vertices[m_indices[i].y].position - m_vertices[m_indices[i].x].position) ^ (m_vertices[m_indices[i].z].position - m_vertices[m_indices[i].x].position);
 
-			m_vertices[m_Indices[i].x].normal += faceNormal;
-			m_vertices[m_Indices[i].y].normal += faceNormal;
-			m_vertices[m_Indices[i].z].normal += faceNormal;
+			m_vertices[m_indices[i].x].normal += faceNormal;
+			m_vertices[m_indices[i].y].normal += faceNormal;
+			m_vertices[m_indices[i].z].normal += faceNormal;
 		}
 		for (int i = 0; i < (int)m_vertices.size(); i++) {
 			m_vertices[i].normal.normalize();
@@ -130,7 +130,7 @@ namespace ml {
 		TriMesh<FloatType> result;
 
 		int index = 0;
-		for (const vec3ui &t : m_Indices)
+		for (const vec3ui &t : m_indices)
 		{
 			result.m_Vertices.push_back(m_vertices[t[0]]);
 			result.m_Vertices.push_back(m_vertices[t[1]]);
@@ -176,9 +176,9 @@ namespace ml {
 		TriMesh<FloatType> result;
 
 		result.m_Vertices = m_vertices;
-		result.m_Indices.reserve(m_Indices.size() * 4);
+		result.m_Indices.reserve(m_indices.size() * 4);
 
-		for (const vec3ui &tri : m_Indices)
+		for (const vec3ui &tri : m_indices)
 		{
 			/*bool subdivide = true;
 			for (UINT eIndex = 0; eIndex < 3; eIndex++)

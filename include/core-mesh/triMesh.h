@@ -140,7 +140,7 @@ namespace ml {
 		// ********************************
 		// TriMesh itself
 		// ********************************
-		TriMesh() : m_vertices(), m_Indices() {
+		TriMesh() : m_vertices(), m_indices() {
 			m_bHasNormals = false;
 			m_bHasTexCoords = false;
 			m_bHasColors = false;
@@ -151,8 +151,8 @@ namespace ml {
 			const bool hasNormals = false, const bool hasTexCoords = false, const bool hasColors = false) {
 				if (indices.size()%3 != 0)	throw MLIB_EXCEPTION("not a tri mesh");
 				m_vertices = vertices;
-				m_Indices.resize(indices.size()/3);
-				memcpy(&m_Indices[0], &indices[0], indices.size()*sizeof(unsigned int));
+				m_indices.resize(indices.size()/3);
+				memcpy(&m_indices[0], &indices[0], indices.size()*sizeof(unsigned int));
 				m_bHasNormals = hasNormals;
 				m_bHasTexCoords = hasTexCoords;
 				m_bHasColors = hasColors;
@@ -164,7 +164,7 @@ namespace ml {
 		TriMesh(const std::vector<Vertex>& vertices, const std::vector<vec3ui>& indices, bool recomputeNormals = false,
 			const bool hasNormals = false, const bool hasTexCoords = false, const bool hasColors = false) {
 				m_vertices = vertices;
-				m_Indices = indices;
+				m_indices = indices;
 				m_bHasNormals = hasNormals;
 				m_bHasTexCoords = hasTexCoords;
 				m_bHasColors = hasColors;
@@ -208,9 +208,9 @@ namespace ml {
 				if (normals) m_vertices[i].normal = normals[i];
 				if (texCoords) m_vertices[i].texCoord = texCoords[i];
 			}
-			m_Indices.resize(numIndices/3);
+			m_indices.resize(numIndices/3);
 			for (size_t i = 0; i < numIndices/3; i++) {
-				m_Indices[i] = vec3ui(indices[3*i+0],indices[3*i+1],indices[3*i+2]);
+				m_indices[i] = vec3ui(indices[3*i+0],indices[3*i+1],indices[3*i+2]);
 			}
 		}
 
@@ -226,20 +226,20 @@ namespace ml {
 				m_vertices[i].position = vertices[i];
 				m_vertices[i].normal = normals[i];
 			}
-			m_Indices = indices;
+			m_indices = indices;
 			m_bHasColors = m_bHasNormals = m_bHasTexCoords = true;
 		}
 
 		TriMesh(const TriMesh& other) {
 			m_vertices = other.m_vertices;
-			m_Indices = other.m_Indices;
+			m_indices = other.m_indices;
 			m_bHasNormals = other.m_bHasNormals;
 			m_bHasTexCoords = other.m_bHasTexCoords;
 			m_bHasColors = other.m_bHasColors;
 		}
 		TriMesh(TriMesh&& t) {
 			m_vertices = std::move(t.m_vertices);
-			m_Indices = std::move(t.m_Indices);
+			m_indices = std::move(t.m_indices);
 			m_bHasNormals = t.m_bHasNormals;
 			m_bHasTexCoords = t.m_bHasTexCoords;
 			m_bHasColors = t.m_bHasColors;
@@ -272,7 +272,7 @@ namespace ml {
 								}
 								for (unsigned int i = 0; i < 12; i++) {
 									indices[i] += vertIdxBase;
-									m_Indices.push_back(indices[i]);
+									m_indices.push_back(indices[i]);
 								}
 							} else {
 								vec3<FloatType> verts[8];
@@ -285,7 +285,7 @@ namespace ml {
 								}
 								for (unsigned int i = 0; i < 12; i++) {
 									indices[i] += vertIdxBase;
-									m_Indices.push_back(indices[i]);
+									m_indices.push_back(indices[i]);
 								}
 							}
 						}
@@ -303,7 +303,7 @@ namespace ml {
 
 		void operator=(TriMesh&& t) {
 			m_vertices = std::move(t.m_vertices);
-			m_Indices = std::move(t.m_Indices);
+			m_indices = std::move(t.m_indices);
 			m_bHasNormals = t.m_bHasNormals;
 			m_bHasTexCoords = t.m_bHasTexCoords;
 			m_bHasColors = t.m_bHasColors;
@@ -311,7 +311,7 @@ namespace ml {
 
 		void operator=(const TriMesh& other) {
 			m_vertices = other.m_vertices;
-			m_Indices = other.m_Indices;
+			m_indices = other.m_indices;
 			m_bHasNormals = other.m_bHasNormals;
 			m_bHasTexCoords = other.m_bHasTexCoords;
 			m_bHasColors = other.m_bHasColors;
@@ -319,7 +319,7 @@ namespace ml {
 
 		void clear() {
 			m_vertices.clear();
-			m_Indices.clear();
+			m_indices.clear();
 			m_bHasNormals = false;
 			m_bHasTexCoords = false;
 			m_bHasColors = false;
@@ -366,17 +366,17 @@ namespace ml {
         TriMesh<FloatType> flatten() const;
 
 		const std::vector<Vertex>& getVertices() const { return m_vertices; }
-		const std::vector<vec3ui>& getIndices() const { return m_Indices; }
+		const std::vector<vec3ui>& getIndices() const { return m_indices; }
 
 		std::vector<Vertex>& getVertices() { return m_vertices; }
-		std::vector<vec3ui>& getIndices() { return m_Indices; }
+		std::vector<vec3ui>& getIndices() { return m_indices; }
 
 		void getMeshData(MeshData<FloatType>& meshData) const {
 
 			meshData.clear();
 
 			meshData.m_Vertices.resize(m_vertices.size());
-			meshData.m_FaceIndicesVertices.resize(m_Indices.size());
+			meshData.m_FaceIndicesVertices.resize(m_indices.size());
 			if (m_bHasColors) {
 				meshData.m_Colors.resize(m_vertices.size());
 			}
@@ -386,10 +386,10 @@ namespace ml {
 			if (m_bHasTexCoords) {
 				meshData.m_TextureCoords.resize(m_vertices.size());
 			}
-			for (size_t i = 0; i < m_Indices.size(); i++) {
-				meshData.m_FaceIndicesVertices[i][0] = m_Indices[i].x;
-				meshData.m_FaceIndicesVertices[i][1] = m_Indices[i].y;
-				meshData.m_FaceIndicesVertices[i][2] = m_Indices[i].z;
+			for (size_t i = 0; i < m_indices.size(); i++) {
+				meshData.m_FaceIndicesVertices[i][0] = m_indices[i].x;
+				meshData.m_FaceIndicesVertices[i][1] = m_indices[i].y;
+				meshData.m_FaceIndicesVertices[i][2] = m_indices[i].z;
 			}
 
 			for (size_t i = 0; i < m_vertices.size(); i++) {
@@ -442,10 +442,10 @@ namespace ml {
 
 
 		void voxelize(BinaryGrid3& grid, const mat4f& worldToVoxel = mat4f::identity(), bool solid = false) const {
-			for (size_t i = 0; i < m_Indices.size(); i++) {
-				vec3<FloatType> p0 = worldToVoxel * m_vertices[m_Indices[i].x].position;
-				vec3<FloatType> p1 = worldToVoxel * m_vertices[m_Indices[i].y].position;
-				vec3<FloatType> p2 = worldToVoxel * m_vertices[m_Indices[i].z].position;
+			for (size_t i = 0; i < m_indices.size(); i++) {
+				vec3<FloatType> p0 = worldToVoxel * m_vertices[m_indices[i].x].position;
+				vec3<FloatType> p1 = worldToVoxel * m_vertices[m_indices[i].y].position;
+				vec3<FloatType> p2 = worldToVoxel * m_vertices[m_indices[i].z].position;
 
 				BoundingBox3<FloatType> bb0(p0, p1, p2);
                 //
@@ -533,7 +533,7 @@ namespace ml {
 		bool m_bHasColors;
 
 		std::vector<Vertex>		m_vertices;
-		std::vector<vec3ui>					m_Indices;
+		std::vector<vec3ui>		m_indices;
 	};
 
 	typedef TriMesh<float> TriMeshf;
@@ -546,7 +546,7 @@ namespace ml {
     inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<< (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const TriMesh<FloatType> &m) {
         s << m.m_bHasNormals << m.m_bHasTexCoords << m.m_bHasColors;
         s.writePrimitiveVector(m.m_vertices);
-        s.writePrimitiveVector(m.m_Indices);
+        s.writePrimitiveVector(m.m_indices);
         return s;
     }
 
@@ -554,7 +554,7 @@ namespace ml {
     inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>> (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, TriMesh<FloatType> &m) {
         s >> m.m_bHasNormals >> m.m_bHasTexCoords >> m.m_bHasColors;
         s.readPrimitiveVector(m.m_vertices);
-        s.readPrimitiveVector(m.m_Indices);
+        s.readPrimitiveVector(m.m_indices);
         return s;
     }
 
