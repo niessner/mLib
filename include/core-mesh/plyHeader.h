@@ -13,50 +13,53 @@ namespace ml {
 			unsigned int byteSize;
 		};
 		PlyHeader(std::ifstream& file) {
-			m_NumVertices = (unsigned int)-1;
-			m_NumFaces = (unsigned int)-1;
+			m_numVertices = (unsigned int)-1;
+			m_numFaces = (unsigned int)-1;
 			m_bHasNormals = false;
 			m_bHasColors = false;
 
 			read(file);
 		}
 		PlyHeader() {
-			m_NumVertices = (unsigned int)-1;
-			m_NumFaces = (unsigned int)-1;
+			m_numVertices = (unsigned int)-1;
+			m_numFaces = (unsigned int)-1;
 			m_bHasNormals = false;
 			m_bHasColors = false;
 		}
-		unsigned int m_NumVertices;
-		unsigned int m_NumFaces;
-		std::vector<PlyProperty> m_Properties;
+		unsigned int m_numVertices;
+		unsigned int m_numFaces;
+		std::map<std::string, std::vector<PlyProperty>> m_properties;
 		bool m_bBinary;
 		bool m_bHasNormals;
 		bool m_bHasColors;
 
 		void read(std::ifstream& file) {
+			std::string activeElement = "";
 			std::string line;
 			std::getline(file, line);
 			while (line.find("end_header") == std::string::npos) {
-				PlyHeaderLine(line, *this);
+				PlyHeaderLine(line, *this, activeElement);
 				std::getline(file, line);
 			}
 		}
 
-		static void PlyHeaderLine(const std::string& line, PlyHeader& header) {
+		static void PlyHeaderLine(const std::string& line, PlyHeader& header, std::string& activeElement) {
 
 			std::stringstream ss(line);
 			std::string currWord;
 			ss >> currWord;
 
+	
 			if (currWord == "element") {
 				ss >> currWord;
+				activeElement = currWord;
 				if (currWord == "vertex") {
-					ss >> header.m_NumVertices;
+					ss >> header.m_numVertices;
 				} else if (currWord == "face") {
-					ss >> header.m_NumFaces;
+					ss >> header.m_numFaces;
 				}
 			} 
-			else if(currWord == "format") {
+			else if (currWord == "format") {
 				ss >> currWord;
 				if (currWord == "binary_little_endian")	{
 					header.m_bBinary = true;
@@ -70,11 +73,20 @@ namespace ml {
 					std::string which;
 					ss >> which;
 					ss >> p.name;
-					if (p.name == "nx")	header.m_bHasNormals = true;
-					if (p.name == "red") header.m_bHasColors = true;
-					if (which == "float") p.byteSize = 4;
-					if (which == "uchar" || which == "char") p.byteSize = 1;
-					header.m_Properties.push_back(p);
+					if (activeElement == "vertex") {
+						if (p.name == "nx")	header.m_bHasNormals = true;
+						if (p.name == "red") header.m_bHasColors = true;
+					}
+
+					if (which == "float" || which == "int") p.byteSize = 4;
+					else if (which == "uchar" || which == "char") p.byteSize = 1;
+					else {
+						throw MLIB_EXCEPTION("unkown data type");
+					}
+					header.m_properties[activeElement].push_back(p);
+				}
+				else {
+					//property belonging to unknown element
 				}
 			}
 		}

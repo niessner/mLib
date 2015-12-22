@@ -72,6 +72,20 @@ private:
 
 int main()
 {
+	MeshDataf md;
+	MeshIOf::loadFromFile("dining1d.ply", md);
+	MeshIOf::saveToFile("test.ply", md);
+
+	std::cout << "loading done!" << std::endl;
+	getchar();
+
+	PointCloudf pc;
+	PointCloudIOf::loadFromFile("cloud_bin_1.ply", pc);
+	PointCloudIOf::saveToFile("test.ply", pc);
+
+
+	std::cout << "loading done!" << std::endl;
+	getchar();
 
 	DistanceField3f df(1, 1, 1);
 	B* b = new B();

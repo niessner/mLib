@@ -14,65 +14,65 @@ namespace ml {
 
 		PlyHeader header(file);
 
-		if (header.m_NumVertices == (unsigned int)-1) throw MLIB_EXCEPTION("no vertices found");
+		if (header.m_numVertices == (unsigned int)-1) throw MLIB_EXCEPTION("no vertices found");
 
-		pc.m_points.resize(header.m_NumVertices);
-		if (header.m_bHasNormals)	pc.m_normals.resize(header.m_NumVertices);
-		if (header.m_bHasColors)	pc.m_colors.resize(header.m_NumVertices);
+		pc.m_points.resize(header.m_numVertices);
+		if (header.m_bHasNormals)	pc.m_normals.resize(header.m_numVertices);
+		if (header.m_bHasColors)	pc.m_colors.resize(header.m_numVertices);
 
 		if (header.m_bBinary) {
 			unsigned int size = 0;
-			for (size_t i = 0; i < header.m_Properties.size(); i++) {
-				size += header.m_Properties[i].byteSize;
+			for (size_t i = 0; i < header.m_properties["vertex"].size(); i++) {
+				size += header.m_properties["vertex"][i].byteSize;
 			}
-			char* data = new char[size*header.m_NumVertices];
-			file.read(data, size*header.m_NumVertices);
+			char* data = new char[size*header.m_numVertices];
+			file.read(data, size*header.m_numVertices);
 
-			for (unsigned int i = 0; i < header.m_NumVertices; i++) {
+			for (unsigned int i = 0; i < header.m_numVertices; i++) {
 				unsigned int byteOffset = 0;
-				for (unsigned int j = 0; j < header.m_Properties.size(); j++) {
-					if (header.m_Properties[j].name == "x") {
+				for (unsigned int j = 0; j < header.m_properties["vertex"].size(); j++) {
+					if (header.m_properties["vertex"][j].name == "x") {
 						pc.m_points[i].x = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "y") {
+					else if (header.m_properties["vertex"][j].name == "y") {
 						pc.m_points[i].y = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "z") {
+					else if (header.m_properties["vertex"][j].name == "z") {
 						pc.m_points[i].z = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "nx") {
+					else if (header.m_properties["vertex"][j].name == "nx") {
 						pc.m_normals[i].x = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "ny") {
+					else if (header.m_properties["vertex"][j].name == "ny") {
 						pc.m_normals[i].y = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "nz") {
+					else if (header.m_properties["vertex"][j].name == "nz") {
 						pc.m_normals[i].z = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "red") {
+					else if (header.m_properties["vertex"][j].name == "red") {
 						pc.m_colors[i].x = ((unsigned char*)&data[i*size + byteOffset])[0];	pc.m_colors[i].x/=255.0f;
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "green") {
+					else if (header.m_properties["vertex"][j].name == "green") {
 						pc.m_colors[i].y = ((unsigned char*)&data[i*size + byteOffset])[0];	pc.m_colors[i].y/=255.0f;
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "blue") {
+					else if (header.m_properties["vertex"][j].name == "blue") {
 						pc.m_colors[i].z = ((unsigned char*)&data[i*size + byteOffset])[0];	pc.m_colors[i].z/=255.0f;
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
-					else if (header.m_Properties[j].name == "alpha") {
+					else if (header.m_properties["vertex"][j].name == "alpha") {
 						pc.m_colors[i].w = ((unsigned char*)&data[i*size + byteOffset])[0];	pc.m_colors[i].w/=255.0f;
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					} else {
 						//unknown (ignore)
-						byteOffset += header.m_Properties[j].byteSize;
+						byteOffset += header.m_properties["vertex"][j].byteSize;
 					}
 
 				}
@@ -83,7 +83,7 @@ namespace ml {
 			delete [] data;
 		} else {
 			MLIB_WARNING("untested");
-			for (size_t i = 0; i < header.m_NumVertices; i++) {
+			for (size_t i = 0; i < header.m_numVertices; i++) {
 				std::string line;
 				std::getline(file, line);
 				std::stringstream ss(line);

@@ -14,69 +14,69 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	// read header
 	PlyHeader header(file);
 
-	if (header.m_NumFaces == (unsigned int)-1) throw MLIB_EXCEPTION("no faces found");
-	if (header.m_NumVertices == (unsigned int)-1) throw MLIB_EXCEPTION("no vertices found");
-
-	mesh.m_Vertices.resize(header.m_NumVertices);
-	mesh.m_FaceIndicesVertices.resize(header.m_NumFaces, 3);	//assuming triangles
-	if (header.m_bHasNormals) mesh.m_Normals.resize(header.m_NumVertices);
-	if (header.m_bHasColors) mesh.m_Colors.resize(header.m_NumVertices);
+	if (header.m_numFaces == (unsigned int)-1) throw MLIB_EXCEPTION("no faces found");
+	if (header.m_numVertices == (unsigned int)-1) throw MLIB_EXCEPTION("no vertices found");
+	 
+	mesh.m_Vertices.resize(header.m_numVertices);
+	mesh.m_FaceIndicesVertices.resize(header.m_numFaces, 3);	//assuming triangles
+	if (header.m_bHasNormals) mesh.m_Normals.resize(header.m_numVertices);
+	if (header.m_bHasColors) mesh.m_Colors.resize(header.m_numVertices);
 
 	if(header.m_bBinary)
 	{
 		//unsigned int size = 3*4+3*4+3+11*4;
 		unsigned int size = 0;
-		for (unsigned int i = 0; i < header.m_Properties.size(); i++) {
-			size += header.m_Properties[i].byteSize;
+		for (unsigned int i = 0; i < header.m_properties["vertex"].size(); i++) {
+			size += header.m_properties["vertex"][i].byteSize;
 		}
 		//size = 3*4+3*4+3+11*4;
-		char* data = new char[size*header.m_NumVertices];
-		file.read(data, size*header.m_NumVertices);
-		for (unsigned int i = 0; i < header.m_NumVertices; i++) {
+		char* data = new char[size*header.m_numVertices];
+		file.read(data, size*header.m_numVertices);
+		for (unsigned int i = 0; i < header.m_numVertices; i++) {
 			unsigned int byteOffset = 0;
-			for (unsigned int j = 0; j < header.m_Properties.size(); j++) {
-				if (header.m_Properties[j].name == "x") {
+			for (unsigned int j = 0; j < header.m_properties["vertex"].size(); j++) {
+				if (header.m_properties["vertex"][j].name == "x") {
 					mesh.m_Vertices[i].x = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "y") {
+				else if (header.m_properties["vertex"][j].name == "y") {
 					mesh.m_Vertices[i].y = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "z") {
+				else if (header.m_properties["vertex"][j].name == "z") {
 					mesh.m_Vertices[i].z = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "nx") {
+				else if (header.m_properties["vertex"][j].name == "nx") {
 					mesh.m_Normals[i].x = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "ny") {
+				else if (header.m_properties["vertex"][j].name == "ny") {
 					mesh.m_Normals[i].y = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "nz") {
+				else if (header.m_properties["vertex"][j].name == "nz") {
 					mesh.m_Normals[i].z = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "red") {
+				else if (header.m_properties["vertex"][j].name == "red") {
 					mesh.m_Colors[i].x = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].x/=255.0f;
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "green") {
+				else if (header.m_properties["vertex"][j].name == "green") {
 					mesh.m_Colors[i].y = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].y/=255.0f;
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "blue") {
+				else if (header.m_properties["vertex"][j].name == "blue") {
 					mesh.m_Colors[i].z = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].z/=255.0f;
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
-				else if (header.m_Properties[j].name == "alpha") {
+				else if (header.m_properties["vertex"][j].name == "alpha") {
 					mesh.m_Colors[i].w = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].w/=255.0f;
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				} else {
 					//unknown (ignore)
-					byteOffset += header.m_Properties[j].byteSize;
+					byteOffset += header.m_properties["vertex"][j].byteSize;
 				}
 			}
 			assert(byteOffset == size);
@@ -86,9 +86,9 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 		delete [] data;
 
 		size = 1+3*4;	//typically 1 uchar for numVertices per triangle, 3 * int for indices
-		data = new char[size*header.m_NumFaces];
-		file.read(data, size*header.m_NumFaces);
-		for (unsigned int i = 0; i < header.m_NumFaces; i++) {	
+		data = new char[size*header.m_numFaces];
+		file.read(data, size*header.m_numFaces);
+		for (unsigned int i = 0; i < header.m_numFaces; i++) {	
 			mesh.m_FaceIndicesVertices[i][0] = ((int*)&data[i*size+1])[0];
 			mesh.m_FaceIndicesVertices[i][1] = ((int*)&data[i*size+1])[1];
 			mesh.m_FaceIndicesVertices[i][2] = ((int*)&data[i*size+1])[2];
@@ -109,7 +109,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	}
 	else
 	{
-		for (unsigned int i = 0; i < header.m_NumVertices; i++) {
+		for (unsigned int i = 0; i < header.m_numVertices; i++) {
 			std::string line;
 			std::getline(file, line);
 			std::stringstream ss(line);
@@ -120,7 +120,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 			}
 		}
 
-		for (unsigned int i = 0; i < header.m_NumFaces; i++) {
+		for (unsigned int i = 0; i < header.m_numFaces; i++) {
 			std::string line;
 			std::getline(file, line);
 			std::stringstream ss(line);
