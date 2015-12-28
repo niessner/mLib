@@ -531,7 +531,7 @@ namespace util
 				end = middle;
 			}
 			else {
-				begin = middle + 1;
+				begin = middle;
 			}
 		}
 
