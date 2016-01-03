@@ -329,6 +329,12 @@ namespace ml {
 			return (*this)((unsigned int)math::round(x*(m_width - 1)), (unsigned int)math::round(y*(m_height - 1)));
 		}
 
+        //! Mutator Operator (vec2i)
+        T& operator()(vec2i coord) {
+            MLIB_ASSERT((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
+            return m_data[coord.y*m_width + coord.x];
+        }
+
 		template <class S>
 		void setPixel(S x, S y, const T& value) {
 			(*this)(x, y) = value;
@@ -367,6 +373,12 @@ namespace ml {
 		const T& operator()(float x, float y) const {
 			return (*this)((unsigned int)math::round(x*(m_width - 1)), (unsigned int)math::round(y*(m_height - 1)));
 		}
+
+        //! Access Operator (vec2i)
+        const T& operator()(vec2i coord) const {
+            MLIB_ASSERT((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
+            return m_data[coord.y*m_width + coord.x];
+        }
 
 		//! Returns the Pixel value at that position (calls the function corresponding to the parameter type)
 		template <class S>
