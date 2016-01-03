@@ -5,6 +5,8 @@
 namespace ml
 {
 
+template<class T> class Grid2;
+
 template<class BinaryDataBuffer, class BinaryDataCompressor>
 class BinaryDataStream {
 public:
@@ -34,6 +36,14 @@ public:
     }
 
     template<class T>
+    void writePrimitiveGrid(const Grid2<T> &g)
+    {
+        writeData(g.getDimX());
+        writeData(g.getDimY());
+        writeData((const BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY());
+    }
+
+    template<class T>
     void readPrimitiveVector(std::vector<T> &v)
     {
         size_t size;
@@ -41,6 +51,16 @@ public:
         v.clear();
         v.resize(size);
         readData((BYTE *)v.data(), sizeof(T) * v.size());
+    }
+
+    template<class T>
+    void readPrimitiveGrid(Grid2<T> &g)
+    {
+        size_t dimX, dimY;
+        readData(&dimX);
+        readData(&dimY);
+        g.allocate(dimX, dimY);
+        readData((BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY());
     }
 
 	//start compression after that byte size (only if compression is enabled)
