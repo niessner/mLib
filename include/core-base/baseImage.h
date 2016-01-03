@@ -678,7 +678,7 @@ namespace ml {
 		}
 
         bool isValidCoordinate(vec2i coord) const {
-            return (coord.x < m_width && coord.y < m_height && coord.x >= 0 && coord.y >= 0);
+            return ((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
         }
 
 		//! returns the number of channels per pixel (-1 if unknown)

@@ -267,6 +267,10 @@ namespace ml
 		{
 			return (x >= 0 && x < int(m_dimX) && y >= 0 && y < int(m_dimY));
 		}
+        inline bool isValidCoordinate(vec2i coord) const
+        {
+            return (coord.x >= 0 && coord.x < int(m_dimX) && coord.y >= 0 && coord.y < int(m_dimY));
+        }
 
 		//
 		// TODO: rename
