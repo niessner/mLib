@@ -665,6 +665,10 @@ namespace ml {
 			return (x < m_width && y < m_height);
 		}
 
+        bool isValidCoordinate(vec2i coord) const {
+            return (coord.x < m_width && coord.y < m_height && coord.x >= 0 && coord.y >= 0);
+        }
+
 		//! returns the number of channels per pixel (-1 if unknown)
 		unsigned int getNumChannels() const  {
 			if (std::is_same<T, USHORT>::value || std::is_same<T, short >::value) return 1;
