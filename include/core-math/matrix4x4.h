@@ -738,6 +738,22 @@ public:
 			return false;
 	}
 	
+    //! returns axis-angle-translation representation ((ax, ay, az) * angle, tx, ty, tz) used by the CERES solver
+    //! angle is in radians
+    //! TODO this function has a singularity at 0 and 180 degrees
+    vec6<FloatType> convertToAxisAngleTranslation() const {
+        Matrix3x3<FloatType> R = getRotation();
+        vec3<FloatType> tr = getTranslation();
+
+        FloatType angle = acos((R(0, 0) + R(1, 1) + R(2, 2) - 1.0f) / 2.0f);
+        FloatType denom = sqrtf(math::square(R(2, 1) - R(1, 2)) + math::square(R(0, 2) - R(2, 0)) + math::square(R(1, 0) - R(0, 1)));
+        FloatType x = (R(2, 1) - R(1, 2)) / denom;
+        FloatType y = (R(0, 2) - R(2, 0)) / denom;
+        FloatType z = (R(1, 0) - R(0, 1)) / denom;
+        vec3<FloatType> axisAngle = (vec3<FloatType>(x, y, z)).getNormalized() * angle;
+        return vec6<FloatType>(axisAngle, tr);
+    }
+
 	//! returns euler angles (x,y,z) and translation in 6d vector (in that order)
 	//! TODO these functions assume radians
 	vec6<FloatType> convertToEulerAnglesPose() const {

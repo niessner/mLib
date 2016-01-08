@@ -20,6 +20,157 @@ namespace ml
 
 		~Grid3();
 
+        struct iteratorEntry
+        {
+            iteratorEntry(size_t _x, size_t _y, size_t _z, T &_value)
+                : x(_x), y(_y), z(_z), value(_value)
+            {
+
+            }
+            size_t x;
+            size_t y;
+            size_t z;
+            T &value;
+        };
+
+        struct constIteratorEntry
+        {
+            constIteratorEntry(size_t _x, size_t _y, size_t _z, const T &_value)
+                : x(_x), y(_y), z(_z), value(_value)
+            {
+
+            }
+            size_t x;
+            size_t y;
+            size_t z;
+            const T &value;
+        };
+
+
+        struct iterator
+        {
+            iterator(Grid3<T> *_grid)
+            {
+                x = 0;
+                y = 0;
+                z = 0;
+                grid = _grid;
+            }
+            iterator(const iterator &i)
+            {
+                x = i.x;
+                y = i.y;
+                z = i.z;
+                grid = i.grid;
+            }
+            ~iterator() {}
+            iterator& operator=(const iterator &i)
+            {
+                x = i.x;
+                y = i.y;
+                z = i.z;
+                grid = i.grid;
+                return *this;
+            }
+            iterator& operator++()
+            {
+                x++;
+                if (x == grid->getDimX())
+                {
+                    x = 0;
+                    y++;
+                    if (y == grid->getDimY())
+                    {
+                        y = 0;
+                        z++;
+                        if (z == grid->getDimZ())
+                        {
+                            grid = NULL;
+                        }
+                    }
+                }
+                return *this;
+            }
+            iteratorEntry operator* () const
+            {
+                return iteratorEntry(x, y, z, (*grid)(x, y, z));
+            }
+
+            bool operator != (const iterator &i) const
+            {
+                return i.grid != grid;
+            }
+
+            friend void swap(iterator &a, iterator &b);
+
+            size_t x, y, z;
+
+        private:
+            Grid3<T> *grid;
+        };
+
+        struct constIterator
+        {
+            constIterator(const Grid3<T> *_grid)
+            {
+                x = 0;
+                y = 0;
+                z = 0;
+                grid = _grid;
+            }
+            constIterator(const constIterator &i)
+            {
+                x = i.x;
+                y = i.y;
+                z = i.z;
+                grid = i.grid;
+            }
+            ~constIterator() {}
+            constIterator& operator=(const constIterator &i)
+            {
+                x = i.x;
+                y = i.y;
+                z = i.z;
+                grid = i.grid;
+                return *this;
+            }
+            constIterator& operator++()
+            {
+                x++;
+                if (x == grid->getDimX())
+                {
+                    x = 0;
+                    y++;
+                    if (y == grid->getDimY())
+                    {
+                        y = 0;
+                        z++;
+                        if (z == grid->getDimZ())
+                        {
+                            grid = NULL;
+                        }
+                    }
+                }
+                return *this;
+            }
+            constIteratorEntry operator* () const
+            {
+                return constIteratorEntry(x, y, z, (*grid)(x, y, z));
+            }
+
+            bool operator != (const constIterator &i) const
+            {
+                return i.grid != grid;
+            }
+
+            friend void swap(const constIterator &a, const constIterator &b);
+
+            size_t x, y, z;
+
+        private:
+            const Grid3<T> *grid;
+        };
+
 		//
 		// Memory
 		//
@@ -67,6 +218,7 @@ namespace ml
 #endif
 			return m_data[z*m_dimY*m_dimX + x*m_dimY + y];
 		}
+
 		inline const T& operator() (size_t dimX, size_t dimY, size_t slice) const
 		{
 #if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
@@ -74,6 +226,23 @@ namespace ml
 #endif
 			return m_data[slice*m_dimY*m_dimX + dimX*m_dimY + dimY];
 		}
+
+        inline T& operator() (const vec3i &coord)
+        {
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
+            MLIB_ASSERT_STR((coord.x < m_dimX) && (coord.y < m_dimY) && (coord.z < m_dimZ), "Out-of-bounds grid access");
+#endif
+            return m_data[coord.z*m_dimY*m_dimX + coord.x*m_dimY + coord.y];
+        }
+
+        inline const T& operator() (const vec3i &coord) const
+        {
+#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
+            MLIB_ASSERT_STR((coord.x < m_dimX) && (coord.y < m_dimY) && (coord.z < m_dimZ), "Out-of-bounds grid access");
+#endif
+            return m_data[coord.z*m_dimY*m_dimX + coord.x*m_dimY + coord.y];
+        }
+
 		inline size_t getDimX() const
 		{
 			return m_dimX;
@@ -115,6 +284,10 @@ namespace ml
 		{
 			return (x < m_dimX && y < m_dimY && z < m_dimZ);
 		}
+        inline bool isValidCoordinate(const vec3i &coord) const
+        {
+            return (coord.x < m_dimX && coord.y < m_dimY && coord.z < m_dimZ);
+        }
 
 		vec3ul getMaxIndex() const;
 		const T& getMaxValue() const;
@@ -135,6 +308,26 @@ namespace ml
 						(*this)(xIndex, yIndex, zIndex) = fillFunction(xIndex, yIndex, zIndex);
 					}
 		}
+
+        iterator begin()
+        {
+            return iterator(this);
+        }
+
+        iterator end()
+        {
+            return iterator(NULL);
+        }
+
+        constIterator begin() const
+        {
+            return constIterator(this);
+        }
+
+        constIterator end() const
+        {
+            return constIterator(NULL);
+        }
 
 	protected:
 		T *m_data;

@@ -18,6 +18,9 @@ namespace convert {
 	inline int toInt(const std::string& s) {
 		return std::stoi(s);
 	}
+    inline long long toInt64(const std::string& s) {
+        return std::strtoll(s.c_str(), NULL, 10);
+    }
     inline int toInt(bool b) {
         if(b) return 1;
         return 0;

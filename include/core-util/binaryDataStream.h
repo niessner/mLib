@@ -6,6 +6,7 @@ namespace ml
 {
 
 template<class T> class Grid2;
+template<class T> class Grid3;
 
 template<class BinaryDataBuffer, class BinaryDataCompressor>
 class BinaryDataStream {
@@ -36,11 +37,20 @@ public:
     }
 
     template<class T>
-    void writePrimitiveGrid(const Grid2<T> &g)
+    void writePrimitive(const Grid2<T> &g)
     {
         writeData(g.getDimX());
         writeData(g.getDimY());
         writeData((const BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY());
+    }
+
+    template<class T>
+    void writePrimitive(const Grid3<T> &g)
+    {
+        writeData(g.getDimX());
+        writeData(g.getDimY());
+        writeData(g.getDimZ());
+        writeData((const BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY() * g.getDimZ());
     }
 
     template<class T>
@@ -54,13 +64,24 @@ public:
     }
 
     template<class T>
-    void readPrimitiveGrid(Grid2<T> &g)
+    void readPrimitive(Grid2<T> &g)
     {
         size_t dimX, dimY;
         readData(&dimX);
         readData(&dimY);
         g.allocate(dimX, dimY);
         readData((BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY());
+    }
+
+    template<class T>
+    void readPrimitive(Grid3<T> &g)
+    {
+        size_t dimX, dimY, dimZ;
+        readData(&dimX);
+        readData(&dimY);
+        readData(&dimZ);
+        g.allocate(dimX, dimY, dimZ);
+        readData((BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY() * g.getDimZ());
     }
 
 	//start compression after that byte size (only if compression is enabled)

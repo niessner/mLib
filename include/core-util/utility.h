@@ -330,6 +330,17 @@ namespace util
     }
 
     template<class T>
+    void pop_front(T &vec)
+    {
+        MLIB_ASSERT_STR(vec.size() >= 1, "empty pop");
+        for (int i = 0; i < (int)vec.size() - 1; i++)
+        {
+            vec[i] = vec[i + 1];
+        }
+        vec.resize((int)vec.size() - 1);
+    }
+
+    template<class T>
     bool contains(const std::vector<T> &vec, const T &element)
     {
         for(const T &e : vec)

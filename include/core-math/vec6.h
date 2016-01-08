@@ -52,6 +52,15 @@ public:
 		array[5] = other.array[5];
 	}
 
+    vec6(const vec3<T>& a, const vec3<T>& b) {
+        array[0] = a.array[0];
+        array[1] = a.array[1];
+        array[2] = a.array[2];
+        array[3] = b.array[0];
+        array[4] = b.array[1];
+        array[5] = b.array[2];
+    }
+
 	vec6(const T* other) {
 		array[0] = other[0];
 		array[1] = other[1];

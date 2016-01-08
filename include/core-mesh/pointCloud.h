@@ -61,6 +61,15 @@ public:
 		return m_points.size() == 0;
 	}
 
+    //! Computes the bounding box of the mesh (not cached!)
+    BoundingBox3<FloatType> computeBoundingBox() const {
+        BoundingBox3<FloatType> bb;
+        for (size_t i = 0; i < m_points.size(); i++) {
+            bb.include(m_points[i]);
+        }
+        return bb;
+    }
+
 
 	std::vector<vec3<FloatType>> m_points;
 	std::vector<vec3<FloatType>> m_normals;

@@ -47,7 +47,7 @@ namespace ml
 			iterator(const iterator &i)
 			{
 				x = i.x;
-				y = i.x;
+				y = i.y;
 				grid = i.grid;
 			}
 			~iterator() {}
@@ -101,7 +101,7 @@ namespace ml
 			constIterator(const constIterator &i)
 			{
 				x = i.x;
-				y = i.x;
+				y = i.y;
 				grid = i.grid;
 			}
 			~constIterator() {}
@@ -391,6 +391,7 @@ namespace ml
 	}
 
 	typedef Grid2<float> Grid2f;
+    typedef Grid2<int> Grid2i;
 	typedef Grid2<double> Grid2d;
 
 }

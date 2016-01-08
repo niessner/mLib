@@ -22,3 +22,6 @@ OnMeshLoad: reduces to lower res mesh for collisison (maybe in quadedge)`
 
 D3D11: Culling + Shading
 Shapes: Cylinder, Torus, Sphere
+
+Grid3's ordering is strange: return m_data[z*m_dimY*m_dimX + x*m_dimY + y];
+should be z * dimX * dimY + y * dimX + x

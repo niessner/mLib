@@ -385,8 +385,6 @@ namespace math {
 			clamp(p.z, pMin, pMax));
 	}
 
-
-
     template<class T>
     inline T triangleArea(const vec3<T>& v0, const vec3<T>& v1, const vec3<T>& v2) {
         return ((v1 - v0) ^ (v2 - v0)).length() * (T)0.5;
@@ -402,6 +400,110 @@ namespace math {
     template<class T>
     inline vec3<T> triangleNormal(const vec3<T>& v0, const vec3<T>& v1, const vec3<T>& v2) {
         return ((v1 - v0) ^ (v2 - v0)).getNormalized();
+    }
+
+    template<class T>
+    inline float trianglePointDistSq(const vec3<T>& t0, const vec3<T>& t1, const vec3<T>& t2, const vec3<T>& p) {
+        const vec3<T> edge0 = t1 - t0;
+        const vec3<T> edge1 = t2 - t0;
+        const vec3<T> v0 = t0 - p;
+
+        float a = edge0 | edge0;
+        float b = edge0 | edge1;
+        float c = edge1 | edge1;
+        float d = edge0 | v0;
+        float e = edge1 | v0;
+
+        float det = a*c - b*b;
+        float s = b*e - c*d;
+        float t = b*d - a*e;
+
+        if (s + t < det)
+        {
+            if (s < 0.f)
+            {
+                if (t < 0.f)
+                {
+                    if (d < 0.f)
+                    {
+                        s = clamp(-d / a, 0.f, 1.f);
+                        t = 0.f;
+                    }
+                    else
+                    {
+                        s = 0.f;
+                        t = clamp(-e / c, 0.f, 1.f);
+                    }
+                }
+                else
+                {
+                    s = 0.f;
+                    t = clamp(-e / c, 0.f, 1.f);
+                }
+            }
+            else if (t < 0.f)
+            {
+                s = clamp(-d / a, 0.f, 1.f);
+                t = 0.f;
+            }
+            else
+            {
+                float invDet = 1.f / det;
+                s *= invDet;
+                t *= invDet;
+            }
+        }
+        else
+        {
+            if (s < 0.f)
+            {
+                float tmp0 = b + d;
+                float tmp1 = c + e;
+                if (tmp1 > tmp0)
+                {
+                    float numer = tmp1 - tmp0;
+                    float denom = a - 2 * b + c;
+                    s = clamp(numer / denom, 0.f, 1.f);
+                    t = 1 - s;
+                }
+                else
+                {
+                    t = clamp(-e / c, 0.f, 1.f);
+                    s = 0.f;
+                }
+            }
+            else if (t < 0.f)
+            {
+                if (a + d > b + e)
+                {
+                    float numer = c + e - b - d;
+                    float denom = a - 2 * b + c;
+                    s = clamp(numer / denom, 0.f, 1.f);
+                    t = 1 - s;
+                }
+                else
+                {
+                    s = clamp(-e / c, 0.f, 1.f);
+                    t = 0.f;
+                }
+            }
+            else
+            {
+                float numer = c + e - b - d;
+                float denom = a - 2 * b + c;
+                s = clamp(numer / denom, 0.f, 1.f);
+                t = 1.f - s;
+            }
+        }
+
+        const vec3f pos = t0 + s * edge0 + t * edge1;
+        return vec3f::distSq(pos, p);
+    }
+
+    template<class T>
+    inline float trianglePointDist(const vec3<T>& t0, const vec3<T>& t1, const vec3<T>& t2, const vec3<T>& p)
+    {
+        return sqrtf(trianglePointDistSq(t0, t1, t2, p));
     }
 }
 
