@@ -626,6 +626,148 @@ namespace util
 
 }  // namespace utility
 
+// This iterator is used to iterate over a collection as a pair<size_t, T>, where .first is the index and .second is a reference to the element.
+// It is mean to replace this:
+//
+// for(int i = 0; i < v.size(); i++)
+// { const T &e = v[i]; ... }
+//
+// or this:
+// int i = 0;
+// for(auto &e : v)
+/// { ... i++; }
+//
+// with this:
+// for(auto &e : ml::iterate(v))
+// { e.index; e.value; ... }
+//
+
+template<class T, class U>
+struct IndexedIterator
+{
+    struct Entry
+    {
+        Entry(size_t _index, U &_value) :
+            index(_index), value(_value) {}
+        size_t index;
+        U &value;
+    };
+    IndexedIterator(size_t _index, T &_iter) :
+        index(_index), iter(_iter) {}
+
+    void operator++(int postfix)
+    {
+        index++;
+        iter++;
+    }
+    void operator++()
+    {
+        index++;
+        iter++;
+    }
+    bool operator != (const IndexedIterator &other)
+    {
+        return iter != other.iter;
+    }
+    Entry operator *()
+    {
+        return Entry(index, *iter);
+    }
+
+private:
+    size_t index;
+    T iter;
+};
+
+template<class T, class U>
+struct IndexedIteratorConst
+{
+    struct Entry
+    {
+        Entry(size_t _index, const U &_value) :
+            index(_index), value(_value) {}
+        size_t index;
+        const U &value;
+    };
+    IndexedIteratorConst(size_t _index, T &_iter) :
+        index(_index), iter(_iter) {}
+
+    void operator++(int postfix)
+    {
+        index++;
+        iter++;
+    }
+    void operator++()
+    {
+        index++;
+        iter++;
+    }
+    bool operator != (const IndexedIteratorConst &other)
+    {
+        return iter != other.iter;
+    }
+    Entry operator *()
+    {
+        return Entry(index, *iter);
+    }
+
+private:
+    size_t index;
+    T iter;
+};
+
+template<class T>
+struct IndexedIteratorContainer
+{
+    typedef typename T::value_type ValueType;
+    typedef typename T::iterator IteratorType;
+
+    IndexedIteratorContainer(T *_v) :
+        v(_v) {}
+    IndexedIterator<IteratorType, ValueType> begin()
+    {
+        return IndexedIterator<IteratorType, ValueType>(0, v->begin());
+    }
+    IndexedIterator<IteratorType, ValueType> end()
+    {
+        return IndexedIterator<IteratorType, ValueType>(0, v->end());
+    }
+    
+    T *v;
+};
+
+template<class T>
+struct IndexedIteratorContainerConst
+{
+    typedef typename T::value_type ValueType;
+    typedef typename T::const_iterator IteratorType;
+
+    IndexedIteratorContainerConst(const T *_v) :
+        v(_v) {}
+    IndexedIteratorConst<IteratorType, ValueType> begin()
+    {
+        return IndexedIteratorConst<IteratorType, ValueType>(0, v->begin());
+    }
+    IndexedIteratorConst<IteratorType, ValueType> end()
+    {
+        return IndexedIteratorConst<IteratorType, ValueType>(0, v->end());
+    }
+
+    const T *v;
+};
+
+template<class T>
+IndexedIteratorContainer<T> iterate(T &v)
+{
+    return IndexedIteratorContainer<T>(&v);
+}
+
+template<class T>
+IndexedIteratorContainerConst<T> iterate(const T &v)
+{
+    return IndexedIteratorContainerConst<T>(&v);
+}
+
 }  // namespace ml
 
 

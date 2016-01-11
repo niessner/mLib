@@ -362,6 +362,41 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	return s;
 }
 
+namespace util
+{
+    template<class T>
+    void serializeToFile(const std::string &filename, const T &o)
+    {
+        BinaryDataStreamFile out(filename, true);
+        out << o;
+        out.closeStream();
+    }
+
+    template<class T, class U>
+    void serializeToFile(const std::string &filename, const T &o0, const U &o1)
+    {
+        BinaryDataStreamFile out(filename, true);
+        out << o0 << o1;
+        out.closeStream();
+    }
+
+    template<class T>
+    void deserializeFromFile(const std::string &filename, T &o)
+    {
+        BinaryDataStreamFile in(filename, false);
+        in >> o0 >> o1;
+        in.closeStream();
+    }
+
+    template<class T, class U>
+    void deserializeFromFile(const std::string &filename, T &o0, U &o1)
+    {
+        BinaryDataStreamFile in(filename, false);
+        in >> o0 >> o1;
+        in.closeStream();
+    }
+}
+
 }  // namespace ml
 
 #endif  // CORE_UTIL_BINARYDATASTREAM_H_
