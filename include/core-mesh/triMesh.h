@@ -247,9 +247,19 @@ namespace ml {
 
 
 		TriMesh(const BinaryGrid3& grid, Matrix4x4<FloatType> voxelToWorld = Matrix4x4<FloatType>::identity(), bool withNormals = false, const vec4<FloatType>& color = vec4<FloatType>(0.5,0.5,0.5,0.5)) {
-			for (unsigned int z = 0; z < grid.getDimZ(); z++) {
-				for (unsigned int y = 0; y < grid.getDimY(); y++) {
-					for (unsigned int x = 0; x < grid.getDimX(); x++) {
+			// Pre-allocate space
+			size_t nVoxels = grid.getNumOccupiedEntries();
+			size_t nVertices = (withNormals)? nVoxels*24 : nVoxels*8;
+			size_t nIndices = nVoxels*12;
+			m_vertices.reserve(nVertices);
+			m_indices.reserve(nIndices);
+			// Temporaries
+			vec3<FloatType> verts[24];
+			vec3ui indices[12];
+			vec3<FloatType> normals[24];
+			for (size_t z = 0; z < grid.getDimZ(); z++) {
+				for (size_t y = 0; y < grid.getDimY(); y++) {
+					for (size_t x = 0; x < grid.getDimX(); x++) {
 						if (grid.isVoxelSet(x,y,z)) {
 							vec3<FloatType> p((FloatType)x,(FloatType)y,(FloatType)z);
 							vec3<FloatType> pMin = p - (FloatType)0.5;
@@ -261,29 +271,24 @@ namespace ml {
 							bb.include(voxelToWorld * pMax);
 
 							if (withNormals) {
-								vec3<FloatType> verts[24];
-								vec3ui indices[12];
-								vec3<FloatType> normals[24];
 								bb.makeTriMesh(verts,indices,normals);
 
-								unsigned int vertIdxBase = (unsigned int)m_vertices.size();
-								for (unsigned int i = 0; i < 24; i++) {
-									m_vertices.push_back(Vertex(verts[i], normals[i]));
+								unsigned int vertIdxBase = static_cast<unsigned int>(m_vertices.size());
+								for (size_t i = 0; i < 24; i++) {
+									m_vertices.emplace_back(verts[i], normals[i]);
 								}
-								for (unsigned int i = 0; i < 12; i++) {
+								for (size_t i = 0; i < 12; i++) {
 									indices[i] += vertIdxBase;
 									m_indices.push_back(indices[i]);
 								}
 							} else {
-								vec3<FloatType> verts[8];
-								vec3ui indices[12];
 								bb.makeTriMesh(verts, indices);
 
-								unsigned int vertIdxBase = (unsigned int)m_vertices.size();
-								for (unsigned int i = 0; i < 8; i++) {
-									m_vertices.push_back(Vertex(verts[i]));
+								unsigned int vertIdxBase = static_cast<unsigned int>(m_vertices.size());
+								for (size_t i = 0; i < 8; i++) {
+									m_vertices.emplace_back(verts[i]);
 								}
-								for (unsigned int i = 0; i < 12; i++) {
+								for (size_t i = 0; i < 12; i++) {
 									indices[i] += vertIdxBase;
 									m_indices.push_back(indices[i]);
 								}
@@ -291,11 +296,11 @@ namespace ml {
 						}
 					}
 				}
-				for (unsigned int i = 0; i < m_vertices.size(); i++) {
-					m_vertices[i].color = color;
-				}
-				m_bHasColors = true;
 			}
+			for (size_t i = 0; i < m_vertices.size(); i++) {
+				m_vertices[i].color = color;
+			}
+			m_bHasColors = true;
 		}
 
 		~TriMesh() {
