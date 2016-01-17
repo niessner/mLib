@@ -338,7 +338,7 @@ namespace ml {
 				}
 			}
 		}
-		//meshdata.mergeCloseVertices(0.00001f, true);
+		meshdata.mergeCloseVertices(0.00001f, true);
 		return TriMesh<FloatType>(meshdata);
 	}
 
