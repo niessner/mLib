@@ -132,11 +132,11 @@ namespace ml {
 		int index = 0;
 		for (const vec3ui &t : m_indices)
 		{
-			result.m_Vertices.push_back(m_vertices[t[0]]);
-			result.m_Vertices.push_back(m_vertices[t[1]]);
-			result.m_Vertices.push_back(m_vertices[t[2]]);
+			result.m_vertices.push_back(m_vertices[t[0]]);
+			result.m_vertices.push_back(m_vertices[t[1]]);
+			result.m_vertices.push_back(m_vertices[t[2]]);
 
-			result.m_Indices.push_back(vec3ui(index + 0, index + 1, index + 2));
+			result.m_indices.push_back(vec3ui(index + 0, index + 1, index + 2));
 			index += 3;
 		}
 
@@ -175,8 +175,8 @@ namespace ml {
 
 		TriMesh<FloatType> result;
 
-		result.m_Vertices = m_vertices;
-		result.m_Indices.reserve(m_indices.size() * 4);
+		result.m_vertices = m_vertices;
+		result.m_indices.reserve(m_indices.size() * 4);
 
 		for (const vec3ui &tri : m_indices)
 		{
@@ -202,21 +202,21 @@ namespace ml {
 					Edge e = Edge(v0, v1);
 					if (edgeToNewVertexMap.count(e) == 0)
 					{
-						edgeToNewVertexMap[e] = (UINT)result.m_Vertices.size();
-						result.m_Vertices.push_back((m_vertices[v0] + m_vertices[v1]) * (FloatType)0.5);
+						edgeToNewVertexMap[e] = (UINT)result.m_vertices.size();
+						result.m_vertices.push_back((m_vertices[v0] + m_vertices[v1]) * (FloatType)0.5);
 					}
 
 					edgeMidpoints[eIndex] = edgeToNewVertexMap[e];
 				}
 
-				result.m_Indices.push_back(vec3ui(tri[0], edgeMidpoints[0], edgeMidpoints[2]));
-				result.m_Indices.push_back(vec3ui(edgeMidpoints[0], tri[1], edgeMidpoints[1]));
-				result.m_Indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[1], tri[2]));
-				result.m_Indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[0], edgeMidpoints[1]));
+				result.m_indices.push_back(vec3ui(tri[0], edgeMidpoints[0], edgeMidpoints[2]));
+				result.m_indices.push_back(vec3ui(edgeMidpoints[0], tri[1], edgeMidpoints[1]));
+				result.m_indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[1], tri[2]));
+				result.m_indices.push_back(vec3ui(edgeMidpoints[2], edgeMidpoints[0], edgeMidpoints[1]));
 			}
 			else
 			{
-				result.m_Indices.push_back(tri);
+				result.m_indices.push_back(tri);
 			}
 		}
 
