@@ -289,14 +289,15 @@ namespace ml {
 				//  3------4 -- theta2
 				//  
 				// Points
-				const ml::vec3<FloatType> c1 = pos + sph2xyz(radius, theta1, phi1),
-					c2 = pos + sph2xyz(radius, theta1, phi2),
-					c3 = pos + sph2xyz(radius, theta2, phi2),
-					c4 = pos + sph2xyz(radius, theta2, phi1);
-				V.push_back(c1);
-				V.push_back(c2);
-				V.push_back(c3);
-				V.push_back(c4);
+				const ml::vec3<FloatType>
+					r1 = sph2xyz(radius, theta1, phi1),
+					r2 = sph2xyz(radius, theta1, phi2),
+					r3 = sph2xyz(radius, theta2, phi2),
+					r4 = sph2xyz(radius, theta2, phi1);
+				V.push_back(r1 + pos);
+				V.push_back(r2 + pos);
+				V.push_back(r3 + pos);
+				V.push_back(r4 + pos);
 
 				// Colors
 				for (int i = 0; i < 4; i++) {
@@ -304,10 +305,10 @@ namespace ml {
 				}
 
 				// Normals
-				N.push_back(c1.getNormalized());
-				N.push_back(c2.getNormalized());
-				N.push_back(c3.getNormalized());
-				N.push_back(c4.getNormalized());
+				N.push_back(r1.getNormalized());
+				N.push_back(r2.getNormalized());
+				N.push_back(r3.getNormalized());
+				N.push_back(r4.getNormalized());
 
 				const UINT baseIdx = static_cast<UINT>(t * slices * 4 + p * 4);
 
@@ -315,25 +316,25 @@ namespace ml {
 				std::vector<unsigned int> indices;
 				if (t == 0) {  // top cap -- t1p1, t2p2, t2p1
 					indices.push_back(baseIdx + 0);
-					indices.push_back(baseIdx + 2);
 					indices.push_back(baseIdx + 3);
+					indices.push_back(baseIdx + 2);
 					I.push_back(indices);
 				}
 				else if (t + 1 == stacks) {  // bottom cap -- t2p2, t1p1, t1p2
 					indices.push_back(baseIdx + 2);
-					indices.push_back(baseIdx + 0);
 					indices.push_back(baseIdx + 1);
+					indices.push_back(baseIdx + 0);
 					I.push_back(indices);
 				}
 				else {  // regular piece
 					indices.push_back(baseIdx + 0);
-					indices.push_back(baseIdx + 1);
 					indices.push_back(baseIdx + 3);
+					indices.push_back(baseIdx + 1);
 					I.push_back(indices);
 					indices.clear();
 					indices.push_back(baseIdx + 1);
-					indices.push_back(baseIdx + 2);
 					indices.push_back(baseIdx + 3);
+					indices.push_back(baseIdx + 2);
 					I.push_back(indices);
 				}
 			}
