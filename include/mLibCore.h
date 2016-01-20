@@ -183,7 +183,7 @@ namespace ml
 #include "core-graphics/dist.h"
 #include "core-util/colorGradient.h"
 #include "core-base/distanceField3.h"
-//#include "core-util/uniformAccelerator.h"
+#include "core-util/uniformAccelerator.h"
 
 //
 // core-mesh headers

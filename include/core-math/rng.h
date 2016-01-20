@@ -275,6 +275,10 @@ namespace ml {
         {
             return RNG::global.uniform(0.0, 1.0);
         }
+        inline float randomUniformf()
+        {
+            return (float)RNG::global.uniform(0.0, 1.0);
+        }
         inline float randomUniform(float min, float max)
         {
             return (float)RNG::global.uniform(min, max);

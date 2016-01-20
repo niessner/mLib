@@ -30,7 +30,7 @@ public:
 	}
 
     template<class T>
-    void writePrimitiveVector(const std::vector<T> &v)
+    void writePrimitive(const std::vector<T> &v)
     {
         writeData(v.size());
         writeData((const BYTE *)v.data(), sizeof(T) * v.size());
@@ -54,7 +54,7 @@ public:
     }
 
     template<class T>
-    void readPrimitiveVector(std::vector<T> &v)
+    void readPrimitive(std::vector<T> &v)
     {
         size_t size;
         readData(&size);
@@ -384,7 +384,7 @@ namespace util
     void deserializeFromFile(const std::string &filename, T &o)
     {
         BinaryDataStreamFile in(filename, false);
-        in >> o0 >> o1;
+        in >> o;
         in.closeStream();
     }
 
@@ -392,6 +392,38 @@ namespace util
     void deserializeFromFile(const std::string &filename, T &o0, U &o1)
     {
         BinaryDataStreamFile in(filename, false);
+        in >> o0 >> o1;
+        in.closeStream();
+    }
+
+    template<class T>
+    void serializeToFileCompressed(const std::string &filename, const T &o)
+    {
+        BinaryDataStreamZLibFile out(filename, true);
+        out << o;
+        out.closeStream();
+    }
+
+    template<class T, class U>
+    void serializeToFileCompressed(const std::string &filename, const T &o0, const U &o1)
+    {
+        BinaryDataStreamZLibFile out(filename, true);
+        out << o0 << o1;
+        out.closeStream();
+    }
+
+    template<class T>
+    void deserializeFromFileCompressed(const std::string &filename, T &o)
+    {
+        BinaryDataStreamZLibFile in(filename, false);
+        in >> o;
+        in.closeStream();
+    }
+
+    template<class T, class U>
+    void deserializeFromFileCompressed(const std::string &filename, T &o0, U &o1)
+    {
+        BinaryDataStreamZLibFile in(filename, false);
         in >> o0 >> o1;
         in.closeStream();
     }

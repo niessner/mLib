@@ -296,10 +296,19 @@ namespace util
 	// FILE wrappers
 	//
 	inline FILE* checkedFOpen(const char* filename, const char* mode) {
+        if (!util::fileExists(filename) && std::string(mode) == "rb")
+        {
+            std::cout << "File not found: " << filename << std::endl;
+            return nullptr;
+        }
 		FILE* file = fopen(filename, mode);
 		MLIB_ASSERT_STR(file != nullptr && !ferror(file), std::string("Failed to open file: ") + std::string(filename));
 		return file;
 	}
+
+    inline FILE* checkedFOpen(const std::string &filename, const char* mode) {
+        return checkedFOpen(filename.c_str(), mode);
+    }
 
 	inline void checkedFRead(void* dest, UINT64 elementSize, UINT64 elementCount, FILE* file) {
 		UINT64 elementsRead = fread(dest, elementSize, elementCount, file);

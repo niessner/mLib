@@ -204,6 +204,11 @@ namespace ml {
         BaseImage(const vec2i &dimensions) {
             create((UINT)dimensions.x, (UINT)dimensions.y);
         }
+
+        BaseImage(size_t width, size_t height, T clearValue) {
+            create((UINT)dimensions.x, (UINT)dimensions.y);
+            setPixels(clearValue);
+        }
         
         BaseImage(size_t width, size_t height, const T *data = nullptr) : Image(BaseImageHelper::formatFromTemplate<T>()) {
             //
@@ -1233,6 +1238,11 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
 		}
+        ColorImageR8G8B8A8(unsigned int width, unsigned int height, vec4uc clearValue) : BaseImage(width, height) {
+            m_format = Image::FORMAT_ColorImageR8G8B8A8;
+            m_InvalidValue = vec4uc(0, 0, 0, 0);
+            setPixels(clearValue);
+        }
 		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4f *data, float scale = 255.0f) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
