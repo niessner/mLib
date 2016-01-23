@@ -550,16 +550,16 @@ namespace ml {
     template<class BinaryDataBuffer, class BinaryDataCompressor, class FloatType>
     inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<< (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const TriMesh<FloatType> &m) {
         s << m.m_bHasNormals << m.m_bHasTexCoords << m.m_bHasColors;
-        s.writePrimitiveVector(m.m_vertices);
-        s.writePrimitiveVector(m.m_indices);
+        s.writePrimitive(m.m_vertices);
+        s.writePrimitive(m.m_indices);
         return s;
     }
 
     template<class BinaryDataBuffer, class BinaryDataCompressor, class FloatType>
     inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>> (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, TriMesh<FloatType> &m) {
         s >> m.m_bHasNormals >> m.m_bHasTexCoords >> m.m_bHasColors;
-        s.readPrimitiveVector(m.m_vertices);
-        s.readPrimitiveVector(m.m_indices);
+        s.readPrimitive(m.m_vertices);
+        s.readPrimitive(m.m_indices);
         return s;
     }
 
