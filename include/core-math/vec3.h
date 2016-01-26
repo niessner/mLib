@@ -110,6 +110,14 @@ public:
 		array[2] *= val;
 	}
 
+    inline bool isValid() const {
+        const T max = std::numeric_limits<T>::max();
+        bool xValid = (x >= -max && x <= max);
+        bool yValid = (y >= -max && y <= max);
+        bool zValid = (z >= -max && z <= max);
+        return xValid && yValid && zValid;
+    }
+
 	inline void operator/=(T val) {
 		T inv = (T)1 / val;
 		array[0] *= inv;

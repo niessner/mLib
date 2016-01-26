@@ -225,6 +225,10 @@ public:
 
 	}
 
+    inline bool isValid() const {
+        return (x == x && y == y && z == z && xx == xx && yy == yy && zz == zz);
+    }
+
 	inline void normalize() {
 		T inv = (T)1/length();
 		array[0] *= inv;

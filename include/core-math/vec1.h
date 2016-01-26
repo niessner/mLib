@@ -143,6 +143,10 @@ public:
 		Console::log() << "(" << array[0] << ")" << std::endl;
 	}
 
+    inline bool isValid() const {
+        return (x == x);
+    }
+
 	inline T* ptr() {
 		return &array[0];
 	}

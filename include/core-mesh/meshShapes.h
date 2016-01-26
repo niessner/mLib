@@ -57,6 +57,33 @@ public:
 	    return meshData;
     }
 
+    static TriMesh<FloatType> unifyMeshes(const std::vector<TriMesh<FloatType> > &meshes)
+    {
+        std::vector<vec3<FloatType> > unifiedVertices;
+        std::vector<unsigned int> unifiedIndices;
+        std::vector<vec4<FloatType> > unifiedColors;
+        std::vector<vec2<FloatType> > unifiedTexCoords;
+        std::vector<vec3<FloatType> > unifiedNormals;
+
+        int meshBaseVertex = 0;
+        for (const auto &mesh : meshes)
+        {
+            for (auto &v : mesh.getVertices())
+            {
+                unifiedVertices.push_back(v.position);
+                unifiedColors.push_back(v.color);
+            }
+            for (auto &i : mesh.getIndices())
+            {
+                unifiedIndices.push_back(i.x + meshBaseVertex);
+                unifiedIndices.push_back(i.y + meshBaseVertex);
+                unifiedIndices.push_back(i.z + meshBaseVertex);
+            }
+            meshBaseVertex += (int)mesh.getVertices().size();
+        }
+
+        return TriMesh<FloatType>(unifiedVertices, unifiedIndices, unifiedColors, unifiedNormals, unifiedTexCoords);
+    }
 };
 
 typedef Shapes<float> Shapesf;

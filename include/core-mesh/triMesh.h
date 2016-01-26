@@ -178,7 +178,7 @@ namespace ml {
 			const std::vector<unsigned int>& indices, 
 			const std::vector<vec4<FloatType>>& colors,
 			const std::vector<vec3<FloatType>>& normals,
-			const std::vector<vec3<FloatType>>& texCoords) :
+			const std::vector<vec2<FloatType>>& texCoords) :
 		TriMesh(vertices.size(), indices.size(), 
 			&vertices[0], &indices[0],
 			colors.size() > 0 ? &colors[0] : nullptr,

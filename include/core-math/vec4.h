@@ -218,6 +218,11 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
             array[3] *= val;
         }
 
+        inline bool isValid() const
+        {
+            return (x == x && y == y && z == z && w == w);
+        }
+
         inline vec4<T> getNormalized() const
         {
             T val = (T)1.0 / length();

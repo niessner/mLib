@@ -100,6 +100,10 @@ public:
 		array[1] *= inv;
 	}
 
+    inline bool isValid() const {
+        return (x == x && y == y);
+    }
+
 	inline vec2<T> operator*(T val) const {
 		return vec2<T>(array[0]*val, array[1]*val);
 	}
