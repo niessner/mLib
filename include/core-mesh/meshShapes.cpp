@@ -107,6 +107,7 @@ namespace ml {
 
 		TriMesh<FloatType> mesh(vv, vi);
 		mesh.scale(vec3<FloatType>(0.5f * xDim, 0.5f * yDim, 0.5f * zDim));
+		mesh.setHasColors(true);
 
 		return mesh;
 	}

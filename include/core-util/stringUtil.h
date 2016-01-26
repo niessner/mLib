@@ -171,9 +171,17 @@ namespace util
 	}
 
 	//! returns substring from beginning of str up to before last occurrence of delim
-	inline std::string substrBeforeLast(const std::string& str, const std::string& delim) {
+	inline std::string getSubstrBeforeLast(const std::string& str, const std::string& delim) {
 		std::string trimmed = str;
 		return trimmed.erase(str.rfind(delim));
+	}
+
+	inline std::string getFilenameFromPath(const std::string& filename) {
+		std::string name = filename;
+		size_t pos = filename.rfind("/");
+		if (pos == std::string::npos) return filename;
+		name.erase(name.begin(), name.begin() + pos + 1);
+		return name;
 	}
 
     //! splits string about the first instance of delim
@@ -187,7 +195,7 @@ namespace util
 
 	//! returns filename with extension removed
 	inline std::string dropExtension(const std::string& filename) {
-		return substrBeforeLast(filename, ".");
+		return getSubstrBeforeLast(filename, ".");
 	}
 
 	//! trims any whitespace on right of str and returns

@@ -368,8 +368,8 @@ namespace ml
 		g.allocate(dimX, dimY, dimZ);
 		for (UINT64 z = 0; z < g.getDimZ(); z++)
 			for (UINT64 y = 0; y < g.getDimY(); y++)
-				for (UINT x = 0; x < g.getDimX(); x++)
-					s << g(x, y, z);
+				for (UINT64 x = 0; x < g.getDimX(); x++)
+					s >> g(x, y, z);
 		return s;
 	}
 

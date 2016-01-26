@@ -488,7 +488,7 @@ public:
 		}
 	}
 
-	BoundingBox3<FloatType> getBoundingBox() const {
+	BoundingBox3<FloatType> computeBoundingBox() const {
 		BoundingBox3<FloatType> bb;
 		for (size_t i = 0; i < m_Vertices.size(); i++) {
 			bb.include(m_Vertices[i]);
