@@ -469,6 +469,11 @@ public:
 		return cubeToWorldTransform().getInverse();	//TODO avoid the inverse
 	}
 
+	BoundingBox3<FloatType>& BoundingBox3<FloatType>::operator=(const BoundingBox3<FloatType> & other) {
+		this->minB = other.minB;
+		this->maxB = other.maxB;
+	}
+
 protected:
 
 #ifdef _WIN32
@@ -491,6 +496,9 @@ protected:
 		};
 		FloatType parameters[6];
 	};
+
+	
+
 };
 
 template<class FloatType>

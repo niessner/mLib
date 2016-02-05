@@ -38,7 +38,7 @@ public:
 private:
 
 #ifdef _WIN32
-    HANDLE m_handle;
+    void* m_handle;
 #endif
 };
 
