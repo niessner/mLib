@@ -1,3 +1,5 @@
+naming convection -> use load/save (instaed of read/write)
+fix error checking; functions like MLIB_WARNING should always be there -- bounds check not
 
 Update triMeshAcceleratorBVH to parameterize parallel build and possibly support parelll build for midpoint.
 toString for vec1/2/4

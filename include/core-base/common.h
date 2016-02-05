@@ -113,7 +113,7 @@ private:
 #endif
 
 //TODO clean that stuff up: we should have checks in debug but not in release... (i don't like 100 defines that change the behavior)
-#ifdef MLIB_ERROR_CHECK
+//#ifdef MLIB_ERROR_CHECK
 
 
 #define MLIB_WARNING(s) ml::warningFunctionMLIB(std::string(FUNCTION_LINE_STRING) + std::string() + ": " + std::string(s))
@@ -125,15 +125,14 @@ void warningFunctionMLIB(const std::string &description);
 void errorFunctionMLIB(const std::string &description);
 void assertFunctionMLIB(bool statement, const std::string &description);
 
-
-#else
-
-#define MLIB_WARNING(s)
-#define MLIB_ERROR(s)
-#define MLIB_ASSERT_STR(b,s)
-#define MLIB_ASSERT(b)
-
-#endif
+//#else
+//
+//#define MLIB_WARNING(s)
+//#define MLIB_ERROR(s)
+//#define MLIB_ASSERT_STR(b,s)
+//#define MLIB_ASSERT(b)
+//
+//#endif
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=nullptr; } }
