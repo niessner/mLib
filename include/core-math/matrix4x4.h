@@ -916,7 +916,7 @@ inline std::ostream& operator<<(std::ostream& s, const Matrix4x4<FloatType>& m)
 
 //! reads from a stream
 template <class FloatType> 
-inline std::istream& operator>>(std::istream& s, const Matrix4x4<FloatType>& m)
+inline std::istream& operator>>(std::istream& s, Matrix4x4<FloatType>& m)
 { 
 	return (
 		s >> 
