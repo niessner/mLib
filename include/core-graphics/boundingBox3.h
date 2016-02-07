@@ -469,9 +469,12 @@ public:
 		return cubeToWorldTransform().getInverse();	//TODO avoid the inverse
 	}
 
-	BoundingBox3<FloatType>& BoundingBox3<FloatType>::operator=(const BoundingBox3<FloatType> & other) {
-		this->minB = other.minB;
-		this->maxB = other.maxB;
+	BoundingBox3<FloatType>& operator=(const BoundingBox3<FloatType>& other) {
+		if (this != &other) { // protect against invalid self-assignment
+			this->minB = other.minB;
+			this->maxB = other.maxB;
+		}
+		return *this;  // by convention, always return *this
 	}
 
 protected:
