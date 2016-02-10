@@ -14,6 +14,11 @@ namespace ml {
 			generateFromBinaryGrid(grid, trunc);
 		}
 
+		FloatType getTruncation() const 
+		{
+			return m_truncation;
+		}
+
 		BinaryGrid3 computeBinaryGrid(float distThres = 0.0001f) const {
 
 		        BinaryGrid3 grid(this->getDimX(), this->getDimY(), this->getDimZ());
