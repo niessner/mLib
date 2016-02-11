@@ -137,10 +137,19 @@ namespace util
 		file.close();
 	}
 
-    std::string directoryFromPath(const std::string &path)
+    std::string directoryFromPath(const std::string& path)
     {
-		if (path.back() == '\\' || path.back() == '/') return path;
-        return replace(path, fileNameFromPath(path), "");
+		if (path.size() == 0) return path;
+		if (path.back() == '\\' || path.back() == '/') return path;		
+		size_t c = path.size();
+		while (c) {
+			c--;
+			if (path[c] == '\\' || path[c] == '/') {
+				if (c == 0) return "";
+				else return path.substr(0, c);
+			}
+		}
+		return path;
     }
 
     std::string fileNameFromPath(const std::string &path)
@@ -150,26 +159,13 @@ namespace util
 
     std::string removeExtensions(const std::string& path)
     {
-		//std::vector<std::string> s = ml::util::split(path, '.', true);
-		//std::string res = s[0];
-		//for (size_t i = 1; i < s.size() - 1; i++) {
-		//	res = res + "." + s[i];
-		//}
-		//return res;
-
-		//works but failles to handle ./bla...
-		//std::size_t found = path.find_last_of('.');
-		//if (found != std::string::npos) {
-		//	return path.substr(0, found);
-		//}
-		//return path;
-
 		std::string filename = util::fileNameFromPath(path);
 		std::size_t found = filename.find_last_of('.');
 		if (found != std::string::npos) {
 			return filename.substr(0, found);
 		}
-		return util::directoryFromPath(path) + filename;
+		std::string directory = util::directoryFromPath(path);
+		return directory + "/" + filename;
     }
 
 	std::vector<std::string> getFileLines(const std::string &filename, UINT minLineLength)
