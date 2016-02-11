@@ -166,4 +166,4 @@ decode_image (
 
 
 #include "uplinksimple_windows-image-codecs.h"
-
+#include "uplinksimple_shift2depth.h"
