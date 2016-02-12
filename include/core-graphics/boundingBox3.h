@@ -23,6 +23,8 @@ public:
 		reset();
 	}
 
+	BoundingBox3(const BoundingBox3& other) : minB(other.minB), maxB(other.maxB) {}
+
 	explicit BoundingBox3(const std::vector< vec3<FloatType> >& verts) {
 		reset();
         for (const auto &v : verts)
