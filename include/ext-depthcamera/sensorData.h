@@ -203,7 +203,7 @@ namespace ml {
 
 
 		class RGBDFrame {
-		public:			
+		public:
 			RGBDFrame() {
 				m_colorCompressed = NULL;
 				m_depthCompressed = NULL;
@@ -234,6 +234,15 @@ namespace ml {
 
 			void setCameraToWorld(const mat4f& cameraToWorld) {
 				m_cameraToWorld = cameraToWorld;
+			}
+
+			//! typically in microseconds
+			void setTimeStampColor(UINT64 t) {
+				m_timeStampColor = t;
+			}
+			//! typically in microseconds
+			void setTimeStampDepth(UINT64 t) {
+				m_timeStampDepth = t;
 			}
 
 		private:
@@ -504,18 +513,67 @@ namespace ml {
 			UINT64 m_depthSizeBytes;					//compressed byte size
 			unsigned char* m_colorCompressed;			//compressed color data
 			unsigned char* m_depthCompressed;			//compressed depth data
-			UINT64 m_timeStampColor;					//time stamp color
-			UINT64 m_timeStampDepth;					//time stamp depth
+			UINT64 m_timeStampColor;					//time stamp color (convection: in microseconds)
+			UINT64 m_timeStampDepth;					//time stamp depth (convention: in microseconds)
 			mat4f m_cameraToWorld;						//camera trajectory: from current frame to base frame
 		};
 
+		struct IMUFrame {
+			IMUFrame() {
+				rotationRate = vec3d(0.0);
+				acceleration = vec3d(0.0);
+				magneticField = vec3d(0.0);
+				attitude = vec3d(0.0);
+				gravity = vec3d(0.0);
+				timeStamp = 0;
+			}
+
+			void loadFromFile(std::ifstream& in) {
+				in.read((char*)&rotationRate, sizeof(vec3d));
+				in.read((char*)&acceleration, sizeof(vec3d));
+				in.read((char*)&magneticField, sizeof(vec3d));
+				in.read((char*)&attitude, sizeof(vec3d));
+				in.read((char*)&gravity, sizeof(vec3d));
+				in.read((char*)&timeStamp, sizeof(UINT64));				
+			}
+			void saveToFile(std::ofstream& out) const {
+				out.write((const char*)&rotationRate, sizeof(vec3d));
+				out.write((const char*)&acceleration, sizeof(vec3d));
+				out.write((const char*)&magneticField, sizeof(vec3d));
+				out.write((const char*)&attitude, sizeof(vec3d));
+				out.write((const char*)&gravity, sizeof(vec3d));
+				out.write((const char*)&timeStamp, sizeof(UINT64));
+			}
+
+			bool operator==(const IMUFrame& other) const {
+				if (rotationRate != other.rotationRate) return false;
+				if (acceleration != other.acceleration) return false;
+				if (magneticField != other.magneticField) return false;
+				if (attitude != other.attitude) return false;
+				if (gravity != other.gravity) return false;
+				if (timeStamp != other.timeStamp) return false;
+			}
+
+			bool operator!=(const IMUFrame& other) const {
+				return *this != other;
+			}
+			
+			vec3d rotationRate;		//angular velocity (raw data)
+			vec3d acceleration;		//acceleration in x,y,z direction (raw data)
+			vec3d magneticField;	//magnetometer data (raw data)
+			vec3d attitude;			//roll, pitch, yaw estimate (inferred)			
+			vec3d gravity;			//gravitation dir estimate (inferred)	
+			UINT64 timeStamp;		//timestamp (typically in microseconds)
+		};
 
 		//////////////////////////////////
 		// SensorData Class starts here //
 		//////////////////////////////////
 
-#define M_SENSOR_DATA_VERSION 3
-///the first 3 versions [0,1,2] are reserved for the old .sensor files
+#define M_SENSOR_DATA_VERSION 4
+		///version 3 was missing the IMUFrame vector
+		//the first 3 versions [0,1,2] are reserved for the old .sensor files
+
 
 		SensorData() {
 			m_versionNumber = M_SENSOR_DATA_VERSION;
@@ -548,6 +606,7 @@ namespace ml {
 			m_colorHeight = 0;
 			m_depthWidth = 0;
 			m_depthHeight = 0;
+			m_IMUFrames.clear();
 		}
 
 		//! checks the version number
@@ -581,9 +640,13 @@ namespace ml {
 			m_calibrationDepth = calibrationDepth;
 		}
 
-		RGBDFrame& addFrame(const vec3uc* color, const unsigned short* depth, const mat4f& cameraToWorld = mat4f::identity(), UINT64 timeStamp = 0) {
-			m_frames.push_back(RGBDFrame(color, m_colorWidth, m_colorHeight, depth, m_depthWidth, m_depthHeight, cameraToWorld, m_colorCompressionType, m_depthCompressionType, timeStamp, timeStamp));
+		RGBDFrame& addFrame(const vec3uc* color, const unsigned short* depth, const mat4f& cameraToWorld = mat4f::identity(), UINT64 timeStampColor = 0, UINT64 timeStampDepth = 0) {
+			m_frames.push_back(RGBDFrame(color, m_colorWidth, m_colorHeight, depth, m_depthWidth, m_depthHeight, cameraToWorld, m_colorCompressionType, m_depthCompressionType, timeStampColor, timeStampDepth));
 			return m_frames.back();
+		}
+
+		IMUFrame& addIMUFrame(const IMUFrame& frame) {
+			m_IMUFrames.push_back(frame);
 		}
 		
 		//! decompresses the frame and allocates the memory -- needs std::free afterwards!
@@ -632,6 +695,12 @@ namespace ml {
 			for (size_t i = 0; i < m_frames.size(); i++) {
 				m_frames[i].saveToFile(out);
 			}
+
+			UINT64 numIMUFrames = m_frames.size();
+			out.write((const char*)&numIMUFrames, sizeof(UINT64));
+			for (size_t i = 0; i < m_IMUFrames.size(); i++) {
+				m_IMUFrames[i].saveToFile(out);
+			}
 		}
 
 		//! loads a .sens file
@@ -664,6 +733,12 @@ namespace ml {
 			in.read((char*)&numFrames, sizeof(UINT64));
 			m_frames.resize(numFrames);
 			for (size_t i = 0; i < m_frames.size(); i++) {
+				m_frames[i].loadFromFile(in);
+			}
+
+			UINT64 numIMUFrames = 0;
+			in.read((char*)&numIMUFrames, sizeof(UINT64));
+			for (size_t i = 0; i < m_IMUFrames.size(); i++) {
 				m_frames[i].loadFromFile(in);
 			}
 		}
@@ -926,6 +1001,10 @@ namespace ml {
 			for (size_t i = 0; i < m_frames.size(); i++) {
 				if (m_frames[i] != other.m_frames[i])	return false;
 			}
+			if (m_IMUFrames.size() != other.m_IMUFrames.size()) return false;
+			for (size_t i = 0; i < m_IMUFrames.size(); i++) {
+				if (m_IMUFrames[i] != other.m_IMUFrames[i]) return false;
+			}
 			return true;
 		}
 
@@ -953,6 +1032,7 @@ namespace ml {
 		float m_depthShift;	//conversion from float[m] to ushort (typically 1000.0f)
 
 		std::vector<RGBDFrame> m_frames;
+		std::vector<IMUFrame> m_IMUFrames;
 
 		/////////////////////////////
 		//MEMBER VARIABLES END HERE//
