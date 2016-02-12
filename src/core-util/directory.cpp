@@ -9,9 +9,9 @@ Directory::Directory(const std::string &path)
 std::vector<std::string> Directory::getFilesWithSuffix(const std::string &suffix) const
 {
     std::vector<std::string> result;
-    for(UINT fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
+    for (size_t fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
     {
-        const std::string &filename = m_files[fileIndex];
+        const std::string& filename = m_files[fileIndex];
         if(util::endsWith(filename, suffix))
         {
             result.push_back(filename);
@@ -19,6 +19,24 @@ std::vector<std::string> Directory::getFilesWithSuffix(const std::string &suffix
     }
     return result;
 }
+
+
+
+std::vector<std::string> Directory::getFilesWithPrefix(const std::string& prefix) const
+{
+	std::vector<std::string> result;
+	for (size_t fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
+	{
+		const std::string& filename = m_files[fileIndex];
+		if (util::startsWith(filename, prefix))
+		{
+			result.push_back(filename);
+		}
+	}
+	return result;
+}
+
+
 
 #ifdef WIN32
 void Directory::load(const std::string &path)

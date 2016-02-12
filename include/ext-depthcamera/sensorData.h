@@ -1012,6 +1012,14 @@ namespace ml {
 			return !((*this) == other);
 		}
 
+		struct SensorNames {
+			const std::string StructureSensor = "StructureSensor";
+			const std::string Kinect_V1 = "Kinect.V1";
+			const std::string Kinect_V2 = "Kinect.V2";
+			const std::string PrimeSense = "PrimeSense Carmine";	//there are different versions 1.08 / 1.09
+			const std::string Asus_Xtion = "Asus Xtion Pro";
+		};
+
 		///////////////////////////////
 		//MEMBER VARIABLES START HERE//
 		///////////////////////////////
