@@ -647,6 +647,7 @@ namespace ml {
 
 		IMUFrame& addIMUFrame(const IMUFrame& frame) {
 			m_IMUFrames.push_back(frame);
+			return m_IMUFrames.back();
 		}
 		
 		//! decompresses the frame and allocates the memory -- needs std::free afterwards!
@@ -667,6 +668,53 @@ namespace ml {
 		unsigned short* decompressDepthAlloc(size_t frameIdx) const {
 			if (frameIdx > m_frames.size()) throw MLIB_EXCEPTION("out of bounds");
 			return decompressDepthAlloc(m_frames[frameIdx]);
+		}
+
+		//! returns the closest IMUFrame for a given RGBDFrame (time-wise)
+		const IMUFrame& findClosestIMUFrame(const RGBDFrame& f, bool basedOnRGB = true) const {
+
+			if (m_IMUFrames.size() == 0) throw MLIB_EXCEPTION("no imu data available");
+
+			UINT64 t = f.m_timeStampColor;
+			if (!basedOnRGB) t = f.m_timeStampDepth;
+			
+			size_t begin = 0;
+			size_t end = m_IMUFrames.size();
+			const UINT64 key = t;
+
+			if (key < m_IMUFrames[0].timeStamp) return m_IMUFrames[0];
+			if (key > m_IMUFrames.back().timeStamp) return m_IMUFrames.back();
+
+			while (begin + 1 < end) {
+				size_t middle = begin + ((end - begin) / 2);
+
+				//std::cout << "range (" << *begin << ", " << *middle << ", ";
+				//if (end != invalid) std::cout << *end << ")" << std::endl;
+				//else std::cout << "END)" << std::endl;
+
+				if (m_IMUFrames[middle].timeStamp == t) {	// in that case we exactly found the value
+					return m_IMUFrames[middle];
+				}
+				else if (m_IMUFrames[middle].timeStamp > key) {
+					end = middle;
+				}
+				else {
+					begin = middle;
+				}
+			}
+
+			// still possible that begin == key or end == key; otherwise return the closest
+			if (key - m_IMUFrames[begin].timeStamp < m_IMUFrames[end].timeStamp - key) {
+				return m_IMUFrames[begin];
+			}
+			else {
+				return m_IMUFrames[end];
+			}
+		}
+
+		//! returns the closest IMUFrame for a given RGBDFrame (time-wise)
+		const IMUFrame& findClosestIMUFrame(size_t frameIdx, bool basedOnRGB = true) const {
+			return findClosestIMUFrame(m_frames[frameIdx], basedOnRGB);
 		}
 
 
