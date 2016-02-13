@@ -820,8 +820,9 @@ namespace ml {
 
 			UINT64 numIMUFrames = 0;
 			in.read((char*)&numIMUFrames, sizeof(UINT64));
+			m_IMUFrames.resize(numIMUFrames);
 			for (size_t i = 0; i < m_IMUFrames.size(); i++) {
-				m_frames[i].loadFromFile(in);
+				m_IMUFrames[i].loadFromFile(in);
 			}
 		}
 
