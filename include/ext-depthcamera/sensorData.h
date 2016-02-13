@@ -874,6 +874,8 @@ namespace ml {
 				for (unsigned int i = 0; i < 16; i++) outMeta << m_calibrationDepth.m_extrinsic[i] << " ";	outMeta << "\n";
 				UINT64 numFrames = m_frames.size();
 				outMeta << "m_frames.size" << " = " << numFrames << "\n";
+
+				if (m_IMUFrames.size() > 0) MLIB_WARNING("warning sensor has imu frames; but writing is not implemented here");
 			}
 
 			if (m_frames.size() == 0) return;	//nothing to do
@@ -1077,6 +1079,10 @@ namespace ml {
 			const std::string PrimeSense = "PrimeSense Carmine";	//there are different versions 1.08 / 1.09
 			const std::string Asus_Xtion = "Asus Xtion Pro";
 		};
+		static const SensorNames& getName() {
+			static SensorNames sn;
+			return sn;
+		}
 
 		///////////////////////////////
 		//MEMBER VARIABLES START HERE//
@@ -1333,6 +1339,7 @@ namespace ml {
 		//s << VAR_STR_LINE(sensorData.m_CalibrationDepth);
 		//s << VAR_STR_LINE(sensorData.m_CalibrationColor);
 		s << VAR_STR_LINE(sensorData.m_frames.size());
+		s << VAR_STR_LINE(sensorData.m_IMUFrames.size());
 		return s;
 	}
 
