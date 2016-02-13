@@ -25,6 +25,7 @@ public:
     }
     std::vector<std::string> getFilesWithSuffix(const std::string& suffix) const;
 	std::vector<std::string> getFilesWithPrefix(const std::string& prefix) const;
+	std::vector<std::string> getFilesContaining(const std::string& str) const;
 
     static std::vector<std::string> enumerateDirectories(const std::string &path)
     {

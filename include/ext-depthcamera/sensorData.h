@@ -115,12 +115,27 @@ namespace ml {
 
 	class mat4f {
 	public:
+		mat4f() { }
+
+		Matrix4x4(	
+			const float& m00, const float& m01, const float& m02, const float& m03,
+			const float& m10, const float& m11, const float& m12, const float& m13,
+			const float& m20, const float& m21, const float& m22, const float& m23,
+			const float& m30, const float& m31, const float& m32, const float& m33) 
+		{
+			_m00 = m00;	_m01 = m01;	_m02 = m02;	_m03 = m03;
+			_m10 = m10;	_m11 = m11;	_m12 = m12;	_m13 = m13;
+			_m20 = m20;	_m21 = m21;	_m22 = m22;	_m23 = m23;
+			_m30 = m30;	_m31 = m31;	_m32 = m32;	_m33 = m33;
+		}
+
 		void setIdentity() {
 			matrix[0] = 1.0;	matrix[1] = 0.0f;	matrix[2] = 0.0f; matrix[3] = 0.0f;
 			matrix[4] = 0.0f;	matrix[5] = 1.0;	matrix[6] = 0.0f; matrix[7] = 0.0f;
 			matrix[8] = 0.0f;	matrix[9] = 0.0f;	matrix[10] = 1.0; matrix[11] = 0.0f;
 			matrix[12] = 0.0f;	matrix[13] = 0.0f;	matrix[14] = 0.0f; matrix[15] = 1.0;
 		}
+
 		static mat4f identity() {
 			mat4f res;	res.setIdentity();
 			return res;
@@ -151,9 +166,18 @@ namespace ml {
 				setIdentity();
 			}
 
-			CalibrationData(const mat4f& intrinsic, const mat4f& extrinsic) {
+			CalibrationData(const mat4f& intrinsic, const mat4f& extrinsic = mat4f::identity()) {
 				m_intrinsic = intrinsic;
 				m_extrinsic = extrinsic;
+			}
+
+			static mat4f makeIntrinsicMatrix(float fx, float fy, float mx, float my) {
+				return mat4f(
+					fx, 0.0f,   mx,   0.0f,
+					0.0f, fy,   my,   0.0f,
+					0.0f, 0.0f, 1.0f, 0.0f,
+					0.0f, 0.0f, 0.0f, 1.0f
+					);
 			}
 
 			void setIdentity() {

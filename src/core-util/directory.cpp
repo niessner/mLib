@@ -1,12 +1,12 @@
 
 namespace ml {
 
-Directory::Directory(const std::string &path)
+Directory::Directory(const std::string& path)
 {
     load(path);
 }
 
-std::vector<std::string> Directory::getFilesWithSuffix(const std::string &suffix) const
+std::vector<std::string> Directory::getFilesWithSuffix(const std::string& suffix) const
 {
     std::vector<std::string> result;
     for (size_t fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
@@ -35,6 +35,22 @@ std::vector<std::string> Directory::getFilesWithPrefix(const std::string& prefix
 	}
 	return result;
 }
+
+std::vector<std::string> Directory::getFilesContaining(const std::string &str) const
+{
+	std::vector<std::string> result;
+	for (size_t fileIndex = 0; fileIndex < m_files.size(); fileIndex++)
+	{
+		const std::string& filename = m_files[fileIndex];
+		if (util::contains(filename, str))
+		{
+			result.push_back(filename);
+		}
+	}
+	return result;
+}
+
+
 
 
 
