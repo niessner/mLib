@@ -245,6 +245,16 @@ namespace ml {
 				m_timeStampDepth = t;
 			}
 
+			//! returns the color time stamp; typically in microseconds
+			UINT64 getTimeStampColor() const {
+				return m_timeStampColor;
+			}
+
+			//! returns the depth time stamp; typically in microseconds
+			UINT64 getTimeStampDepth() const {
+				return m_timeStampDepth;
+			}
+
 		private:
 			friend class SensorData;
 
