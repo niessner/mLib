@@ -630,7 +630,7 @@ namespace util
 
     inline std::string getMLibDir()
     {
-        return util::directoryFromPath(__FILE__) + "../../";
+        return util::directoryFromPath(__FILE__) + "/../../";
     }
 
 }  // namespace utility
