@@ -586,10 +586,11 @@ namespace ml {
 				if (attitude != other.attitude) return false;
 				if (gravity != other.gravity) return false;
 				if (timeStamp != other.timeStamp) return false;
+				return true;
 			}
 
 			bool operator!=(const IMUFrame& other) const {
-				return *this != other;
+				return !(*this == other);
 			}
 			
 			vec3d rotationRate;		//angular velocity (raw data)
