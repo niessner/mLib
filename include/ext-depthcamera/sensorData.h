@@ -15,33 +15,37 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 namespace stb {
-//#define STB_IMAGE_IMPLEMENTATION
+	//#define STB_IMAGE_IMPLEMENTATION
 #include "sensorData/stb_image.h"
-//#undef STB_IMAGE_IMPLEMENTATION
+	//#undef STB_IMAGE_IMPLEMENTATION
 
-//#define STB_IMAGE_WRITE_IMPLEMENTATION
+	//#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "sensorData/stb_image_write.h"
-//#undef STB_IMAGE_WRITE_IMPLEMENTATION
+	//#undef STB_IMAGE_WRITE_IMPLEMENTATION
 }
 
 #ifdef _USE_UPLINK_COMPRESSION
-	#if _WIN32
-	#pragma comment(lib, "gdiplus.lib")
-	#pragma comment(lib, "Shlwapi.lib")
-	#include <winsock2.h>
-	#include <Ws2tcpip.h>
-	#include "sensorData/uplinksimple.h"
-	#else 
-	#undef _USE_UPLINK_COMPRESSION
-	#endif 
+#if _WIN32
+#pragma comment(lib, "gdiplus.lib")
+#pragma comment(lib, "Shlwapi.lib")
+#include <winsock2.h>
+#include <Ws2tcpip.h>
+#include "sensorData/uplinksimple.h"
+#else 
+#undef _USE_UPLINK_COMPRESSION
+#endif 
 #endif
 #include <vector>
+#include <list>
 #include <string>
 #include <exception>
 #include <fstream>
 #include <cassert>
 #include <iostream>
 #include <atomic>
+#include <thread> 
+#include <mutex>
+#include <sstream>
 
 
 namespace ml {
@@ -113,15 +117,53 @@ namespace ml {
 		};
 	};
 
+	class vec3d {
+	public:
+		vec3d() {
+		}
+		vec3d(double d) {
+			x = y = z = d;
+		}
+		bool operator==(const vec3d& other) const {
+			if (x != other.x || y != other.y || z != other.z) return false;
+			return true;
+		}
+		bool operator!=(const vec3d& other) const {
+			return !(*this != other);
+		}
+		union
+		{
+			struct
+			{
+				double x, y, z; // standard names for components
+			};
+			double array[3];     // array access
+		};
+	};
+
+
+	class vec4d {
+	public:
+		union
+		{
+			struct
+			{
+				double x, y, z, w; // standard names for components
+			};
+			double array[4];     // array access
+		};
+	};
+
+
 	class mat4f {
 	public:
 		mat4f() { }
 
-		Matrix4x4(	
+		mat4f(
 			const float& m00, const float& m01, const float& m02, const float& m03,
 			const float& m10, const float& m11, const float& m12, const float& m13,
 			const float& m20, const float& m21, const float& m22, const float& m23,
-			const float& m30, const float& m31, const float& m32, const float& m33) 
+			const float& m30, const float& m31, const float& m32, const float& m33)
 		{
 			_m00 = m00;	_m01 = m01;	_m02 = m02;	_m03 = m03;
 			_m10 = m10;	_m11 = m11;	_m12 = m12;	_m13 = m13;
@@ -173,8 +215,8 @@ namespace ml {
 
 			static mat4f makeIntrinsicMatrix(float fx, float fy, float mx, float my) {
 				return mat4f(
-					fx, 0.0f,   mx,   0.0f,
-					0.0f, fy,   my,   0.0f,
+					fx, 0.0f, mx, 0.0f,
+					0.0f, fy, my, 0.0f,
 					0.0f, 0.0f, 1.0f, 0.0f,
 					0.0f, 0.0f, 0.0f, 1.0f
 					);
@@ -197,8 +239,8 @@ namespace ml {
 
 			bool operator==(const CalibrationData& other) const {
 				for (unsigned int i = 0; i < 16; i++) {
-					if (m_intrinsic[i] != other.m_intrinsic[i]) return false;
-					if (m_extrinsic[i] != other.m_extrinsic[i]) return false;
+					if (m_intrinsic.matrix[i] != other.m_intrinsic.matrix[i]) return false;
+					if (m_extrinsic.matrix[i] != other.m_extrinsic.matrix[i]) return false;
 				}
 				return true;
 			}
@@ -287,7 +329,7 @@ namespace ml {
 				const unsigned short*  depth, unsigned int depthWidth, unsigned int depthHeight,
 				const mat4f& cameraToWorld = mat4f::identity(),
 				COMPRESSION_TYPE_COLOR colorType = TYPE_JPEG,
-				COMPRESSION_TYPE_DEPTH depthType = TYPE_ZLIB_USHORT,	
+				COMPRESSION_TYPE_DEPTH depthType = TYPE_ZLIB_USHORT,
 				UINT64 timeStampColor = 0,
 				UINT64 timeStampDepth = 0)
 			{
@@ -436,7 +478,7 @@ namespace ml {
 					m_depthCompressed = stb::stbi_zlib_compress(tmpBuff, width*height*sizeof(unsigned short), &out_len, quality);
 					std::free(tmpBuff);
 					m_depthSizeBytes = out_len;
-				} 
+				}
 				else if (type == TYPE_OCCI_USHORT) {
 					freeDepth();
 #ifdef _USE_UPLINK_COMPRESSION
@@ -482,7 +524,7 @@ namespace ml {
 				if (type != TYPE_OCCI_USHORT) throw MLIB_EXCEPTION("invliad type");
 				unsigned short* res = (unsigned short*)std::malloc(width*height * 2);
 				uplinksimple::decode(m_depthCompressed, (unsigned int)m_depthSizeBytes, width*height, res);
-				//uplinksimple::shift2depth(res, m_depthWidth*m_depthHeight); //this is a stupid idea i think
+				uplinksimple::shift2depth(res, width*height);
 				return res;
 #else
 				throw MLIB_EXCEPTION("need UPLINK_COMPRESSION");
@@ -528,7 +570,7 @@ namespace ml {
 				if (m_timeStampColor != other.m_timeStampColor) return false;
 				if (m_timeStampDepth != other.m_timeStampDepth) return false;
 				for (unsigned int i = 0; i < 16; i++) {
-					if (m_cameraToWorld[i] != other.m_cameraToWorld[i]) return false;
+					if (m_cameraToWorld.matrix[i] != other.m_cameraToWorld.matrix[i]) return false;
 				}
 				for (UINT64 i = 0; i < m_colorSizeBytes; i++) {
 					if (m_colorCompressed[i] != other.m_colorCompressed[i]) return false;
@@ -568,7 +610,7 @@ namespace ml {
 				in.read((char*)&magneticField, sizeof(vec3d));
 				in.read((char*)&attitude, sizeof(vec3d));
 				in.read((char*)&gravity, sizeof(vec3d));
-				in.read((char*)&timeStamp, sizeof(UINT64));				
+				in.read((char*)&timeStamp, sizeof(UINT64));
 			}
 			void saveToFile(std::ofstream& out) const {
 				out.write((const char*)&rotationRate, sizeof(vec3d));
@@ -592,7 +634,7 @@ namespace ml {
 			bool operator!=(const IMUFrame& other) const {
 				return !(*this == other);
 			}
-			
+
 			vec3d rotationRate;		//angular velocity (raw data)
 			vec3d acceleration;		//acceleration in x,y,z direction (raw data)
 			vec3d magneticField;	//magnetometer data (raw data)
@@ -646,7 +688,7 @@ namespace ml {
 
 		//! checks the version number
 		void assertVersionNumber() const {
-			if (m_versionNumber != M_SENSOR_DATA_VERSION)	
+			if (m_versionNumber != M_SENSOR_DATA_VERSION)
 				throw MLIB_EXCEPTION("Invalid file version -- found " + std::to_string(m_versionNumber) + " but expectd " + std::to_string(M_SENSOR_DATA_VERSION));
 		}
 
@@ -661,7 +703,7 @@ namespace ml {
 			COMPRESSION_TYPE_COLOR colorType = TYPE_JPEG,
 			COMPRESSION_TYPE_DEPTH depthType = TYPE_ZLIB_USHORT,
 			float depthShift = 1000.0f,
-			const std::string sensorName = "Unknown") 
+			const std::string sensorName = "Unknown")
 		{
 			m_sensorName = sensorName;
 			m_colorCompressionType = colorType;
@@ -684,7 +726,7 @@ namespace ml {
 			m_IMUFrames.push_back(frame);
 			return m_IMUFrames.back();
 		}
-		
+
 		//! decompresses the frame and allocates the memory -- needs std::free afterwards!
 		vec3uc* decompressColorAlloc(const RGBDFrame& f) const {
 			return f.decompressColorAlloc(m_colorCompressionType);
@@ -712,7 +754,7 @@ namespace ml {
 
 			UINT64 t = f.m_timeStampColor;
 			if (!basedOnRGB) t = f.m_timeStampDepth;
-			
+
 			size_t begin = 0;
 			size_t end = m_IMUFrames.size();
 			const UINT64 key = t;
@@ -874,7 +916,7 @@ namespace ml {
 			unsigned int	m_initValue;
 		};
 
-		
+
 #ifdef 	_HAS_MLIB	//needs free image to write out data
 		//! 7-scenes format
 		void saveToImages(const std::string& outputFolder, const std::string& basename = "frame-") const {
@@ -950,7 +992,7 @@ namespace ml {
 				{
 					unsigned short* depth = decompressDepthAlloc(f);
 					DepthImage16 image(m_depthWidth, m_depthHeight, depth);
-					FreeImageWrapper::saveImage(depthFile, image);					
+					FreeImageWrapper::saveImage(depthFile, image);
 					std::free(depth);
 				}
 
@@ -959,10 +1001,10 @@ namespace ml {
 		}
 
 		//! 7-scenes format
-		void loadFromImages(const std::string& sourceFolder, const std::string& basename = "frame-", const std::string& colorEnding = "png") 
+		void loadFromImages(const std::string& sourceFolder, const std::string& basename = "frame-", const std::string& colorEnding = "png")
 		{
 			if (colorEnding != "png" && colorEnding != "jpg") throw MLIB_EXCEPTION("invalid color format " + colorEnding);
-			
+
 
 			{
 				//write meta information
@@ -1020,7 +1062,7 @@ namespace ml {
 				DepthImage16 depthImage;			ml::FreeImageWrapper::loadImage(depthFile, depthImage, false);
 				unsigned short*	depthData = new unsigned short[m_depthWidth*m_depthHeight];
 				memcpy(depthData, depthImage.getData(), sizeof(unsigned short)*m_depthWidth*m_depthHeight);
-				
+
 
 				ml::SensorData::COMPRESSION_TYPE_COLOR compressionColor = ml::SensorData::COMPRESSION_TYPE_COLOR::TYPE_PNG;
 				if (colorEnding == "png")		compressionColor = ml::SensorData::COMPRESSION_TYPE_COLOR::TYPE_PNG;
@@ -1072,7 +1114,7 @@ namespace ml {
 				std::memcpy(f.m_depthCompressed, second.m_frames[i].m_depthCompressed, f.m_depthSizeBytes);
 			}
 		}
-		
+
 		bool operator==(const SensorData& other) const {
 			if (m_versionNumber != other.m_versionNumber) return false;
 			if (m_sensorName != other.m_sensorName) return false;
