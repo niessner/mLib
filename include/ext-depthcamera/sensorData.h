@@ -321,6 +321,12 @@ namespace ml {
 				return m_timeStampDepth;
 			}
 
+			void free() {
+				freeColor();
+				freeDepth();
+				m_cameraToWorld.setIdentity();
+			}
+
 		private:
 			friend class SensorData;
 
@@ -351,12 +357,6 @@ namespace ml {
 					compressDepth(depth, depthWidth, depthHeight, depthType);
 					//std::cout << "compressDepth " << t.getElapsedTimeMS() << " [ms] " << std::endl;
 				}
-			}
-
-			void free() {
-				freeColor();
-				freeDepth();
-				m_cameraToWorld.setIdentity();
 			}
 
 
