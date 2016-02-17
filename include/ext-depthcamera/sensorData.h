@@ -779,7 +779,7 @@ namespace ml {
 				m_frames[i].saveToFile(out);
 			}
 
-			UINT64 numIMUFrames = m_frames.size();
+			UINT64 numIMUFrames = m_IMUFrames.size();
 			out.write((const char*)&numIMUFrames, sizeof(UINT64));
 			for (size_t i = 0; i < m_IMUFrames.size(); i++) {
 				m_IMUFrames[i].saveToFile(out);
@@ -821,9 +821,11 @@ namespace ml {
 
 			UINT64 numIMUFrames = 0;
 			in.read((char*)&numIMUFrames, sizeof(UINT64));
-			m_IMUFrames.resize(numIMUFrames);
-			for (size_t i = 0; i < m_IMUFrames.size(); i++) {
-				m_IMUFrames[i].loadFromFile(in);
+			if (numIMUFrames > 0) {
+				m_IMUFrames.resize(numIMUFrames);
+				for (size_t i = 0; i < m_IMUFrames.size(); i++) {
+					m_IMUFrames[i].loadFromFile(in);
+				}
 			}
 		}
 
