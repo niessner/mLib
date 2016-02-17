@@ -57,7 +57,7 @@ std::vector<std::string> Directory::getFilesContaining(const std::string &str) c
 #ifdef WIN32
 void Directory::load(const std::string &path)
 {
-	m_path = path + "\\";
+	m_path = path + "/";
 	m_files.clear();
 	m_directories.clear();
 
