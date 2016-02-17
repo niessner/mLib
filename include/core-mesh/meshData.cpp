@@ -423,7 +423,7 @@ unsigned int MeshData<FloatType>::removeFacesInFrontOfPlane( const Plane<FloatTy
 
 	std::vector<unsigned int> vertexLookUp;	vertexLookUp.resize(numV);
 	std::vector<vec3<FloatType>> new_verts;	new_verts.reserve(numV);
-	std::vector<std::vector<unsigned int>> new_faces;	new_faces.reserve(numF);
+	Indices new_faces;	new_faces.reserve(numF);
 	std::vector<vec4<FloatType>> new_color;		if (hasPerVertexColors())		new_color.reserve(m_Colors.size());
 	std::vector<vec3<FloatType>> new_normals;	if (hasPerVertexNormals())		new_normals.reserve(m_Normals.size());
 	std::vector<vec2<FloatType>> new_tex;		if (hasPerVertexTexCoords())	new_tex.reserve(m_TextureCoords.size());
@@ -464,7 +464,7 @@ unsigned int MeshData<FloatType>::removeFacesInFrontOfPlane( const Plane<FloatTy
 	if (hasPerVertexNormals())		m_Normals = std::vector<vec3<FloatType>>(new_normals.begin(), new_normals.end());
 	if (hasPerVertexTexCoords())	m_TextureCoords = std::vector<vec2<FloatType>>(new_tex.begin(), new_tex.end());
 
-	m_FaceIndicesVertices = std::vector<std::vector<unsigned int>>(new_faces.begin(), new_faces.end());
+	m_FaceIndicesVertices = new_faces;
 
 	return (unsigned int)m_Vertices.size();
 }

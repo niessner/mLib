@@ -68,7 +68,7 @@ namespace ml {
 				}
 			}
 			else if (currWord == "property") {
-				if (!util::endsWith(line, "vertex_indices")) {
+				if (!util::endsWith(line, "vertex_indices") && !util::endsWith(line, "vertex_index")) {
 					PlyHeader::PlyProperty p;
 					std::string which;
 					ss >> which;

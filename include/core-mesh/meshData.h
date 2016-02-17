@@ -484,7 +484,7 @@ public:
 		Matrix4x4<FloatType> invTrans = t.getInverse().getTranspose();
 		for (size_t i = 0; i < m_Normals.size(); i++) {
 			m_Normals[i] = invTrans.transformNormalAffine(m_Normals[i]);
-      m_Normals[i].normalizeIfNonzero();
+			m_Normals[i].normalizeIfNonzero();
 		}
 	}
 
