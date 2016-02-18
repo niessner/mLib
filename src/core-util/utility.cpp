@@ -160,11 +160,11 @@ namespace util
     std::string removeExtensions(const std::string& path)
     {
 		std::string filename = util::fileNameFromPath(path);
+		std::string directory = util::directoryFromPath(path);
 		std::size_t found = filename.find_last_of('.');
 		if (found != std::string::npos) {
-			return filename.substr(0, found);
+			return directory + "/" + filename.substr(0, found);
 		}
-		std::string directory = util::directoryFromPath(path);
 		return directory + "/" + filename;
     }
 
