@@ -146,10 +146,10 @@ namespace util
 			c--;
 			if (path[c] == '\\' || path[c] == '/') {
 				if (c == 0) return "";
-				else return path.substr(0, c);
+				else return path.substr(0, c) + '/';
 			}
 		}
-		return path;
+		return "";
     }
 
     std::string fileNameFromPath(const std::string &path)
@@ -163,9 +163,10 @@ namespace util
 		std::string directory = util::directoryFromPath(path);
 		std::size_t found = filename.find_last_of('.');
 		if (found != std::string::npos) {
-			return directory + "/" + filename.substr(0, found);
+			if (!directory.empty())	return directory + filename.substr(0, found);
+			return filename.substr(0, found);
 		}
-		return directory + "/" + filename;
+		return path;
     }
 
 	std::vector<std::string> getFileLines(const std::string &filename, UINT minLineLength)
