@@ -257,11 +257,13 @@ namespace ml {
 		};
 
 		enum COMPRESSION_TYPE_COLOR {
+			TYPE_COLOR_UNKNOWN = -1,
 			TYPE_RAW = 0,
 			TYPE_PNG = 1,
 			TYPE_JPEG = 2
 		};
 		enum COMPRESSION_TYPE_DEPTH {
+			TYPE_DEPTH_UNKNOWN = -1,
 			TYPE_RAW_USHORT = 0,
 			TYPE_ZLIB_USHORT = 1,
 			TYPE_OCCI_USHORT = 2
@@ -659,6 +661,8 @@ namespace ml {
 			m_colorHeight = 0;
 			m_depthWidth = 0;
 			m_depthHeight = 0;
+			m_colorCompressionType = TYPE_COLOR_UNKNOWN;
+			m_depthCompressionType = TYPE_DEPTH_UNKNOWN;
 		}
 
 		SensorData(const std::string& filename) {
@@ -684,6 +688,8 @@ namespace ml {
 			m_depthWidth = 0;
 			m_depthHeight = 0;
 			m_IMUFrames.clear();
+			m_colorCompressionType = TYPE_COLOR_UNKNOWN;
+			m_depthCompressionType = TYPE_DEPTH_UNKNOWN;
 		}
 
 		//! checks the version number
