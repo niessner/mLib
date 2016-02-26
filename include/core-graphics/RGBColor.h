@@ -97,6 +97,50 @@ struct RGBColor : public vec4uc
 		const float scale = 1.0f / 255.0f;
 		return vec4f(r * scale, g * scale, b * scale, a * scale);
 	}
+/*
+//TOOD IMPLEMENT A GOOD FUNCTION HERE
+	static RGBColor colorPalette(unsigned int idx, unsigned int maxNum = 10000) {
+		const unsigned int p0 = 73856093;
+		const unsigned int p1 = 19349669;
+		idx = (idx * p0 + p1) % maxNum;
+
+		float x = idx / (float)(maxNum - 1);
+		float r = 0.0f;
+		float g = 0.0f;
+		float b = 1.0f;
+		if (x >= 0.0f && x < 0.2f) {
+			x = x / 0.2f;
+			r = 0.0f;
+			g = x;
+			b = 1.0f;
+		}
+		else if (x >= 0.2f && x < 0.4f) {
+			x = (x - 0.2f) / 0.2f;
+			r = 0.0f;
+			g = 1.0f;
+			b = 1.0f - x;
+		}
+		else if (x >= 0.4f && x < 0.6f) {
+			x = (x - 0.4f) / 0.2f;
+			r = x;
+			g = 1.0f;
+			b = 0.0f;
+		}
+		else if (x >= 0.6f && x < 0.8f) {
+			x = (x - 0.6f) / 0.2f;
+			r = 1.0f;
+			g = 1.0f - x;
+			b = 0.0f;
+		}
+		else if (x >= 0.8f && x <= 1.0f) {
+			x = (x - 0.8f) / 0.2f;
+			r = 1.0f;
+			g = 0.0f;
+			b = x;
+		}
+
+		return RGBColor(vec3f(r, g, b));
+	}*/
 
     static const RGBColor White;
     static const RGBColor Red;

@@ -923,7 +923,7 @@ namespace ml {
 		};
 
 
-#ifdef 	_HAS_MLIB	//needs free image to write out data
+#ifdef 	_FREEIMAGEWRAPPER_H_	//needs free image to write out data
 		//! 7-scenes format
 		void saveToImages(const std::string& outputFolder, const std::string& basename = "frame-") const {
 			if (!ml::util::directoryExists(outputFolder)) ml::util::makeDirectory(outputFolder);
