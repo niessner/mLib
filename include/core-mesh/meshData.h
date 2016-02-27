@@ -701,7 +701,7 @@ public:
 	}
 
 
-	//! computes per vertex normals
+	//! computes per vertex normals (recomputes if not present yet)
 	void computeVertexNormals() {
 
 		if (m_FaceIndicesVertices.size() == 0) throw MLIB_EXCEPTION("must be an indexed face set");

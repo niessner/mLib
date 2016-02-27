@@ -345,9 +345,6 @@ namespace ml {
 				m_depthCompressed = NULL;
 				m_colorSizeBytes = 0;
 				m_depthSizeBytes = 0;
-				m_cameraToWorld = cameraToWorld;
-				m_timeStampColor = timeStampColor;
-				m_timeStampDepth = timeStampDepth;
 
 				if (color) {
 					//Timer t;
@@ -359,6 +356,10 @@ namespace ml {
 					compressDepth(depth, depthWidth, depthHeight, depthType);
 					//std::cout << "compressDepth " << t.getElapsedTimeMS() << " [ms] " << std::endl;
 				}
+
+				m_cameraToWorld = cameraToWorld;
+				m_timeStampColor = timeStampColor;
+				m_timeStampDepth = timeStampDepth;
 			}
 
 
