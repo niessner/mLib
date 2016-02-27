@@ -71,7 +71,7 @@ public:
 			pointsProj[i] = vec2<FloatType>(points[i] | v0, points[i] | v1);
 		}
 
-		vector< std::pair<vec3<FloatType>, FloatType> > pca = math::pointSetPCA(points);
+		vector< std::pair<vec2<FloatType>, FloatType> > pca = math::pointSetPCA(pointsProj);
 
 		const vec2<FloatType>& ev0 = pca[0].first;
 		const vec2<FloatType>& ev1 = pca[1].first;
@@ -84,7 +84,8 @@ public:
 		m_AxesScaled[1] = v0 * ev1.x + v1 * ev1.y;
 
 		m_AxesScaled[0].normalize();
-		m_AxesScaled[1].normalize();
+		//m_AxesScaled[1].normalize();
+		m_AxesScaled[1] = m_AxesScaled[2] ^ m_AxesScaled[0];
 
 		computeAnchorAndExtentsForGivenNormalizedAxis(points);
 	}
