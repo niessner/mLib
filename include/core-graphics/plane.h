@@ -26,7 +26,7 @@ public:
 		m_Distance = dist;
 	}
 
-	Plane(const vec3<FloatType> &normal, const vec3<FloatType>& p) {
+	Plane(const vec3<FloatType>& normal, const vec3<FloatType>& p) {
 		m_Normal = normal;
 		m_Distance = m_Normal | p;
 	}

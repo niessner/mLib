@@ -22,7 +22,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	if (header.m_bHasNormals) mesh.m_Normals.resize(header.m_numVertices);
 	if (header.m_bHasColors) mesh.m_Colors.resize(header.m_numVertices);
 
-	if(header.m_bBinary)
+	if (header.m_bBinary)
 	{
 		//unsigned int size = 3*4+3*4+3+11*4;
 		unsigned int size = 0;
@@ -34,49 +34,51 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 		file.read(data, size*header.m_numVertices);
 		for (unsigned int i = 0; i < header.m_numVertices; i++) {
 			unsigned int byteOffset = 0;
-			for (unsigned int j = 0; j < header.m_properties["vertex"].size(); j++) {
-				if (header.m_properties["vertex"][j].name == "x") {
+			const std::vector<PlyHeader::PlyProperty>& vertexProperties = header.m_properties["vertex"];
+
+			for (unsigned int j = 0; j < vertexProperties.size(); j++) {
+				if (vertexProperties[j].name == "x") {
 					mesh.m_Vertices[i].x = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "y") {
+				else if (vertexProperties[j].name == "y") {
 					mesh.m_Vertices[i].y = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "z") {
+				else if (vertexProperties[j].name == "z") {
 					mesh.m_Vertices[i].z = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "nx") {
+				else if (vertexProperties[j].name == "nx") {
 					mesh.m_Normals[i].x = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "ny") {
+				else if (vertexProperties[j].name == "ny") {
 					mesh.m_Normals[i].y = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "nz") {
+				else if (vertexProperties[j].name == "nz") {
 					mesh.m_Normals[i].z = ((float*)&data[i*size + byteOffset])[0];
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "red") {
+				else if (vertexProperties[j].name == "red") {
 					mesh.m_Colors[i].x = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].x/=255.0f;
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "green") {
+				else if (vertexProperties[j].name == "green") {
 					mesh.m_Colors[i].y = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].y/=255.0f;
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "blue") {
+				else if (vertexProperties[j].name == "blue") {
 					mesh.m_Colors[i].z = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].z/=255.0f;
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
-				else if (header.m_properties["vertex"][j].name == "alpha") {
+				else if (vertexProperties[j].name == "alpha") {
 					mesh.m_Colors[i].w = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].w/=255.0f;
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				} else {
 					//unknown (ignore)
-					byteOffset += header.m_properties["vertex"][j].byteSize;
+					byteOffset += vertexProperties[j].byteSize;
 				}
 			}
 			assert(byteOffset == size);
