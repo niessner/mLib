@@ -801,6 +801,13 @@ namespace ml {
 			return findClosestIMUFrame(m_frames[frameIdx], basedOnRGB);
 		}
 
+		//! transforms the trajectory of all frames
+		void applyTransform(const mat4f& t) {
+			for (RGBDFrame& f : m_frames) {
+				const mat4f& m = f.getCameraToWorld();
+				f.setCameraToWorld(t * m);
+			}
+		}
 
 		//! saves a .sens file
 		void saveToFile(const std::string& filename) const {
