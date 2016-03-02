@@ -351,8 +351,8 @@ namespace util
 	std::string getExecutablePath() {
 		HMODULE hModule = GetModuleHandleW(NULL);
 		CHAR path[MAX_PATH];
-		GetModuleFileName(hModule, path, MAX_PATH);
-		PathRemoveFileSpec(path);
+		GetModuleFileNameA(hModule, path, MAX_PATH);
+		PathRemoveFileSpecA(path);
 		return std::string(path);
 	}
 #endif
