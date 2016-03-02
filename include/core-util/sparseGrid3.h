@@ -46,6 +46,10 @@ public:
 		return (m_Data.find(i) != m_Data.end());
 	}
 
+	bool exists(int x, int y, int z) const {
+		return exists(vec3i(x, y, z));
+	}
+
 	const T& operator()(const vec3i& i) const {
 		return m_Data.find(i)->second;
 	}

@@ -53,6 +53,53 @@ std::vector<std::string> Directory::getFilesContaining(const std::string &str) c
 
 
 
+std::vector<std::string> Directory::getDirectoriesWithSuffix(const std::string& suffix) const
+{
+	std::vector<std::string> result;
+	for (size_t fileIndex = 0; fileIndex < m_directories.size(); fileIndex++)
+	{
+		const std::string& filename = m_directories[fileIndex];
+		if (util::endsWith(filename, suffix))
+		{
+			result.push_back(filename);
+		}
+	}
+	return result;
+}
+
+
+
+std::vector<std::string> Directory::getDirectoriesWithPrefix(const std::string& prefix) const
+{
+	std::vector<std::string> result;
+	for (size_t fileIndex = 0; fileIndex < m_directories.size(); fileIndex++)
+	{
+		const std::string& filename = m_directories[fileIndex];
+		if (util::startsWith(filename, prefix))
+		{
+			result.push_back(filename);
+		}
+	}
+	return result;
+}
+
+std::vector<std::string> Directory::getDirectoriesContaining(const std::string &str) const
+{
+	std::vector<std::string> result;
+	for (size_t fileIndex = 0; fileIndex < m_directories.size(); fileIndex++)
+	{
+		const std::string& filename = m_directories[fileIndex];
+		if (util::contains(filename, str))
+		{
+			result.push_back(filename);
+		}
+	}
+	return result;
+}
+
+
+
+
 
 #ifdef WIN32
 void Directory::load(const std::string &path)
