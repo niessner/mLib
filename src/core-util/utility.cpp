@@ -325,6 +325,10 @@ namespace util
         DeleteFileA(file.c_str());
     }
 
+	bool moveFile(const std::string& currentFile, const std::string& newFile) {
+		return (MoveFileA(currentFile.c_str(), newFile.c_str()) != 0);
+	}
+
 	bool directoryExists(const std::string& directory) {
 
 		DWORD ftyp = GetFileAttributesA(directory.c_str());
