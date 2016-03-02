@@ -267,7 +267,8 @@ namespace util
     void deleteDirectory(const std::string& directory);
     void deleteFile(const std::string& file);
 	bool directoryExists(const std::string& directory);
-	std::string workingDirectory();
+	std::string getWorkingDirectory();	//returns the current working directory
+	std::string getExecutablePath();	//returns the path of the program executable
        
     inline void runSystemCommand(const std::string &s)
     {

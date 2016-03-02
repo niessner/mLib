@@ -154,6 +154,7 @@ namespace util
 
     std::string fileNameFromPath(const std::string &path)
     {
+		//TODO maybe use: PathRemoveFilespec ?
         return ml::util::split(ml::util::replace(path, '\\', '/'), '/').back();
     }
 
@@ -336,11 +337,19 @@ namespace util
 		return false;    // this is not a directory!
 	}
 
-	std::string workingDirectory()
+	std::string getWorkingDirectory()
 	{
 		char buffer[2048];
 		GetCurrentDirectoryA(2048, buffer);
 		return std::string(buffer);
+	}
+
+	std::string getExecutablePath() {
+		HMODULE hModule = GetModuleHandleW(NULL);
+		CHAR path[MAX_PATH];
+		GetModuleFileName(hModule, path, MAX_PATH);
+		PathRemoveFileSpec(path);
+		return std::string(path);
 	}
 #endif
 
