@@ -4,7 +4,8 @@ ID3DBlob* ml::D3D11Utility::CompileShader(const std::string &filename, const std
 	static const bool s_bUsePreCompiledShaders = true;
 	static bool b_CompiledShaderDirectoryCreated = false;
 
-	std::string compiledShaderDirectory("CompiledShaders/");
+	const std::string path = util::getExecutablePath();
+	const std::string compiledShaderDirectory(path + "/CompiledShaders/");
 	if (!b_CompiledShaderDirectoryCreated) {
 		//CreateDirectory(compiledShaderDirectory.c_str(), NULL);
 		util::makeDirectory(compiledShaderDirectory);
