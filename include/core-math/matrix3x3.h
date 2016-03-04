@@ -89,6 +89,19 @@ public:
 		return matrix[i];
 	}
 
+	//! equal operator
+	inline bool operator==(const Matrix3x3<FloatType>& other) const {
+		for (unsigned i = 0; i < 9; i++) {
+			if (matrix[i] != other[i]) return false;
+		}
+		return true;
+	}
+
+	//! not equal operator
+	inline bool operator!=(const Matrix3x3<FloatType>& other) const {
+		return !(*this == other);
+	}
+
 
 	//! overwrite the matrix with an identity-matrix
 	void setIdentity() {

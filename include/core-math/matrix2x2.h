@@ -87,6 +87,18 @@ public:
 		return matrix[i];
 	}
 
+	//! equal operator
+	inline bool operator==(const Matrix2x2<FloatType>& other) const {
+		for (unsigned i = 0; i < 4; i++) {
+			if (matrix[i] != other[i]) return false;
+		}
+		return true;
+	}
+
+	//! not equal operator
+	inline bool operator!=(const Matrix2x2<FloatType>& other) const {
+		return !(*this == other);
+	}
 
 	//! overwrite the matrix with an identity-matrix
 	void setIdentity() {
