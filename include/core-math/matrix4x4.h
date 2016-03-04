@@ -870,7 +870,17 @@ public:
 		}
 	}
 
-
+    std::string toString(const std::string &seperator) const {
+        string result;
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+            {
+                result += to_string(matrix2[i][j]);
+                if (i != 3 || j != 3)
+                    result += seperator;
+            }
+        return result;
+    }
 
 	//! constructs a matrix from a normal vector (TODO check if it is not transposed...)
 	static Matrix4x4 frame(const vec3<FloatType>& n) {

@@ -252,6 +252,11 @@ namespace util
 		return size.QuadPart;
 	}
 
+    int runCommand(const std::string& command)
+    {
+        return system(command.c_str());
+    }
+
 	// Create a process with the given command line, and wait until it returns
 	int runCommand(const std::string &executablePath, const std::string& commandLine, bool block)
 	{

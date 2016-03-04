@@ -51,7 +51,7 @@ namespace ml {
 						}
 
 						if (vertexSplit) {
-							MLIB_WARNING("vertex split untested");
+							//MLIB_WARNING("vertex split untested");
 							Vertex v = vert;  // copy of vert for splitting out
 							if (bFaceHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (bFaceHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];

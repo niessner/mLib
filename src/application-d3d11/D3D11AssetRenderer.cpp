@@ -16,7 +16,7 @@ void D3D11AssetRenderer::init(GraphicsDevice &g, bool useTexture)
     else
         m_shader = &m_graphics->getShaderManager().getShaders("defaultBasic");
 }
-    
+
 void D3D11AssetRenderer::renderMesh(const D3D11TriMesh &mesh, const mat4f &cameraPerspective, const vec3f &color)
 {
     renderMesh(mesh, cameraPerspective, mat4f::identity(), color);

@@ -268,6 +268,11 @@ namespace ml {
         template <class T>
         inline const T& randomElement(const std::vector<T> &v)
         {
+            if (v.size() == 0)
+            {
+                cout << "Choosing random element from empty vector" << endl;
+                return v[0];
+            }
             long index = randomInteger((long)0, (long)v.size() - 1);
             return v[index];
         }

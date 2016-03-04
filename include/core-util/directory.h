@@ -37,6 +37,19 @@ public:
         return dir.getDirectories();
     }
 
+    static std::vector<std::string> enumerateDirectoriesWithPath(const std::string &path)
+    {
+        std::string ending = "";
+        if (path.back() != '/' && path.back() != '\\')
+            ending = "/";
+
+        Directory dir(path);
+        auto directories = dir.getDirectories();
+        for (auto &d : directories)
+            d = path + ending + d;
+        return directories;
+    }
+
     static std::vector<std::string> enumerateFiles(const std::string &path)
     {
         Directory dir(path);

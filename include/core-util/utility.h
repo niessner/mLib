@@ -262,6 +262,7 @@ namespace util
 	void messageBox(const std::string& S);
 	void copyStringToClipboard(const std::string& S);
 	std::string loadStringFromClipboard();
+    int runCommand(const std::string& command);
 	int runCommand(const std::string& executablePath, const std::string& commandLine, bool Blocking);
 	void makeDirectory(const std::string& directory);
     void deleteDirectory(const std::string& directory);
