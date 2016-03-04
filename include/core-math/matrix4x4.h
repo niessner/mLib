@@ -137,6 +137,7 @@ public:
 		return matrix[i];
 	}
 
+	//! equal operator
 	inline bool operator==(const Matrix4x4<FloatType>& other) const {
 		for (unsigned i = 0; i < 16; i++) {
 			if (matrix[i] != other[i]) return false;
@@ -144,6 +145,7 @@ public:
 		return true;
 	}
 
+	//! not equal operator
 	inline bool operator!=(const Matrix4x4<FloatType>& other) const {
 		return !(*this == other);
 	}
