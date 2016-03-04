@@ -805,6 +805,7 @@ namespace ml {
 		void applyTransform(const mat4f& t) {
 			for (RGBDFrame& f : m_frames) {
 				const mat4f& m = f.getCameraToWorld();
+				if (m(0, 0) == -std::numeric_limits<float>::infinity()) continue;	//avoid creating NANs
 				f.setCameraToWorld(t * m);
 			}
 		}
