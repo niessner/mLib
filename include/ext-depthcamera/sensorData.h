@@ -182,6 +182,19 @@ namespace ml {
 			mat4f res;	res.setIdentity();
 			return res;
 		}
+
+		//! sets the matrix zero (or a specified value)
+		void setZero(float v = 0.0f) {
+			matrix[ 0] = matrix[ 1] = matrix[ 2] = matrix[ 3] = v;
+			matrix[ 4] = matrix[ 5] = matrix[ 6] = matrix[ 7] = v;
+			matrix[ 8] = matrix[ 9] = matrix[10] = matrix[11] = v;
+			matrix[12] = matrix[13] = matrix[14] = matrix[15] = v;
+		}
+		static mat4f zero(float v = 0.0f) {
+			mat4f res;	res.setZero(v);
+			return res;
+		}
+
 		union {
 			//! access matrix using a single array
 			float matrix[16];
@@ -277,7 +290,7 @@ namespace ml {
 				m_depthCompressed = NULL;
 				m_colorSizeBytes = 0;
 				m_depthSizeBytes = 0;
-				m_cameraToWorld.setIdentity();
+				m_cameraToWorld.setZero(-std::numeric_limits<float>::infinity());
 				m_timeStampColor = 0;
 				m_timeStampDepth = 0;
 			}
@@ -326,7 +339,7 @@ namespace ml {
 			void free() {
 				freeColor();
 				freeDepth();
-				m_cameraToWorld.setIdentity();
+				m_cameraToWorld.setZero(-std::numeric_limits<float>::infinity());
 			}
 
 		private:
