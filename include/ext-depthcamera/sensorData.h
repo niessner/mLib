@@ -766,8 +766,8 @@ namespace ml {
 			size_t end = m_IMUFrames.size();
 			const UINT64 key = t;
 
-			if (key < m_IMUFrames[0].timeStamp) return m_IMUFrames[0];
-			if (key > m_IMUFrames.back().timeStamp) return m_IMUFrames.back();
+			//if (key < m_IMUFrames[0].timeStamp) return m_IMUFrames[0];
+			//if (key > m_IMUFrames.back().timeStamp) return m_IMUFrames.back();
 
 			while (begin + 1 < end) {
 				size_t middle = begin + ((end - begin) / 2);
