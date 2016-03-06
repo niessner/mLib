@@ -106,12 +106,13 @@ namespace ml {
 		float getFarPlane() const {
 			return m_zFar;
 		}
-	private:
-		void update();
 
 		//! field of view is in degrees
 		static Matrix4x4<FloatType> perspectiveFov(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar);
 		static Matrix4x4<FloatType> viewMatrix(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& up, const vec3<FloatType>& right);
+
+	private:
+		void update();
 
 		vec3<FloatType> m_eye, m_right, m_look, m_up;
 		vec3<FloatType> m_worldUp;
