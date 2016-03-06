@@ -191,10 +191,17 @@ namespace ml
 			}
 			return *this;
 		}
+		inline Grid3<T>& operator += (T right)
+		{
+			for (size_t i = 0; i < getNumElements(); i++) {
+				m_data[i] += right;
+			}
+			return *this;
+		}
 		inline Grid3<T>& operator *= (T right)
 		{
 			for (size_t i = 0; i < getNumElements(); i++) {
-				m_data[i] *= right.m_data[i];
+				m_data[i] *= right;
 			}
 			return *this;
 		}

@@ -181,6 +181,14 @@ namespace ml
 			return *this;
 		}
 
+		inline Grid2<T>& operator += (T value)
+		{
+			for (size_t y = 0; y < m_dimY; y++)
+				for (size_t x = 0; x < m_dimX; x++)
+					m_data[y * m_dimX + x] += value;
+			return *this;
+		}
+
 		inline Grid2<T>& operator *= (T value)
 		{
 			for (size_t y = 0; y < m_dimY; y++)
