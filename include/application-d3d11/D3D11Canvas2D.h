@@ -29,7 +29,12 @@ namespace ml {
 			ELEMENT_TYPE_BOX
 		};
 
+		
+		//forward declarations for casts
 		class ElementBillboard;
+		class ElementCircle;
+		class ElementBox;
+
 		class Element
 		{
 		public:
@@ -55,6 +60,30 @@ namespace ml {
 				MLIB_ASSERT(m_elementType == ELEMENT_TYPE_BILLBOARD);
 				return *((ElementBillboard*)this);
 			}
+			ElementBillboard& castBillboard() {
+				MLIB_ASSERT(m_elementType == ELEMENT_TYPE_BILLBOARD);
+				return *((ElementBillboard*)this);
+			}
+
+			const ElementCircle& castCircle() const {
+				MLIB_ASSERT(m_elementType == ELEMENT_TYPE_CIRCLE);
+				return *((ElementCircle*)this);
+			}
+			ElementCircle& castCircle() {
+				MLIB_ASSERT(m_elementType == ELEMENT_TYPE_CIRCLE);
+				return *((ElementCircle*)this);
+			}
+
+			const ElementBox& castBox() const {
+				MLIB_ASSERT(m_elementType == ELEMENT_TYPE_BOX);
+				return *((ElementBox*)this);
+			}
+			ElementBox& castBox() {
+				MLIB_ASSERT(m_elementType == ELEMENT_TYPE_BOX);
+				return *((ElementBox*)this);
+			}
+
+
 
 		protected:
 			D3D11GraphicsDevice* m_graphics;
@@ -68,7 +97,7 @@ namespace ml {
 		class ElementBillboard : public Element
 		{
 		public:
-			ElementBillboard(GraphicsDevice& g, const std::string &id, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) : Element(g, id, ELEMENT_TYPE_BILLBOARD, depth)
+			ElementBillboard(GraphicsDevice& g, const std::string &id, const bbox2i& box, const ColorImageR8G8B8A8& image, float depth) : Element(g, id, ELEMENT_TYPE_BILLBOARD, depth)
 			{
 				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasBillboard", "billboardVS", "vs_4_0", "billboardPS", "ps_4_0");
@@ -88,6 +117,10 @@ namespace ml {
 				return m_box;
 			}
 
+			void updateTexture(const ColorImageR8G8B8A8& image) {
+				m_tex.load(*m_graphics, image);
+			}
+
 		private:
 			bbox2i m_box;
 			D3D11Texture2D m_tex;
@@ -103,7 +136,7 @@ namespace ml {
 				float radius;
 				float dummy;
 			};
-			ElementCircle(GraphicsDevice &g, const std::string &id, const vec2f& center, float radius, const vec4f& color, float depth) : Element(g, id, ELEMENT_TYPE_CIRCLE, depth) {
+			ElementCircle(GraphicsDevice& g, const std::string &id, const vec2f& center, float radius, const vec4f& color, float depth) : Element(g, id, ELEMENT_TYPE_CIRCLE, depth) {
 
 				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasCircle", "circleVS", "vs_4_0", "circlePS", "ps_4_0");
@@ -214,13 +247,14 @@ namespace ml {
 		}
 
 		Intersection intersectionFirst(const vec2i &mouseCoord) const;
-		vector<Intersection> intersectionAll(const vec2i &mouseCoord) const;
+		std::vector<Intersection> intersectionAll(const vec2i &mouseCoord) const;
 
 		void release();
 		void reset();
 		void onDeviceResize();
 
 		void render();
+		void render(const std::string& elementId);
 
 		void clearElements()
 		{
@@ -232,7 +266,12 @@ namespace ml {
 			m_unnamedElements.clear();
 		}
 
-		const Element& getElementById(const std::string &elementId) const
+		bool elementExists(const std::string &elementId) const {
+			auto it = m_namedElements.find(elementId);
+			return it != m_namedElements.end();
+		}
+
+		Element& getElementById(const std::string &elementId)
 		{
 			auto it = m_namedElements.find(elementId);
 			MLIB_ASSERT_STR(it != m_namedElements.end(), "Element not found");

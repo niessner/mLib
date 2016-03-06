@@ -77,4 +77,11 @@ void D3D11Canvas2D::render()
         e->render();
 }
 
+
+void D3D11Canvas2D::render(const std::string& elementId)
+{
+	getElementById(elementId).render();
+}
+
+
 }  // namespace ml

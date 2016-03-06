@@ -50,7 +50,7 @@ VertexShaderOutput billboardVS(float4 position : position, float3 normal : norma
 
 float4 billboardPS(VertexShaderOutput input) : SV_Target
 {
-	float4 texColor = modelTexture.Sample(modelSampler, float2(1.0 - input.texCoord.x, input.texCoord.y));
+	float4 texColor = modelTexture.Sample(modelSampler, float2(input.texCoord.x, 1.0f - input.texCoord.y));
 	if (texColor.w == 0.0f) {
 		discard;
 	}
