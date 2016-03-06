@@ -170,6 +170,11 @@ namespace util
 		return extension;
 	}
 
+	inline bool hasFileExtension(const std::string& filename) {
+		if (filename.rfind(".") == std::string::npos) return false;
+		return true;
+	}
+
 	//! returns substring from beginning of str up to before last occurrence of delim
 	inline std::string getSubstrBeforeLast(const std::string& str, const std::string& delim) {
 		std::string trimmed = str;
