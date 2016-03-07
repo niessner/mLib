@@ -110,7 +110,7 @@ namespace math
 
 	template<class T>
 	inline T abs(T x) {
-		//TODO complate check that it's not an unsigned variable type
+		//TODO compile check that it's not an unsigned variable type
 		if (x < 0) { return -x; }
 		return x;
 	}

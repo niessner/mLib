@@ -1,3 +1,5 @@
+Clean up Directory: add static functions: getFiles(<path>) getDirectories(<path>) etc.
+add function: getDirectoryFromPath() <- similar to getFilenameFromPath()
 naming convection -> use load/save (instaed of read/write)
 fix error checking; functions like MLIB_WARNING should always be there -- bounds check not
 
