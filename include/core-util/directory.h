@@ -86,6 +86,46 @@ public:
         return files;
     }
 
+	static std::vector<std::string> getDirectoriesRecursive(const std::string& path) {
+		Directory dir(path);
+
+		//create an actual copy
+		std::vector<std::string> res = dir.getDirectories();	
+		std::sort(res.begin(), res.end());
+
+		for (std::string& d : res) {
+			d = path + "/" + d + "/";
+			d = util::replace(d, "//", "/");
+		}
+
+		for (const std::string& d : dir.getDirectories()) {
+			std::vector<std::string> subFolders = getDirectoriesRecursive(path + "/" + d);
+			res.insert(res.end(), subFolders.begin(), subFolders.end());
+		}
+
+		return res;
+	}
+
+	static std::vector<std::string> getFilesRecursive(const std::string& path) {
+		Directory dir(path);
+
+		std::vector<std::string> res = dir.getFiles();
+		std::sort(res.begin(), res.end());
+
+		for (std::string& d : res) {
+			d = path + "/" + d;
+			d = util::replace(d, "//", "/");
+		}
+
+		for (const std::string& d : dir.getDirectories()) {
+			std::vector<std::string> subFolders = getFilesRecursive(path + "/" + d);
+			res.insert(res.end(), subFolders.begin(), subFolders.end());
+		}
+
+		return res;
+	}
+
+
 private:
     std::string m_path;
     std::vector<std::string> m_files;
