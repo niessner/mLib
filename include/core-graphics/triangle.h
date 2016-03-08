@@ -20,6 +20,20 @@ struct Triangle
         return ml::math::triangleNormal(vertices[0], vertices[1], vertices[2]);
     }
 
+	float getArea() const {
+		vec3f ab = vertices[1] - vertices[0];
+		vec3f ac = vertices[2] - vertices[0];
+		float len = ab.length() * ac.length();
+		float cosTheta = (ab | ac) / len;
+		if (fabs(cosTheta + 1) < 0.00001f || fabs(cosTheta - 1) < 0.00001f) {
+			return 0;
+		}
+		float theta = std::acos(cosTheta);
+		float area (0.5f * len * std::sin(theta));
+		MLIB_ASSERT(area > 0);
+		return area;
+	}
+
     vec3<T> vertices[3];
 
 };

@@ -870,6 +870,13 @@ public:
 		}
 	}
 
+	//! assumes z-y-x rotation composition (euler angles)
+	vec6<FloatType> decomposeToEulerAnglesTranslation() const {
+		vec3<FloatType> angles = getMatrix3x3().decomposeToEulerAngles();
+		vec3<FloatType> tr = getTranslation();
+		return vec6<FloatType>(angles.x, angles.y, angles.z, tr.x, tr.y, tr.z);
+	}
+
     std::string toString(const std::string &seperator) const {
         string result;
         for (int i = 0; i < 4; i++)

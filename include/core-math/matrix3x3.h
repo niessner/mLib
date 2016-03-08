@@ -522,6 +522,35 @@ public:
 		return EigenSolver<FloatType>::solve<EigenSolver<FloatType>::TYPE_DEFAULT>(*this);
 	}
 
+	//! assumes z-y-x rotation composition (euler angles)
+	vec3<FloatType> decomposeToEulerAngles() const {
+		FloatType eps = (FloatType)0.0001;
+
+		FloatType psi, theta, phi; // x,y,z axis angles
+		if (matrix2[2][0] > -1 + eps && matrix2[2][0] < 1 - eps) { // R(2, 0) != +/- 1
+			//if (abs(R(2, 0) - 1) > eps && abs(R(2, 0) + 1) > eps) { // R(2, 0) != +/- 1
+			theta = -asin(matrix2[2][0]); // \pi - theta
+			float costheta = cos(theta);
+			psi = atan2(matrix2[2][1] / costheta, matrix2[2][2] / costheta);
+			phi = atan2(matrix2[1][0] / costheta, matrix2[0][0] / costheta);
+		}
+		else {
+			phi = 0;
+			if (matrix2[2][0] <= -1 + eps) {
+				//if (abs(R(2, 0) + 1) < eps) { // R(2, 0) == - 1
+				//if (abs(R(2, 0) + 1) > eps) {
+				theta = ml::math::PIf / 2.0f;
+				psi = phi + atan2(matrix2[0][1], matrix2[0][2]);
+			}
+			else {
+				theta = -ml::math::PIf / 2.0f;
+				psi = -phi + atan2(-matrix2[0][1], -matrix2[0][2]);
+			}
+		}
+
+		return vec3<FloatType>(psi, theta, phi);
+	}
+
 
 protected:
 	//! calculate determinant of a 3x3 sub-matrix given by the indices of the rows and columns

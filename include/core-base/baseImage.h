@@ -789,6 +789,36 @@ namespace ml {
 			}
 		}
 
+		//! nearest neighbor sub-sampling
+		void subSample(unsigned int newWidth, unsigned int newHeight) {
+			if (m_width != newWidth || m_height != newHeight) {
+				BaseImage res(newWidth, newHeight);
+				res.setInvalidValue(m_InvalidValue);
+				float scaleWidth = (float)m_width / (float)newWidth;
+				float scaleHeight = (float)m_height / (float)newHeight;
+				for (unsigned int i = 0; i < newWidth; i++) {
+					for (unsigned int j = 0; j < newHeight; j++) {
+						const unsigned int x = math::round((float)i * scaleWidth);
+						const unsigned int y = math::round((float)j * scaleHeight);
+						res(i, j) = getPixel(x, y);
+					}
+				}
+				swap(*this, res);
+			}
+		}
+		void subSample(unsigned int newWidth, unsigned int newHeight, BaseImage& res) const {
+			res.allocate(newWidth, newHeight);
+			res.setInvalidValue(m_InvalidValue);
+			float scaleWidth = (float)m_width / (float)newWidth;
+			float scaleHeight = (float)m_height / (float)newHeight;
+			for (unsigned int i = 0; i < newWidth; i++) {
+				for (unsigned int j = 0; j < newHeight; j++) {
+					const unsigned int x = math::round((float)i * scaleWidth);
+					const unsigned int y = math::round((float)j * scaleHeight);
+					res(i, j) = getPixel(x, y);
+				}
+			}
+		}
 
 		//! smooth (laplacian smoothing step)
 		void smooth(unsigned int steps = 1) {
@@ -1279,6 +1309,18 @@ namespace ml {
 		ColorImageR8G8B8A8(unsigned int width, unsigned int height) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
+		}
+		ColorImageR8G8B8A8(const BaseImage<vec3uc>& other) : BaseImage(other.getWidth(), other.getHeight()) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_InvalidValue = vec4uc(0, 0, 0, 0);
+
+			for (unsigned int y = 0; y < m_height; y++) {
+				for (unsigned int x = 0; x < m_width; x++) {
+					const vec3uc& c = other(x, y);
+					vec4uc value(c.x, c.y, c.z, (unsigned char)255);
+					setPixel(x, y, value);
+				}
+			}
 		}
 
 		BaseImage<float> convertToGrayscale() const {
