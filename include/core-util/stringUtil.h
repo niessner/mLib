@@ -170,11 +170,6 @@ namespace util
 		return extension;
 	}
 
-	inline bool hasFileExtension(const std::string& filename) {
-		if (filename.rfind(".") == std::string::npos) return false;
-		return true;
-	}
-
 	//! returns substring from beginning of str up to before last occurrence of delim
 	inline std::string getSubstrBeforeLast(const std::string& str, const std::string& delim) {
 		std::string trimmed = str;
@@ -187,6 +182,13 @@ namespace util
 		if (pos == std::string::npos) return filename;
 		name.erase(name.begin(), name.begin() + pos + 1);
 		return name;
+	}
+
+	inline bool hasFileExtension(const std::string& filename) {
+		std::string filepart = getFilenameFromPath(filename);
+		size_t p = filepart.rfind(".");
+		if (p == 0 || p == std::string::npos) return false;
+		return true;
 	}
 
     //! splits string about the first instance of delim
