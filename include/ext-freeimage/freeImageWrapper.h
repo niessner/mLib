@@ -209,7 +209,8 @@ namespace ml {
 					}
 				}
 				else if ((numChannels == 4 && bytesPerChannel == 1) || (numChannels == 4 && bytesPerChannel == 4)) {
-					MLIB_ASSERT(filename.find(".jpg") == std::string::npos);	//jpgs with transparencies don't work...
+					if (filename.find(".jpg") != std::string::npos) throw MLIB_EXCEPTION("jpg does not support transparencies");
+					//MLIB_ASSERT(filename.find(".jpg") == std::string::npos);	//jpgs with transparencies don't work...
 					//color map; R8G8B8A8; R32G32B32A32
 					for (unsigned int y = 0; y < height; y++) {
 						BYTE* bitsRowStart = bits + (height - 1 - y)*pitch;
