@@ -1273,6 +1273,10 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
 		}
+        ColorImageR8G8B8A8(const vec2i &dimensions) : BaseImage(dimensions.x, dimensions.y) {
+            m_format = Image::FORMAT_ColorImageR8G8B8A8;
+            m_InvalidValue = vec4uc(0, 0, 0, 0);
+        }
 		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4uc *data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
