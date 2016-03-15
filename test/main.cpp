@@ -72,6 +72,17 @@ private:
 
 int main()
 {
+	{
+		ColorImageR8G8B8A8 image;
+		FreeImageWrapper::loadImage("ak.png", image);
+		FreeImageWrapper::saveImage("test_out.png", image);
+		//FreeImageWrapper::saveImage("test_out.jpg", image);
+		std::cout << "loading done!" << std::endl;
+		getchar();
+	}
+
+
+
 	MeshDataf md;
 	MeshIOf::loadFromFile("dining1d.ply", md);
 	MeshIOf::saveToFile("test.ply", md);
