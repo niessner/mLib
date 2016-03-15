@@ -252,9 +252,7 @@ public:
 		return (matrix2[0][0] + matrix2[1][1] + matrix2[2][2]);
 	}
 
-
-
-	//! return the product of the operand with matrix
+    //! return the product of the operand with matrix
 	Matrix3x3 operator* (const Matrix3x3& other) const {
 		Matrix3x3<FloatType> result;
 		//TODO unroll the loop
@@ -268,6 +266,7 @@ public:
 		}
 		return result;
 	}
+
 	//! multiply operand with matrix b
 	Matrix3x3& operator*= (const Matrix3x3& other) {
 		Matrix3x3<FloatType> prod = (*this)*other;
@@ -375,6 +374,18 @@ public:
 	vec3<FloatType> zrow() const {
 		return vec3<FloatType>(matrix[6],matrix[7],matrix[8]);
 	}
+
+    std::string toString(const std::string &seperator = ",") const {
+        string result;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+            {
+                result += to_string(matrix2[i][j]);
+                if (i != 3 || j != 3)
+                    result += seperator;
+            }
+        return result;
+    }
 
 	//! return the inverse matrix; but does not change the current matrix
 	Matrix3x3 getInverse() const {

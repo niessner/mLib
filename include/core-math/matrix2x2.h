@@ -161,9 +161,18 @@ public:
 		return (matrix2[0][0] + matrix2[1][1]);
 	}
 
-
-
-
+    std::string toString(const std::string &seperator = ",") const {
+        string result;
+        for (int i = 0; i < 2; i++)
+            for (int j = 0; j < 2; j++)
+            {
+                result += to_string(matrix2[i][j]);
+                if (i != 1 || j != 1)
+                    result += seperator;
+            }
+        return result;
+    }
+    
 	//! return the product of the operand with matrix
 	Matrix2x2 operator* (const Matrix2x2& other) const {
 		Matrix2x2<FloatType> result;

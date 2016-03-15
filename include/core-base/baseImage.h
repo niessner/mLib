@@ -6,7 +6,6 @@
 
 namespace ml {
 
-
 	class Image {
 	public:
 
@@ -581,6 +580,16 @@ namespace ml {
 			}
 			file.close();
 		}
+
+        BaseImage<T> getSubregion(const bbox2i &rect) const {
+            std::cout << rect.getMin() << " - " << rect.getMax() << std::endl;
+            BaseImage<T> result(rect.getExtentX(), rect.getExtentY());
+            for (auto &p : result)
+            {
+                p.value = (*this)(p.x + rect.getMinX(), p.y + rect.getMinY());
+            }
+            return result;
+        }
 
         //! counts the number of pixels
         unsigned int getNumPixels() const {

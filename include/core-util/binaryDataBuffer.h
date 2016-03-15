@@ -255,6 +255,16 @@ public:
 	void flushBufferStream() {
 		return;
 	}
+
+    const std::vector<BYTE>& getData() const {
+        return m_Data;
+    }
+
+    void setData(std::vector<BYTE> &&data) {
+        m_Data = data;
+        m_readOffset = 0;
+    }
+
 private:
 	std::vector<BYTE>	m_Data;
 	size_t				m_readOffset;

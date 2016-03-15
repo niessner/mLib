@@ -438,6 +438,18 @@ namespace util
         return result;
     }
 
+    template<class T>
+    size_t maxIndex(const std::vector<T> &collection)
+    {
+        size_t maxIndex = 0;
+        for (size_t i = 1; i < collection.size(); i++)
+        {
+            if (collection[i] > collection[maxIndex])
+                maxIndex = i;
+        }
+        return maxIndex;
+    }
+
     //Usage: float result = minValue(v, [](vec3f x) { return x.length(); });
     template<class mapFunction, class T>
     auto maxValue(const std::vector<T> &collection, mapFunction function) -> decltype(function(std::declval<T>()))

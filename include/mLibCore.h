@@ -152,7 +152,6 @@ namespace ml
 #include "core-util/eventMap.h"
 #include "core-util/sparseGrid3.h"
 #include "core-base/binaryGrid3.h"
-#include "core-base/baseImage.h"
 
 //
 // core-multithreading headers
@@ -181,9 +180,10 @@ namespace ml
 #include "core-graphics/orientedBoundingBox2.h"
 #include "core-graphics/orientedBoundingBox3.h"
 #include "core-graphics/dist.h"
-#include "core-util/colorGradient.h"
 #include "core-base/distanceField3.h"
 #include "core-util/uniformAccelerator.h"
+#include "core-base/baseImage.h"
+#include "core-util/colorGradient.h"
 
 //
 // core-mesh headers

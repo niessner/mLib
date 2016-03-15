@@ -148,6 +148,15 @@ public:
 	void flush() {
 		m_DataBuffer.flushBufferStream();
 	}
+
+    const std::vector<BYTE>& getData() const {
+        return m_DataBuffer.getData();
+    }
+
+    void setData(std::vector<BYTE> &&data) {
+        m_DataBuffer.setData(move(data));
+    }
+
 private:
 	BinaryDataBuffer		m_DataBuffer;
 	BinaryDataCompressor	m_DataCompressor;
