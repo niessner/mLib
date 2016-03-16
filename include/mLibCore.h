@@ -184,6 +184,7 @@ namespace ml
 #include "core-util/uniformAccelerator.h"
 #include "core-base/baseImage.h"
 #include "core-util/colorGradient.h"
+#include "core-util/textWriter.h"
 
 //
 // core-mesh headers

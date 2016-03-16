@@ -466,6 +466,17 @@ namespace ml {
 			}
 		}
 
+        //! Copies a source image into a region of the current image
+        void copyIntoImageChecked(const BaseImage &source, unsigned int startX, unsigned int startY) {
+            MLIB_ASSERT(source.getWidth() + startX <= getWidth() && source.getHeight() + startY <= getHeight());
+            for (unsigned int y = startY; y < startY + source.getHeight(); y++) {
+                for (unsigned int x = startX; x < startX + source.getWidth(); x++) {
+                    if (x < m_width && y < m_height)
+                        (*this)(x, y) = source(x - startX, y - startY);
+                }
+            }
+        }
+
 		//! Returns the width of the image
 		unsigned int getWidth() const {
 			return m_width;
@@ -581,15 +592,14 @@ namespace ml {
 			file.close();
 		}
 
-        BaseImage<T> getSubregion(const bbox2i &rect) const {
-            std::cout << rect.getMin() << " - " << rect.getMax() << std::endl;
+        /*BaseImage<T> getSubregion(const bbox2i &rect) const {
             BaseImage<T> result(rect.getExtentX(), rect.getExtentY());
             for (auto &p : result)
             {
                 p.value = (*this)(p.x + rect.getMinX(), p.y + rect.getMinY());
             }
             return result;
-        }
+        }*/
 
         //! counts the number of pixels
         unsigned int getNumPixels() const {
@@ -797,6 +807,22 @@ namespace ml {
 				}
 			}
 		}
+
+        //! bilinear re-sampling
+        void reSampleBilinear(unsigned int newWidth, unsigned int newHeight) {
+            if (m_width != newWidth || m_height != newHeight) {
+                BaseImage res(newWidth, newHeight);
+                res.setInvalidValue(m_InvalidValue);
+                for (unsigned int i = 0; i < newHeight; i++) {
+                    for (unsigned int j = 0; j < newWidth; j++) {
+                        const float x = (float)j / (newWidth - 1);
+                        const float y = (float)i / (newHeight - 1);
+                        res(j, i) = getInterpolated(x * m_width, y * m_height);
+                    }
+                }
+                swap(*this, res);
+            }
+        }
 
 		//! nearest neighbor sub-sampling
 		void subSample(unsigned int newWidth, unsigned int newHeight) {
@@ -1335,6 +1361,15 @@ namespace ml {
 				}
 			}
 		}
+
+        ColorImageR8G8B8A8 getSubregion(const bbox2i &rect) const {
+            ColorImageR8G8B8A8 result(rect.getExtentX(), rect.getExtentY());
+            for (auto &p : result)
+            {
+                p.value = (*this)(p.x + rect.getMinX(), p.y + rect.getMinY());
+            }
+            return result;
+        }
 
 		BaseImage<float> convertToGrayscale() const {
 			BaseImage<float> res(getWidth(), getHeight());
