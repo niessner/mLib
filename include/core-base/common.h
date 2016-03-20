@@ -106,33 +106,25 @@ private:
 
 
 #define FUNCTION_LINE_STRING (std::string(__FUNCTION__) + ":" + std::to_string(__LINE__))
-//#define FUNCTION_LINE_STRING (std::string(__FUNCTION__))
 
 #ifndef MLIB_EXCEPTION
 #define MLIB_EXCEPTION(s) ml::MLibException(std::string(__FUNCTION__).append(":").append(std::to_string(__LINE__)).append(": ").append(s).c_str())
 #endif
 
-//TODO clean that stuff up: we should have checks in debug but not in release... (i don't like 100 defines that change the behavior)
-//#ifdef MLIB_ERROR_CHECK
-
-
 #define MLIB_WARNING(s) ml::warningFunctionMLIB(std::string(FUNCTION_LINE_STRING) + std::string() + ": " + std::string(s))
+void warningFunctionMLIB(const std::string &description);
+
 #define MLIB_ERROR(s) ml::errorFunctionMLIB(std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
+void errorFunctionMLIB(const std::string &description);
+
+#ifdef DEBUG
 #define MLIB_ASSERT_STR(b,s) { if(!(b)) ml::assertFunctionMLIB(b, std::string(FUNCTION_LINE_STRING) + ": " + std::string(s)); }
 #define MLIB_ASSERT(b) { if(!(b)) ml::assertFunctionMLIB(b, FUNCTION_LINE_STRING); }
-
-void warningFunctionMLIB(const std::string &description);
-void errorFunctionMLIB(const std::string &description);
 void assertFunctionMLIB(bool statement, const std::string &description);
-
-//#else
-//
-//#define MLIB_WARNING(s)
-//#define MLIB_ERROR(s)
-//#define MLIB_ASSERT_STR(b,s)
-//#define MLIB_ASSERT(b)
-//
-//#endif
+#else
+#define MLIB_ASSERT_STR(b,s)
+#define MLIB_ASSERT(b)
+#endif
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=nullptr; } }

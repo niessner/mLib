@@ -390,10 +390,14 @@ namespace ml {
 			return (*this)(x, y);
 		}
 
-		//! returns the bi-linearly interpolated pixel; S must be float or double; ; x,y \in [0;width/height[
+		//! returns the bi-linearly interpolated pixel; S must be float or double; ; x,y \in [0;1]
 		template<class S>
-		T getInterpolated(S x, S y) const {
+		T getPixelInterpolated(S x, S y) const {
 			static_assert(std::is_same<float, S>::value || std::is_same<double, S>::value, "must be double or float");
+
+			x *= getWidth() - 1;
+			y *= getHeight() - 1;
+			//now x, y \in[0; width / height[
 
 			unsigned int xl = math::floor(x);	unsigned int xh = math::ceil(x);
 			unsigned int yl = math::floor(y);	unsigned int yh = math::ceil(y);
@@ -401,9 +405,9 @@ namespace ml {
 			S t = x - (S)xl;	//x interpolation parameter
 			S s = y - (S)yl;	//y interpolation parameter
 
-			T p0 = math::lerp(getPixel(xl, yl), getPixel(xh, yl), s);	// lerp between p_00 and p_10
-			T p1 = math::lerp(getPixel(xl, yh), getPixel(xh, yh), s);	// lerp between P_01 and p_11
-			return math::lerp(p0, p1, t);
+			T p0 = math::lerp(getPixel(xl, yl), getPixel(xh, yl), t);	// lerp between p_00 and p_10
+			T p1 = math::lerp(getPixel(xl, yh), getPixel(xh, yh), t);	// lerp between P_01 and p_11
+			return math::lerp(p0, p1, s);
 		}
 
 
@@ -457,25 +461,23 @@ namespace ml {
 		}
 
 		//! Copies a source image into a region of the current image
-		void copyIntoImage(const BaseImage &source, unsigned int startX, unsigned int startY) {
-			MLIB_ASSERT(source.getWidth() + startX <= getWidth() && source.getHeight() + startY <= getHeight());
-			for (unsigned int y = startY; y < startY + source.getHeight(); y++) {
-				for (unsigned int x = startX; x < startX + source.getWidth(); x++) {
-					(*this)(x, y) = source(x - startX, y - startY);
+		void copyIntoImage(const BaseImage& source, unsigned int startDestX, unsigned int startDestY, bool checkBoundMismatch = true) {
+
+			if (checkBoundMismatch) {
+				if (!(source.getWidth() + startDestX <= getWidth() && source.getHeight() + startDestY <= getHeight())) {
+					throw MLIB_EXCEPTION("source image too large to fit at location");
+				}
+			}
+
+			const unsigned int upperX = std::min(source.getWidth() + startDestX, getWidth());
+			const unsigned int upperY = std::max(source.getHeight() + startDestY, getHeight());
+
+			for (unsigned int y = startDestY; y < upperX; y++) {
+				for (unsigned int x = startDestX; x < upperY; x++) {
+					(*this)(x, y) = source(x - startDestX, y - startDestY);
 				}
 			}
 		}
-
-        //! Copies a source image into a region of the current image
-        void copyIntoImageChecked(const BaseImage &source, unsigned int startX, unsigned int startY) {
-            MLIB_ASSERT(source.getWidth() + startX <= getWidth() && source.getHeight() + startY <= getHeight());
-            for (unsigned int y = startY; y < startY + source.getHeight(); y++) {
-                for (unsigned int x = startX; x < startX + source.getWidth(); x++) {
-                    if (x < m_width && y < m_height)
-                        (*this)(x, y) = source(x - startX, y - startY);
-                }
-            }
-        }
 
 		//! Returns the width of the image
 		unsigned int getWidth() const {
@@ -780,80 +782,54 @@ namespace ml {
 			}
 		}
 
-		//! nearest neighbor re-sampling
-		void reSample(unsigned int newWidth, unsigned int newHeight) {
+		//! returns a new resized image with newWidth / newHeight and follows the interpolation option (Warning: does not handle invalid pixels)
+		BaseImage<T> getResized(unsigned int newWidth, unsigned int newHeight, bool bilinearInterpolate = false) const {
+
 			if (m_width != newWidth || m_height != newHeight) {
-				BaseImage res(newWidth, newHeight);
+				BaseImage<T> res(newWidth, newHeight);
 				res.setInvalidValue(m_InvalidValue);
-				for (unsigned int i = 0; i < newHeight; i++) {
-					for (unsigned int j = 0; j < newWidth; j++) {
-						const float x = (float)j / (newWidth - 1);
-						const float y = (float)i / (newHeight - 1);
-						res(j, i) = getPixel(x, y);
+
+				float factorX = 1.0f;
+				float factorY = 1.0f;
+
+				if (newWidth > 1) factorX = 1.0f / (newWidth - 1);
+				if (newHeight > 1) factorY = 1.0f / (newHeight - 1);
+
+				if (bilinearInterpolate) {
+					for (unsigned int i = 0; i < newHeight; i++) {
+						for (unsigned int j = 0; j < newWidth; j++) {
+							const float x = (float)j * factorX;
+							const float y = (float)i * factorY;
+							T tmp = getPixelInterpolated(x, y);
+							res(j, i) = tmp;
+						}
 					}
 				}
+				else {
+					for (unsigned int i = 0; i < newHeight; i++) {
+						for (unsigned int j = 0; j < newWidth; j++) {
+							const float x = (float)j * factorX;
+							const float y = (float)i * factorY;
+							res(j, i) = getPixel(x, y);
+						}
+					}
+				}
+				return res;
+			}
+			else {
+				return *this;
+			}			
+		}
+
+
+		//! resizes the image to a newWidth / newHeight and follows the interpolation option (Warning: does not handle invalid pixels)
+		void resize(unsigned int newWidth, unsigned int newHeight, bool bilinearInterpolate = false) {
+			if (m_width != newWidth || m_height != newHeight) {
+				BaseImage<T> res = getResized(newWidth, newHeight, bilinearInterpolate);
 				swap(*this, res);
 			}
 		}
 
-		void reSample(unsigned int newWidth, unsigned int newHeight, BaseImage& res) const {
-			res.allocate(newWidth, newHeight);
-			res.setInvalidValue(m_InvalidValue);
-			for (unsigned int i = 0; i < newHeight; i++) {
-				for (unsigned int j = 0; j < newWidth; j++) {
-					const float x = (float)j / (newWidth - 1);
-					const float y = (float)i / (newHeight - 1);
-					res(j, i) = getPixel(x, y);
-				}
-			}
-		}
-
-        //! bilinear re-sampling
-        void reSampleBilinear(unsigned int newWidth, unsigned int newHeight) {
-            if (m_width != newWidth || m_height != newHeight) {
-                BaseImage res(newWidth, newHeight);
-                res.setInvalidValue(m_InvalidValue);
-                for (unsigned int i = 0; i < newHeight; i++) {
-                    for (unsigned int j = 0; j < newWidth; j++) {
-                        const float x = (float)j / (newWidth - 1);
-                        const float y = (float)i / (newHeight - 1);
-                        res(j, i) = getInterpolated(x * m_width, y * m_height);
-                    }
-                }
-                swap(*this, res);
-            }
-        }
-
-		//! nearest neighbor sub-sampling
-		void subSample(unsigned int newWidth, unsigned int newHeight) {
-			if (m_width != newWidth || m_height != newHeight) {
-				BaseImage res(newWidth, newHeight);
-				res.setInvalidValue(m_InvalidValue);
-				float scaleWidth = (float)m_width / (float)newWidth;
-				float scaleHeight = (float)m_height / (float)newHeight;
-				for (unsigned int i = 0; i < newWidth; i++) {
-					for (unsigned int j = 0; j < newHeight; j++) {
-						const unsigned int x = math::round((float)i * scaleWidth);
-						const unsigned int y = math::round((float)j * scaleHeight);
-						res(i, j) = getPixel(x, y);
-					}
-				}
-				swap(*this, res);
-			}
-		}
-		void subSample(unsigned int newWidth, unsigned int newHeight, BaseImage& res) const {
-			res.allocate(newWidth, newHeight);
-			res.setInvalidValue(m_InvalidValue);
-			float scaleWidth = (float)m_width / (float)newWidth;
-			float scaleHeight = (float)m_height / (float)newHeight;
-			for (unsigned int i = 0; i < newWidth; i++) {
-				for (unsigned int j = 0; j < newHeight; j++) {
-					const unsigned int x = math::round((float)i * scaleWidth);
-					const unsigned int y = math::round((float)j * scaleHeight);
-					res(i, j) = getPixel(x, y);
-				}
-			}
-		}
 
 		//! smooth (laplacian smoothing step)
 		void smooth(unsigned int steps = 1) {

@@ -44,7 +44,7 @@ public:
             if (cValue < 0 || cValue >= ASCIICharacters.size())
                 continue;
             const ColorImageR8G8B8A8 &character = ASCIICharacters[cValue];
-            image.copyIntoImageChecked(character, coord.x + xOffset, coord.y);
+            image.copyIntoImage(character, coord.x + xOffset, coord.y, false);	//copies irrespective whether dimensions match up (claps accordingly)
             xOffset += character.getWidth();
         }
     }

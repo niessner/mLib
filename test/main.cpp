@@ -73,10 +73,34 @@ private:
 int main()
 {
 	{
-		ColorImageR8G8B8A8 image;
+		ColorImageR32G32B32 image(2, 1);
+		image(0, 0) = 0.0f;
+		image(1, 0) = 1.0f;
+		image.resize(11, 1, false);
+		for (unsigned int i = 0; i < image.getWidth(); i++) {
+			std::cout << image(i, 0u) << std::endl;
+		}
+		
+
+		auto img = image.getResized(10, 10);
+
+		int a = 5;
+
+	}
+	{
+
+		ColorImageR32G32B32A32 image;
 		FreeImageWrapper::loadImage("ak.png", image);
-		FreeImageWrapper::saveImage("test_out.png", image);
-		//FreeImageWrapper::saveImage("test_out.jpg", image);
+		image.resize(100, 100, false);
+		FreeImageWrapper::saveImage("test_out_nn.png", image);
+
+		FreeImageWrapper::loadImage("ak.png", image);
+		while (image.getWidth() > 100) {
+			image.resize(image.getWidth()-1, image.getHeight()-1, true);
+		}
+		
+		FreeImageWrapper::saveImage("test_out_bi.png", image);
+
 		std::cout << "loading done!" << std::endl;
 		getchar();
 	}
