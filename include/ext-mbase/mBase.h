@@ -95,9 +95,10 @@ template<class RecordType>
 class Reader
 {
 public:
-    Reader(const std::string &_directory, size_t _cacheSize)
+    Reader() {}
+    Reader(const std::string &_directory, size_t _cacheSize, int maxRecords)
     {
-        init(_directory, _cacheSize);
+        init(_directory, _cacheSize, maxRecords);
     }
 
     ~Reader()
@@ -108,30 +109,38 @@ public:
         }
     }
 
-    void init(const std::string &_directory, size_t _cacheSize)
+    void init(const std::string &_directory, size_t _cacheSize, int maxRecords)
     {
+        epoch = 0;
         directory = _directory;
         cacheSize = _cacheSize;
         terminateThread = false;
         activeRecordIndex = 0;
         util::deserializeFromFile(directory + "records.dat", records);
-        cout << "Loaded " << records.size() << " records" << endl;
+        std::cout << "Loaded " << records.size() << " records" << std::endl;
+
+        if (maxRecords >= 0 && records.size() >= maxRecords)
+        {
+            std::cout << "Truncated to " << maxRecords << " records" << std::endl;
+            records.resize(maxRecords);
+        }
 
         startDecompressBackgroundThread();
     }
 
     void readNextRecord(RecordType &result)
     {
+        //std::cout << "RNR Epoch " << epoch << " cache: " << cache.size() << std::endl;
         while (1) {
             if (cache.size() > 0) {
                 cacheMutex.lock();
-                result = move(cache.front());
+                result = std::move(cache.front());
                 cache.pop_front();
                 cacheMutex.unlock();
                 return;
             }
             else {
-                this_thread::sleep_for(std::chrono::microseconds(1));
+                std::this_thread::sleep_for(std::chrono::microseconds(1));
             }
         }
     }
@@ -146,7 +155,7 @@ private:
         FILE* file = fopen(filename.c_str(), "rb");
         if (file == nullptr || ferror(file))
         {
-            cout << "Failed to open file: " << filename << endl;
+            std::cout << "Failed to open file: " << filename << std::endl;
             return;
         }
 
@@ -167,11 +176,12 @@ private:
 
     void readNextRecordInternal(RecordType &result)
     {
+        //std::cout << "RNRI activeRecordIndex " << activeRecordIndex << std::endl;
         readRecordInternal(activeRecordIndex, result);
         activeRecordIndex++;
         if (activeRecordIndex == records.size())
         {
-            cout << "All records read; restarting from beginning" << endl;
+            if(epoch <= 100) std::cout << "Epoch " << epoch++ << " finished" << std::endl;
             activeRecordIndex = 0;
         }
     }
@@ -193,12 +203,12 @@ private:
                 readNextRecordInternal(newRecord);
 
                 cacheMutex.lock();
-                cache.push_back(move(newRecord));
-                cout << "New cache size: " << cache.size() << endl;
+                cache.push_back(std::move(newRecord));
+                //std::cout << "New cache size: " << cache.size() << std::endl;
                 cacheMutex.unlock();
             }
             else {
-                this_thread::sleep_for(std::chrono::microseconds(1));
+                std::this_thread::sleep_for(std::chrono::microseconds(1));
             }
         }
     }
@@ -213,6 +223,7 @@ private:
     std::mutex cacheMutex;
     bool terminateThread;
     std::vector<BYTE> cacheStorage;
+    int epoch;
 };
 
 }

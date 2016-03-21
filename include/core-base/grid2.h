@@ -401,6 +401,7 @@ namespace ml
 	typedef Grid2<float> Grid2f;
     typedef Grid2<int> Grid2i;
 	typedef Grid2<double> Grid2d;
+    typedef Grid2<unsigned char> Grid2uc;
 
 }
 

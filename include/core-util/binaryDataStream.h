@@ -381,6 +381,23 @@ namespace util
         out.closeStream();
     }
 
+    template<class T>
+    void serializeToFilePrimitive(const std::string &filename, const T &o)
+    {
+        BinaryDataStreamFile out(filename, true);
+        out.writePrimitive(o);
+        out.closeStream();
+    }
+
+    template<class T, class U>
+    void serializeToFilePrimitive(const std::string &filename, const T &o0, const U &o1)
+    {
+        BinaryDataStreamFile out(filename, true);
+        out.writePrimitive(o0);
+        out.writePrimitive(o1);
+        out.closeStream();
+    }
+
     template<class T, class U>
     void serializeToFile(const std::string &filename, const T &o0, const U &o1)
     {
@@ -394,6 +411,23 @@ namespace util
     {
         BinaryDataStreamFile in(filename, false);
         in >> o;
+        in.closeStream();
+    }
+
+    template<class T>
+    void deserializeFromFilePrimitive(const std::string &filename, T &o)
+    {
+        BinaryDataStreamFile in(filename, false);
+        in.readPrimitive(o);
+        in.closeStream();
+    }
+
+    template<class T, class U>
+    void deserializeFromFilePrimitive(const std::string &filename, T &o0, U &o1)
+    {
+        BinaryDataStreamFile in(filename, false);
+        in.readPrimitive(o0);
+        in.readPrimitive(o1);
         in.closeStream();
     }
 
