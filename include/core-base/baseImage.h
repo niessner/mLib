@@ -469,11 +469,11 @@ namespace ml {
 				}
 			}
 
-			const unsigned int upperX = std::min(source.getWidth() + startDestX, getWidth());
-			const unsigned int upperY = std::max(source.getHeight() + startDestY, getHeight());
+			const unsigned int upperX = math::clamp(source.getWidth() + startDestX, 0U, getWidth());
+            const unsigned int upperY = math::clamp(source.getHeight() + startDestY, 0U, getHeight());
 
-			for (unsigned int y = startDestY; y < upperX; y++) {
-				for (unsigned int x = startDestX; x < upperY; x++) {
+			for (unsigned int y = startDestY; y < upperY; y++) {
+				for (unsigned int x = startDestX; x < upperX; x++) {
 					(*this)(x, y) = source(x - startDestX, y - startDestY);
 				}
 			}

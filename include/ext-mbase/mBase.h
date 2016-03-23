@@ -159,7 +159,7 @@ private:
             return;
         }
 
-        fseek(file, offset.byteOffset, SEEK_SET);
+        fseek(file, (long)offset.byteOffset, SEEK_SET);
 
         if (cacheStorage.size() < offset.recordSize)
             cacheStorage.resize(offset.recordSize);
