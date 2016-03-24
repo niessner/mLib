@@ -73,7 +73,7 @@ private:
 int main()
 {
 	{
-		ColorImageR32G32B32 image(2, 1);
+		ColorImageR8G8B8 image(2, 1);
 		image(0, 0) = 0.0f;
 		image(1, 0) = 1.0f;
 		image.resize(11, 1, false);

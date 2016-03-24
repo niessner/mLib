@@ -44,7 +44,7 @@ namespace math
 
 	template<class T, class U>
 	inline T lerp(T left, T right, U s) {
-		return static_cast<T>(left + s * (right - left));
+		return static_cast<T>(left + (right - left) * s);
 	}
 
 	inline int mod(int x, size_t M) {
