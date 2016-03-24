@@ -61,6 +61,17 @@ public:
 		return m_points.size() == 0;
 	}
 
+	void applyTransform(const Matrix4x4<FloatType>& t) {
+		for (size_t i = 0; i < m_points.size(); i++) {
+			m_points[i] = t*m_points[i];
+		}
+		Matrix4x4<FloatType> invTrans = t.getInverse().getTranspose();
+		for (size_t i = 0; i < m_normals.size(); i++) {
+			m_normals[i] = invTrans.transformNormalAffine(m_normals[i]);
+			m_normals[i].normalizeIfNonzero();
+		}
+	}
+
     //! Computes the bounding box of the mesh (not cached!)
     BoundingBox3<FloatType> computeBoundingBox() const {
         BoundingBox3<FloatType> bb;
