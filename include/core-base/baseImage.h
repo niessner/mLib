@@ -405,6 +405,7 @@ namespace ml {
 			S t = x - (S)xl;	//x interpolation parameter
 			S s = y - (S)yl;	//y interpolation parameter
 
+			 
 			T p0 = math::lerp(getPixel(xl, yl), getPixel(xh, yl), t);	// lerp between p_00 and p_10
 			T p1 = math::lerp(getPixel(xl, yh), getPixel(xh, yh), t);	// lerp between P_01 and p_11
 			return math::lerp(p0, p1, s);

@@ -85,7 +85,7 @@ int main()
 		auto img = image.getResized(10, 10);
 
 		int a = 5;
-
+		vec3f bla;
 	}
 	{
 
