@@ -270,7 +270,7 @@ namespace ml {
         {
             if (v.size() == 0)
             {
-                cout << "Choosing random element from empty vector" << endl;
+                std::cout << "Choosing random element from empty vector" << std::endl;
                 return v[0];
             }
             long index = randomInteger((long)0, (long)v.size() - 1);

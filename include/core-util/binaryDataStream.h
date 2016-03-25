@@ -439,7 +439,10 @@ namespace util
         in.closeStream();
     }
 
-    template<class T>
+	//
+	// TODO: these cannot be forward declared without zlib, and should be moved into the mlib-zlib header.
+	//
+    /*template<class T>
     void serializeToFileCompressed(const std::string &filename, const T &o)
     {
         BinaryDataStreamZLibFile out(filename, true);
@@ -469,7 +472,7 @@ namespace util
         BinaryDataStreamZLibFile in(filename, false);
         in >> o0 >> o1;
         in.closeStream();
-    }
+    }*/
 }
 
 }  // namespace ml

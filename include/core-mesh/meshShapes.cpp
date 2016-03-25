@@ -28,7 +28,7 @@ namespace ml {
 	{
 		std::vector<vec3<FloatType>> vertices = { p0, p1, p2, p3 };
 		std::vector<UINT> indices = { 0, 1, 2, 0, 2, 3 };
-		std::vector<vec3<FloatType>> normals = { vec3f::normalize((p1 - p0) ^ (p3 - p0)),
+		std::vector<vec3<FloatType>> normals = { ((p1 - p0) ^ (p3 - p0)).getNormalized(),
 			vec3f::normalize((p0 - p1) ^ (p2 - p1)),
 			vec3f::normalize((p1 - p2) ^ (p3 - p2)),
 			vec3f::normalize((p0 - p3) ^ (p2 - p3)) };

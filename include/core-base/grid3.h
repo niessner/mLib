@@ -101,6 +101,7 @@ namespace ml
                 return i.grid != grid;
             }
 
+            template<class U>
             friend void swap(iterator &a, iterator &b);
 
             size_t x, y, z;
@@ -163,6 +164,7 @@ namespace ml
                 return i.grid != grid;
             }
 
+            template<class U>
             friend void swap(const constIterator &a, const constIterator &b);
 
             size_t x, y, z;

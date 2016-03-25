@@ -878,7 +878,7 @@ public:
 	}
 
     std::string toString(const std::string &seperator) const {
-        string result;
+        std::string result;
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++)
             {

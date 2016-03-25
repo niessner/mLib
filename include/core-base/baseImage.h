@@ -205,7 +205,7 @@ namespace ml {
         }
 
         BaseImage(size_t width, size_t height, T clearValue) {
-            create((UINT)dimensions.x, (UINT)dimensions.y);
+            create((UINT)width, (UINT)height);
             setPixels(clearValue);
         }
         
@@ -1341,7 +1341,7 @@ namespace ml {
 
         ColorImageR8G8B8A8 getSubregion(const bbox2i &rect) const {
             ColorImageR8G8B8A8 result(rect.getExtentX(), rect.getExtentY());
-            for (auto &p : result)
+            for (const auto &p : result)
             {
                 p.value = (*this)(p.x + rect.getMinX(), p.y + rect.getMinY());
             }

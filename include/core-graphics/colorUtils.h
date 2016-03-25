@@ -106,13 +106,13 @@ class ColorUtils {
   {
       ColorImageR32G32B32 image32(input.getWidth(), input.getHeight());
 
-      for (auto &p : image32)
+      for (const auto &p : image32)
           p.value = toColor32(input(p.x, p.y));
       image32.resize(newWidth, newHeight, true);
 
       ColorImageR8G8B8A8 result(newWidth, newHeight);
 
-      for (auto &p : result)
+      for (const auto &p : result)
           p.value = toColor8(image32(p.x, p.y));
 
       return result;
