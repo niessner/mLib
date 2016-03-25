@@ -164,7 +164,6 @@ namespace ml
 // core-graphics headers
 //
 #include "core-graphics/RGBColor.h"
-#include "core-graphics/colorUtils.h"
 #include "core-graphics/ray.h"
 #include "core-graphics/camera.h"
 #include "core-graphics/cameraTrackball.h"
@@ -185,6 +184,7 @@ namespace ml
 #include "core-base/baseImage.h"
 #include "core-util/colorGradient.h"
 #include "core-util/textWriter.h"
+#include "core-graphics/colorUtils.h"
 
 //
 // core-mesh headers

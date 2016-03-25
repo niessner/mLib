@@ -72,7 +72,10 @@ public:
     {
         std::string value;
         if (!readParameter(paramName, value))
+        {
+            std::cout << "parameter not found: " << paramName << std::endl;
             value = "<parameter not found>";
+        }
         return value;
     }
 

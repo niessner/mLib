@@ -88,6 +88,36 @@ class ColorUtils {
     }
     return out;
   }
+
+  static inline vec4uc toColor8(const vec3f &v)
+  {
+      return vec4uc(util::boundToByte(v.x * 255.0f),
+          util::boundToByte(v.y * 255.0f),
+          util::boundToByte(v.z * 255.0f), 255);
+  }
+
+  static inline vec3f toColor32(const vec4uc &v)
+  {
+      return vec3f(v.getVec3()) / 255.0f;
+  }
+
+  // TODO: this is only necessary because our .resize() function on images doesn't work for ColorImageR8G8B8A8
+  static inline ColorImageR8G8B8A8 resizeImage8(const ColorImageR8G8B8A8 &input, int newWidth, int newHeight)
+  {
+      ColorImageR32G32B32 image32(input.getWidth(), input.getHeight());
+
+      for (auto &p : image32)
+          p.value = toColor32(input(p.x, p.y));
+      image32.resize(newWidth, newHeight, true);
+
+      ColorImageR8G8B8A8 result(newWidth, newHeight);
+
+      for (auto &p : result)
+          p.value = toColor8(image32(p.x, p.y));
+
+      return result;
+  }
+
 };
 
 }  // namespace ml
