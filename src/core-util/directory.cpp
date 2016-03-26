@@ -156,7 +156,7 @@ void Directory::load(const std::string &path)
 
 	while (entity != nullptr) {
 		auto entity = readdir(dir);
-        std::cout << "Reading entity " << entity << std::endl;
+        //std::cout << "Reading entity " << entity << std::endl;
         if (entity == nullptr) break;
 		if (entity->d_type == DT_DIR) {
 			// don't process  '..' & '.' directories
@@ -164,7 +164,7 @@ void Directory::load(const std::string &path)
 				m_directories.push_back(std::string(entity->d_name));
 		}
 		else if (entity->d_type == DT_REG) {
-            std::cout << "Reading file " << entity->d_name << std::endl;
+            //std::cout << "Reading file " << entity->d_name << std::endl;
 			m_files.push_back(std::string(entity->d_name));
 		}
 	}
