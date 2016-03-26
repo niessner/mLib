@@ -683,7 +683,7 @@ struct IndexedIterator
         size_t index;
         U &value;
     };
-    IndexedIterator(size_t _index, T &_iter) :
+    IndexedIterator(size_t _index, const T &_iter) :
         index(_index), iter(_iter) {}
 
     void operator++(int postfix)
@@ -720,7 +720,7 @@ struct IndexedIteratorConst
         size_t index;
         const U &value;
     };
-    IndexedIteratorConst(size_t _index, T &_iter) :
+    IndexedIteratorConst(size_t _index, const T &_iter) :
         index(_index), iter(_iter) {}
 
     void operator++(int postfix)
