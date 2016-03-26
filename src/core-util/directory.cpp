@@ -140,23 +140,31 @@ void Directory::load(const std::string &path)
 #ifdef LINUX
 void Directory::load(const std::string &path)
 {
+    //std::cout << "Loading all files in " << path << std::endl;
 	m_path = path + "\\";
 	m_files.clear();
 	m_directories.clear();
 
 	auto dir = opendir(path.c_str());
-	if (dir == nullptr) return; // could not open directory
+    if (dir == nullptr)
+    {
+        std::cout << "Could not open " << path << std::endl;
+        return; // could not open directory
+    }
 
 	auto entity = readdir(dir);
 
 	while (entity != nullptr) {
 		auto entity = readdir(dir);
+        std::cout << "Reading entity " << entity << std::endl;
+        if (entity == nullptr) break;
 		if (entity->d_type == DT_DIR) {
 			// don't process  '..' & '.' directories
 			if(entity->d_name[0] != '.')
 				m_directories.push_back(std::string(entity->d_name));
 		}
 		else if (entity->d_type == DT_REG) {
+            std::cout << "Reading file " << entity->d_name << std::endl;
 			m_files.push_back(std::string(entity->d_name));
 		}
 	}
