@@ -117,7 +117,7 @@ void warningFunctionMLIB(const std::string &description);
 #define MLIB_ERROR(s) ml::errorFunctionMLIB(std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
 void errorFunctionMLIB(const std::string &description);
 
-#ifdef DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
 #define MLIB_ASSERT_STR(b,s) { if(!(b)) ml::assertFunctionMLIB(b, std::string(FUNCTION_LINE_STRING) + ": " + std::string(s)); }
 #define MLIB_ASSERT(b) { if(!(b)) ml::assertFunctionMLIB(b, FUNCTION_LINE_STRING); }
 void assertFunctionMLIB(bool statement, const std::string &description);
