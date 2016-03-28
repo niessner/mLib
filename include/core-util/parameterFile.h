@@ -33,11 +33,11 @@ public:
 			getline(file, line);
 			removeComments(line);
 			removeSpecialCharacters(line);
-			if (line.length() == 0) continue;
+			if (line.length() <= 1) continue;
 
 			size_t separator = line.find(m_Separator);	//split the string at separator
 			if (separator == std::string::npos)	{
-				MLIB_WARNING("No seperator found in line");
+                MLIB_WARNING("No seperator found in line: " + line); //std::string(1, m_Separator) + ":" + 
 				continue;
 			}
 			std::string attr_name = line.substr(0, separator);
@@ -149,8 +149,8 @@ public:
 private:
 	//! removes spaces and tabs at the begin and end of the string
 	void removeSpecialCharacters(std::string &str) const {
-		char characters[] = {' ', '\t', '\"', ';'};
-		const unsigned int length = 4;
+		char characters[] = {' ', '\t', '\"', ';', '\r', '\n'};
+		const unsigned int length = 6;
 		bool found = true;
 		while(str.length() && found) {
 			found = false;

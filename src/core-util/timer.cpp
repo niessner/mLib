@@ -16,7 +16,7 @@ namespace ml {
 #ifdef LINUX
 		struct timeval timevalue;
 		gettimeofday(&timevalue, nullptr);
-		return (UINT64)timevalue.tv_sec * 1000000ULL + (UINT64)timevalue.tv_usec;
+		return (double)((UINT64)timevalue.tv_sec) + (double)((UINT64)timevalue.tv_usec) / 1000000.0;
 #endif //LINUX
 	}
 } // namespace ml
