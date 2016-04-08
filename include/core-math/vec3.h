@@ -210,6 +210,9 @@ public:
 		return array[i];
 	}
 
+	static inline vec3<T> normalize(const vec3<T> &v) {
+		return v.getNormalized();
+	}
 	inline void normalize() {
 		T val = (T)1.0 / length();
 		array[0] *= val;

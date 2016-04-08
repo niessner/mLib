@@ -174,7 +174,7 @@ public:
 		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]));
 	}
 
-    static inline void normalize(const vec2& v) {
+    static inline vec2<T> normalize(const vec2<T>& v) {
         return v.getNormalized();
     }
 

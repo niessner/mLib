@@ -14,14 +14,14 @@ namespace ml {
 			generateFromBinaryGrid(grid, trunc);
 		}
 
-		FloatType getTruncation() const 
+		FloatType getTruncation() const
 		{
 			return m_truncation;
 		}
 
 		BinaryGrid3 computeBinaryGrid(float distThres = 0.0001f) const {
 
-		        BinaryGrid3 grid(this->getDimX(), this->getDimY(), this->getDimZ());
+			BinaryGrid3 grid(this->getDimX(), this->getDimY(), this->getDimZ());
 			for (size_t z = 0; z < this->getDimZ(); z++) {
 				for (size_t y = 0; y < this->getDimY(); y++) {
 					for (size_t x = 0; x < this->getDimX(); x++) {
@@ -94,6 +94,39 @@ namespace ml {
 		size_t getNumZeroVoxels() const {
 			return m_numZeroVoxels;
 		}
+
+		void normalize(float factor)  {
+			BinaryGrid3 res(getDimX(), getDimY(), getDimZ());
+			for (size_t k = 0; k < getDimZ(); k++) {
+				for (size_t j = 0; j < getDimY(); j++) {
+					for (size_t i = 0; i < getDimX(); i++) {
+
+						if ((*this)(i, j, k) != 0.0f) {
+							(*this)(i, j, k) /= factor;
+						}
+
+					}
+				}
+			}
+		}
+
+		void improveDF(unsigned int numIter) {
+			for (unsigned int iter = 0; iter < numIter; iter++) {
+				bool hasUpdate = false;
+				for (size_t k = 0; k < getDimZ(); k++) {
+					for (size_t j = 0; j < getDimY(); j++) {
+						for (size_t i = 0; i < getDimX(); i++) {
+							if (checkDistToNeighborAndUpdate(i, j, k)) {
+								hasUpdate = true;
+							}
+						}
+					}
+				}
+
+				if (!hasUpdate) break;
+			}
+		}
+
 	private:
 
 		void generateFromBinaryGridSimple(const BinaryGrid3& grid, FloatType trunc) {

@@ -174,7 +174,7 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
             return sqrt(lengthSq());
         }
 
-        static inline void normalize(const vec4 &v) {
+        static inline vec4<T> normalize(const vec4<T> &v) {
             return v.getNormalized();
         }
 
