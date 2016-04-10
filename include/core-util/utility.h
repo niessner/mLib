@@ -247,6 +247,9 @@ namespace util
 		return BYTE(value);
 	}
 
+	//i/o
+	std::istream& safeGetline(std::istream& is, std::string& t);
+
 	//
 	// file utility
 	//

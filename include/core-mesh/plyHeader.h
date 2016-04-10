@@ -36,10 +36,10 @@ namespace ml {
 		void read(std::ifstream& file) {
 			std::string activeElement = "";
 			std::string line;
-			std::getline(file, line);
+			util::safeGetline(file, line);
 			while (line.find("end_header") == std::string::npos) {
 				PlyHeaderLine(line, *this, activeElement);
-				std::getline(file, line);
+				util::safeGetline(file, line);
 			}
 		}
 

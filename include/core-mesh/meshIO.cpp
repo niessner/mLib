@@ -113,7 +113,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	{
 		for (unsigned int i = 0; i < header.m_numVertices; i++) {
 			std::string line;
-			std::getline(file, line);
+			util::safeGetline(file, line);
 			std::stringstream ss(line);
 			ss >> mesh.m_Vertices[i].x >> mesh.m_Vertices[i].y >> mesh.m_Vertices[i].z;
 			if (header.m_bHasColors) {
@@ -124,7 +124,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 
 		for (unsigned int i = 0; i < header.m_numFaces; i++) {
 			std::string line;
-			std::getline(file, line);
+			util::safeGetline(file, line);
 			std::stringstream ss(line);
 			unsigned int num_vs;
 			ss >> num_vs;
