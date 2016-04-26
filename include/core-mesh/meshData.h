@@ -727,6 +727,112 @@ public:
 			n.normalize();
 		}
 	}
+
+	bool isTriMesh() const {
+		for (auto &f : m_FaceIndicesVertices) {
+			if (f.size() != 3) return false;
+		}
+		return true;
+	}
+
+	//! converts all non-tri faces into triangles (very simple triangulation)
+	void makeTriMesh() {
+		if (isTriMesh()) return;	//nothing to do...
+
+		size_t numFaces = m_FaceIndicesVertices.size();
+		if (!(m_FaceIndicesNormals.size() == 0 || m_FaceIndicesNormals.size() == numFaces) ||
+			!(m_FaceIndicesTextureCoords.size() == 0 || m_FaceIndicesTextureCoords.size() == numFaces) ||
+			!(m_FaceIndicesColors.size() == 0 || m_FaceIndicesColors.size() == numFaces)) {
+			throw MLIB_EXCEPTION("");
+		}
+
+		Indices faceIndicesVertices_new;		faceIndicesVertices_new.reserve(numFaces);	//always need to have faces
+		Indices faceIndicesNormals_new;			if (m_FaceIndicesNormals.size())		faceIndicesNormals_new.reserve(numFaces);
+		Indices faceIndicesTextureCoords_new;	if (m_FaceIndicesTextureCoords.size())	faceIndicesTextureCoords_new.reserve(numFaces);
+		Indices faceIndicesColors_new;			if (m_FaceIndicesColors.size())			faceIndicesColors_new.reserve(numFaces);
+		
+			
+		for (size_t i = 0; i < numFaces; i++) {
+			auto f = m_FaceIndicesVertices[i];
+			if (f.size() < 3) throw MLIB_EXCEPTION("non face found");
+			if (f.size() != 3) {
+				unsigned int v0 = f[0];
+				for (unsigned int j = 0; j < f.size()-2; j++) {
+					std::vector<unsigned int> newF(3);
+					newF[0] = v0;
+					newF[1] = f[j + 1];
+					newF[2] = f[j + 2];
+					faceIndicesVertices_new.push_back(newF);
+				} 				
+
+				if (m_FaceIndicesNormals.size()) {
+					if (m_FaceIndicesNormals[i].size() != f.size()) throw MLIB_EXCEPTION("mismatch in face valence");
+					auto f = m_FaceIndicesNormals[i];
+					unsigned int v0 = f[0];
+					for (unsigned int j = 0; j < f.size() - 2; j++) {
+						std::vector<unsigned int> newF(3);
+						newF[0] = v0;
+						newF[1] = f[j + 1];
+						newF[2] = f[j + 2];
+						faceIndicesNormals_new.push_back(newF);
+					}					
+				}
+
+				if (m_FaceIndicesTextureCoords.size()) {
+					if (m_FaceIndicesTextureCoords[i].size() != f.size()) throw MLIB_EXCEPTION("mismatch in face valence");
+					auto f = m_FaceIndicesTextureCoords[i];
+					unsigned int v0 = f[0];
+					for (unsigned int j = 0; j < f.size() - 2; j++) {
+						std::vector<unsigned int> newF(3);
+						newF[0] = v0;
+						newF[1] = f[j + 1];
+						newF[2] = f[j + 2];
+						faceIndicesTextureCoords_new.push_back(newF);
+					}
+				}
+
+				if (m_FaceIndicesColors.size()) {
+					if (m_FaceIndicesColors[i].size() != f.size()) throw MLIB_EXCEPTION("mismatch in face valence");
+					auto f = m_FaceIndicesColors[i];
+					unsigned int v0 = f[0];
+					for (unsigned int j = 0; j < f.size() - 2; j++) {
+						std::vector<unsigned int> newF(3);
+						newF[0] = v0;
+						newF[1] = f[j + 1];
+						newF[2] = f[j + 2];
+						m_FaceIndicesColors.push_back(newF);
+					}
+				}
+			}
+			else {
+				faceIndicesVertices_new.push_back(f);
+				if (m_FaceIndicesNormals.size()) {
+					faceIndicesNormals_new.push_back(m_FaceIndicesNormals[i]);
+				}
+				if (m_FaceIndicesTextureCoords.size()) {
+					faceIndicesTextureCoords_new.push_back(m_FaceIndicesTextureCoords[i]);
+				}
+				if (m_FaceIndicesColors.size()) {
+					faceIndicesNormals_new.push_back(m_FaceIndicesColors[i]);
+				}
+			}
+		}
+
+		if (m_FaceIndicesVertices.size() != faceIndicesVertices_new.size()) {
+			m_FaceIndicesVertices = Indices(faceIndicesVertices_new);
+		}
+		if (m_FaceIndicesNormals.size() != faceIndicesNormals_new.size()) {
+			m_FaceIndicesNormals = Indices(faceIndicesNormals_new);
+		}
+		if (m_FaceIndicesTextureCoords.size() != faceIndicesTextureCoords_new.size()) {
+			m_FaceIndicesTextureCoords = Indices(faceIndicesTextureCoords_new);
+		}
+		if (m_FaceIndicesColors.size() != faceIndicesColors_new.size()) {
+			m_FaceIndicesColors = Indices(faceIndicesColors_new);
+		}
+	}
+
+
 	//! inserts a midpoint into every faces; and triangulates the result
 	void subdivideFacesMidpoint();
 

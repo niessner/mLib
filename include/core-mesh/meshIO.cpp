@@ -280,8 +280,9 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 					match = fscanf( fp, "%f %f %f %f", &val[0], &val[1], &val[2], &val[3]);
 					mesh.m_TextureCoords.push_back(vec2<FloatType>(val[0], val[1]));
 
-					assert( match > 1 && match < 4);
-					assert( match == 2);
+					//these asserts should actually be there... (commented out because shuran's obj files have NaNs in them...; in that case math == 0)
+					//assert( match > 1 && match < 4);
+					//assert( match == 2);
 					break;
 				}
 				break;

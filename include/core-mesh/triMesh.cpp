@@ -7,7 +7,7 @@ namespace ml {
 	template<class FloatType>
 	TriMesh<FloatType>::TriMesh(const MeshData<FloatType>& meshData)
 	{
-
+		
 		m_vertices.resize(meshData.m_Vertices.size());
 
 		m_bHasNormals = meshData.m_Normals.size() > 0;
@@ -53,16 +53,16 @@ namespace ml {
 						if (vertexSplit) {
 							//MLIB_WARNING("vertex split untested");
 							Vertex v = vert;  // copy of vert for splitting out
-							if (bFaceHasNormals)		v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (bFaceHasNormals)	v.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (bFaceHasTexCoords)	v.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
 							if (bFaceHasColors)		v.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							m_vertices.push_back(v);
 							coords[j] = (unsigned int)m_vertices.size() - 1;
 						}
 						else {
-							if (bFaceHasNormals)		vert.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
+							if (bFaceHasNormals)	vert.normal = meshData.m_Normals[meshData.getFaceIndicesNormals()[i][j]];
 							if (bFaceHasTexCoords)	vert.texCoord = meshData.m_TextureCoords[meshData.getFaceIndicesTexCoords()[i][j]];
-							if (bFaceHasColors)		  vert.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
+							if (bFaceHasColors)		vert.color = meshData.m_Colors[meshData.getFaceIndicesColors()[i][j]];
 							coords[j] = meshData.getFaceIndicesVertices()[i][j];
 						}
 					}
@@ -87,7 +87,7 @@ namespace ml {
 				}
 			}
 			else {
-				MLIB_WARNING("non triangle face found - ignoring it");
+				MLIB_WARNING("non triangle face found - ignoring it (see meshData for a converter)");
 			}
 		}
 	}
