@@ -187,22 +187,23 @@ namespace ml
 	{
 		captureDepthBuffer(result);
 
-		auto inv = perspectiveTransform.getInverse();
+		const mat4f inv = perspectiveTransform.getInverse();
 
-		result.setInvalidValue(std::numeric_limits<float>::infinity());
+		//result.setInvalidValue(std::numeric_limits<float>::infinity());	//the default is -INF
 
-		for (UINT y = 0; y < result.getHeight(); y++)
-		{
-			for (UINT x = 0; x < result.getWidth(); x++)
-			{
+		for (unsigned int y = 0; y < result.getHeight(); y++)	{
+			for (unsigned int x = 0; x < result.getWidth(); x++)	{
 				float &v = result(x, y);
 				if (v >= 1.0f)
 					v = result.getInvalidValue();
 				else
 				{
-					float dx = math::linearMap(0.0f, result.getWidth() - 1.0f, -1.0f, 1.0f, (float)x);
-					float dy = math::linearMap(0.0f, result.getHeight() - 1.0f, -1.0f, 1.0f, (float)y);
-					v = (inv * vec3f(dx, dy, v)).length();
+					//float dx = math::linearMap(0.0f, result.getWidth() - 1.0f, -1.0f, 1.0f, (float)x);
+					//float dy = math::linearMap(0.0f, result.getHeight() - 1.0f, -1.0f, 1.0f, (float)y);
+					//v = (inv * vec3f(dx, dy, v)).z;
+					
+					vec2f p = D3D11GraphicsDevice::pixelToNDC(vec2i(x, y), result.getWidth(), result.getHeight());
+					v = (inv * vec3f(p.x, p.y, v)).z;
 				}
 			}
 		}
