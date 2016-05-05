@@ -97,7 +97,7 @@ namespace util
 
 	//TODO TEST
 	inline std::vector<std::string> split(const std::string& str, const std::string& separator, bool pushEmptyStrings = false) {
-		MLIB_ASSERT_STR(separator.length() >= 1, "empty seperator");
+		MLIB_ASSERT_STR(separator.length() >= 1, "empty separator");
 		std::vector<std::string> result;
 
         if (str.size() == 0)
