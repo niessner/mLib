@@ -11,7 +11,7 @@ public:
     void insert(const T &task)
     {
         m_mutex.lock();
-        m_tasks.pushBack(task);
+        m_tasks.push_back(task);
         m_mutex.unlock();
     }
 

@@ -19,7 +19,7 @@ public:
 class WorkerThreadTask
 {
 public:
-	virtual ~WorkerThreadTask();
+	virtual ~WorkerThreadTask() {}
     virtual void run(UINT threadIndex, ThreadLocalStorage *threadLocalStorage) = 0;
 };
 
@@ -32,7 +32,7 @@ public:
 	}
 	~WorkerThread()
 	{
-		SAFE_DELETE(m_thread);
+		//SAFE_DELETE(m_thread);
 	}
 
     void init(UINT threadIndex, ThreadLocalStorage *storage);

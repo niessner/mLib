@@ -59,7 +59,7 @@ namespace ml {
 			if (!dib) throw MLIB_EXCEPTION("Could not load image: " + filename);
 			FREE_IMAGE_TYPE fitype = FreeImage_GetImageType(dib);
 
-			if (fitype != FIT_BITMAP && fitype != FIT_UINT16) throw MLIB_EXCEPTION("Unknown image format");
+			if (fitype != FIT_BITMAP && fitype != FIT_UINT16 && fitype != FIT_RGB16) throw MLIB_EXCEPTION("Unknown image format");
 
 			bits = FreeImage_GetBits(dib);
 			unsigned int width = FreeImage_GetWidth(dib);
@@ -111,12 +111,27 @@ namespace ml {
 					throw MLIB_EXCEPTION("Unknown image format");
 				}
 			}
+			else if (fitype == FIT_RGB16) {
+				const BYTE* data = (BYTE*)bits;
+				unsigned int bytesPerPixel = nBits / 8;
+				MLIB_ASSERT(bytesPerPixel == 6);
+				for (unsigned int y = 0; y < height; y++) {
+					const BYTE* dataRowStart = data + (height - 1 - y)*pitch;
+					for (unsigned int x = 0; x < width; x++) {
+						convertFromUSHORT3(resultImage(x, y), (USHORT*)&dataRowStart[x*bytesPerPixel]);
+					}
+				}
+			}
 
 			FreeImage_Unload(dib);
 			if (debugPrint) {
 				std::cout << __FUNCTION__ << ":" << filename << " (width=" << width << ";height=" << height << "; " << resultImage.getNumChannels() << "; " << resultImage.getNumBytesPerChannel() << ")" << std::endl;
 			}
-			FreeImage_DeInitialise();
+
+			//
+			// FreeImage_DeInitialise() is buggy and crashes any openMP code that uses loadImage
+			//
+			//FreeImage_DeInitialise();
 		}
 
 

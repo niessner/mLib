@@ -1,4 +1,6 @@
 
+#include "mLibZLib.h"
+
 namespace ml
 {
 

@@ -7,7 +7,7 @@ namespace ml
 class ThreadPool
 {
 public:
-    ~ThreadPool();
+	~ThreadPool() {}
 
     void init(UINT threadCount);
     void init(UINT threadCount, const std::vector<ThreadLocalStorage*> &threadLocalStorage);

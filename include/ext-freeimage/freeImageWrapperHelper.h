@@ -215,8 +215,25 @@ template<>	inline void convertFromUSHORT<double>(double& output, const unsigned 
 	output /= 1000.0;
 }
 
+//USHORT3
+template<class T>	inline void convertFromUSHORT3(T& output, const unsigned short* input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+template<>	inline void convertFromUSHORT3<vec3d>(vec3d& output, const unsigned short* input) {
+	output.x = (double)input[0];
+	output.y = (double)input[1];
+	output.z = (double)input[2];
+}
+template<>	inline void convertFromUSHORT3<vec3us>(vec3us& output, const unsigned short* input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+}
 
-
+template<>	inline void convertFromUSHORT3<unsigned short>(unsigned short& output, const unsigned short* input) {
+	output = input[0];
+}
 
 ///////////////////////
 // DATA WRITE HELPER //
