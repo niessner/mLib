@@ -96,10 +96,10 @@ namespace ml {
 		}
 
 		void normalize(float factor)  {
-			BinaryGrid3 res(getDimX(), getDimY(), getDimZ());
-			for (size_t k = 0; k < getDimZ(); k++) {
-				for (size_t j = 0; j < getDimY(); j++) {
-					for (size_t i = 0; i < getDimX(); i++) {
+			BinaryGrid3 res(this->getDimX(), this->getDimY(), this->getDimZ());
+			for (size_t k = 0; k < this->getDimZ(); k++) {
+				for (size_t j = 0; j < this->getDimY(); j++) {
+					for (size_t i = 0; i < this->getDimX(); i++) {
 
 						if ((*this)(i, j, k) != 0.0f) {
 							(*this)(i, j, k) /= factor;
@@ -113,9 +113,9 @@ namespace ml {
 		void improveDF(unsigned int numIter) {
 			for (unsigned int iter = 0; iter < numIter; iter++) {
 				bool hasUpdate = false;
-				for (size_t k = 0; k < getDimZ(); k++) {
-					for (size_t j = 0; j < getDimY(); j++) {
-						for (size_t i = 0; i < getDimX(); i++) {
+				for (size_t k = 0; k < this->getDimZ(); k++) {
+					for (size_t j = 0; j < this->getDimY(); j++) {
+						for (size_t i = 0; i < this->getDimX(); i++) {
 							if (checkDistToNeighborAndUpdate(i, j, k)) {
 								hasUpdate = true;
 							}

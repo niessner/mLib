@@ -1288,7 +1288,9 @@ namespace ml {
 						return fs;
 					}
 					else {
+						#ifdef _WIN32
 						Sleep(0);
+						#endif
 					}
 				}
 				return FrameState();
@@ -1378,7 +1380,9 @@ namespace ml {
 				fs.m_colorFrame = color;
 				fs.m_depthFrame = depth;
 				while (m_data.size() >= m_cacheSize) {
+					#ifdef _WIN32
 					Sleep(0);	//wait until we have space in our cache
+				    #endif
 				}
 				m_mutexList.lock();
 				m_data.push_back(fs);

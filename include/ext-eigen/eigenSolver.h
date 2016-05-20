@@ -91,7 +91,7 @@ public:
             //FloatType alpha = gamma / SparseMatrix<FloatType>::quadratic(A, p);
             const D alphaDenom = MathVector<D>::dot(p, eigenMultiply(p));
             
-            cout << "alphaDenom: " << alphaDenom << endl;
+            std::cout << "alphaDenom: " << alphaDenom << std::endl;
 
             const D alpha = gamma / alphaDenom;
 
