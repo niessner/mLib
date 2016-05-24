@@ -295,6 +295,36 @@ namespace ml {
 				m_timeStampDepth = 0;
 			}
 
+			RGBDFrame(const RGBDFrame& other) {
+				m_colorSizeBytes = other.m_colorSizeBytes;
+				m_depthSizeBytes = other.m_depthSizeBytes;
+				m_colorCompressed = (unsigned char*)std::malloc(m_colorSizeBytes);
+				m_depthCompressed = (unsigned char*)std::malloc(m_depthSizeBytes);
+
+				if (!m_colorCompressed || !m_depthCompressed) throw MLIB_EXCEPTION("out of memory");
+
+				std::memcpy(m_colorCompressed, other.m_colorCompressed, m_colorSizeBytes);
+				std::memcpy(m_depthCompressed, other.m_depthCompressed, m_depthSizeBytes);
+
+				m_timeStampColor = other.m_timeStampColor;
+				m_timeStampDepth = other.m_timeStampDepth;
+				m_cameraToWorld = other.m_cameraToWorld;
+			}
+
+			RGBDFrame(RGBDFrame&& other) {
+				m_colorSizeBytes = other.m_colorSizeBytes;
+				m_depthSizeBytes = other.m_depthSizeBytes;
+				m_colorCompressed = other.m_colorCompressed;
+				m_depthCompressed = other.m_depthCompressed;
+
+				m_timeStampColor = other.m_timeStampColor;
+				m_timeStampDepth = other.m_timeStampDepth;
+				m_cameraToWorld = other.m_cameraToWorld;
+
+				other.m_colorCompressed = NULL;
+				other.m_depthCompressed = NULL;
+			}
+
 
 			unsigned char* getColorCompressed() const {
 				return m_colorCompressed;
@@ -374,6 +404,7 @@ namespace ml {
 				m_timeStampColor = timeStampColor;
 				m_timeStampDepth = timeStampDepth;
 			}
+			
 
 
 			void freeColor() {
@@ -387,6 +418,46 @@ namespace ml {
 				m_depthCompressed = NULL;
 				m_depthSizeBytes = 0;
 				m_timeStampDepth = 0;
+			}
+
+			//! assignment operator
+			bool operator=(const RGBDFrame& other) {
+				if (this != &other) {
+					free();
+
+					m_colorSizeBytes = other.m_colorSizeBytes;
+					m_depthSizeBytes = other.m_depthSizeBytes;
+					m_colorCompressed = (unsigned char*)std::malloc(m_colorSizeBytes);
+					m_depthCompressed = (unsigned char*)std::malloc(m_depthSizeBytes);
+
+					if (!m_colorCompressed || !m_depthCompressed) throw MLIB_EXCEPTION("out of memory");
+
+					std::memcpy(m_colorCompressed, other.m_colorCompressed, m_colorSizeBytes);
+					std::memcpy(m_depthCompressed, other.m_depthCompressed, m_depthSizeBytes);
+
+					m_timeStampColor = other.m_timeStampColor;
+					m_timeStampDepth = other.m_timeStampDepth;
+					m_cameraToWorld = other.m_cameraToWorld;
+				}
+			}
+
+			//! move operator
+			bool operator=(RGBDFrame&& other) {
+				if (this != &other) {
+					free();
+
+					m_colorSizeBytes = other.m_colorSizeBytes;
+					m_depthSizeBytes = other.m_depthSizeBytes;
+					m_colorCompressed = other.m_colorCompressed;
+					m_depthCompressed = other.m_depthCompressed;
+
+					m_timeStampColor = other.m_timeStampColor;
+					m_timeStampDepth = other.m_timeStampDepth;
+					m_cameraToWorld = other.m_cameraToWorld;
+
+					other.m_colorCompressed = NULL;
+					other.m_depthCompressed = NULL;
+				}
 			}
 
 
