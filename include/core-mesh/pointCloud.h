@@ -93,5 +93,6 @@ typedef PointCloud<double>	PointCloudd;
 
 } // namespace ml
 
+#include "pointCloud.cpp"
 
 #endif

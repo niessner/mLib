@@ -30,7 +30,6 @@ public:
 		if (!pointCloud.isConsistent()) throw MLIB_EXCEPTION("inconsistent point cloud");
 	}
 
-
 	static void saveToFile(const std::string& filename, const std::vector<vec3<FloatType>> &points) {
 		PointCloud<FloatType> pc;
 		pc.m_points = points;
@@ -44,7 +43,7 @@ public:
 		}
 		std::string extension = util::getFileExtension(filename);
 		if (extension == "ply") {
-			writeToPLY(filename, pointCloud);
+			saveToPLY(filename, pointCloud);
 		} else {
 			throw MLIB_EXCEPTION("unknown file extension" + filename);
 		}
@@ -62,7 +61,7 @@ public:
 	/* Write Functions													    */
 	/************************************************************************/
 
-	static void writeToPLY(const std::string& filename, const PointCloud<FloatType>& pc) {
+	static void saveToPLY(const std::string& filename, const PointCloud<FloatType>& pc) {
 
 		if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float, not for double");
 
