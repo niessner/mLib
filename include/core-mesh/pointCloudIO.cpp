@@ -88,7 +88,7 @@ namespace ml {
 			for (size_t i = 0; i < header.m_numVertices; i++) {
 				std::string line;
 				std::getline(file, line);
-				std::stringstream ss(line);
+				std::stringstream ss(line); // TODO replace with sscanf which should be faster
 				ss >> pc.m_points[i].x >> pc.m_points[i].y >> pc.m_points[i].z;
 				if (header.m_bHasColors) {
 					ss >> pc.m_colors[i].x >> pc.m_colors[i].y >> pc.m_colors[i].z;
