@@ -7,7 +7,7 @@ namespace ml {
 class D3D11TriMesh : public GraphicsAsset
 {
 public:
-    static const UINT layoutElementCount = 4;
+    static const UINT layoutElementCount = 4;	//accessed by D3D11VertexShader
     static const D3D11_INPUT_ELEMENT_DESC layout[layoutElementCount];
 
 	D3D11TriMesh()
@@ -18,7 +18,7 @@ public:
 	}
 
 	template<class T>
-	D3D11TriMesh(GraphicsDevice &g, const MeshData<T>& meshData)
+	D3D11TriMesh(GraphicsDevice& g, const MeshData<T>& meshData)
     {
 		m_vertexBuffer = nullptr;
 		m_indexBuffer = nullptr;
@@ -26,7 +26,7 @@ public:
 	}
 
 	template<class T>
-	D3D11TriMesh(GraphicsDevice &g, const TriMesh<T>& triMesh)
+	D3D11TriMesh(GraphicsDevice& g, const TriMesh<T>& triMesh)
     {
 		m_vertexBuffer = nullptr;
 		m_indexBuffer = nullptr;
@@ -38,7 +38,7 @@ public:
 		release();
 	}
 
-    void load(GraphicsDevice &g, const D3D11TriMesh& mesh)
+    void load(GraphicsDevice& g, const D3D11TriMesh& mesh)
     {
 		m_graphics = &g.castD3D11();
         m_triMesh = mesh.m_triMesh;
@@ -46,7 +46,7 @@ public:
     }
 
 	template<class T>
-	void load(GraphicsDevice &g, const TriMesh<T>& triMesh)
+	void load(GraphicsDevice& g, const TriMesh<T>& triMesh)
     {
         m_graphics = &g.castD3D11();
         m_triMesh = triMesh;
@@ -54,7 +54,7 @@ public:
 	}
 
 	template<class T>
-	void load(GraphicsDevice &g, const MeshData<T>& meshData)
+	void load(GraphicsDevice& g, const MeshData<T>& meshData)
     {
         load(g, TriMesh<T>(meshData));
 	}
@@ -65,13 +65,13 @@ public:
 	void render() const;
 
 	//! \deprecated Backwards-compatible version of updateColors with unused GraphicsDevice& argument
-	void updateColors(GraphicsDevice &g, const std::vector<vec4f> &vertexColors);
+	void updateColors(GraphicsDevice& g, const std::vector<vec4f> &vertexColors);
 
 	//! Updates colors of this D3D11TriMesh to vertexColors. Precondition: vertexColors has same length as vertices otherwise exception is thrown
-	void updateColors(const std::vector<vec4f> &vertexColors);
+	void updateColors(const std::vector<vec4f>& vertexColors);
 
 	//! computes and returns the bounding box; no caching
-    bbox3f computeBoundingBox() const
+	BoundingBox3f computeBoundingBox() const
     {
         return m_triMesh.computeBoundingBox();
     }

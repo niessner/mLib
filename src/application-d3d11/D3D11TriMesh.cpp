@@ -42,10 +42,15 @@ void ml::D3D11TriMesh::initVB(GraphicsDevice &g)
     if (m_triMesh.getVertices().size() == 0) return;
 	auto &device = g.castD3D11().getDevice();
 
+	size_t byteSize = sizeof(TriMeshf::Vertex) * m_triMesh.getVertices().size();
+	if (byteSize > std::numeric_limits<UINT>::max()) {
+		throw MLIB_EXCEPTION("buffer size too big " + std::to_string(byteSize) + ", while max is " + std::to_string(std::numeric_limits<UINT>::max()));
+	}
+
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.ByteWidth = sizeof(TriMeshf::Vertex) * (UINT)m_triMesh.getVertices().size();
+	bufferDesc.ByteWidth = (UINT)byteSize;
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
 
@@ -62,10 +67,15 @@ void ml::D3D11TriMesh::initIB(GraphicsDevice &g)
     if (indices.size() == 0) return;
 	auto &device = g.castD3D11().getDevice();
 
+	size_t byteSize = sizeof(vec3ui) * indices.size();
+	if (byteSize > std::numeric_limits<UINT>::max()) {
+		throw MLIB_EXCEPTION("buffer size too big " + std::to_string(byteSize) + ", while max is " + std::to_string(std::numeric_limits<UINT>::max()));
+	}
+
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory( &bufferDesc, sizeof(bufferDesc) );
 	bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	bufferDesc.ByteWidth = sizeof( vec3ui ) * (UINT)indices.size();
+	bufferDesc.ByteWidth = (UINT)byteSize;
 	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0;
 
@@ -75,6 +85,9 @@ void ml::D3D11TriMesh::initIB(GraphicsDevice &g)
 
 	D3D_VALIDATE(device.CreateBuffer( &bufferDesc, &data, &m_indexBuffer ));
 }
+
+
+
 
 void ml::D3D11TriMesh::render() const
 {
@@ -86,7 +99,6 @@ void ml::D3D11TriMesh::render() const
     UINT stride = sizeof(TriMeshf::Vertex);
 	UINT offset = 0;
 	context.IASetVertexBuffers( 0, 1, &m_vertexBuffer, &stride, &offset );
-
 	context.IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
     context.DrawIndexed((UINT)m_triMesh.getIndices().size() * 3, 0, 0);

@@ -13,6 +13,7 @@ void D3D11GraphicsDevice::init(const WindowWin32 &window)
 	m_swapChainDesc.BufferDesc.Height = m_height;
 
 	UINT createDeviceFlags = 0;
+
 //#ifdef _DEBUG
 //	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 //#endif

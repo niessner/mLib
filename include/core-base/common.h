@@ -59,6 +59,7 @@
 #include <tuple>
 #include <complex>
 #include <queue> 
+#include <random>
 
 
 namespace boost {
@@ -150,8 +151,11 @@ void assertFunctionMLIB(bool statement, const std::string &description);
 //#define E_RETURN(hr) { if(FAILED(hr)) { Console::log() << #hr << " " << hr << std::endl; } }
 //#endif
 
+//#ifndef D3D_VALIDATE
+//#define D3D_VALIDATE(statement) { HRESULT hr = statement;  if(FAILED(hr)) { MLIB_ERROR(#statement); } }
+//#endif
 #ifndef D3D_VALIDATE
-#define D3D_VALIDATE(statement) { HRESULT hr = statement;  if(FAILED(hr)) { MLIB_ERROR(#statement); } }
+#define D3D_VALIDATE(statement) { HRESULT hr = statement;  if(FAILED(hr)) { throw MLIB_EXCEPTION(#statement); } }
 #endif
 
 }  // namespace ml

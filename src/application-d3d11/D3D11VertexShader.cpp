@@ -19,7 +19,7 @@ void ml::D3D11VertexShader::load(
 	g.castD3D11().registerAsset(this);
 
 	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel, shaderMacros);
-	MLIB_ASSERT_STR(m_blob != nullptr, "CompileShader failed");
+	if (m_blob == nullptr) throw MLIB_EXCEPTION("CompileShader failed");
 
 	reset();
 }
@@ -38,7 +38,7 @@ void ml::D3D11VertexShader::reset()
 
 	D3D_VALIDATE(device.CreateVertexShader(m_blob->GetBufferPointer(), m_blob->GetBufferSize(), nullptr, &m_shader));
 
-	device.CreateInputLayout(D3D11TriMesh::layout, D3D11TriMesh::layoutElementCount, m_blob->GetBufferPointer(), m_blob->GetBufferSize(), &m_standardLayout);
+	D3D_VALIDATE(device.CreateInputLayout(D3D11TriMesh::layout, D3D11TriMesh::layoutElementCount, m_blob->GetBufferPointer(), m_blob->GetBufferSize(), &m_standardLayout));
 }
 
 void ml::D3D11VertexShader::bind() const

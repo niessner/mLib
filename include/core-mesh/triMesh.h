@@ -563,6 +563,18 @@ namespace ml {
         return s;
     }
 
+
+	template<class FloatType>
+	std::ostream& operator<<(std::ostream& os, const TriMesh<FloatType>& triMesh) {
+		os << "TriMesh:\n"
+			<< "\tVertices:  " << triMesh.m_vertices.size() << "\n"
+			<< "\tIndices:   " << triMesh.m_indices.size() << "*3\n"
+			<< std::endl;
+
+		return os;
+	}
+
+
 }  // namespace ml
 
 #include "triMesh.cpp"
