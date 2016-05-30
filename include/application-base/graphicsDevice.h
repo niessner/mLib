@@ -19,7 +19,7 @@ public:
 	virtual void renderBeginFrame() = 0;
 	//! clears the back buffer (color and depth)
     virtual void clear(const ml::vec4f &clearColor = vec4f(0, 0, 0, 0), float clearDepth = 1.0f) = 0;
-	virtual void renderEndFrame() = 0;
+	virtual void renderEndFrame(bool vsync) = 0;
 
     void captureBackBuffer(ColorImageR8G8B8A8 &result)
     {

@@ -233,9 +233,10 @@ void D3D11GraphicsDevice::clear(const vec4f &clearColor, float clearDepth)
     m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, clearDepth, 0);
 }
 
-void D3D11GraphicsDevice::renderEndFrame()
+void D3D11GraphicsDevice::renderEndFrame(bool vsync)
 {
-    m_swapChain->Present(1, 0);
+	UINT syncInterval = vsync ? 1 : 0;
+    m_swapChain->Present(syncInterval, 0);	//0 -> vsync off; 1 -> vsync on (== 60Hz max)
 }
 
 void D3D11GraphicsDevice::toggleWireframe()

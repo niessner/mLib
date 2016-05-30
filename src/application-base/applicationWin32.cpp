@@ -29,7 +29,7 @@ ml::ApplicationWin32::~ApplicationWin32()
 	m_bResizeEvent = false;
 }
 
-void ml::ApplicationWin32::messageLoop()
+void ml::ApplicationWin32::messageLoop(bool vsync /*= false*/)
 {
 	bool messageReceived;
 	MSG msg;
@@ -62,7 +62,7 @@ void ml::ApplicationWin32::messageLoop()
 
 			m_graphics->renderBeginFrame();
 			m_callback.render(*m_data);
-			m_graphics->renderEndFrame();
+			m_graphics->renderEndFrame(vsync);
 		}
 	}
 }

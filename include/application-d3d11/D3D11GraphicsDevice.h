@@ -86,7 +86,7 @@ public:
 
 	void resize(const WindowWin32 &window);
     void renderBeginFrame();
-    void renderEndFrame();
+    void renderEndFrame(bool vsync);
     void registerAsset(GraphicsAsset *asset);
 
     void setCullMode(D3D11_CULL_MODE mode);
