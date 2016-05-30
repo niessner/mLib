@@ -44,9 +44,9 @@ namespace ml {
 			for (size_t i = 0; i < pointCloud.m_points.size(); i++) {
 				m_points.push_back(pointCloud.m_points[i]);
 				auto& v = m_points.back();
-				if (pointCloud.m_normals.size()) v.normal = pointCloud.m_normals[i];
-				if (pointCloud.m_colors.size()) v.color = pointCloud.m_colors[i];
-				//TODO texture coords?
+				if (pointCloud.hasNormals()) v.normal = pointCloud.m_normals[i];
+				if (pointCloud.hasColors()) v.color = pointCloud.m_colors[i];
+				if (pointCloud.hasTexCoords()) v.texCoord = pointCloud.m_texCoords[i];
 			}
 			reset();
 		}

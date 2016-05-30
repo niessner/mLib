@@ -72,7 +72,7 @@ public:
 	ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const std::string &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback, unsigned int initWindowPosX = 0, unsigned int initWindowPosY = 0);
 	~ApplicationWin32();
 
-	void messageLoop(bool vsync = false);
+	void messageLoop(bool vsync = true);
 
 	inline ApplicationData& data()
 	{
