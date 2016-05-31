@@ -33,6 +33,17 @@ public:
 		init(v, (UINT)points[0].size(), maxK);
 	}
 
+	//! init from a linearized array (needs an additional copy)
+	void init(const FloatType* points, UINT numPoints, UINT dimension, UINT maxK) 
+	{
+		std::vector<const FloatType*> pointsPtr(numPoints);
+
+		for (size_t i = 0; i < pointsPtr.size(); i++) {
+			pointsPtr[i] = &points[i*dimension];
+		}
+		init(pointsPtr, dimension, maxK);
+	}
+
 	void kNearest(const std::vector<FloatType> &query, UINT k, FloatType epsilon, std::vector<UINT> &result) const
 	{
 		kNearestInternal(&query[0], k, epsilon, result);
@@ -162,7 +173,7 @@ public:
 		m_dimension = dimension;
 		m_pointData.resize(points.size() * dimension);
 		int pointIndex = 0;
-		for(auto p : points)
+		for (auto p : points)
 		{
 			m_points.push_back(&m_pointData[0] + pointIndex);
 			for(UINT d = 0; d < m_dimension; d++)
@@ -186,9 +197,9 @@ public:
 			m_queue.insert(typename KNearestNeighborQueue<FloatType>::NeighborEntry(pointIndex, dist));
 		}
 
-		if(result.size() != k) result.resize(k);
+		if (result.size() != k) result.resize(k);
 		UINT resultIndex = 0;
-		for(const auto &e : m_queue.queue())
+		for (const auto &e : m_queue.queue())
 		{
 			result[resultIndex++] = e.index;
 		}

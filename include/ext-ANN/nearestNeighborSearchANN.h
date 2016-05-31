@@ -5,8 +5,8 @@
 namespace ml
 {
 
-template<class D>
-class NearestNeighborSearchANN : public NearestNeighborSearch<D>
+template<class FloatType>
+class NearestNeighborSearchANN : public NearestNeighborSearch<FloatType>
 {
 public:
 	NearestNeighborSearchANN()
@@ -19,6 +19,7 @@ public:
 		m_points = nullptr;
 		m_tree = nullptr;
 	}
+
 	~NearestNeighborSearchANN()
 	{
 		SAFE_DELETE_ARRAY(m_indices);
@@ -28,8 +29,12 @@ public:
 		if(m_points) annDeallocPts(m_points);
 	}
 
-	void initInternal(const std::vector< const D* > &points, UINT dimension, UINT maxK)
+
+private:
+	void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK)
 	{
+		if (points.size() >= std::numeric_limits<int>::max()) throw MLIB_EXCEPTION("ANN only supports 'int'");
+
 		const UINT pointCount = (UINT)points.size();
 		m_dimension = dimension;
 		m_maxK = maxK;
@@ -37,16 +42,17 @@ public:
 		m_points = annAllocPts(pointCount, m_dimension);
 		m_indices = new ANNidx[m_maxK];
 		m_dists = new ANNdist[m_maxK];
-		for(UINT i = 0; i < pointCount; i++)
-			for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
+		for (unsigned int i = 0; i < pointCount; i++) {
+			for (unsigned int elementIndex = 0; elementIndex < m_dimension; elementIndex++) {
 				m_points[i][elementIndex] = points[i][elementIndex];
-
+			}
+		}
 		const bool useBruteForce = false;
-		if(useBruteForce) m_tree = new ANNbruteForce(m_points, pointCount, m_dimension);
+		if (useBruteForce) m_tree = new ANNbruteForce(m_points, pointCount, m_dimension);
 		else m_tree = new ANNkd_tree(m_points, pointCount, m_dimension);
 	}
 
-	void kNearestInternal(const D *query, UINT k, D epsilon, std::vector<UINT> &result) const
+	void kNearestInternal(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const
 	{
 		for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
 			m_queryPt[elementIndex] = query[elementIndex];
@@ -61,7 +67,7 @@ public:
 			result[i] = m_indices[i];
 	}
 
-    void fixedRadiusInternal(const D *query, UINT k, D radiusSq, D epsilon, std::vector<UINT> &result) const
+    void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector<UINT> &result) const
     {
         for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
             m_queryPt[elementIndex] = query[elementIndex];
@@ -78,7 +84,7 @@ public:
             result[i] = m_indices[i];
     }
 
-    void fixedRadiusInternalDist(const D *query, UINT k, D radiusSq, D epsilon, std::vector< std::pair<UINT, D> > &result) const
+    void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const
     {
         for(UINT elementIndex = 0; elementIndex < m_dimension; elementIndex++)
             m_queryPt[elementIndex] = query[elementIndex];
@@ -93,11 +99,10 @@ public:
         result.resize(math::min(count, (int)k));
         for(int i = 0; i < result.size(); i++)
         {
-            result[i] = std::make_pair(m_indices[i], (D)m_dists[i]);
+            result[i] = std::make_pair(m_indices[i], (FloatType)m_dists[i]);
         }
     }
 
-private:
 	UINT                 m_maxK;        // Maximum value of k
 	UINT                 m_dimension;   // dimensionality of KDTree
 	ANNpointArray        m_points;      // data points
