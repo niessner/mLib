@@ -501,9 +501,6 @@ protected:
 		};
 		FloatType parameters[6];
 	};
-
-	
-
 };
 
 template<class FloatType>
@@ -514,9 +511,11 @@ std::ostream& operator<< (std::ostream& s, const BoundingBox3<FloatType>& bb) {
 
 typedef BoundingBox3<float> BoundingBox3f;
 typedef BoundingBox3<double> BoundingBox3d;
+typedef BoundingBox3<int> BoundingBox3i;
 
 typedef BoundingBox3<float> bbox3f;
 typedef BoundingBox3<double> bbox3d;
+typedef BoundingBox3<int> bbox3i;
 
 }  // namespace ml
 
