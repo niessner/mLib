@@ -70,6 +70,9 @@ namespace ml {
 			return bbox;
 		}
 
+		const std::vector<TriMeshf::Vertex>& getPoints() const {
+			return m_points;
+		}
 
 		void getPointCloud(PointCloudf& pointCloud) const
 		{

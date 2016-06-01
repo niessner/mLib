@@ -5,28 +5,36 @@
 namespace ml {
 namespace math {
 
+template<class T>
+Matrix3x3<T> covarianceMatrix(const std::vector< vec3<T> >& points) 
+{
+	auto mean = std::accumulate(points.begin(), points.end(), vec3<T>::origin) / (T)points.size();
+
+	Matrix3x3<T> covariance;
+	covariance.setZero();
+
+	for (const auto& p : points)
+	{
+		auto recenteredPt = p - mean;
+		auto tensor = Matrix3x3<T>::tensorProduct(recenteredPt, recenteredPt);
+		for (int y = 0; y < 3; y++)
+			for (int x = 0; x < 3; x++)
+				covariance(y, x) += tensor(y, x);
+	}
+
+	covariance /= (T)(points.size() - 1);
+
+	return covariance;
+}
+
+
 //
 // returns the <axis, eigenvalue> pairs for the PCA of the given 3D points.
 //
 template <class T>
 vector< std::pair<vec3<T>, T> > pointSetPCA(const std::vector< vec3<T> > &points)
 {
-    auto mean = std::accumulate(points.begin(), points.end(), vec3<T>::origin) / (T)points.size();
-
-    DenseMatrix<T> covariance(3, 3, (T)0.0);
-    
-    for (const auto &p : points)
-    {
-        auto recenteredPt = p - mean;
-        auto tensor = Matrix3x3<T>::tensorProduct(recenteredPt, recenteredPt);
-        for (int y = 0; y < 3; y++)
-            for (int x = 0; x < 3; x++)
-                covariance(y, x) += tensor(y, x);
-    }
-
-    covariance /= (T)(points.size() - 1);
-
-    auto system = covariance.eigenSystem();
+	auto system = covarianceMatrix(points).eigenSystem();
     const auto &v = system.eigenvectors;
     
     vector< std::pair<vec3<T>, T> > result;
