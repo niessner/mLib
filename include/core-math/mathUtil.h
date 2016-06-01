@@ -27,6 +27,28 @@ Matrix3x3<T> covarianceMatrix(const std::vector< vec3<T> >& points)
 	return covariance;
 }
 
+template<class T>
+Matrix2x2<T> covarianceMatrix(const std::vector< vec2<T> >& points)
+{
+	auto mean = std::accumulate(points.begin(), points.end(), vec2<T>::origin) / (T)points.size();
+
+	Matrix2x2<T> covariance;
+	covariance.setZero();
+
+	for (const auto& p : points)
+	{
+		auto recenteredPt = p - mean;
+		auto tensor = Matrix2x2<T>::tensorProduct(recenteredPt, recenteredPt);
+		for (int y = 0; y < 2; y++)
+			for (int x = 0; x < 2; x++)
+				covariance(y, x) += tensor(y, x);
+	}
+
+	covariance /= (T)(points.size() - 1);
+
+	return covariance
+}
+
 
 //
 // returns the <axis, eigenvalue> pairs for the PCA of the given 3D points.
@@ -50,30 +72,7 @@ vector< std::pair<vec3<T>, T> > pointSetPCA(const std::vector< vec3<T> > &points
 template <class T>
 vector< std::pair<vec2<T>, T> > pointSetPCA(const std::vector< vec2<T> > &points)
 {
-    auto mean = std::accumulate(points.begin(), points.end(), vec2<T>::origin) / (T)points.size();
-
-    DenseMatrix<T> covariance(2, 2, (T)0.0);
-
-    for (const auto &p : points)
-    {
-        auto recenteredPt = p - mean;
-        auto tensor = Matrix2x2<T>::tensorProduct(recenteredPt, recenteredPt);
-        for (int y = 0; y < 2; y++)
-            for (int x = 0; x < 2; x++)
-                covariance(y, x) += tensor(y, x);
-    }
-
-    /*DenseMatrix<T> B(2, (UINT)points.size());
-    for (UINT pointIndex = 0; pointIndex < (UINT)points.size(); pointIndex++)
-    {
-        B(0, pointIndex) = points[pointIndex][0] - mean[0];
-        B(1, pointIndex) = points[pointIndex][1] - mean[1];
-    }
-    auto covariance = B * B.transpose();*/
-
-    covariance /= (T)(points.size() - 1);
-
-    auto system = covariance.eigenSystem();
+	auto system = covarianceMatrix(points).eigenSystem();
     const auto &v = system.eigenvectors;
 
     vector< std::pair<vec2<T>, T> > result;
