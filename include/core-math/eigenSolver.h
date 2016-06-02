@@ -158,7 +158,7 @@ public:
 		MLIB_ASSERT(M.square());
 
 		const unsigned int n = M.rows();
-		const FloatType* matrix = M.ptr();
+		const FloatType* matrix = M.getData();
 
 		// Use jacobi's method:
 		// Build matrix NR-style:

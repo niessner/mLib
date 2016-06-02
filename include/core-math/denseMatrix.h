@@ -197,7 +197,7 @@ public:
 		return result;
 	}
 
-    const T* ptr() const
+    const T* getData() const
     {
         return m_dataPtr;
     }
