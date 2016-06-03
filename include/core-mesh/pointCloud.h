@@ -52,9 +52,9 @@ public:
 
 	bool isConsistent() const {
 		bool is = true;
-		if (m_normals.size() > 0 && m_normals.size() != m_points.size())	is = false;
-		if (m_colors.size() > 0 && m_colors.size() != m_points.size())		is = false;
-		if (m_texCoords.size() > 0 && m_texCoords.size() != m_points.size())		is = false;
+		if (m_normals.size() > 0 && m_normals.size() != m_points.size())		is = false;
+		if (m_colors.size() > 0 && m_colors.size() != m_points.size())			is = false;
+		if (m_texCoords.size() > 0 && m_texCoords.size() != m_points.size())	is = false;
 		return is;
 	}
 
@@ -148,12 +148,31 @@ public:
 		}
 	}
 
+	size_t sparsifyUniform(FloatType thresh, bool approx);
+	size_t sparsifyUniform(unsigned int targetNumVerts, bool approx = true, FloatType startThresh = 0.005f /*5mm*/) {
+		FloatType thresh = startThresh;
+		while (m_points.size() > targetNumVerts) {
+			sparsifyUniform(thresh, approx);
+			thresh *= 2.0f;
+		}
+		return m_points.size();
+	}
+
 
 	std::vector<vec3<FloatType>> m_points;
 	std::vector<vec3<FloatType>> m_normals;
 	std::vector<vec4<FloatType>> m_colors;
 	std::vector<vec2<FloatType>> m_texCoords;
 private:
+
+	inline vec3i toVirtualVoxelPos(const vec3<FloatType>& v, FloatType voxelSize) {
+		return vec3i(v / voxelSize + (FloatType)0.5*vec3<FloatType>(math::sign(v)));
+	}
+	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned
+	size_t hasNearestNeighbor(const vec3i& coord, SparseGrid3<std::list<std::pair<vec3<FloatType>, size_t> > > &neighborQuery, const vec3<FloatType>& v, FloatType thresh);
+
+	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned (manhattan distance)
+	size_t hasNearestNeighborApprox(const vec3i& coord, SparseGrid3<size_t> &neighborQuery, FloatType thresh);
 };
 
 typedef PointCloud<float>	PointCloudf;
