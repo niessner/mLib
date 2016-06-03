@@ -121,6 +121,12 @@ namespace math
 	}
 
 	template<class T>
+	inline T frac(const T& val) {
+		return (val - floor(val));
+	}
+
+
+	template<class T>
 	inline bool isPower2(const T& x) {
 		return (x & (x - 1)) == 0;
 	}

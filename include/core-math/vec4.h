@@ -347,6 +347,10 @@ typedef vec4<INT64> vec4l;
 
 namespace math {
 	template<class T>
+	inline vec4<T> frac(const vec4<T>& f) {
+		return vec4<T>(frac(f.x), frac(f.y), frac(f.z), frac(f.w));
+	}
+	template<class T>
 	inline vec4i round(const vec4<T>& f) {
 		return vec4i(round(f.x), round(f.y), round(f.z), round(f.w));
 	}

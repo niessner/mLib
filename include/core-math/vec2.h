@@ -274,6 +274,10 @@ typedef vec2<INT64> vec2l;
 
 namespace math {
 	template<class T>
+	inline vec2<T> frac(const vec2<T>& f) {
+		return vec2<T>(frac(f.x), frac(f.y));
+	}
+	template<class T>
 	inline vec2i round(const vec2<T>& f) {
 		return vec2i(round(f.x), round(f.y));
 	}

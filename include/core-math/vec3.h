@@ -343,6 +343,10 @@ typedef vec3<INT64> vec3l;
 
 namespace math {
 	template<class T>
+	inline vec3<T> frac(const vec3<T>& f) {
+		return vec3<T>(frac(f.x), frac(f.y), frac(f.z));
+	}
+	template<class T>
 	inline vec3i round(const vec3<T>& f) {
 		return vec3i(round(f.x), round(f.y), round(f.z));
 	}

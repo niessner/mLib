@@ -127,6 +127,45 @@ namespace ml {
 			}
 		}
 
+
+		FloatType trilinearInterpolationSimpleFastFast(const vec3<FloatType>& pos) const {
+			//const FloatType oSet = m_voxelSize;
+			const FloatType oSet = 1.0f;
+
+			const vec3<FloatType> posDual = pos - vec3<FloatType>(oSet / 2.0f, oSet / 2.0f, oSet / 2.0f);
+			vec3<FloatType> weight = math::frac(pos);
+
+			//if (!isValidCoordinate(math::round(posDual)) || !isValidCoordinate(math::round(posDual + oSet))) throw MLIB_EXCEPTION("out of bounds " + pos.toString());
+
+			FloatType dist = 0.0f;
+			vec3<FloatType> maxBound((FloatType)getDimX() - 1, (FloatType)getDimY() - 1, (FloatType)getDimZ() - 1);
+
+			FloatType v;
+			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(0.0f, 0.0f, 0.0f), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += (1.0f - weight.x)*(1.0f - weight.y)*(1.0f - weight.z)*v;
+			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(oSet, 0.0f, 0.0f), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += weight.x *(1.0f - weight.y)*(1.0f - weight.z)*v;
+			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(0.0f, oSet, 0.0f), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += (1.0f - weight.x)*weight.y *(1.0f - weight.z)*v;
+			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(0.0f, 0.0f, oSet), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += (1.0f - weight.x)*(1.0f - weight.y)*weight.z *v;
+			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(oSet, oSet, 0.0f), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += weight.x*weight.y *(1.0f - weight.z)*v;
+			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(0.0f, oSet, oSet), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += (1.0f - weight.x)*weight.y*weight.z*v;
+			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(oSet, 0.0f, oSet), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += weight.x *(1.0f - weight.y)*weight.z*v;
+			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(oSet, oSet, oSet), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += weight.x*weight.y*weight.z *v;
+
+			return dist;
+		}
+
+		DistanceField3 upsample() const {
+			DistanceField3 res(getDimX() * 2, getDimY() * 2, getDimZ() * 2);
+			for (size_t z = 0; z < res.getDimZ(); z++) {
+				for (size_t y = 0; y < res.getDimY(); y++) {
+					for (size_t x = 0; x < res.getDimX(); x++) {
+						vec3<FloatType> c((FloatType)x, (FloatType)y, (FloatType)z);
+						c /= 2.0f;
+						res(x, y, z) = trilinearInterpolationSimpleFastFast(c);
+					}
+				}
+			}
+			return res;
+		}
 	private:
 
 		void generateFromBinaryGridSimple(const BinaryGrid3& grid, FloatType trunc) {
