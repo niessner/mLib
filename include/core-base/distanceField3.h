@@ -153,8 +153,8 @@ namespace ml {
 			return dist;
 		}
 
-		DistanceField3 upsample() const {
-			DistanceField3 res(getDimX() * 2, getDimY() * 2, getDimZ() * 2);
+		DistanceField3 upsample(const vec3ul& newDim) const {
+			DistanceField3 res(newDim.x, newDim.y, newDim.z);
 			for (size_t z = 0; z < res.getDimZ(); z++) {
 				for (size_t y = 0; y < res.getDimY(); y++) {
 					for (size_t x = 0; x < res.getDimX(); x++) {
@@ -165,6 +165,10 @@ namespace ml {
 				}
 			}
 			return res;
+		}
+
+		DistanceField3 upsample() const {
+			return upsample(vec3ul(getDimX() / 2, getDimY() / 2, getDimZ() / 2));
 		}
 	private:
 
