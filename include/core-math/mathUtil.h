@@ -46,7 +46,7 @@ Matrix2x2<T> covarianceMatrix(const std::vector< vec2<T> >& points)
 
 	covariance /= (T)(points.size() - 1);
 
-	return covariance
+	return covariance;
 }
 
 
