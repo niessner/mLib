@@ -71,6 +71,7 @@ public:
             }
             else if (token == "d") {
                 // d token not implemented
+				//MLIB_WARNING("d token not implemented");
             }
             else {
 				MLIB_WARNING("unknown token: " + line);
@@ -98,11 +99,11 @@ public:
 		//m_Texture_Ks.free();
 	}
 
-	std::string			m_name;
+	std::string		m_name;
 	vec4<FloatType>	m_ambient;
 	vec4<FloatType>	m_diffuse;
 	vec4<FloatType>	m_specular;
-	FloatType			m_shiny;
+	FloatType		m_shiny;
 
 	std::string			m_TextureFilename_Ka;
 	std::string			m_TextureFilename_Kd;

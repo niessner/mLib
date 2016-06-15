@@ -226,6 +226,11 @@ namespace ml {
 				m_extrinsic = extrinsic;
 			}
 
+			void setMatrices(const mat4f& intrinsic, const mat4f& extrinsic = mat4f::identity()) {
+				m_intrinsic = intrinsic;
+				m_extrinsic = extrinsic;
+			}
+
 			static mat4f makeIntrinsicMatrix(float fx, float fy, float mx, float my) {
 				return mat4f(
 					fx, 0.0f, mx, 0.0f,
