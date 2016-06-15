@@ -258,6 +258,21 @@ namespace ml {
 			return numOccupiedEntries;
 		}
 
+		inline const unsigned int* getData() const {
+			return m_data;
+		}
+
+		inline unsigned int* getData() {
+			return m_data;
+		}
+
+		template<class BinaryDataBuffer, class BinaryDataCompressor> friend
+			BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& 
+			operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BinaryGrid3& g);
+
+		template<class BinaryDataBuffer, class BinaryDataCompressor> friend
+			BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>&
+			operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BinaryGrid3& g);
 	private:
 
 #ifdef _WIN32
@@ -289,6 +304,28 @@ namespace ml {
 		unsigned int*	m_data;
 	};
 
+
+	 
+
+	template<class BinaryDataBuffer, class BinaryDataCompressor>
+	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BinaryGrid3& g) {
+		s << (UINT64)g.getDimX() << (UINT64)g.getDimY() << (UINT64)g.getDimZ();
+		//s.reserve(sizeof(T) * g.getDimX() * g.getDimY() * g.getDimZ());
+
+		size_t dataSize = g.getNumUInts();
+		s.writeData((const BYTE*)g.getData(), dataSize*sizeof(unsigned int));
+		return s;
+	}
+
+	template<class BinaryDataBuffer, class BinaryDataCompressor>
+	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BinaryGrid3& g) {
+		UINT64 dimX, dimY, dimZ;
+		s >> dimX >> dimY >> dimZ;
+		g.allocate(dimX, dimY, dimZ);
+		size_t dataSize = g.getNumUInts();
+		s.readData((BYTE*)g.getData(), dataSize*sizeof(unsigned int));
+		return s;
+	}
 
 }
 
