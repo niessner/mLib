@@ -9,6 +9,7 @@ namespace ml {
 
 		DistanceField3() {}
 		DistanceField3(size_t dimX, size_t dimY, size_t dimZ) : Grid3<FloatType>(dimX, dimY, dimZ) {}
+		DistanceField3(const vec3ul& dim) : Grid3<FloatType>(dim.x, dim.y, dim.z) {}
 		DistanceField3(const BinaryGrid3& grid, FloatType trunc = std::numeric_limits<FloatType>::infinity()) : Grid3<FloatType>(grid.getDimX(), grid.getDimY(), grid.getDimZ())
 		{
 			generateFromBinaryGrid(grid, trunc);

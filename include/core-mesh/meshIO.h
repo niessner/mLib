@@ -39,7 +39,7 @@ public:
 	static void saveToFile(const std::string& filename, const MeshData<FloatType>& mesh) {
 
 		if (mesh.isEmpty()) {		
-			MLIB_WARNING("empty mesh");
+			MLIB_WARNING("empty mesh: " + filename);
 			return;
 		}
 
