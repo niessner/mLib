@@ -160,7 +160,7 @@ namespace ml {
 				for (size_t y = 0; y < res.getDimY(); y++) {
 					for (size_t x = 0; x < res.getDimX(); x++) {
 						vec3<FloatType> c((FloatType)x, (FloatType)y, (FloatType)z);
-						c /= 2.0f;
+						c /= 2.0f;	//TODO check factor based on newDim / oldDim
 						res(x, y, z) = trilinearInterpolationSimpleFastFast(c);
 					}
 				}
@@ -169,7 +169,7 @@ namespace ml {
 		}
 
 		DistanceField3 upsample() const {
-			return upsample(vec3ul(getDimX() / 2, getDimY() / 2, getDimZ() / 2));
+			return upsample(vec3ul(getDimX() * 2, getDimY() * 2, getDimZ() * 2));
 		}
 	private:
 
