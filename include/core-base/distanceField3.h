@@ -156,11 +156,20 @@ namespace ml {
 
 		DistanceField3 upsample(const vec3ul& newDim) const {
 			DistanceField3 res(newDim.x, newDim.y, newDim.z);
+
+			vec3<FloatType> factor(
+				(FloatType)res.getDimX() / (FloatType)getDimX(), 
+				(FloatType)res.getDimY() / (FloatType)getDimY(), 
+				(FloatType)res.getDimZ() / (FloatType)getDimZ());
+
 			for (size_t z = 0; z < res.getDimZ(); z++) {
 				for (size_t y = 0; y < res.getDimY(); y++) {
 					for (size_t x = 0; x < res.getDimX(); x++) {
 						vec3<FloatType> c((FloatType)x, (FloatType)y, (FloatType)z);
-						c /= 2.0f;	//TODO check factor based on newDim / oldDim
+						//c /= 2.0f;	//TODO check factor based on newDim / oldDim
+						c.x /= factor.x;
+						c.y /= factor.y;
+						c.z /= factor.z;
 						res(x, y, z) = trilinearInterpolationSimpleFastFast(c);
 					}
 				}
