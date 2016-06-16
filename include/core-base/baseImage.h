@@ -1194,6 +1194,15 @@ namespace ml {
 				m_data[i] = ml::vec3f(data[i].x / scale, data[i].y / scale, data[i].z / scale);
 			}
 		}
+		ColorImageR32G32B32(const BaseImage<vec3uc>& image, float scale = 255.0f) : BaseImage(image.getWidth(), image.getHeight()) {
+			m_format = Image::FORMAT_ColorImageR32G32B32;
+			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+
+			const vec3uc* data = image.getData();
+			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+				m_data[i] = ml::vec3f(data[i].x / scale, data[i].y / scale, data[i].z / scale);
+			}
+		}
 
 		BaseImage<float> convertToGrayscale() const {
 			BaseImage<float> res(getWidth(), getHeight());
