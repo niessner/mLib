@@ -261,6 +261,12 @@ namespace ml {
 			minX = minY = 0;
 			maxX = maxY = 1;
 		}
+
+		BoundingBox2<FloatType>& operator = (const BoundingBox2<FloatType> &b) {
+			for (int i = 0; i < 4; i++)
+				parameters[i] = b.parameters[i];
+			return *this;
+		}
 	protected:
 		union {
 			struct {
