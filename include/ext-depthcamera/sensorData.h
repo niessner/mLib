@@ -1196,7 +1196,33 @@ namespace ml {
 				SAFE_DELETE_ARRAY(depthData);
 			}
 		}
-#endif //_HAS_MLIB
+#endif //_FREEIMAGEWRAPPER_H_
+
+		//! save frame(s) to point cloud
+		void saveToPointCloud(const std::string& filename, unsigned int frameFrom, unsigned int frameTo = -1) const {
+			if (frameTo == (unsigned int)-1) frameTo = frameFrom + 1;
+			PointCloudf pc;
+
+			const mat4f intrinsicInv = m_calibrationDepth.m_intrinsic.getInverse();
+			for (unsigned int frame = frameFrom; frame < frameTo; frame++) {
+				vec3uc* color = decompressColorAlloc(frame);
+				unsigned short* depth = decompressDepthAlloc(frame);
+				mat4f transform = m_frames[frame].getCameraToWorld(); if (transform[0] == -std::numeric_limits<float>::infinity() || transform[0] == 0) transform.setIdentity();
+				for (unsigned int i = 0; i < m_depthWidth*m_depthHeight; i++) {
+					unsigned int x = i % m_depthWidth, y =  i / m_depthWidth;
+					if (depth[i] != 0) {
+						float d = (float)depth[i]/m_depthShift;
+						vec3f worldpos = (intrinsicInv*vec4f((float)x*d, (float)y*d, d, 0.0f)).getVec3();
+						pc.m_points.push_back(transform * worldpos);
+						if (m_colorWidth == m_depthWidth && m_colorHeight == m_depthHeight)
+							pc.m_colors.push_back(vec4f(color[i], 255.0f) / 255.0f);
+					}
+				}
+				std::free(color);
+				std::free(depth);
+			}
+			PointCloudIOf::saveToFile(filename, pc);
+		}
 
 		//! appends another SensorData object
 		void append(const SensorData& second) {
