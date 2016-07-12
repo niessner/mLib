@@ -12,6 +12,7 @@ namespace ml {
 template<class FloatType>
 struct EigenSystem
 {
+	EigenSystem() {}
     EigenSystem(int n)
     {
         eigenvectors = DenseMatrix<FloatType>(n, n);

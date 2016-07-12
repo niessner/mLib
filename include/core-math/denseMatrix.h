@@ -249,6 +249,11 @@ public:
 		return EigenSolver<T>::solve<EigenSolver<T>::TYPE_DEFAULT>(*this);
 	}
 
+	// TODO: figure out a better way to do this.
+	EigenSystem<T> eigenSystemUsingEigen() const {
+		return EigenSolver<T>::solve<EigenSolver<T>::TYPE_EIGEN>(*this);
+	}
+
     //
     // in-place operators
     //

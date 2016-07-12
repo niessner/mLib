@@ -4,6 +4,7 @@ template <class T>
 class PCA
 {
 public:
+	PCA() {}
     void init(const std::vector<const T*> &points, size_t dimension);
 
     // points is a matrix with dimensions (# data points, # dimensions)

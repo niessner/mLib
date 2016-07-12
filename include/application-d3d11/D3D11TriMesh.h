@@ -81,11 +81,13 @@ public:
         return m_triMesh;
 	}
 
+	// TODO: this function is not named correctly; getX shouldn't have to copy so much memory.
 	void getMeshData(MeshDataf& meshData) const
     {
         meshData = m_triMesh.getMeshData();
 	}
 
+	// TODO: this function is not named correctly; getX shouldn't have to copy so much memory.
 	MeshDataf getMeshData() const {
 		MeshDataf meshData;
 		getMeshData(meshData);

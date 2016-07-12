@@ -45,6 +45,7 @@
 #include "core-math/kMeansClustering.h"
 #include "core-math/sampling.h"
 #include "core-math/mathUtil.h"
+#include "core-math/PCA.h"
 
 namespace ml
 {
