@@ -28,7 +28,7 @@ bool DenseMatrix<FloatType>::valid() const
 }
 
 template<class FloatType>
-DenseMatrix<FloatType> DenseMatrix<FloatType>::transpose() const
+DenseMatrix<FloatType> DenseMatrix<FloatType>::getTranspose() const
 {
     DenseMatrix<FloatType> result(m_cols, m_rows);
     for(UINT row = 0; row < m_rows; row++)

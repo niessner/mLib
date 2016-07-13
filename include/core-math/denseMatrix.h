@@ -62,6 +62,17 @@ public:
 		m_dataPtr = &m_data[0];
 	}
 
+	DenseMatrix(size_t rows, size_t cols, const T* values) {
+		m_rows = (UINT)rows;
+		m_cols = (UINT)cols;
+		m_data.resize(m_rows * m_cols);
+		m_dataPtr = &m_data[0];
+
+		for (size_t i = 0; i < rows*cols; i++) {
+			m_dataPtr[i] = values[i];
+		}
+	}
+
 	DenseMatrix(const std::string &s, MatrixStringFormat format)
 	{
 		if(format == MatrixStringFormatMathematica)
@@ -206,7 +217,7 @@ public:
 	//
 	// math functions
 	//
-	DenseMatrix<T> transpose() const;
+	DenseMatrix<T> getTranspose() const;
 	T maxMagnitude() const;
 	DenseMatrix<T> inverse();
 	void invertInPlace();
