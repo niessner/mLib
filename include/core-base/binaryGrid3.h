@@ -11,6 +11,13 @@ namespace ml {
 			m_depth = m_height = m_width = 0;
 			m_data = nullptr;
 		}
+
+		BinaryGrid3(size_t dim) {
+			m_data = nullptr;
+			allocate(dim, dim, dim);
+			clearVoxels();
+		}
+
 		BinaryGrid3(size_t width, size_t height, size_t depth) {
 			m_data = nullptr;
 			allocate(width, height, depth);
