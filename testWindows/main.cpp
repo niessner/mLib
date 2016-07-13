@@ -70,23 +70,106 @@ private:
 
 };
 
+
+template<class FloatType>
+DenseMatrix<FloatType> randomMatrix(size_t rows, size_t cols, FloatType _min = (FloatType)0.0, FloatType _max = (FloatType)1.0) {
+
+	std::default_random_engine generator;
+	std::uniform_real_distribution<FloatType> distribution(_min, _max);
+
+	DenseMatrix<FloatType> res(rows, cols);
+	for (size_t i = 0; i < rows; i++) {
+		for (size_t j = 0; j < cols; j++) {
+			res(i, j) = distribution(generator);
+		}
+	}
+	return res;
+}
+
+
+
+#include "C:\Program Files\MATLAB\R2014b\extern\include\engine.h"
+#pragma comment(lib, "C:\\Program Files\\MATLAB\\R2014b\\extern\\lib\\win64\\microsoft\\libmat.lib")
+#pragma comment(lib, "C:\\Program Files\\MATLAB\\R2014b\\extern\\lib\\win64\\microsoft\\libmex.lib")
+#pragma comment(lib, "C:\\Program Files\\MATLAB\\R2014b\\extern\\lib\\win64\\microsoft\\libmx.lib")
+#pragma comment(lib, "C:\\Program Files\\MATLAB\\R2014b\\extern\\lib\\win64\\microsoft\\libeng.lib")
+
+EigenSystemd computeEigenSystem(const DenseMatrixd& m) {
+	Engine* ep;
+	if (!(ep = engOpen(NULL))) throw MLIB_EXCEPTION("cannot open matlab engine");
+
+	mxArray* A = mxCreateDoubleMatrix(m.cols(), m.rows(), mxREAL);
+	memcpy((char*)mxGetPr(A), m.getData(), sizeof(double)*m.cols()*m.rows());
+
+	engPutVariable(ep, "A", A);
+	engEvalString(ep, "[V,d] = eigs(A)");
+	engEvalString(ep, "D = diag(d)");
+
+	mxArray* D = engGetVariable(ep, "D");
+	mxArray* V = engGetVariable(ep, "V");
+	
+	double* Dreal = mxGetPr(D);
+	double* Vreal = mxGetPr(V);
+
+	engClose(ep);
+
+
+	EigenSystemd es;
+	es.eigenvalues.resize(m.rows());
+	for (size_t i = 0; i < m.rows(); i++) {
+		es.eigenvalues[i] = Dreal[i];
+	}
+	es.eigenvectors = DenseMatrixd(m.rows(), m.cols(), Vreal);
+	
+
+
+	mxDestroyArray(A);
+	mxDestroyArray(D);
+	mxDestroyArray(V);
+
+	return es;
+}
+
+
 int main()
 {
-	{
-		ColorImageR8G8B8 image(2, 1);
-		image(0, 0) = 0.0f;
-		image(1, 0) = 1.0f;
-		image.resize(11, 1, false);
-		for (unsigned int i = 0; i < image.getWidth(); i++) {
-			std::cout << image(i, 0u) << std::endl;
-		}
-		
+	if (true) {
+		DenseMatrixd dm = randomMatrix<double>(4, 4);
 
-		auto img = image.getResized(10, 10);
+		double values[] = {
+			1.0000, 0.5000, 0.3333, 0.2500,
+			0.5000, 1.0000, 0.6667, 0.5000,
+			0.3333, 0.6667, 1.0000, 0.7500,
+			0.2500, 0.5000, 0.7500, 1.0000
+		};
+		dm = DenseMatrixd(4, 4, values);
+		//dm = dm * dm.getTranspose();
+		std::cout << dm << std::endl;
+		EigenSystemd es0 = computeEigenSystem(dm);
+		EigenSystemd es1 = dm.eigenSystem();	es1.sortByAbsValue();
 
-		int a = 5;
-		vec3f bla;
+		std::cout << es0 << std::endl;
+		std::cout << "\n\n";
+		std::cout << es1 << std::endl;
+		getchar();
+		exit(1);
 	}
+
+	//{
+	//	ColorImageR8G8B8 image(2, 1);
+	//	image(0, 0) = 0.0f;
+	//	image(1, 0) = 1.0f;
+	//	image.resize(11, 1, false);
+	//	for (unsigned int i = 0; i < image.getWidth(); i++) {
+	//		std::cout << image(i, 0u) << std::endl;
+	//	}
+	//	
+
+	//	auto img = image.getResized(10, 10);
+
+	//	int a = 5;
+	//	vec3f bla;
+	//}
 	{
 
 		ColorImageR32G32B32A32 image;
