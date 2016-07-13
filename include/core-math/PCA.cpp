@@ -105,7 +105,7 @@ void PCA<T>::finalizeFromEigenSystem()
 }
 
 template<class T>
-size_t PCA<T>::reducedDimension(double energyPercent)
+size_t PCA<T>::reducedDimension(double energyPercent) const
 {
 	double sum = 0.0;
 	for(size_t dimIndex = 0; dimIndex < _system.eigenvalues.size(); dimIndex++)
@@ -125,7 +125,7 @@ size_t PCA<T>::reducedDimension(double energyPercent)
 }
 
 template<class T>
-void PCA<T>::transform(const std::vector<T> &input, size_t reducedDimension, std::vector<T> &result)
+void PCA<T>::transform(const std::vector<T> &input, size_t reducedDimension, std::vector<T> &result) const
 {
     if(result.size() != reducedDimension)
 	    result.resize(reducedDimension);
@@ -133,7 +133,7 @@ void PCA<T>::transform(const std::vector<T> &input, size_t reducedDimension, std
 }
 
 template<class T>
-void PCA<T>::inverseTransform(const std::vector<T> &input, std::vector<T> &result)
+void PCA<T>::inverseTransform(const std::vector<T> &input, std::vector<T> &result) const
 {
     if (result.size() != _means.size())
 	    result.resize(dimension);
@@ -141,22 +141,25 @@ void PCA<T>::inverseTransform(const std::vector<T> &input, std::vector<T> &resul
 }
 
 template<class T>
-void PCA<T>::transform(const T *input, size_t reducedDimension, T *result)
+void PCA<T>::transform(const T *input, size_t reducedDimension, T *result) const
 {
 	const size_t dimension = _means.size();
+	const T *means = _means.data();
+	const T *eigenVectorsPtr = _system.eigenvectors.getData();
 	for(size_t row = 0; row < reducedDimension; row++)
     {
 		T total = 0.0;
+		const T *rowStart = eigenVectorsPtr + row * _system.eigenvectors.cols();
 		for(size_t index = 0; index < dimension; index++)
 		{
-			total += _system.eigenvectors(row, index) * (input[index] - _means[index]);
+			total += rowStart[index] * (input[index] - means[index]);
 		}
 		result[row] = total;
     }
 }
 
 template<class T>
-void PCA<T>::inverseTransform(const T *input, size_t reducedDimension, T *result)
+void PCA<T>::inverseTransform(const T *input, size_t reducedDimension, T *result) const
 {
 	size_t dimension = _means.size();
 	for(size_t col = 0; col < dimension; col++)

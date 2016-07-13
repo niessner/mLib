@@ -184,6 +184,24 @@ namespace math
 		x1 = c / tmp;
 	}
 
+	//! L2 squared distance metric
+	template<typename T>
+	inline T distSqL2(const std::vector<T> &a, const std::vector<T> &b) {
+		T result = T(0.0);
+		for (size_t i = 0; i < a.size(); i++)
+		{
+			T diff = a[i] - b[i];
+			result += diff * diff;
+		}
+		return result;
+	}
+
+	//! L2 distance metric
+	template<typename T>
+	inline T distL2(const std::vector<T> &a, const std::vector<T> &b) {
+		return sqrt(distSqL2(a, b));
+	}
+
 	//! computes sin(phi) and cos(phi)
 	template<typename T>
 	inline void sincos(T phi, T& sinPhi, T& cosPhi) {
@@ -276,6 +294,7 @@ namespace util
 	int runCommand(const std::string& executablePath, const std::string& commandLine, bool Blocking);
 	void makeDirectory(const std::string& directory);
     void deleteDirectory(const std::string& directory);
+	void clearDirectory(const std::string& directory);
     void deleteFile(const std::string& file);
 	bool moveFile(const std::string& currentFile, const std::string& newFile);
 	bool directoryExists(const std::string& directory);

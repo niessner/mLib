@@ -359,6 +359,20 @@ namespace util
         }
     }
 
+	// remove all files and subdirectories in directory, but do not delete it.
+	void clearDirectory(const std::string& directory) {
+		if (directoryExists(directory)) {
+			Directory dir(directory);
+
+			for (const auto& f : dir.getFiles()) {
+				deleteFile(directory + "/" + f);
+			}
+			for (const auto& d : dir.getDirectories()) {
+				deleteDirectory(directory + "/" + d);
+			}
+		}
+	}
+
     void deleteFile(const std::string& file) {
         DeleteFileA(file.c_str());
     }
