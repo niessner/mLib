@@ -1,6 +1,6 @@
 
 template<class T>
-void PCA<T>::init(const std::vector<const T*> &points, size_t dimension)
+void PCA<T>::init(const std::vector<const T*> &points, size_t dimension, const EigenSolverFunc &eigenSolver)
 {
     std::cout << "Initializing PCA, " << points.size() << " points, " << dimension << " dimensions" << std::endl;
 	
@@ -39,7 +39,7 @@ void PCA<T>::init(const std::vector<const T*> &points, size_t dimension)
 }
 
 template<class T>
-void PCA<T>::init(DenseMatrix<T> &points)
+void PCA<T>::init(DenseMatrix<T> &points, const EigenSolverFunc &eigenSolver)
 {
     const size_t n = points.rows();
     const size_t dimension = points.cols();
@@ -73,15 +73,17 @@ void PCA<T>::init(DenseMatrix<T> &points)
     for (auto &x : C)
         x *= norm;
 
-    initFromCorrelationMatrix(C);
+    initFromCorrelationMatrix(C, eigenSolver);
 }
 
 template<class T>
-void PCA<T>::initFromCorrelationMatrix(const DenseMatrix<T> &C)
+void PCA<T>::initFromCorrelationMatrix(const DenseMatrix<T> &C, const EigenSolverFunc &eigenSolver)
 {
     const size_t dimension = C.rows();
 	std::cout << "Computing eigensystem..." << endl;
-    _system = C.eigenSystem();
+	_system = eigenSolver(C);
+    //_system = C.eigenSystem();
+	//_system = C.eigenSystemUsingEigen();
     //std::cout << C.EigenTest(_system.eigenvalues, _system.eigenvectors) << endl;
 
     finalizeFromEigenSystem();
