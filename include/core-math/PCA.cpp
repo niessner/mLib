@@ -66,7 +66,7 @@ void PCA<T>::init(DenseMatrix<T> &points, const EigenSolverFunc &eigenSolver)
     std::cout << "Building cross-correlation matrix..." << std::endl;
 
 	//DenseMatrix<T> C = points * points.transpose();
-	DenseMatrix<T> C = points.transpose() * points;
+	DenseMatrix<T> C = points.getTranspose() * points;
     //DenseMatrix<T>::MultiplyMMTranspose(C, B);
 
     const T norm = T(1.0) / T(n);

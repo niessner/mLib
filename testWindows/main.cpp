@@ -119,8 +119,12 @@ EigenSystemd computeEigenSystem(const DenseMatrixd& m) {
 	for (size_t i = 0; i < m.rows(); i++) {
 		es.eigenvalues[i] = Dreal[i];
 	}
-	es.eigenvectors = DenseMatrixd(m.rows(), m.cols(), Vreal);
-	
+    es.eigenvectors = DenseMatrixd(m.rows(), m.cols());
+    for (size_t i = 0; i < m.rows(); i++) {
+        for (size_t j = 0; j < m.cols(); j++) {
+            es.eigenvectors(j, i) = Vreal[i*m.cols() + j];
+        }
+    }
 
 
 	mxDestroyArray(A);
@@ -144,10 +148,19 @@ int main()
 			0.2500, 0.5000, 0.7500, 1.0000
 		};
 		dm = DenseMatrixd(4, 4, values);
-		//dm = dm * dm.getTranspose();
+		dm = dm * dm.getTranspose();
 		std::cout << dm << std::endl;
 		EigenSystemd es0 = computeEigenSystem(dm);
 		EigenSystemd es1 = dm.eigenSystem();	es1.sortByAbsValue();
+
+        
+        const DenseMatrix<double> diffA = dm * es0.eigenvectors - es0.eigenvectors * DenseMatrixd(es0.eigenvalues);
+        const DenseMatrix<double> diffB = dm * es1.eigenvectors - es1.eigenvectors * DenseMatrixd(es1.eigenvalues);
+        using std::cout;
+        using std::endl;
+        cout << "diffA: " << diffA << endl;
+        cout << "diffB: " << diffB << endl;
+
 
 		std::cout << es0 << std::endl;
 		std::cout << "\n\n";

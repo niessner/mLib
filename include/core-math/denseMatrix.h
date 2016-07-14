@@ -334,7 +334,7 @@ DenseMatrix<T> operator * (const DenseMatrix<T> &A, const DenseMatrix<T> &B)
 }
 
 template<class T>
-std::vector<T> operator * (const DenseMatrix<T> &A, const MathVector<T> &B)
+MathVector<T> operator * (const DenseMatrix<T> &A, const MathVector<T> &B)
 {
 	return DenseMatrix<T>::multiply(A, B);
 }

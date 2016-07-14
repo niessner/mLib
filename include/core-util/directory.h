@@ -46,7 +46,7 @@ public:
         Directory dir(path);
         auto directories = dir.getDirectories();
         for (auto &d : directories)
-            d = path + ending + d;
+            d = path + ending + d + "/";
         return directories;
     }
 
