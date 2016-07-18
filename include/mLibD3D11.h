@@ -13,7 +13,7 @@
 #pragma warning ( disable : 4005)
 
 #include <d3d11.h>
-//#include <d3dx11.h>
+#include <d3dx11.h>	//D3dX is in theory deprecated // see D3D11Utility.cpp, line 84
 #include <d3dcompiler.h>
 
 //
