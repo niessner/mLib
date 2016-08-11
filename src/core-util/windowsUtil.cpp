@@ -8,7 +8,7 @@
 namespace ml {
 
 	namespace util {
-		inline void ErrorExit(const std::string& functionName)
+		inline void errorExit(const std::string& functionName)
 		{
 			// Retrieve the system error message for the last-error code
 

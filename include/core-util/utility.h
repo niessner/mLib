@@ -202,6 +202,21 @@ namespace math
 		return sqrt(distSqL2(a, b));
 	}
 
+	//! L1 distance metric
+	template<typename T>
+	inline T distL1(const std::vector<T> &a, const std::vector<T> &b) {
+		T result = T(0.0);
+		const size_t size = a.size();
+		const T* aPtr = a.data();
+		const T* bPtr = b.data();
+		for (size_t i = 0; i < size; i++)
+		{
+			const T diff = aPtr[i] - bPtr[i];
+			result += std::abs(diff);
+		}
+		return result;
+	}
+
 	//! computes sin(phi) and cos(phi)
 	template<typename T>
 	inline void sincos(T phi, T& sinPhi, T& cosPhi) {
@@ -232,6 +247,12 @@ namespace math
 
 namespace util
 {
+	template<class T>
+	bool validIndex(const std::vector<T> &v, int index)
+	{
+		return (index >= 0 && index < v.size());
+	}
+
     //
     // iterator helpers
     //
