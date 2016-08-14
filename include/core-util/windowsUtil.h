@@ -8,7 +8,7 @@ namespace ml {
 
 	namespace util {
 		//! checks an error and exits
-		void ErrorExit(const std::string& functionName);
+		void errorExit(const std::string& functionName);
 	}
 }
 

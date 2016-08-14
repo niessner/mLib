@@ -125,7 +125,7 @@ namespace ml {
 		m_class.lpszMenuName = nullptr;
 		m_class.lpszClassName = className.c_str();
 		if (RegisterClass(&m_class) == 0) {
-			util::ErrorExit(__FUNCTION__);
+			util::errorExit(__FUNCTION__);
 		}
 
 		s_mainWindow = this;
@@ -142,7 +142,7 @@ namespace ml {
 			instance,
 			(LPVOID) nullptr);
 		if (m_handle == nullptr) {
-			util::ErrorExit(__FUNCTION__);
+			util::errorExit(__FUNCTION__);
 		}
 		ShowWindow(m_handle, SW_SHOW);
 		UpdateWindow(m_handle);
