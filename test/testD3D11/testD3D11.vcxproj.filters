@@ -28,6 +28,9 @@
     <Filter Include="mLibHeader\ext-d3d11font">
       <UniqueIdentifier>{786f6f75-9fa3-4cee-bd72-04eead94dc73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{f1788b5b-0906-442e-b1f7-3760d1698a11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\mLibCore.h">
@@ -195,39 +198,6 @@
     <ClInclude Include="..\include\core-mesh\triMeshAccelerator.h">
       <Filter>mLibHeader\core-mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11PixelShader.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11RenderTarget.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11ShaderManager.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11Texture2D.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11Texture3D.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11TriMesh.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11Utility.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11VertexShader.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11Canvas2D.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11ConstantBuffer.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\application-d3d11\D3D11GraphicsDevice.h">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\ext-d3d11font\D3D11Font.h">
       <Filter>mLibHeader\ext-d3d11font</Filter>
     </ClInclude>
@@ -264,6 +234,48 @@
     <ClInclude Include="..\include\core-base\baseImage.h">
       <Filter>mLibHeader\core-base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11GeometryShader.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11GraphicsDevice.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11PixelShader.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11PointCloud.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11RenderTarget.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11ShaderManager.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11Texture2D.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11Texture3D.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11TriMesh.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11Utility.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11VertexShader.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11AssetRenderer.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11Canvas2D.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11ConstantBuffer.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
@@ -272,5 +284,13 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="console.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\pointCloud.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\test.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

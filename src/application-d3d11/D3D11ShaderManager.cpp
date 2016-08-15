@@ -54,5 +54,15 @@ void D3D11ShaderManager::registerShaderWithGS(
 	}
 }
 
+void D3D11ShaderManager::bindShaders(const std::string& shaderName) const
+{
+	const auto& shaders = getShaders(shaderName);
+
+	shaders.vs.bind();
+	shaders.ps.bind();
+	if (shaders.gs.exists()) shaders.gs.bind();
+	else m_graphics->getContext().GSSetShader(nullptr, nullptr, 0);
+}
+
 
 }

@@ -9,12 +9,6 @@ namespace ml {
 		D3D11PixelShader ps;
 		D3D11GeometryShader gs;
 		D3D11VertexShader vs;
-
-		void bind() const {
-			ps.bind();
-			if (gs.exists()) gs.bind();
-			vs.bind();
-		}
 	};
 
 	class D3D11ShaderManager
@@ -61,14 +55,10 @@ namespace ml {
             return m_shaders.find(shaderName)->second;
         }
 
-		void bindShaders(const std::string &shaderName) const
-		{
-			auto& shaders = getShaders(shaderName);
-			shaders.bind();
-		}
+		void bindShaders(const std::string& shaderName) const;
 
 	private:
-		D3D11GraphicsDevice *m_graphics;
+		D3D11GraphicsDevice* m_graphics;
 		std::map<std::string, D3D11ShaderPair> m_shaders;
 	};
 

@@ -1,7 +1,6 @@
 #include "main.h"
 
-int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, 
-				   LPSTR lpszCmdLine, int nCmdShow)
+int PASCAL WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 {
 	ml::Console::openLogFile("console.txt");
 	AppTest callback;

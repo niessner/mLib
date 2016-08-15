@@ -24,6 +24,20 @@ VertexShaderOutput vertexShaderMain( float4 position : position,
     return output;
 }
 
+
+[maxvertexcount(3)]
+void geometryShaderMain(triangle VertexShaderOutput tri[3], inout TriangleStream<VertexShaderOutput> triStream)
+{
+	VertexShaderOutput output;
+
+	[unroll]
+	for (uint c = 0; c < 3; c++)
+	{
+		output = tri[c];
+		triStream.Append(output);
+	}
+}
+
 float4 pixelShaderMain( VertexShaderOutput input ) : SV_Target
 {
     return float4( input.color.x, input.color.y, input.color.z, 1.0f );

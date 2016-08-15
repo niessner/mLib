@@ -158,6 +158,8 @@ void AppTest::init(ml::ApplicationData &app)
 
 	m_shaderManager.init(app.graphics);
 	m_shaderManager.registerShader("shaders/pointCloud.hlsl", "pointCloud");
+	//m_shaderManager.registerShader("shaders/test.hlsl", "geometryShaderTest");
+	m_shaderManager.registerShaderWithGS("shaders/test.hlsl", "geometryShaderTest");
 
 	m_constants.init(app.graphics);
 
@@ -209,7 +211,8 @@ void AppTest::render(ml::ApplicationData &app)
 	constants.worldViewProj = proj * m_camera.getCamera();
 	constants.modelColor = ml::vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 	m_constants.updateAndBind(constants, 0);
-	app.graphics.castD3D11().getShaderManager().bindShaders("defaultBasic");
+	//app.graphics.castD3D11().getShaderManager().bindShaders("defaultBasic");
+	m_shaderManager.bindShaders("geometryShaderTest");
 	m_mesh.render();
 
 	m_shaderManager.bindShaders("pointCloud");

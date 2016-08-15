@@ -1,5 +1,5 @@
 
-ID3DBlob* ml::D3D11Utility::CompileShader(const std::string &filename, const std::string &entryPoint, const std::string &shaderModel, const std::vector<std::pair<std::string, std::string>>& macros)
+ID3DBlob* ml::D3D11Utility::CompileShader(const std::string& filename, const std::string& entryPoint, const std::string& shaderModel, const std::vector<std::pair<std::string, std::string>>& macros)
 {
 	static const bool s_bUsePreCompiledShaders = true;
 	static bool b_CompiledShaderDirectoryCreated = false;

@@ -57,12 +57,18 @@ public:
 	void bind(UINT constantBufferIndex) 
 	{
 		bindVertexShader(constantBufferIndex);
+		bindGeometryShader(constantBufferIndex);
 		bindPixelShader(constantBufferIndex);
 	}
 
 	void bindVertexShader(UINT constantBufferIndex)
 	{
         m_graphics->getContext().VSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);
+	}
+
+	void bindGeometryShader(UINT constantBufferIndex)
+	{
+		m_graphics->getContext().GSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);
 	}
 
 	void bindPixelShader(UINT constantBufferIndex)
