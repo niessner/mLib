@@ -247,6 +247,15 @@ namespace math
 
 namespace util
 {
+	//! reads from a vector with an index that is clamped to be in-bounds.
+	template<class T>
+	const T& clampedRead(const std::vector<T> &v, int index)
+	{
+		if (index < 0) return v[0];
+		if (index >= v.size()) return v[v.size() - 1];
+		return v[index];
+	}
+
 	template<class T>
 	bool validIndex(const std::vector<T> &v, int index)
 	{
@@ -290,6 +299,12 @@ namespace util
 		if (value < 0) { value = 0; }
 		if (value > 255) { value = 255; }
 		return BYTE(value);
+	}
+
+	template <class T> inline short boundToShort(T value) {
+		if (value <= std::numeric_limits<short>::min()) { return std::numeric_limits<short>::min(); }
+		if (value >= std::numeric_limits<short>::max()) { return std::numeric_limits<short>::max(); }
+		return short(value);
 	}
 
 	//i/o
