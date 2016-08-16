@@ -110,7 +110,7 @@ namespace ml {
 
 			void onDeviceResize();
 			void render();
-			bool intersects(const vec2i &mouseCoord, Intersection &intersection) const;
+			bool intersects(const vec2i &mouseCoord, Intersection& intersection) const;
 
 			const bbox2i& getBox() const
 			{

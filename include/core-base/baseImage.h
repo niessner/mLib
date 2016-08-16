@@ -1289,7 +1289,7 @@ namespace ml {
             m_format = Image::FORMAT_ColorImageR8G8B8A8;
             m_InvalidValue = vec4uc(0, 0, 0, 0);
         }
-		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4uc *data) : BaseImage(width, height, data) {
+		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4uc* data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
 		}
@@ -1298,7 +1298,7 @@ namespace ml {
             m_InvalidValue = vec4uc(0, 0, 0, 0);
             setPixels(clearValue);
         }
-		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4f *data, float scale = 255.0f) : BaseImage(width, height) {
+		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4f* data, float scale = 255.0f) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
 
@@ -1314,6 +1314,23 @@ namespace ml {
 				}
 			}
 		}
+		ColorImageR8G8B8A8(const BaseImage<vec4f>& other, float scale = 255.0f) : BaseImage(other.getWidth(), other.getHeight()) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_InvalidValue = vec4uc(0, 0, 0, 0);
+
+			for (unsigned int y = 0; y < m_height; y++) {
+				for (unsigned int x = 0; x < m_width; x++) {
+					vec4uc value(
+						(unsigned char)(other.getData()[y*m_width + x].x * scale),
+						(unsigned char)(other.getData()[y*m_width + x].y * scale),
+						(unsigned char)(other.getData()[y*m_width + x].z * scale),
+						(unsigned char)(other.getData()[y*m_width + x].w * scale)
+						);
+					setPixel(x, y, value);
+				}
+			}
+		}
+		
 		ColorImageR8G8B8A8(const BaseImage<float>& other, float scale = 255.0f) : BaseImage(other.getWidth(), other.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_InvalidValue = vec4uc(0, 0, 0, 0);
