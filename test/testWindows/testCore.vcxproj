@@ -42,13 +42,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>../include/;../../mLibExternal/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../mLibExternal/libsWindows/lib64/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../include/;../../../mLibExternal/include/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../../mLibExternal/libsWindows/lib64/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>../include/;../../mLibExternal/include/;$(IncludePath)</IncludePath>
-    <LibraryPath>../../mLibExternal/libsWindows/lib64/;$(LibraryPath)</LibraryPath>
+    <IncludePath>../../include/;../../../mLibExternal/include/;$(IncludePath)</IncludePath>
+    <LibraryPath>../../../mLibExternal/libsWindows/lib64/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
