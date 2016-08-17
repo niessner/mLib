@@ -128,6 +128,6 @@ namespace ml {
 
 }  // namespace ml
 
-#include "camera.cpp"
+#include "camera.inl"
 
 #endif  // CORE_GRAPHICS_CAMERA_H_

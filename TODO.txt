@@ -30,3 +30,16 @@ Shapes: Cylinder, Torus, Sphere
 
 Grid3's ordering is strange: return m_data[z*m_dimY*m_dimX + x*m_dimY + y];
 should be z * dimX * dimY + y * dimX + x
+
+Code audit:
+
+core-base
+ * common.h -> 
+ * console.h -> now multiStream.h
+ * baseImage ->
+   some core functions seem to be missing, like getSubregion
+   some functions  don't do what they sound like, like copyIntoImage should actually be named copyFromImage
+   I think some functions assume floats and are broken on r8g8b8 images
+   MImage is fine to keep if it's useful, but feels like we can just handle all this with stream serialization?
+ * baseImageHelper ->
+   Some functions here should be moved to a colorUtil namespace
