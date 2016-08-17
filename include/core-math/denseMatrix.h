@@ -132,7 +132,7 @@ public:
 			m_data[element] = m[element];
 	}
 
-	void resize(UINT rows, UINT cols, T clearValue = (T)0.0)
+    void resize(size_t rows, size_t cols, T clearValue = (T)0.0)
 	{
 		m_rows = rows;
 		m_cols = cols;
@@ -162,22 +162,22 @@ public:
 	//
 	// Accessors
 	//
-	T& operator()(UINT row, UINT col)
+    T& operator()(size_t row, size_t col)
 	{
 		return m_dataPtr[row * m_cols + col];
 	}
 
-	T operator()(UINT row, UINT col) const
+    T operator()(size_t row, size_t col) const
 	{
 		return m_dataPtr[row * m_cols + col];
 	}
 
-	UINT rows() const
+    size_t rows() const
 	{
 		return m_rows;
 	}
 
-	UINT cols() const
+    size_t cols() const
 	{
 		return m_cols;
 	}

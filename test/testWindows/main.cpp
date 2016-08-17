@@ -16,8 +16,6 @@ private:
 	TestCGAL m_cgal;
 	TestGrid m_grid;
 	TestUtility m_utility;
-	//TestMath m_math;
-	TestANN m_ANN;
 	TestLodePNG m_lodePNG;
 	TestBinaryStream m_binaryStream;
 	TestOpenMesh m_openMesh;
@@ -28,8 +26,6 @@ void App::go()
 	m_box.run();
 	m_cgal.run();
 	m_utility.run();
-	//m_math.run();
-	m_ANN.run();
 	m_lodePNG.run();
 	m_binaryStream.run();
 	m_grid.run();

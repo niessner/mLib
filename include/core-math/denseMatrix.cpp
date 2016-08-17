@@ -102,9 +102,9 @@ DenseMatrix<FloatType> DenseMatrix<FloatType>::multiply(const DenseMatrix<FloatT
 {
 	MLIB_ASSERT_STR(A.cols() == B.rows(), "invalid dimensions");
 
-	const UINT rows = A.rows();
-	const UINT cols = B.cols();
-	const UINT innerCount = A.cols();
+	const size_t rows = A.rows();
+    const size_t cols = B.cols();
+    const size_t innerCount = A.cols();
 
 	DenseMatrix<FloatType> result(rows, cols);
 	
