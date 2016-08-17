@@ -15,7 +15,7 @@ public:
 			MLIB_ASSERT_STR(String(i).toINT() == i, "convert test failed");
 		}
 
-		Console::log() << "string test0 passed" << std::endl;
+		std::cout << "string test0 passed" << std::endl;
 	}
 
 	String name()

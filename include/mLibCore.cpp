@@ -18,7 +18,6 @@
 // core-base source files
 //
 #include "../src/core-base/common.cpp"
-#include "../src/core-base/console.cpp"
 
 //
 // core-math source files

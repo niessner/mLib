@@ -25,7 +25,7 @@
 //
 //		MLIB_ASSERT_STR(solveError <= 1e-5, "solve failed");
 //
-//		Console::log() << "sparse matrix test passed" << std::endl;
+//		std::cout << "sparse matrix test passed" << std::endl;
 //	}
 //
 //	void test1()
@@ -50,7 +50,7 @@
 //		double inverseError = inverseCheck.maxMagnitude();
 //		MLIB_ASSERT_STR(inverseError < 1e-6, "matrix inverse test failed");
 //
-//		Console::log() << "dense matrix test passed" << std::endl;
+//		std::cout << "dense matrix test passed" << std::endl;
 //	}
 //
 //	void test2()
@@ -88,7 +88,7 @@
 //		MLIB_ASSERT_STR(solveError2 <= 1e-5, "solve failed");
 //		MLIB_ASSERT_STR(solveError3 <= 1e-5, "solve failed");
 //
-//		Console::log() << "Eigen test passed" << std::endl;
+//		std::cout << "Eigen test passed" << std::endl;
 //	}
 //
 //	void test3()
@@ -107,10 +107,10 @@
 //			Timer timer;
 //			KMeansClustering<vec3f, vec3fKMeansMetric> clustering;
 //			clustering.cluster(points, clusterCount, maxIterations, false);
-//			Console::log() << "iteration " << iteration << ": " << timer.getElapsedTime() << std::endl;
+//			std::cout << "iteration " << iteration << ": " << timer.getElapsedTime() << std::endl;
 //		}
 //		
-//		Console::log() << "clustering test passed" << std::endl;
+//		std::cout << "clustering test passed" << std::endl;
 //	}
 //
 //	std::string name()

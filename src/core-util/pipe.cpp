@@ -29,7 +29,7 @@ void Pipe::closePipe()
 
 void Pipe::createPipe(const std::string &pipeName, bool block)
 {
-    //Console::log() << "creating pipe " << pipeName << std::endl;
+    //std::cout << "creating pipe " << pipeName << std::endl;
 
     closePipe();
     const UINT PipeBufferSize = 100000;
@@ -104,10 +104,10 @@ void Pipe::createPipe(const std::string &pipeName, bool block)
 
     if(block)
     {
-        Console::log("Pipe created, waiting for connection");
+        std::cout << "Pipe created, waiting for connection" << std::endl;
         BOOL Connected = (ConnectNamedPipe(m_handle, nullptr) != 0);
         MLIB_ASSERT_STR(Connected != FALSE, "ConnectNamedPipe failed in Pipe::CreatePipe");
-        Console::log("Connected");
+		std::cout << "Connected" << std::endl;
     }
     else
     {

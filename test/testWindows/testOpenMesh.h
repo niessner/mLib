@@ -22,7 +22,7 @@ public:
 		MeshIOf::saveToFile("bla3.ply",s.getMeshData());
 
 
-		ml::Console::log() << "Open Mesh test0 passed" << std::endl;
+		std::cout <<"Open Mesh test0 passed" << std::endl;
 	}
 
 

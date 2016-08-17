@@ -109,7 +109,7 @@ public:
 
 	MathVector<D> solveLeastSquaresQR(const Eigen::SparseMatrix<D> &A, const MathVector<D> &b)
 	{
-		Console::log("Solving least-squares problem using QR");
+		std::cout << "Solving least-squares problem using QR" << std::endl;
 
         const Eigen::Matrix<D, Eigen::Dynamic, 1> bEigen = eigenutil::makeEigenVector(b);
         Eigen::SparseQR< Eigen::SparseMatrix<D>, Eigen::COLAMDOrdering<int> > factorization(A);
@@ -176,7 +176,7 @@ private:
 		}
 		else if(method == Profile)
 		{
-			Console::log("Profiling all eigen linear solvers");
+			std::cout << "Profiling all eigen linear solvers" << std::endl;
 			const int methodCount = (int)Profile;
 			std::vector< MathVector<D> > results(methodCount);
 			for(int methodIndex = 0; methodIndex < methodCount; methodIndex++)
@@ -187,7 +187,7 @@ private:
 					double maxDeviation = 0.0;
 					for(UINT variableIndex = 0; variableIndex < b.size(); variableIndex++)
 						maxDeviation = std::max<double>(maxDeviation, fabs(results[methodIndex][variableIndex] - results[0][variableIndex]));
-					Console::log("Max deviation from LLT: " + std::to_string(maxDeviation));
+					std::cout << "Max deviation from LLT: " << std::to_string(maxDeviation) << std::endl;
 				}
 			}
 			return results[0];

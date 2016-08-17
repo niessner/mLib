@@ -9,7 +9,6 @@
 // core-base headers
 //
 #include "core-base/common.h"
-#include "core-base/console.h"
 
 //
 // core-util headers (these are required by matrices)

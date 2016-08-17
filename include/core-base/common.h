@@ -4,6 +4,10 @@
 
 #ifdef _WIN32
 
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+
 #ifndef _SCL_SECURE_NO_WARNINGS
 #define _SCL_SECURE_NO_WARNINGS
 #endif
@@ -11,18 +15,6 @@
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
-
-//// Disable iterator debugging if _IDL0 set
-//#ifdef _IDL0
-//#if _SECURE_SCL
-//#undef _SECURE_SCL
-//#define _SECURE_SCL 0
-//#endif
-//
-//#ifndef _ITERATOR_DEBUG_LEVEL
-//#define _ITERATOR_DEBUG_LEVEL 0
-//#endif
-//#endif
 
 #define MLIB_OPENMP
 
@@ -72,10 +64,6 @@ class access;
 
 namespace ml
 {
-
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
 
 #if defined (LINUX)
 #define __FUNCTION__ __func__
@@ -143,17 +131,6 @@ void assertFunctionMLIB(bool statement, const std::string &description);
 #define SAFE_RELEASE(p) { if (p) { p->Release();   (p)=nullptr; } }
 #endif
 
-//#ifndef V_RETURN
-//#define V_RETURN(hr) { if (FAILED(hr)) { return (hr); } }
-//#endif
-
-//#ifndef E_RETURN
-//#define E_RETURN(hr) { if(FAILED(hr)) { Console::log() << #hr << " " << hr << std::endl; } }
-//#endif
-
-//#ifndef D3D_VALIDATE
-//#define D3D_VALIDATE(statement) { HRESULT hr = statement;  if(FAILED(hr)) { MLIB_ERROR(#statement); } }
-//#endif
 #ifndef D3D_VALIDATE
 #define D3D_VALIDATE(statement) { HRESULT hr = statement;  if(FAILED(hr)) { throw MLIB_EXCEPTION(#statement); } }
 #endif
@@ -208,9 +185,6 @@ typedef unsigned char BYTE;
 #ifndef USHORT
 typedef unsigned short USHORT;
 #endif
-
-
-
 
 #ifndef sint
 typedef signed int sint;

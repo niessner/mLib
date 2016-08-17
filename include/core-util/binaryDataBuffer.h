@@ -44,14 +44,14 @@ public:
 	}
 
 	void writeData(const BYTE* t, size_t size) {
-		//Console::log() << "tellp() " << m_fileStream.tellp() << std::endl;
+		//std::cout << "tellp() " << m_fileStream.tellp() << std::endl;
 		m_fileStream.seekp(m_fileSize);	//always append at the end
 		m_fileStream.write((char*)t, size);
 		m_fileSize += size;
 	}
 
 	void readData(BYTE* result, size_t size) {
-		//Console::log() << "tellg() " << m_fileStream.tellg() << std::endl;
+		//std::cout << "tellg() " << m_fileStream.tellg() << std::endl;
 		//assert(m_readOffset + size <= m_fileSize);
 		if (m_readOffset + size > m_fileSize) throw MLIB_EXCEPTION("invalid read; probably wrong file name (" + m_filename + ")?");
 		m_fileStream.seekg(m_readOffset);

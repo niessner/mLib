@@ -25,7 +25,6 @@ private:
 
 void App::go()
 {
-	ml::Console::openLogFile("console.txt");
 	m_box.run();
 	m_cgal.run();
 	m_utility.run();
@@ -36,7 +35,6 @@ void App::go()
 	m_grid.run();
 	m_openMesh.run();
 
-	ml::Console::log("All tests completed");
 	std::cin.get();
 }
 

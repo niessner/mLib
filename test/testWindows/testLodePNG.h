@@ -12,10 +12,9 @@ public:
 		bmp(2, 7) = RGBColor::White;
 
 		LodePNG::save(bmp, "test.png");
-    ColorImageR8G8B8A8 bmpReloaded = LodePNG::load("test.png");
+		ColorImageR8G8B8A8 bmpReloaded = LodePNG::load("test.png");
 
 		MLIB_ASSERT_STR(bmp == bmpReloaded, "bitmaps do not match");
-		Console::log("LodePNG test done");
 	}
 
 	std::string name()

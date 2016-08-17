@@ -59,7 +59,7 @@ public:
     }
     void reset()
     {
-        //Console::log() << "resetting fonts" << std::endl;
+        //std::cout << "resetting fonts" << std::endl;
         release();
         D3D_VALIDATE(FW1CreateFactory(FW1_VERSION, &m_factory));
         D3D_VALIDATE(m_factory->CreateFontWrapper(&m_graphics->getDevice(), m_fontName.c_str(), &m_fontWrapper));

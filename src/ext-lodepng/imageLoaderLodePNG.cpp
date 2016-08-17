@@ -6,7 +6,7 @@ namespace ml
   {
     if (!ml::util::fileExists(filename))
     {
-      Console::log("LodePNG::load file not found: " + filename);
+      std::cout << "LodePNG::load file not found: " << filename << std::endl;
       return ColorImageR8G8B8A8();
     }
     std::vector<BYTE> image;

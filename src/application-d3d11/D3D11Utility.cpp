@@ -91,7 +91,7 @@ ID3DBlob* ml::D3D11Utility::CompileShader(const std::string& filename, const std
 			std::string errorBlobText;
 			if (errorBlob != nullptr) {
 				errorBlobText = (char *)errorBlob->GetBufferPointer();
-				Console::log() << "Shader compilation failed for " << filename << std::endl
+				std::cout << "Shader compilation failed for " << filename << std::endl
 					<< errorBlobText << std::endl;
 			}
 			MLIB_ERROR("Shader compilation failed for " + filename);

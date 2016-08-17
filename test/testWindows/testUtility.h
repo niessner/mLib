@@ -25,9 +25,6 @@ public:
 			std::find(dir.getFiles().begin(), dir.getFiles().end(), "output.txt") != dir.getFiles().end() &&
 			std::find(filesWithSuffic.begin(), filesWithSuffic.end(), "output.txt") != filesWithSuffic.end(), 
 			"Directory failed");
-
-
-		Console::log("util tests passed");
 	}
 
 	std::string name()

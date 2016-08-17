@@ -29,7 +29,7 @@ public:
 			std::vector<vec3f> convexHull = CGALWrapper<float>::convexHull3(points);
 			PointCloudIOf::saveToFile("convexHull.ply", PointCloudf(convexHull));
 		}
-		ml::Console::log() << "CGAL test0 passed" << std::endl;
+		std::cout <<"CGAL test0 passed" << std::endl;
 	}
 
 
