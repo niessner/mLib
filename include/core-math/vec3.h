@@ -110,19 +110,24 @@ public:
 		array[2] *= val;
 	}
 
-    inline bool isValid() const {
-        const T max = std::numeric_limits<T>::max();
-        bool xValid = (x >= -max && x <= max);
-        bool yValid = (y >= -max && y <= max);
-        bool zValid = (z >= -max && z <= max);
-        return xValid && yValid && zValid;
-    }
+	inline bool isValid() const
+	{
+		return (x == x && y == y && z == z);
+	}
 
 	inline void operator/=(T val) {
-		T inv = (T)1 / val;
-		array[0] *= inv;
-		array[1] *= inv;
-		array[2] *= inv;
+		//optimized version for float/double (doesn't work for int) -- assumes compiler statically optimizes if
+		if (std::is_same<T, float>::value || std::is_same<T, double>::value) {
+			T inv = (T)1 / val;
+			array[0] *= inv;
+			array[1] *= inv;
+			array[2] *= inv;
+		}
+		else {
+			array[0] /= val;
+			array[1] /= val;
+			array[2] /= val;
+		}
 	}
 
 	inline vec3<T> operator*(T val) const {
@@ -130,7 +135,14 @@ public:
 	}
 
 	inline vec3<T> operator/(T val) const {
-		return vec3<T>(array[0]/val, array[1]/val, array[2]/val);
+		//optimized version for float/double (doesn't work for int) -- assumes compiler statically optimizes if
+		if (std::is_same<T, float>::value || std::is_same<T, double>::value) {
+			T inv = (T)1 / val;
+			return vec3<T>(array[0] * inv, array[1] * inv, array[2] * inv);
+		}
+		else {
+			return vec3<T>(array[0] / val, array[1] / val, array[2] / val);
+		}
 	}
 
 	//! Cross product

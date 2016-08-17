@@ -153,15 +153,25 @@ public:
 	}
 
 	inline void operator/=(T val) {
+		//optimized version for float/double (doesn't work for int) -- assumes compiler statically optimizes if
+		if (std::is_same<T, float>::value || std::is_same<T, double>::value) {
+			T inv = ((T)1) / (val);
 
-		T inv_val = ((T)1)/(val);
-
-		array[0] *= inv_val;
-		array[1] *= inv_val;
-		array[2] *= inv_val;
-		array[3] *= inv_val;
-		array[4] *= inv_val;
-		array[5] *= inv_val;
+			array[0] *= inv;
+			array[1] *= inv;
+			array[2] *= inv;
+			array[3] *= inv;
+			array[4] *= inv;
+			array[5] *= inv;
+		}
+		else {
+			array[0] /= val;
+			array[1] /= val;
+			array[2] /= val;
+			array[3] /= val;
+			array[4] /= val;
+			array[5] /= val;
+		}
 	}
 
 	inline vec6<T> operator*(T val) const {
@@ -169,7 +179,14 @@ public:
 	}
 
 	inline vec6<T> operator/(T val) const {
-		return vec6<T>(array[0]/val, array[1]/val, array[2]/val, array[3]/val, array[4]/val, array[5]/val);
+		//optimized version for float/double (doesn't work for int) -- assumes compiler statically optimizes if
+		if (std::is_same<T, float>::value || std::is_same<T, double>::value) {
+			T inv = ((T)1) / (val);
+			return vec6<T>(array[0] * inv, array[1] * inv, array[2] * inv, array[3] * inv, array[4] * inv, array[5] * inv);
+		}
+		else {
+			return vec6<T>(array[0] / val, array[1] / val, array[2] / val, array[3] / val, array[4] / val, array[5] / val);
+		}
 	}
 
 	//! dot product
