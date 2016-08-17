@@ -117,11 +117,20 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
         }
 
         inline void operator/=(T val) {
-            T inv = (T)1 / val;
-            array[0] *= inv;
-            array[1] *= inv;
-            array[2] *= inv;
-            array[3] *= inv;
+			//optimized version for float/double (doesn't work for int) -- assumes compiler statically optimizes if
+			if (std::is_same<T, float>::value || std::is_same<T, double>::value) {
+				T inv = (T)1 / val;
+				array[0] *= inv;
+				array[1] *= inv;
+				array[2] *= inv;
+				array[3] *= inv;
+			}
+			else {
+				array[0] /= val;
+				array[1] /= val;
+				array[2] /= val;
+				array[3] /= val;
+			}
         }
 
         inline vec4<T> operator*(T val) const {
@@ -129,8 +138,14 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
         }
 
         inline vec4<T> operator/(T val) const {
-            T inv = (T)1 / val;
-            return vec4<T>(array[0]*inv, array[1]*inv, array[2]*inv, array[3]*inv);
+			//optimized version for float/double (doesn't work for int) -- assumes compiler statically optimizes if
+			if (std::is_same<T, float>::value || std::is_same<T, double>::value) {
+				T inv = (T)1 / val;
+				return vec4<T>(array[0] * inv, array[1] * inv, array[2] * inv, array[3] * inv);
+			}
+			else {
+				return vec4<T>(array[0] / val, array[1] / val, array[2] / val, array[3] / val);
+			}
         }
 
         //! cross product (of .xyz)
