@@ -258,7 +258,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 	
 	if (key == KEY_F2) {
 		ml::D3D11RenderTarget renderTarget;
-		renderTarget.load(app.graphics.castD3D11(), app.window.getWidth(), app.window.getHeight());
+		renderTarget.load(app.graphics.castD3D11(), app.window.getWidth(), app.window.getHeight(), std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, true);
 		renderTarget.clear();
 		renderTarget.bind();
 		render(app);

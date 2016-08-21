@@ -50,7 +50,7 @@ namespace ml
 			D3D11_TEXTURE2D_DESC renderDesc;
 			renderDesc.Width = m_width;
 			renderDesc.Height = m_height;
-			renderDesc.MipLevels = 0;
+			renderDesc.MipLevels = 1;
 			renderDesc.ArraySize = 1;
 			//renderDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 			renderDesc.Format = m_textureFormats[i];
@@ -85,7 +85,7 @@ namespace ml
 		depthDesc.SampleDesc.Quality = 0;
 		depthDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		//if (hasSRVs()) depthDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;	//TODO make this work
+		if (hasSRVs()) depthDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;	//TODO make this work
 		depthDesc.CPUAccessFlags = 0;
 		depthDesc.MiscFlags = 0;
 		D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_depthStencil));
