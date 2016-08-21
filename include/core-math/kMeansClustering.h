@@ -87,7 +87,7 @@ class KMeansClustering
 public:
 	void cluster(const std::vector<T> &elements, UINT clusterCount, UINT maxIterations = 0, bool verbose = true, double maxDelta = 0.0)
 	{
-		if(verbose) Console::log(std::string("k-means clustering, ") + std::to_string(elements.size()) + std::string(" points, ") + std::to_string(clusterCount) + std::string(" clusters"));
+		if(verbose) std::cout << (std::string("k-means clustering, ") + std::to_string(elements.size()) + std::string(" points, ") + std::to_string(clusterCount) + std::string(" clusters")) << std::endl;
 
 		MLIB_ASSERT_STR(elements.size() >= clusterCount, "Too many clusters");
 
@@ -113,13 +113,13 @@ public:
 				delta += Metric::Dist(previousClusterCenters[clusterIndex], m_clusters[clusterIndex].center);
 
 			converged = (delta <= maxDelta || pass == maxIterations);
-			if(verbose) Console::log(std::string("pass ") + std::to_string(pass) + std::string(", ") + std::string("delta=") + std::to_string(delta));
+			if(verbose) std::cout << (std::string("pass ") + std::to_string(pass) + std::string(", ") + std::string("delta=") + std::to_string(delta)) << std::endl;
 		}
 	}
 
 	void cluster(const std::vector<T> &elements, const std::vector<float> &weights, UINT clusterCount, UINT maxIterations = 0, bool verbose = true, double maxDelta = 0.0)
 	{
-		if(verbose) Console::log(std::string("k-means clustering, ") + std::to_string(elements.size()) + std::string(" points, ") + std::to_string(clusterCount) + std::string(" clusters"));
+		if(verbose) std::cout << (std::string("k-means clustering, ") + std::to_string(elements.size()) + std::string(" points, ") + std::to_string(clusterCount) + std::string(" clusters")) << std::endl;
 
 		MLIB_ASSERT_STR(elements.size() >= clusterCount, "Too many clusters");
 		MLIB_ASSERT_STR(elements.size() == weights.size(), "Incorrect number of weights");
@@ -150,7 +150,7 @@ public:
 				delta += Metric::Dist(previousClusterCenters[clusterIndex], m_clusters[clusterIndex].center);
 
 			converged = (delta <= maxDelta || pass == maxIterations);
-			if(verbose) Console::log(std::string("pass ") + std::to_string(pass) + std::string(", ") + std::string("delta=") + std::to_string(delta));
+			if(verbose) std::cout << (std::string("pass ") + std::to_string(pass) + std::string(", ") + std::string("delta=") + std::to_string(delta)) << std::endl;
 		}
 	}
 

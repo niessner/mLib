@@ -38,7 +38,8 @@ namespace ml {
 		class Element
 		{
 		public:
-			Element(GraphicsDevice& g, const std::string &id, ElementType elementType, float depth) : m_graphics(&g.castD3D11()), m_id(id), m_depth(depth) {
+			Element(GraphicsDevice& g, const std::string &id, ElementType elementType, float depth, bool useDefaultShader = true) 
+				: m_graphics(&g.castD3D11()), m_id(id), m_depth(depth), m_bUseDefaultShader(useDefaultShader) {
 				m_elementType = elementType;
 			}
 
@@ -89,6 +90,7 @@ namespace ml {
 			D3D11GraphicsDevice* m_graphics;
 			float m_depth; // value should be between 0 and 1
 			std::string m_id;
+			bool m_bUseDefaultShader;
 
 		private:
 			ElementType m_elementType;
@@ -158,7 +160,7 @@ namespace ml {
 			}
 
 			void render() {
-				m_graphics->getShaderManager().bindShaders("defaultCanvasCircle");
+				if (m_bUseDefaultShader) m_graphics->getShaderManager().bindShaders("defaultCanvasCircle");
 				m_constantBuffer.bind(0);
 				m_mesh.render();
 			}
@@ -171,7 +173,8 @@ namespace ml {
 		class ElementBox : public Element
 		{
 		public:
-			ElementBox(GraphicsDevice& g, const std::string &id, const bbox2i& box, const vec4f& color, float depth) : Element(g, id, ELEMENT_TYPE_BOX, depth)
+			ElementBox(GraphicsDevice& g, const std::string &id, const bbox2i& box, const vec4f& color, float depth, bool useDefaultShader) 
+				: Element(g, id, ELEMENT_TYPE_BOX, depth, useDefaultShader)
 			{
 				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasBox", "boxVS", "vs_4_0", "boxPS", "ps_4_0");
@@ -189,7 +192,7 @@ namespace ml {
 			}
 
 			void render() {
-				m_graphics->getShaderManager().bindShaders("defaultCanvasBox");
+				if (m_bUseDefaultShader)  m_graphics->getShaderManager().bindShaders("defaultCanvasBox");
 				m_mesh.render();
 			}
 			bool intersects(const vec2i &mouseCoord, Intersection &intersection) const {
@@ -230,8 +233,8 @@ namespace ml {
 		void addBillboard(const std::string &elementId, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
 			m_namedElements[elementId] = new ElementBillboard(*m_graphics, elementId, box, image, depth);
 		}
-		void addBox(const std::string &elementId, const bbox2i& box, const vec4f& color, float depth) {
-			m_namedElements[elementId] = new ElementBox(*m_graphics, elementId, box, color, depth);
+		void addBox(const std::string &elementId, const bbox2i& box, const vec4f& color, float depth, bool useDefaultShader = true) {
+			m_namedElements[elementId] = new ElementBox(*m_graphics, elementId, box, color, depth, useDefaultShader);
 		}
 
 		void addCircle(const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
@@ -242,8 +245,8 @@ namespace ml {
 			m_unnamedElements.push_back(new ElementBillboard(*m_graphics, "", box, image, depth));
 		}
 
-		void addBox(const bbox2i& box, const vec4f& color, float depth) {
-			m_unnamedElements.push_back(new ElementBox(*m_graphics, "", box, color, depth));
+		void addBox(const bbox2i& box, const vec4f& color, float depth, bool useDefaultShader = true) {
+			m_unnamedElements.push_back(new ElementBox(*m_graphics, "", box, color, depth, useDefaultShader));
 		}
 
 		Intersection intersectionFirst(const vec2i &mouseCoord) const;

@@ -35,8 +35,8 @@ public:
 	{
 		if(argIndex >= m_args.size())
 		{
-			Console::log("insufficient number of arguments: " + m_commandLine);
-			Console::log("usage: " + m_usage);
+			std::cout << "insufficient number of arguments: " << m_commandLine << std::endl;
+			std::cout << "usage: " << m_usage << std::endl;
 			MLIB_ERROR("aborting");
 			exit(1);
 		}

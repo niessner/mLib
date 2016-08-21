@@ -12,7 +12,7 @@ public:
 	{
         m_graphics = nullptr;
         m_texture = nullptr;
-        m_view = nullptr;
+        m_srv = nullptr;
 	}
     //
     // TODO: implement other copy constructors similar to D3D11Mesh
@@ -21,7 +21,7 @@ public:
     {
         m_image = std::move(t.m_image);
         m_graphics = t.m_graphics;
-        m_view = t.m_view; t.m_view = nullptr;
+        m_srv = t.m_srv; t.m_srv = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
     }
 
@@ -29,7 +29,7 @@ public:
     {
         m_image = std::move(t.m_image);
         m_graphics = t.m_graphics;
-        m_view = t.m_view; t.m_view = nullptr;
+        m_srv = t.m_srv; t.m_srv = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
     }
 
@@ -41,7 +41,7 @@ public:
 	D3D11Texture2D(GraphicsDevice &g, const ColorImageR8G8B8A8 &bmp)
     {
         m_texture = nullptr;
-        m_view = nullptr;
+        m_srv = nullptr;
         load(g, bmp);
     }
     void load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image);
@@ -49,7 +49,7 @@ public:
 	void release();
 	void reset();
 
-    void bind() const;
+	void bind(unsigned int slot = 0) const;
 
 	const ColorImageR8G8B8A8& getImage() const
     {
@@ -60,7 +60,7 @@ private:
 	D3D11GraphicsDevice *m_graphics;
 	ColorImageR8G8B8A8 m_image;
     ID3D11Texture2D *m_texture;
-    ID3D11ShaderResourceView *m_view;
+    ID3D11ShaderResourceView *m_srv;
 };
 
 }  // namespace ml

@@ -56,7 +56,7 @@ public:
 	{
 		m_prompt = prompt;
 		m_terminated = false;
-		Console::log("start " + prompt);
+		std::cout << "start " << prompt << std::endl;
 	}
 	~ComponentTimer()
 	{
@@ -65,7 +65,7 @@ public:
 	void end()
 	{
 		m_terminated = true;
-		Console::log("end " + m_prompt + ", " + std::to_string(m_clock.getElapsedTime()) + "s");
+		std::cout << "end " << m_prompt << ", " << std::to_string(m_clock.getElapsedTime()) << "s" << std::endl;
 	}
 
 private:

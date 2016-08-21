@@ -13,7 +13,7 @@ template<class FloatType>
 struct EigenSystem
 {
 	EigenSystem() {}
-    EigenSystem(int n)
+    EigenSystem(size_t n)
     {
         eigenvectors = DenseMatrix<FloatType>(n, n);
         eigenvalues.resize(n);
@@ -158,7 +158,7 @@ public:
 
 		MLIB_ASSERT(M.square());
 
-		const unsigned int n = M.rows();
+		const unsigned int n = (unsigned int)M.rows();
 		const FloatType* matrix = M.getData();
 
 		// Use jacobi's method:

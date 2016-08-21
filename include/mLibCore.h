@@ -9,7 +9,6 @@
 // core-base headers
 //
 #include "core-base/common.h"
-#include "core-base/console.h"
 
 //
 // core-util headers (these are required by matrices)
@@ -26,7 +25,7 @@
 //
 // core-math headers
 //
-#include "core-math/nr_templates.h"
+#include "core-math/numericalRecipesTemplates.h"
 #include "core-math/vec1.h"
 #include "core-math/vec2.h"
 #include "core-math/vec3.h"

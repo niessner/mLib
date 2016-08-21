@@ -390,6 +390,6 @@ namespace ml
 
 }  // namespace ml
 
-#include "grid3.cpp"
+#include "grid3.inl"
 
 #endif  // CORE_BASE_GRID3D_H_

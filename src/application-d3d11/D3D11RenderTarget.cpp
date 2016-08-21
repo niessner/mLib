@@ -18,7 +18,7 @@ namespace ml
 
 		SAFE_RELEASE(m_depthStencil);
 		SAFE_RELEASE(m_depthStencilDSV);
-		if (hasSRVs()) SAFE_RELEASE(m_depthStensilSRV);
+		if (hasSRVs()) SAFE_RELEASE(m_depthStencilSRV);
 
 		for (unsigned int i = 0; i < getNumTargets(); i++) {
 			if (m_captureTextures) SAFE_RELEASE(m_captureTextures[i]);
@@ -50,7 +50,7 @@ namespace ml
 			D3D11_TEXTURE2D_DESC renderDesc;
 			renderDesc.Width = m_width;
 			renderDesc.Height = m_height;
-			renderDesc.MipLevels = 0;
+			renderDesc.MipLevels = 1;
 			renderDesc.ArraySize = 1;
 			//renderDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 			renderDesc.Format = m_textureFormats[i];
@@ -58,6 +58,7 @@ namespace ml
 			renderDesc.SampleDesc.Quality = 0;
 			renderDesc.Usage = D3D11_USAGE_DEFAULT;
 			renderDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+			if (hasSRVs()) renderDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
 			renderDesc.CPUAccessFlags = 0;
 			renderDesc.MiscFlags = 0;
 
@@ -84,6 +85,7 @@ namespace ml
 		depthDesc.SampleDesc.Quality = 0;
 		depthDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		if (hasSRVs()) depthDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;	//TODO make this work
 		depthDesc.CPUAccessFlags = 0;
 		depthDesc.MiscFlags = 0;
 		D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_depthStencil));
@@ -95,6 +97,9 @@ namespace ml
 		depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthViewDesc.Texture2D.MipSlice = 0;
 		D3D_VALIDATE(device.CreateDepthStencilView(m_depthStencil, nullptr, &m_depthStencilDSV));
+
+		// Create the shader resource view	//TODO make this work
+		//if (hasSRVs())	D3D_VALIDATE(device.CreateShaderResourceView(m_depthStencil, nullptr, &m_depthStencilSRV));	// create the shader resource view
 
 
 		// Create the depth capture buffer

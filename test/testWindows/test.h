@@ -3,7 +3,6 @@ class Test
 public:
 	void run()
 	{
-		ml::Console::log("Running test: " + name());
 		test0();
 		test1();
 		test2();

@@ -27,7 +27,7 @@ public:
 		std::cout << "AABB_FALLBACK" << std::endl;
 		std::cout << CGALWrapperf::computeOrientedBoundingBox(points, CGALWrapperf::AABB_FALLBACK) << std::endl;
 
-		ml::Console::log() << "box test0 passed" << std::endl;
+		std::cout <<"box test0 passed" << std::endl;
 	}
 
 	void test1() 
@@ -74,7 +74,7 @@ public:
 			MLIB_ASSERT_STR(resultA == resultB, "collisions inconsistent");
 		}
 
-		ml::Console::log() << "box test1 passed" << std::endl;
+		std::cout <<"box test1 passed" << std::endl;
 
 	}
 
@@ -84,7 +84,7 @@ public:
 		obb.scale(1.5);
 		std::cout << "obb after\t" << obb << std::endl;
 
-		ml::Console::log() << "box test2 passed" << std::endl;
+		std::cout <<"box test2 passed" << std::endl;
 	}
 
 	std::string name()

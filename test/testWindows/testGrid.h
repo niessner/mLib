@@ -21,7 +21,7 @@ public:
 			grid.setVoxel(i,i,i);
 		}
 
-		ml::Console::log() << "binaryGrid3d test0 passed" << std::endl;
+		std::cout <<"binaryGrid3d test0 passed" << std::endl;
 	}
 
 	void test1()
@@ -37,7 +37,7 @@ public:
 		ml::PointCloudf pc(grid, 1.0f);
 		ml::PointCloudIOf::saveToFile("gridcloud0.ply", pc);
 
-		ml::Console::log() << "binaryGrid3d test1 passed" << std::endl;
+		std::cout <<"binaryGrid3d test1 passed" << std::endl;
 	}
 
 	void test2() 
@@ -69,7 +69,7 @@ public:
 		TriMeshf voxelMesh(grid.first, grid.second.getInverse());
 		MeshIOf::saveToFile("box.ply", voxelMesh.getMeshData());
 
-		ml::Console::log() << "binaryGrid3d test2 passed" << std::endl;
+		std::cout <<"binaryGrid3d test2 passed" << std::endl;
 	}
 
 
@@ -117,7 +117,7 @@ public:
 		std::cout << t.getElapsedTimeMS() << " ms" << std::endl;
 
 
-		ml::Console::log() << "distanceField test3 passed" << std::endl;
+		std::cout <<"distanceField test3 passed" << std::endl;
 	}
 
     void test4()

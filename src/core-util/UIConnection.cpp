@@ -7,12 +7,12 @@ void UIConnection::init(const std::string &executableFile, const std::string &pi
 {
     if (executableFile.size() > 0 && util::runCommand(executableFile, "", false) != 0)
 	{
-		Console::log("Failed to launch UI");
+		std::cout << "Failed to launch UI" << std::endl;
 		return;
 	}
 	m_readFromUIPipe.createPipe(pipeBaseName + "ReadFromUI", false);
 	m_writeToUIPipe.connectToLocalPipe(pipeBaseName + "WriteToUI");
-    Console::log("UI pipes created");
+	std::cout << "UI pipes created" << std::endl;
 }
 
 void UIConnection::readMessages()
