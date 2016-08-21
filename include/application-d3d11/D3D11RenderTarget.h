@@ -19,7 +19,7 @@ public:
 
 		m_depthStencil = nullptr;
 		m_depthStencilDSV = nullptr;
-		m_depthStensilSRV = nullptr;
+		m_depthStencilSRV = nullptr;
 
 		m_captureTextures = nullptr;
 		m_captureDepth = nullptr;
@@ -39,7 +39,7 @@ public:
 
 		m_depthStencil = nullptr;
 		m_depthStencilDSV = nullptr;
-		m_depthStensilSRV = nullptr;
+		m_depthStencilSRV = nullptr;
 
 		m_captureTextures = nullptr;
 		m_captureDepth = nullptr;
@@ -108,7 +108,7 @@ public:
 	}
 	ID3D11ShaderResourceView* getDepthSRV() {
 		if (!hasSRVs()) throw MLIB_EXCEPTION("render target has no SRVs");
-		return m_depthStensilSRV;
+		return m_depthStencilSRV;
 	}
 
 	void bindColorSRVs(unsigned int startSlot = 0) {
@@ -118,7 +118,7 @@ public:
 
 	void bindDepthSRV(unsigned int startSlot = 0) {
 		if (!hasSRVs()) throw MLIB_EXCEPTION("render target has no SRVs");
-		m_graphics->getContext().PSSetShaderResources(startSlot, 1, &m_depthStensilSRV);
+		m_graphics->getContext().PSSetShaderResources(startSlot, 1, &m_depthStencilSRV);
 	}
 
 	void unbindColorSRVs(unsigned int startSlot = 0) {
@@ -143,10 +143,10 @@ private:
 
 	ID3D11Texture2D*			m_depthStencil;
 	ID3D11DepthStencilView*		m_depthStencilDSV;
-	ID3D11ShaderResourceView*	m_depthStensilSRV;
+	ID3D11ShaderResourceView*	m_depthStencilSRV;
 
-    ID3D11Texture2D **m_captureTextures;    
-    ID3D11Texture2D *m_captureDepth;   
+    ID3D11Texture2D** m_captureTextures;    
+    ID3D11Texture2D* m_captureDepth;   
     
 	bool m_bHasSRVs;
 };
