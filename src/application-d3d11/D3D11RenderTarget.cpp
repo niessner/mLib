@@ -80,26 +80,32 @@ namespace ml
 		depthDesc.Height = m_height;
 		depthDesc.MipLevels = 1;
 		depthDesc.ArraySize = 1;
-		depthDesc.Format = DXGI_FORMAT_D32_FLOAT;	//we just assume the depth buffer to always have 32 bit
+		//depthDesc.Format = DXGI_FORMAT_D32_FLOAT;	//we just assume the depth buffer to always have 32 bit
+		depthDesc.Format = DXGI_FORMAT_R32_TYPELESS;
 		depthDesc.SampleDesc.Count = 1;
 		depthDesc.SampleDesc.Quality = 0;
 		depthDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		if (hasSRVs()) depthDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;	//TODO make this work
+		if (hasSRVs()) depthDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
 		depthDesc.CPUAccessFlags = 0;
 		depthDesc.MiscFlags = 0;
 		D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_depthStencil));
 
 		// Create the depth view
-		D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDesc;
-		depthViewDesc.Flags = 0;
-		depthViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		depthViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		depthViewDesc.Texture2D.MipSlice = 0;
-		D3D_VALIDATE(device.CreateDepthStencilView(m_depthStencil, nullptr, &m_depthStencilDSV));
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDSVDesc;
+		depthViewDSVDesc.Flags = 0;
+		depthViewDSVDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthViewDSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthViewDSVDesc.Texture2D.MipSlice = 0;
+		D3D_VALIDATE(device.CreateDepthStencilView(m_depthStencil, &depthViewDSVDesc, &m_depthStencilDSV));
 
-		// Create the shader resource view	//TODO make this work
-		//if (hasSRVs())	D3D_VALIDATE(device.CreateShaderResourceView(m_depthStencil, nullptr, &m_depthStencilSRV));	// create the shader resource view
+		// Create the shader resource view
+		D3D11_SHADER_RESOURCE_VIEW_DESC depthViewSRVDesc;
+		depthViewSRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
+		depthViewSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		depthViewSRVDesc.Texture2D.MipLevels = 1;
+		depthViewSRVDesc.Texture2D.MostDetailedMip = 0;
+		if (hasSRVs())	D3D_VALIDATE(device.CreateShaderResourceView(m_depthStencil, &depthViewSRVDesc, &m_depthStencilSRV));	// create the shader resource view
 
 
 		// Create the depth capture buffer
