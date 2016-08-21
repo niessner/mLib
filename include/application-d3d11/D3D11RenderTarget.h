@@ -101,6 +101,35 @@ public:
 	bool hasSRVs() const {
 		return m_bHasSRVs;
 	}
+
+	ID3D11ShaderResourceView* getColorSRV(unsigned int which = 0) {
+		if (!hasSRVs()) throw MLIB_EXCEPTION("render target has no SRVs");
+		return m_targetsSRV[which];
+	}
+	ID3D11ShaderResourceView* getDepthSRV() {
+		if (!hasSRVs()) throw MLIB_EXCEPTION("render target has no SRVs");
+		return m_depthStensilSRV;
+	}
+
+	void bindColorSRVs(unsigned int startSlot = 0) {
+		if (!hasSRVs()) throw MLIB_EXCEPTION("render target has no SRVs");
+		m_graphics->getContext().PSSetShaderResources(startSlot, getNumTargets(), m_targetsSRV);
+	}
+
+	void bindDepthSRV(unsigned int startSlot = 0) {
+		if (!hasSRVs()) throw MLIB_EXCEPTION("render target has no SRVs");
+		m_graphics->getContext().PSSetShaderResources(startSlot, 1, &m_depthStensilSRV);
+	}
+
+	void unbindColorSRVs(unsigned int startSlot = 0) {
+		ID3D11ShaderResourceView* const srvs[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+		m_graphics->getContext().PSSetShaderResources(startSlot, getNumTargets(), srvs);
+	}
+
+	void unbindDepthSRV(unsigned int startSlot = 0) {
+		ID3D11ShaderResourceView* const srvs[] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+		m_graphics->getContext().PSSetShaderResources(startSlot, 1, srvs);
+	}
 private:
 	D3D11GraphicsDevice *m_graphics;
 	unsigned int m_width;
