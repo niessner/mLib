@@ -1,0 +1,59 @@
+
+namespace ml
+{
+
+	void D3D11Buffer::load(GraphicsDevice& g, const std::vector<T>& data)
+	{
+		m_graphics = &g.castD3D11();
+		release();
+
+		g.castD3D11().registerAsset(this);
+		m_data = data;
+
+		reset();
+	}
+
+	void D3D11Buffer::release()
+	{
+		SAFE_RELEASE(m_buffer);
+		SAFE_RELEASE(m_srv);
+		SAFE_RELEASE(m_uav);
+	}
+
+	void D3D11Buffer::reset()
+	{
+		release();
+
+		if (m_data.size() == 0) return;
+
+		auto &device = m_graphics->getDevice();
+		auto &context = m_graphics->getContext();
+
+		//D3D11_BUFFER_DESC desc;
+		//desc.Width = (UINT)m_image.getWidth();
+		//desc.Height = (UINT)m_image.getHeight();
+		//desc.MipLevels = 0;
+		//desc.ArraySize = 1;
+		//desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		//desc.SampleDesc.Count = 1;
+		//desc.SampleDesc.Quality = 0;
+		//desc.Usage = D3D11_USAGE_DEFAULT;
+		//desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		//desc.CPUAccessFlags = 0;
+		//desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		//
+		//D3D_VALIDATE(device.CreateTexture2D(&desc, nullptr, &m_texture));
+		//D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_srv));
+		//
+		//context.UpdateSubresource(m_texture, 0, nullptr, m_image.getData(), (UINT)m_image.getWidth() * sizeof(vec4uc), (UINT)m_image.getWidth() * (UINT)m_image.getHeight() * sizeof(vec4uc));
+		//
+		//context.GenerateMips(m_srv);
+	}
+
+	void D3D11Buffer::bind(unsigned int slot /* = 0 */) const
+	{
+		if (m_srv == nullptr) return;
+		m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
+	}
+
+}

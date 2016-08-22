@@ -30,6 +30,7 @@
 #include "application-d3d11/D3D11PointCloud.h"
 #include "application-d3d11/D3D11Texture2D.h"
 #include "application-d3d11/D3D11Texture3D.h"
+#include "application-d3d11/D3D11Buffer.h"
 #include "application-d3d11/D3D11RenderTarget.h"
 #include "application-d3d11/D3D11Canvas2D.h"
 #include "application-d3d11/D3D11AssetRenderer.h"
