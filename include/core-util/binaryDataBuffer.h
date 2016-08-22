@@ -172,6 +172,8 @@ public:
 	BinaryDataBufferMemory() {
 		m_readOffset = 0;
 	}
+
+	//TODO: this is pretty clunky and it is confusing this constructor is statically-compilable for BinaryDataBufferMemory.
 	void openBufferStream(const std::string& filename, bool clearBuffer = false) {
 		MLIB_ASSERT(false);
 		//dummy just needed for file stream

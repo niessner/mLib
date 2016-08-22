@@ -335,7 +335,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 }
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::list<T>& l) {
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, std::list<T>& l) {
 	UINT64 size;
 	s >> size;
 	l.clear();
@@ -438,6 +438,20 @@ namespace util
         in >> o0 >> o1;
         in.closeStream();
     }
+
+	template<class T>
+	void deserializeFromMemoryPrimitive(const std::vector<BYTE> &data, T &o)
+	{
+		deserializeFromMemoryPrimitive(std::move(data), o);
+	}
+
+	template<class T>
+	void deserializeFromMemoryPrimitive(std::vector<BYTE> &&data, T &o)
+	{
+		BinaryDataStreamVector in;
+		in.setData(std::move(data));
+		in.readPrimitive(o);
+	}
 
 	//
 	// TODO: these cannot be forward declared without zlib, and should be moved into the mlib-zlib header.
