@@ -1,4 +1,6 @@
 
+Buffer<float4> g_buffer : register(t0);
+
 cbuffer ConstantBuffer : register( b0 )
 {
 	matrix worldViewProj;
@@ -16,11 +18,17 @@ struct VertexShaderOutput
 VertexShaderOutput vertexShaderMain( float4 position : position,
 									 float4 normal : normal,
 									 float4 color : color,
-									 float4 texCoord : texCoord )
+									 float4 texCoord : texCoord,
+									 uint vID : SV_VertexID
+									 )
 {
     VertexShaderOutput output;
     output.position = mul( position, worldViewProj );
 	output.color = color;
+
+	float4 bufferValue = g_buffer[vID];
+	output.color = bufferValue;
+
     return output;
 }
 

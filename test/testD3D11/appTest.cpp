@@ -201,7 +201,6 @@ void AppTest::init(ml::ApplicationData &app)
 		bufferData[i] = m_mesh.getTriMesh().getVertices()[i].color;
 		bufferData[i].x = 0.0f;
 	}
-	m_mesh.getTriMesh();
 	m_buffer.load(app.graphics, bufferData);
 }
 
@@ -223,7 +222,10 @@ void AppTest::render(ml::ApplicationData &app)
 	m_constants.updateAndBind(constants, 0);
 	//app.graphics.castD3D11().getShaderManager().bindShaders("defaultBasic");
 	m_shaderManager.bindShaders("geometryShaderTest");
+
+	m_buffer.bindSRV(0);
 	m_mesh.render();
+	m_buffer.unbindSRV(0);
 
 	m_shaderManager.bindShaders("pointCloud");
 	m_constants.bind(0);

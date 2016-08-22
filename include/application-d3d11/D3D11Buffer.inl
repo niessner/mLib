@@ -56,10 +56,10 @@ namespace ml
 			else throw MLIB_EXCEPTION("TOOD implement the format for template T...");
 			
 			descSRV.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
-			descSRV.Buffer.ElementOffset = 0;
-			descSRV.Buffer.ElementWidth = sizeof(T);
-			//descSRV.Buffer.FirstElement = 0;
-			//descSRV.Buffer.NumElements = m_data.size();
+			//descSRV.Buffer.ElementOffset = 0;
+			//descSRV.Buffer.ElementWidth = sizeof(T);
+			descSRV.Buffer.FirstElement = 0;
+			descSRV.Buffer.NumElements = (unsigned int)m_data.size();
 			D3D_VALIDATE(device.CreateShaderResourceView(m_buffer, &descSRV, &m_srv));
 		}
 		if (hasUAV()) {
@@ -85,8 +85,8 @@ namespace ml
 	{
 		if (m_srv == nullptr) return;
 		ID3D11ShaderResourceView* const srvs[] = { NULL };
-		m_graphics->getContext().VSSetShaderResources(slot, 1, &srvs);
-		m_graphics->getContext().GSSetShaderResources(slot, 1, &srvs);
-		m_graphics->getContext().PSSetShaderResources(slot, 1, &srvs);
+		m_graphics->getContext().VSSetShaderResources(slot, 1, srvs);
+		m_graphics->getContext().GSSetShaderResources(slot, 1, srvs);
+		m_graphics->getContext().PSSetShaderResources(slot, 1, srvs);
 	}
 }
