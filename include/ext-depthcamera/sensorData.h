@@ -1343,17 +1343,29 @@ namespace ml {
 					m_bIsReady = false;
 					m_colorFrame = NULL;
 					m_depthFrame = NULL;
+					m_timeStampDepth = 0;
+					m_timeStampColor = 0;
 				}
 				~FrameState() {
 					//NEEDS MANUAL FREE
 				}
 				void free() {
-					if (m_colorFrame) std::free(m_colorFrame);
-					if (m_depthFrame) std::free(m_depthFrame);
+					if (m_colorFrame) {
+						std::free(m_colorFrame);
+						m_colorFrame = NULL;
+					}
+					if (m_depthFrame) {
+						std::free(m_depthFrame);
+						m_depthFrame = NULL;
+					}
+					m_timeStampDepth = 0;
+					m_timeStampColor = 0;
 				}
 				bool			m_bIsReady;
 				vec3uc*			m_colorFrame;
 				unsigned short*	m_depthFrame;
+				UINT64			m_timeStampDepth;
+				UINT64			m_timeStampColor;
 			};
 			RGBDFrameCacheRead(SensorData* sensorData, unsigned int cacheSize) : m_decompThread() {
 				m_sensorData = sensorData;
@@ -1420,6 +1432,8 @@ namespace ml {
 						//std::cout << "decompressing frame " << cache->m_nextFromSensorData << std::endl;
 						fs.m_colorFrame = sensorData->decompressColorAlloc(frame);
 						fs.m_depthFrame = sensorData->decompressDepthAlloc(frame);
+						fs.m_timeStampDepth = frame.m_timeStampDepth;
+						fs.m_timeStampColor = frame.m_timeStampColor;
 						fs.m_bIsReady = true;
 						cache->m_nextFromSensorData++;
 					}
@@ -1445,17 +1459,29 @@ namespace ml {
 					m_bIsReady = false;
 					m_colorFrame = NULL;
 					m_depthFrame = NULL;
+					m_timeStampDepth = 0;
+					m_timeStampColor = 0;
 				}
 				~FrameState() {
 					//NEEDS MANUAL FREE
 				}
 				void free() {
-					if (m_colorFrame) std::free(m_colorFrame);
-					if (m_depthFrame) std::free(m_depthFrame);
+					if (m_colorFrame) {
+						std::free(m_colorFrame);
+						m_colorFrame = NULL;
+					}
+					if (m_depthFrame) {
+						std::free(m_depthFrame);
+						m_depthFrame = NULL;
+					}
+					m_timeStampDepth = 0;
+					m_timeStampColor = 0;
 				}
 				bool			m_bIsReady;
 				vec3uc*			m_colorFrame;
 				unsigned short*	m_depthFrame;
+				UINT64			m_timeStampDepth;
+				UINT64			m_timeStampColor;
 			};
 		public:
 			RGBDFrameCacheWrite(SensorData* sensorData, unsigned int cacheSize) : m_compThread() {
@@ -1477,10 +1503,12 @@ namespace ml {
 			}
 
 			//! appends the data to the cache for process AND frees the memory
-			void writeNextAndFree(vec3uc* color, unsigned short* depth) {
+			void writeNextAndFree(vec3uc* color, unsigned short* depth, UINT64 timeStampColor = 0, UINT64 timeStampDepth = 0) {
 				FrameState fs;
 				fs.m_colorFrame = color;
 				fs.m_depthFrame = depth;
+				fs.m_timeStampColor = timeStampColor;
+				fs.m_timeStampDepth = timeStampDepth;
 				while (m_data.size() >= m_cacheSize) {
 					#ifdef _WIN32
 					Sleep(0);	//wait until we have space in our cache
@@ -1512,7 +1540,7 @@ namespace ml {
 						//	fs.m_depthFrame,
 						//	cache->m_sensorData->m_depthWidth,
 						//	cache->m_sensorData->m_depthHeight));
-						cache->m_sensorData->addFrame(fs.m_colorFrame, fs.m_depthFrame);
+						cache->m_sensorData->addFrame(fs.m_colorFrame, fs.m_depthFrame, mat4f::identity(), fs.m_timeStampColor, fs.m_timeStampDepth);
 						fs.free();
 
 					}

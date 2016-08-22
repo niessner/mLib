@@ -16,7 +16,7 @@ void D3D11Texture3D::load(GraphicsDevice &g, const Grid3<RGBColor> &data)
 void D3D11Texture3D::release()
 {
     SAFE_RELEASE(m_texture);
-    SAFE_RELEASE(m_view);
+    SAFE_RELEASE(m_srv);
 }
 
 void D3D11Texture3D::reset()
@@ -41,18 +41,17 @@ void D3D11Texture3D::reset()
     desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
     D3D_VALIDATE(device.CreateTexture3D(&desc, nullptr, &m_texture));
-    D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_view));
+    D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_srv));
 
 	context.UpdateSubresource(m_texture, 0, nullptr, m_data.getData(), (UINT)m_data.getDimX() * sizeof(RGBColor), (UINT)m_data.getDimX() * (UINT)m_data.getDimY() * sizeof(RGBColor));
 
-    context.GenerateMips(m_view);
+    context.GenerateMips(m_srv);
 }
 
-void D3D11Texture3D::bind() const
+void D3D11Texture3D::bind(unsigned int slot /* = 0 */) const
 {
-    if (m_view == nullptr)
-        return;
-	m_graphics->getContext().PSSetShaderResources(0, 1, &m_view);
+    if (m_srv == nullptr) return;
+	m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
 }
 
 }

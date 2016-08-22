@@ -89,6 +89,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\application-d3d11\D3D11AssetRenderer.h" />
+    <ClInclude Include="..\..\include\application-d3d11\D3D11Buffer.h" />
     <ClInclude Include="..\..\include\application-d3d11\D3D11Canvas2D.h" />
     <ClInclude Include="..\..\include\application-d3d11\D3D11ConstantBuffer.h" />
     <ClInclude Include="..\..\include\application-d3d11\D3D11GeometryShader.h" />

@@ -21,7 +21,7 @@ void D3D11Canvas2D::ElementBillboard::onDeviceResize()
 
 void D3D11Canvas2D::ElementBillboard::render()
 {
-    m_graphics->getShaderManager().bindShaders("defaultCanvasBillboard");
+    if (m_bUseDefaultShader) m_graphics->getShaderManager().bindShaders("defaultCanvasBillboard");
     m_tex.bind();
     m_mesh.render();
 }

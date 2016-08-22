@@ -117,7 +117,7 @@ EigenSystemd computeEigenSystem(const DenseMatrixd& m) {
     for (size_t i = 0; i < m.rows(); i++) {
         for (size_t j = 0; j < m.cols(); j++) {
             es.eigenvectors(j, i) = Vreal[i*m.cols() + j];
-        }
+        } 
     }
 
 
@@ -131,8 +131,38 @@ EigenSystemd computeEigenSystem(const DenseMatrixd& m) {
 
 int main()
 {
+	if (true) {		
+
+		const size_t numBatches = 100;
+		std::vector<vec2d> sum(numBatches, vec2d(0.0));
+
+		for (size_t j = 0; j < numBatches; j++) {
+			const size_t numElem = 1000000;
+			std::vector<vec2d> values(numElem, vec2d(1.0));
+			Timer t;
+			for (size_t i = 0; i < numElem; i++) {
+
+				const vec2d& v = values[i];
+				sum[i%numBatches] += v;
+				//sum.divA(sum.x + sum.y + sum.z + (T)1.0);
+				sum[i%numBatches] /= (sum[i%numBatches].x + 1.0);
+				//vec[i] /= 2.0;
+				//vec[i] /= 3.0;
+				//vec[i] /= 4.0;
+				//vec[i] /= 5.0;
+				//vec[i] /= 2.0;
+				//vec[i] /= 3.0;
+				//vec[i] /= 4.0;
+				//vec[i] /= 5.0;
+			}
+			std::cout << "time " << t.getElapsedTimeMS() << " ms" << std::endl;
+		}
+		getchar();
+		exit(1);
+	}
+
 	//////////////// REVISION 1000 !!!! ////////////
-	if (true) {
+	if (false) {
 		DenseMatrixd dm = randomMatrix<double>(4, 4);
 
 		double values[] = {

@@ -16,7 +16,7 @@ void D3D11Texture2D::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
 void D3D11Texture2D::release()
 {
     SAFE_RELEASE(m_texture);
-    SAFE_RELEASE(m_view);
+    SAFE_RELEASE(m_srv);
 }
 
 void D3D11Texture2D::reset()
@@ -43,18 +43,17 @@ void D3D11Texture2D::reset()
     desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
     D3D_VALIDATE(device.CreateTexture2D(&desc, nullptr, &m_texture));
-    D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_view));
+    D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_srv));
 
     context.UpdateSubresource(m_texture, 0, nullptr, m_image.getData(), (UINT)m_image.getWidth() * sizeof(vec4uc), (UINT)m_image.getWidth() * (UINT)m_image.getHeight() * sizeof(vec4uc));
 
-    context.GenerateMips(m_view);
+    context.GenerateMips(m_srv);
 }
 
-void D3D11Texture2D::bind() const
+void D3D11Texture2D::bind(unsigned int slot /* = 0 */) const
 {
-    if (m_view == nullptr)
-        return;
-    m_graphics->getContext().PSSetShaderResources(0, 1, &m_view);
+    if (m_srv == nullptr) return;
+	m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
 }
 
 }

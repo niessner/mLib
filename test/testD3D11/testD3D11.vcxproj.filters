@@ -276,6 +276,9 @@
     <ClInclude Include="..\..\include\application-d3d11\D3D11ConstantBuffer.h">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\application-d3d11\D3D11Buffer.h">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />

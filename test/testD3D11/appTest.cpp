@@ -148,7 +148,9 @@ void AppTest::init(ml::ApplicationData &app)
 	std::vector<ml::TriMeshf> meshes;
 	meshes.push_back(triMesh);
 
-	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));
+	ml::TriMeshf unifiedMesh = ml::meshutil::createUnifiedMesh(meshes);
+
+	m_mesh.load(app.graphics, unifiedMesh);
 
 	auto lambdaPoints = [=](ml::vec3f& v) { v = ml::vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX); };
 	std::vector<ml::vec3f> points(5000);
@@ -163,7 +165,7 @@ void AppTest::init(ml::ApplicationData &app)
 
 	m_constants.init(app.graphics);
 
-	bbox3f bb = ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)).computeBoundingBox();
+	bbox3f bb = unifiedMesh.computeBoundingBox();
 	std::cout << bb << std::endl;
 
 
@@ -193,6 +195,13 @@ void AppTest::init(ml::ApplicationData &app)
 	m_canvas.addBillboard(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
 	m_canvas.addBillboard(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
 	m_canvas.addBox(bbox2i(vec2i(50, 50), vec2i(10, 10)), RGBColor::Yellow, 0.4f);
+
+	std::vector<vec4f> bufferData(m_mesh.getTriMesh().getVertices().size());
+	for (size_t i = 0; i < m_mesh.getTriMesh().getVertices().size(); i++) {
+		bufferData[i] = m_mesh.getTriMesh().getVertices()[i].color;
+		bufferData[i].x = 0.0f;
+	}
+	m_buffer.load(app.graphics, bufferData);
 }
 
 void AppTest::render(ml::ApplicationData &app)
@@ -213,7 +222,10 @@ void AppTest::render(ml::ApplicationData &app)
 	m_constants.updateAndBind(constants, 0);
 	//app.graphics.castD3D11().getShaderManager().bindShaders("defaultBasic");
 	m_shaderManager.bindShaders("geometryShaderTest");
+
+	m_buffer.bindSRV(0);
 	m_mesh.render();
+	m_buffer.unbindSRV(0);
 
 	m_shaderManager.bindShaders("pointCloud");
 	m_constants.bind(0);
@@ -258,7 +270,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 	
 	if (key == KEY_F2) {
 		ml::D3D11RenderTarget renderTarget;
-		renderTarget.load(app.graphics.castD3D11(), app.window.getWidth(), app.window.getHeight());
+		renderTarget.load(app.graphics.castD3D11(), app.window.getWidth(), app.window.getHeight(), std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, true);
 		renderTarget.clear();
 		renderTarget.bind();
 		render(app);

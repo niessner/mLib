@@ -273,6 +273,18 @@ namespace util
         }
     }
 
+	inline std::string getTimeString() {
+		auto t = std::time(nullptr);
+		auto tm = *std::localtime(&t);
+		std::stringstream ss; ss << std::put_time(&tm, "%Y-%m-%d_%H-%M-%S");
+		return ss.str();
+	}
+
+	inline UINT64 getTime() {
+		UINT64 res = std::time(NULL);
+		return res;
+	}
+
 	//
 	// hashing
 	//
