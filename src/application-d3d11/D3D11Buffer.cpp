@@ -1,8 +1,8 @@
 
 namespace ml
 {
-
-	void D3D11Buffer::load(GraphicsDevice& g, const std::vector<T>& data)
+	template <class T>
+	void D3D11Buffer<T>::load(GraphicsDevice& g, const std::vector<T>& data)
 	{
 		m_graphics = &g.castD3D11();
 		release();
@@ -13,14 +13,16 @@ namespace ml
 		reset();
 	}
 
-	void D3D11Buffer::release()
+	template <class T>
+	void D3D11Buffer<T>::release()
 	{
 		SAFE_RELEASE(m_buffer);
 		SAFE_RELEASE(m_srv);
 		SAFE_RELEASE(m_uav);
 	}
 
-	void D3D11Buffer::reset()
+	template <class T>
+	void D3D11Buffer<T>::reset()
 	{
 		release();
 
@@ -29,31 +31,42 @@ namespace ml
 		auto &device = m_graphics->getDevice();
 		auto &context = m_graphics->getContext();
 
-		//D3D11_BUFFER_DESC desc;
-		//desc.Width = (UINT)m_image.getWidth();
-		//desc.Height = (UINT)m_image.getHeight();
-		//desc.MipLevels = 0;
-		//desc.ArraySize = 1;
-		//desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		//desc.SampleDesc.Count = 1;
-		//desc.SampleDesc.Quality = 0;
-		//desc.Usage = D3D11_USAGE_DEFAULT;
-		//desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-		//desc.CPUAccessFlags = 0;
-		//desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
-		//
-		//D3D_VALIDATE(device.CreateTexture2D(&desc, nullptr, &m_texture));
-		//D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_srv));
-		//
+		D3D11_BUFFER_DESC desc;
+		desc.ByteWidth = sizeof(T)*m_data.size();
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desc.MiscFlags = 0;
+		desc.StructureByteStride = sizeof(T);
+		desc.Usage = D3D11_USAGE_DEFAULT;	// read/write GPU
+		//desc.Usage = D3D11_USAGE_DYNAMIC;	// read-only GPU, write CPU
+		desc.BindFlags = 0;
+		if (hasSRV()) desc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+		if (hasUAV()) desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
+		
+		D3D11_SUBRESOURCE_DATA initialData;
+		initialData.pSysMem = m_data.data();
+		initialData.SysMemPitch = 0;
+		initialData.SysMemSlicePitch = 0;
+
+		D3D_VALIDATE(device.CreateBuffer(&desc, &initialData, &m_buffer));
+		if (hasSRV())	D3D_VALIDATE(device.CreateShaderResourceView(m_buffer, nullptr, &m_srv));
+		if (hasUAV())	D3D_VALIDATE(device.CreateUnorderedAccessView(m_buffer, nullptr, &m_uav));
+		
 		//context.UpdateSubresource(m_texture, 0, nullptr, m_image.getData(), (UINT)m_image.getWidth() * sizeof(vec4uc), (UINT)m_image.getWidth() * (UINT)m_image.getHeight() * sizeof(vec4uc));
-		//
 		//context.GenerateMips(m_srv);
 	}
 
-	void D3D11Buffer::bind(unsigned int slot /* = 0 */) const
+	template <class T>
+	void D3D11Buffer<T>::bind(unsigned int slot /* = 0 */) const
 	{
 		if (m_srv == nullptr) return;
 		m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
 	}
 
+	template <class T>
+	void D3D11Buffer<T>::unbind(unsigned int slot /* = 0 */) const
+	{
+		if (m_srv == nullptr) return;
+		ID3D11ShaderResourceView* const srvs[] = { NULL };
+		m_graphics->getContext().PSSetShaderResources(slot, 1, &srvs);
+	}
 }

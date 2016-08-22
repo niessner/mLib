@@ -61,8 +61,9 @@ namespace ml {
 		void reset();
 
 		void bind(unsigned int slot = 0) const;
+		void unbind(unsigned int slot = 0) const;
 
-		const ColorImageR8G8B8A8& getImage() const
+		const std::vector<T>& getData() const
 		{
 			return m_image;
 		}
