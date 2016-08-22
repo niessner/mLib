@@ -148,7 +148,9 @@ void AppTest::init(ml::ApplicationData &app)
 	std::vector<ml::TriMeshf> meshes;
 	meshes.push_back(triMesh);
 
-	m_mesh.load(app.graphics, ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)));
+	ml::TriMeshf unifiedMesh = ml::meshutil::createUnifiedMesh(meshes);
+
+	m_mesh.load(app.graphics, unifiedMesh);
 
 	auto lambdaPoints = [=](ml::vec3f& v) { v = ml::vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX); };
 	std::vector<ml::vec3f> points(5000);
@@ -163,7 +165,7 @@ void AppTest::init(ml::ApplicationData &app)
 
 	m_constants.init(app.graphics);
 
-	bbox3f bb = ml::TriMeshf(ml::meshutil::createUnifiedMesh(meshes)).computeBoundingBox();
+	bbox3f bb = unifiedMesh.computeBoundingBox();
 	std::cout << bb << std::endl;
 
 
@@ -193,6 +195,14 @@ void AppTest::init(ml::ApplicationData &app)
 	m_canvas.addBillboard(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
 	m_canvas.addBillboard(bbox2i(vec2i(100, 100), vec2i(500, 500)), image, 0.5f);
 	m_canvas.addBox(bbox2i(vec2i(50, 50), vec2i(10, 10)), RGBColor::Yellow, 0.4f);
+
+	std::vector<vec4f> bufferData(m_mesh.getTriMesh().getVertices().size());
+	for (size_t i = 0; i < m_mesh.getTriMesh().getVertices().size(); i++) {
+		bufferData[i] = m_mesh.getTriMesh().getVertices()[i].color;
+		bufferData[i].x = 0.0f;
+	}
+	m_mesh.getTriMesh();
+	m_buffer.load(app.graphics, bufferData);
 }
 
 void AppTest::render(ml::ApplicationData &app)

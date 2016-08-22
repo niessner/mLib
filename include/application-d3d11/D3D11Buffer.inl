@@ -32,7 +32,7 @@ namespace ml
 		auto &context = m_graphics->getContext();
 
 		D3D11_BUFFER_DESC desc;
-		desc.ByteWidth = sizeof(T)*m_data.size();
+		desc.ByteWidth = (unsigned int)(sizeof(T)*m_data.size());
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		desc.MiscFlags = 0;
 		desc.StructureByteStride = sizeof(T);
@@ -48,8 +48,24 @@ namespace ml
 		initialData.SysMemSlicePitch = 0;
 
 		D3D_VALIDATE(device.CreateBuffer(&desc, &initialData, &m_buffer));
-		if (hasSRV())	D3D_VALIDATE(device.CreateShaderResourceView(m_buffer, nullptr, &m_srv));
-		if (hasUAV())	D3D_VALIDATE(device.CreateUnorderedAccessView(m_buffer, nullptr, &m_uav));
+		if (hasSRV()) {
+			D3D11_SHADER_RESOURCE_VIEW_DESC descSRV;
+
+			if (std::is_same<T, float>::value) descSRV.Format = DXGI_FORMAT_R32_FLOAT;
+			else if (std::is_same<T, vec4f>::value) descSRV.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			else throw MLIB_EXCEPTION("TOOD implement the format for template T...");
+			
+			descSRV.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+			descSRV.Buffer.ElementOffset = 0;
+			descSRV.Buffer.ElementWidth = sizeof(T);
+			//descSRV.Buffer.FirstElement = 0;
+			//descSRV.Buffer.NumElements = m_data.size();
+			D3D_VALIDATE(device.CreateShaderResourceView(m_buffer, &descSRV, &m_srv));
+		}
+		if (hasUAV()) {
+			MLIB_ASSERT_STR(false, "not implemented yet");
+			D3D_VALIDATE(device.CreateUnorderedAccessView(m_buffer, nullptr, &m_uav));
+		}
 		
 		//context.UpdateSubresource(m_texture, 0, nullptr, m_image.getData(), (UINT)m_image.getWidth() * sizeof(vec4uc), (UINT)m_image.getWidth() * (UINT)m_image.getHeight() * sizeof(vec4uc));
 		//context.GenerateMips(m_srv);

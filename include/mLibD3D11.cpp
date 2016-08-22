@@ -18,7 +18,7 @@
 #include "../src/application-d3d11/D3D11PointCloud.cpp"
 #include "../src/application-d3d11/D3D11Texture2D.cpp"
 #include "../src/application-d3d11/D3D11Texture3D.cpp"
-#include "../src/application-d3d11/D3D11Buffer.cpp"
+//#include "../src/application-d3d11/D3D11Buffer.cpp"
 #include "../src/application-d3d11/D3D11RenderTarget.cpp"
 #include "../src/application-d3d11/D3D11Canvas2D.cpp"
 #include "../src/application-d3d11/D3D11AssetRenderer.cpp"

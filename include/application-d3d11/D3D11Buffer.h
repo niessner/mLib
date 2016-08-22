@@ -16,7 +16,7 @@ namespace ml {
 			m_uav = nullptr;
 			
 			m_bHasSRV = true;	//TODO add parameter
-			m_bHasUAV = true;	//TODO add parameter
+			m_bHasUAV = false;	//TODO add parameter
 		}
 		//
 		// TODO: implement other copy constructors similar to D3D11Mesh
@@ -60,8 +60,8 @@ namespace ml {
 		void release();
 		void reset();
 
-		void bind(unsigned int slot = 0) const;
-		void unbind(unsigned int slot = 0) const;
+		void bindSRV(unsigned int slot = 0) const;
+		void unbindSRV(unsigned int slot = 0) const;
 
 		const std::vector<T>& getData() const
 		{
@@ -88,5 +88,7 @@ namespace ml {
 	};
 
 }  // namespace ml
+
+#include "D3D11Buffer.inl"
 
 #endif  // APPLICATION_D3D11_D3D11Buffer_H_
