@@ -56,17 +56,21 @@ namespace ml
 	}
 
 	template <class T>
-	void D3D11Buffer<T>::bind(unsigned int slot /* = 0 */) const
+	void D3D11Buffer<T>::bindSRV(unsigned int slot /* = 0 */) const
 	{
 		if (m_srv == nullptr) return;
+		m_graphics->getContext().VSSetShaderResources(slot, 1, &m_srv);
+		m_graphics->getContext().GSSetShaderResources(slot, 1, &m_srv);
 		m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
 	}
 
 	template <class T>
-	void D3D11Buffer<T>::unbind(unsigned int slot /* = 0 */) const
+	void D3D11Buffer<T>::unbindSRV(unsigned int slot /* = 0 */) const
 	{
 		if (m_srv == nullptr) return;
 		ID3D11ShaderResourceView* const srvs[] = { NULL };
+		m_graphics->getContext().VSSetShaderResources(slot, 1, &srvs);
+		m_graphics->getContext().GSSetShaderResources(slot, 1, &srvs);
 		m_graphics->getContext().PSSetShaderResources(slot, 1, &srvs);
 	}
 }
