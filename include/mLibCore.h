@@ -45,7 +45,7 @@
 #include "core-math/sampling.h"
 #include "core-math/mathUtil.h"
 #include "core-math/PCA.h"
-//#include "core-math/blockedPCA.h"
+#include "core-math/blockedPCA.h"
 
 namespace ml
 {

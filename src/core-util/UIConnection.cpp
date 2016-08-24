@@ -5,6 +5,13 @@ namespace ml {
 
 void UIConnection::init(const std::string &executableFile, const std::string &pipeBaseName)
 {
+    if (!util::fileExists(executableFile))
+    {
+        std::cout << "File not found: " << executableFile << std::endl;
+        std::cout << "Working directory: " << util::getWorkingDirectory() << std::endl;
+        std::cin.get();
+        return;
+    }
     if (executableFile.size() > 0 && util::runCommand(executableFile, "", false) != 0)
 	{
 		std::cout << "Failed to launch UI" << std::endl;
