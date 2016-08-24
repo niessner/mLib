@@ -306,6 +306,14 @@ public:
 		return res;
 	}
 
+	void setRotation(const Matrix3x3<FloatType>& R) {
+		for (unsigned char i = 0; i < 3; i++) {
+			for (unsigned char j = 0; j < 3; j++) {
+				at(i, j) = R.at(i, j);
+			}
+		}
+	}
+
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotation(FloatType yaw, FloatType pitch, FloatType roll) {
 		*this = rotationY(yaw) * rotationX(pitch) * rotationZ(roll);
@@ -419,7 +427,7 @@ public:
 		}
 		return result;
 	}
-
+	
 	//! multiply operand with matrix b
 	Matrix4x4& operator*= (const Matrix4x4& other) {
 		Matrix4x4<FloatType> prod = (*this) * other;
