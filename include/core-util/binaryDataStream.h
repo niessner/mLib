@@ -364,9 +364,10 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	s >> size >> maxLoadFactor;
 	m.max_load_factor(maxLoadFactor);
 	for (size_t i = 0; i < size; i++) {
-		K first;	T second;
-		s >> first >> second;
-		m[first] = second;
+		K first;
+		s >> first;
+		T &second = m[first];
+		s >> second;
 	}
 	return s;
 }

@@ -25,12 +25,21 @@ public:
     void save(const std::string &baseFilename) const;
     void load(const std::string &baseFilename);
 
-    void transform(const T *input, size_t reducedSubsetDimension, T *result) const;
-    void inverseTransform(const T *input, size_t reducedSubsetDimension, T *result) const;
+	void transform(const std::vector<T> &input, size_t reducedTotalDimension, std::vector<T> &result) const;
+    void transform(const T *input, size_t reducedTotalDimension, T *result) const;
+
+	//void inverseTransform(const std::vector<T> &input, std::vector<T> &result) const;
+    //void inverseTransform(const T *input, size_t reducedSubsetDimension, T *result) const;
+
+	size_t subsetCount() const
+	{
+		return _subsets.size();
+	}
 
 private:
 
 	std::vector< Subset > _subsets;
+	size_t _totalDimensions;
 };
 
 #include "blockedPCA.cpp"
