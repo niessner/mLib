@@ -306,14 +306,6 @@ public:
 		return res;
 	}
 
-	void setRotation(const Matrix3x3<FloatType>& R) {
-		for (unsigned char i = 0; i < 3; i++) {
-			for (unsigned char j = 0; j < 3; j++) {
-				at(i, j) = R.at(i, j);
-			}
-		}
-	}
-
 	//! overwrite the matrix with a rotation-matrix around a coordinate-axis (angle is specified in degrees)
 	void setRotation(FloatType yaw, FloatType pitch, FloatType roll) {
 		*this = rotationY(yaw) * rotationX(pitch) * rotationZ(roll);
@@ -813,7 +805,7 @@ public:
 		vec3<FloatType> degrees;
 		for (unsigned int i = 0; i < 3; i++)
 			degrees[i] = (FloatType)ml::math::radiansToDegrees(ksi[i]);
-		res.setRotation(Matrix3x3<FloatType>::rotationZ(degrees[2])*Matrix3x3<FloatType>::rotationY(degrees[1])*Matrix3x3<FloatType>::rotationX(degrees[0]));
+		res.setRotationMatrix(Matrix3x3<FloatType>::rotationZ(degrees[2])*Matrix3x3<FloatType>::rotationY(degrees[1])*Matrix3x3<FloatType>::rotationX(degrees[0]));
 		res.setTranslationVector(vec3<FloatType>(ksi[3], ksi[4], ksi[5]));
 		return res;
 	}
