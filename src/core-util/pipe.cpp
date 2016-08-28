@@ -225,8 +225,8 @@ void Pipe::sendMessage(const BYTE *Message, UINT MessageLength)
         MessageLength,         // message length
         &BytesWritten,         // bytes written
         nullptr);                 // not overlapped
-    MLIB_ASSERT_STR(success != FALSE, "WriteFile failed in Pipe::ReadMessage");
-    MLIB_ASSERT_STR(BytesWritten == MessageLength, "WriteFile failed to send entire message in Pipe::ReadMessage");
+    if (success != FALSE) MLIB_WARNING("WriteFile failed in Pipe::ReadMessage");
+    if (BytesWritten == MessageLength) MLIB_WARNING("WriteFile failed to send entire message in Pipe::ReadMessage");
 }
 
 UINT Pipe::activeInstances()
