@@ -42,6 +42,13 @@ namespace math
 		return ((start - s1) * (e2 - s2) / (e1 - s1) + s2);
 	}
 
+	template<class T>
+	inline T linearMapClamped(T s1, T e1, T s2, T e2, T start) {
+		if (start <= s1) return s2;
+		if (start >= e1) return e2;
+		return ((start - s1) * (e2 - s2) / (e1 - s1) + s2);
+	}
+
 	template<class T, class U>
 	inline T lerp(T left, T right, U s) {
 		return static_cast<T>(left + (right - left) * s);
