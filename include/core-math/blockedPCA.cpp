@@ -14,14 +14,14 @@ void BlockedPCA<T>::init(const DenseMatrix<T> &points, size_t subsetCount, const
 	{
 		_subsets[subsetIndex].dimCount++;
 		allocatedDims++;
-		subsetIndex = (subsetIndex + 1) % _subsetCount;
+		subsetIndex = (subsetIndex + 1) % subsetCount;
 	}
 
-	int startDim = 0;
+	_totalDimensions = 0;
 	for (int i = 0; i < subsetCount; i++)
 	{
-		_subsets[i].startDim = startDim;
-		startDim += _subsets[i].dimCount;
+		_subsets[i].startDim = _totalDimensions;
+		_totalDimensions += _subsets[i].dimCount;
 	}
 
 	for (Subset &s : _subsets)
@@ -32,41 +32,65 @@ void BlockedPCA<T>::init(const DenseMatrix<T> &points, size_t subsetCount, const
 				subpoints(p, d) = points(p, d + s.startDim);
 		s.pca.init(subpoints, eigenSolver);
 	}
-	
 }
 
 template<class T>
-void BlockedPCA<T>::transform(const T *input, size_t reducedSubsetDimension, T *result) const
+void BlockedPCA<T>::transform(const std::vector<T> &input, size_t reducedTotalDimension, std::vector<T> &result) const
 {
-	for (int i = 0; i < reducedSubsetDimension * subset; i++)
+	if (result.size() != reducedTotalDimension)
+		result.resize(reducedTotalDimension);
+	transform(input.data(), reducedTotalDimension, result.data());
+}
+
+/*template<class T>
+void BlockedPCA<T>::inverseTransform(const std::vector<T> &input, std::vector<T> &result) const
+{
+	if (result.size() != _totalDimensions)
+		result.resize(_totalDimensions);
+	inverseTransform(input.data(), input.size() / _subsets.size() + 1, result.data());
+}*/
+
+template<class T>
+void BlockedPCA<T>::transform(const T *input, size_t reducedTotalDimension, T *result) const
+{
+	const size_t subsetCount = _subsets.size();
+	const int reducedSubsetDimension = reducedTotalDimension / subsetCount;
+	for (int i = 0; i < reducedTotalDimension; i++)
 		result[i] = 0;
 
-	for (Subset &s : _subsets)
+	for (int subsetIndex = 0; subsetIndex < subsetCount; subsetIndex++)
 	{
-		const int reducedDim = std::min(reducedSubsetDimension, s.dimCount);
-		s.transform(input + s.startDim, reducedDim, result + s.startDim);
+		const Subset &s = _subsets[subsetIndex];
+		
+		int reducedDim = std::min((int)reducedSubsetDimension, s.dimCount);
+		if (subsetIndex * reducedSubsetDimension + reducedDim >= reducedTotalDimension)
+			reducedDim = reducedTotalDimension - subsetIndex * reducedSubsetDimension;
+
+		s.pca.transform(input + s.startDim, reducedDim, result + subsetIndex * reducedSubsetDimension);
 	}
 }
 
-template<class T>
+/*template<class T>
 void BlockedPCA<T>::inverseTransform(const T *input, size_t reducedSubsetDimension, T *result) const
 {
-	for (int i = 0; i < reducedSubsetDimension * subset; i++)
+	const size_t subsetCount = _subsets.size();
+	for (int i = 0; i < reducedSubsetDimension * subsetCount; i++)
 		result[i] = 0;
 
-	for (Subset &s : _subsets)
+	for (int subsetIndex = 0; subsetIndex < subsetCount; subsetIndex++)
 	{
-		const int reducedDim = std::min(reducedSubsetDimension, s.dimCount);
-		s.inverseTransform(input + s.startDim, reducedDim, result + s.startDim);
+		const Subset &s = _subsets[subsetIndex];
+		const int reducedDim = std::min((int)reducedSubsetDimension, s.dimCount);
+		s.pca.transform(input + s.startDim, reducedDim, result + subsetIndex * reducedSubsetDimension);
 	}
-}
+}*/
 
 template<class T>
 void BlockedPCA<T>::save(const std::string &baseFilename) const
 {
     BinaryDataStreamFile file(baseFilename + ".dat", true);
 	size_t subsetCount = _subsets.size();
-    file << subsetCount;
+    file << subsetCount << _totalDimensions;
 	for (int i = 0; i < subsetCount; i++)
 	{
 		file << _subsets[i].startDim << _subsets[i].dimCount;
@@ -82,7 +106,7 @@ void BlockedPCA<T>::load(const std::string &baseFilename)
 {
     BinaryDataStreamFile file(baseFilename + ".dat", false);
 	size_t subsetCount;
-	file >> subsetCount;
+	file >> subsetCount >> _totalDimensions;
 	_subsets.resize(subsetCount);
 	for (int i = 0; i < subsetCount; i++)
 	{

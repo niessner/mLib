@@ -1,0 +1,94 @@
+
+#ifndef EXT_NEARESTNEIGHBORSEARCHFLANN_H_
+#define EXT_NEARESTNEIGHBORSEARCHFLANN_H_
+
+namespace ml
+{
+
+	template<class FloatType>
+	class NearestNeighborSearchFLANN : public NearestNeighborSearch<FloatType>
+	{
+	public:
+		// checkCount is the total number of entries that are checked each query.  Typically max(50, 4 * maxK) is good.
+		NearestNeighborSearchFLANN(int checkCount)
+		{
+			m_checkCount = checkCount;
+			m_flatPoints = nullptr;
+			m_FLANNIndex = nullptr;
+		}
+
+		~NearestNeighborSearchFLANN()
+		{
+			SAFE_DELETE(m_flatPoints);
+			SAFE_DELETE(m_FLANNIndex);
+		}
+
+
+	private:
+		void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK)
+		{
+			m_dimension = dimension;
+			std::cout << "Initializing FLANN index with " << points.size() << " points" << std::endl;
+			
+			// FLANN requires that all the points be flat. We could make a different init function
+			// so that if you provide everything in a flat array we can use that instead without
+			// duplicating the dataset.
+			m_flatPoints = new FloatType[points.size() * dimension];
+			for (size_t pointIndex = 0; pointIndex < points.size(); pointIndex++)
+			{
+				for (size_t dim = 0; dim < dimension; dim++)
+				{
+					m_flatPoints[pointIndex * dimension + dim] = points[pointIndex][dim];
+				}
+			}
+				
+			flann::Matrix<FloatType> dataset(m_flatPoints, points.size(), dimension);
+
+			// TODO: FLANN can easily save/load its index, if creating the index is taking a long time.
+			m_FLANNIndex = new flann::Index<flann::L2<FloatType> >(dataset, flann::KDTreeIndexParams(8));
+			m_FLANNIndex->buildIndex();
+
+			m_queryStorage = flann::Matrix<float>(new float[dimension], 1, dimension);
+			m_indicesStorage = flann::Matrix<int>(new int[maxK], 1, maxK);
+			m_distsStorage = flann::Matrix<float>(new float[maxK], 1, maxK);
+
+			std::cout << "FLANN index created" << std::endl;
+		}
+
+		void kNearestInternal(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const
+		{
+			memcpy(m_queryStorage.ptr(), query, m_dimension * sizeof(FloatType));
+			m_FLANNIndex->knnSearch(m_queryStorage, m_indicesStorage, m_distsStorage, k, flann::SearchParams((int)m_checkCount));
+
+			if (result.size() < k) result.resize(k);
+			for (size_t i = 0; i < k; i++)
+			{
+				result[i] = m_indicesStorage[0][i];
+			}
+		}
+
+		void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector<UINT> &result) const
+		{
+			MLIB_EXCEPTION("fixedRadiusInternal is not yet implemented");
+		}
+
+		void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const
+		{
+			MLIB_EXCEPTION("fixedRadiusInternalDist is not yet implemented");
+		}
+
+		//TODO: abstract over different search metrics
+		flann::Index< flann::L2<float> > *m_FLANNIndex;
+		float *m_flatPoints;
+		mutable flann::Matrix<FloatType> m_queryStorage;
+		mutable flann::Matrix<int> m_indicesStorage;
+		mutable flann::Matrix<FloatType> m_distsStorage;
+		size_t m_dimension, m_checkCount;
+	};
+
+	typedef NearestNeighborSearchFLANN<float> NearestNeighborSearchFLANNf;
+	typedef NearestNeighborSearchFLANN<double> NearestNeighborSearchFLANNd;
+
+}  // namespace ml
+
+#endif  // EXT_NEARESTNEIGHBORSEARCHFLANN_H_
