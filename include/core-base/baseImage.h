@@ -1225,6 +1225,11 @@ namespace ml {
 			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
+		ColorImageR32G32B32A32(BaseImage < vec4f >& other) : BaseImage< vec4f >(other){
+			m_format = Image::FORMAT_ColorImageR32G32B32A32;
+			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+		}
+
 		ColorImageR32G32B32A32(unsigned int width, unsigned int height, const vec4f *data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
 			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
