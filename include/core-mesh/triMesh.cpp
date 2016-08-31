@@ -96,11 +96,11 @@ namespace ml {
 	template<class FloatType>
 	void TriMesh<FloatType>::computeNormals()
 	{
-		for (int i = 0; i < (int)m_vertices.size(); i++) {
+		for (size_t i = 0; i < m_vertices.size(); i++) {
 			m_vertices[i].normal = vec3<FloatType>::origin;
 		}
 
-		for (int i = 0; i < (int)m_indices.size(); i++) {
+		for (size_t i = 0; i < m_indices.size(); i++) {
 			vec3<FloatType> faceNormal =
 				(m_vertices[m_indices[i].y].position - m_vertices[m_indices[i].x].position) ^ (m_vertices[m_indices[i].z].position - m_vertices[m_indices[i].x].position);
 
@@ -108,7 +108,7 @@ namespace ml {
 			m_vertices[m_indices[i].y].normal += faceNormal;
 			m_vertices[m_indices[i].z].normal += faceNormal;
 		}
-		for (int i = 0; i < (int)m_vertices.size(); i++) {
+		for (size_t i = 0; i < m_vertices.size(); i++) {
 			m_vertices[i].normal.normalize();
 		}
 
