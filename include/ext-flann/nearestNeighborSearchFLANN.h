@@ -10,8 +10,10 @@ namespace ml
 	{
 	public:
 		// checkCount is the total number of entries that are checked each query.  Typically max(50, 4 * maxK) is good.
-		NearestNeighborSearchFLANN(int checkCount)
+		// trees: number of parallel kd-trees to use
+		NearestNeighborSearchFLANN(int checkCount, int trees)
 		{
+			m_trees = trees;
 			m_checkCount = checkCount;
 			m_flatPoints = nullptr;
 			m_FLANNIndex = nullptr;
@@ -23,6 +25,11 @@ namespace ml
 			SAFE_DELETE(m_FLANNIndex);
 		}
 
+		void getDistances(unsigned int k, std::vector<FloatType> &dists) const
+		{
+			dists.resize(k);
+			for (unsigned int i = 0; i < k; i++) dists[i] = (FloatType)m_distsStorage[0][i];
+		}
 
 	private:
 		void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK)
@@ -45,7 +52,7 @@ namespace ml
 			flann::Matrix<FloatType> dataset(m_flatPoints, points.size(), dimension);
 
 			// TODO: FLANN can easily save/load its index, if creating the index is taking a long time.
-			m_FLANNIndex = new flann::Index<flann::L2<FloatType> >(dataset, flann::KDTreeIndexParams(8));
+			m_FLANNIndex = new flann::Index<flann::L2<FloatType> >(dataset, flann::KDTreeIndexParams((int)m_trees));
 			m_FLANNIndex->buildIndex();
 
 			m_queryStorage = flann::Matrix<float>(new float[dimension], 1, dimension);
@@ -83,7 +90,7 @@ namespace ml
 		mutable flann::Matrix<FloatType> m_queryStorage;
 		mutable flann::Matrix<int> m_indicesStorage;
 		mutable flann::Matrix<FloatType> m_distsStorage;
-		size_t m_dimension, m_checkCount;
+		size_t m_dimension, m_checkCount, m_trees;
 	};
 
 	typedef NearestNeighborSearchFLANN<float> NearestNeighborSearchFLANNf;

@@ -180,6 +180,21 @@ namespace ml {
 		DistanceField3 upsample() const {
 			return upsample(vec3ul(getDimX() * 2, getDimY() * 2, getDimZ() * 2));
 		}
+
+		void setTruncation(float truncation, bool updateValues = true) {
+			m_truncation = truncation;
+			if (updateValues) {
+				for (unsigned int z = 0; z < m_dimZ; z++) {
+					for (unsigned int y = 0; y < m_dimY; y++) {
+						for (unsigned int x = 0; x < m_dimX; x++) {
+							float v = (*this)(x, y, z);
+							if (v > truncation) (*this)(x, y, z) = truncation;
+						} //x
+					} //y
+				} //z
+			}
+		}
+
 	private:
 
 		void generateFromBinaryGridSimple(const BinaryGrid3& grid, FloatType trunc) {
