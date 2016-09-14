@@ -270,7 +270,7 @@ namespace ml {
 			//! Camera-to-Proj matrix
 			mat4f m_intrinsic;
 
-			//! World-to-Camera matrix (accumulated R|t mapping back to the first frame))
+			//! it should be the mapping to base frame in a multi-view setup (typically it's depth to color; and the color extrinsic is the identity)
 			mat4f m_extrinsic;
 		};
 
@@ -286,6 +286,21 @@ namespace ml {
 			TYPE_ZLIB_USHORT = 1,
 			TYPE_OCCI_USHORT = 2
 		};
+
+		static std::string COMPRESSION_TYPE_COLOR_Str(COMPRESSION_TYPE_COLOR type) {
+			if (type == TYPE_COLOR_UNKNOWN) return "TYPE_COLOR_UNKNOWN";
+			if (type == TYPE_RAW) return "TYPE_RAW";
+			if (type == TYPE_PNG) return "TYPE_PNG";
+			if (type == TYPE_JPEG) return "TYPE_JPEG";
+			return "unknown compression type entry";
+		}
+		static std::string COMPRESSION_TYPE_DEPTH_Str(COMPRESSION_TYPE_DEPTH type) {
+			if (type == TYPE_DEPTH_UNKNOWN) return "TYPE_DEPTH_UNKNOWN";
+			if (type == TYPE_RAW_USHORT) return "TYPE_RAW_USHORT";
+			if (type == TYPE_ZLIB_USHORT) return "TYPE_ZLIB_USHORT";
+			if (type == TYPE_OCCI_USHORT) return "TYPE_OCCI_USHORT";
+			return "unknown compression type entry";
+		}
 
 
 		class RGBDFrame {
@@ -1212,10 +1227,25 @@ namespace ml {
 					unsigned int x = i % m_depthWidth, y =  i / m_depthWidth;
 					if (depth[i] != 0) {
 						float d = (float)depth[i]/m_depthShift;
-						vec3f worldpos = (intrinsicInv*vec4f((float)x*d, (float)y*d, d, 0.0f)).getVec3();
-						pc.m_points.push_back(transform * worldpos);
-						if (m_colorWidth == m_depthWidth && m_colorHeight == m_depthHeight)
-							pc.m_colors.push_back(vec4f(color[i], 255.0f) / 255.0f);
+						vec3f cameraPos = (intrinsicInv*vec4f((float)x*d, (float)y*d, d, 0.0f)).getVec3();
+						vec3f worldPos = transform * cameraPos;
+						pc.m_points.push_back(worldPos);
+
+						vec3f colorFramePos = m_calibrationDepth.m_extrinsic * cameraPos;
+						vec3f colorCoord = m_calibrationColor.m_intrinsic * colorFramePos;
+						colorCoord.x /= colorCoord.z;	colorCoord.y /= colorCoord.z;
+						vec3ui colorCoordi = math::round(colorCoord);
+						if (colorCoordi.x >= 0 && colorCoordi.x < m_colorWidth && colorCoordi.y >= 0 && colorCoordi.y < m_colorHeight) {
+							unsigned int colorIdx = colorCoordi.y*m_colorWidth + colorCoordi.x;
+							pc.m_colors.push_back(vec4f(color[colorIdx], 255.0f) / 255.0f);
+						}
+						else {
+							pc.m_colors.push_back(vec4f(0.0f, 0.0f, 0.0f, 0.0f));
+						}
+
+						//if (m_colorWidth == m_depthWidth && m_colorHeight == m_depthHeight) {
+						//	pc.m_colors.push_back(vec4f(color[i], 255.0f) / 255.0f);
+						//}
 					}
 				}
 				std::free(color);

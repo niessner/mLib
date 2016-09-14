@@ -13,7 +13,7 @@ namespace ml {
 		//! Standard constructor (eye point, look direction, up vector)
 		Camera(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& worldUp, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar);
 
-		//! Construct camera from extrinsics matrix m (columns are x, y, z vectors and origin of camera in that order).
+		//! Construct camera from extrinsic matrix m (columns are x, y, z vectors and origin of camera in that order).
 		//! If flipRight is set, flip the x coordinate
 		Camera(const Matrix4x4<FloatType>& m, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar, bool flipRight = false);
 
@@ -71,6 +71,15 @@ namespace ml {
 		void applyTransform(const Matrix3x3<FloatType>& transform);
 		void applyTransform(const Matrix4x4<FloatType>& transform);
 		void reset(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& up);
+
+
+		static Camera<FloatType> visionToGraphics(const Matrix4x4<FloatType>& extrinsic, unsigned int width, unsigned int height, FloatType fx, FloatType fy, FloatType zNear, FloatType zFar) {
+			//not entirely sure whether there is a '-1' for width/height somewhere
+			FloatType fov = (FloatType)2.0 * atan((FloatType)width / ((FloatType)2 * fx));
+			FloatType aspect = (FloatType)width / (FloatType)height;
+
+			return Camera<FloatType>(extrinsic.getTranspose(), math::radiansToDegrees(fov), aspect, zNear, zFar);
+		}
 
 		static Matrix4x4<FloatType> visionToGraphicsProj(unsigned int width, unsigned int height, FloatType fx, FloatType fy, FloatType zNear, FloatType zFar)
 		{

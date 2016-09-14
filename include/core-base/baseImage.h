@@ -704,7 +704,7 @@ namespace ml {
 			return (x < m_width && y < m_height);
 		}
 
-        bool isValidCoordinate(vec2i coord) const {
+        bool isValidCoordinate(const vec2i& coord) const {
             return ((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
         }
 
@@ -859,8 +859,11 @@ namespace ml {
 							value += getPixel(x + 0, y - 1);
 						}
 
-						if (isValid(x, y)) {
+						if (isValid(x, y) && valid > 0) {
 							other.setPixel(x, y, ((float)valid*getPixel(x, y) + value) / (2 * (float)valid));
+						}
+						else {
+							other.setInvalid(x, y);
 						}
 					}
 				}
@@ -1261,17 +1264,17 @@ namespace ml {
 			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = depthImage.getData();
-            float maxDepth = -std::numeric_limits<float>::max();
-            float minDepth = +std::numeric_limits<float>::max();
+			float minDepth = +std::numeric_limits<float>::max();
+            float maxDepth = -std::numeric_limits<float>::max();           
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				if (data[i] != depthImage.getInvalidValue()) {
-					if (data[i] > maxDepth) maxDepth = data[i];
 					if (data[i] < minDepth) minDepth = data[i];
+					if (data[i] > maxDepth) maxDepth = data[i];
 				}
 			}
 			if (debugPrint) {
-				std::cout << "max Depth " << maxDepth << std::endl;
 				std::cout << "min Depth " << minDepth << std::endl;
+				std::cout << "max Depth " << maxDepth << std::endl;				
 			}
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				if (data[i] != depthImage.getInvalidValue()) {

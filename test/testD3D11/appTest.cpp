@@ -199,7 +199,7 @@ void AppTest::init(ml::ApplicationData &app)
 	std::vector<vec4f> bufferData(m_mesh.getTriMesh().getVertices().size());
 	for (size_t i = 0; i < m_mesh.getTriMesh().getVertices().size(); i++) {
 		bufferData[i] = m_mesh.getTriMesh().getVertices()[i].color;
-		bufferData[i].x = 0.0f;
+		//bufferData[i].x = 0.0f;
 	}
 	m_buffer.load(app.graphics, bufferData);
 }
@@ -243,7 +243,25 @@ void AppTest::resize(ml::ApplicationData &app)
 
 void AppTest::keyDown(ml::ApplicationData &app, UINT key)
 {
+	if (key == KEY_Z) {
+		const unsigned int width = app.window.getWidth();
+		const unsigned int height = app.window.getHeight();
+		mat4f intrinsic = Cameraf::graphicsToVisionProj(m_camera.getPerspective(), width, height);
+		mat4f extrinsic = m_camera.getCamera();
 
+		std::cout << "intrinsic before " << intrinsic << std::endl;
+		std::cout << "extrinsic before " << extrinsic << std::endl;
+
+		Cameraf newCam = Cameraf::visionToGraphics(extrinsic, width, height, intrinsic(0, 0), intrinsic(1, 1), m_camera.getNearPlane(), m_camera.getFarPlane());
+		m_camera = newCam;
+
+		intrinsic = Cameraf::graphicsToVisionProj(m_camera.getPerspective(), width, height);
+		extrinsic = m_camera.getCamera();
+		std::cout << "intrinsic after " << intrinsic << std::endl;
+		std::cout << "extrinsic after " << extrinsic << std::endl; 
+
+		int a = 5;
+	}
 }
 
 void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
@@ -296,6 +314,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		//	0.0f, 0.0f, 0.0f, 1.0f);
 		//std::cout << intrinsics << std::endl;
 		mat4f intrinsics = Cameraf::graphicsToVisionProj(m_camera.getPerspective(), app.window.getWidth(), app.window.getHeight());
+		
 		//std::cout << intrinsics << std::endl;
 		mat4f intrinsicsInverse = intrinsics.getInverse();
 
