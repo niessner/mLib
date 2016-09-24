@@ -59,15 +59,9 @@ namespace ml
 
 	template <class T> Grid2<T>::~Grid2()
 	{
-		free();
+		SAFE_DELETE_ARRAY(m_data);
 	}
 
-	template <class T> void Grid2<T>::free()
-	{
-		m_dimX = 0;
-		m_dimY = 0;
-		SAFE_DELETE(m_data);
-	}
 
 	template <class T> Grid2<T>& Grid2<T>::operator = (const Grid2<T> &G)
 	{
@@ -94,7 +88,7 @@ namespace ml
 	template <class T> void Grid2<T>::allocate(size_t dimX, size_t dimY)
 	{
 		if (dimX == 0 || dimY == 0) {
-			free();
+			SAFE_DELETE_ARRAY(m_data);
 		}
 		else {
 			m_dimX = dimX;
@@ -107,7 +101,7 @@ namespace ml
 	template <class T> void Grid2<T>::allocate(size_t dimX, size_t dimY, const T &value)
 	{
 		if (dimX == 0 || dimY == 0) {
-			free();
+			SAFE_DELETE_ARRAY(m_data);
 		} else {
 			allocate(dimX, dimY);
 			setValues(value);

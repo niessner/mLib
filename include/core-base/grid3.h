@@ -173,10 +173,6 @@ namespace ml
             const Grid3<T> *grid;
         };
 
-		//
-		// Memory
-		//
-		void free();
 		Grid3<T>& operator = (const Grid3<T> &G);
 		Grid3<T>& operator = (Grid3<T> &&G);
 

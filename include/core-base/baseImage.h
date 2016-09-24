@@ -245,12 +245,6 @@ namespace ml {
 			BaseImageHelper::convertBaseImagePixel<T, U>(m_InvalidValue, otherInvalidValue);
 		}
 
-		//! clears the image; and release all memory
-		void free() {
-			SAFE_DELETE_ARRAY(m_data);
-			m_height = m_width = 0;
-		}
-
 
 		//! adl swap
 		friend void swap(BaseImage& a, BaseImage& b) {
@@ -453,7 +447,7 @@ namespace ml {
 		//! Allocates the images to the given size
 		void allocate(unsigned int width, unsigned int height) {
 			if (width == 0 || height == 0) {
-				free();
+				SAFE_DELETE_ARRAY(m_data);
 			}
 			else if (m_width != width || m_height != height) {
 				SAFE_DELETE_ARRAY(m_data);
