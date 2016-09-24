@@ -18,6 +18,9 @@ template<class T>	inline void convertFromBYTE(T& output, const BYTE* input) {
 	throw MLIB_EXCEPTION("Invalid Data Conversion");
 	//static_assert(false, "Function should never be called");
 }
+template<>	inline void convertFromBYTE<unsigned char>(unsigned char& output, const BYTE* input) {
+	output = input[0];
+}
 template<>	inline void convertFromBYTE<vec3d>(vec3d& output, const BYTE* input) {
 	output.z = input[0]/255.0;	
 	output.y = input[0]/255.0;	
@@ -368,6 +371,15 @@ template<>	inline void convertToVEC4UC<vec4uc>(vec4uc& output, const vec4uc& inp
 }
 template<>	inline void convertToVEC4UC<float>(vec4uc& output, const float& input) {
 	convertToVEC4UC(output, vec4f(input));
+}
+
+//UCHAR
+template<class T>	inline void convertToUCHAR(unsigned char& output, const T& input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+template<>	inline void convertToUCHAR<unsigned char>(unsigned char& output, const unsigned char& input) {
+	output = input;
 }
 
 //USHORT
