@@ -315,6 +315,7 @@ namespace ml {
 				m_timeStampDepth = 0;
 			}
 
+
 			RGBDFrame(const RGBDFrame& other) {
 				m_colorSizeBytes = other.m_colorSizeBytes;
 				m_depthSizeBytes = other.m_depthSizeBytes;
@@ -425,7 +426,17 @@ namespace ml {
 				m_timeStampDepth = timeStampDepth;
 			}
 			
+			//! overwrites the depth frame data
+			void replaceDepth(const unsigned short* depth, unsigned int depthWidth, unsigned int depthHeight, COMPRESSION_TYPE_DEPTH depthType = TYPE_ZLIB_USHORT) {
+				freeDepth();
+				compressDepth(depth, depthWidth, depthHeight, depthType);
+			}
 
+			//! overwrites the color frame data
+			void replaceColor(const vec3uc* color, unsigned int colorWidth, unsigned int colorHeight, COMPRESSION_TYPE_COLOR colorType = TYPE_JPEG) {
+				freeColor();
+				compressColor(color, colorWidth, colorHeight, colorType);
+			}
 
 			void freeColor() {
 				if (m_colorCompressed) std::free(m_colorCompressed);
@@ -857,6 +868,26 @@ namespace ml {
 			if (frameIdx > m_frames.size()) throw MLIB_EXCEPTION("out of bounds");
 			return decompressDepthAlloc(m_frames[frameIdx]);
 		}
+
+		//! replaces the depth data of the given frame
+		void replaceDepth(RGBDFrame& f, const unsigned short* depth) {
+			f.replaceDepth(depth, m_depthWidth, m_depthHeight, m_depthCompressionType);
+		}
+		void replaceDepth(size_t frameIdx, const unsigned short* depth) {
+			if (frameIdx > m_frames.size()) throw MLIB_EXCEPTION("out of bounds");
+			replaceDepth(m_frames[frameIdx], depth);
+		}
+
+		//! replaces the color data of the given frame
+		void replaceColor(RGBDFrame& f, const vec3uc* color) {
+			f.replaceColor(color, m_colorWidth, m_colorHeight, m_colorCompressionType);
+		}
+		void replaceColor(size_t frameIdx, const vec3uc* color) {
+			if (frameIdx > m_frames.size()) throw MLIB_EXCEPTION("out of bounds");
+			replaceColor(m_frames[frameIdx], color);
+		}
+
+
 
 		//! returns the closest IMUFrame for a given RGBDFrame (time-wise)
 		const IMUFrame& findClosestIMUFrame(const RGBDFrame& f, bool basedOnRGB = true) const {
