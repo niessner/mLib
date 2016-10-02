@@ -156,6 +156,103 @@ void D3D11GraphicsDevice::createViews() {
 }
 
 
+void D3D11GraphicsDevice::initWithoutWindow()
+{
+
+	m_width = 0;
+	m_height = 0;
+	ZeroMemory(&m_swapChainDesc, sizeof DXGI_SWAP_CHAIN_DESC);
+
+	UINT createDeviceFlags = 0;
+	//#ifdef _DEBUG
+	//	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	//#endif
+
+	D3D_FEATURE_LEVEL featureLevels[] =
+	{
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0,
+	};
+	UINT numFeatureLevels = ARRAYSIZE(featureLevels);
+
+	D3D_VALIDATE(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, createDeviceFlags, featureLevels, numFeatureLevels, D3D11_SDK_VERSION, &m_device, &m_featureLevel, &m_context));
+
+	m_depthBuffer = nullptr;
+	m_depthState = nullptr;
+	m_depthStencilView = nullptr;
+
+	//
+	// Setup the rasterizer state
+	//
+	m_rasterDesc.AntialiasedLineEnable = false;
+	m_rasterDesc.CullMode = D3D11_CULL_NONE;
+	m_rasterDesc.DepthBias = 0;
+	m_rasterDesc.DepthBiasClamp = 0.0f;
+	m_rasterDesc.DepthClipEnable = true;
+	m_rasterDesc.FillMode = D3D11_FILL_SOLID;
+	m_rasterDesc.FrontCounterClockwise = false;
+	m_rasterDesc.MultisampleEnable = false;
+	m_rasterDesc.ScissorEnable = false;
+	m_rasterDesc.SlopeScaledDepthBias = 0.0f;
+
+	D3D_VALIDATE(m_device->CreateRasterizerState(&m_rasterDesc, &m_rasterState));
+	m_context->RSSetState(m_rasterState);
+
+
+	//
+	// Setup the depth state
+	//
+	D3D11_DEPTH_STENCIL_DESC depthStateDesc;
+	depthStateDesc.DepthEnable = true;
+	depthStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthStateDesc.StencilEnable = false;
+	D3D_VALIDATE(m_device->CreateDepthStencilState(&depthStateDesc, &m_depthState));
+	m_context->OMSetDepthStencilState(m_depthState, 1);
+
+
+	//
+	// Setup the sampler state
+	//
+	D3D11_SAMPLER_DESC samplerStateDesc;
+	samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerStateDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerStateDesc.MipLODBias = 0.0f;
+	samplerStateDesc.MaxAnisotropy = 1;
+	samplerStateDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerStateDesc.MinLOD = -FLT_MAX;
+	samplerStateDesc.MaxLOD = FLT_MAX;
+	D3D_VALIDATE(m_device->CreateSamplerState(&samplerStateDesc, &m_samplerState));
+	m_context->PSSetSamplers(0, 1, &m_samplerState);
+
+#ifdef MLIB_GRAPHICSDEVICE_TRANSPARENCY
+	ID3D11BlendState* d3dBlendState;
+	D3D11_BLEND_DESC omDesc;
+	ZeroMemory(&omDesc, sizeof(D3D11_BLEND_DESC));
+	omDesc.RenderTarget[0].BlendEnable = true;
+	omDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	omDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	omDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	omDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+	omDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	omDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	omDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	D3D_VALIDATE(m_device->CreateBlendState(&omDesc, &d3dBlendState));
+	m_context->OMSetBlendState(d3dBlendState, 0, 0xffffffff);
+#endif
+
+#ifdef _DEBUG
+	m_device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_debug));
+#endif
+
+	m_shaderManager.init(*this);
+	registerDefaultShaders();
+}
+
+
 void D3D11GraphicsDevice::registerDefaultShaders()
 {
     const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
