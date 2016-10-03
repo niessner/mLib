@@ -79,11 +79,11 @@ template<class T>
 void PCA<T>::initFromCorrelationMatrix(const DenseMatrix<T> &C, const EigenSolverFunc &eigenSolver)
 {
     const size_t dimension = C.rows();
-	std::cout << "Computing eigensystem..." << endl;
+	std::cout << "Computing eigensystem..." << std::endl;
 	_system = eigenSolver(C);
     //_system = C.eigenSystem();
 	//_system = C.eigenSystemUsingEigen();
-    //std::cout << C.EigenTest(_system.eigenvalues, _system.eigenvectors) << endl;
+    //std::cout << C.EigenTest(_system.eigenvalues, _system.eigenvectors) << std::endl;
 
     finalizeFromEigenSystem();
 }
@@ -101,7 +101,7 @@ void PCA<T>::finalizeFromEigenSystem()
 	for(size_t dimIndex = 0; dimIndex < dimension; dimIndex++)
 	{
 		cumulativeEnergy += _system.eigenvalues[dimIndex];
-		std::cout << "Energy at " << dimIndex + 1 << " terms: " << cumulativeEnergy / sum * 100.0f << "%" << endl;
+		std::cout << "Energy at " << dimIndex + 1 << " terms: " << cumulativeEnergy / sum * 100.0f << "%" << std::endl;
 	}
 }
 
@@ -137,7 +137,7 @@ template<class T>
 void PCA<T>::inverseTransform(const std::vector<T> &input, std::vector<T> &result) const
 {
     if (result.size() != _means.size())
-	    result.resize(dimension);
+	    result.resize(_means.size());
     inverseTransform(input.data(), input.size(), result.data());
 }
 

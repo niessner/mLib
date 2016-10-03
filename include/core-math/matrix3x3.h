@@ -453,7 +453,14 @@ public:
 		return ret;
 	}
 
-	
+	//! compute the matrix representation of the cross-product
+	static Matrix3x3 crossProductMatrix(const vec3<FloatType>& v) {
+		return Matrix3x3(
+			0, -v.z, v.y,
+			v.z, 0, -v.x,
+			-v.y, v.x, 0
+		);
+	}
 
 	//! save matrix array to .matArray
 	static void saveMatrixArrayToFile(const std::string& name, const Matrix3x3<FloatType>* matrixArray, unsigned int numMatrices) {

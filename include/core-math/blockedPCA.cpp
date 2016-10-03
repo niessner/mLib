@@ -1,3 +1,4 @@
+#include <string>
 
 template<class T>
 void BlockedPCA<T>::init(const DenseMatrix<T> &points, size_t subsetCount, const EigenSolverFunc &eigenSolver)
@@ -94,7 +95,7 @@ void BlockedPCA<T>::save(const std::string &baseFilename) const
 	for (int i = 0; i < subsetCount; i++)
 	{
 		file << _subsets[i].startDim << _subsets[i].dimCount;
-		_subsets[i].pca.save(baseFilename + "_" + to_string(i) + ".dat");
+		_subsets[i].pca.save(baseFilename + "_" + std::to_string(i) + ".dat");
 	}
     file.closeStream();
 
@@ -111,7 +112,7 @@ void BlockedPCA<T>::load(const std::string &baseFilename)
 	for (int i = 0; i < subsetCount; i++)
 	{
 		file >> _subsets[i].startDim >> _subsets[i].dimCount;
-		_subsets[i].pca.load(baseFilename + "_" + to_string(i) + ".dat");
+		_subsets[i].pca.load(baseFilename + "_" + std::to_string(i) + ".dat");
 	}
     //file.closeStream();
 }

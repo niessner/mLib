@@ -1,6 +1,8 @@
 #ifndef CORE_BASE_DISTANCE_FIELD3_H_
 #define CORE_BASE_DISTANCE_FIELD3_H_
 
+#include <core-base/grid3.h>
+
 namespace ml {
 
 	template<class FloatType>
@@ -139,7 +141,7 @@ namespace ml {
 			//if (!isValidCoordinate(math::round(posDual)) || !isValidCoordinate(math::round(posDual + oSet))) throw MLIB_EXCEPTION("out of bounds " + pos.toString());
 
 			FloatType dist = 0.0f;
-			vec3<FloatType> maxBound((FloatType)getDimX() - 1, (FloatType)getDimY() - 1, (FloatType)getDimZ() - 1);
+			vec3<FloatType> maxBound((FloatType)this->getDimX() - 1, (FloatType)this->getDimY() - 1, (FloatType)this->getDimZ() - 1);
 
 			FloatType v;
 			v = (*this)(math::round(math::min(math::max(posDual + vec3<FloatType>(0.0f, 0.0f, 0.0f), vec3<FloatType>::origin), vec3<FloatType>(maxBound))));	    dist += (1.0f - weight.x)*(1.0f - weight.y)*(1.0f - weight.z)*v;
@@ -158,9 +160,9 @@ namespace ml {
 			DistanceField3 res(newDim.x, newDim.y, newDim.z);
 
 			vec3<FloatType> factor(
-				(FloatType)res.getDimX() / (FloatType)getDimX(), 
-				(FloatType)res.getDimY() / (FloatType)getDimY(), 
-				(FloatType)res.getDimZ() / (FloatType)getDimZ());
+				(FloatType)res.getDimX() / (FloatType)this->getDimX(), 
+				(FloatType)res.getDimY() / (FloatType)this->getDimY(), 
+				(FloatType)res.getDimZ() / (FloatType)this->getDimZ());
 
 			for (size_t z = 0; z < res.getDimZ(); z++) {
 				for (size_t y = 0; y < res.getDimY(); y++) {
@@ -178,7 +180,7 @@ namespace ml {
 		}
 
 		DistanceField3 upsample() const {
-			return upsample(vec3ul(getDimX() * 2, getDimY() * 2, getDimZ() * 2));
+			return upsample(vec3ul(this->getDimX() * 2, this->getDimY() * 2, this->getDimZ() * 2));
 		}
 	private:
 

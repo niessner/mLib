@@ -2,6 +2,7 @@
 #ifndef _BASEIMAGE_H_
 #define _BASEIMAGE_H_
 
+#include <utility>
 #include "baseImageHelper.h"
 
 namespace ml {
@@ -1282,6 +1283,35 @@ namespace ml {
 				}
 			}
 		}
+
+		ColorImageR32G32B32A32(const BaseImage<float>& image) : BaseImage(image.getWidth(), image.getHeight()) {
+			m_format = Image::FORMAT_ColorImageR32G32B32A32;
+			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+
+			const float* data = image.getData();
+			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+				m_data[i] = ml::vec4f(data[i], data[i], data[i], 1.0f);
+			}
+		}
+		ColorImageR32G32B32A32(const BaseImage<vec4uc>& image, float scale = 255.0f) : BaseImage(image.getWidth(), image.getHeight()) {
+			m_format = Image::FORMAT_ColorImageR32G32B32A32;
+			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+
+			const vec4uc* data = image.getData();
+			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+				m_data[i] = ml::vec4f(data[i].x / scale, data[i].y / scale, data[i].z / scale, data[i].w / scale);
+			}
+		}
+		ColorImageR32G32B32A32(const BaseImage<vec3uc>& image, float scale = 255.0f) : BaseImage(image.getWidth(), image.getHeight()) {
+			m_format = Image::FORMAT_ColorImageR32G32B32A32;
+			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+
+			const vec3uc* data = image.getData();
+			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
+				m_data[i] = ml::vec4f(data[i].x / scale, data[i].y / scale, data[i].z / scale, 1.0f);
+			}
+		}
+
 	};
 
 	class ColorImageR8G8B8A8 : public BaseImage < vec4uc > {
