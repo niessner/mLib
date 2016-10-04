@@ -338,7 +338,7 @@ namespace util
 	{
 		const std::string dir = replace(directory,'\\', '/');
 		const std::vector<std::string> dirParts = split(dir, '/');
-		std::string soFar = "";
+		std::string soFar = startsWith(dir, "//") ? "//" : "";
 		for (const std::string& part : dirParts) {
 			soFar += part + "/";
 			CreateDirectoryA(soFar.c_str(), nullptr);
