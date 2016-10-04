@@ -21,8 +21,15 @@ namespace ml
 
 		~NearestNeighborSearchFLANN()
 		{
-			SAFE_DELETE(m_flatPoints);
-			SAFE_DELETE(m_FLANNIndex);
+			if (m_FLANNIndex) {
+ 				delete[] m_queryStorage.ptr();
+				delete[] m_indicesStorage.ptr();
+				delete[] m_distsStorage.ptr();
+				delete m_flatPoints;
+				delete m_FLANNIndex;
+				m_flatPoints = nullptr;
+				m_FLANNIndex = nullptr;
+			}
 		}
 
 		void getDistances(unsigned int k, std::vector<FloatType> &dists) const

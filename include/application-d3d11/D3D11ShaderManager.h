@@ -56,7 +56,7 @@ namespace ml {
         }
 
 		void bindShaders(const std::string& shaderName) const;
-
+		void unbindShaders();
 	private:
 		D3D11GraphicsDevice* m_graphics;
 		std::map<std::string, D3D11ShaderPair> m_shaders;

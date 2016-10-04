@@ -65,25 +65,25 @@ namespace ml {
 		// TODO: use templating to collapse iterator and const-iterator
         struct iteratorEntry
         {
-            iteratorEntry(size_t _x, size_t _y, T &_value)
+            iteratorEntry(unsigned int _x, unsigned int _y, T &_value)
                 : x(_x), y(_y), value(_value)
             {
 
             }
-            size_t x;
-            size_t y;
+            unsigned int x;
+            unsigned int y;
             T &value;
         };
 
         struct constIteratorEntry
         {
-            constIteratorEntry(size_t _x, size_t _y, const T &_value)
+            constIteratorEntry(unsigned int _x, unsigned int _y, const T &_value)
                 : x(_x), y(_y), value(_value)
             {
 
             }
-            size_t x;
-            size_t y;
+            unsigned int x;
+            unsigned int y;
             const T &value;
         };
 
@@ -135,7 +135,7 @@ namespace ml {
 
             friend void swap(iterator &a, iterator &b);
 
-            size_t x, y;
+            unsigned int x, y;
 
         private:
             BaseImage<T> *image;
@@ -189,7 +189,7 @@ namespace ml {
 
             friend void swap(constIterator &a, constIterator &b);
 
-            size_t x, y;
+            unsigned int x, y;
 
         private:
             const BaseImage<T> *image;
@@ -1002,7 +1002,7 @@ namespace ml {
 				float val;
 				USHORT d = image.getData()[i];
 				if (d == INVALID) val = m_InvalidValue;
-				else val = 0.001f * d;
+				else val = 0.001f * d;	//TODO make this a parameters m_depthShift
 				m_data[i] = val;
 			}
 		}
