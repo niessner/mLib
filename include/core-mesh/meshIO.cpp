@@ -564,8 +564,8 @@ void MeshIO<FloatType>::saveToOFF( const std::string& filename, const MeshData<F
 	std::ofstream file(filename);
 	if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file for writing " + filename);		
 
-	// first line should say 'COFF'
-	file << "COFF\n";
+	// first line should say 'OFF'
+	file << "OFF\n";
 
 	// write header (verts, faces, edges)
 	file << mesh.m_Vertices.size() << " " << mesh.m_FaceIndicesVertices.size() << " " << 0 << "\n";
