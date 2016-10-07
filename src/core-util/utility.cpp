@@ -170,6 +170,14 @@ namespace util
 		file.close();
 	}
 
+	std::vector<std::string> splitPath(const std::string& path)
+	{
+		if (path.size() == 0) return std::vector<std::string>();
+		const std::string dir = replace(path, '\\', '/');
+		std::vector<std::string> dirParts = split(dir, '/');
+		return dirParts;
+	}
+
     std::string directoryFromPath(const std::string& path)
     {
 		if (path.size() == 0) return path;
@@ -338,7 +346,7 @@ namespace util
 	{
 		const std::string dir = replace(directory,'\\', '/');
 		const std::vector<std::string> dirParts = split(dir, '/');
-		std::string soFar = "";
+		std::string soFar = startsWith(dir, "//") ? "//" : "";
 		for (const std::string& part : dirParts) {
 			soFar += part + "/";
 			CreateDirectoryA(soFar.c_str(), nullptr);
