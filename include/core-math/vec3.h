@@ -115,6 +115,11 @@ public:
 		return (x == x && y == y && z == z);
 	}
 
+	inline bool isFinite() const
+	{
+		return std::isfinite(x) && std::isfinite(y) && std::isfinite(z);
+	}
+
 	inline void operator/=(T val) {
 		//optimized version for float/double (doesn't work for int) -- assumes compiler statically optimizes if
 		if (std::is_same<T, float>::value || std::is_same<T, double>::value) {
