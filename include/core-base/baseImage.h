@@ -1420,6 +1420,16 @@ namespace ml {
 
 			return res;
 		}
+
+		BaseImage<vec3uc> convertToR8G8B8() const {
+			BaseImage<vec3uc> res(getWidth(), getHeight());
+
+			for (const auto& p : *this) {
+				res(p.x, p.y) = vec3uc(p.value.x, p.value.y, p.value.z);
+			}
+
+			return res;
+		}
 	};
 
 	typedef ColorImageR32G32B32	PointImage;

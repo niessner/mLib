@@ -1,3 +1,4 @@
+#pragma once
 
 //
 // ext-depthcamera headers

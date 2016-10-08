@@ -168,49 +168,49 @@ private:
 	{
 		return; // FIXME: Ditch or fix codec enumeration.
 
-        CodecsList encodersList;
-        CodecsList decodersList;
+        //CodecsList encodersList;
+        //CodecsList decodersList;
 
-        populateCodecsInfo(encodersList, Gdiplus::GetImageEncodersSize, Gdiplus::GetImageEncoders);
-        populateCodecsInfo(decodersList, Gdiplus::GetImageDecodersSize, Gdiplus::GetImageDecoders);
+        //populateCodecsInfo(encodersList, Gdiplus::GetImageEncodersSize, Gdiplus::GetImageEncoders);
+        //populateCodecsInfo(decodersList, Gdiplus::GetImageDecodersSize, Gdiplus::GetImageDecoders);
 
-        typedef std::map<GUID, Gdiplus::ImageCodecInfo*> CodecsDict;
+        //typedef std::map<GUID, Gdiplus::ImageCodecInfo*> CodecsDict;
 
-        CodecsDict encodersDict;
-        CodecsDict decodersDict;
+        //CodecsDict encodersDict;
+        //CodecsDict decodersDict;
 
-        for (size_t n = 0; n < encodersList.size(); ++n)
-        {
-            Gdiplus::ImageCodecInfo* info = &encodersList[n];
-            encodersDict[info->FormatID] = info;
-        }
+        //for (size_t n = 0; n < encodersList.size(); ++n)
+        //{
+        //    Gdiplus::ImageCodecInfo* info = &encodersList[n];
+        //    encodersDict[info->FormatID] = info;
+        //}
 
-        for (size_t n = 0; n < decodersList.size(); ++n)
-        {
-            Gdiplus::ImageCodecInfo* info = &decodersList[n];
-            decodersDict[info->FormatID] = info;
-        }
+        //for (size_t n = 0; n < decodersList.size(); ++n)
+        //{
+        //    Gdiplus::ImageCodecInfo* info = &decodersList[n];
+        //    decodersDict[info->FormatID] = info;
+        //}
 
-        static const GUID guids [] =
-        {
-            // Defined in the same sequence as the ImageCodec enum definition.
-            Gdiplus::ImageFormatJPEG,
-            Gdiplus::ImageFormatPNG,
-            Gdiplus::ImageFormatBMP,
-        };
+        //static const GUID guids [] =
+        //{
+        //    // Defined in the same sequence as the ImageCodec enum definition.
+        //    Gdiplus::ImageFormatJPEG,
+        //    Gdiplus::ImageFormatPNG,
+        //    Gdiplus::ImageFormatBMP,
+        //};
 
-        for (size_t n = 0; n < sizeof_array(guids); ++n)
-        {
-            const GUID guid = guids[n];
+        //for (size_t n = 0; n < sizeof_array(guids); ++n)
+        //{
+        //    const GUID guid = guids[n];
 
-            CodecsDict::const_iterator enc = encodersDict.find(guid);
-            CodecsDict::const_iterator dec = decodersDict.find(guid);
+        //    CodecsDict::const_iterator enc = encodersDict.find(guid);
+        //    CodecsDict::const_iterator dec = decodersDict.find(guid);
 
-            assert(enc != encodersDict.end());
-            assert(dec != decodersDict.end());
+        //    assert(enc != encodersDict.end());
+        //    assert(dec != decodersDict.end());
 
-            codecs.push_back(Codec(*enc->second, *enc->second));
-        }
+        //    codecs.push_back(Codec(*enc->second, *enc->second));
+        //}
 	}
 
 public:

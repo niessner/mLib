@@ -444,6 +444,7 @@ namespace ml {
 					m_timeStampDepth = other.m_timeStampDepth;
 					m_cameraToWorld = other.m_cameraToWorld;
 				}
+				return true;
 			}
 
 			//! move operator
@@ -463,6 +464,7 @@ namespace ml {
 					other.m_colorCompressed = NULL;
 					other.m_depthCompressed = NULL;
 				}
+				return true;
 			}
 
 
@@ -527,7 +529,7 @@ namespace ml {
 				if (type == TYPE_PNG) codec = uplinksimple::graphics_ImageCodec_PNG;
 
 				uplinksimple::MemoryBlock block;
-				float quality = uplinksimple::defaultQuality;
+				//float quality = uplinksimple::defaultQuality;
 				size_t width = 0;
 				size_t height = 0;
 				uplinksimple::decode_image(codec, (const uint8_t*)m_colorCompressed, m_colorSizeBytes, format, width, height, block);
@@ -1174,7 +1176,7 @@ namespace ml {
 				else throw MLIB_EXCEPTION("invalid color format " + compressionColor);
 
 				//by default use TYPE_OCCI_USHORT (it's just the best)
-				ml::SensorData::COMPRESSION_TYPE_DEPTH compressionDepth = ml::SensorData::COMPRESSION_TYPE_DEPTH::TYPE_OCCI_USHORT;
+				//ml::SensorData::COMPRESSION_TYPE_DEPTH compressionDepth = ml::SensorData::COMPRESSION_TYPE_DEPTH::TYPE_OCCI_USHORT;
 
 				RGBDFrame& f = addFrame(NULL, depthData);
 				f.m_colorSizeBytes = colorSizeBytes;
