@@ -887,7 +887,36 @@ namespace ml {
 			replaceColor(m_frames[frameIdx], color);
 		}
 
-
+		//! not efficient but easy to use 
+		DepthImage32 computeDepthImage(const RGBDFrame& f) const {		
+			USHORT* depth = decompressDepthAlloc(f);
+			DepthImage32 d(m_depthWidth, m_depthHeight);
+			d.setInvalidValue(0.0f);
+			for (unsigned int i = 0; i < m_depthWidth * m_depthHeight; i++) {
+				if (depth[i] == 0) d.getData()[i] = d.getInvalidValue();
+				else d.getData()[i] = (float)depth[i] / m_depthShift;
+			}
+			std::free(depth);
+			return d;
+		}
+		//! not efficient but easy to use 
+		DepthImage32 computeDepthImage(size_t frameIdx) const {
+			return computeDepthImage(m_frames[frameIdx]);
+		}
+		//! not efficient but easy to use 
+		ColorImageR8G8B8 computeColorImage(const RGBDFrame& f) const {
+			vec3uc* color = decompressColorAlloc(f);
+			ColorImageR8G8B8 c(m_colorWidth, m_colorHeight);
+			for (unsigned int i = 0; i < m_colorWidth * m_colorHeight; i++) {
+				c.getData()[i] = color[i];
+			}
+			std::free(color);
+			return c;
+		}
+		//! not efficient but easy to use 
+		ColorImageR8G8B8 computeColorImage(size_t frameIdx) const {
+			return computeColorImage(m_frames[frameIdx]);
+		}
 
 		//! returns the closest IMUFrame for a given RGBDFrame (time-wise)
 		const IMUFrame& findClosestIMUFrame(const RGBDFrame& f, bool basedOnRGB = true) const {
