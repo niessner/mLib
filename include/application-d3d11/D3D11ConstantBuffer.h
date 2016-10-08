@@ -61,6 +61,13 @@ public:
 		bindPixelShader(constantBufferIndex);
 	}
 
+	void unbind(unsigned int constantBufferIndex)
+	{
+		ID3D11Buffer* buffNULL[] = { nullptr };
+		m_graphics->getContext()->GSSetConstantBuffers(constantBufferIndex, 1, buffNULL);
+		m_graphics->getContext()->PSSetConstantBuffers(constantBufferIndex, 1, buffNULL);
+	}
+
 	void bindVertexShader(UINT constantBufferIndex)
 	{
         m_graphics->getContext().VSSetConstantBuffers(constantBufferIndex, 1, &m_buffer);

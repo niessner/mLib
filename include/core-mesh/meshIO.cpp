@@ -564,8 +564,8 @@ void MeshIO<FloatType>::saveToOFF( const std::string& filename, const MeshData<F
 	std::ofstream file(filename);
 	if (!file.is_open())	throw MLIB_EXCEPTION("Could not open file for writing " + filename);		
 
-	// first line should say 'COFF'
-	file << "COFF\n";
+	// first line should say 'OFF'
+	file << "OFF\n";
 
 	// write header (verts, faces, edges)
 	file << mesh.m_Vertices.size() << " " << mesh.m_FaceIndicesVertices.size() << " " << 0 << "\n";
@@ -635,12 +635,12 @@ void MeshIO<FloatType>::saveToOBJ( const std::string& filename, const MeshData<F
 		for (unsigned int j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
 			file << mesh.m_FaceIndicesVertices[i][j]+1;
 			if (mesh.m_FaceIndicesTextureCoords.size() > 0 || mesh.m_FaceIndicesNormals.size() > 0) {
-				file << "//";
 				if (mesh.m_FaceIndicesTextureCoords.size() > 0) {
+					file << "//";
 					file << mesh.m_FaceIndicesTextureCoords[i][j]+1;
 				}
-				file << "//";
 				if (mesh.m_FaceIndicesNormals.size() > 0) {
+					file << "//";
 					file << mesh.m_FaceIndicesNormals[i][j]+1;
 				}
 			}

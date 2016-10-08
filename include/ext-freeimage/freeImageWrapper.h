@@ -187,7 +187,18 @@ namespace ml {
 				BYTE* bits = FreeImage_GetBits(dib);
 				unsigned int pitch = FreeImage_GetPitch(dib);
 
-				if (numChannels == 1 && bytesPerChannel == 2) {
+				if (numChannels == 1 && bytesPerChannel == 1) {
+					//unsigned char
+					for (unsigned int y = 0; y < height; y++) {
+						BYTE* bitsRowStart = bits + (height - 1 - y)*pitch;
+						unsigned char* bitsRowStartUChar = (unsigned char*)bitsRowStart;
+						for (unsigned int x = 0; x < width; x++) {
+							unsigned char v;	convertToUCHAR(v, image(x, y));
+							bitsRowStartUChar[x] = v;
+						}
+					}
+				}
+				else if (numChannels == 1 && bytesPerChannel == 2) {
 					//depth map; unsigned short
 					for (unsigned int y = 0; y < height; y++) {
 						BYTE* bitsRowStart = bits + (height - 1 - y)*pitch;

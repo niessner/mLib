@@ -374,6 +374,7 @@ namespace util
 	//
 	// Returns the next line in the given file
 	//
+	std::vector<std::string> splitPath(const std::string& path);
     std::string directoryFromPath(const std::string &path);
     std::string fileNameFromPath(const std::string &path);
     std::string removeExtensions(const std::string &path);

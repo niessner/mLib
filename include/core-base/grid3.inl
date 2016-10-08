@@ -69,19 +69,7 @@ namespace ml
 
 	template <class T> Grid3<T>::~Grid3()
 	{
-		free();
-	}
-
-	template <class T> void Grid3<T>::free()
-	{
-		m_dimX = 0;
-		m_dimY = 0;
-		m_dimZ = 0;
-		if (m_data != nullptr)
-		{
-			delete[] m_data;
-			m_data = nullptr;
-		}
+		SAFE_DELETE_ARRAY(m_data);
 	}
 
 	template <class T> Grid3<T>& Grid3<T>::operator = (const Grid3<T> &G)
@@ -112,7 +100,7 @@ namespace ml
 	template <class T> void Grid3<T>::allocate(size_t dimX, size_t dimY, size_t dimZ)
 	{
 		if (dimX == 0 || dimY == 0 || dimZ == 0) {
-			free();
+			SAFE_DELETE_ARRAY(m_data);
 		}
 		else {
 			m_dimX = dimX;
@@ -126,7 +114,7 @@ namespace ml
 	template <class T> void Grid3<T>::allocate(size_t dimX, size_t dimY, size_t dimZ, const T &clearValue)
 	{
 		if (dimX == 0 || dimY == 0 || dimZ == 0) {
-			free();
+			SAFE_DELETE_ARRAY(m_data);
 		}
 		else {
 			allocate(dimX, dimY, dimZ);

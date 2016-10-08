@@ -270,7 +270,7 @@ namespace ml {
 			//! Camera-to-Proj matrix
 			mat4f m_intrinsic;
 
-			//! World-to-Camera matrix (accumulated R|t mapping back to the first frame))
+			//! it should be the mapping to base frame in a multi-view setup (typically it's depth to color; and the color extrinsic is the identity)
 			mat4f m_extrinsic;
 		};
 
@@ -287,6 +287,21 @@ namespace ml {
 			TYPE_OCCI_USHORT = 2
 		};
 
+		static std::string COMPRESSION_TYPE_COLOR_Str(COMPRESSION_TYPE_COLOR type) {
+			if (type == TYPE_COLOR_UNKNOWN) return "TYPE_COLOR_UNKNOWN";
+			if (type == TYPE_RAW) return "TYPE_RAW";
+			if (type == TYPE_PNG) return "TYPE_PNG";
+			if (type == TYPE_JPEG) return "TYPE_JPEG";
+			return "unknown compression type entry";
+		}
+		static std::string COMPRESSION_TYPE_DEPTH_Str(COMPRESSION_TYPE_DEPTH type) {
+			if (type == TYPE_DEPTH_UNKNOWN) return "TYPE_DEPTH_UNKNOWN";
+			if (type == TYPE_RAW_USHORT) return "TYPE_RAW_USHORT";
+			if (type == TYPE_ZLIB_USHORT) return "TYPE_ZLIB_USHORT";
+			if (type == TYPE_OCCI_USHORT) return "TYPE_OCCI_USHORT";
+			return "unknown compression type entry";
+		}
+
 
 		class RGBDFrame {
 		public:
@@ -299,6 +314,7 @@ namespace ml {
 				m_timeStampColor = 0;
 				m_timeStampDepth = 0;
 			}
+
 
 			RGBDFrame(const RGBDFrame& other) {
 				m_colorSizeBytes = other.m_colorSizeBytes;
@@ -410,7 +426,17 @@ namespace ml {
 				m_timeStampDepth = timeStampDepth;
 			}
 			
+			//! overwrites the depth frame data
+			void replaceDepth(const unsigned short* depth, unsigned int depthWidth, unsigned int depthHeight, COMPRESSION_TYPE_DEPTH depthType = TYPE_ZLIB_USHORT) {
+				freeDepth();
+				compressDepth(depth, depthWidth, depthHeight, depthType);
+			}
 
+			//! overwrites the color frame data
+			void replaceColor(const vec3uc* color, unsigned int colorWidth, unsigned int colorHeight, COMPRESSION_TYPE_COLOR colorType = TYPE_JPEG) {
+				freeColor();
+				compressColor(color, colorWidth, colorHeight, colorType);
+			}
 
 			void freeColor() {
 				if (m_colorCompressed) std::free(m_colorCompressed);
@@ -845,6 +871,55 @@ namespace ml {
 			return decompressDepthAlloc(m_frames[frameIdx]);
 		}
 
+		//! replaces the depth data of the given frame
+		void replaceDepth(RGBDFrame& f, const unsigned short* depth) {
+			f.replaceDepth(depth, m_depthWidth, m_depthHeight, m_depthCompressionType);
+		}
+		void replaceDepth(size_t frameIdx, const unsigned short* depth) {
+			if (frameIdx > m_frames.size()) throw MLIB_EXCEPTION("out of bounds");
+			replaceDepth(m_frames[frameIdx], depth);
+		}
+
+		//! replaces the color data of the given frame
+		void replaceColor(RGBDFrame& f, const vec3uc* color) {
+			f.replaceColor(color, m_colorWidth, m_colorHeight, m_colorCompressionType);
+		}
+		void replaceColor(size_t frameIdx, const vec3uc* color) {
+			if (frameIdx > m_frames.size()) throw MLIB_EXCEPTION("out of bounds");
+			replaceColor(m_frames[frameIdx], color);
+		}
+
+		//! not efficient but easy to use 
+		DepthImage32 computeDepthImage(const RGBDFrame& f) const {		
+			USHORT* depth = decompressDepthAlloc(f);
+			DepthImage32 d(m_depthWidth, m_depthHeight);
+			d.setInvalidValue(0.0f);
+			for (unsigned int i = 0; i < m_depthWidth * m_depthHeight; i++) {
+				if (depth[i] == 0) d.getData()[i] = d.getInvalidValue();
+				else d.getData()[i] = (float)depth[i] / m_depthShift;
+			}
+			std::free(depth);
+			return d;
+		}
+		//! not efficient but easy to use 
+		DepthImage32 computeDepthImage(size_t frameIdx) const {
+			return computeDepthImage(m_frames[frameIdx]);
+		}
+		//! not efficient but easy to use 
+		ColorImageR8G8B8 computeColorImage(const RGBDFrame& f) const {
+			vec3uc* color = decompressColorAlloc(f);
+			ColorImageR8G8B8 c(m_colorWidth, m_colorHeight);
+			for (unsigned int i = 0; i < m_colorWidth * m_colorHeight; i++) {
+				c.getData()[i] = color[i];
+			}
+			std::free(color);
+			return c;
+		}
+		//! not efficient but easy to use 
+		ColorImageR8G8B8 computeColorImage(size_t frameIdx) const {
+			return computeColorImage(m_frames[frameIdx]);
+		}
+
 		//! returns the closest IMUFrame for a given RGBDFrame (time-wise)
 		const IMUFrame& findClosestIMUFrame(const RGBDFrame& f, bool basedOnRGB = true) const {
 
@@ -1214,10 +1289,25 @@ namespace ml {
 					unsigned int x = i % m_depthWidth, y =  i / m_depthWidth;
 					if (depth[i] != 0) {
 						float d = (float)depth[i]/m_depthShift;
-						vec3f worldpos = (intrinsicInv*vec4f((float)x*d, (float)y*d, d, 0.0f)).getVec3();
-						pc.m_points.push_back(transform * worldpos);
-						if (m_colorWidth == m_depthWidth && m_colorHeight == m_depthHeight)
-							pc.m_colors.push_back(vec4f(color[i], 255.0f) / 255.0f);
+						vec3f cameraPos = (intrinsicInv*vec4f((float)x*d, (float)y*d, d, 0.0f)).getVec3();
+						vec3f worldPos = transform * cameraPos;
+						pc.m_points.push_back(worldPos);
+
+						vec3f colorFramePos = m_calibrationDepth.m_extrinsic * cameraPos;
+						vec3f colorCoord = m_calibrationColor.m_intrinsic * colorFramePos;
+						colorCoord.x /= colorCoord.z;	colorCoord.y /= colorCoord.z;
+						vec3ui colorCoordi = math::round(colorCoord);
+						if (colorCoordi.x >= 0 && colorCoordi.x < m_colorWidth && colorCoordi.y >= 0 && colorCoordi.y < m_colorHeight) {
+							unsigned int colorIdx = colorCoordi.y*m_colorWidth + colorCoordi.x;
+							pc.m_colors.push_back(vec4f(color[colorIdx], 255.0f) / 255.0f);
+						}
+						else {
+							pc.m_colors.push_back(vec4f(0.0f, 0.0f, 0.0f, 0.0f));
+						}
+
+						//if (m_colorWidth == m_depthWidth && m_colorHeight == m_depthHeight) {
+						//	pc.m_colors.push_back(vec4f(color[i], 255.0f) / 255.0f);
+						//}
 					}
 				}
 				std::free(color);

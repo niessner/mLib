@@ -66,25 +66,25 @@ namespace ml {
 		// TODO: use templating to collapse iterator and const-iterator
         struct iteratorEntry
         {
-            iteratorEntry(size_t _x, size_t _y, T &_value)
+            iteratorEntry(unsigned int _x, unsigned int _y, T &_value)
                 : x(_x), y(_y), value(_value)
             {
 
             }
-            size_t x;
-            size_t y;
+            unsigned int x;
+            unsigned int y;
             T &value;
         };
 
         struct constIteratorEntry
         {
-            constIteratorEntry(size_t _x, size_t _y, const T &_value)
+            constIteratorEntry(unsigned int _x, unsigned int _y, const T &_value)
                 : x(_x), y(_y), value(_value)
             {
 
             }
-            size_t x;
-            size_t y;
+            unsigned int x;
+            unsigned int y;
             const T &value;
         };
 
@@ -136,7 +136,7 @@ namespace ml {
 
             friend void swap(iterator &a, iterator &b);
 
-            size_t x, y;
+            unsigned int x, y;
 
         private:
             BaseImage<T> *image;
@@ -190,7 +190,7 @@ namespace ml {
 
             friend void swap(constIterator &a, constIterator &b);
 
-            size_t x, y;
+            unsigned int x, y;
 
         private:
             const BaseImage<T> *image;
@@ -244,12 +244,6 @@ namespace ml {
 			}
 			const U& otherInvalidValue = other.getInvalidValue();
 			BaseImageHelper::convertBaseImagePixel<T, U>(m_InvalidValue, otherInvalidValue);
-		}
-
-		//! clears the image; and release all memory
-		void free() {
-			SAFE_DELETE_ARRAY(m_data);
-			m_height = m_width = 0;
 		}
 
 
@@ -454,7 +448,7 @@ namespace ml {
 		//! Allocates the images to the given size
 		void allocate(unsigned int width, unsigned int height) {
 			if (width == 0 || height == 0) {
-				free();
+				SAFE_DELETE_ARRAY(m_data);
 			}
 			else if (m_width != width || m_height != height) {
 				SAFE_DELETE_ARRAY(m_data);
@@ -705,7 +699,7 @@ namespace ml {
 			return (x < m_width && y < m_height);
 		}
 
-        bool isValidCoordinate(vec2i coord) const {
+        bool isValidCoordinate(const vec2i& coord) const {
             return ((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
         }
 
@@ -860,8 +854,11 @@ namespace ml {
 							value += getPixel(x + 0, y - 1);
 						}
 
-						if (isValid(x, y)) {
+						if (isValid(x, y) && valid > 0) {
 							other.setPixel(x, y, ((float)valid*getPixel(x, y) + value) / (2 * (float)valid));
+						}
+						else {
+							other.setInvalid(x, y);
 						}
 					}
 				}
@@ -1006,7 +1003,7 @@ namespace ml {
 				float val;
 				USHORT d = image.getData()[i];
 				if (d == INVALID) val = m_InvalidValue;
-				else val = 0.001f * d;
+				else val = 0.001f * d;	//TODO make this a parameters m_depthShift
 				m_data[i] = val;
 			}
 		}
@@ -1262,17 +1259,17 @@ namespace ml {
 			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = depthImage.getData();
-            float maxDepth = -std::numeric_limits<float>::max();
-            float minDepth = +std::numeric_limits<float>::max();
+			float minDepth = +std::numeric_limits<float>::max();
+            float maxDepth = -std::numeric_limits<float>::max();           
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				if (data[i] != depthImage.getInvalidValue()) {
-					if (data[i] > maxDepth) maxDepth = data[i];
 					if (data[i] < minDepth) minDepth = data[i];
+					if (data[i] > maxDepth) maxDepth = data[i];
 				}
 			}
 			if (debugPrint) {
-				std::cout << "max Depth " << maxDepth << std::endl;
 				std::cout << "min Depth " << minDepth << std::endl;
+				std::cout << "max Depth " << maxDepth << std::endl;				
 			}
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
 				if (data[i] != depthImage.getInvalidValue()) {

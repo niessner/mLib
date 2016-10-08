@@ -59,13 +59,13 @@ namespace ml {
 		}
 
 		~BinaryGrid3() {
-			free();
+			SAFE_DELETE_ARRAY(m_data);
 		}
 
 
 		inline void allocate(size_t width, size_t height, size_t depth) {
 			if (width == 0 || height == 0 || depth == 0) {
-				free();
+				SAFE_DELETE_ARRAY(m_data);
 				return;
 			}
 			else {
@@ -81,12 +81,6 @@ namespace ml {
 
 		inline void allocate(const vec3ul& dim) {
 			allocate(dim.x, dim.y, dim.z);
-		}
-
-		//! frees all the data
-		inline void free() {
-			SAFE_DELETE_ARRAY(m_data);
-			m_width = m_height = m_depth = 0;
 		}
 
 		inline BinaryGrid3& operator=(const BinaryGrid3& other) {

@@ -22,20 +22,20 @@ void PCA<T>::init(const std::vector<const T*> &points, size_t dimension, const E
 		const T *point = points[pointIndex];
 		for(size_t dimIndex = 0; dimIndex < dimension; dimIndex++)
 		{
-            B(pointIndex, dimIndex) = point[dimIndex] - _means[dimIndex];
+            B((UINT)pointIndex, (UINT)dimIndex) = point[dimIndex] - _means[dimIndex];
 		}
 	}
 
     std::cout << "Building cross-correlation matrix..." << std::endl;
 	
-    DenseMatrix<T> C = B * B.transpose();
+    DenseMatrix<T> C = B.getTranspose() * B;
 	//DenseMatrix<T>::MultiplyMMTranspose(C, B);
 
-    const T norm = T(1.0) / T(n - 1);
+    const T norm = T(1.0) / T(n);	//TODO (Matthias): I think this is wrong; I believe it  must be n-1
     for (auto &x : C)
         x *= norm;
 
-    initFromCorrelationMatrix(C);
+    initFromCorrelationMatrix(C, eigenSolver);
 }
 
 template<class T>
@@ -65,10 +65,11 @@ void PCA<T>::init(DenseMatrix<T> &points, const EigenSolverFunc &eigenSolver)
 
     std::cout << "Building cross-correlation matrix..." << std::endl;
 
+	//DenseMatrix<T> C = points * points.transpose();
 	DenseMatrix<T> C = points.getTranspose() * points;
     //DenseMatrix<T>::MultiplyMMTranspose(C, B);
 
-    const T norm = T(1.0) / T(n - 1);
+    const T norm = T(1.0) / T(n);
     for (auto &x : C)
         x *= norm;
 

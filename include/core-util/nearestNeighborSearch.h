@@ -84,6 +84,11 @@ public:
         return result;
     }
 
+	virtual void getDistances(unsigned int k, std::vector<FloatType> &dists) const
+	{
+		throw MLIB_EXCEPTION("kNearest not implemented");
+	}
+
 private:
 	virtual void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK) = 0;
 	virtual void kNearestInternal(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const = 0;

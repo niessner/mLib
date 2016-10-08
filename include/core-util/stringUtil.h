@@ -200,6 +200,15 @@ namespace util
         return result;
     }
 
+	//! splits string about the first instance of delim
+	inline std::pair<std::string, std::string> splitOnLast(const std::string& str, const std::string& delim) {
+		std::pair<std::string, std::string> result;
+		auto lastIndex = str.rfind(delim);
+		result.first = str.substr(0, lastIndex);
+		result.second = str.substr(lastIndex + delim.size());
+		return result;
+	}
+
 	//! returns filename with extension removed
 	inline std::string dropExtension(const std::string& filename) {
 		return getSubstrBeforeLast(filename, ".");

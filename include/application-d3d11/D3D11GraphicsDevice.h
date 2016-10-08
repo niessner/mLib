@@ -84,6 +84,8 @@ public:
 
     void init(const WindowWin32 &window);
 
+	void initWithoutWindow();
+
 	void resize(const WindowWin32 &window);
     void renderBeginFrame();
     void renderEndFrame(bool vsync);

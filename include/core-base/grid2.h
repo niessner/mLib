@@ -162,10 +162,6 @@ namespace ml
 
 		~Grid2();
 
-		//
-		// Memory
-		//
-		void free();
 		Grid2<T>& operator = (const Grid2<T> &G);
 		Grid2<T>& operator = (Grid2<T> &&G);
 
