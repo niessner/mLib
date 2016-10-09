@@ -328,7 +328,7 @@ namespace ml {
 		}
 
         //! Mutator Operator (vec2i)
-        T& operator()(vec2i coord) {
+        T& operator()(const vec2i& coord) {
             MLIB_ASSERT((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
             return m_data[coord.y*m_width + coord.x];
         }
@@ -373,7 +373,7 @@ namespace ml {
 		}
 
         //! Access Operator (vec2i)
-        const T& operator()(vec2i coord) const {
+        const T& operator()(const vec2i& coord) const {
             MLIB_ASSERT((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
             return m_data[coord.y*m_width + coord.x];
         }
