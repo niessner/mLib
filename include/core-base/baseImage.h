@@ -928,7 +928,7 @@ namespace ml {
 		s.writeData(image.getWidth());
 		s.writeData(image.getHeight());
 		s.writeData(image.getInvalidValue());
-		s.writeData((BYTE*)image.getData(), sizeof(T)*image.getWidth()*image.getHeight());
+		if (image.getNumPixels() > 0) s.writeData((BYTE*)image.getData(), sizeof(T)*image.getWidth()*image.getHeight());
 		return s;
 	}
 
@@ -941,7 +941,7 @@ namespace ml {
 		s.readData(&invalidValue);
 		image.allocate(width, height);
 		image.setInvalidValue(invalidValue);
-		s.readData((BYTE*)image.getData(), sizeof(T)*width*height);
+		if (image.getNumPixels() > 0) s.readData((BYTE*)image.getData(), sizeof(T)*width*height);
 		return s;
 	}
 
