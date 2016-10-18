@@ -1,3 +1,4 @@
+#pragma once
 
 //
 // application-base headers

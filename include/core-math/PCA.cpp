@@ -138,7 +138,7 @@ template<class T>
 void PCA<T>::inverseTransform(const std::vector<T> &input, std::vector<T> &result) const
 {
     if (result.size() != _means.size())
-	    result.resize(dimension);
+	    result.resize(_means.size());
     inverseTransform(input.data(), input.size(), result.data());
 }
 
