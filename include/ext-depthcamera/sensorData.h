@@ -245,12 +245,12 @@ namespace ml {
 				m_extrinsic.setIdentity();
 			}
 
-			void saveToFile(std::ofstream& out) const {
+			void saveToFile(std::ostream& out) const {
 				out.write((const char*)&m_intrinsic, sizeof(mat4f));
 				out.write((const char*)&m_extrinsic, sizeof(mat4f));
 			}
 
-			void loadFromFile(std::ifstream& in) {
+			void loadFromFile(std::istream& in) {
 				in.read((char*)&m_intrinsic, sizeof(mat4f));
 				in.read((char*)&m_extrinsic, sizeof(mat4f));
 			}
@@ -661,7 +661,7 @@ namespace ml {
 			}
 
 
-			void saveToFile(std::ofstream& out) const {
+			void saveToFile(std::ostream& out) const {
 				out.write((const char*)&m_cameraToWorld, sizeof(mat4f));
 				out.write((const char*)&m_timeStampColor, sizeof(UINT64));
 				out.write((const char*)&m_timeStampDepth, sizeof(UINT64));
@@ -671,7 +671,7 @@ namespace ml {
 				out.write((const char*)m_depthCompressed, m_depthSizeBytes);
 			}
 
-			void loadFromFile(std::ifstream& in) {
+			void loadFromFile(std::istream& in) {
 				free();
 				in.read((char*)&m_cameraToWorld, sizeof(mat4f));
 				in.read((char*)&m_timeStampColor, sizeof(UINT64));
@@ -724,7 +724,7 @@ namespace ml {
 				timeStamp = 0;
 			}
 
-			void loadFromFile(std::ifstream& in) {
+			void loadFromFile(std::istream& in) {
 				in.read((char*)&rotationRate, sizeof(vec3d));
 				in.read((char*)&acceleration, sizeof(vec3d));
 				in.read((char*)&magneticField, sizeof(vec3d));
@@ -732,7 +732,7 @@ namespace ml {
 				in.read((char*)&gravity, sizeof(vec3d));
 				in.read((char*)&timeStamp, sizeof(UINT64));
 			}
-			void saveToFile(std::ofstream& out) const {
+			void saveToFile(std::ostream& out) const {
 				out.write((const char*)&rotationRate, sizeof(vec3d));
 				out.write((const char*)&acceleration, sizeof(vec3d));
 				out.write((const char*)&magneticField, sizeof(vec3d));
@@ -839,6 +839,11 @@ namespace ml {
 			m_depthShift = depthShift;
 			m_calibrationColor = calibrationColor;
 			m_calibrationDepth = calibrationDepth;
+		}
+
+		// Ownership of frame is transferred. Make sure to free the frame by hand.
+		RGBDFrame createFrame(const vec3uc* color, const unsigned short* depth, const mat4f& cameraToWorld = mat4f::identity(), UINT64 timeStampColor = 0, UINT64 timeStampDepth = 0) const {
+			return RGBDFrame(color, m_colorWidth, m_colorHeight, depth, m_depthWidth, m_depthHeight, cameraToWorld, m_colorCompressionType, m_depthCompressionType, timeStampColor, timeStampDepth);
 		}
 
 		RGBDFrame& addFrame(const vec3uc* color, const unsigned short* depth, const mat4f& cameraToWorld = mat4f::identity(), UINT64 timeStampColor = 0, UINT64 timeStampDepth = 0) {
@@ -976,10 +981,8 @@ namespace ml {
 			}
 		}
 
-		//! saves a .sens file
-		void saveToFile(const std::string& filename) const {
-			std::ofstream out(filename, std::ios::binary);
-
+		//! writes header to .sens file
+		void writeHeaderToFile(std::ostream& out) const {
 			out.write((const char*)&m_versionNumber, sizeof(unsigned int));
 			UINT64 strLen = m_sensorName.size();
 			out.write((const char*)&strLen, sizeof(UINT64));
@@ -995,19 +998,173 @@ namespace ml {
 			out.write((const char*)&m_depthWidth, sizeof(unsigned int));
 			out.write((const char*)&m_depthHeight, sizeof(unsigned int));
 			out.write((const char*)&m_depthShift, sizeof(float));
+		}
 
-			UINT64 numFrames = m_frames.size();
-			out.write((const char*)&numFrames, sizeof(UINT64));
+		//! writes number of frames to .sens file
+		void writeNumFramesToFile(uint64_t numFrames, std::ostream& out) const
+		{
+			out.write((const char*)&numFrames, sizeof(uint64_t));
+		}
+
+		//! writes RGBFrames to .sens file
+		void writeRGBFramesToFile(std::ostream& out) const
+		{
+			writeNumFramesToFile(m_frames.size(), out);
 			for (size_t i = 0; i < m_frames.size(); i++) {
 				m_frames[i].saveToFile(out);
 			}
+		}
 
-			UINT64 numIMUFrames = m_IMUFrames.size();
-			out.write((const char*)&numIMUFrames, sizeof(UINT64));
+		//! writes IMUFrames to .sens file
+		void writeIMUFramesToFile(std::ostream& out) const
+		{
+			writeNumFramesToFile(m_IMUFrames.size(), out);
 			for (size_t i = 0; i < m_IMUFrames.size(); i++) {
 				m_IMUFrames[i].saveToFile(out);
 			}
 		}
+
+		//! saves a .sens file
+		void saveToFile(const std::string& filename) const {
+			std::ofstream out(filename, std::ios::binary);
+			if (!out) {
+				throw std::runtime_error("Unable to open file for writing: " + filename);
+			}
+			writeHeaderToFile(out);
+			writeRGBFramesToFile(out);
+			writeIMUFramesToFile(out);
+		}
+
+		//! Enables writing out RGB frames directly to a file. Does not work with IMU frames and has to be closed after writing finished!
+		class LiveSensorDataWriter
+		{
+		public:
+			LiveSensorDataWriter(const SensorData* data, const std::string& filename, bool overwriteExistingFile = false)
+				: m_data(data), m_headerWritten(false), m_frameCounterRGB(0)
+			{
+				std::string actualFilename = filename;
+				if (!overwriteExistingFile) {
+					while (util::fileExists(actualFilename)) {
+						std::string path = util::directoryFromPath(actualFilename);
+						std::string curr = util::fileNameFromPath(actualFilename);
+						std::string ext = util::getFileExtension(curr);
+						curr = util::removeExtensions(curr);
+						std::string base = util::getBaseBeforeNumericSuffix(curr);
+						unsigned int num = util::getNumericSuffix(curr);
+						if (num == (unsigned int)-1) {
+							num = 0;
+						}
+						actualFilename = path + base + std::to_string(num + 1) + "." + ext;
+					}
+				}
+				m_out.open(actualFilename, std::ios::binary);
+				if (!m_out) {
+					throw std::runtime_error("Unable to open file for writing: " + filename);
+				}
+				startBackgroundThread();
+			}
+
+			~LiveSensorDataWriter()
+			{
+				close();
+			}
+
+			void close() {
+				if (m_backgroundThread.joinable()) {
+					m_bTerminateThread = true;
+					m_backgroundThread.join();
+					// Write number of IMU frames (0)
+					m_data->writeNumFramesToFile(0, m_out);
+					// Write number of RGB frames
+					m_out.seekp(m_numFramesPosRGB);
+					m_data->writeNumFramesToFile(m_frameCounterRGB, m_out);
+					m_out.close();
+				}
+			}
+
+			//! appends the data to the cache for process AND frees the memory
+			void writeNextAndFree(vec3uc* color, unsigned short* depth, const mat4f& transform = mat4f::identity(), uint64_t timeStampColor = 0, uint64_t timeStampDepth = 0) {
+				TempFrame f;
+				f.colorFrame = color;
+				f.depthFrame = depth;
+				f.transform = transform;
+				f.timeStampColor = timeStampColor;
+				f.timeStampDepth = timeStampDepth;
+				m_mutexCache.lock();
+				m_frameCache.push_back(f);
+				std::cout << "frames in cache: " << m_frameCache.size() << std::endl;
+				m_mutexCache.unlock();
+			}
+
+		private:
+			struct TempFrame {
+				vec3uc* colorFrame;
+				unsigned short* depthFrame;
+				mat4f transform;
+				uint64_t timeStampColor;
+				uint64_t timeStampDepth;
+
+				void free() {
+					if (colorFrame) {
+						std::free(colorFrame);
+						colorFrame = nullptr;
+					}
+					if (depthFrame) {
+						std::free(depthFrame);
+						depthFrame = nullptr;
+					}
+					timeStampDepth = 0;
+					timeStampColor = 0;
+				}
+			};
+
+			//! writes RGBFrame to .sens file
+			void writeFrameToFile(const RGBDFrame& frame)
+			{
+				if (!m_out) {
+					throw std::runtime_error("Output file has been closed");
+				}
+				if (!m_headerWritten) {
+					m_headerWritten = true;
+					m_data->writeHeaderToFile(m_out);
+					m_numFramesPosRGB = m_out.tellp();
+					m_data->writeNumFramesToFile(0, m_out);
+				}
+				frame.saveToFile(m_out);
+				++m_frameCounterRGB;
+			}
+
+			void startBackgroundThread() {
+				const auto backgroundThreadFunc = [&]
+				{
+					while (!m_bTerminateThread) {
+						if (m_frameCache.size() == 0) {
+							continue;
+						}
+						m_mutexCache.lock();
+						TempFrame frame = m_frameCache.front();
+						m_frameCache.pop_front();
+						m_mutexCache.unlock();
+						SensorData::RGBDFrame rgbFrame = m_data->createFrame(frame.colorFrame, frame.depthFrame, frame.transform, frame.timeStampColor, frame.timeStampDepth);
+						writeFrameToFile(rgbFrame);
+						rgbFrame.free();
+						frame.free();
+					}
+				};
+				m_backgroundThread = std::thread(backgroundThreadFunc);
+			}
+
+		private:
+			const SensorData* m_data;
+			std::ofstream m_out;
+			std::thread m_backgroundThread;
+			std::mutex m_mutexCache;
+			std::atomic<bool> m_bTerminateThread;
+			uint64_t m_frameCounterRGB;
+			bool m_headerWritten;
+			std::streampos m_numFramesPosRGB;
+			std::list<TempFrame> m_frameCache;
+		};
 
 		//! loads a .sens file
 		void loadFromFile(const std::string& filename) {
