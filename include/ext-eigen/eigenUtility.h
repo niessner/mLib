@@ -35,7 +35,7 @@ namespace eigenutil
 	}
 
 	template<class D>
-	static void makeEigenMatrix(const DenseMatrix<D> &M, Eigen::MatrixXd &result) 
+	static void makeEigenMatrix(const DenseMatrix<D> &M, Eigen::Matrix<D, Eigen::Dynamic, Eigen::Dynamic> &result) 
 	{
 		result.resize(M.rows(), M.cols());
 		for (unsigned int i = 0; i < M.rows(); i++) {

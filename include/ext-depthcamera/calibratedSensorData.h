@@ -113,7 +113,7 @@ public:
 		//return vec3f(depth*x, depth*y, depth);
 	}
 
-	void savePointCloud(const std::string& filename, unsigned int frameFrom, unsigned int frameTo = -1) const {
+	void savePointCloud(const std::string& filename, unsigned int frameFrom, unsigned int frameTo = (unsigned int)-1) const {
 		PointCloudf pc;
 
 		if (frameTo == (unsigned int)-1) frameTo = frameFrom + 1;

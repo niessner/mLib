@@ -1,4 +1,3 @@
-
 #ifndef CORE_UTIL_UTILITY_H_
 #define CORE_UTIL_UTILITY_H_
 
@@ -6,6 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <sstream>
+#include <iomanip>
 
 namespace ml
 {
@@ -50,8 +50,13 @@ namespace math
 	}
 
 	template<class T, class U>
+#if __cplusplus >= 201103L || __cpp_decltype
+	inline auto lerp(T left, T right, U s) -> decltype(left * s) {
+		return static_cast<decltype(left * s)>(left + (right - left) * s);
+#else
 	inline T lerp(T left, T right, U s) {
 		return static_cast<T>(left + (right - left) * s);
+#endif
 	}
 
 	inline int mod(int x, size_t M) {
@@ -283,8 +288,13 @@ namespace util
 	inline std::string getTimeString() {
 		auto t = std::time(nullptr);
 		auto tm = *std::localtime(&t);
+#if __GNUC__ && __GNUC__ < 5
+        #pragma message ("std::put_time not available in gcc version < 5")
+        return std::string();
+#else
 		std::stringstream ss; ss << std::put_time(&tm, "%Y-%m-%d_%H-%M-%S");
 		return ss.str();
+#endif
 	}
 
 	inline UINT64 getTime() {

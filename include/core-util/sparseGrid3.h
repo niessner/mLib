@@ -2,8 +2,13 @@
 #ifndef CORE_UTIL_SPARSEGRID3D_H_
 #define CORE_UTIL_SPARSEGRID3D_H_
 
-template<>
-struct std::hash<ml::vec3i> : public std::unary_function<ml::vec3i, size_t> {
+#include <functional>
+#include <core-math/vec3.h>
+
+namespace std {
+
+template <>
+struct hash<ml::vec3i> : public std::unary_function<ml::vec3i, size_t> {
 	size_t operator()(const ml::vec3i& v) const {
 		//TODO larger prime number (64 bit) to match size_t
 		const size_t p0 = 73856093;
@@ -13,6 +18,8 @@ struct std::hash<ml::vec3i> : public std::unary_function<ml::vec3i, size_t> {
 		return res;
 	}
 };
+
+}
 
 namespace ml {
 
