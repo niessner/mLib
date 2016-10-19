@@ -15,7 +15,7 @@ template<class T>
 class OrientedBoundingBox3;
 
 template<class FloatType>
-class BoundingBox3
+class BoundingBox3 : public BinaryDataSerialize < BoundingBox3<FloatType> >
 {
 public:
 

@@ -329,7 +329,7 @@ namespace ml {
 		}
 
         //! Mutator Operator (vec2i)
-        T& operator()(vec2i coord) {
+        T& operator()(const vec2i& coord) {
             MLIB_ASSERT((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
             return m_data[coord.y*m_width + coord.x];
         }
@@ -374,7 +374,7 @@ namespace ml {
 		}
 
         //! Access Operator (vec2i)
-        const T& operator()(vec2i coord) const {
+        const T& operator()(const vec2i& coord) const {
             MLIB_ASSERT((unsigned int)coord.x < m_width && (unsigned int)coord.y < m_height);
             return m_data[coord.y*m_width + coord.x];
         }
@@ -614,7 +614,7 @@ namespace ml {
         }
 
 		//! counts the number of pixels not equal to value
-		unsigned int getNumPixelsNotEqualTo(const T &value) {
+		unsigned int getNumPixelsNotEqualTo(const T &value) const {
 			unsigned int count = 0;
 			for (unsigned int i = 0; i < m_width * m_height; i++) {
 				if (value != m_data[i])	count++;
@@ -929,7 +929,7 @@ namespace ml {
 		s.writeData(image.getWidth());
 		s.writeData(image.getHeight());
 		s.writeData(image.getInvalidValue());
-		s.writeData((BYTE*)image.getData(), sizeof(T)*image.getWidth()*image.getHeight());
+		if (image.getNumPixels() > 0) s.writeData((BYTE*)image.getData(), sizeof(T)*image.getWidth()*image.getHeight());
 		return s;
 	}
 
@@ -942,7 +942,7 @@ namespace ml {
 		s.readData(&invalidValue);
 		image.allocate(width, height);
 		image.setInvalidValue(invalidValue);
-		s.readData((BYTE*)image.getData(), sizeof(T)*width*height);
+		if (image.getNumPixels() > 0) s.readData((BYTE*)image.getData(), sizeof(T)*width*height);
 		return s;
 	}
 

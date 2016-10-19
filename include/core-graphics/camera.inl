@@ -109,6 +109,13 @@ namespace ml {
 	}
 
 	template <class FloatType>
+	void Camera<FloatType>::updateFov(FloatType newFov) {
+		m_fieldOfView = newFov;
+		m_perspective = perspectiveFov(m_fieldOfView, m_aspect, m_zNear, m_zFar);
+		update();
+	}
+
+	template <class FloatType>
 	void Camera<FloatType>::update() {
 		m_camera = viewMatrix(m_eye, m_look, m_up, m_right);
 		m_cameraPerspective = m_perspective * m_camera;
