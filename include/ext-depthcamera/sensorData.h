@@ -1039,8 +1039,8 @@ namespace ml {
 		class LiveSensorDataWriter
 		{
 		public:
-			LiveSensorDataWriter(const SensorData* data, const std::string& filename, bool overwriteExistingFile = false)
-				: m_data(data), m_headerWritten(false), m_frameCounterRGB(0)
+			LiveSensorDataWriter(const SensorData* data, const std::string& filename, bool overwriteExistingFile = false, unsigned int cacheSize = 500)
+				: m_data(data), m_cacheSize(cacheSize), m_headerWritten(false), m_frameCounterRGB(0)
 			{
 				std::string actualFilename = filename;
 				if (!overwriteExistingFile) {
@@ -1090,9 +1090,13 @@ namespace ml {
 				f.transform = transform;
 				f.timeStampColor = timeStampColor;
 				f.timeStampDepth = timeStampDepth;
+				while (m_frameCache.size() >= m_cacheSize) {
+#ifdef _WIN32
+					Sleep(0);
+#endif
+				}
 				m_mutexCache.lock();
 				m_frameCache.push_back(f);
-				std::cout << "frames in cache: " << m_frameCache.size() << std::endl;
 				m_mutexCache.unlock();
 			}
 
@@ -1137,7 +1141,7 @@ namespace ml {
 			void startBackgroundThread() {
 				const auto backgroundThreadFunc = [&]
 				{
-					while (!m_bTerminateThread) {
+					while (!m_bTerminateThread || m_frameCache.size() > 0) {
 						if (m_frameCache.size() == 0) {
 							continue;
 						}
@@ -1156,6 +1160,7 @@ namespace ml {
 
 		private:
 			const SensorData* m_data;
+			unsigned int m_cacheSize;
 			std::ofstream m_out;
 			std::thread m_backgroundThread;
 			std::mutex m_mutexCache;
