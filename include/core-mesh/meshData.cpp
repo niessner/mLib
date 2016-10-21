@@ -334,6 +334,7 @@ unsigned int MeshData<FloatType>::removeIsolatedVertices()
 	unsigned int cnt = 0;
 	for (auto& face : m_FaceIndicesVertices) {
 		for (auto& idx : face) {
+			if (idx >= m_Vertices.size()) throw MLIB_EXCEPTION("face indices vertices index out of vertex bounds");
 			if (_map.find(idx) != _map.end()) {
 				idx = _map[idx];	//set to new idx, which already exists
 			} else {

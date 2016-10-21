@@ -263,7 +263,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 					if (match == 6) {  //we found color data
 						mesh.m_Colors.push_back(vec4<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
 					}
-					assert( match == 3 || match == 4 || match == 6);
+					if (!( match == 3 || match == 4 || match == 6)) throw MLIB_EXCEPTION("bad color format");
 					break;
 
 				case 'n':
@@ -271,7 +271,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 					match = fscanf( fp, "%f %f %f", &val[0], &val[1], &val[2]);
 					mesh.m_Normals.push_back(vec3<FloatType>(val[0], val[1], val[2]));
 
-					assert( match == 3);
+					if ( match != 3) throw MLIB_EXCEPTION("bad normal format");
 					break;
 
 				case 't':
