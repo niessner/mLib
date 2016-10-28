@@ -209,6 +209,22 @@ namespace util
 		return result;
 	}
 
+	//! splits string about the first instance of any string in delims
+	inline std::pair<std::string, std::string> splitOnFirst(const std::string& str, const std::vector<std::string>& delims) {
+		std::pair<std::string, std::string> result;
+		size_t firstIndex = std::string::npos; unsigned int delimIdx = (unsigned int)-1;
+		for (unsigned int i = 0; i < delims.size(); i++) {
+			auto idx = str.find(delims[i]);
+			if (idx < firstIndex) {
+				firstIndex = idx;
+				delimIdx = i;
+			}
+		}
+		result.first = str.substr(0, firstIndex);
+		result.second = (firstIndex == std::string::npos) ? "" : str.substr(firstIndex + delims[delimIdx].size());
+		return result;
+	}
+
 	//! returns filename with extension removed
 	inline std::string dropExtension(const std::string& filename) {
 		return getSubstrBeforeLast(filename, ".");
