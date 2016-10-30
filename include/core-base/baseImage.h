@@ -993,6 +993,10 @@ namespace ml {
 			m_format = Image::FORMAT_DepthImage;
 			m_InvalidValue = -std::numeric_limits<float>::infinity();
 		}
+		DepthImage32(unsigned int width, unsigned int height, float clearValue) : BaseImage(width, height, clearValue) {
+			m_format = Image::FORMAT_DepthImage;
+			m_InvalidValue = -std::numeric_limits<float>::infinity();
+		}
 
 		DepthImage32(const DepthImage16& image) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_DepthImage;
