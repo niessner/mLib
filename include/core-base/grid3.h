@@ -390,7 +390,7 @@ namespace ml
 		if (std::is_fundamental<T>::value) {
 			//T* data = g.getData();
 			//s.readData((BYTE*)data, sizeof(T)*g.getDimX()*g.getDimY()*g.getDimZ());
-			std::vector<T> data(dimX*dimX*dimZ);
+			std::vector<T> data(dimX*dimY*dimZ);
 			s.readData((BYTE*)data.data(), sizeof(T)*g.getDimX()*g.getDimY()*g.getDimZ());
 			for (UINT64 z = 0; z < g.getDimZ(); z++)
 				for (UINT64 y = 0; y < g.getDimY(); y++)
