@@ -368,6 +368,7 @@ namespace util
        
     inline void runSystemCommand(const std::string &s)
     {
+		//TODO fix it: this should in theroy call s = util::replace(s, "/", "\\");
         system(s.c_str());
     }
 

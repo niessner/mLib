@@ -300,7 +300,7 @@ namespace ml {
 			for (size_t i = 0; i < m_vertices.size(); i++) {
 				m_vertices[i].color = color;
 			}
-			m_bHasNormals = false;
+			m_bHasNormals = withNormals;
 			m_bHasTexCoords = false;
 			m_bHasColors = true;
 		}

@@ -344,6 +344,7 @@ namespace util
 
 	void makeDirectory(const std::string &directory)
 	{
+		if (directoryExists(directory)) return;
 		const std::string dir = replace(directory,'\\', '/');
 		const std::vector<std::string> dirParts = split(dir, '/');
 		std::string soFar = startsWith(dir, "//") ? "//" : "";
