@@ -614,7 +614,7 @@ namespace ml {
         }
 
 		//! counts the number of pixels not equal to value
-		unsigned int getNumPixelsNotEqualTo(const T &value) {
+		unsigned int getNumPixelsNotEqualTo(const T &value) const {
 			unsigned int count = 0;
 			for (unsigned int i = 0; i < m_width * m_height; i++) {
 				if (value != m_data[i])	count++;
@@ -961,7 +961,7 @@ namespace ml {
 			m_InvalidValue = 0;
 		}
 
-		DepthImage16(const BaseImage<float>& image) : BaseImage(image.getWidth(), image.getHeight()) {
+		DepthImage16(const BaseImage<float>& image, float shift = 1000.0f) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_DepthImage16;
 			m_InvalidValue = 0;
 
@@ -970,7 +970,7 @@ namespace ml {
 				USHORT val;
 				float d = image.getData()[i];
 				if (d == INVALID) val = 0;
-				else val = (USHORT)(1000.0f * d);
+				else val = (USHORT)(shift * d);
 				m_data[i] = val;
 			}
 		}
@@ -990,6 +990,10 @@ namespace ml {
 			m_InvalidValue = -std::numeric_limits<float>::infinity();
 		}
 		DepthImage32(unsigned int width, unsigned int height) : BaseImage(width, height) {
+			m_format = Image::FORMAT_DepthImage;
+			m_InvalidValue = -std::numeric_limits<float>::infinity();
+		}
+		DepthImage32(unsigned int width, unsigned int height, float clearValue) : BaseImage(width, height, clearValue) {
 			m_format = Image::FORMAT_DepthImage;
 			m_InvalidValue = -std::numeric_limits<float>::infinity();
 		}

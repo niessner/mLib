@@ -300,6 +300,8 @@ namespace ml {
 			for (size_t i = 0; i < m_vertices.size(); i++) {
 				m_vertices[i].color = color;
 			}
+			m_bHasNormals = withNormals;
+			m_bHasTexCoords = false;
 			m_bHasColors = true;
 		}
 
@@ -446,7 +448,7 @@ namespace ml {
 		}
 
 
-		void voxelize(BinaryGrid3& grid, const mat4f& worldToVoxel = mat4f::identity(), bool solid = false) const {
+		void voxelize(BinaryGrid3& grid, const mat4f& worldToVoxel = mat4f::identity(), bool solid = false, bool verbose = true) const {
 			for (size_t i = 0; i < m_indices.size(); i++) {
 				vec3<FloatType> p0 = worldToVoxel * m_vertices[m_indices[i].x].position;
 				vec3<FloatType> p1 = worldToVoxel * m_vertices[m_indices[i].y].position;
@@ -459,7 +461,7 @@ namespace ml {
 				BoundingBox3<FloatType> bb1(vec3<FloatType>(0,0,0), vec3<FloatType>((FloatType)grid.getDimX() + 1.0f, (FloatType)grid.getDimY() + 1.0f, (FloatType)grid.getDimZ() + 1.0f));
 				if (bb0.intersects(bb1)) {
 					voxelizeTriangle(p0, p1, p2, grid, solid);
-				} else {
+				} else if (verbose) {
 					std::cerr << "out of bounds: " << p0 << "\tof: " << grid.getDimensions() << std::endl;
 					std::cerr << "out of bounds: " << p1 << "\tof: " << grid.getDimensions() << std::endl;
 					std::cerr << "out of bounds: " << p2 << "\tof: " << grid.getDimensions() << std::endl;
@@ -476,6 +478,8 @@ namespace ml {
 				BoundingBox3<FloatType> bb(v0, v1, v2);
 				vec3ui minI = math::floor(bb.getMin());
 				vec3ui maxI = math::ceil(bb.getMax());
+				minI = vec3ui(math::clamp(minI.x, 0u, (unsigned int)grid.getDimX()), math::clamp(minI.y, 0u, (unsigned int)grid.getDimY()), math::clamp(minI.z, 0u, (unsigned int)grid.getDimZ()));
+				maxI = vec3ui(math::clamp(maxI.x, 0u, (unsigned int)grid.getDimX()), math::clamp(maxI.y, 0u, (unsigned int)grid.getDimY()), math::clamp(maxI.z, 0u, (unsigned int)grid.getDimZ()));
 
 				//test for accurate voxel-triangle intersections
 				for (unsigned int i = minI.x; i <= maxI.x; i++) {

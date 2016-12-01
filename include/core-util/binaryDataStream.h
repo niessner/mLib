@@ -39,6 +39,7 @@ public:
     template<class T>
     void writePrimitive(const Grid2<T> &g)
     {
+		//TODO FIX the ordering here is different than then naive from the stream read/write
         writeData(g.getDimX());
         writeData(g.getDimY());
         writeData((const BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY());
@@ -47,6 +48,7 @@ public:
     template<class T>
     void writePrimitive(const Grid3<T> &g)
     {
+		//TODO FIX the ordering here is different than then naive from the stream read/write
         writeData(g.getDimX());
         writeData(g.getDimY());
         writeData(g.getDimZ());
@@ -66,6 +68,7 @@ public:
     template<class T>
     void readPrimitive(Grid2<T> &g)
     {
+		//TODO FIX the ordering here is different than then naive from the stream read/write
         size_t dimX, dimY;
         readData(&dimX);
         readData(&dimY);
@@ -76,6 +79,7 @@ public:
     template<class T>
     void readPrimitive(Grid3<T> &g)
     {
+		//TODO FIX the ordering here is different than then naive from the stream read/write
         size_t dimX, dimY, dimZ;
         readData(&dimX);
         readData(&dimY);

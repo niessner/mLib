@@ -356,13 +356,28 @@ namespace ml
 
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Grid3<T>& g) {
-		s << (UINT64)g.getDimX() << (UINT64)g.getDimY() << (UINT64)g.getDimZ();
-		s.reserve(sizeof(T) * g.getDimX() * g.getDimY() * g.getDimZ());
+		s << (UINT64)g.getDimX() << (UINT64)g.getDimY() << (UINT64)g.getDimZ();		
 
-		for (UINT64 z = 0; z < g.getDimZ(); z++)
-			for (UINT64 y = 0; y < g.getDimY(); y++)
-				for (UINT64 x = 0; x < g.getDimX(); x++)
-					s << g(x, y, z);
+		if (std::is_fundamental<T>::value) {
+			//const T* data = g.getData();
+			//s.writeData((const BYTE*)data, sizeof(T)*g.getDimX()*g.getDimY()*g.getDimZ());
+			std::vector<T> data(g.getDimX()*g.getDimY()*g.getDimZ());
+			for (UINT64 z = 0; z < g.getDimZ(); z++)
+				for (UINT64 y = 0; y < g.getDimY(); y++)
+					for (UINT64 x = 0; x < g.getDimX(); x++) {
+						size_t linIdx = x + y*g.getDimX() + z*g.getDimX()*g.getDimY();
+						data[linIdx] = g(x, y, z);
+					}
+			s.writeData((const BYTE*)data.data(), sizeof(T)*g.getDimX()*g.getDimY()*g.getDimZ());
+		}
+		else {
+		//the ordering here is different than then naiv read/write
+			s.reserve(sizeof(T) * g.getDimX() * g.getDimY() * g.getDimZ());
+			for (UINT64 z = 0; z < g.getDimZ(); z++)
+				for (UINT64 y = 0; y < g.getDimY(); y++)
+					for (UINT64 x = 0; x < g.getDimX(); x++)
+						s << g(x, y, z);
+		}
 		return s;
 	}
 
@@ -371,10 +386,27 @@ namespace ml
 		UINT64 dimX, dimY, dimZ;
 		s >> dimX >> dimY >> dimZ;
 		g.allocate(dimX, dimY, dimZ);
-		for (UINT64 z = 0; z < g.getDimZ(); z++)
-			for (UINT64 y = 0; y < g.getDimY(); y++)
-				for (UINT64 x = 0; x < g.getDimX(); x++)
-					s >> g(x, y, z);
+
+		if (std::is_fundamental<T>::value) {
+			//T* data = g.getData();
+			//s.readData((BYTE*)data, sizeof(T)*g.getDimX()*g.getDimY()*g.getDimZ());
+			std::vector<T> data(dimX*dimY*dimZ);
+			s.readData((BYTE*)data.data(), sizeof(T)*g.getDimX()*g.getDimY()*g.getDimZ());
+			for (UINT64 z = 0; z < g.getDimZ(); z++)
+				for (UINT64 y = 0; y < g.getDimY(); y++)
+					for (UINT64 x = 0; x < g.getDimX(); x++) {
+						size_t linIdx = x + y*g.getDimX() + z*g.getDimX()*g.getDimY();
+						g(x, y, z) = data[linIdx];
+					}		
+
+		}
+		else { //the ordering here is different than then naiv read/write
+			for (UINT64 z = 0; z < g.getDimZ(); z++)
+				for (UINT64 y = 0; y < g.getDimY(); y++)
+					for (UINT64 x = 0; x < g.getDimX(); x++)
+						s >> g(x, y, z);
+		}
+
 		return s;
 	}
 

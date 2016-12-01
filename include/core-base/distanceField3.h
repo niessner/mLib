@@ -28,7 +28,7 @@ namespace ml {
 			for (size_t z = 0; z < this->getDimZ(); z++) {
 				for (size_t y = 0; y < this->getDimY(); y++) {
 					for (size_t x = 0; x < this->getDimX(); x++) {
-						if ((*this)(x, y, z) <= distThres) {
+						if (std::abs((*this)(x, y, z)) <= distThres) {
 							grid.setVoxel(x, y, z);
 						}
 					}
@@ -113,13 +113,13 @@ namespace ml {
 			}
 		}
 
-		void improveDF(unsigned int numIter) {
+		void improveDF(unsigned int numIter, bool respectTruncation = false) {
 			for (unsigned int iter = 0; iter < numIter; iter++) {
 				bool hasUpdate = false;
 				for (size_t k = 0; k < this->getDimZ(); k++) {
 					for (size_t j = 0; j < this->getDimY(); j++) {
 						for (size_t i = 0; i < this->getDimX(); i++) {
-							if (checkDistToNeighborAndUpdate(i, j, k)) {
+							if (checkDistToNeighborAndUpdate(i, j, k, respectTruncation)) {
 								hasUpdate = true;
 							}
 						}
@@ -341,7 +341,7 @@ namespace ml {
 
 
 		//! bools checks if there is a neighbor with a smaller distance (+ the dist to the current voxel); if then it updates the distances and returns true
-		bool checkDistToNeighborAndUpdate(size_t x, size_t y, size_t z) {
+		bool checkDistToNeighborAndUpdate(size_t x, size_t y, size_t z, bool respectTruncation = false) {
 			bool foundBetter = false;
 			for (size_t k = 0; k < 3; k++) {
 				for (size_t j = 0; j < 3; j++) {
@@ -349,9 +349,12 @@ namespace ml {
 						if (k == 1 && j == 1 && i == 1) continue;	//don't consider itself
 						vec3ul n(x - 1 + i, y - 1 + j, z - 1 + k);
 						if (this->isValidCoordinate(n.x, n.y, n.z)) {
-							FloatType d = (vec3<FloatType>((FloatType)x, (FloatType)y, (FloatType)z) -
-								vec3<FloatType>((FloatType)n.x, (FloatType)n.y, (FloatType)n.z)).length();
+							FloatType d = (vec3<FloatType>((FloatType)x, (FloatType)y, (FloatType)z) - vec3<FloatType>((FloatType)n.x, (FloatType)n.y, (FloatType)n.z)).length();
 							FloatType dToN = (*this)(n.x, n.y, n.z) + d;
+
+							if (respectTruncation) throw MLIB_EXCEPTION("not implemented");
+							//if (respectTruncation) dToN = std::min(dToN, m_truncation);
+							
 							if (dToN < (*this)(x, y, z)) {
 								(*this)(x, y, z) = dToN;
 								foundBetter = true;

@@ -79,7 +79,7 @@ namespace ml {
 					}
 
 					if (which == "double") p.byteSize = 8;
-					else if (which == "float" || which == "int") p.byteSize = 4;
+					else if (which == "float" || which == "int" || which == "uint") p.byteSize = 4;
 					else if (which == "uchar" || which == "char") p.byteSize = 1;
 					else {
 						throw MLIB_EXCEPTION("unkown data type");
