@@ -176,9 +176,11 @@ namespace util
 		return trimmed.erase(str.rfind(delim));
 	}
 
+	// TODO: this is broken if the filename has both / and \.
 	inline std::string getFilenameFromPath(const std::string& filename) {
 		std::string name = filename;
 		size_t pos = filename.rfind("/");
+		if (pos == std::string::npos) pos = filename.rfind("\\");
 		if (pos == std::string::npos) return filename;
 		name.erase(name.begin(), name.begin() + pos + 1);
 		return name;

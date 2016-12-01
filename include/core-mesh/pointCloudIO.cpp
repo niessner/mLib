@@ -33,17 +33,37 @@ namespace ml {
 				const std::vector<PlyHeader::PlyProperty>& vertexProperties = header.m_properties["vertex"];
 
 				for (unsigned int j = 0; j < vertexProperties.size(); j++) {
+
+					auto readNextDecimalValue = [&]()
+					{
+						int byteSize = vertexProperties[j].byteSize;
+						FloatType f;
+						if (byteSize == 4)
+						{
+							f = (FloatType)((float*)&data[i*size + byteOffset])[0];
+						}
+						else if (byteSize == 8)
+						{
+							f = (FloatType)((double*)&data[i*size + byteOffset])[0];
+						}
+						byteOffset += byteSize;
+						return f;
+					};
+
 					if (vertexProperties[j].name == "x") {
-						pc.m_points[i].x = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += vertexProperties[j].byteSize;
+						pc.m_points[i].x = readNextDecimalValue();
+						//pc.m_points[i].x = ((float*)&data[i*size + byteOffset])[0];
+						//byteOffset += vertexProperties[j].byteSize;
 					}
 					else if (vertexProperties[j].name == "y") {
-						pc.m_points[i].y = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += vertexProperties[j].byteSize;
+						pc.m_points[i].y = readNextDecimalValue();
+						//pc.m_points[i].y = ((float*)&data[i*size + byteOffset])[0];
+						//byteOffset += vertexProperties[j].byteSize;
 					}
 					else if (vertexProperties[j].name == "z") {
-						pc.m_points[i].z = ((float*)&data[i*size + byteOffset])[0];
-						byteOffset += vertexProperties[j].byteSize;
+						pc.m_points[i].z = readNextDecimalValue();
+						//pc.m_points[i].z = ((float*)&data[i*size + byteOffset])[0];
+						//byteOffset += vertexProperties[j].byteSize;
 					}
 					else if (vertexProperties[j].name == "nx") {
 						pc.m_normals[i].x = ((float*)&data[i*size + byteOffset])[0];
