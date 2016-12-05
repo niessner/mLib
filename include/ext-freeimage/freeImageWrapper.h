@@ -59,7 +59,8 @@ namespace ml {
 			if (!dib) throw MLIB_EXCEPTION("Could not load image: " + filename);
 			FREE_IMAGE_TYPE fitype = FreeImage_GetImageType(dib);
 
-			if (fitype != FIT_BITMAP && fitype != FIT_UINT16 && fitype != FIT_RGB16) throw MLIB_EXCEPTION("Unknown image format");
+			if (fitype != FIT_BITMAP && fitype != FIT_UINT16 && fitype != FIT_RGB16 && fitype != FIT_RGBA16) 
+				throw MLIB_EXCEPTION("Unknown image format");
 
 			bits = FreeImage_GetBits(dib);
 			unsigned int width = FreeImage_GetWidth(dib);
@@ -119,6 +120,18 @@ namespace ml {
 					const BYTE* dataRowStart = data + (height - 1 - y)*pitch;
 					for (unsigned int x = 0; x < width; x++) {
 						convertFromUSHORT3(resultImage(x, y), (USHORT*)&dataRowStart[x*bytesPerPixel]);
+					}
+				}
+			} 
+			else if (fitype == FIT_RGBA16) {
+				//TODO test this part
+				const BYTE* data = (BYTE*)bits;
+				unsigned int bytesPerPixel = nBits / 8;
+				MLIB_ASSERT(bytesPerPixel == 8);
+				for (unsigned int y = 0; y < height; y++) {
+					const BYTE* dataRowStart = data + (height - 1 - y)*pitch;
+					for (unsigned int x = 0; x < width; x++) {
+						convertFromUSHORT4(resultImage(x, y), (USHORT*)&dataRowStart[x*bytesPerPixel]);
 					}
 				}
 			}

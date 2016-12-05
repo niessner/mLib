@@ -56,4 +56,12 @@ void D3D11Texture2D::bind(unsigned int slot /* = 0 */) const
 	m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
 }
 
+
+void D3D11Texture2D::unbind(unsigned int slot /*= 0*/) const
+{
+	ID3D11ShaderResourceView* srvNULL = nullptr;
+	m_graphics->getContext().PSSetShaderResources(slot, 1, &srvNULL);
+}
+
+
 }
