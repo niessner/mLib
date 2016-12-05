@@ -31,6 +31,9 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{f1788b5b-0906-442e-b1f7-3760d1698a11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mLibHeader\core-network">
+      <UniqueIdentifier>{157a594e-67b8-44ce-9cd4-49561d99381c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\mLibCore.h">
@@ -279,14 +282,17 @@
     <ClInclude Include="..\..\include\application-d3d11\D3D11Buffer.h">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\core-network\networkClient.h">
+      <Filter>mLibHeader\core-network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\core-network\networkServer.h">
+      <Filter>mLibHeader\core-network</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mLibSource.cpp" />
     <ClCompile Include="winMain.cpp" />
     <ClCompile Include="appTest.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="console.txt" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\pointCloud.hlsl">

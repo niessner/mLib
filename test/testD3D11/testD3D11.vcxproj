@@ -103,6 +103,8 @@
     <ClInclude Include="..\..\include\application-d3d11\D3D11TriMesh.h" />
     <ClInclude Include="..\..\include\application-d3d11\D3D11Utility.h" />
     <ClInclude Include="..\..\include\application-d3d11\D3D11VertexShader.h" />
+    <ClInclude Include="..\..\include\core-network\networkClient.h" />
+    <ClInclude Include="..\..\include\core-network\networkServer.h" />
     <ClInclude Include="..\include\application-base\applicationWin32.h" />
     <ClInclude Include="..\include\application-base\graphicsAsset.h" />
     <ClInclude Include="..\include\application-base\graphicsDevice.h" />
@@ -177,9 +179,6 @@
     <ClCompile Include="appTest.cpp" />
     <ClCompile Include="mLibSource.cpp" />
     <ClCompile Include="winMain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="console.txt" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\pointCloud.hlsl">
