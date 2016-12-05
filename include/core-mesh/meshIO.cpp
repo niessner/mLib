@@ -438,7 +438,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 
 					if (currFaceIndicesNormals.size()) {
 						mesh.m_FaceIndicesNormals.push_back(currFaceIndicesNormals);
-											bHasFaceNormalIndices = true;
+						bHasFaceNormalIndices = true;
 					} else {
 						//insert empty face
 						typename MeshData<FloatType>::Indices::Face fFaceIndicesNormals(nullptr, 0);
