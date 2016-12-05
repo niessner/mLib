@@ -7,9 +7,7 @@ namespace ml
 
 	template <class T> Grid3<T>::Grid3()
 	{
-		m_dimX = 0;
-		m_dimY = 0;
-		m_dimZ = 0;
+		m_dimX = m_dimY = m_dimZ = 0;
 		m_data = nullptr;
 	}
 
@@ -21,25 +19,25 @@ namespace ml
 		m_data = new T[dimX * dimY * dimZ];
 	}
 
-	template <class T> Grid3<T>::Grid3(size_t dimX, size_t dimY, size_t dimZ, const T &clearValue)
+	template <class T> Grid3<T>::Grid3(size_t dimX, size_t dimY, size_t dimZ, const T& value)
 	{
 		m_dimX = dimX;
 		m_dimY = dimY;
 		m_dimZ = dimZ;
 		m_data = new T[dimX * dimY * dimZ];
-		setValues(clearValue);
+		setValues(value);
 	}
 
-	template <class T> Grid3<T>::Grid3(const Grid3<T> &G)
+	template <class T> Grid3<T>::Grid3(const Grid3<T>& grid)
 	{
-		m_dimX = G.m_dimX;
-		m_dimY = G.m_dimY;
-		m_dimZ = G.m_dimZ;
+		m_dimX = grid.m_dimX;
+		m_dimY = grid.m_dimY;
+		m_dimZ = grid.m_dimZ;
 
 		const size_t totalEntries = getNumElements();
 		m_data = new T[totalEntries];
 		for (size_t i = 0; i < totalEntries; i++) {
-			m_data[i] = G.m_data[i];
+			m_data[i] = grid.m_data[i];
 		}
 	}
 

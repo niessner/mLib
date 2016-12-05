@@ -7,8 +7,7 @@ namespace ml
 
 	template <class T> Grid2<T>::Grid2()
 	{
-		m_dimX = 0;
-		m_dimY = 0;
+		m_dimX = m_dimY = 0;
 		m_data = nullptr;
 	}
 
@@ -19,7 +18,7 @@ namespace ml
 		m_data = new T[dimX * dimY];
 	}
 
-	template <class T> Grid2<T>::Grid2(size_t dimX, size_t dimY, const T &value)
+	template <class T> Grid2<T>::Grid2(size_t dimX, size_t dimY, const T& value)
 	{
 		m_dimX = dimX;
 		m_dimY = dimY;
@@ -27,15 +26,15 @@ namespace ml
 		setValues(value);
 	}
 
-	template <class T> Grid2<T>::Grid2(const Grid2<T> &G)
+	template <class T> Grid2<T>::Grid2(const Grid2<T>& grid)
 	{
-		m_dimX = G.m_dimX;
-		m_dimY = G.m_dimY;
-
+		m_dimX = grid.m_dimX;
+		m_dimY = grid.m_dimY;
+		
 		const size_t totalEntries = m_dimX * m_dimY;
 		m_data = new T[totalEntries];
 		for (size_t i = 0; i < totalEntries; i++)
-			m_data[i] = G.m_data[i];
+			m_data[i] = grid.m_data[i];
 	}
 
 	template <class T> Grid2<T>::Grid2(Grid2<T> &&G)

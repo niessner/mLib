@@ -218,33 +218,21 @@ namespace ml
 		//
 		inline T& operator() (size_t x, size_t y, size_t z)
 		{
-#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-			MLIB_ASSERT_STR((x < m_dimX) && (y < m_dimY) && (z < m_dimZ), "Out-of-bounds grid access");
-#endif
 			return m_data[z*m_dimY*m_dimX + x*m_dimY + y];
 		}
 
 		inline const T& operator() (size_t dimX, size_t dimY, size_t slice) const
 		{
-#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-			MLIB_ASSERT_STR((dimX < m_dimX) && (dimY < m_dimY) && (slice < m_dimZ), "Out-of-bounds grid access");
-#endif
 			return m_data[slice*m_dimY*m_dimX + dimX*m_dimY + dimY];
 		}
 
         inline T& operator() (const vec3i &coord)
         {
-#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-            MLIB_ASSERT_STR((coord.x < m_dimX) && (coord.y < m_dimY) && (coord.z < m_dimZ), "Out-of-bounds grid access");
-#endif
             return m_data[coord.z*m_dimY*m_dimX + coord.x*m_dimY + coord.y];
         }
 
         inline const T& operator() (const vec3i &coord) const
         {
-#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-            MLIB_ASSERT_STR((coord.x < m_dimX) && (coord.y < m_dimY) && (coord.z < m_dimZ), "Out-of-bounds grid access");
-#endif
             return m_data[coord.z*m_dimY*m_dimX + coord.x*m_dimY + coord.y];
         }
 
@@ -289,7 +277,7 @@ namespace ml
 		{
 			return (x < m_dimX && y < m_dimY && z < m_dimZ);
 		}
-        inline bool isValidCoordinate(const vec3i &coord) const
+        inline bool isValidCoordinate(const vec3i& coord) const
         {
             return (coord.x < m_dimX && coord.y < m_dimY && coord.z < m_dimZ);
         }
@@ -302,7 +290,7 @@ namespace ml
 		//
 		// Modifiers
 		//
-		void setValues(const T &clearValue);
+		void setValues(const T &value);
 
 		void fill(const std::function<T(size_t x, size_t y, size_t z)> &fillFunction)
 		{

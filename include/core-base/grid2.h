@@ -67,7 +67,7 @@ namespace ml
 					y++;
 					if (y == grid->getDimY())
 					{
-						grid = NULL;
+						grid = nullptr;
 					}
 				}
 				return *this;
@@ -122,7 +122,7 @@ namespace ml
 					y++;
 					if (y == grid->getDimY())
 					{
-						grid = NULL;
+						grid = nullptr;
 					}
 				}
 				return *this;
@@ -281,12 +281,12 @@ namespace ml
 		//
 		// TODO: rename
 		//
-		void setRow(size_t row, const std::vector<T> &values)
+		void setRow(size_t row, const std::vector<T>& values)
 		{
 			for (size_t col = 0; col < m_dimY; col++) m_data[row * m_dimX + col] = values[col];
 		}
 
-		void setCol(size_t col, const std::vector<T> &values)
+		void setCol(size_t col, const std::vector<T>& values)
 		{
 			for (size_t row = 0; row < m_dimX; row++) m_data[row * m_dimX + col] = values[row];
 		}
