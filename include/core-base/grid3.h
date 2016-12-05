@@ -375,7 +375,7 @@ namespace ml
 		s >> dimX >> dimY >> dimZ;
 		g.allocate(dimX, dimY, dimZ);
 
-		if (std::is_fundamental<T>::value) {
+		if (std::is_pod<T>::value) {
 			//T* data = g.getData();
 			//s.readData((BYTE*)data, sizeof(T)*g.getDimX()*g.getDimY()*g.getDimZ());
 			std::vector<T> data(dimX*dimY*dimZ);
@@ -406,6 +406,6 @@ namespace ml
 
 }  // namespace ml
 
-#include "grid3.inl"
+#include "grid3.cpp"
 
 #endif  // CORE_BASE_GRID3D_H_

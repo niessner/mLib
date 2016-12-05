@@ -3,7 +3,6 @@
 // mLib includes
 //
 
-
 #include "mLibCore.h"
 #include "mLibDepthCamera.h"
 #include "mLibEigen.h"

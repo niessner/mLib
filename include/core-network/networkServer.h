@@ -104,7 +104,7 @@ namespace ml {
 				return false;
 			}
 
-			//client = std::string(inet_ntoa(addr.sin_addr));
+			//client = std::string(inet_ntoa(addr.sin_addr));	//depricated
 			char ipbuf[INET_ADDRSTRLEN];
 			inet_ntop(AF_INET, &addr.sin_addr, ipbuf, sizeof(ipbuf));
 			client = std::string(ipbuf);

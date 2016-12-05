@@ -209,16 +209,10 @@ namespace ml
 		//
 		inline T& operator() (size_t x, size_t y)
 		{
-#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-			MLIB_ASSERT_STR((x < m_dimX) && (y < m_dimY), "Out-of-bounds grid access");
-#endif
 			return m_data[y * m_dimX + x];
 		}
 		inline const T& operator() (size_t x, size_t y) const
 		{
-#if defined(MLIB_BOUNDS_CHECK) || defined(_DEBUG)
-			MLIB_ASSERT_STR((x < m_dimX) && (y < m_dimY), "Out-of-bounds grid access");
-#endif
 			return m_data[y * m_dimX + x];
 		}
 
@@ -403,6 +397,6 @@ namespace ml
 
 }
 
-#include "grid2.inl"
+#include "grid2.cpp"
 
 #endif  // CORE_BASE_GRID2D_H_
