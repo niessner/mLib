@@ -13,80 +13,21 @@ class BinaryDataStream {
 public:
 	BinaryDataStream() {}
 	BinaryDataStream(const std::string& filename, bool clearStream) {
-		m_DataBuffer.openBufferStream(filename, clearStream);
+		m_dataBuffer.openBufferStream(filename, clearStream);
 	}
 	//! only required for files
 	void openStream(const std::string& filename, bool clearStream) {
-		m_DataBuffer.openBufferStream(filename, clearStream);
+		m_dataBuffer.openBufferStream(filename, clearStream);
 	}
 
 	void closeStream() {
-		m_DataBuffer.closeBufferStream();
+		m_dataBuffer.closeBufferStream();
 	}
 
 	template <class T>
 	void writeData(const T& t) {
 		writeData((const BYTE*)&t, sizeof(T));
 	}
-
-    template<class T>
-    void writePrimitive(const std::vector<T> &v)
-    {
-        writeData(v.size());
-        writeData((const BYTE *)v.data(), sizeof(T) * v.size());
-    }
-
-    template<class T>
-    void writePrimitive(const Grid2<T> &g)
-    {
-		//TODO FIX the ordering here is different than then naive from the stream read/write
-        writeData(g.getDimX());
-        writeData(g.getDimY());
-        writeData((const BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY());
-    }
-
-    template<class T>
-    void writePrimitive(const Grid3<T> &g)
-    {
-		//TODO FIX the ordering here is different than then naive from the stream read/write
-        writeData(g.getDimX());
-        writeData(g.getDimY());
-        writeData(g.getDimZ());
-        writeData((const BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY() * g.getDimZ());
-    }
-
-    template<class T>
-    void readPrimitive(std::vector<T> &v)
-    {
-        size_t size;
-        readData(&size);
-        v.clear();
-        v.resize(size);
-        readData((BYTE *)v.data(), sizeof(T) * v.size());
-    }
-
-    template<class T>
-    void readPrimitive(Grid2<T> &g)
-    {
-		//TODO FIX the ordering here is different than then naive from the stream read/write
-        size_t dimX, dimY;
-        readData(&dimX);
-        readData(&dimY);
-        g.allocate(dimX, dimY);
-        readData((BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY());
-    }
-
-    template<class T>
-    void readPrimitive(Grid3<T> &g)
-    {
-		//TODO FIX the ordering here is different than then naive from the stream read/write
-        size_t dimX, dimY, dimZ;
-        readData(&dimX);
-        readData(&dimY);
-        readData(&dimZ);
-        g.allocate(dimX, dimY, dimZ);
-        readData((BYTE *)g.getData(), sizeof(T) * g.getDimX() * g.getDimY() * g.getDimZ());
-    }
 
 	//start compression after that byte size (only if compression is enabled)
 #define COMPRESSION_THRESHOLD_ 1024 
@@ -95,12 +36,12 @@ public:
 		if (useCompression && size > COMPRESSION_THRESHOLD_) {
 			std::vector<BYTE> compressedT;
 			//ZLibWrapper::CompressStreamToMemory(t, size, compressedT, false);
-			m_DataCompressor.compressStreamToMemory(t, size, compressedT);
+			m_dataCompressor.compressStreamToMemory(t, size, compressedT);
 			UINT64 compressedSize = compressedT.size();
-			m_DataBuffer.writeData((const BYTE*)&compressedSize, sizeof(compressedSize));
-			m_DataBuffer.writeData(&compressedT[0], compressedSize);
+			m_dataBuffer.writeData((const BYTE*)&compressedSize, sizeof(compressedSize));
+			m_dataBuffer.writeData(&compressedT[0], compressedSize);
 		} else 	{
-			m_DataBuffer.writeData(t, size);
+			m_dataBuffer.writeData(t, size);
 		}
 
 	}
@@ -114,56 +55,56 @@ public:
 		const bool useCompression = !std::is_same<BinaryDataCompressorNone, BinaryDataCompressor>::value;
 		if (useCompression && size > COMPRESSION_THRESHOLD_) {
 			UINT64 compressedSize;
-			m_DataBuffer.readData((BYTE*)&compressedSize, sizeof(UINT64));
+			m_dataBuffer.readData((BYTE*)&compressedSize, sizeof(UINT64));
 			std::vector<BYTE> compressedT;	compressedT.resize(compressedSize);
-			m_DataBuffer.readData(&compressedT[0], compressedSize);
+			m_dataBuffer.readData(&compressedT[0], compressedSize);
 			//ZLibWrapper::DecompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
-			m_DataCompressor.decompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
+			m_dataCompressor.decompressStreamFromMemory(&compressedT[0], compressedSize, result, size);
 		} else 
 		{
-			m_DataBuffer.readData(result, size);
+			m_dataBuffer.readData(result, size);
 		}
 	}
 
 	//! clears the read offset: copies all data to the front of the data array and frees all unnecessary memory
 	void clearReadOffset() {
-		m_DataBuffer.clearReadOffset();
+		m_dataBuffer.clearReadOffset();
 	}
 
 	//! destroys all the data in the stream (DELETES ALL DATA!)
 	void clearStream() {
-		m_DataBuffer.clearBuffer();
+		m_dataBuffer.clearBuffer();
 	}
 
 	//! saves the stream to file; does not affect current data
 	void saveToFile(const std::string &filename) {
-		m_DataBuffer.saveToFile(filename);
+		m_dataBuffer.saveToFile(filename);
 	}
 
 	//! loads a binary stream from file; destorys all previous data in the stream
 	void loadFromFile(const std::string &filename) {
-		m_DataBuffer.loadFromFile(filename);
+		m_dataBuffer.loadFromFile(filename);
 	} 
 
 	void reserve(size_t size) {
-		m_DataBuffer.reserve(size);
+		m_dataBuffer.reserve(size);
 	}
 
 	void flush() {
-		m_DataBuffer.flushBufferStream();
+		m_dataBuffer.flushBufferStream();
 	}
 
     const std::vector<BYTE>& getData() const {
-        return m_DataBuffer.getData();
+        return m_dataBuffer.getData();
     }
 
     void setData(std::vector<BYTE> &&data) {
-        m_DataBuffer.setData(move(data));
+        m_dataBuffer.setData(move(data));
     }
 
 private:
-	BinaryDataBuffer		m_DataBuffer;
-	BinaryDataCompressor	m_DataCompressor;
+	BinaryDataBuffer		m_dataBuffer;
+	BinaryDataCompressor	m_dataCompressor;
 };
 
 typedef BinaryDataStream<BinaryDataBufferMemory, BinaryDataCompressorNone> BinaryDataStreamVector;
@@ -231,9 +172,14 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::vector<T>& v) {
 	s << (UINT64)v.size();
-	s.reserve(sizeof(T)*v.size());
-	for (size_t i = 0; i < v.size(); i++) {
-		s << v[i];
+	if (std::is_pod<T>::value) {
+		s.writeData((const BYTE*)v.data(), sizeof(T)*v.size());
+	}
+	else {
+		s.reserve(sizeof(T)*v.size());
+		for (size_t i = 0; i < v.size(); i++) {
+			s << v[i];
+		}
 	}
 	return s;
 }
@@ -248,12 +194,9 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(Bina
 	return s;
 }
 template<class BinaryDataBuffer, class BinaryDataCompressor>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::string& l) {
-	s << (UINT64)l.size();
-	s.reserve(sizeof(char)*l.size());
-	for (size_t i = 0; i < l.size(); i++) {
-		s << l[i];
-	}
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const std::string& str) {
+	s << (UINT64)str.size();
+	s.writeData((const BYTE*)str.data(), sizeof(char)*str.size());
 	return s;
 }
 
@@ -332,8 +275,13 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	UINT64 size;
 	s >> size;
 	v.resize(size);
-	for (size_t i = 0; i < v.size(); i++) {
-		s >> v[i];
+	if (std::is_pod<T>::value) {
+		s.readData((BYTE*)v.data(), sizeof(T)*v.size());
+	}
+	else {
+		for (size_t i = 0; i < v.size(); i++) {
+			s >> v[i];
+		}
 	}
 	return s;
 }
@@ -351,13 +299,11 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(Bina
 	return s;
 }
 template<class BinaryDataBuffer, class BinaryDataCompressor>
-inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, std::string& v) {
+inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, std::string& str) {
 	UINT64 size;
 	s >> size;
-	v.resize(size);
-	for (size_t i = 0; i < v.size(); i++) {
-		s >> v[i];
-	}
+	str.resize(size);
+	s.readData((BYTE*)str.data(), sizeof(char)*str.size());
 	return s;
 }
 
@@ -386,23 +332,6 @@ namespace util
         out.closeStream();
     }
 
-    template<class T>
-    void serializeToFilePrimitive(const std::string &filename, const T &o)
-    {
-        BinaryDataStreamFile out(filename, true);
-        out.writePrimitive(o);
-        out.closeStream();
-    }
-
-    template<class T, class U>
-    void serializeToFilePrimitive(const std::string &filename, const T &o0, const U &o1)
-    {
-        BinaryDataStreamFile out(filename, true);
-        out.writePrimitive(o0);
-        out.writePrimitive(o1);
-        out.closeStream();
-    }
-
     template<class T, class U>
     void serializeToFile(const std::string &filename, const T &o0, const U &o1)
     {
@@ -419,23 +348,6 @@ namespace util
         in.closeStream();
     }
 
-    template<class T>
-    void deserializeFromFilePrimitive(const std::string &filename, T &o)
-    {
-        BinaryDataStreamFile in(filename, false);
-        in.readPrimitive(o);
-        in.closeStream();
-    }
-
-    template<class T, class U>
-    void deserializeFromFilePrimitive(const std::string &filename, T &o0, U &o1)
-    {
-        BinaryDataStreamFile in(filename, false);
-        in.readPrimitive(o0);
-        in.readPrimitive(o1);
-        in.closeStream();
-    }
-
     template<class T, class U>
     void deserializeFromFile(const std::string &filename, T &o0, U &o1)
     {
@@ -443,21 +355,6 @@ namespace util
         in >> o0 >> o1;
         in.closeStream();
     }
-
-	template<class T>
-	void deserializeFromMemoryPrimitive(const std::vector<BYTE> &data, T &o)
-	{
-		deserializeFromMemoryPrimitive(std::move(data), o);
-	}
-
-	template<class T>
-	void deserializeFromMemoryPrimitive(std::vector<BYTE> &&data, T &o)
-	{
-		BinaryDataStreamVector in;
-		in.setData(std::move(data));
-		in.readPrimitive(o);
-	}
-
 	//
 	// TODO: these cannot be forward declared without zlib, and should be moved into the mlib-zlib header.
 	//

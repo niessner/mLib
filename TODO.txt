@@ -1,5 +1,3 @@
-Get rid of writePrimitive and readPrimitive; use std::is_fundamental<T>::value instead in an if statement in the stream operator
-Big bug in read/writePrimitive of BinaryData stream (Grid2/3): here the ordering of the write/read is different than from what the stream operator is doing -- needs to be consistent!!!
 
 naming convention in D3D11 wrappers: figure load vs init (this is currently consistent)
 Clean up Directory: add static functions: getFiles(<path>) getDirectories(<path>) etc.

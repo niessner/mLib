@@ -18,7 +18,7 @@ public:
 		std::cout << "string test0 passed" << std::endl;
 	}
 
-	String name()
+	String getName()
 	{
 		return "vector";
 	}

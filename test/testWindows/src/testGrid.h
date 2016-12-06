@@ -4,7 +4,7 @@ public:
 	void test0() 
 	{
 		unsigned int s = 10;
-		ml::BinaryGrid3 grid(s,s,s);
+		BinaryGrid3 grid(s,s,s);
 		for (unsigned int i = 0; i < s; i++) {
 			for (unsigned int j = 0; j < s; j++) {
 				for (unsigned int k = 0; k < s; k++) {
@@ -21,23 +21,34 @@ public:
 			grid.setVoxel(i,i,i);
 		}
 
-		std::cout <<"binaryGrid3d test0 passed" << std::endl;
+		std::cout <<  __FUNCTION__ << " passed" << std::endl;
 	}
 
 	void test1()
 	{
 		unsigned int s = 50;
-		ml::BinaryGrid3 grid(s,s,s);
+		BinaryGrid3 grid(s,s,s);
 		for (unsigned int i = 0; i < s; i++) {
 			grid.setVoxel(i,i,i);
 			grid.setVoxel(50-1-i,i,i);
 			grid.setVoxel(i,50-1-i,i);
 			grid.setVoxel(i,i,50-1-i);
 		}
-		ml::PointCloudf pc(grid, 1.0f);
-		ml::PointCloudIOf::saveToFile("gridcloud0.ply", pc);
+		PointCloudf pc(grid, 1.0f);
+		PointCloudIOf::saveToFile("gridcloud0.ply", pc);
 
-		std::cout <<"binaryGrid3d test1 passed" << std::endl;
+		{
+			auto rePC = PointCloudIOf::loadFromFile("gridcloud0.ply");
+			BinaryGrid3 re(s);
+			for (const auto& p : rePC.m_points) {
+				re.setVoxel(math::round(p));
+			}
+			MLIB_ASSERT_STR(re == grid, "point cloud conversion failed");
+			
+		}
+		util::deleteFile("gridcloud0.ply");
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}
 
 	void test2() 
@@ -62,14 +73,14 @@ public:
 
 		Timer t;
 		std::pair<ml::BinaryGrid3, ml::mat4f> grid = sphere.voxelize(0.25f);
-		std::cout << "voxelization time " << t.getElapsedTimeMS() << std::endl;
+		//std::cout << "voxelization time " << t.getElapsedTimeMS() << std::endl;
 		ml::PointCloudf pc(grid.first, 1.0f);
 		ml::PointCloudIOf::saveToFile("gridcloud1.ply", pc);
 
 		TriMeshf voxelMesh(grid.first, grid.second.getInverse());
 		MeshIOf::saveToFile("box.ply", voxelMesh.getMeshData());
 
-		std::cout <<"binaryGrid3d test2 passed" << std::endl;
+		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}
 
 
@@ -77,25 +88,22 @@ public:
 	{
 		{
 			//simplest case
-			size_t s = 10;
+			size_t s = 5;
 			BinaryGrid3 grid(s, 1, 1);
 			grid.setVoxel(0, 0, 0);
-			grid.setVoxel(s - 1, 0, 0);
 			DistanceField3f df(grid);
-			//for (size_t i = 0; i < s; i++) {
-			//	std::cout << df(i, 0, 0) << std::endl;
-			//	//math::floatEqual()
-			//}
-
-			df.evalDist(grid, mat4f::identity());
+			std::pair<float,size_t> res = df.evalDist(grid, mat4f::identity());
+			float expectedResult = 0.5f * (s * (s - 1.0f));
+			MLIB_ASSERT_STR(math::floatEqual(res.first, (float)expectedResult), "mismatch between df - grid comparison");
 		}
 		{
 			//2d test case
-			size_t s = 10;
+			size_t s = 5;
 			BinaryGrid3 grid(s, s, 1);
 			grid.setVoxel(0, 0, 0);
 			grid.setVoxel(s - 1, s - 1, 0);
 			DistanceField3f df(grid);
+			std::pair<float, size_t> res = df.evalDist(grid, mat4f::identity());
 			//for (size_t i = 0; i < s; i++) {
 			//	for (size_t j = 0; j < s; j++) {
 			//		std::cout << math::round(df(i, j, 0)) << " ";
@@ -106,27 +114,85 @@ public:
 		}
 
 
-		ml::TriMeshf sphere = ml::Shapesf::sphere(5.0f, ml::vec3f(0, 0, 0), 128, 128);
+		TriMeshf sphere = Shapesf::sphere(5.0f, vec3f(0, 0, 0), 128, 128);
 
-		sphere.transform(ml::mat4f::translation(ml::vec3f(-6.0053f)));
-		sphere.transform(ml::mat4f::rotation(0.0012f, 0.021f, 0.0024f));
-		std::pair<ml::BinaryGrid3, ml::mat4f> grid = sphere.voxelize(0.25f);
+		sphere.transform(mat4f::translation(ml::vec3f(-6.0053f)));
+		sphere.transform(mat4f::rotation(0.0012f, 0.021f, 0.0024f));
+		std::pair<BinaryGrid3, mat4f> grid = sphere.voxelize(0.25f * 5.0f);
 		
 		Timer t;
 		DistanceField3f df(grid.first);
-		std::cout << t.getElapsedTimeMS() << " ms" << std::endl;
+		//std::cout << t.getElapsedTimeMS() << " ms" << std::endl;
 
+		MeshIOf::saveToFile("voxelizedSphere.ply", TriMeshf(grid.first).getMeshData());
 
-		std::cout <<"distanceField test3 passed" << std::endl;
+		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}
 
     void test4()
     {
         Grid3<float> a;
         Grid3<float> b = std::move(a);
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
     }
 
-	std::string name() {
+	void test5() 
+	{
+		//testing the binary stream operator for serialization (Grid3)
+		vec3ul dim(10, 8, 5);
+		Grid3<float> grid(dim);
+		auto fillFunc = [](size_t x, size_t y, size_t z) { return (float)(z * 8 * 10 + y * 10 + x); };
+		grid.fill(fillFunc); 
+		BinaryDataStreamFile out("tmp.bin", true);
+		out << grid;
+		out.closeStream(); 
+		BinaryDataStreamFile in("tmp.bin", false);
+		Grid3<float> re;
+		in >> re;
+		MLIB_ASSERT_STR(grid == re, "binary stream grid3 and re don't match");
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
+	}
+
+	void test6()
+	{
+		//testing the binary stream operator for serialization (Grid2)
+		vec2ul dim(10, 8);
+		Grid2<float> grid(dim);
+		auto fillFunc = [](size_t x, size_t y) { return (float)(y * 10 + x); };
+		grid.fill(fillFunc);
+		BinaryDataStreamFile out("tmp.bin", true);
+		out << grid;
+		out.closeStream();
+		BinaryDataStreamFile in("tmp.bin", false);
+		Grid2<float> re;
+		in >> re;
+		MLIB_ASSERT_STR(grid == re, "binary stream grid2 and re don't match");
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
+	}
+
+	void test7() 
+	{
+		//test printing
+		{
+			//binary grid
+			BinaryGrid3 grid(5,6,7);
+			for (size_t z = 0; z < grid.getDimZ(); z++) {
+				for (size_t y = 0; y < grid.getDimY(); y++) {
+					for (size_t x = 0; x < grid.getDimX(); x++) {
+						if (math::random_cointoss()) {
+							grid.setVoxel(x, y, z);
+						}
+					}
+				}
+			}
+			std::cout << grid << std::endl;
+		}
+	}
+
+	std::string getName() {
 		return "grid";
 	}
 private:
