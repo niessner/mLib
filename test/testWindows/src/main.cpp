@@ -25,9 +25,9 @@ public:
 	}
 
 private:
-	TestBox m_box;
-	TestCGAL m_cgal;
 	TestGrid m_grid;
+	TestBox m_box;
+	TestCGAL m_cgal;	
 	TestUtility m_utility;
 	TestLodePNG m_lodePNG;
 	TestBinaryStream m_binaryStream;
