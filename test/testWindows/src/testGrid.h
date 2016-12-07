@@ -178,7 +178,7 @@ public:
 		//test printing
 		{
 			//binary grid
-			BinaryGrid3 grid(5,6,7);
+			BinaryGrid3 grid(2,3,4);
 			for (size_t z = 0; z < grid.getDimZ(); z++) {
 				for (size_t y = 0; y < grid.getDimY(); y++) {
 					for (size_t x = 0; x < grid.getDimX(); x++) {
@@ -190,6 +190,22 @@ public:
 			}
 			std::cout << grid << std::endl;
 		}
+
+		{
+			//grid3
+			Grid3f grid(2,3,4);
+			grid.fill([](size_t x, size_t y, size_t z){ return math::random_uniform(0.0f, 1.0f);  });
+			std::cout << grid << std::endl;
+		}
+
+		{
+			//grid2
+			Grid2f grid(2, 3);
+			grid.fill([](size_t x, size_t y){ return math::random_uniform(0.0f, 1.0f);  });
+			std::cout << grid << std::endl;
+		}
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}
 
 	std::string getName() {

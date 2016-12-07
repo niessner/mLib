@@ -204,33 +204,6 @@ namespace ml {
 			toggleVoxelAndBehindSlice(v.x, v.y, v.z);
 		}
 
-
-		std::string toString(bool verbose = true) const {
-			std::stringstream ss;
-
-			ss << getDimensions() << "\n";
-
-			if (verbose) {
-				for (size_t z = 0; z < m_dimZ; z++) {
-					ss << "slice " << z << std::endl;
-					for (size_t y = 0; y < m_dimY; y++) {
-						ss << "\t";
-						for (size_t x = 0; x < m_dimX; x++) {
-							if (isVoxelSet(x, y, z)) {
-								ss << "1";
-							}
-							else {
-								ss << "0";
-							}
-
-						}
-						ss << "\n";
-					}
-				}				
-			}
-			return ss.str();
-		}
-
 		inline size_t getDimX() const {
 			return m_dimX;
 		}
@@ -274,6 +247,32 @@ namespace ml {
 
 		inline unsigned int* getData() {
 			return m_data;
+		}
+
+		std::string toString(bool verbose = true) const {
+			std::stringstream ss;
+
+			ss << "grid dim: " << getDimensions() << "\n";
+
+			if (verbose) {
+				for (size_t z = 0; z < m_dimZ; z++) {
+					ss << "slice " << z << std::endl;
+					for (size_t y = 0; y < m_dimY; y++) {
+						ss << "\t";
+						for (size_t x = 0; x < m_dimX; x++) {
+							if (isVoxelSet(x, y, z)) {
+								ss << "1";
+							}
+							else {
+								ss << "0";
+							}
+
+						}
+						ss << "\n";
+					}
+				}
+			}
+			return ss.str();
 		}
 
 		template<class BinaryDataBuffer, class BinaryDataCompressor> friend

@@ -148,6 +148,23 @@ namespace ml
 		vec2ul getMinIndex() const;
 		const T& getMinValue() const;
 
+		std::string toString(bool verbose = true) const {
+			std::stringstream ss;
+
+			ss << "grid dim: " << getDimensions() << "\n";
+
+			if (verbose) {
+				for (size_t y = 0; y < m_dimY; y++) {
+					ss << "\t";
+					for (size_t x = 0; x < m_dimX; x++) {
+						ss << (*this)(x, y) << " ";
+					}
+					ss << "\n";
+				}
+			}
+			return ss.str();
+		}
+
 		//
 		// TODO: rename
 		//
@@ -363,7 +380,15 @@ namespace ml
 		return !(a == b);
 	}
 
+	//! writes to a stream
+	template <class T>
+	inline std::ostream& operator<<(std::ostream& s, const Grid2<T>& g)
+	{
+		s << g.toString();
+		return s;
+	}
 
+	//! serialization (output)
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Grid2<T>& g) {
 		
@@ -382,6 +407,7 @@ namespace ml
 		return s;
 	}
 
+	//! serialization (input)
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Grid2<T>& g) {
 		
