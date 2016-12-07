@@ -902,6 +902,22 @@ namespace ml {
 			return *this;
 		}
 
+		std::string toString(bool verbose = true) {
+			std::stringstream ss;
+
+			ss << "image dim: " << getDimensions() << "\n";
+
+			if (verbose) {
+				for (size_t y = 0; y < getDimX(); y++) {
+					ss << "\t";
+					for (size_t x = 0; x < getDimY(); x++) {
+						ss << (*this)(x, y) << " ";
+					}
+					ss << "\n";
+				}
+			}
+			return ss.str();
+		}
 	protected:
 		//! Allocates memory and sets the image size accordingly
 		void create(unsigned int width, unsigned int height) {
@@ -924,6 +940,15 @@ namespace ml {
 
 	};
 
+	//! writes to a stream
+	template <class T>
+	inline std::ostream& operator<<(std::ostream& s, const BaseImage<T>& image)
+	{
+		s << image.toString();
+		return s;
+	}
+
+	//! serialization (output)
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BaseImage<T>& image) {
 		s.writeData(image.getWidth());
@@ -933,6 +958,7 @@ namespace ml {
 		return s;
 	}
 
+	//! serialization (input)
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BaseImage<T>& image) {
 		unsigned int width, height;

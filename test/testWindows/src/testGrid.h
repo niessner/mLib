@@ -205,6 +205,14 @@ public:
 			std::cout << grid << std::endl;
 		}
 
+		{
+			//base image
+			BaseImage<float> image(2, 4);
+			image.fill([](size_t x, size_t y){ return math::random_uniform(0.0f, 1.0f);  });
+			std::cout << image;
+
+		}
+
 		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}
 
