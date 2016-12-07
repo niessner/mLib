@@ -206,7 +206,7 @@ public:
 		std::cout << "(" << array[0] << " / " << array[1] << ")" << std::endl;
 	}
 
-	inline T* ptr() {
+	inline T* getData() {
 		return &array[0];
 	}
 
@@ -216,6 +216,14 @@ public:
         result[1] = y;
         return result;
     }
+
+	inline std::string toString(char separator = ' ') const {
+		return toString(std::string(1, separator));
+	}
+
+	inline std::string toString(const std::string &separator) const {
+		return std::to_string(x) + separator + std::to_string(y);
+	}
 
 	static const vec2<T> origin;
 	static const vec2<T> eX;

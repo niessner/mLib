@@ -201,7 +201,7 @@ namespace ml {
 			m_width = m_height = 0;
 		}
 
-        BaseImage(const vec2i &dimensions) {
+        BaseImage(const vec2ui &dimensions) {
             create((UINT)dimensions.x, (UINT)dimensions.y);
         }
 

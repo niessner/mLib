@@ -38,9 +38,11 @@ namespace ml
 		// Accessors
 		//
 		inline T& operator() (size_t x, size_t y)	{
+			MLIB_ASSERT(x < getDimX() && y < getDimY());
 			return m_data[getDimX()*y + x];
 		}
 		inline const T& operator() (size_t x, size_t y) const	{
+			MLIB_ASSERT(x < getDimX() && y < getDimY());
 			return m_data[getDimX()*y + x];
 		}
 
@@ -150,9 +152,7 @@ namespace ml
 
 		std::string toString(bool verbose = true) const {
 			std::stringstream ss;
-
 			ss << "grid dim: " << getDimensions() << "\n";
-
 			if (verbose) {
 				for (size_t y = 0; y < m_dimY; y++) {
 					ss << "\t";

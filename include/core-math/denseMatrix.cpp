@@ -11,7 +11,7 @@ FloatType DenseMatrix<FloatType>::maxMagnitude() const
 	double result = 0.0;
 	for(UINT row = 0; row < m_rows; row++)
 		for(UINT col = 0; col < m_cols; col++)
-			result = std::max(result, fabs(m_dataPtr[row * m_cols + col]));
+			result = std::max(result, fabs(m_data[row * m_cols + col]));
 	return result;
 }
 
@@ -21,7 +21,7 @@ bool DenseMatrix<FloatType>::valid() const
 	for(UINT row = 0; row < m_rows; row++)
 		for(UINT col = 0; col < m_cols; col++)
 		{
-			double v = m_dataPtr[row * m_cols + col];
+			const double& v = m_data[row * m_cols + col];
 			if(v != v) return false;
 		}
 	return true;
@@ -33,7 +33,7 @@ DenseMatrix<FloatType> DenseMatrix<FloatType>::getTranspose() const
     DenseMatrix<FloatType> result(m_cols, m_rows);
     for(UINT row = 0; row < m_rows; row++)
         for(UINT col = 0; col < m_cols; col++)
-            result.m_dataPtr[col * m_rows + row] = m_dataPtr[row * m_cols + col];
+			result.m_data[col * m_rows + row] = m_data[row * m_cols + col];
     return result;
 }
 
@@ -43,7 +43,7 @@ DenseMatrix<FloatType> DenseMatrix<FloatType>::multiply(const DenseMatrix<FloatT
 	DenseMatrix<FloatType> result(A.m_rows, A.m_cols);
 	for(UINT row = 0; row < A.m_rows; row++)
 		for(UINT col = 0; col < A.m_cols; col++)
-			result.m_dataPtr[row * A.m_cols + col] = A.m_dataPtr[row * A.m_cols + col] * val;
+			result.m_data[row * A.m_cols + col] = A.m_data[row * A.m_cols + col] * val;
 	return result;
 }
 
@@ -58,7 +58,7 @@ DenseMatrix<FloatType> DenseMatrix<FloatType>::add(const DenseMatrix<FloatType> 
 	DenseMatrix<FloatType> result(A.m_rows, A.m_cols);
 	for(UINT row = 0; row < rows; row++)
 		for(UINT col = 0; col < cols; col++)
-			result.m_dataPtr[row * cols + col] = A.m_dataPtr[row * cols + col] + B.m_dataPtr[row * cols + col];
+			result.m_data[row * cols + col] = A.m_data[row * cols + col] + B.m_data[row * cols + col];
 	return result;
 }
 
@@ -73,7 +73,7 @@ DenseMatrix<FloatType> DenseMatrix<FloatType>::subtract(const DenseMatrix<FloatT
 	DenseMatrix<FloatType> result(A.m_rows, A.m_cols);
 	for(UINT row = 0; row < rows; row++)
 		for(UINT col = 0; col < cols; col++)
-			result.m_dataPtr[row * cols + col] = A.m_dataPtr[row * cols + col] - B.m_dataPtr[row * cols + col];
+			result.m_data[row * cols + col] = A.m_data[row * cols + col] - B.m_data[row * cols + col];
 	return result;
 }
 
@@ -91,7 +91,7 @@ std::vector<FloatType> DenseMatrix<FloatType>::multiply(const DenseMatrix<FloatT
 	{
 		FloatType val = 0.0;
 		for(UINT col = 0; col < cols; col++)
-			val += A.m_dataPtr[row * cols + col] * B[col];
+			val += A.m_data[row * cols + col] * B[col];
 		result[row] = val;
 	}
 	return result;

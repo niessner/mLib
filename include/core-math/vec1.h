@@ -147,7 +147,7 @@ public:
         return (x == x);
     }
 
-	inline T* ptr() {
+	inline T* getData() {
 		return &array[0];
 	}
 
@@ -155,6 +155,10 @@ public:
 		std::vector<T> result(1);
 		result[0] = x;
 		return result;
+	}
+
+	inline std::string toString() const {
+		return std::to_string(x);
 	}
 
 	static const vec1<T> origin;

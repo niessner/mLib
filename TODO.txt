@@ -6,12 +6,8 @@ naming convention -> use load/save (instaed of read/write)
 
 
 Update triMeshAcceleratorBVH to parameterize parallel build and possibly support parelll build for midpoint.
-toString for vec1/2/4
 
-Matthias:
-MeshIO -> std::vector<std::vector<unsigned int>> -> std::vector<unsigned int> (prefix sum; speed!) (bool flag isTriMesh)
 MeshIO -> material groups (.obj loader -> index faces)
-MeshIO -> conversion to TriMesh
 
 OBB2f
 
