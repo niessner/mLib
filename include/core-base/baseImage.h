@@ -908,9 +908,9 @@ namespace ml {
 			ss << "image dim: " << getDimensions() << "\n";
 
 			if (verbose) {
-				for (size_t y = 0; y < getDimX(); y++) {
+				for (size_t y = 0; y < getDimY(); y++) {
 					ss << "\t";
-					for (size_t x = 0; x < getDimY(); x++) {
+					for (size_t x = 0; x < getDimX(); x++) {
 						ss << (*this)(x, y) << " ";
 					}
 					ss << "\n";
