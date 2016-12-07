@@ -902,7 +902,7 @@ namespace ml {
 			return *this;
 		}
 
-		std::string toString(bool verbose = true) {
+		std::string toString(bool verbose = true) const {
 			std::stringstream ss;
 
 			ss << "image dim: " << getDimensions() << "\n";
