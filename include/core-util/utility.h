@@ -389,6 +389,7 @@ namespace util
 	std::vector<std::string> getFileLines(const std::string& filename, UINT minLineLength = 0);
 
 	//! Save lines to file
+	void writeToFile(const std::string &line, const std::string& filename);
 	void saveLinesToFile(const std::vector<std::string>& lines, const std::string& filename);
 
 	//
