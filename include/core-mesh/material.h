@@ -33,6 +33,12 @@ public:
 		//std::swap(a.m_Texture_Ks, b.m_Texture_Ks);
 	}
 
+	static std::vector<Material> loadFromMTL(const std::string& filename) {
+		std::vector<Material> res;
+		loadFromMTL(filename, res);
+		return res;
+	}
+
 	static void loadFromMTL(const std::string& filename, std::vector<Material>& res) {
 		res.clear();
 

@@ -209,5 +209,10 @@ namespace ml
 #include "core-mesh/meshUtil.h"
 #include "core-mesh/meshShapes.h"
 
+//
+// core-network headers
+//
+#include "core-network/networkClient.h"
+#include "core-network/networkServer.h"
 
 #endif  // MLIBCORE_H_

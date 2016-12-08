@@ -47,7 +47,7 @@ namespace ml {
 			//generateFromBinaryGridQueue(grid);
 		}
 
-		//! computes the distance
+		//! computes the distance when projecting all grid points into the distance field (returns distance and valid comparisons)
 		std::pair<FloatType, size_t> evalDist(const BinaryGrid3& grid, const Matrix4x4<FloatType>& gridToDF, bool squaredSum = false) const {
 
 			FloatType dist = (FloatType)0;

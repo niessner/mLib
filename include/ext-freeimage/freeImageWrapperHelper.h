@@ -238,6 +238,46 @@ template<>	inline void convertFromUSHORT3<unsigned short>(unsigned short& output
 	output = input[0];
 }
 
+//USHORT4
+template<class T>	inline void convertFromUSHORT4(T& output, const unsigned short* input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+template<>	inline void convertFromUSHORT4<vec4d>(vec4d& output, const unsigned short* input) {
+	output.x = (double)input[0];
+	output.y = (double)input[1];
+	output.z = (double)input[2];
+	output.w = (double)input[3];
+}
+template<>	inline void convertFromUSHORT4<vec4us>(vec4us& output, const unsigned short* input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+	output.w = input[3];
+}
+template<>	inline void convertFromUSHORT4<vec4uc>(vec4uc& output, const unsigned short* input) {
+	//this is a hard-coded HDR to non-HDR conversion
+	output.x = (unsigned char)(input[0] / 256);
+	output.y = (unsigned char)(input[1] / 256);
+	output.z = (unsigned char)(input[2] / 256);
+	output.w = (unsigned char)(input[3] / 256);
+}
+
+template<>	inline void convertFromUSHORT4<vec3d>(vec3d& output, const unsigned short* input) {
+	output.x = (double)input[0];
+	output.y = (double)input[1];
+	output.z = (double)input[2];
+}
+template<>	inline void convertFromUSHORT4<vec3us>(vec3us& output, const unsigned short* input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+}
+
+template<>	inline void convertFromUSHORT4<unsigned short>(unsigned short& output, const unsigned short* input) {
+	output = input[0];
+}
+
 ///////////////////////
 // DATA WRITE HELPER //
 ///////////////////////

@@ -8,7 +8,7 @@ namespace ml {
 	class BinaryGrid3 {
 	public:
 		BinaryGrid3() {
-			m_depth = m_height = m_width = 0;
+			m_dimZ = m_dimY = m_dimX = 0;
 			m_data = nullptr;
 		}
 
@@ -33,27 +33,27 @@ namespace ml {
 		BinaryGrid3(const BinaryGrid3& other) {
 			m_data = nullptr;
 			if (other.m_data != nullptr) {
-				allocate(other.m_width, other.m_height, other.m_depth);
+				allocate(other.m_dimX, other.m_dimY, other.m_dimZ);
 				memcpy(m_data, other.m_data, getNumUInts()*sizeof(unsigned int));
 			}
 			else {
 				m_data = nullptr;
-				m_width = other.m_width;
-				m_height = other.m_height;
-				m_depth = other.m_depth;
+				m_dimX = other.m_dimX;
+				m_dimY = other.m_dimY;
+				m_dimZ = other.m_dimZ;
 			}
 		}
 
 		BinaryGrid3(BinaryGrid3&& other) {
-			m_height = other.m_height;
-			m_width = other.m_width;
-			m_depth = other.m_depth;
+			m_dimY = other.m_dimY;
+			m_dimX = other.m_dimX;
+			m_dimZ = other.m_dimZ;
 
 			m_data = other.m_data;
 
-			other.m_width = 0;
-			other.m_height = 0;
-			other.m_depth = 0;
+			other.m_dimX = 0;
+			other.m_dimY = 0;
+			other.m_dimZ = 0;
 
 			other.m_data = nullptr;
 		}
@@ -70,9 +70,9 @@ namespace ml {
 			}
 			else {
 				SAFE_DELETE_ARRAY(m_data);
-				m_width = width;
-				m_height = height;
-				m_depth = depth;
+				m_dimX = width;
+				m_dimY = height;
+				m_dimZ = depth;
 
 				size_t dataSize = getNumUInts();
 				m_data = new unsigned int[dataSize];
@@ -86,15 +86,15 @@ namespace ml {
 		inline BinaryGrid3& operator=(const BinaryGrid3& other) {
 			if (this != &other) {
 				if (other.m_data != nullptr) {
-					allocate(other.m_width, other.m_height, other.m_depth);
+					allocate(other.m_dimX, other.m_dimY, other.m_dimZ);
 					memcpy(m_data, other.m_data, getNumUInts()*sizeof(unsigned int));
 				}
 				else {
 					SAFE_DELETE_ARRAY(m_data);
 					m_data = nullptr;
-					m_width = other.m_width;
-					m_height = other.m_height;
-					m_depth = other.m_depth;
+					m_dimX = other.m_dimX;
+					m_dimY = other.m_dimY;
+					m_dimZ = other.m_dimZ;
 				}
 			}
 			return *this;
@@ -104,23 +104,23 @@ namespace ml {
 			if (this != &other) {
 				SAFE_DELETE_ARRAY(m_data);
 
-				m_width = other.m_width;
-				m_height = other.m_height;
-				m_depth = other.m_depth;
+				m_dimX = other.m_dimX;
+				m_dimY = other.m_dimY;
+				m_dimZ = other.m_dimZ;
 				m_data = other.m_data;
 
-				other.m_width = 0;
-				other.m_height = 0;
-				other.m_depth = 0;
+				other.m_dimX = 0;
+				other.m_dimY = 0;
+				other.m_dimZ = 0;
 				other.m_data = nullptr;
 			}
 			return *this;
 		}
 
 		inline bool operator==(const BinaryGrid3& other) const {
-			if (m_width != other.m_width ||
-				m_height != other.m_height ||
-				m_depth != other.m_depth)	return false;
+			if (m_dimX != other.m_dimX ||
+				m_dimY != other.m_dimY ||
+				m_dimZ != other.m_dimZ)	return false;
 
 			size_t numUInts = getNumUInts();
 			for (size_t i = 0; i < numUInts; i++) {
@@ -143,7 +143,7 @@ namespace ml {
 		}
 
 		inline bool isVoxelSet(size_t x, size_t y, size_t z) const {
-			size_t linIdx = z*m_height*m_width + x*m_height + y;
+			size_t linIdx = z*m_dimY*m_dimX + x*m_dimY + y;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			return (m_data[baseIdx] & (1 << localIdx)) != 0;
@@ -154,7 +154,7 @@ namespace ml {
 		}
 
 		inline void setVoxel(size_t x, size_t y, size_t z) {
-			size_t linIdx = z*m_height*m_width + x*m_height + y;
+			size_t linIdx = z*m_dimY*m_dimX + x*m_dimY + y;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] |= (1 << localIdx);
@@ -165,7 +165,7 @@ namespace ml {
 		}
 
 		inline void clearVoxel(size_t x, size_t y, size_t z) {
-			size_t linIdx = z*m_height*m_width + x*m_height + y;
+			size_t linIdx = z*m_dimY*m_dimX + x*m_dimY + y;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] &= ~(1 << localIdx);
@@ -176,7 +176,7 @@ namespace ml {
 		}
 
 		inline void toggleVoxel(size_t x, size_t y, size_t z) {
-			size_t linIdx = z*m_height*m_width + x*m_height + y;
+			size_t linIdx = z*m_dimY*m_dimX + x*m_dimY + y;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] ^= (1 << localIdx);
@@ -187,7 +187,7 @@ namespace ml {
 		}
 
 		inline void toggleVoxelAndBehindRow(size_t x, size_t y, size_t z) {
-			for (size_t i = x; i < m_width; i++) {
+			for (size_t i = x; i < m_dimX; i++) {
 				toggleVoxel(i, y, z);
 			}
 		}
@@ -196,7 +196,7 @@ namespace ml {
 		}
 
 		inline void toggleVoxelAndBehindSlice(size_t x, size_t y, size_t z) {
-			for (size_t i = z; i < m_depth; i++) {
+			for (size_t i = z; i < m_dimZ; i++) {
 				toggleVoxel(x, y, i);
 			}
 		}
@@ -204,32 +204,14 @@ namespace ml {
 			toggleVoxelAndBehindSlice(v.x, v.y, v.z);
 		}
 
-		inline void print() const {
-			for (size_t z = 0; z < m_depth; z++) {
-				std::cout << "slice0" << std::endl;
-				for (size_t y = 0; y < m_height; y++) {
-					for (size_t x = 0; x < m_width; x++) {
-						if (isVoxelSet(x, y, z)) {
-							std::cout << "1";
-						}
-						else {
-							std::cout << "0";
-						}
-
-					}
-					std::cout << "\n";
-				}
-			}
-		}
-
 		inline size_t getDimX() const {
-			return m_width;
+			return m_dimX;
 		}
 		inline size_t getDimY() const {
-			return m_height;
+			return m_dimY;
 		}
 		inline size_t getDimZ() const {
-			return m_depth;
+			return m_dimZ;
 		}
 
 		inline vec3ul getDimensions() const {
@@ -237,12 +219,12 @@ namespace ml {
 		}
 
 		inline size_t getNumElements() const {
-			return m_width*m_height*m_depth;
+			return m_dimX*m_dimY*m_dimZ;
 		}
 
 		inline bool isValidCoordinate(size_t x, size_t y, size_t z) const
 		{
-			return (x < m_width && y < m_height && z < m_depth);
+			return (x < m_dimX && y < m_dimY && z < m_dimZ);
 		}
 
 		inline bool isValidCoordinate(const vec3ul& v) const
@@ -267,6 +249,32 @@ namespace ml {
 			return m_data;
 		}
 
+		std::string toString(bool verbose = true) const {
+			std::stringstream ss;
+
+			ss << "grid dim: " << getDimensions() << "\n";
+
+			if (verbose) {
+				for (size_t z = 0; z < m_dimZ; z++) {
+					ss << "slice " << z << std::endl;
+					for (size_t y = 0; y < m_dimY; y++) {
+						ss << "\t";
+						for (size_t x = 0; x < m_dimX; x++) {
+							if (isVoxelSet(x, y, z)) {
+								ss << "1";
+							}
+							else {
+								ss << "0";
+							}
+
+						}
+						ss << "\n";
+					}
+				}
+			}
+			return ss.str();
+		}
+
 		template<class BinaryDataBuffer, class BinaryDataCompressor> friend
 			BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& 
 			operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BinaryGrid3& g);
@@ -281,12 +289,12 @@ namespace ml {
 		friend class boost::serialization::access;
 		template <class Archive>
 		void save(Archive& ar, const unsigned int version) const {
-			ar << m_width << m_height << m_depth << boost::serialization::make_array(m_data, getNumUInts());
+			ar << m_dimX << m_dimY << m_dimZ << boost::serialization::make_array(m_data, getNumUInts());
 		}
 		template<class Archive>
 		void load(Archive& ar, const unsigned int version) {
-			ar >> m_width >> m_height >> m_depth;
-			allocate(m_width, m_height, m_depth);
+			ar >> m_dimX >> m_dimY >> m_dimZ;
+			allocate(m_dimX, m_dimY, m_dimZ);
 			ar >> boost::serialization::make_array(m_data, getNumUInts());
 		}
 		template<class Archive>
@@ -301,23 +309,27 @@ namespace ml {
 		}
 
 		static const unsigned int bitsPerUInt = sizeof(unsigned int) * 8;
-		size_t			m_width, m_height, m_depth;
+		size_t			m_dimX, m_dimY, m_dimZ;
 		unsigned int*	m_data;
 	};
 
-
+	//! writes to a stream
+	inline std::ostream& operator<<(std::ostream& s, const BinaryGrid3& g)
+	{
+		s << g.toString();
+		return s;
+	}
 	 
-
+	//! serialization (output)
 	template<class BinaryDataBuffer, class BinaryDataCompressor>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BinaryGrid3& g) {
 		s << (UINT64)g.getDimX() << (UINT64)g.getDimY() << (UINT64)g.getDimZ();
-		//s.reserve(sizeof(T) * g.getDimX() * g.getDimY() * g.getDimZ());
-
 		size_t dataSize = g.getNumUInts();
 		s.writeData((const BYTE*)g.getData(), dataSize*sizeof(unsigned int));
 		return s;
 	}
 
+	//! seralization (input)
 	template<class BinaryDataBuffer, class BinaryDataCompressor>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BinaryGrid3& g) {
 		UINT64 dimX, dimY, dimZ;

@@ -265,7 +265,7 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
             { return false; }
         }
 
-		inline T* ptr() {
+		inline T* getData() {
 			return &array[0];
 		}
 
@@ -277,6 +277,15 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
 			result[3] = w;
 			return result;
 		}
+
+		inline std::string toString(char separator = ' ') const {
+			return toString(std::string(1, separator));
+		}
+
+		inline std::string toString(const std::string &separator) const {
+			return std::to_string(x) + separator + std::to_string(y) + separator + std::to_string(z) + separator + std::to_string(w);
+		}
+
 
 		static const vec4<T> origin;
 		static const vec4<T> eX;

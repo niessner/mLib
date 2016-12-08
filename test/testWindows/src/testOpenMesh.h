@@ -27,7 +27,7 @@ public:
 
 
 
-	std::string name() {
+	std::string getName() {
 		return "Open Mesh";
 	}
 private:

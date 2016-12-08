@@ -255,6 +255,31 @@ namespace math
 		return (((i + (i >> 4)) & 0x0F0F0F0F) * 0x01010101) >> 24;
 	}
 
+	//! generates a random number (uniform distribution)
+	template<typename T>
+	inline T random_uniform(T _min, T _max) {
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+		static std::uniform_real_distribution<T> dis(_min, _max);
+		return dis(gen);
+	}
+
+
+	//! generates a random number (normal distribution)
+	template<typename T>
+	inline T random_normal(T mean, T stddev) {
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+		static std::normal_distribution<T> dis(mean, stddev);
+		return dis(gen);
+	}
+
+	//! flips a coin: 50% chance to retrun true; otherwise false
+	inline bool random_cointoss() {
+		if (random_uniform(0.0f, 1.0f) > 0.5f) return false;	//there may be some bias
+		else return true;
+	}
+
 }  // namespace math
 
 namespace util

@@ -33,7 +33,7 @@ public:
 	}
 
 
-	std::string name() {
+	std::string getName() {
 		return "cgal";
 	}
 

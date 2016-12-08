@@ -87,7 +87,7 @@ public:
 		std::cout <<"box test2 passed" << std::endl;
 	}
 
-	std::string name()
+	std::string getName()
 	{
 		return "Box";
 	}
