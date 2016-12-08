@@ -131,6 +131,10 @@ public:
 		return std::abs(v0.array[0] - v1.array[1]);
 	}
 
+	static vec1<T> randomUniform(T min, T max) {
+		return vec1<T>(math::randomUniform(min, max));
+	}
+
 	inline vec1 getNormalized() const {
 		return vec1<T>();
 	}

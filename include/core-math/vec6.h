@@ -226,6 +226,15 @@ public:
 		return (v0-v1).length();
 	}
 
+	static vec6<T> randomUniform(T min, T max) {
+		return vec6<T>(math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max));
+	}
+
 	inline void print() const {
 		std::cout << "(" << array[0] << " / " << array[1] << " / " << array[2] << " / " << array[3] << " / " << array[4] << " / " << array[5] << ")" << std::endl;
 	}

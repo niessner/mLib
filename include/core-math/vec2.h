@@ -187,6 +187,11 @@ public:
 		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]));
 	}
 
+	static vec2<T> randomUniform(T min, T max) {
+		return vec2<T>(math::randomUniform(min, max),
+			math::randomUniform(min, max));
+	}
+
     static inline vec2<T> normalize(const vec2<T>& v) {
         return v.getNormalized();
     }

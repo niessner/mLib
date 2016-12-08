@@ -827,6 +827,12 @@ namespace ml {
 		}
 
 
+		//! resizes the image to the given width/height
+		void resize(const vec2i &dimensions, bool bilinearInterpolate = false) {
+			resize(dimensions.x, dimensions.y, bilinearInterpolate);
+		}
+
+
 		//! smooth (laplacian smoothing step)
 		void smooth(unsigned int steps = 1) {
 			for (unsigned int i = 0; i < steps; i++) {

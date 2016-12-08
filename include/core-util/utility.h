@@ -50,7 +50,7 @@ namespace math
 	}
 
 	template<class T, class U>
-#if __cplusplus >= 201103L || __cpp_decltype
+#if __cplusplus >= 201103L || defined __cpp_decltype
 	inline auto lerp(T left, T right, U s) -> decltype(left * s) {
 		return static_cast<decltype(left * s)>(left + (right - left) * s);
 #else
@@ -257,7 +257,7 @@ namespace math
 
 	//! generates a random number (uniform distribution)
 	template<typename T>
-	inline T random_uniform(T _min, T _max) {
+	inline T randomUniform(T _min, T _max) {
 		static std::random_device rd;
 		static std::mt19937 gen(rd());
 		static std::uniform_real_distribution<T> dis(_min, _max);
@@ -267,7 +267,7 @@ namespace math
 
 	//! generates a random number (normal distribution)
 	template<typename T>
-	inline T random_normal(T mean, T stddev) {
+	inline T randomNormal(T mean, T stddev) {
 		static std::random_device rd;
 		static std::mt19937 gen(rd());
 		static std::normal_distribution<T> dis(mean, stddev);
@@ -275,8 +275,8 @@ namespace math
 	}
 
 	//! flips a coin: 50% chance to retrun true; otherwise false
-	inline bool random_cointoss() {
-		if (random_uniform(0.0f, 1.0f) > 0.5f) return false;	//there may be some bias
+	inline bool randomCointoss() {
+		if (randomUniform(0.0f, 1.0f) > 0.5f) return false;	//there may be some bias
 		else return true;
 	}
 
