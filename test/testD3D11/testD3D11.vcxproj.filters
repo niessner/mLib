@@ -42,12 +42,9 @@
     <ClInclude Include="..\include\mLibCore.h">
       <Filter>mLibHeader</Filter>
     </ClInclude>
-    <ClInclude Include="main.h" />
-    <ClInclude Include="mLibInclude.h" />
     <ClInclude Include="..\include\mLibD3D11.h">
       <Filter>mLibHeader</Filter>
     </ClInclude>
-    <ClInclude Include="appTest.h" />
     <ClInclude Include="..\include\ext-openmesh\loader.h">
       <Filter>mLibHeader\ext-openmesh</Filter>
     </ClInclude>
@@ -378,11 +375,12 @@
     <ClInclude Include="..\..\include\core-util\flagSet.h">
       <Filter>mLibHeader\core-util</Filter>
     </ClInclude>
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\mLibInclude.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\appTest.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mLibSource.cpp" />
-    <ClCompile Include="winMain.cpp" />
-    <ClCompile Include="appTest.cpp" />
     <ClCompile Include="..\..\include\core-graphics\polygon.cpp">
       <Filter>mLibHeader\core-graphics</Filter>
     </ClCompile>
@@ -425,6 +423,10 @@
     <ClCompile Include="..\..\include\core-base\grid2.cpp">
       <Filter>mLibHeader\core-base</Filter>
     </ClCompile>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\mLibSource.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\appTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\pointCloud.hlsl">
