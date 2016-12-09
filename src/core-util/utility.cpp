@@ -163,6 +163,14 @@ namespace util
 		return result;
 	}
 
+	void writeToFile(const std::string &line, const std::string& filename) {
+		std::ofstream file;
+		file.open(filename, std::ios::out);
+		file << line << std::endl;
+		file.close();
+	}
+
+	// TODO: rename this writeToFile.
 	void saveLinesToFile(const std::vector<std::string>& lines, const std::string& filename) {
 		std::ofstream file;
 		file.open(filename, std::ios::out);

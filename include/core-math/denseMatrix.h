@@ -18,7 +18,6 @@ public:
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
 		m_data = s.m_data;
-		m_dataPtr = &m_data[0];
 	}
 
     DenseMatrix(DenseMatrix<T> &&s)
@@ -28,7 +27,6 @@ public:
 		s.m_rows = 0;
 		s.m_cols = 0;
 		m_data = std::move(s.m_data);
-		m_dataPtr = &m_data[0];
 	}
 
     explicit DenseMatrix(size_t squareDimension)
@@ -36,7 +34,6 @@ public:
 		m_rows = (UINT)squareDimension;
         m_cols = (UINT)squareDimension;
 		m_data.resize(m_rows * m_cols);
-		m_dataPtr = &m_data[0];
 	}
 
 	explicit DenseMatrix(const MathVector<T> &diagonal)

@@ -3,8 +3,8 @@
 #ifndef _MLIB_EIGEN_H_
 #define _MLIB_EIGEN_H_
 
-#include "Eigen/Sparse"
-#include "Eigen/Eigenvalues"
+#include "Eigen33b1/Sparse"
+#include "Eigen33b1/Eigenvalues"
 
 //
 // ext-eigen headers

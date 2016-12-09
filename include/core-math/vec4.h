@@ -206,6 +206,13 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
             return (v0 - v1).length();
         }
 
+		static vec4<T> randomUniform(T min, T max) {
+			return vec4<T>(math::randomUniform(min, max),
+				math::randomUniform(min, max),
+				math::randomUniform(min, max),
+				math::randomUniform(min, max));
+		}
+
         void print() const
         {
             std::cout << "(" << array[0] << " / " << array[1] << " / " << array[2] <<
