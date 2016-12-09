@@ -182,7 +182,7 @@ public:
 			for (size_t z = 0; z < grid.getDimZ(); z++) {
 				for (size_t y = 0; y < grid.getDimY(); y++) {
 					for (size_t x = 0; x < grid.getDimX(); x++) {
-						if (math::random_cointoss()) {
+						if (math::randomCointoss()) {
 							grid.setVoxel(x, y, z);
 						}
 					}
@@ -194,21 +194,21 @@ public:
 		{
 			//grid3
 			Grid3f grid(2,3,4);
-			grid.fill([](size_t x, size_t y, size_t z){ return math::random_uniform(0.0f, 1.0f);  });
+			grid.fill([](size_t x, size_t y, size_t z){ return math::randomUniform(0.0f, 1.0f);  });
 			std::cout << grid << std::endl;
 		}
 
 		{
 			//grid2
 			Grid2f grid(2, 3);
-			grid.fill([](size_t x, size_t y){ return math::random_uniform(0.0f, 1.0f);  });
+			grid.fill([](size_t x, size_t y){ return math::randomUniform(0.0f, 1.0f);  });
 			std::cout << grid << std::endl;
 		}
 
 		{
 			//base image
 			BaseImage<float> image(2, 4);
-			image.fill([](size_t x, size_t y){ return math::random_uniform(0.0f, 1.0f);  });
+			image.fill([](size_t x, size_t y){ return math::randomUniform(0.0f, 1.0f);  });
 			std::cout << image;
 
 		}

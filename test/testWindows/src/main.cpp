@@ -40,7 +40,7 @@ int main()
 	std::array<unsigned int, 2> hist;
 	hist[0] = hist[1] = 0;
 	for (size_t i = 0; i < 10000; i++) {
-		hist[math::random_cointoss()]++;
+		hist[math::randomCointoss()]++;
 	}
 	std::cout << "false: " << hist[0] << "\t true: " << hist[1] << std::endl;
 

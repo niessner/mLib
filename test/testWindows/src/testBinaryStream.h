@@ -106,7 +106,7 @@ class TestBinaryStream : public Test {
 		size_t s = 1000;
 		std::vector<float> v(s);
 		for (size_t i = 0; i < v.size(); i++) {
-			v[i] = math::random_uniform(0.0f, 1.0f);
+			v[i] = math::randomUniform(0.0f, 1.0f);
 		}
 		BinaryDataStreamFile out("tmp.bin", true);
 		out << v;
@@ -117,6 +117,24 @@ class TestBinaryStream : public Test {
 		in >> re;
 		
 		MLIB_ASSERT_STR(v == re, "binary stream vector doesn't match out");
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
+	}
+
+	void test3() 
+	{
+		{
+			BinaryDataStreamFile out("test.bin", true);
+			int a = 5;
+			out.writeData(a);
+		}
+		{
+			BinaryDataStreamFile in("test.bin", false);
+			int a;
+			in.readData(a);
+
+			MLIB_ASSERT_STR(a == 5, "binary stream in/out doesn't match");
+		}
 
 		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}

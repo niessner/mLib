@@ -624,7 +624,6 @@ public:
 							if (hasPerVertexColors())		meshData.m_Colors.push_back(m_Colors[idx]);
 							if (hasPerVertexNormals())		meshData.m_Normals.push_back(m_Normals[idx]);
 							if (hasPerVertexTexCoords())	meshData.m_TextureCoords.push_back(m_TextureCoords[idx]);
-							//TODO HANDLE COLOR NORMAL TEX COORD
 							idx = cnt;
 							cnt++;
 						}
@@ -686,6 +685,7 @@ public:
 				}	
 			}
 
+			meshData.deleteEmptyIndices();
 			meshData.deleteRedundantIndices();
 
 
@@ -847,6 +847,48 @@ public:
 		if (m_FaceIndicesVertices == m_FaceIndicesNormals)			m_FaceIndicesNormals.clear();
 		if (m_FaceIndicesVertices == m_FaceIndicesColors)			m_FaceIndicesColors.clear();
 		if (m_FaceIndicesVertices == m_FaceIndicesTextureCoords)	m_FaceIndicesTextureCoords.clear();
+	}
+
+	//! sometimes the face index buffers are empty -- we delete it in these cases
+	void deleteEmptyIndices() {
+		if (m_FaceIndicesNormals.size() > 0) {
+			size_t emptyNorIdxCount = 0;
+			while (emptyNorIdxCount < m_FaceIndicesNormals.size()) {
+				auto& f = m_FaceIndicesNormals[emptyNorIdxCount];
+				if (f.size() != 0) break;
+				emptyNorIdxCount++;
+			}
+			if (emptyNorIdxCount == m_FaceIndicesNormals.size()) {
+				m_Normals.clear();
+				m_FaceIndicesNormals.clear();
+			}
+		}
+
+		if (m_FaceIndicesColors.size() > 0) {
+			size_t emptyColIdxCount = 0;
+			while (emptyColIdxCount < m_FaceIndicesColors.size()) {
+				auto& f = m_FaceIndicesColors[emptyColIdxCount];
+				if (f.size() != 0) break;
+				emptyColIdxCount++;
+			}
+			if (emptyColIdxCount == m_FaceIndicesColors.size()) {
+				m_Colors.clear();
+				m_FaceIndicesColors.clear();
+			}
+		}
+
+		if (m_FaceIndicesTextureCoords.size() > 0) {
+			size_t emptyTexIdxCount = 0;
+			while (emptyTexIdxCount < m_FaceIndicesTextureCoords.size()) {
+				auto& f = m_FaceIndicesTextureCoords[emptyTexIdxCount];
+				if (f.size() != 0) break;
+				emptyTexIdxCount++;
+			}
+			if (emptyTexIdxCount == m_FaceIndicesTextureCoords.size()) {
+				m_TextureCoords.clear();
+				m_FaceIndicesTextureCoords.clear();
+			}
+		}
 	}
 private:
 	inline vec3i toVirtualVoxelPos(const vec3<FloatType>& v, FloatType voxelSize) {

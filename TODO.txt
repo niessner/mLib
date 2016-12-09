@@ -1,3 +1,12 @@
+DX11
+load vs init -> load
+releaseGPU
+resetGPU
+onResize
+
+need proper constructors/objects/swap for D3D11 Objects 
+templetize 2D textures
+
 
 naming convention in D3D11 wrappers: figure load vs init (this is currently consistent)
 Clean up Directory: add static functions: getFiles(<path>) getDirectories(<path>) etc.
