@@ -81,8 +81,8 @@ template<class FloatType>
 std::vector<FloatType> DenseMatrix<FloatType>::multiply(const DenseMatrix<FloatType> &A, const std::vector<FloatType> &B)
 {
 	MLIB_ASSERT_STR(A.cols() == B.size(), "invalid dimensions");
-	const int rows = A.m_rows;
-	const UINT cols = A.m_cols;
+	const size_t rows = A.m_rows;
+	const size_t cols = A.m_cols;
 	std::vector<FloatType> result(rows);
 //#ifdef MLIB_OPENMP
 //#pragma omp parallel for

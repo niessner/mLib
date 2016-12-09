@@ -38,11 +38,11 @@ namespace ml
 		// Accessors
 		//
 		inline T& operator() (size_t x, size_t y)	{
-			MLIB_ASSERT(x < getDimX() && y < getDimY());
+			MLIB_ASSERT(x < m_dimX && y < m_dimY);
 			return m_data[getDimX()*y + x];
 		}
 		inline const T& operator() (size_t x, size_t y) const	{
-			MLIB_ASSERT(x < getDimX() && y < getDimY());
+			MLIB_ASSERT(x < m_dimX && y < m_dimY);
 			return m_data[getDimX()*y + x];
 		}
 
