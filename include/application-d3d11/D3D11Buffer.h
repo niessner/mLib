@@ -8,64 +8,84 @@ namespace ml {
 	class D3D11Buffer : public GraphicsAsset
 	{
 	public:
-		D3D11Buffer(bool _withSRV = true, bool _withUAV = false)
-		{
+		D3D11Buffer(bool _withSRV = true, bool _withUAV = false)	{
 			m_graphics = nullptr;
 			m_buffer = nullptr;
 			m_srv = nullptr;
 			m_uav = nullptr;
 			
-			m_bHasSRV = _withSRV;	//TODO add parameter
-			m_bHasUAV = _withUAV;	//TODO add parameter
+			m_bHasSRV = _withSRV;
+			m_bHasUAV = _withUAV;
 		}
 
-		D3D11Buffer(GraphicsDevice& g, const std::vector<T>& data)
-		{
+		D3D11Buffer(GraphicsDevice& g, const std::vector<T>& data, bool _withSRV = true, bool _withUAV = false)	{
+			m_graphics = nullptr;
 			m_buffer = nullptr;
 			m_srv = nullptr;
 			m_uav = nullptr;
-			load(g, data);
+
+			m_bHasSRV = _withSRV;
+			m_bHasUAV = _withUAV;
+			init(g, data);
 		}
 
-		//
-		// TODO: implement other copy constructors similar to D3D11Mesh
-		//
-		D3D11Buffer(D3D11Buffer&& t)
-		{
-			m_data = std::move(t.m_data);
-			m_graphics = t.m_graphics;
-			m_buffer = t.m_buffer; t.m_buffer = nullptr;
-			m_srv = t.m_srv; t.m_srv = nullptr;
-			m_uav = t.m_uav; t.m_uav = nullptr;
+		//! copy constructor
+		D3D11Buffer(D3D11Buffer& t) {
+			m_graphics = nullptr;
+			m_buffer = nullptr;
+			m_srv = nullptr;
+			m_uav = nullptr;
+
 			m_bHasSRV = t.m_bHasSRV;
 			m_bHasUAV = t.m_bHasUAV;
+			init(*t.m_graphics, t.getData());
 		}
 
-		void operator=(D3D11Buffer&& t)
-		{
-			m_data = std::move(t.m_data);
-			m_graphics = t.m_graphics;
-			m_buffer = t.m_buffer; t.m_buffer = nullptr;
-			m_srv = t.m_srv; t.m_srv = nullptr;
-			m_uav = t.m_uav; t.m_uav = nullptr;
+		//! move constructor
+		D3D11Buffer(D3D11Buffer&& t)	{
+			m_graphics = nullptr;
+			m_buffer = nullptr;
+			m_srv = nullptr;
+			m_uav = nullptr;
+
+			m_bHasSRV = false;
+			m_bHasUAV = false;
+
+			std::swap(*this, t);
+		}
+
+		~D3D11Buffer()	{
+			releaseGPU();
+		}
+
+		//! assignment operator
+		void operator=(D3D11Buffer& t) {
 			m_bHasSRV = t.m_bHasSRV;
 			m_bHasUAV = t.m_bHasUAV;
-		}		
-
-		~D3D11Buffer()
-		{
-			release();
+			init(*t.m_graphics, t.getData());
 		}
+
+		//! move operator
+		void operator=(D3D11Buffer&& t)	{
+			swap(*this, grid);
+			return *this;
+		}				
 
 		//! adl swap
-		friend void swap() {
+		friend void swap(D3D11Buffer& a, D3D11Buffer& b) {
+			std::swap(a.m_graphics, b.m_graphics);
+			std::swap(a.m_data, b.m_data);
+			std::swap(a.m_buffer, b.m_buffer);
+			std::swap(a.m_srv, b.m_srv);
+			std::swap(a.m_uav, b.m_uav);
 
+			std::swap(a.m_bHasSRV, b.m_bHasSRV);
+			std::swap(a.m_bHasUAV, b.m_bHasUAV);
 		}
 
-		void load(GraphicsDevice& g, const std::vector<T>& data);
-
-		void release();
-		void reset();
+		void init(GraphicsDevice& g, const std::vector<T>& data);
+		void releaseGPU();
+		void createGPU();
 
 		//! binds the buffer as a shader resource view
 		void bindSRV(unsigned int slot = 0) const;
@@ -73,7 +93,7 @@ namespace ml {
 		void unbindSRV(unsigned int slot = 0) const;
 
 		const std::vector<T>& getData() const {
-			return m_image;
+			return m_buffer;
 		}
 
 		bool hasSRV() const {
@@ -96,6 +116,6 @@ namespace ml {
 
 }  // namespace ml
 
-#include "D3D11Buffer.inl"
+#include "D3D11Buffer.cpp"
 
 #endif  // APPLICATION_D3D11_D3D11Buffer_H_

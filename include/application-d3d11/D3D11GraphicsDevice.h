@@ -44,6 +44,7 @@ public:
     ~D3D11GraphicsDevice()
     {
 		if (m_assets.size()) {
+			std::cout << __FUNCTION__ " : unreleased assets found" << std::endl;
 			printAssets();
 			throw MLIB_EXCEPTION("found unreleased assets");
 		}

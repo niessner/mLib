@@ -252,8 +252,8 @@ namespace ml {
 		Intersection intersectionFirst(const vec2i &mouseCoord) const;
 		std::vector<Intersection> intersectionAll(const vec2i &mouseCoord) const;
 
-		void release();
-		void reset();
+		void releaseGPU();
+		void createGPU();
 		void onDeviceResize();
 
 		void render();

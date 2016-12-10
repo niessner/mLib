@@ -27,8 +27,8 @@ namespace ml {
 			const std::string& shaderModel = "vs_4_0",
 			const std::vector<std::pair<std::string, std::string>>& shaderMacros = std::vector<std::pair<std::string, std::string>>());
 
-		void release();
-		void reset();
+		void releaseGPU();
+		void createGPU();
 
 		void bind() const;
 

@@ -9,12 +9,15 @@ namespace ml {
 class GraphicsAsset
 {
 public:
-	virtual void release() = 0;
-	virtual void reset() = 0;
-
+	//! returns the asset name
 	virtual std::string getName() const {
-		return "unknown graphics asset";
+		return typeid(*this).name();
 	}
+	
+	//! releases all GPU parts
+	virtual void releaseGPU() = 0;
+	//! (re-)creates all GPU parts
+	virtual void createGPU() = 0;
 };
 
 }  // namespace ml

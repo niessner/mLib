@@ -7,11 +7,6 @@ const D3D11_INPUT_ELEMENT_DESC ml::D3D11TriMesh::layout[layoutElementCount] =
 	{ "texCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
-void ml::D3D11TriMesh::updateColors(GraphicsDevice &g, const std::vector<vec4f> &newValues)
-{
-	updateColors(newValues);
-}
-
 void ml::D3D11TriMesh::updateColors(const std::vector<vec4f> &newValues) {
 	auto &vertices = m_triMesh.getVertices();
 	if (newValues.size() != vertices.size()) {
@@ -20,19 +15,19 @@ void ml::D3D11TriMesh::updateColors(const std::vector<vec4f> &newValues) {
 	for (size_t i = 0; i < newValues.size(); i++) {
 		vertices[i].color = newValues[i];
 	}
-	reset();
+	createGPU();
 }
 
 
-void ml::D3D11TriMesh::release()
+void ml::D3D11TriMesh::releaseGPU()
 {
 	SAFE_RELEASE(m_vertexBuffer);
 	SAFE_RELEASE(m_indexBuffer);
 }
 
-void ml::D3D11TriMesh::reset()
+void ml::D3D11TriMesh::createGPU()
 {
-	release();
+	releaseGPU();
 	initVB(*m_graphics);
 	initIB(*m_graphics);
 }

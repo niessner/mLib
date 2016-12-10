@@ -5,23 +5,23 @@ namespace ml
 void D3D11Texture3D::load(GraphicsDevice &g, const Grid3<RGBColor> &data)
 {
     m_graphics = &g.castD3D11();
-    release();
+    releaseGPU();
     
     g.castD3D11().registerAsset(this);
     m_data = data;
 
-    reset();
+    createGPU();
 }
 
-void D3D11Texture3D::release()
+void D3D11Texture3D::releaseGPU()
 {
     SAFE_RELEASE(m_texture);
     SAFE_RELEASE(m_srv);
 }
 
-void D3D11Texture3D::reset()
+void D3D11Texture3D::createGPU()
 {
-    release();
+    releaseGPU();
 
     if (m_data.getDimX() == 0)
         return;

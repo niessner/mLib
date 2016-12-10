@@ -3,7 +3,7 @@ namespace ml
 {
 
 
-	void D3D11RenderTarget::release()
+	void D3D11RenderTarget::releaseGPU()
 	{
 		
 		for (unsigned int i = 0; i < getNumTargets(); i++) {
@@ -28,9 +28,9 @@ namespace ml
 		SAFE_RELEASE(m_captureDepth);
 	}
 
-	void D3D11RenderTarget::reset()
+	void D3D11RenderTarget::createGPU()
 	{
-		release();
+		releaseGPU();
 
 		if (m_width == 0 || m_height == 0)
 			return;

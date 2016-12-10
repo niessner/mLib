@@ -466,6 +466,9 @@
     <ClCompile Include="..\..\src\application-d3d11\D3D11PixelShader.cpp">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\include\application-d3d11\D3D11Buffer.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\pointCloud.hlsl">
@@ -476,9 +479,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\include\application-d3d11\D3D11Buffer.inl">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </None>
     <None Include="..\..\include\core-graphics\camera.inl">
       <Filter>mLibHeader\core-graphics</Filter>
     </None>

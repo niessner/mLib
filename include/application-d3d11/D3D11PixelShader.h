@@ -16,7 +16,7 @@ namespace ml {
 
 		~D3D11PixelShader()
 		{
-			release();
+			releaseGPU();
 		}
 
 		void load(
@@ -26,8 +26,8 @@ namespace ml {
 			const std::string& shaderModel = "ps_4_0",
 			const std::vector<std::pair<std::string, std::string>>& shaderMacros = std::vector<std::pair<std::string, std::string>>());
 
-		void release();
-		void reset();
+		void releaseGPU();
+		void createGPU();
 
 		void bind() const;
 

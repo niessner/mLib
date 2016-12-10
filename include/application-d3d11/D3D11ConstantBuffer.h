@@ -16,24 +16,23 @@ public:
 
 	~D3D11ConstantBuffer()
 	{
-		release();
+		releaseGPU();
 	}
 
 	void init(GraphicsDevice &g)
 	{
         m_graphics = &g.castD3D11();
-		reset();
+		createGPU();
 	}
 
-	void release()
+	void releaseGPU()
 	{
 		SAFE_RELEASE(m_buffer);
-		m_graphics->unregisterAsset(this);
 	}
 
-	void reset()
+	void createGPU()
 	{
-		release();
+		releaseGPU();
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory( &desc, sizeof(desc) );

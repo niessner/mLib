@@ -25,14 +25,14 @@ namespace ml {
 
 		~D3D11PointCloud()
 		{
-			release();
+			releaseGPU();
 		}
 
 		void load(GraphicsDevice& g, const D3D11PointCloud& pointCloud)
 		{
 			m_graphics = &g.castD3D11();
 			m_points = pointCloud.m_points;
-			reset();
+			createGPU();
 		}
 
 		template<class T>
@@ -48,11 +48,11 @@ namespace ml {
 				if (pointCloud.hasColors()) v.color = pointCloud.m_colors[i];
 				if (pointCloud.hasTexCoords()) v.texCoord = pointCloud.m_texCoords[i];
 			}
-			reset();
+			createGPU();
 		}
 
-		void release();
-		void reset();
+		void releaseGPU();
+		void createGPU();
 
 		void render() const;
 

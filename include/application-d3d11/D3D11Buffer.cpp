@@ -2,31 +2,29 @@
 namespace ml
 {
 	template <class T>
-	void D3D11Buffer<T>::load(GraphicsDevice& g, const std::vector<T>& data)
+	void D3D11Buffer<T>::init(GraphicsDevice& g, const std::vector<T>& data)
 	{
 		m_graphics = &g.castD3D11();
-		release();
+		releaseGPU();
 
 		g.castD3D11().registerAsset(this);
 		m_data = data;
 
-		reset();
+		createGPU();
 	}
 
 	template <class T>
-	void D3D11Buffer<T>::release()
+	void D3D11Buffer<T>::releaseGPU()
 	{
 		SAFE_RELEASE(m_buffer);
 		SAFE_RELEASE(m_srv);
 		SAFE_RELEASE(m_uav);
-
-		m_graphics->unregisterAsset(this);
 	}
 
 	template <class T>
-	void D3D11Buffer<T>::reset()
+	void D3D11Buffer<T>::createGPU()
 	{
-		release();
+		releaseGPU();
 
 		if (m_data.size() == 0) return;
 

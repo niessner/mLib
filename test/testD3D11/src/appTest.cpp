@@ -201,7 +201,10 @@ void AppTest::init(ml::ApplicationData &app)
 		bufferData[i] = m_mesh.getTriMesh().getVertices()[i].color;
 		//bufferData[i].x = 0.0f;
 	}
-	m_buffer.load(app.graphics, bufferData);
+	m_buffer.init(app.graphics, bufferData);
+
+	app.graphics.castD3D11().printAssets();
+	std::cout << "\nInit done!\n\n" << std::endl;
 }
 
 void AppTest::render(ml::ApplicationData &app)
@@ -231,7 +234,7 @@ void AppTest::render(ml::ApplicationData &app)
 	m_constants.bind(0);
 	m_pointCloud.render();
 
-	m_font.drawString(app.graphics, "FPS: " + ml::convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
+	m_font.drawString("FPS: " + ml::convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
 }
 
 void AppTest::resize(ml::ApplicationData &app)

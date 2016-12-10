@@ -9,30 +9,26 @@ namespace ml {
 class D3D11Font : GraphicsAsset
 {
 public:
-    D3D11Font()
-    {
+    D3D11Font()	{
         m_factory = nullptr;
         m_fontWrapper = nullptr;
     }
-    ~D3D11Font()
-    {
+    ~D3D11Font()	{
         SAFE_RELEASE(m_factory);
         SAFE_RELEASE(m_fontWrapper);
     }
 
-    void init(GraphicsDevice &g, const std::string &fontName)
-    {
+    void init(GraphicsDevice& g, const std::string& fontName){
 		m_graphics = &g.castD3D11();
         g.castD3D11().registerAsset(this);
         m_fontName = std::wstring(fontName.begin(), fontName.end());
-        reset();
+        createGPU();
     }
 
-    void drawString(GraphicsDevice &g, const std::string &text, const ml::vec2i &pos, const float fontHeight, RGBColor color) const
-    {
+    void drawString(const std::string& text, const ml::vec2i& pos, const float fontHeight, const RGBColor& color) const	{
         std::wstring wText(text.begin(), text.end());
         m_fontWrapper->DrawString(
-            &g.castD3D11().getContext(),
+			&m_graphics->getContext(),
             wText.c_str(),
             fontHeight,
             (FLOAT)pos.x,
@@ -42,25 +38,21 @@ public:
             );
     }
 
-    void drawStrings(GraphicsDevice &g, const std::vector< std::pair<std::string, RGBColor> > &text, const ml::vec2i &pos, const float fontHeight, UINT lineHeight) const
-    {
+    void drawStrings(const std::vector< std::pair<std::string, RGBColor> >& text, const ml::vec2i& pos, const float fontHeight, UINT lineHeight) const	{
         int lineIndex = 0;
         for (const auto &line : text)
         {
-            drawString(g, line.first, pos + ml::vec2i(0, lineHeight * lineIndex), fontHeight, line.second);
+            drawString(line.first, pos + ml::vec2i(0, lineHeight * lineIndex), fontHeight, line.second);
             lineIndex++;
         }
     }
 
-    void release()
-    {
+    void releaseGPU() {
         SAFE_RELEASE(m_factory);
         SAFE_RELEASE(m_fontWrapper);
     }
-    void reset()
-    {
-        //std::cout << "resetting fonts" << std::endl;
-        release();
+    void createGPU() {
+        releaseGPU();
         D3D_VALIDATE(FW1CreateFactory(FW1_VERSION, &m_factory));
         D3D_VALIDATE(m_factory->CreateFontWrapper(&m_graphics->getDevice(), m_fontName.c_str(), &m_fontWrapper));
     }

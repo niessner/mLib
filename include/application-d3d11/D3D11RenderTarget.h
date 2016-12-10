@@ -51,7 +51,7 @@ public:
 
 	~D3D11RenderTarget()
 	{
-		release();
+		releaseGPU();
 	}
 
     // create a new render target with given width and height. Also creates an equal-sized depth buffer.
@@ -66,11 +66,11 @@ public:
 
 		g.castD3D11().registerAsset(this);
 
-		reset();
+		createGPU();
 	}
 
-	void release();
-	void reset();
+	void releaseGPU();
+	void createGPU();
 
     // sets the render and depth buffers as the render target for the current device.
     // to return to the original graphics device render target, call bindRenderTarget() on the graphics device.

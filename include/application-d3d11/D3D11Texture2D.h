@@ -32,8 +32,10 @@ public:
         m_srv = t.m_srv; t.m_srv = nullptr;
         m_texture = t.m_texture; t.m_texture = nullptr;
     }
+	//TODO copy opaterator
+	//TODO swap
 
-    void operator= (D3D11Texture2D &&t)
+    void operator=(D3D11Texture2D &&t)
     { 
         m_image = std::move(t.m_image);
         m_graphics = t.m_graphics;
@@ -43,7 +45,7 @@ public:
 
     ~D3D11Texture2D()
 	{
-		release();
+		releaseGPU();
 	}
 
 	D3D11Texture2D(GraphicsDevice &g, const ColorImageR8G8B8A8& image)
@@ -54,8 +56,8 @@ public:
     }
     void load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image);
 
-	void release();
-	void reset();
+	void releaseGPU();
+	void createGPU();
 
 	void bind(unsigned int slot = 0) const;
 	void unbind(unsigned int slot = 0) const;

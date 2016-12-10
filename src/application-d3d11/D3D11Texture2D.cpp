@@ -5,23 +5,23 @@ namespace ml
 void D3D11Texture2D::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
 {
     m_graphics = &g.castD3D11();
-    release();
+    releaseGPU();
     
     g.castD3D11().registerAsset(this);
     m_image = image;
 
-    reset();
+    createGPU();
 }
 
-void D3D11Texture2D::release()
+void D3D11Texture2D::releaseGPU()
 {
     SAFE_RELEASE(m_texture);
     SAFE_RELEASE(m_srv);
 }
 
-void D3D11Texture2D::reset()
+void D3D11Texture2D::createGPU()
 {
-    release();
+    releaseGPU();
 
 	if (m_image.getWidth() == 0 || m_image.getHeight() == 0)
         return;

@@ -51,13 +51,13 @@ D3D11Canvas2D::Intersection D3D11Canvas2D::intersectionFirst(const vec2i &mouseC
     return result;
 }
 
-void D3D11Canvas2D::release()
+void D3D11Canvas2D::releaseGPU()
 {
 	clearElements();
 	m_graphics->unregisterAsset(this);
 }
 
-void D3D11Canvas2D::reset()
+void D3D11Canvas2D::createGPU()
 {
 
 }

@@ -32,7 +32,7 @@ public:
     }
     ~D3D11Texture3D()
 	{
-		release();
+		releaseGPU();
 	}
     D3D11Texture3D(GraphicsDevice &g, const Grid3<RGBColor> &data)
     {
@@ -42,8 +42,8 @@ public:
     }
     void load(GraphicsDevice &g, const Grid3<RGBColor> &data);
 
-	void release();
-	void reset();
+	void releaseGPU();
+	void createGPU();
 
     void bind(unsigned int slot = 0) const;
 

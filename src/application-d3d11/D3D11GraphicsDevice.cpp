@@ -317,7 +317,7 @@ void D3D11GraphicsDevice::unregisterAsset(GraphicsAsset* asset)
 
 void D3D11GraphicsDevice::printAssets()
 {
-	std::cout << "graphics assets: " << std::endl;
+	std::cout << "D3D11GraphicsDevice Assets: " << std::endl;
 	for (auto& asset : m_assets) {
 		std::cout << "\t[ " << asset->getName() << " ] " << std::endl;
 	}
