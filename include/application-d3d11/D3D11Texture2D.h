@@ -21,7 +21,7 @@ public:
 		m_texture = nullptr;
 		m_srv = nullptr;
 		if (t.isLoaded()) {
-			load(*t.m_graphics, t.getImage());
+			init(*t.m_graphics, t.getImage());
 		}
 	}
 
@@ -52,9 +52,9 @@ public:
     {
         m_texture = nullptr;
         m_srv = nullptr;
-        load(g, image);
+        init(g, image);
     }
-    void load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image);
+    void init(GraphicsDevice &g, const ColorImageR8G8B8A8 &image);
 
 	void releaseGPU();
 	void createGPU();

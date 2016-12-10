@@ -298,30 +298,27 @@ void D3D11GraphicsDevice::resize(const WindowWin32 &window)
 	}*/
 }
 
-void D3D11GraphicsDevice::registerAsset(GraphicsAsset* asset)
-{
-    m_assets.insert(asset);
-    //if (std::find(m_assets.begin(), m_assets.end(), asset) != m_assets.end()) m_assets.push_back(asset);
-}
-
-void D3D11GraphicsDevice::unregisterAsset(GraphicsAsset* asset)
-{
-	auto it = m_assets.find(asset);
-	if (it != m_assets.end()) {
-		m_assets.erase(it);
-	}
-	else {
-		throw MLIB_EXCEPTION("asset not found");
-	}
-}
-
-void D3D11GraphicsDevice::printAssets()
-{
-	std::cout << "D3D11GraphicsDevice Assets: " << std::endl;
-	for (auto& asset : m_assets) {
-		std::cout << "\t[ " << asset->getName() << " ] " << std::endl;
-	}
-}
+//void D3D11GraphicsDevice::registerAsset(GraphicsAsset* asset) {
+//    m_assets.insert(asset);
+//    //if (std::find(m_assets.begin(), m_assets.end(), asset) != m_assets.end()) m_assets.push_back(asset);
+//}
+//
+//void D3D11GraphicsDevice::unregisterAsset(GraphicsAsset* asset) {
+//	auto it = m_assets.find(asset);
+//	if (it != m_assets.end()) {
+//		m_assets.erase(it);
+//	}
+//	else {
+//		throw MLIB_EXCEPTION("asset not found");
+//	}
+//}
+//
+//void D3D11GraphicsDevice::printAssets() {
+//	std::cout << "D3D11GraphicsDevice Assets: " << std::endl;
+//	for (auto& asset : m_assets) {
+//		std::cout << "\t[ " << asset->getName() << " ] " << std::endl;
+//	}
+//}
 
 void D3D11GraphicsDevice::renderBeginFrame()
 {

@@ -23,8 +23,8 @@ void D3D11ShaderManager::registerShader(
 	// in case the shader exists return
 	if (m_shaders.count(shaderName) == 0) {
 		auto &shaders = m_shaders[shaderName];
-		shaders.vs.load(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
-		shaders.ps.load(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
+		shaders.vs.init(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
+		shaders.ps.init(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
 	}
 }
 
@@ -45,11 +45,11 @@ void D3D11ShaderManager::registerShaderWithGS(
 	// in case the shader exists return
 	if (m_shaders.count(shaderName) == 0) {
 		auto &shaders = m_shaders[shaderName];
-		shaders.vs.load(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
-		shaders.ps.load(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
+		shaders.vs.init(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
+		shaders.ps.init(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
 
 		if (entryPointGS != "") {
-			shaders.gs.load(*m_graphics, filename, entryPointGS, shaderModelGS, shaderMacros);
+			shaders.gs.init(*m_graphics, filename, entryPointGS, shaderModelGS, shaderMacros);
 		}
 	}
 }

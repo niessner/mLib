@@ -64,7 +64,7 @@ public:
 		m_textureFormats = formats;
 		m_bHasSRVs = createSRVs;
 
-		g.castD3D11().registerAsset(this);
+		//g.castD3D11().registerAsset(this);
 
 		createGPU();
 	}

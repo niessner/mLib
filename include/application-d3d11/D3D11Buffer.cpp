@@ -7,7 +7,7 @@ namespace ml
 		m_graphics = &g.castD3D11();
 		releaseGPU();
 
-		g.castD3D11().registerAsset(this);
+		//g.castD3D11().registerAsset(this);
 		m_data = data;
 
 		createGPU();

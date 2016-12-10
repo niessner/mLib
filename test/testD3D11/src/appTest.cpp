@@ -203,7 +203,9 @@ void AppTest::init(ml::ApplicationData &app)
 	}
 	m_buffer.init(app.graphics, bufferData);
 
-	app.graphics.castD3D11().printAssets();
+	D3D11Canvas2D canvas = m_canvas;
+
+	//app.graphics.castD3D11().printAssets();
 	std::cout << "\nInit done!\n\n" << std::endl;
 }
 

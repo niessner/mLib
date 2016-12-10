@@ -19,7 +19,7 @@ namespace ml {
 			releaseGPU();
 		}
 
-		void load(
+		void init(
 			GraphicsDevice &g, 
 			const std::string &filename, 
 			const std::string& entryPoint = "geometryShaderMain", 

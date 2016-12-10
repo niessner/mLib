@@ -20,7 +20,7 @@ public:
 
     void init(GraphicsDevice& g, const std::string& fontName){
 		m_graphics = &g.castD3D11();
-        g.castD3D11().registerAsset(this);
+        //g.castD3D11().registerAsset(this);
         m_fontName = std::wstring(fontName.begin(), fontName.end());
         createGPU();
     }

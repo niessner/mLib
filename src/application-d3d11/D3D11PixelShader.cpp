@@ -1,5 +1,5 @@
 
-void ml::D3D11PixelShader::load(
+void ml::D3D11PixelShader::init(
 	GraphicsDevice &g, 
 	const std::string &filename, 
 	const std::string& entryPoint, 
@@ -12,7 +12,7 @@ void ml::D3D11PixelShader::load(
 	SAFE_RELEASE(m_blob);
 
 	m_filename = filename;
-	g.castD3D11().registerAsset(this);
+	//g.castD3D11().registerAsset(this);
 
 	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel, shaderMacros);
 	MLIB_ASSERT_STR(m_blob != nullptr, "CompileShader failed");

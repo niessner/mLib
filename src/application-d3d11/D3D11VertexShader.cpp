@@ -1,5 +1,5 @@
 
-void ml::D3D11VertexShader::load(
+void ml::D3D11VertexShader::init(
 	GraphicsDevice &g,
 	const std::string &filename,
 	const std::string& entryPoint,
@@ -16,7 +16,7 @@ void ml::D3D11VertexShader::load(
 	SAFE_RELEASE(m_blob);
 
 	m_filename = filename;
-	g.castD3D11().registerAsset(this);
+	//g.castD3D11().registerAsset(this);
 
 	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel, shaderMacros);
 	if (m_blob == nullptr) throw MLIB_EXCEPTION("CompileShader failed");

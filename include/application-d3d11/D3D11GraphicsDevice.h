@@ -43,11 +43,11 @@ public:
 
     ~D3D11GraphicsDevice()
     {
-		if (m_assets.size()) {
-			std::cout << __FUNCTION__ " : unreleased assets found" << std::endl;
-			printAssets();
-			throw MLIB_EXCEPTION("found unreleased assets");
-		}
+		//if (m_assets.size()) {
+		//	std::cout << __FUNCTION__ " : unreleased assets found" << std::endl;
+		//	printAssets();
+		//	throw MLIB_EXCEPTION("found unreleased assets");
+		//}
 
 		if (!m_bExternallyCreated) {
 			SAFE_RELEASE(m_rasterState);
@@ -96,12 +96,13 @@ public:
     void renderBeginFrame();
     void renderEndFrame(bool vsync);
 
-	//! registers an asset from the device
-    void registerAsset(GraphicsAsset* asset);
-	//! unregisters an asset from the device
-	void unregisterAsset(GraphicsAsset* asset);
-	//! lists all assets
-	void printAssets();
+	//this is a) not really needed and doesn't work with move semantics because the asset pointers change
+	////! registers an asset from the device
+	//void registerAsset(GraphicsAsset* asset);
+	////! unregisters an asset from the device
+	//void unregisterAsset(GraphicsAsset* asset);
+	////! lists all assets
+	//void printAssets();
 
     void setCullMode(D3D11_CULL_MODE mode);
     void toggleCullMode();
@@ -184,7 +185,7 @@ private:
 	
 	bool m_bExternallyCreated; 
 protected:
-	void captureBackBufferInternal(ColorImageR8G8B8A8 &result);
+	void captureBackBufferInternal(ColorImageR8G8B8A8& result);
 };
 
 }  // namespace ml

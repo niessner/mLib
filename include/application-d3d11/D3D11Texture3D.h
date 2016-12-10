@@ -38,9 +38,9 @@ public:
     {
         m_texture = nullptr;
         m_srv = nullptr;
-        load(g, data);
+        init(g, data);
     }
-    void load(GraphicsDevice &g, const Grid3<RGBColor> &data);
+    void init(GraphicsDevice &g, const Grid3<RGBColor> &data);
 
 	void releaseGPU();
 	void createGPU();

@@ -26,10 +26,12 @@ void D3D11Canvas2D::ElementBillboard::render()
     m_mesh.render();
 }
 
-void D3D11Canvas2D::init(GraphicsDevice &g)
+void D3D11Canvas2D::init(GraphicsDevice& g)
 {
-    m_graphics = &g.castD3D11();
-	m_graphics->registerAsset(this);	//register to get resize, reset, and release events
+	releaseGPU();
+
+	m_graphics = &g.castD3D11();
+	//m_graphics->registerAsset(this);
 }
 
 D3D11Canvas2D::Intersection D3D11Canvas2D::intersectionFirst(const vec2i &mouseCoord) const
@@ -54,7 +56,6 @@ D3D11Canvas2D::Intersection D3D11Canvas2D::intersectionFirst(const vec2i &mouseC
 void D3D11Canvas2D::releaseGPU()
 {
 	clearElements();
-	m_graphics->unregisterAsset(this);
 }
 
 void D3D11Canvas2D::createGPU()
@@ -65,7 +66,7 @@ void D3D11Canvas2D::createGPU()
 void D3D11Canvas2D::resize()
 {
     for (auto &e : m_namedElements)
-        e.second->onDeviceResize();
+        e.second->resize();
     for (Element *e : m_unnamedElements)
         e->resize();
 }

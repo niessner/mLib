@@ -2,12 +2,12 @@
 namespace ml
 {
 
-void D3D11Texture3D::load(GraphicsDevice &g, const Grid3<RGBColor> &data)
+void D3D11Texture3D::init(GraphicsDevice &g, const Grid3<RGBColor> &data)
 {
     m_graphics = &g.castD3D11();
     releaseGPU();
     
-    g.castD3D11().registerAsset(this);
+    //g.castD3D11().registerAsset(this);
     m_data = data;
 
     createGPU();

@@ -20,7 +20,7 @@ namespace ml {
 			SAFE_RELEASE(m_blob);
 			SAFE_RELEASE(m_standardLayout);
 		}
-		void load(
+		void init(
 			GraphicsDevice &g, 
 			const std::string &filename, 
 			const std::string& entryPoint = "vertexShaderMain", 

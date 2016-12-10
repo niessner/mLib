@@ -2,12 +2,12 @@
 namespace ml
 {
 
-void D3D11Texture2D::load(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
+void D3D11Texture2D::init(GraphicsDevice &g, const ColorImageR8G8B8A8 &image)
 {
     m_graphics = &g.castD3D11();
     releaseGPU();
     
-    g.castD3D11().registerAsset(this);
+    //g.castD3D11().registerAsset(this);
     m_image = image;
 
     createGPU();
