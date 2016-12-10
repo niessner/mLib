@@ -79,7 +79,7 @@ namespace ml
 		return *this;
 	}
 
-	template <class T> Grid3<T>& Grid3<T>::operator = (Grid3<T> &&grid)
+	template <class T> Grid3<T>& Grid3<T>::operator=(Grid3<T> &&grid)
 	{
 		swap(*this, grid);
 		return *this;

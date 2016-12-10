@@ -45,21 +45,21 @@ namespace ml {
 		}
 
 		BinaryGrid3(BinaryGrid3&& other) {
-			m_dimY = other.m_dimY;
-			m_dimX = other.m_dimX;
-			m_dimZ = other.m_dimZ;
-
-			m_data = other.m_data;
-
-			other.m_dimX = 0;
-			other.m_dimY = 0;
-			other.m_dimZ = 0;
-
-			other.m_data = nullptr;
+			m_dimX = m_dimY = m_dimZ = 0;
+			m_data = nullptr;
+			swap(*this, other);
 		}
 
 		~BinaryGrid3() {
 			SAFE_DELETE_ARRAY(m_data);
+		}
+
+		//! adl swap
+		friend void swap(BinaryGrid3& a, BinaryGrid3& b) {
+			std::swap(a.m_dimX, b.m_dimX);
+			std::swap(a.m_dimY, b.m_dimY);
+			std::swap(a.m_dimZ, b.m_dimZ);
+			std::swap(a.m_data, b.m_data);
 		}
 
 
@@ -101,19 +101,7 @@ namespace ml {
 		}
 
 		inline BinaryGrid3& operator=(BinaryGrid3&& other) {
-			if (this != &other) {
-				SAFE_DELETE_ARRAY(m_data);
-
-				m_dimX = other.m_dimX;
-				m_dimY = other.m_dimY;
-				m_dimZ = other.m_dimZ;
-				m_data = other.m_data;
-
-				other.m_dimX = 0;
-				other.m_dimY = 0;
-				other.m_dimZ = 0;
-				other.m_data = nullptr;
-			}
+			swap(*this, other);
 			return *this;
 		}
 
@@ -329,7 +317,7 @@ namespace ml {
 		return s;
 	}
 
-	//! seralization (input)
+	//! serialization (input)
 	template<class BinaryDataBuffer, class BinaryDataCompressor>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BinaryGrid3& g) {
 		UINT64 dimX, dimY, dimZ;

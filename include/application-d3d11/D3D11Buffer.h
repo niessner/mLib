@@ -8,16 +8,25 @@ namespace ml {
 	class D3D11Buffer : public GraphicsAsset
 	{
 	public:
-		D3D11Buffer()
+		D3D11Buffer(bool _withSRV = true, bool _withUAV = false)
 		{
 			m_graphics = nullptr;
 			m_buffer = nullptr;
 			m_srv = nullptr;
 			m_uav = nullptr;
 			
-			m_bHasSRV = true;	//TODO add parameter
-			m_bHasUAV = false;	//TODO add parameter
+			m_bHasSRV = _withSRV;	//TODO add parameter
+			m_bHasUAV = _withUAV;	//TODO add parameter
 		}
+
+		D3D11Buffer(GraphicsDevice& g, const std::vector<T>& data)
+		{
+			m_buffer = nullptr;
+			m_srv = nullptr;
+			m_uav = nullptr;
+			load(g, data);
+		}
+
 		//
 		// TODO: implement other copy constructors similar to D3D11Mesh
 		//
@@ -41,33 +50,31 @@ namespace ml {
 			m_uav = t.m_uav; t.m_uav = nullptr;
 			m_bHasSRV = t.m_bHasSRV;
 			m_bHasUAV = t.m_bHasUAV;
-		}
+		}		
 
 		~D3D11Buffer()
 		{
 			release();
 		}
 
-		D3D11Buffer(GraphicsDevice& g, const std::vector<T>& data)
-		{
-			m_buffer = nullptr;
-			m_srv = nullptr;
-			m_uav = nullptr;
-			load(g, data);
+		//! adl swap
+		friend void swap() {
+
 		}
+
 		void load(GraphicsDevice& g, const std::vector<T>& data);
 
 		void release();
 		void reset();
 
+		//! binds the buffer as a shader resource view
 		void bindSRV(unsigned int slot = 0) const;
+		//! unbinds the shader resource view
 		void unbindSRV(unsigned int slot = 0) const;
 
-		const std::vector<T>& getData() const
-		{
+		const std::vector<T>& getData() const {
 			return m_image;
 		}
-
 
 		bool hasSRV() const {
 			return m_bHasSRV;

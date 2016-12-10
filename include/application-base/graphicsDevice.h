@@ -18,7 +18,7 @@ public:
 	virtual void resize(const WindowWin32 &window) = 0;
 	virtual void renderBeginFrame() = 0;
 	//! clears the back buffer (color and depth)
-    virtual void clear(const ml::vec4f &clearColor = vec4f(0, 0, 0, 0), float clearDepth = 1.0f) = 0;
+    virtual void clear(const vec4f& clearColor = vec4f(0, 0, 0, 0), float clearDepth = 1.0f) = 0;
 	virtual void renderEndFrame(bool vsync) = 0;
 
     void captureBackBuffer(ColorImageR8G8B8A8& result)
@@ -33,7 +33,7 @@ public:
         return result;
     }
 
-	GraphicsDeviceType type() const
+	GraphicsDeviceType getType() const
 	{
 		return m_type;
 	}
@@ -44,7 +44,7 @@ public:
 	}
 
 protected:
-	virtual void captureBackBufferInternal(ColorImageR8G8B8A8 &result) = 0;
+	virtual void captureBackBufferInternal(ColorImageR8G8B8A8& result) = 0;
 	GraphicsDeviceType m_type;
 };
 

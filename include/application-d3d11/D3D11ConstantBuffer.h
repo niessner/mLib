@@ -28,6 +28,7 @@ public:
 	void release()
 	{
 		SAFE_RELEASE(m_buffer);
+		m_graphics->unregisterAsset(this);
 	}
 
 	void reset()

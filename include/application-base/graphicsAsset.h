@@ -5,13 +5,16 @@
 namespace ml {
 
 
-class GraphicsDevice;
+
 class GraphicsAsset
 {
 public:
 	virtual void release() = 0;
 	virtual void reset() = 0;
-	virtual void onDeviceResize() {}
+
+	virtual std::string getName() const {
+		return "unknown graphics asset";
+	}
 };
 
 }  // namespace ml

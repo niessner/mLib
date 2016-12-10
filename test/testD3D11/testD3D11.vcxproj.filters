@@ -427,6 +427,45 @@
     <ClCompile Include="src\mLibSource.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
     <ClCompile Include="src\appTest.cpp" />
+    <ClCompile Include="..\..\src\application-d3d11\D3D11PointCloud.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11RenderTarget.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11ShaderManager.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11Texture2D.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11Texture3D.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11TriMesh.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11Utility.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11VertexShader.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11AssetRenderer.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11Canvas2D.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11GeometryShader.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11GraphicsDevice.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\application-d3d11\D3D11PixelShader.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shaders\pointCloud.hlsl">

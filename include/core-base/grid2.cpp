@@ -57,7 +57,7 @@ namespace ml
 		SAFE_DELETE_ARRAY(m_data);
 	}
 
-	template <class T> Grid2<T>& Grid2<T>::operator = (const Grid2<T> &grid)
+	template <class T> Grid2<T>& Grid2<T>::operator=(const Grid2<T> &grid)
 	{
 		SAFE_DELETE_ARRAY(m_data)
 		m_dimX = grid.m_dimX;
@@ -71,7 +71,7 @@ namespace ml
 		return *this;
 	}
 
-	template <class T> Grid2<T>& Grid2<T>::operator = (Grid2<T> &&grid)
+	template <class T> Grid2<T>& Grid2<T>::operator=(Grid2<T> &&grid)
 	{
 		swap(*this, grid);
 		return *this;

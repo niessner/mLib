@@ -19,6 +19,8 @@ namespace ml
 		SAFE_RELEASE(m_buffer);
 		SAFE_RELEASE(m_srv);
 		SAFE_RELEASE(m_uav);
+
+		m_graphics->unregisterAsset(this);
 	}
 
 	template <class T>

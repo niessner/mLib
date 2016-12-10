@@ -54,6 +54,7 @@ D3D11Canvas2D::Intersection D3D11Canvas2D::intersectionFirst(const vec2i &mouseC
 void D3D11Canvas2D::release()
 {
 	clearElements();
+	m_graphics->unregisterAsset(this);
 }
 
 void D3D11Canvas2D::reset()
