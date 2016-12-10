@@ -14,6 +14,7 @@ public:
 		return typeid(*this).name();
 	}
 	
+protected:
 	//! releases all GPU parts
 	virtual void releaseGPU() = 0;
 	//! (re-)creates all GPU parts

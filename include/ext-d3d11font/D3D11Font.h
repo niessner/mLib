@@ -47,17 +47,17 @@ public:
         }
     }
 
-    void releaseGPU() {
-        SAFE_RELEASE(m_factory);
-        SAFE_RELEASE(m_fontWrapper);
-    }
-    void createGPU() {
-        releaseGPU();
-        D3D_VALIDATE(FW1CreateFactory(FW1_VERSION, &m_factory));
-        D3D_VALIDATE(m_factory->CreateFontWrapper(&m_graphics->getDevice(), m_fontName.c_str(), &m_fontWrapper));
-    }
-
 private:
+	void releaseGPU() {
+		SAFE_RELEASE(m_factory);
+		SAFE_RELEASE(m_fontWrapper);
+	}
+	void createGPU() {
+		releaseGPU();
+		D3D_VALIDATE(FW1CreateFactory(FW1_VERSION, &m_factory));
+		D3D_VALIDATE(m_factory->CreateFontWrapper(&m_graphics->getDevice(), m_fontName.c_str(), &m_fontWrapper));
+	}
+
 	D3D11GraphicsDevice *m_graphics;
     IFW1Factory *m_factory;
     IFW1FontWrapper *m_fontWrapper;

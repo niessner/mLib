@@ -47,7 +47,7 @@ namespace ml {
 
 			//! render the element: takes care for shader binding, etc.,
 			virtual void render() = 0;
-			virtual void onDeviceResize() {};
+			virtual void resize() {};
 			virtual bool intersects(const vec2i &mouseCoord, Intersection &intersection) const
 			{
 				return false;
@@ -107,10 +107,10 @@ namespace ml {
 				m_id = id;
 				m_box = box;
 				m_tex.load(g, image);
-				onDeviceResize();
+				resize();
 			}
 
-			void onDeviceResize();
+			void resize();
 			void render();
 			bool intersects(const vec2i &mouseCoord, Intersection& intersection) const;
 
@@ -254,7 +254,7 @@ namespace ml {
 
 		void releaseGPU();
 		void createGPU();
-		void onDeviceResize();
+		void resize();
 
 		void render();
 		void render(const std::string& elementId);

@@ -239,7 +239,7 @@ void AppTest::render(ml::ApplicationData &app)
 
 void AppTest::resize(ml::ApplicationData &app)
 {
-	m_canvas.onDeviceResize();
+	m_canvas.resize();
 	m_camera.updateAspectRatio((float)app.window.getWidth() / app.window.getHeight());
 
 }

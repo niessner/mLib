@@ -11,7 +11,7 @@ bool D3D11Canvas2D::ElementBillboard::intersects(const vec2i &mouseCoord, D3D11C
     return false;
 }
 
-void D3D11Canvas2D::ElementBillboard::onDeviceResize()
+void D3D11Canvas2D::ElementBillboard::resize()
 {
     bbox2f boxNdc;
     boxNdc.include(m_graphics->pixelToNDC(m_box.getMin()));
@@ -62,12 +62,12 @@ void D3D11Canvas2D::createGPU()
 
 }
 
-void D3D11Canvas2D::onDeviceResize()
+void D3D11Canvas2D::resize()
 {
     for (auto &e : m_namedElements)
         e.second->onDeviceResize();
     for (Element *e : m_unnamedElements)
-        e->onDeviceResize();
+        e->resize();
 }
 
 void D3D11Canvas2D::render()
