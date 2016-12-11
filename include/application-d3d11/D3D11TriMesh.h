@@ -41,7 +41,7 @@ public:
 		m_graphics = nullptr;
 		m_vertexBuffer = nullptr;
 		m_indexBuffer = nullptr;
-		std::swap(*this, t);
+		swap(*this, t);
 	}
 
 	~D3D11TriMesh() {
@@ -55,7 +55,7 @@ public:
 
 	//! move operator
 	void operator=(D3D11TriMesh&& t) {
-		std::swap(*this, t);
+		swap(*this, t);
 	}
 
 	//! adl swap

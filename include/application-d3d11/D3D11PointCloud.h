@@ -28,7 +28,7 @@ namespace ml {
 		D3D11PointCloud(D3D11PointCloud&& t) {
 			m_graphics = nullptr;
 			m_vertexBuffer = nullptr;
-			std::swap(*this, t);
+			swap(*this, t);
 		}
 
 		~D3D11PointCloud() {
@@ -42,7 +42,7 @@ namespace ml {
 
 		//! move operator
 		void operator=(D3D11PointCloud&& t) {
-			std::swap(*this, t);
+			swap(*this, t);
 		}
 
 		//! adl swap

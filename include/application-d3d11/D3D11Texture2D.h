@@ -34,7 +34,7 @@ public:
 		m_graphics = nullptr;
 		m_texture = nullptr;
 		m_srv = nullptr;
-		std::swap(*this, t);
+		swap(*this, t);
     }
 
 	~D3D11Texture2D() {
@@ -47,7 +47,7 @@ public:
 	}
 	//! move operator
     void operator=(D3D11Texture2D&& t) { 
-		std::swap(*this, t);
+		swap(*this, t);
     }
 
 	//! adl swap
@@ -82,5 +82,7 @@ private:
 };
 
 }  // namespace ml
+
+#include "D3D11Texture2D.cpp"
 
 #endif  // APPLICATION_D3D11_D3D11TEXTURE2D_H_

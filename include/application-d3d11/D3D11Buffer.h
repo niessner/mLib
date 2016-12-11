@@ -51,7 +51,7 @@ namespace ml {
 			m_bHasSRV = false;
 			m_bHasUAV = false;
 
-			std::swap(*this, t);
+			swap(*this, t);
 		}
 
 		~D3D11Buffer()	{

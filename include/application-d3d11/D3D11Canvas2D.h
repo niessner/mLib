@@ -235,7 +235,7 @@ namespace ml {
 		//! move constructor
 		D3D11Canvas2D(D3D11Canvas2D&& other) {
 			m_graphics = nullptr;
-			std::swap(*this, other);
+			swap(*this, other);
 		}
 
 		~D3D11Canvas2D() {
@@ -261,7 +261,7 @@ namespace ml {
 		}
 		//! move operator
 		void operator=(D3D11Canvas2D&& other) {
-			std::swap(*this, other);
+			swap(*this, other);
 		}
 			 
 		void init(GraphicsDevice& g);

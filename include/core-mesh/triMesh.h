@@ -237,8 +237,9 @@ namespace ml {
 			m_bHasTexCoords = other.m_bHasTexCoords;
 			m_bHasColors = other.m_bHasColors;
 		}
+
 		TriMesh(TriMesh&& t) {
-			std::swap(*this, t);
+			swap(*this, t);
 		}
 
 

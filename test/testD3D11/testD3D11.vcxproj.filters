@@ -436,12 +436,6 @@
     <ClCompile Include="..\..\src\application-d3d11\D3D11ShaderManager.cpp">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\application-d3d11\D3D11Texture2D.cpp">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\application-d3d11\D3D11Texture3D.cpp">
-      <Filter>mLibHeader\application-D3D11</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\application-d3d11\D3D11TriMesh.cpp">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClCompile>
@@ -467,6 +461,12 @@
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClCompile>
     <ClCompile Include="..\..\include\application-d3d11\D3D11Buffer.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\application-d3d11\D3D11Texture2D.cpp">
+      <Filter>mLibHeader\application-D3D11</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\include\application-d3d11\D3D11Texture3D.cpp">
       <Filter>mLibHeader\application-D3D11</Filter>
     </ClCompile>
   </ItemGroup>

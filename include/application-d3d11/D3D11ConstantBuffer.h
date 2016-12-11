@@ -13,8 +13,39 @@ public:
 		m_buffer = nullptr;
 	}
 
+	//! copy constructor
+	D3D11ConstantBuffer(const D3D11ConstantBuffer& other) {
+		m_graphics = nullptr;
+		m_buffer = nullptr;
+		init(*other.m_graphics);
+		update(other.getData());
+	}
+
+	//! move constructor
+	D3D11ConstantBuffer(D3D11ConstantBuffer&& other) {
+		m_graphics = nullptr;
+		m_buffer = nullptr;
+		swap(*this, other);
+	}
+
 	~D3D11ConstantBuffer() {
 		releaseGPU();
+	}
+
+	//! assignment operator
+	void operator=(const D3D11ConstantBuffer& other) {
+		init(other.m_graphics);
+		update(other.getData());
+	}
+
+	void operator=(const D3D11ConstantBuffer&& other) {
+		swap(*this, other);
+	}
+
+	//! adl swap
+	friend void swap(D3D11ConstantBuffer& a, D3D11ConstantBuffer& b) {
+		std::swap(a.m_graphics, b.m_graphics);
+		std::swap(a.m_buffer, b.m_buffer);
 	}
 
 	void init(GraphicsDevice& g) {
@@ -44,6 +75,7 @@ public:
     }
 
 	void update(const T& data) {
+		m_data = data;
         m_graphics->getContext().UpdateSubresource(m_buffer, 0, nullptr, &data, 0, 0);
 	}
 
@@ -64,9 +96,14 @@ public:
 		m_graphics->getContext()->PSSetConstantBuffers(constantBufferIndex, 1, buffNULL);
 	}
 
+	const T& getData() const {
+		return m_data;
+	}
+
 private:
-	D3D11GraphicsDevice *m_graphics;
-	ID3D11Buffer *m_buffer;
+	D3D11GraphicsDevice* m_graphics;
+	T m_data;
+	ID3D11Buffer* m_buffer;
 };
 
 }  // namespace ml
