@@ -42,7 +42,7 @@ public:
 	}
 
 	//! assignment operator
-	void operator=(D3D11Texture2D& t) {
+	void operator=(const D3D11Texture2D& t) {
 		init(*t.m_graphics, t.getImage());
 	}
 	//! move operator

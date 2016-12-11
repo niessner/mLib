@@ -2,56 +2,65 @@
 namespace ml
 {
 
-void D3D11Texture3D::init(GraphicsDevice &g, const Grid3<RGBColor> &data)
-{
-    m_graphics = &g.castD3D11();
-    releaseGPU();
-    
-    //g.castD3D11().registerAsset(this);
-    m_data = data;
+	template<class T>
+	void D3D11Texture3D<T>::init(GraphicsDevice &g, const Grid3<T>& data) {
+		m_graphics = &g.castD3D11();
+		m_data = data;
+		createGPU();
+	}
 
-    createGPU();
-}
+	template<class T>
+	void D3D11Texture3D<T>::releaseGPU() {
+		SAFE_RELEASE(m_texture);
+		SAFE_RELEASE(m_srv);
+	}
 
-void D3D11Texture3D::releaseGPU()
-{
-    SAFE_RELEASE(m_texture);
-    SAFE_RELEASE(m_srv);
-}
+	template<class T>
+	void D3D11Texture3D<T>::createGPU() {
+		releaseGPU();
 
-void D3D11Texture3D::createGPU()
-{
-    releaseGPU();
+		if (m_data.getNumElements() == 0) return;
 
-    if (m_data.getDimX() == 0)
-        return;
+		auto &device = m_graphics->getDevice();
+		auto &context = m_graphics->getContext();
 
-    auto &device = m_graphics->getDevice();
-	auto &context = m_graphics->getContext();
+		D3D11_TEXTURE3D_DESC desc;
+		desc.Width = (UINT)m_data.getDimX();
+		desc.Height = (UINT)m_data.getDimY();
+		desc.Depth = (UINT)m_data.getDimZ();
+		desc.MipLevels = 0;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	//TOOD
+		desc.Usage = D3D11_USAGE_DEFAULT;
+		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
-    D3D11_TEXTURE3D_DESC desc;
-    desc.Width = (UINT)m_data.getDimX();
-	desc.Height = (UINT)m_data.getDimY();
-	desc.Depth = (UINT)m_data.getDimZ();
-    desc.MipLevels = 0;
-    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    desc.Usage = D3D11_USAGE_DEFAULT;
-    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-    desc.CPUAccessFlags = 0;
-    desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+		D3D_VALIDATE(device.CreateTexture3D(&desc, nullptr, &m_texture));
+		D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_srv));
 
-    D3D_VALIDATE(device.CreateTexture3D(&desc, nullptr, &m_texture));
-    D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_srv));
+		context.UpdateSubresource(m_texture, 0, nullptr, m_data.getData(), (UINT)m_data.getDimX() * sizeof(RGBColor), (UINT)m_data.getDimX() * (UINT)m_data.getDimY() * sizeof(RGBColor));
 
-	context.UpdateSubresource(m_texture, 0, nullptr, m_data.getData(), (UINT)m_data.getDimX() * sizeof(RGBColor), (UINT)m_data.getDimX() * (UINT)m_data.getDimY() * sizeof(RGBColor));
+		context.GenerateMips(m_srv);
+	}
 
-    context.GenerateMips(m_srv);
-}
+	template<class T>
+	void D3D11Texture3D<T>::bind(unsigned int slot /* = 0 */) const {
+		if (m_srv == nullptr) return;
+		m_graphics->getContext().VSSetShaderResources(slot, 1, &m_srv);
+		m_graphics->getContext().GSSetShaderResources(slot, 1, &m_srv);
+		m_graphics->getContext().HSSetShaderResources(slot, 1, &m_srv);
+		m_graphics->getContext().DSSetShaderResources(slot, 1, &m_srv);
+		m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
+	}
 
-void D3D11Texture3D::bind(unsigned int slot /* = 0 */) const
-{
-    if (m_srv == nullptr) return;
-	m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
-}
+	template<class T>
+	void D3D11Texture3D<T>::unbind(unsigned int slot /* = 0 */) const {
+		ID3D11ShaderResourceView* srvNULL = nullptr;
+		m_graphics->getContext().VSSetShaderResources(slot, 1, &srvNULL);
+		m_graphics->getContext().GSSetShaderResources(slot, 1, &srvNULL);
+		m_graphics->getContext().HSSetShaderResources(slot, 1, &srvNULL);
+		m_graphics->getContext().DSSetShaderResources(slot, 1, &srvNULL);
+		m_graphics->getContext().PSSetShaderResources(slot, 1, &srvNULL);
+	}
 
 }
