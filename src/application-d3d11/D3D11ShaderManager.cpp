@@ -29,7 +29,7 @@ void D3D11ShaderManager::registerShader(
 }
 
 void D3D11ShaderManager::registerShaderWithGS(
-	const std::string&filename,
+	const std::string& filename,
 	const std::string& shaderName,
 	const std::string& entryPointVS,
 	const std::string& shaderModelVS,
@@ -60,7 +60,7 @@ void D3D11ShaderManager::bindShaders(const std::string& shaderName) const
 
 	shaders.vs.bind();
 	shaders.ps.bind();
-	if (shaders.gs.exists()) shaders.gs.bind();
+	if (shaders.gs.isInit()) shaders.gs.bind();
 	else m_graphics->getContext().GSSetShader(nullptr, nullptr, 0);
 }
 

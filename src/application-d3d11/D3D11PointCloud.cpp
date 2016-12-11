@@ -20,8 +20,7 @@ void ml::D3D11PointCloud::releaseGPU()
 	SAFE_RELEASE(m_vertexBuffer);
 }
 
-void ml::D3D11PointCloud::createGPU()
-{
+void ml::D3D11PointCloud::createGPU() {
 	releaseGPU();
 	initVB(*m_graphics);
 }
