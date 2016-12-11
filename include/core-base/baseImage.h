@@ -1353,19 +1353,19 @@ namespace ml {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_invalidValue = vec4uc(0, 0, 0, 0);
 		}
-        ColorImageR8G8B8A8(const vec2i &dimensions) : BaseImage(dimensions.x, dimensions.y) {
-            m_format = Image::FORMAT_ColorImageR8G8B8A8;
-            m_invalidValue = vec4uc(0, 0, 0, 0);
-        }
+		ColorImageR8G8B8A8(const vec2i &dimensions) : BaseImage(dimensions.x, dimensions.y) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_invalidValue = vec4uc(0, 0, 0, 0);
+		}
 		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4uc* data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_invalidValue = vec4uc(0, 0, 0, 0);
 		}
-        ColorImageR8G8B8A8(unsigned int width, unsigned int height, vec4uc clearValue) : BaseImage(width, height) {
-            m_format = Image::FORMAT_ColorImageR8G8B8A8;
-            m_invalidValue = vec4uc(0, 0, 0, 0);
-            setPixels(clearValue);
-        }
+		ColorImageR8G8B8A8(unsigned int width, unsigned int height, vec4uc clearValue) : BaseImage(width, height) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_invalidValue = vec4uc(0, 0, 0, 0);
+			setPixels(clearValue);
+		}
 		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4f* data, float scale = 255.0f) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_invalidValue = vec4uc(0, 0, 0, 0);
@@ -1398,7 +1398,7 @@ namespace ml {
 				}
 			}
 		}
-		
+
 		ColorImageR8G8B8A8(const BaseImage<float>& other, float scale = 255.0f) : BaseImage(other.getWidth(), other.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
 			m_invalidValue = vec4uc(0, 0, 0, 0);
@@ -1433,6 +1433,11 @@ namespace ml {
 			}
 		}
 
+		ColorImageR8G8B8A8(const BaseImage<vec4uc>& other) : BaseImage(other.getWidth(), other.getHeight(), other.getData()) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_invalidValue = other.getInvalidValue();			
+		}
+
         ColorImageR8G8B8A8 getSubregion(const bbox2i &rect) const {
             ColorImageR8G8B8A8 result(rect.getExtentX(), rect.getExtentY());
             for (const auto &p : result)
@@ -1463,6 +1468,11 @@ namespace ml {
 
 			return res;
 		}
+
+		//operator BaseImage<vec4uc>() const {
+		//	BaseImage<vec4uc> res(*this);
+		//	return res;
+		//}
 	};
 
 	typedef ColorImageR32G32B32	PointImage;

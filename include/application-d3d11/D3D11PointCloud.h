@@ -8,36 +8,59 @@ namespace ml {
 	class D3D11PointCloud : public GraphicsAsset
 	{
 	public:
-
-		D3D11PointCloud()
-		{
+		D3D11PointCloud() {
 			m_graphics = nullptr;
 			m_vertexBuffer = nullptr;
 		}
 
 		template<class T>
-		D3D11PointCloud(GraphicsDevice& g, const PointCloud<T>& pointCloud)
-		{
+		D3D11PointCloud(GraphicsDevice& g, const PointCloud<T>& pointCloud) {
 			m_vertexBuffer = nullptr;
-			load(g, pointCloud);
+			init(g, pointCloud);
 		}
 
+		//! copy constructor
+		D3D11PointCloud(const D3D11PointCloud& t) {
+			m_vertexBuffer = nullptr;
+			init(*t.m_graphics, t);
+		}
+		//! move constructor
+		D3D11PointCloud(D3D11PointCloud&& t) {
+			m_graphics = nullptr;
+			m_vertexBuffer = nullptr;
+			std::swap(*this, t);
+		}
 
-		~D3D11PointCloud()
-		{
+		~D3D11PointCloud() {
 			releaseGPU();
 		}
 
-		void load(GraphicsDevice& g, const D3D11PointCloud& pointCloud)
-		{
+		//! assignment operator
+		void operator=(const D3D11PointCloud& t) {
+			init(*t.m_graphics, t);
+		}
+
+		//! move operator
+		void operator=(D3D11PointCloud&& t) {
+			std::swap(*this, t);
+		}
+
+		//! adl swap
+		friend void swap(D3D11PointCloud& a, D3D11PointCloud& b) {
+			std::swap(a.m_graphics, b.m_graphics);
+			std::swap(a.m_vertexBuffer, b.m_vertexBuffer);
+			std::swap(a.m_points, b.m_points);
+		}
+
+
+		void init(GraphicsDevice& g, const D3D11PointCloud& pointCloud) {
 			m_graphics = &g.castD3D11();
 			m_points = pointCloud.m_points;
 			createGPU();
 		}
 
 		template<class T>
-		void load(GraphicsDevice& g, const PointCloud<T>& pointCloud)
-		{
+		void init(GraphicsDevice& g, const PointCloud<T>& pointCloud) {
 			m_graphics = &g.castD3D11();
 			m_points.clear();
 			m_points.reserve(pointCloud.m_points.size());
@@ -61,8 +84,7 @@ namespace ml {
 		void updateColors(const std::vector<vec4f>& vertexColors);
 
 		//! computes and returns the bounding box; no caching
-		BoundingBox3f computeBoundingBox() const
-		{
+		BoundingBox3f computeBoundingBox() const {
 			BoundingBox3f bbox;
 			for (const auto& v : m_points) {
 				bbox.include(v.position);
@@ -74,8 +96,7 @@ namespace ml {
 			return m_points;
 		}
 
-		void getPointCloud(PointCloudf& pointCloud) const
-		{
+		void getPointCloud(PointCloudf& pointCloud) const {
 			pointCloud.clear();
 			for (const auto& v : m_points) {
 				pointCloud.m_points.push_back(v.position);
@@ -84,38 +105,11 @@ namespace ml {
 			}
 		}
 
-
-		D3D11PointCloud(const D3D11PointCloud &t)
-		{
-			m_vertexBuffer = nullptr;
-			load(*t.m_graphics, t);
-		}
-		D3D11PointCloud(D3D11PointCloud &&t)
-		{
-			m_graphics = t.m_graphics; t.m_graphics = nullptr;
-			m_vertexBuffer = t.m_vertexBuffer; t.m_vertexBuffer = nullptr;
-			m_points = std::move(t.m_points);
-		}
-
-		void operator=(const D3D11PointCloud& t)
-		{
-			m_vertexBuffer = nullptr;
-			load(*t.m_graphics, t);
-		}
-
-		void operator=(D3D11PointCloud&& t)
-		{
-			m_graphics = t.m_graphics; t.m_graphics = nullptr;
-			m_vertexBuffer = t.m_vertexBuffer; t.m_vertexBuffer = nullptr;
-			m_points = std::move(t.m_points);
-		}
-
 	private:
-		D3D11GraphicsDevice *m_graphics;
 		void initVB(GraphicsDevice& g);
 
-		ID3D11Buffer *m_vertexBuffer;
-
+		D3D11GraphicsDevice *m_graphics;
+		ID3D11Buffer* m_vertexBuffer;
 		std::vector<TriMeshf::Vertex> m_points;
 	};
 

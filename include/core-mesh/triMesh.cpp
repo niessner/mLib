@@ -94,8 +94,7 @@ namespace ml {
 
 
 	template<class FloatType>
-	void TriMesh<FloatType>::computeNormals()
-	{
+	void TriMesh<FloatType>::computeNormals() {
 		for (size_t i = 0; i < m_vertices.size(); i++) {
 			m_vertices[i].normal = vec3<FloatType>::origin;
 		}
@@ -116,22 +115,19 @@ namespace ml {
 	}
 
 	template<class FloatType>
-	TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(UINT iterations, float minEdgeLength) const
-	{
+	TriMesh<FloatType> TriMesh<FloatType>::flatLoopSubdivision(unsigned int iterations, float minEdgeLength) const {
 		TriMeshf result = *this;
-		for (UINT i = 0; i < iterations; i++)
+		for (unsigned int i = 0; i < iterations; i++)
 			result = result.flatLoopSubdivision(minEdgeLength);
 		return result;
 	}
 
 	template < class FloatType >
-	TriMesh<FloatType> TriMesh<FloatType>::flatten() const
-	{
+	TriMesh<FloatType> TriMesh<FloatType>::flatten() const {
 		TriMesh<FloatType> result;
 
-		int index = 0;
-		for (const vec3ui &t : m_indices)
-		{
+		size_t index = 0;
+		for (const vec3ui& t : m_indices) {
 			result.m_vertices.push_back(m_vertices[t[0]]);
 			result.m_vertices.push_back(m_vertices[t[1]]);
 			result.m_vertices.push_back(m_vertices[t[2]]);

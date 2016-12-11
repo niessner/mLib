@@ -4,8 +4,6 @@
 
 namespace ml {
 
-
-
 class GraphicsAsset
 {
 public:

@@ -68,7 +68,6 @@ namespace ml {
 		//! move operator
 		void operator=(D3D11Buffer&& t)	{
 			swap(*this, grid);
-			return *this;
 		}				
 
 		//! adl swap
@@ -101,6 +100,10 @@ namespace ml {
 		}
 		bool hasUAV() const {
 			return m_bHasUAV;
+		}
+
+		bool isInit() const {
+			return m_buffer != nullptr;
 		}
 
 	private:

@@ -126,7 +126,7 @@ namespace ml {
 			friend D3D11Canvas2D;
 		private:
 			bbox2i m_box;
-			D3D11Texture2D m_tex;
+			D3D11Texture2D<vec4uc> m_tex;
 			D3D11TriMesh m_mesh;
 		};
 
@@ -157,7 +157,7 @@ namespace ml {
 				bbox2f box;
 				box.include(m_graphics->pixelToNDC(math::floor(m_constants.center - m_constants.radius)));
 				box.include(m_graphics->pixelToNDC(math::ceil(m_constants.center + m_constants.radius)));
-				m_mesh.load(*m_graphics, ml::Shapesf::rectangleZ(box.getMin(), box.getMax(), m_depth));
+				m_mesh.init(*m_graphics, ml::Shapesf::rectangleZ(box.getMin(), box.getMax(), m_depth));
 			}
 
 			void render() {
@@ -191,7 +191,7 @@ namespace ml {
 				bbox2f boxNdc;
 				boxNdc.include(m_graphics->pixelToNDC(m_box.getMin()));
 				boxNdc.include(m_graphics->pixelToNDC(m_box.getMax()));
-				m_mesh.load(*m_graphics, ml::Shapesf::rectangleZ(boxNdc.getMin(), boxNdc.getMax(), m_depth, m_color));
+				m_mesh.init(*m_graphics, ml::Shapesf::rectangleZ(boxNdc.getMin(), boxNdc.getMax(), m_depth, m_color));
 			}
 
 			void render() {
@@ -294,7 +294,7 @@ namespace ml {
 			auto type = e.getType();
 			if (type == ELEMENT_TYPE_BILLBOARD) {
 				auto _e = e.castBillboard();
-				addBillboard(elementId, _e.m_box, _e.m_tex.getImage(), _e.m_depth);
+				addBillboard(elementId, _e.m_box, ColorImageR8G8B8A8(_e.m_tex.getImage()), _e.m_depth);
 			}
 			else if (type == ELEMENT_TYPE_BOX) {
 				auto _e = e.castBox();

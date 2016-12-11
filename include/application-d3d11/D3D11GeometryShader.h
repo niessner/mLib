@@ -20,8 +20,8 @@ namespace ml {
 		}
 
 		void init(
-			GraphicsDevice &g, 
-			const std::string &filename, 
+			GraphicsDevice& g, 
+			const std::string& filename, 
 			const std::string& entryPoint = "geometryShaderMain", 
 			const std::string& shaderModel = "gs_4_0",
 			const std::vector<std::pair<std::string, std::string>>& shaderMacros = std::vector<std::pair<std::string, std::string>>());
@@ -31,9 +31,7 @@ namespace ml {
 
 		void bind() const;
 
-		UINT64 hash64();
-
-		bool exists() const {
+		bool isInit() const {
 			return m_shader != nullptr;
 		}
 	private:
