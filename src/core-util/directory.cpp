@@ -3,7 +3,7 @@ namespace ml {
 
 Directory::Directory(const std::string& path)
 {
-    load(path);
+    init(path);
 }
 
 std::vector<std::string> Directory::getFilesWithSuffix(const std::string& suffix) const
@@ -102,7 +102,7 @@ std::vector<std::string> Directory::getDirectoriesContaining(const std::string &
 
 
 #ifdef WIN32
-void Directory::load(const std::string &path)
+void Directory::init(const std::string &path)
 {
 	m_path = path + "/";
 	m_files.clear();
@@ -138,7 +138,7 @@ void Directory::load(const std::string &path)
 #endif  // _WIN32
 
 #ifdef LINUX
-void Directory::load(const std::string &path)
+void Directory::init(const std::string &path)
 {
     //std::cout << "Loading all files in " << path << std::endl;
 	m_path = path + "\\";

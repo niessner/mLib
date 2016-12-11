@@ -29,11 +29,16 @@ namespace ml
 		desc.Height = (UINT)m_data.getDimY();
 		desc.Depth = (UINT)m_data.getDimZ();
 		desc.MipLevels = 0;
-		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	//TOOD
+		//desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;		//is set below baed on template
 		desc.Usage = D3D11_USAGE_DEFAULT;
 		desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+
+		if (std::is_same<T, float>::value) desc.Format = DXGI_FORMAT_R32_FLOAT;
+		else if (std::is_same<T, vec4uc>::value) desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		else if (std::is_same<T, vec4f>::value) desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		else throw MLIB_EXCEPTION("TOOD implement the format for template T...");
 
 		D3D_VALIDATE(device.CreateTexture3D(&desc, nullptr, &m_texture));
 		D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_srv));

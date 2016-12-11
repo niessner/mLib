@@ -201,7 +201,7 @@ namespace util
 		return "";
     }
 
-    std::string fileNameFromPath(const std::string &path)
+    std::string fileNameFromPath(const std::string& path)
     {
 		//TODO maybe use: PathRemoveFilespec ?
         return ml::util::split(ml::util::replace(path, '\\', '/'), '/').back();

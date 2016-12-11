@@ -34,11 +34,11 @@ public:
 
 	//! assignment operator
 	void operator=(const D3D11ConstantBuffer& other) {
-		init(other.m_graphics);
+		init(*other.m_graphics);
 		update(other.getData());
 	}
 
-	void operator=(const D3D11ConstantBuffer&& other) {
+	void operator=(D3D11ConstantBuffer&& other) {
 		swap(*this, other);
 	}
 

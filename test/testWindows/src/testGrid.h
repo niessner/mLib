@@ -78,7 +78,7 @@ public:
 		ml::PointCloudIOf::saveToFile("gridcloud1.ply", pc);
 
 		TriMeshf voxelMesh(grid.first, grid.second.getInverse());
-		MeshIOf::saveToFile("box.ply", voxelMesh.getMeshData());
+		MeshIOf::saveToFile("box.ply", voxelMesh.makeMeshData());
 
 		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}
@@ -124,7 +124,7 @@ public:
 		DistanceField3f df(grid.first);
 		//std::cout << t.getElapsedTimeMS() << " ms" << std::endl;
 
-		MeshIOf::saveToFile("voxelizedSphere.ply", TriMeshf(grid.first).getMeshData());
+		MeshIOf::saveToFile("voxelizedSphere.ply", TriMeshf(grid.first).makeMeshData());
 
 		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}
