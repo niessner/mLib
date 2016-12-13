@@ -969,9 +969,9 @@ namespace ml {
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BaseImage<T>& image) {
 		unsigned int width, height;
 		T invalidValue;
-		s.readData(&width);
-		s.readData(&height);
-		s.readData(&invalidValue);
+		s.readData(width);
+		s.readData(height);
+		s.readData(invalidValue);
 		image.allocate(width, height);
 		image.setInvalidValue(invalidValue);
 		if (image.getNumPixels() > 0) s.readData((BYTE*)image.getData(), sizeof(T)*width*height);

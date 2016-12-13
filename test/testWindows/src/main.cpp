@@ -37,7 +37,9 @@ private:
 
 int main()
 {
-	std::cout << Directory::enumerateDirectoriesWithPath("../") << std::endl;
+	//std::cout << Directory::enumerateDirectoriesWithPath("../") << std::endl;
+	//util::fileNameFromPath()
+
 
 	std::array<unsigned int, 2> hist;
 	hist[0] = hist[1] = 0;

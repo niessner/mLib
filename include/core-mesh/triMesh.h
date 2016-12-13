@@ -382,7 +382,7 @@ namespace ml {
 		std::vector<Vertex>& getVertices() { return m_vertices; }
 		std::vector<vec3ui>& getIndices() { return m_indices; }
 
-		void makeMeshData(MeshData<FloatType>& meshData) const {
+		void computeMeshData(MeshData<FloatType>& meshData) const {
 
 			meshData.clear();
 
@@ -411,9 +411,9 @@ namespace ml {
 			}
 		}
 
-		MeshData<FloatType> makeMeshData() const {
+		MeshData<FloatType> computeMeshData() const {
 			MeshData<FloatType> meshData;
-			makeMeshData(meshData);
+			computeMeshData(meshData);
 			return meshData;
 		}
 
