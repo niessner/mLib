@@ -4,14 +4,19 @@
 
 namespace ml {
 
-
-class GraphicsDevice;
 class GraphicsAsset
 {
 public:
-	virtual void release() = 0;
-	virtual void reset() = 0;
-	virtual void onDeviceResize() {}
+	//! returns the asset name
+	virtual std::string getName() const {
+		return typeid(*this).name();
+	}
+	
+protected:
+	//! releases all GPU parts
+	virtual void releaseGPU() = 0;
+	//! (re-)creates all GPU parts
+	virtual void createGPU() = 0;
 };
 
 }  // namespace ml

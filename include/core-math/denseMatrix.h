@@ -18,7 +18,6 @@ public:
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
 		m_data = s.m_data;
-		m_dataPtr = &m_data[0];
 	}
 
     DenseMatrix(DenseMatrix<T> &&s)
@@ -28,7 +27,6 @@ public:
 		s.m_rows = 0;
 		s.m_cols = 0;
 		m_data = std::move(s.m_data);
-		m_dataPtr = &m_data[0];
 	}
 
     explicit DenseMatrix(size_t squareDimension)
@@ -36,15 +34,13 @@ public:
 		m_rows = (UINT)squareDimension;
         m_cols = (UINT)squareDimension;
 		m_data.resize(m_rows * m_cols);
-		m_dataPtr = &m_data[0];
 	}
 
 	explicit DenseMatrix(const MathVector<T> &diagonal)
 	{
-		m_rows = (UINT)diagonal.size();
-		m_cols = (UINT)diagonal.size();
+		m_rows = diagonal.size();
+		m_cols = diagonal.size();
 		m_data.resize(m_rows * m_cols);
-		m_dataPtr = &m_data[0];
 		for(UINT row = 0; row < m_rows; row++)
 		{
 			for(UINT col = 0; col < m_cols; col++)
@@ -56,20 +52,18 @@ public:
 
     DenseMatrix(size_t rows, size_t cols, T clearValue = (T)0.0)
 	{
-		m_rows = (UINT)rows;
-        m_cols = (UINT)cols;
+		m_rows = rows;
+        m_cols = cols;
         m_data.resize(m_rows * m_cols, clearValue);
-		m_dataPtr = &m_data[0];
 	}
 
 	DenseMatrix(size_t rows, size_t cols, const T* values) {
-		m_rows = (UINT)rows;
-		m_cols = (UINT)cols;
+		m_rows = rows;
+		m_cols = cols;
 		m_data.resize(m_rows * m_cols);
-		m_dataPtr = &m_data[0];
 
 		for (size_t i = 0; i < rows*cols; i++) {
-			m_dataPtr[i] = values[i];
+			m_data[i] = values[i];
 		}
 	}
 
@@ -81,16 +75,13 @@ public:
 			// this is really a dense format and should be loaded as such, then cast into a SparseMatrix
 			//
 			std::vector<std::string> data = ml::util::split(s,"},{");
-			m_rows = (UINT)data.size();
-			m_cols = (UINT)ml::util::split(data[0], ",").size();
+			m_rows = data.size();
+			m_cols = util::split(data[0], ",").size();
 			m_data.resize(m_rows * m_cols);
-			m_dataPtr = &m_data[0];
 
-			for(UINT row = 0; row < m_rows; row++)
-			{
+			for (size_t row = 0; row < m_rows; row++) {
 				std::vector<std::string> values = ml::util::split(data[row], ",");
-				for(UINT col = 0; col < values.size(); col++)
-				{
+				for (size_t col = 0; col < values.size(); col++) {
 					const std::string s = ml::util::replace(ml::util::replace(values[col], "{",""), "}","");
 					(*this)(row, col) = (T)std::stod(s);
 				}
@@ -107,7 +98,6 @@ public:
         m_rows = 4;
         m_cols = 4;
         m_data.resize(16);
-        m_dataPtr = &m_data[0];
         for (unsigned int element = 0; element < m_data.size(); element++)
             m_data[element] = m[element];
     }
@@ -117,7 +107,6 @@ public:
 		m_rows = 3;
 		m_cols = 3;
 		m_data.resize(9);
-		m_dataPtr = &m_data[0];
 		for (unsigned int element = 0; element < m_data.size(); element++)
 			m_data[element] = m[element];
 	}
@@ -127,7 +116,6 @@ public:
 		m_rows = 2;
 		m_cols = 2;
 		m_data.resize(4);
-		m_dataPtr = &m_data[0];
 		for (unsigned int element = 0; element < m_data.size(); element++)
 			m_data[element] = m[element];
 	}
@@ -137,7 +125,6 @@ public:
 		m_rows = rows;
 		m_cols = cols;
 		m_data.resize(m_rows * m_cols, clearValue);
-		m_dataPtr = &m_data[0];
 	}
 
 
@@ -146,7 +133,6 @@ public:
 		m_rows = s.m_rows;
 		m_cols = s.m_cols;
 		m_data = s.m_data;
-        m_dataPtr = &m_data[0];
 	}
 
 	void operator=(DenseMatrix<T>&& s)
@@ -156,7 +142,6 @@ public:
 		s.m_rows = 0;
 		s.m_cols = 0;
 		m_data = std::move(s.m_data);
-		m_dataPtr = &m_data[0];
 	}
 
 	//
@@ -164,12 +149,14 @@ public:
 	//
     T& operator()(size_t row, size_t col)
 	{
-		return m_dataPtr[row * m_cols + col];
+		MLIB_ASSERT(row < m_rows && col < m_cols);
+		return m_data[row * m_cols + col];
 	}
 
     T operator()(size_t row, size_t col) const
 	{
-		return m_dataPtr[row * m_cols + col];
+		MLIB_ASSERT(row < m_rows && col < m_cols);
+		return m_data[row * m_cols + col];
 	}
 
     size_t rows() const
@@ -189,14 +176,14 @@ public:
 
 	//! Access i-th element of the Matrix for constant access
 	inline T operator[] (unsigned int i) const {
-		assert(i < m_cols*m_rows);
-		return m_dataPtr[i];
+		MLIB_ASSERT(i < m_cols*m_rows);
+		return m_data[i];
 	}
 
 	//! Access i-th element of the Matrix
 	inline  T& operator[] (unsigned int i) {
 		assert(i < m_cols*m_rows);
-		return m_dataPtr[i];
+		return m_data[i];
 	}
 
 	std::vector<T> diagonal() const
@@ -210,7 +197,7 @@ public:
 
     const T* getData() const
     {
-        return m_dataPtr;
+        return &m_data[0];
     }
 
 
@@ -277,11 +264,11 @@ public:
 
     T* begin()
     {
-        return m_dataPtr;
+        return &m_data[0];
     }
     T* end()
     {
-        return m_dataPtr + (m_rows * m_cols);
+        return begin() + (m_rows * m_cols);
     }
 
 	inline operator Matrix4x4<T>(){
@@ -310,8 +297,7 @@ public:
 	}
 
 private:
-	UINT m_rows, m_cols;
-	T* m_dataPtr;
+	size_t m_rows, m_cols;
     std::vector< T > m_data;
 };
 

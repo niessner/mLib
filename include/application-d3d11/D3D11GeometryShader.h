@@ -16,24 +16,22 @@ namespace ml {
 
 		~D3D11GeometryShader()
 		{
-			release();
+			releaseGPU();
 		}
 
-		void load(
-			GraphicsDevice &g, 
-			const std::string &filename, 
+		void init(
+			GraphicsDevice& g, 
+			const std::string& filename, 
 			const std::string& entryPoint = "geometryShaderMain", 
 			const std::string& shaderModel = "gs_4_0",
 			const std::vector<std::pair<std::string, std::string>>& shaderMacros = std::vector<std::pair<std::string, std::string>>());
 
-		void release();
-		void reset();
+		void releaseGPU();
+		void createGPU();
 
 		void bind() const;
 
-		UINT64 hash64();
-
-		bool exists() const {
+		bool isInit() const {
 			return m_shader != nullptr;
 		}
 	private:

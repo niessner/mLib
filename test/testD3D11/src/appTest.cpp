@@ -150,13 +150,13 @@ void AppTest::init(ml::ApplicationData &app)
 
 	ml::TriMeshf unifiedMesh = ml::meshutil::createUnifiedMesh(meshes);
 
-	m_mesh.load(app.graphics, unifiedMesh);
+	m_mesh.init(app.graphics, unifiedMesh);
 
 	auto lambdaPoints = [=](ml::vec3f& v) { v = ml::vec3f(-2.f*(float)rand() / RAND_MAX, -2.f*(float)rand() / RAND_MAX, (float)rand() / RAND_MAX); };
 	std::vector<ml::vec3f> points(5000);
 	std::for_each(points.begin(), points.end(), lambdaPoints);
 
-	m_pointCloud.load(app.graphics, ml::meshutil::createPointCloudTemplate(ml::Shapesf::box(0.01f), points));
+	m_pointCloud.init(app.graphics, ml::meshutil::createPointCloudTemplate(ml::Shapesf::box(0.01f), points));
 
 	m_shaderManager.init(app.graphics);
 	m_shaderManager.registerShader("shaders/pointCloud.hlsl", "pointCloud");
@@ -201,7 +201,12 @@ void AppTest::init(ml::ApplicationData &app)
 		bufferData[i] = m_mesh.getTriMesh().getVertices()[i].color;
 		//bufferData[i].x = 0.0f;
 	}
-	m_buffer.load(app.graphics, bufferData);
+	m_buffer.init(app.graphics, bufferData);
+
+	D3D11Canvas2D canvas = m_canvas;
+
+	//app.graphics.castD3D11().printAssets();
+	std::cout << "\nInit done!\n\n" << std::endl;
 }
 
 void AppTest::render(ml::ApplicationData &app)
@@ -231,12 +236,12 @@ void AppTest::render(ml::ApplicationData &app)
 	m_constants.bind(0);
 	m_pointCloud.render();
 
-	m_font.drawString(app.graphics, "FPS: " + ml::convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
+	m_font.drawString("FPS: " + ml::convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
 }
 
 void AppTest::resize(ml::ApplicationData &app)
 {
-	m_canvas.onDeviceResize();
+	m_canvas.resize();
 	m_camera.updateAspectRatio((float)app.window.getWidth() / app.window.getHeight());
 
 }

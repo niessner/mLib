@@ -11,18 +11,17 @@ void ml::D3D11PointCloud::updateColors(const std::vector<vec4f> &newValues)
 	for (size_t i = 0; i < newValues.size(); i++) {
 		vertices[i].color = newValues[i];
 	}
-	reset();
+	createGPU();
 }
 
 
-void ml::D3D11PointCloud::release()
+void ml::D3D11PointCloud::releaseGPU()
 {
 	SAFE_RELEASE(m_vertexBuffer);
 }
 
-void ml::D3D11PointCloud::reset()
-{
-	release();
+void ml::D3D11PointCloud::createGPU() {
+	releaseGPU();
 	initVB(*m_graphics);
 }
 

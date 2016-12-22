@@ -204,6 +204,11 @@ public:
 		return sqrt((v0.array[0]-v1.array[0])*(v0.array[0]-v1.array[0]) + (v0.array[1]-v1.array[1])*(v0.array[1]-v1.array[1]) + (v0.array[2]-v1.array[2])*(v0.array[2]-v1.array[2]));
 	}
 
+	static vec3<T> randomUniform(T min, T max) {
+		return vec3<T>(math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max));
+	}
 
 	inline operator T*() {
 		return array;
@@ -262,7 +267,7 @@ public:
             return math::radiansToDegrees(acosf(math::clamp(vec3<T>::dot(v0, v1) / l0 / l1, -1.0f, 1.0f)));
     }
 
-	inline T* ptr() {
+	inline T* getData() {
 		return &array[0];
 	}
 
@@ -274,14 +279,12 @@ public:
 		return result;
 	}
 
-    inline std::string toString(char separator = ',') const {
+    inline std::string toString(char separator = ' ') const {
         return toString(std::string(1, separator));
     }
 
     inline std::string toString(const std::string &separator) const {
-        return std::to_string(x) + separator + 
-               std::to_string(y) + separator + 
-               std::to_string(z);
+        return std::to_string(x) + separator + std::to_string(y) + separator + std::to_string(z);
     }
 
 	static const vec3<T> origin;

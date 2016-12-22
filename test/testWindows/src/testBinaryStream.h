@@ -78,9 +78,68 @@ class TestBinaryStream : public Test {
 
 		MLIB_ASSERT(data == reRead);
 
+		std::cout << __FUNCTION__ << " passed" << std::endl;
 	}
 
-	std::string name()
+	void test1() 
+	{
+		//test string (pod)
+		std::string s = "123abc\n";
+		{
+			BinaryDataStreamFile out("tmp.bin", true);
+			out << s;
+		}
+		{
+			std::string re;
+			BinaryDataStreamFile in("tmp.bin", false);
+			in >> re;
+			MLIB_ASSERT_STR(s == re, "binary stream string doesn't match out");
+		}
+		util::deleteFile("tmp.bin");
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
+	}
+
+	void test2()
+	{
+		//test vector (pod)
+		size_t s = 1000;
+		std::vector<float> v(s);
+		for (size_t i = 0; i < v.size(); i++) {
+			v[i] = math::randomUniform(0.0f, 1.0f);
+		}
+		BinaryDataStreamFile out("tmp.bin", true);
+		out << v;
+		out.closeStream();
+		
+		BinaryDataStreamFile in("tmp.bin", false);
+		std::vector<float> re;
+		in >> re;
+		
+		MLIB_ASSERT_STR(v == re, "binary stream vector doesn't match out");
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
+	}
+
+	void test3() 
+	{
+		{
+			BinaryDataStreamFile out("test.bin", true);
+			int a = 5;
+			out.writeData(a);
+		}
+		{
+			BinaryDataStreamFile in("test.bin", false);
+			int a;
+			in.readData(a);
+
+			MLIB_ASSERT_STR(a == 5, "binary stream in/out doesn't match");
+		}
+
+		std::cout << __FUNCTION__ << " passed" << std::endl;
+	}
+
+	std::string getName()
 	{
 		return "Binary Stream";
 	}

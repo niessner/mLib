@@ -2,29 +2,22 @@
 namespace ml
 {
 	template <class T>
-	void D3D11Buffer<T>::load(GraphicsDevice& g, const std::vector<T>& data)
-	{
+	void D3D11Buffer<T>::init(GraphicsDevice& g, const std::vector<T>& data) {
 		m_graphics = &g.castD3D11();
-		release();
-
-		g.castD3D11().registerAsset(this);
 		m_data = data;
-
-		reset();
+		createGPU();
 	}
 
 	template <class T>
-	void D3D11Buffer<T>::release()
-	{
+	void D3D11Buffer<T>::releaseGPU() {
 		SAFE_RELEASE(m_buffer);
 		SAFE_RELEASE(m_srv);
 		SAFE_RELEASE(m_uav);
 	}
 
 	template <class T>
-	void D3D11Buffer<T>::reset()
-	{
-		release();
+	void D3D11Buffer<T>::createGPU() {
+		releaseGPU();
 
 		if (m_data.size() == 0) return;
 
@@ -77,6 +70,8 @@ namespace ml
 		if (m_srv == nullptr) return;
 		m_graphics->getContext().VSSetShaderResources(slot, 1, &m_srv);
 		m_graphics->getContext().GSSetShaderResources(slot, 1, &m_srv);
+		m_graphics->getContext().HSSetShaderResources(slot, 1, &m_srv);
+		m_graphics->getContext().DSSetShaderResources(slot, 1, &m_srv);
 		m_graphics->getContext().PSSetShaderResources(slot, 1, &m_srv);
 	}
 
@@ -84,9 +79,11 @@ namespace ml
 	void D3D11Buffer<T>::unbindSRV(unsigned int slot /* = 0 */) const
 	{
 		if (m_srv == nullptr) return;
-		ID3D11ShaderResourceView* const srvs[] = { NULL };
+		ID3D11ShaderResourceView* const srvs[] = { nullptr };
 		m_graphics->getContext().VSSetShaderResources(slot, 1, srvs);
 		m_graphics->getContext().GSSetShaderResources(slot, 1, srvs);
+		m_graphics->getContext().HSSetShaderResources(slot, 1, srvs);
+		m_graphics->getContext().DSSetShaderResources(slot, 1, srvs);
 		m_graphics->getContext().PSSetShaderResources(slot, 1, srvs);
 	}
 }

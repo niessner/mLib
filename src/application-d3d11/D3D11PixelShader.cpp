@@ -1,5 +1,5 @@
 
-void ml::D3D11PixelShader::load(
+void ml::D3D11PixelShader::init(
 	GraphicsDevice &g, 
 	const std::string &filename, 
 	const std::string& entryPoint, 
@@ -8,26 +8,26 @@ void ml::D3D11PixelShader::load(
 {
     m_graphics = &g.castD3D11();
 
-	release();
+	releaseGPU();
 	SAFE_RELEASE(m_blob);
 
 	m_filename = filename;
-	g.castD3D11().registerAsset(this);
+	//g.castD3D11().registerAsset(this);
 
 	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel, shaderMacros);
 	MLIB_ASSERT_STR(m_blob != nullptr, "CompileShader failed");
 
-	reset();
+	createGPU();
 }
 
-void ml::D3D11PixelShader::release()
+void ml::D3D11PixelShader::releaseGPU()
 {
 	SAFE_RELEASE(m_shader);
 }
 
-void ml::D3D11PixelShader::reset()
+void ml::D3D11PixelShader::createGPU()
 {
-	release();
+	releaseGPU();
 
 	auto &device = m_graphics->getDevice();
 

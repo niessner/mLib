@@ -43,6 +43,12 @@ public:
 
     ~D3D11GraphicsDevice()
     {
+		//if (m_assets.size()) {
+		//	std::cout << __FUNCTION__ " : unreleased assets found" << std::endl;
+		//	printAssets();
+		//	throw MLIB_EXCEPTION("found unreleased assets");
+		//}
+
 		if (!m_bExternallyCreated) {
 			SAFE_RELEASE(m_rasterState);
 			SAFE_RELEASE(m_context);
@@ -82,14 +88,21 @@ public:
 		m_bExternallyCreated = true;
 	} 
 
-    void init(const WindowWin32 &window);
+    void init(const WindowWin32& window);
 
 	void initWithoutWindow();
 
 	void resize(const WindowWin32 &window);
     void renderBeginFrame();
     void renderEndFrame(bool vsync);
-    void registerAsset(GraphicsAsset *asset);
+
+	//this is a) not really needed and doesn't work with move semantics because the asset pointers change
+	////! registers an asset from the device
+	//void registerAsset(GraphicsAsset* asset);
+	////! unregisters an asset from the device
+	//void unregisterAsset(GraphicsAsset* asset);
+	////! lists all assets
+	//void printAssets();
 
     void setCullMode(D3D11_CULL_MODE mode);
     void toggleCullMode();
@@ -114,11 +127,13 @@ public:
         return *m_context;
     }
 
-	UINT getWidth() const {
+
+
+	unsigned int getWidth() const {
 		return m_width;
 	}
 
-	UINT getHeight() const {
+	unsigned int getHeight() const {
 		return m_height;
 	}
 
@@ -133,8 +148,6 @@ public:
 			2.0f*(float)p.x / ((float)width - 1.0f) - 1.0f,
 			1.0f - 2.0f*(float)p.y / ((float)height - 1.0f));
 	}
-
-
 
 private:
 
@@ -172,7 +185,7 @@ private:
 	
 	bool m_bExternallyCreated; 
 protected:
-	void captureBackBufferInternal(ColorImageR8G8B8A8 &result);
+	void captureBackBufferInternal(ColorImageR8G8B8A8& result);
 };
 
 }  // namespace ml

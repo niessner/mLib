@@ -23,7 +23,7 @@ inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<< (Bin
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class ChildClass>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>> (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BinaryDataSerialize<ChildClass> &o) {
-	s.readData((ChildClass*)&o);
+	s.readData(*((ChildClass*)&o));
 	return s;
 }
 

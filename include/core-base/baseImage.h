@@ -201,7 +201,7 @@ namespace ml {
 			m_width = m_height = 0;
 		}
 
-        BaseImage(const vec2i &dimensions) {
+        BaseImage(const vec2ui &dimensions) {
             create((UINT)dimensions.x, (UINT)dimensions.y);
         }
 
@@ -225,7 +225,7 @@ namespace ml {
 		BaseImage(const BaseImage& other) : Image(other.getFormat()){
 			create(other.m_width, other.m_height);
 			memcpy(m_data, other.m_data, sizeof(T) * m_width * m_height);
-			m_InvalidValue = other.getInvalidValue();
+			m_invalidValue = other.getInvalidValue();
 		}
 
 		//! Move constructor
@@ -243,7 +243,7 @@ namespace ml {
 				BaseImageHelper::convertBaseImagePixel<T, U>(m_data[i], other.getData()[i]);
 			}
 			const U& otherInvalidValue = other.getInvalidValue();
-			BaseImageHelper::convertBaseImagePixel<T, U>(m_InvalidValue, otherInvalidValue);
+			BaseImageHelper::convertBaseImagePixel<T, U>(m_invalidValue, otherInvalidValue);
 		}
 
 
@@ -252,7 +252,7 @@ namespace ml {
 			std::swap(a.m_data, b.m_data);
 			std::swap(a.m_height, b.m_height);
 			std::swap(a.m_width, b.m_width);
-			std::swap(a.m_InvalidValue, b.m_InvalidValue);
+			std::swap(a.m_invalidValue, b.m_invalidValue);
 			std::swap(a.m_format, b.m_format);
 		}
 
@@ -416,7 +416,7 @@ namespace ml {
 				}
 
 				memcpy(m_data, other.m_data, sizeof(T) * m_height * m_width);
-				m_InvalidValue = other.getInvalidValue();
+				m_invalidValue = other.getInvalidValue();
 				m_format = other.m_format;
 			}
 			return *this;
@@ -670,12 +670,12 @@ namespace ml {
 
 		//! returns the invalid value
 		T getInvalidValue() const {
-			return m_InvalidValue;
+			return m_invalidValue;
 		}
 
 		//! sets the invalid value
 		void setInvalidValue(T invalidValue) {
-			m_InvalidValue = invalidValue;
+			m_invalidValue = invalidValue;
 		}
 
 		//! sets a pixel to the invalid value
@@ -686,13 +686,13 @@ namespace ml {
 
 		//! returns true if a value is valid
 		bool isValidValue(T value) const {
-			return value != m_InvalidValue;
+			return value != m_invalidValue;
 		}
 
 		//! returns true if the depth value at position (x,y) is valid
 		template <class S>
 		bool isValid(S x, S y) const {
-			return getPixel(x, y) != m_InvalidValue;
+			return getPixel(x, y) != m_invalidValue;
 		}
 
 		bool isValidCoordinate(unsigned int x, unsigned int y) const {
@@ -735,7 +735,7 @@ namespace ml {
 		//! computes the next mip map level of the image (box filtered image)
 		void mipMap(BaseImage& result, bool ignoreInvalidPixels = false) const {
 			result.allocate(m_width / 2, m_height / 2);
-			result.setInvalidValue(m_InvalidValue);
+			result.setInvalidValue(m_invalidValue);
 
 			if (!ignoreInvalidPixels) {
 				for (unsigned int y = 0; y < result.m_height; y++) {
@@ -783,7 +783,7 @@ namespace ml {
 
 			if (m_width != newWidth || m_height != newHeight) {
 				BaseImage<T> res(newWidth, newHeight);
-				res.setInvalidValue(m_InvalidValue);
+				res.setInvalidValue(m_invalidValue);
 
 				float factorX = 1.0f;
 				float factorY = 1.0f;
@@ -827,11 +827,17 @@ namespace ml {
 		}
 
 
+		//! resizes the image to the given width/height
+		void resize(const vec2i &dimensions, bool bilinearInterpolate = false) {
+			resize(dimensions.x, dimensions.y, bilinearInterpolate);
+		}
+
+
 		//! smooth (laplacian smoothing step)
 		void smooth(unsigned int steps = 1) {
 			for (unsigned int i = 0; i < steps; i++) {
 				BaseImage<T> other(m_width, m_height);
-				other.setInvalidValue(m_InvalidValue);
+				other.setInvalidValue(m_invalidValue);
 
 				for (unsigned int y = 0; y < m_height; y++) {
 					for (unsigned int x = 0; x < m_width; x++) {
@@ -902,6 +908,22 @@ namespace ml {
 			return *this;
 		}
 
+		std::string toString(bool verbose = true) const {
+			std::stringstream ss;
+
+			ss << "image dim: " << getDimensions() << "\n";
+
+			if (verbose) {
+				for (size_t y = 0; y < getDimY(); y++) {
+					ss << "\t";
+					for (size_t x = 0; x < getDimX(); x++) {
+						ss << (*this)(x, y) << " ";
+					}
+					ss << "\n";
+				}
+			}
+			return ss.str();
+		}
 	protected:
 		//! Allocates memory and sets the image size accordingly
 		void create(unsigned int width, unsigned int height) {
@@ -920,10 +942,19 @@ namespace ml {
 		T* m_data;
 
 		//! Invalid image value
-		T m_InvalidValue;
+		T m_invalidValue;
 
 	};
 
+	//! writes to a stream
+	template <class T>
+	inline std::ostream& operator<<(std::ostream& s, const BaseImage<T>& image)
+	{
+		s << image.toString();
+		return s;
+	}
+
+	//! serialization (output)
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<<(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const BaseImage<T>& image) {
 		s.writeData(image.getWidth());
@@ -933,13 +964,14 @@ namespace ml {
 		return s;
 	}
 
+	//! serialization (input)
 	template<class BinaryDataBuffer, class BinaryDataCompressor, class T>
 	inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>>(BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, BaseImage<T>& image) {
 		unsigned int width, height;
 		T invalidValue;
-		s.readData(&width);
-		s.readData(&height);
-		s.readData(&invalidValue);
+		s.readData(width);
+		s.readData(height);
+		s.readData(invalidValue);
 		image.allocate(width, height);
 		image.setInvalidValue(invalidValue);
 		if (image.getNumPixels() > 0) s.readData((BYTE*)image.getData(), sizeof(T)*width*height);
@@ -950,20 +982,20 @@ namespace ml {
 	public:
 		DepthImage16() : BaseImage() {
 			m_format = Image::FORMAT_DepthImage16;
-			m_InvalidValue = 0;
+			m_invalidValue = 0;
 		}
 		DepthImage16(unsigned int width, unsigned int height, const unsigned short *data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_DepthImage16;
-			m_InvalidValue = 0;
+			m_invalidValue = 0;
 		}
 		DepthImage16(unsigned int width, unsigned int height) : BaseImage(width, height) {
 			m_format = Image::FORMAT_DepthImage16;
-			m_InvalidValue = 0;
+			m_invalidValue = 0;
 		}
 
 		DepthImage16(const BaseImage<float>& image, float shift = 1000.0f) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_DepthImage16;
-			m_InvalidValue = 0;
+			m_invalidValue = 0;
 
 			float INVALID = image.getInvalidValue();
 			for (unsigned int i = 0; i < m_width * m_height; i++) {
@@ -982,31 +1014,31 @@ namespace ml {
 	public:
 		DepthImage32() : BaseImage() {
 			m_format = Image::FORMAT_DepthImage;
-			m_InvalidValue = -std::numeric_limits<float>::infinity();
+			m_invalidValue = -std::numeric_limits<float>::infinity();
 		}
 
 		DepthImage32(unsigned int width, unsigned int height, const float *data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_DepthImage;
-			m_InvalidValue = -std::numeric_limits<float>::infinity();
+			m_invalidValue = -std::numeric_limits<float>::infinity();
 		}
 		DepthImage32(unsigned int width, unsigned int height) : BaseImage(width, height) {
 			m_format = Image::FORMAT_DepthImage;
-			m_InvalidValue = -std::numeric_limits<float>::infinity();
+			m_invalidValue = -std::numeric_limits<float>::infinity();
 		}
 		DepthImage32(unsigned int width, unsigned int height, float clearValue) : BaseImage(width, height, clearValue) {
 			m_format = Image::FORMAT_DepthImage;
-			m_InvalidValue = -std::numeric_limits<float>::infinity();
+			m_invalidValue = -std::numeric_limits<float>::infinity();
 		}
 
 		DepthImage32(const DepthImage16& image) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_DepthImage;
-			m_InvalidValue = -std::numeric_limits<float>::infinity();
+			m_invalidValue = -std::numeric_limits<float>::infinity();
 
 			float INVALID = image.getInvalidValue();
 			for (unsigned int i = 0; i < m_width * m_height; i++) {
 				float val;
 				USHORT d = image.getData()[i];
-				if (d == INVALID) val = m_InvalidValue;
+				if (d == INVALID) val = m_invalidValue;
 				else val = 0.001f * d;	//TODO make this a parameters m_depthShift
 				m_data[i] = val;
 			}
@@ -1110,17 +1142,17 @@ namespace ml {
 	public:
 		ColorImageR32G32B32() : BaseImage() {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
 		ColorImageR32G32B32(unsigned int width, unsigned int height, const vec3f *data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
 		ColorImageR32G32B32(unsigned int width, unsigned int height, const vec3uc *data, float scale = 255.0f) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 
 			for (unsigned int y = 0; y < m_height; y++) {
@@ -1135,12 +1167,12 @@ namespace ml {
 		}
 		ColorImageR32G32B32(unsigned int width, unsigned int height) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
 		ColorImageR32G32B32(const DepthImage32& depthImage, bool debugPrint = false) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = depthImage.getData();
             float maxDepth = -std::numeric_limits<float>::max();
@@ -1166,7 +1198,7 @@ namespace ml {
 		}
 		ColorImageR32G32B32(const DepthImage32& depthImage, float minDepth, float maxDepth) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = depthImage.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1180,7 +1212,7 @@ namespace ml {
 		}
 		ColorImageR32G32B32(const BaseImage<float>& image) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = image.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1189,7 +1221,7 @@ namespace ml {
 		}
 		ColorImageR32G32B32(const BaseImage<vec4uc>& image, float scale = 255.0f) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const vec4uc* data = image.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1198,7 +1230,7 @@ namespace ml {
 		}
 		ColorImageR32G32B32(const BaseImage<vec3uc>& image, float scale = 255.0f) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32;
-			m_InvalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec3f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const vec3uc* data = image.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1224,22 +1256,22 @@ namespace ml {
 	public:
 		ColorImageR32G32B32A32() : BaseImage() {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
 		ColorImageR32G32B32A32(BaseImage < vec4f >& other) : BaseImage< vec4f >(other){
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
 		ColorImageR32G32B32A32(unsigned int width, unsigned int height, const vec4f *data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
 		ColorImageR32G32B32A32(unsigned int width, unsigned int height, const vec4uc *data, float scale = 255.0f) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			for (unsigned int y = 0; y < m_height; y++) {
 				for (unsigned int x = 0; x < m_width; x++) {
@@ -1255,12 +1287,12 @@ namespace ml {
 		}
 		ColorImageR32G32B32A32(unsigned int width, unsigned int height) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 		}
 
 		ColorImageR32G32B32A32(const DepthImage32& depthImage, bool debugPrint = false) : BaseImage(depthImage.getWidth(), depthImage.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = depthImage.getData();
 			float minDepth = +std::numeric_limits<float>::max();
@@ -1287,7 +1319,7 @@ namespace ml {
 
 		ColorImageR32G32B32A32(const BaseImage<float>& image) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const float* data = image.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1296,7 +1328,7 @@ namespace ml {
 		}
 		ColorImageR32G32B32A32(const BaseImage<vec4uc>& image, float scale = 255.0f) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const vec4uc* data = image.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1305,7 +1337,7 @@ namespace ml {
 		}
 		ColorImageR32G32B32A32(const BaseImage<vec3uc>& image, float scale = 255.0f) : BaseImage(image.getWidth(), image.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR32G32B32A32;
-			m_InvalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
+			m_invalidValue = vec4f(-std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity(), -std::numeric_limits<float>::infinity());
 
 			const vec3uc* data = image.getData();
 			for (unsigned int i = 0; i < getWidth()*getHeight(); i++) {
@@ -1319,24 +1351,24 @@ namespace ml {
 	public:
 		ColorImageR8G8B8A8() : BaseImage() {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
-			m_InvalidValue = vec4uc(0, 0, 0, 0);
+			m_invalidValue = vec4uc(0, 0, 0, 0);
 		}
-        ColorImageR8G8B8A8(const vec2i &dimensions) : BaseImage(dimensions.x, dimensions.y) {
-            m_format = Image::FORMAT_ColorImageR8G8B8A8;
-            m_InvalidValue = vec4uc(0, 0, 0, 0);
-        }
+		ColorImageR8G8B8A8(const vec2i &dimensions) : BaseImage(dimensions.x, dimensions.y) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_invalidValue = vec4uc(0, 0, 0, 0);
+		}
 		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4uc* data) : BaseImage(width, height, data) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
-			m_InvalidValue = vec4uc(0, 0, 0, 0);
+			m_invalidValue = vec4uc(0, 0, 0, 0);
 		}
-        ColorImageR8G8B8A8(unsigned int width, unsigned int height, vec4uc clearValue) : BaseImage(width, height) {
-            m_format = Image::FORMAT_ColorImageR8G8B8A8;
-            m_InvalidValue = vec4uc(0, 0, 0, 0);
-            setPixels(clearValue);
-        }
+		ColorImageR8G8B8A8(unsigned int width, unsigned int height, vec4uc clearValue) : BaseImage(width, height) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_invalidValue = vec4uc(0, 0, 0, 0);
+			setPixels(clearValue);
+		}
 		ColorImageR8G8B8A8(unsigned int width, unsigned int height, const vec4f* data, float scale = 255.0f) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
-			m_InvalidValue = vec4uc(0, 0, 0, 0);
+			m_invalidValue = vec4uc(0, 0, 0, 0);
 
 			for (unsigned int y = 0; y < m_height; y++) {
 				for (unsigned int x = 0; x < m_width; x++) {
@@ -1352,7 +1384,7 @@ namespace ml {
 		}
 		ColorImageR8G8B8A8(const BaseImage<vec4f>& other, float scale = 255.0f) : BaseImage(other.getWidth(), other.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
-			m_InvalidValue = vec4uc(0, 0, 0, 0);
+			m_invalidValue = vec4uc(0, 0, 0, 0);
 
 			for (unsigned int y = 0; y < m_height; y++) {
 				for (unsigned int x = 0; x < m_width; x++) {
@@ -1366,10 +1398,10 @@ namespace ml {
 				}
 			}
 		}
-		
+
 		ColorImageR8G8B8A8(const BaseImage<float>& other, float scale = 255.0f) : BaseImage(other.getWidth(), other.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
-			m_InvalidValue = vec4uc(0, 0, 0, 0);
+			m_invalidValue = vec4uc(0, 0, 0, 0);
 
 			const float* data = other.getData();
 			for (unsigned int y = 0; y < m_height; y++) {
@@ -1386,11 +1418,11 @@ namespace ml {
 		}
 		ColorImageR8G8B8A8(unsigned int width, unsigned int height) : BaseImage(width, height) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
-			m_InvalidValue = vec4uc(0, 0, 0, 0);
+			m_invalidValue = vec4uc(0, 0, 0, 0);
 		}
 		ColorImageR8G8B8A8(const BaseImage<vec3uc>& other) : BaseImage(other.getWidth(), other.getHeight()) {
 			m_format = Image::FORMAT_ColorImageR8G8B8A8;
-			m_InvalidValue = vec4uc(0, 0, 0, 0);
+			m_invalidValue = vec4uc(0, 0, 0, 0);
 
 			for (unsigned int y = 0; y < m_height; y++) {
 				for (unsigned int x = 0; x < m_width; x++) {
@@ -1399,6 +1431,11 @@ namespace ml {
 					setPixel(x, y, value);
 				}
 			}
+		}
+
+		ColorImageR8G8B8A8(const BaseImage<vec4uc>& other) : BaseImage(other.getWidth(), other.getHeight(), other.getData()) {
+			m_format = Image::FORMAT_ColorImageR8G8B8A8;
+			m_invalidValue = other.getInvalidValue();			
 		}
 
         ColorImageR8G8B8A8 getSubregion(const bbox2i &rect) const {
@@ -1431,6 +1468,11 @@ namespace ml {
 
 			return res;
 		}
+
+		//operator BaseImage<vec4uc>() const {
+		//	BaseImage<vec4uc> res(*this);
+		//	return res;
+		//}
 	};
 
 	typedef ColorImageR32G32B32	PointImage;

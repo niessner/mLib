@@ -1,10 +1,7 @@
 
 namespace ml
 {
-
-
-	void D3D11RenderTarget::release()
-	{
+	void D3D11RenderTarget::releaseGPU() {
 		
 		for (unsigned int i = 0; i < getNumTargets(); i++) {
 			if (m_targets)		SAFE_RELEASE(m_targets[i]);
@@ -28,12 +25,10 @@ namespace ml
 		SAFE_RELEASE(m_captureDepth);
 	}
 
-	void D3D11RenderTarget::reset()
-	{
-		release();
+	void D3D11RenderTarget::createGPU() {
+		releaseGPU();
 
-		if (m_width == 0 || m_height == 0)
-			return;
+		if (m_width == 0 || m_height == 0) return;
 
 		auto &device = m_graphics->getDevice();
 		auto &context = m_graphics->getContext();

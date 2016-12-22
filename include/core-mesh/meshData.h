@@ -624,7 +624,6 @@ public:
 							if (hasPerVertexColors())		meshData.m_Colors.push_back(m_Colors[idx]);
 							if (hasPerVertexNormals())		meshData.m_Normals.push_back(m_Normals[idx]);
 							if (hasPerVertexTexCoords())	meshData.m_TextureCoords.push_back(m_TextureCoords[idx]);
-							//TODO HANDLE COLOR NORMAL TEX COORD
 							idx = cnt;
 							cnt++;
 						}
@@ -686,6 +685,7 @@ public:
 				}	
 			}
 
+			meshData.deleteEmptyIndices();
 			meshData.deleteRedundantIndices();
 
 
@@ -740,11 +740,11 @@ public:
 		if (isTriMesh()) return;	//nothing to do...
 
 		size_t numFaces = m_FaceIndicesVertices.size();
-		if (!(m_FaceIndicesNormals.size() == 0 || m_FaceIndicesNormals.size() == numFaces) ||
-			!(m_FaceIndicesTextureCoords.size() == 0 || m_FaceIndicesTextureCoords.size() == numFaces) ||
-			!(m_FaceIndicesColors.size() == 0 || m_FaceIndicesColors.size() == numFaces)) {
-			throw MLIB_EXCEPTION("");
-		}
+		//if (!(m_FaceIndicesNormals.size() == 0 || m_FaceIndicesNormals.size() == numFaces) ||
+		//	!(m_FaceIndicesTextureCoords.size() == 0 || m_FaceIndicesTextureCoords.size() == numFaces) ||
+		//	!(m_FaceIndicesColors.size() == 0 || m_FaceIndicesColors.size() == numFaces)) {
+		//	throw MLIB_EXCEPTION("");
+		//}
 
 		Indices faceIndicesVertices_new;		faceIndicesVertices_new.reserve(numFaces);	//always need to have faces
 		Indices faceIndicesNormals_new;			if (m_FaceIndicesNormals.size())		faceIndicesNormals_new.reserve(numFaces);
@@ -757,7 +757,7 @@ public:
 			if (f.size() < 3) throw MLIB_EXCEPTION("non face found");
 			if (f.size() != 3) {
 				unsigned int v0 = f[0];
-				for (unsigned int j = 0; j < f.size()-2; j++) {
+				for (unsigned int j = 0; j < f.size() - 2; j++) {
 					std::vector<unsigned int> newF(3);
 					newF[0] = v0;
 					newF[1] = f[j + 1];
@@ -766,7 +766,7 @@ public:
 				} 				
 
 				if (m_FaceIndicesNormals.size()) {
-					if (m_FaceIndicesNormals[i].size() != f.size()) throw MLIB_EXCEPTION("mismatch in face valence");
+					if (m_FaceIndicesNormals[i].size() != f.size()) throw MLIB_EXCEPTION("mismatch in face valence (normals)");
 					auto f = m_FaceIndicesNormals[i];
 					unsigned int v0 = f[0];
 					for (unsigned int j = 0; j < f.size() - 2; j++) {
@@ -779,7 +779,10 @@ public:
 				}
 
 				if (m_FaceIndicesTextureCoords.size()) {
-					if (m_FaceIndicesTextureCoords[i].size() != f.size()) throw MLIB_EXCEPTION("mismatch in face valence");
+					if (m_FaceIndicesTextureCoords[i].size() != f.size()) {
+						int a = 5;
+						throw MLIB_EXCEPTION("mismatch in face valence (texcoods)");
+					}
 					auto f = m_FaceIndicesTextureCoords[i];
 					unsigned int v0 = f[0];
 					for (unsigned int j = 0; j < f.size() - 2; j++) {
@@ -792,7 +795,7 @@ public:
 				}
 
 				if (m_FaceIndicesColors.size()) {
-					if (m_FaceIndicesColors[i].size() != f.size()) throw MLIB_EXCEPTION("mismatch in face valence");
+					if (m_FaceIndicesColors[i].size() != f.size()) throw MLIB_EXCEPTION("mismatch in face valence (colors)");
 					auto f = m_FaceIndicesColors[i];
 					unsigned int v0 = f[0];
 					for (unsigned int j = 0; j < f.size() - 2; j++) {
@@ -844,6 +847,48 @@ public:
 		if (m_FaceIndicesVertices == m_FaceIndicesNormals)			m_FaceIndicesNormals.clear();
 		if (m_FaceIndicesVertices == m_FaceIndicesColors)			m_FaceIndicesColors.clear();
 		if (m_FaceIndicesVertices == m_FaceIndicesTextureCoords)	m_FaceIndicesTextureCoords.clear();
+	}
+
+	//! sometimes the face index buffers are empty -- we delete it in these cases
+	void deleteEmptyIndices() {
+		if (m_FaceIndicesNormals.size() > 0) {
+			size_t emptyNorIdxCount = 0;
+			while (emptyNorIdxCount < m_FaceIndicesNormals.size()) {
+				auto& f = m_FaceIndicesNormals[emptyNorIdxCount];
+				if (f.size() != 0) break;
+				emptyNorIdxCount++;
+			}
+			if (emptyNorIdxCount == m_FaceIndicesNormals.size()) {
+				m_Normals.clear();
+				m_FaceIndicesNormals.clear();
+			}
+		}
+
+		if (m_FaceIndicesColors.size() > 0) {
+			size_t emptyColIdxCount = 0;
+			while (emptyColIdxCount < m_FaceIndicesColors.size()) {
+				auto& f = m_FaceIndicesColors[emptyColIdxCount];
+				if (f.size() != 0) break;
+				emptyColIdxCount++;
+			}
+			if (emptyColIdxCount == m_FaceIndicesColors.size()) {
+				m_Colors.clear();
+				m_FaceIndicesColors.clear();
+			}
+		}
+
+		if (m_FaceIndicesTextureCoords.size() > 0) {
+			size_t emptyTexIdxCount = 0;
+			while (emptyTexIdxCount < m_FaceIndicesTextureCoords.size()) {
+				auto& f = m_FaceIndicesTextureCoords[emptyTexIdxCount];
+				if (f.size() != 0) break;
+				emptyTexIdxCount++;
+			}
+			if (emptyTexIdxCount == m_FaceIndicesTextureCoords.size()) {
+				m_TextureCoords.clear();
+				m_FaceIndicesTextureCoords.clear();
+			}
+		}
 	}
 private:
 	inline vec3i toVirtualVoxelPos(const vec3<FloatType>& v, FloatType voxelSize) {

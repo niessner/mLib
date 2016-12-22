@@ -23,13 +23,13 @@ void D3D11ShaderManager::registerShader(
 	// in case the shader exists return
 	if (m_shaders.count(shaderName) == 0) {
 		auto &shaders = m_shaders[shaderName];
-		shaders.vs.load(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
-		shaders.ps.load(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
+		shaders.vs.init(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
+		shaders.ps.init(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
 	}
 }
 
 void D3D11ShaderManager::registerShaderWithGS(
-	const std::string&filename,
+	const std::string& filename,
 	const std::string& shaderName,
 	const std::string& entryPointVS,
 	const std::string& shaderModelVS,
@@ -45,11 +45,11 @@ void D3D11ShaderManager::registerShaderWithGS(
 	// in case the shader exists return
 	if (m_shaders.count(shaderName) == 0) {
 		auto &shaders = m_shaders[shaderName];
-		shaders.vs.load(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
-		shaders.ps.load(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
+		shaders.vs.init(*m_graphics, filename, entryPointVS, shaderModelVS, shaderMacros);
+		shaders.ps.init(*m_graphics, filename, entryPointPS, shaderModelPS, shaderMacros);
 
 		if (entryPointGS != "") {
-			shaders.gs.load(*m_graphics, filename, entryPointGS, shaderModelGS, shaderMacros);
+			shaders.gs.init(*m_graphics, filename, entryPointGS, shaderModelGS, shaderMacros);
 		}
 	}
 }
@@ -60,7 +60,7 @@ void D3D11ShaderManager::bindShaders(const std::string& shaderName) const
 
 	shaders.vs.bind();
 	shaders.ps.bind();
-	if (shaders.gs.exists()) shaders.gs.bind();
+	if (shaders.gs.isInit()) shaders.gs.bind();
 	else m_graphics->getContext().GSSetShader(nullptr, nullptr, 0);
 }
 

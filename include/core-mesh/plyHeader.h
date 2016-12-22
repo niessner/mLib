@@ -78,7 +78,8 @@ namespace ml {
 						if (p.name == "red") header.m_bHasColors = true;
 					}
 
-					if (which == "float" || which == "int" || which == "uint") p.byteSize = 4;
+					if (which == "double") p.byteSize = 8;
+					else if (which == "float" || which == "int" || which == "uint") p.byteSize = 4;
 					else if (which == "uchar" || which == "char") p.byteSize = 1;
 					else {
 						throw MLIB_EXCEPTION("unkown data type");

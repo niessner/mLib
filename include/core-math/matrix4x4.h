@@ -768,36 +768,6 @@ public:
         return vec6<FloatType>(axisAngle, tr);
     }
 
-	//! returns euler angles (x,y,z) and translation in 6d vector (in that order)
-	//! TODO these functions assume radians
-	vec6<FloatType> convertToEulerAnglesPose() const {
-		Matrix3x3<FloatType> R = getRotation();
-		vec3<FloatType> tr = getTranslation();
-
-		FloatType eps = (FloatType)0.00001;
-
-		FloatType psi, theta, phi; // x,y,z axis angles
-		if (std::abs(R(2, 0) - 1) > eps || std::abs(R(2, 0) + 1) > eps) {
-			theta = -asin(R(2, 0)); // \pi - theta
-			FloatType costheta = (FloatType)cos(theta);
-			psi = atan2(R(2, 1) / costheta, R(2, 2) / costheta);
-			phi = atan2(R(1, 0) / costheta, R(0, 0) / costheta);
-		}
-		else {
-			phi = 0;
-			FloatType delta = (FloatType)atan2(R(0, 1), R(0, 2));
-			if (std::abs(R(2, 0) + 1) > eps) {
-				theta = (FloatType)(ml::math::PI / 2.0);
-				psi = phi + delta;
-			}
-			else {
-				theta = (FloatType)(-ml::math::PI / 2.0);
-				psi = -phi + delta;
-			}
-		}
-
-		return vec6<FloatType>(psi, theta, phi, tr.x, tr.y, tr.z);
-	}
 	//! constructs rigid transform from euler angles and translation vector (in that order)
 	//! TODO these functions assume radians
 	static Matrix4x4 EulerAnglesPoseToMatrix(const vec6<FloatType>& ksi) {

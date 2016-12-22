@@ -17,7 +17,7 @@ public:
 		MLIB_ASSERT_STR(bmp == bmpReloaded, "bitmaps do not match");
 	}
 
-	std::string name()
+	std::string getName()
 	{
 		return "LodePNG";
 	}

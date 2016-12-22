@@ -1,7 +1,7 @@
 
-void ml::D3D11VertexShader::load(
+void ml::D3D11VertexShader::init(
 	GraphicsDevice &g,
-	const std::string &filename,
+	const std::string& filename,
 	const std::string& entryPoint,
 	const std::string& shaderModel,
 	const std::vector<std::pair<std::string, std::string>>& shaderMacros)
@@ -12,27 +12,27 @@ void ml::D3D11VertexShader::load(
 		std::cout << "file not found: " << filename << std::endl;
 		return;
 	}
-	release();
+	releaseGPU();
 	SAFE_RELEASE(m_blob);
 
 	m_filename = filename;
-	g.castD3D11().registerAsset(this);
+	//g.castD3D11().registerAsset(this);
 
 	m_blob = D3D11Utility::CompileShader(m_filename, entryPoint, shaderModel, shaderMacros);
 	if (m_blob == nullptr) throw MLIB_EXCEPTION("CompileShader failed");
 
-	reset();
+	createGPU();
 }
 
-void ml::D3D11VertexShader::release()
+void ml::D3D11VertexShader::releaseGPU()
 {
 	SAFE_RELEASE(m_shader);
 	SAFE_RELEASE(m_standardLayout);
 }
 
-void ml::D3D11VertexShader::reset()
+void ml::D3D11VertexShader::createGPU()
 {
-	release();
+	releaseGPU();
 
 	auto &device = m_graphics->getDevice();
 

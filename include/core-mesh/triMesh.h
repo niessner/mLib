@@ -237,12 +237,9 @@ namespace ml {
 			m_bHasTexCoords = other.m_bHasTexCoords;
 			m_bHasColors = other.m_bHasColors;
 		}
+
 		TriMesh(TriMesh&& t) {
-			m_vertices = std::move(t.m_vertices);
-			m_indices = std::move(t.m_indices);
-			m_bHasNormals = t.m_bHasNormals;
-			m_bHasTexCoords = t.m_bHasTexCoords;
-			m_bHasColors = t.m_bHasColors;
+			swap(*this, t);
 		}
 
 
@@ -308,20 +305,27 @@ namespace ml {
 		~TriMesh() {
 		}
 
-		void operator=(TriMesh&& t) {
-			m_vertices = std::move(t.m_vertices);
-			m_indices = std::move(t.m_indices);
-			m_bHasNormals = t.m_bHasNormals;
-			m_bHasTexCoords = t.m_bHasTexCoords;
-			m_bHasColors = t.m_bHasColors;
-		}
-
+		//! assignment operator
 		void operator=(const TriMesh& other) {
 			m_vertices = other.m_vertices;
 			m_indices = other.m_indices;
 			m_bHasNormals = other.m_bHasNormals;
 			m_bHasTexCoords = other.m_bHasTexCoords;
 			m_bHasColors = other.m_bHasColors;
+		}
+
+		//! move operator
+		void operator=(TriMesh&& t) {
+			std::swap(*this, t);
+		}
+
+		//! adl swap
+		friend void swap(TriMesh& a, TriMesh& b) {
+			std::swap(a.m_vertices, b.m_vertices);
+			std::swap(a.m_indices, b.m_indices);
+			std::swap(a.m_bHasNormals, b.m_bHasNormals);
+			std::swap(a.m_bHasTexCoords, b.m_bHasTexCoords);
+			std::swap(a.m_bHasColors, b.m_bHasColors);
 		}
 
 		void clear() {
@@ -333,12 +337,12 @@ namespace ml {
 		}
 
 		void transform(const Matrix4x4<FloatType>& m) {
-      Matrix4x4<FloatType> invTrans = m.getInverse().getTranspose();
+			Matrix4x4<FloatType> invTrans = m.getInverse().getTranspose();
 			for (Vertex& v : m_vertices) {
-        v.position = m * v.position;
-        v.normal = invTrans.transformNormalAffine(v.normal);
-        v.normal.normalizeIfNonzero();
-      }
+				v.position = m * v.position;
+				v.normal = invTrans.transformNormalAffine(v.normal);
+				v.normal.normalizeIfNonzero();
+			}
 		}
 
 		void scale(FloatType s) { scale(vec3<FloatType>(s, s, s)); }
@@ -378,7 +382,7 @@ namespace ml {
 		std::vector<Vertex>& getVertices() { return m_vertices; }
 		std::vector<vec3ui>& getIndices() { return m_indices; }
 
-		void getMeshData(MeshData<FloatType>& meshData) const {
+		void computeMeshData(MeshData<FloatType>& meshData) const {
 
 			meshData.clear();
 
@@ -407,9 +411,9 @@ namespace ml {
 			}
 		}
 
-		MeshData<FloatType> getMeshData() const {
+		MeshData<FloatType> computeMeshData() const {
 			MeshData<FloatType> meshData;
-			getMeshData(meshData);
+			computeMeshData(meshData);
 			return meshData;
 		}
 

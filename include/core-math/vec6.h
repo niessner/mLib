@@ -226,6 +226,15 @@ public:
 		return (v0-v1).length();
 	}
 
+	static vec6<T> randomUniform(T min, T max) {
+		return vec6<T>(math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max),
+			math::randomUniform(min, max));
+	}
+
 	inline void print() const {
 		std::cout << "(" << array[0] << " / " << array[1] << " / " << array[2] << " / " << array[3] << " / " << array[4] << " / " << array[5] << ")" << std::endl;
 	}
@@ -265,7 +274,7 @@ public:
         return v.getNormalized();
     }
 
-	inline T* ptr() {
+	inline T* getData() {
 		return &array[0];
 	}
 
@@ -279,6 +288,16 @@ public:
 		result[5] = zz;
 		return result;
 	}
+
+	inline std::string toString(char separator = ' ') const {
+		return toString(std::string(1, separator));
+	}
+
+	inline std::string toString(const std::string &separator) const {
+		return std::to_string(x) + separator + std::to_string(y) + separator + std::to_string(z) + separator + std::to_string(w) + separator + 
+			std::to_string(xx) + separator + std::to_string(yy) + separator + std::to_string(zz);
+	}
+
 
 	inline vec1<T> getVec1() const {
 		return vec1<T>(x);

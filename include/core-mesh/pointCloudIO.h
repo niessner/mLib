@@ -61,6 +61,30 @@ public:
 	/* Write Functions													    */
 	/************************************************************************/
 
+	// PCD is the file format used by PCL
+	// example: http://pointclouds.org/documentation/tutorials/pcd_file_format.php
+	static void saveToPCD(const std::string& filename, const PointCloud<FloatType>& pc) {
+		if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float, not for double");
+
+		std::ofstream file(filename, std::ios::binary);
+		if (!file.is_open()) throw MLIB_EXCEPTION("Could not open file for writing " + filename);
+		file << "VERSION .7" << std::endl;
+		file << "FIELDS x y z" << std::endl;
+		file << "SIZE 4 4 4" << std::endl;
+		file << "TYPE F F F" << std::endl;
+		file << "COUNT 1 1 1" << std::endl;
+		file << "WIDTH " << pc.m_points.size() << std::endl;
+		file << "HEIGHT 1" << std::endl;
+		file << "VIEWPOINT 0 0 0 1 0 0 0" << std::endl;
+		file << "POINTS " << pc.m_points.size() << std::endl;
+		file << "DATA ascii" << std::endl;
+		for (auto &p : pc.m_points)
+		{
+			file << p.x << " " << p.y << " " << p.z << std::endl;
+		}
+		file.close();
+	}
+
 	static void saveToPLY(const std::string& filename, const PointCloud<FloatType>& pc) {
 
 		if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float, not for double");

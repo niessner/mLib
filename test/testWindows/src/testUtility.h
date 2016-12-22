@@ -27,7 +27,7 @@ public:
 			"Directory failed");
 	}
 
-	std::string name()
+	std::string getName()
 	{
 		return "utility";
 	}

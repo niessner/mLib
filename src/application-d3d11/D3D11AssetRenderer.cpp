@@ -5,9 +5,9 @@ void D3D11AssetRenderer::init(GraphicsDevice &g, bool useTexture)
 {
     m_constants.init(g);
 
-    m_sphere.load(g, ml::Shapesf::sphere(1.0f, vec3f::origin));
-    m_cylinder.load(g, ml::Shapesf::cylinder(0.01f, 1.0f, 2, 15, ml::vec4f(1.0f, 1.0f, 1.0f, 1.0f)));
-    m_box.load(g, ml::Shapesf::box(1.0f));
+    m_sphere.init(g, ml::Shapesf::sphere(1.0f, vec3f::origin));
+    m_cylinder.init(g, ml::Shapesf::cylinder(0.01f, 1.0f, 2, 15, ml::vec4f(1.0f, 1.0f, 1.0f, 1.0f)));
+    m_box.init(g, ml::Shapesf::box(1.0f));
 
     m_graphics = &g.castD3D11();
 
