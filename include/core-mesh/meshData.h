@@ -607,14 +607,26 @@ public:
 		} else {
 			groups = m_indicesByGroup;
 			for (size_t gIdx = 0; gIdx < groups.size(); gIdx++) {
-				const auto& g = groups[gIdx];
+				auto& g = groups[gIdx];
 				bool found = false;
 				for (size_t mIdx = 0; mIdx < m_indicesByMaterial.size(); mIdx++) {
 					const auto& m = m_indicesByMaterial[mIdx];
-					if (g.start >= m.start && g.end <= m.end) {
+					//regular case: there is a single material for the entire group
+					if (g.start >= m.start && g.end <= m.end) {	
 						materialNames.push_back(m.name);
 						found = true;
 						break;
+					}
+					//there are multiple materials for this group (needs to split the group)
+					else if (g.start >= m.start && g.start < m.end && g.end > m.end) {
+						GroupIndex newGroup;
+						newGroup.start = m.end;
+						newGroup.end = g.end;
+						newGroup.name = g.name + " (split by mat)";
+						g.end = m.end;
+						groups.insert(groups.begin() + gIdx + 1, newGroup);
+						materialNames.push_back(m.name);
+						found = true;
 					}
 				}
 				if (!found) throw MLIB_EXCEPTION("could not find a material for group: " + g.name);
@@ -725,7 +737,6 @@ public:
 
 			meshData.deleteEmptyIndices();
 			meshData.deleteRedundantIndices();
-
 		}
 	}
 	

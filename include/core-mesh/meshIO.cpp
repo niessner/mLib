@@ -259,7 +259,9 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 
 			//fscanf(fp, "%s", buf);
 			skipLine(buf, OBJ_LINE_BUF_SIZE, fp);
-			activeGroup.name = std::string(buf);
+			size_t offset = 0;
+			while (buf[offset] == ' ' && buf[offset] != '\0' && offset < OBJ_LINE_BUF_SIZE) offset++;	//skip leading spaces
+			activeGroup.name = std::string(buf + offset);
 			activeGroup.start = faceIndex;
 			bActiveGroup = true;
 		}
