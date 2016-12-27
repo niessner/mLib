@@ -595,12 +595,39 @@ public:
 		else 
 			Material<FloatType>::loadFromMTL(m_materialFile, mats);
 		
-		res.resize(m_indicesByMaterial.size());
 
-		for (size_t i = 0; i < m_indicesByMaterial.size(); i++) {
+		std::vector<GroupIndex> groups;
+		std::vector<std::string> materialNames;
+		bool ignoreGroups = false;
+		if (m_indicesByGroup.size() == 0) ignoreGroups = true;
+
+		if (ignoreGroups) {
+			groups = m_indicesByMaterial;
+			for (auto g : groups) materialNames.push_back(g.name);
+		} else {
+			groups = m_indicesByGroup;
+			for (size_t gIdx = 0; gIdx < groups.size(); gIdx++) {
+				const auto& g = groups[gIdx];
+				bool found = false;
+				for (size_t mIdx = 0; mIdx < m_indicesByMaterial.size(); mIdx++) {
+					const auto& m = m_indicesByMaterial[mIdx];
+					if (g.start >= m.start && g.end <= m.end) {
+						materialNames.push_back(m.name);
+						found = true;
+						break;
+					}
+				}
+				if (!found) throw MLIB_EXCEPTION("could not find a material for group: " + g.name);
+			}
+		}
+
+
+		res.resize(groups.size());
+
+		for (size_t i = 0; i < groups.size(); i++) {
 			Material<FloatType>* m = nullptr;
 			for (size_t j = 0; j < mats.size(); j++) {
-				if (m_indicesByMaterial[i].name == mats[j].m_name) {
+				if (materialNames[i] == mats[j].m_name) {
 					m = &mats[j];
 					break;
 				}
@@ -611,11 +638,19 @@ public:
 			MeshData& meshData = res[i].first;
 			meshData.clear();
 
+			meshData.m_indicesByMaterial.push_back(GroupIndex());
+			meshData.m_indicesByGroup.push_back(GroupIndex());
+			meshData.m_indicesByMaterial[0].name = materialNames[i];
+			meshData.m_indicesByMaterial[0].start = 0;
+			meshData.m_indicesByMaterial[0].end = groups[i].end - groups[i].start;
+			meshData.m_indicesByGroup[0] = meshData.m_indicesByMaterial[0];
+			meshData.m_indicesByGroup[0].name = groups[i].name;
+
 			//vertices
 			{
 				std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
 				unsigned int cnt = 0;
-				for (size_t j = m_indicesByMaterial[i].start; j < m_indicesByMaterial[i].end; j++) {
+				for (size_t j = groups[i].start; j < groups[i].end; j++) {
 					meshData.m_FaceIndicesVertices.push_back(getFaceIndicesVertices()[j]);
 					auto &face = meshData.m_FaceIndicesVertices.back();				
 					for (auto& idx : face) {
@@ -636,7 +671,7 @@ public:
 			if (hasColorIndices()) {
 				std::unordered_map<unsigned int, unsigned int> _map(m_Colors.size());
 				unsigned int cnt = 0;
-				for (size_t j = m_indicesByMaterial[i].start; j < m_indicesByMaterial[i].end; j++) {
+				for (size_t j = groups[i].start; j < groups[i].end; j++) {
 					meshData.m_FaceIndicesColors.push_back(getFaceIndicesColors()[j]);
                     auto &face = meshData.m_FaceIndicesColors.back();
 					for (auto& idx : face) {
@@ -654,7 +689,7 @@ public:
 			if (hasNormalIndices()) {
 				std::unordered_map<unsigned int, unsigned int> _map(m_Normals.size());
 				unsigned int cnt = 0;
-				for (size_t j = m_indicesByMaterial[i].start; j < m_indicesByMaterial[i].end; j++) {
+				for (size_t j = groups[i].start; j < groups[i].end; j++) {
 					meshData.m_FaceIndicesNormals.push_back(getFaceIndicesNormals()[j]);
 					auto &face = meshData.m_FaceIndicesNormals.back();				
 					for (auto& idx : face) {
@@ -672,7 +707,7 @@ public:
 			if (hasTexCoordsIndices()) {
 				std::unordered_map<unsigned int, unsigned int> _map(m_TextureCoords.size());
 				unsigned int cnt = 0;
-				for (size_t j = m_indicesByMaterial[i].start; j < m_indicesByMaterial[i].end; j++) {
+				for (size_t j = groups[i].start; j < groups[i].end; j++) {
 					meshData.m_FaceIndicesTextureCoords.push_back(getFaceIndicesTexCoords()[j]);
                     auto &face = meshData.m_FaceIndicesTextureCoords.back();
 					for (auto& idx : face) {
