@@ -226,26 +226,44 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 	bool bHasFaceNormalIndices = false;
 	bool bHasFaceTexCoordIndices = false;
 
-	typename MeshData<FloatType>::MaterialIndex activeMaterial;
+	typename MeshData<FloatType>::GroupIndex activeMaterial;
+	typename MeshData<FloatType>::GroupIndex activeGroup;
 	bool bActiveMaterial = false;
+	bool bActiveGroup = false;
 
 	while ( fscanf( fp, "%s", buf) != EOF ) {
 		if (strncmp(buf, "mtllib", strlen("mtllib")) == 0) {
-			if (mesh.m_MaterialFile.size()) throw MLIB_EXCEPTION("only a single mtllib definition allowed");
+			if (mesh.m_materialFile.size()) throw MLIB_EXCEPTION("only a single mtllib definition allowed");
 			fscanf( fp, "%s", buf);
-			mesh.m_MaterialFile = util::directoryFromPath(filename) + std::string(buf);
-		} else if (strncmp(buf, "usemtl", strlen("usemtl")) == 0) {
-			unsigned int faceIndex = mesh.m_FaceIndicesVertices.size();
-			if (bActiveMaterial) {
+			mesh.m_materialFile = util::directoryFromPath(filename) + std::string(buf);
+		}
+		//active material
+		else if (strncmp(buf, "usemtl", strlen("usemtl")) == 0) {
+			size_t faceIndex = mesh.m_FaceIndicesVertices.size();
+			if (bActiveMaterial && activeMaterial.start != faceIndex) {
 				activeMaterial.end = faceIndex;
-				mesh.m_MaterialIndices.push_back(activeMaterial);
+				mesh.m_indicesByMaterial.push_back(activeMaterial);
 			}
 
-			fscanf( fp, "%s", buf);
-			activeMaterial.materialName = std::string(buf);
+			fscanf(fp, "%s", buf);
+			activeMaterial.name = std::string(buf);
 			activeMaterial.start = faceIndex;
 			bActiveMaterial = true;
-		} else {
+		} 
+		else if (buf[0] == 'g') {
+			size_t faceIndex = mesh.m_FaceIndicesVertices.size();
+			if (bActiveGroup && activeGroup.start != faceIndex) {
+				activeGroup.end = faceIndex;
+				mesh.m_indicesByGroup.push_back(activeGroup);
+			}
+
+			//fscanf(fp, "%s", buf);
+			skipLine(buf, OBJ_LINE_BUF_SIZE, fp);
+			activeGroup.name = std::string(buf);
+			activeGroup.start = faceIndex;
+			bActiveGroup = true;
+		}
+		else {
 			switch (buf[0]) {
 			case '#':
 				//comment line, eat the remainder
@@ -457,7 +475,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 				break;
 
 			case 's':
-			case 'g':
+			//case 'g':	//groups are handled above and reesult int odifferent materials
 			case 'u':
 				//all presently ignored
 			default:
@@ -474,9 +492,14 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 
 
 	if (bActiveMaterial) {
-		unsigned int faceIndex = mesh.m_FaceIndicesVertices.size();
+		size_t faceIndex = mesh.m_FaceIndicesVertices.size();
 		activeMaterial.end = faceIndex;
-		mesh.m_MaterialIndices.push_back(activeMaterial);
+		mesh.m_indicesByMaterial.push_back(activeMaterial);
+	}
+	if (bActiveGroup) {
+		size_t faceIndex = mesh.m_FaceIndicesVertices.size();
+		activeGroup.end = faceIndex;
+		mesh.m_indicesByGroup.push_back(activeGroup);
 	}
 
 }
