@@ -410,11 +410,16 @@ namespace util
 		return false;    // this is not a directory!
 	}
 
-	std::string getWorkingDirectory()
-	{
+	std::string getWorkingDirectory() {
 		char buffer[2048];
 		GetCurrentDirectoryA(2048, buffer);
 		return std::string(buffer);
+	}
+
+	bool setWorkingDirectory(const std::string& dir) {
+		BOOL res = SetCurrentDirectoryA(dir.c_str());
+		if (res == 0) return false;
+		else return true;
 	}
 
 	std::string getExecutablePath() {
