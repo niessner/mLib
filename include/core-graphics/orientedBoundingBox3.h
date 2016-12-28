@@ -273,6 +273,11 @@ public:
 		return intersection::intersectOBBOBB<FloatType>(m_Anchor, &m_AxesScaled[0], other.m_Anchor, &other.m_AxesScaled[0]);
 	}
 
+	//! warning: not tested
+	bool intersects(const vec3<FloatType>& point) const {
+		vec3f p = getWorldToOBB() * point;
+		return (p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1  && p.z >= 0 && p.z <= 1);
+	}
 
 	//! scales the bounding box by the factor t (for t=1 the bb remains unchanged)
 	void scale(FloatType x, FloatType y, FloatType z) {

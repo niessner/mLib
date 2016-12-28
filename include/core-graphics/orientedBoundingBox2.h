@@ -127,6 +127,12 @@ public:
 	vec2<FloatType> getExtent() const {
 		return vec2<FloatType>(m_AxesScaled[0].length(), m_AxesScaled[1].length());
 	}
+	float getExtentX() const {
+		return m_AxesScaled[0].length();
+	}
+	float getExtentY() const {
+		return m_AxesScaled[1].length();
+	}
 
 	vec2<FloatType> getAnchor() const {
 		return m_Anchor;
