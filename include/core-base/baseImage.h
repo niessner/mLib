@@ -1007,6 +1007,11 @@ namespace ml {
 			}
 		}
 
+		DepthImage16(const BaseImage<unsigned short>& other) : BaseImage(other.getWidth(), other.getHeight(), other.getData()) {
+			m_format = Image::FORMAT_DepthImage16;
+			m_invalidValue = other.getInvalidValue();
+		}
+
 	private:
 	};
 

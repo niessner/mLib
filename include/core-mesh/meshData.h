@@ -183,8 +183,8 @@ public:
 			m_Faces.reserve(numFaces);
 		}
 
-		unsigned int size() const {
-			return (unsigned int)m_Faces.size();
+		size_t size() const {
+			return m_Faces.size();
 		}
 
 		void clear() {
@@ -409,8 +409,9 @@ public:
 		m_FaceIndicesNormals = std::move(d.m_FaceIndicesNormals);
 		m_FaceIndicesTextureCoords = std::move(d.m_FaceIndicesTextureCoords);
 		m_FaceIndicesColors = std::move(d.m_FaceIndicesColors);
-		m_MaterialFile = std::move(d.m_MaterialFile);
-		m_MaterialIndices = std::move(d.m_MaterialIndices);
+		m_materialFile = std::move(d.m_materialFile);
+		m_indicesByMaterial = std::move(d.m_indicesByMaterial);
+		m_indicesByGroup = std::move(d.m_indicesByGroup);
 	}
 	void operator=(MeshData&& d) {
 		m_Vertices = std::move(d.m_Vertices);
@@ -421,8 +422,9 @@ public:
 		m_FaceIndicesNormals = std::move(d.m_FaceIndicesNormals);
 		m_FaceIndicesTextureCoords = std::move(d.m_FaceIndicesTextureCoords);
 		m_FaceIndicesColors = std::move(d.m_FaceIndicesColors);
-		m_MaterialFile = std::move(d.m_MaterialFile);
-		m_MaterialIndices = std::move(d.m_MaterialIndices);
+		m_materialFile = std::move(d.m_materialFile);
+		m_indicesByMaterial = std::move(d.m_indicesByMaterial);
+		m_indicesByGroup = std::move(d.m_indicesByGroup);
 	}
 	void clear() {
 		m_Vertices.clear();
@@ -432,8 +434,9 @@ public:
 		m_FaceIndicesNormals.clear();
 		m_FaceIndicesTextureCoords.clear();
 		m_FaceIndicesColors.clear();
-		m_MaterialFile.clear();
-		m_MaterialIndices.clear();
+		m_materialFile.clear();
+		m_indicesByMaterial.clear();
+		m_indicesByGroup.clear();
 	}
 
 	void clearAttributes() {
@@ -567,16 +570,16 @@ public:
 	Indices	m_FaceIndicesTextureCoords;	//indices in texture array (if size==0, indicesVertices is used)
 	Indices	m_FaceIndicesColors;		//indices in color array (if size==0, indicesVertices is used)
 
-	std::string		m_MaterialFile;	// in case of objs, refers to the filename
-	struct MaterialIndex {
-		MaterialIndex() {}
-		MaterialIndex(unsigned int s, unsigned int e, const std::string& name) : start(s), end(e), materialName(name) {}
-		unsigned int start;
-		unsigned int end;	//end index NOT included (similar to iterators)
-		std::string materialName;
+	std::string	m_materialFile;	// in case of objs, refers to the filename
+	struct GroupIndex {
+		GroupIndex() {}
+		GroupIndex(size_t _start, size_t _end, const std::string& _name) : start(_start), end(_end), name(_name) {}
+		size_t start;
+		size_t end;	//end index NOT included (similar to iterators)
+		std::string name;
 	};
-	std::vector<MaterialIndex>	m_MaterialIndices;	//active material for indices; from - to (in case of objcs)
-
+	std::vector<GroupIndex>	m_indicesByMaterial;	//active material for indices; from - to (in case of obj files)
+	std::vector<GroupIndex>	m_indicesByGroup;		//active group for indices; from - to (in case of obj files)
 
 	std::vector< std::pair <MeshData, Material<FloatType> > > splitByMaterial(const std::string& overwriteMTLPath = "") const {
 		std::vector<std::pair<MeshData, Material<FloatType> > > res;
@@ -590,14 +593,53 @@ public:
 		if (overwriteMTLPath != "")
 			Material<FloatType>::loadFromMTL(overwriteMTLPath, mats);
 		else 
-			Material<FloatType>::loadFromMTL(m_MaterialFile, mats);
+			Material<FloatType>::loadFromMTL(m_materialFile, mats);
 		
-		res.resize(m_MaterialIndices.size());
 
-		for (size_t i = 0; i < m_MaterialIndices.size(); i++) {
+		std::vector<GroupIndex> groups;
+		std::vector<std::string> materialNames;
+		bool ignoreGroups = false;
+		if (m_indicesByGroup.size() == 0) ignoreGroups = true;
+
+		if (ignoreGroups) {
+			groups = m_indicesByMaterial;
+			for (auto g : groups) materialNames.push_back(g.name);
+		} else {
+			groups = m_indicesByGroup;
+			for (size_t gIdx = 0; gIdx < groups.size(); gIdx++) {
+				auto& g = groups[gIdx];
+				bool found = false;
+				for (size_t mIdx = 0; mIdx < m_indicesByMaterial.size(); mIdx++) {
+					const auto& m = m_indicesByMaterial[mIdx];
+					//regular case: there is a single material for the entire group
+					if (g.start >= m.start && g.end <= m.end) {	
+						materialNames.push_back(m.name);
+						found = true;
+						break;
+					}
+					//there are multiple materials for this group (needs to split the group)
+					else if (g.start >= m.start && g.start < m.end && g.end > m.end) {
+						GroupIndex newGroup;
+						newGroup.start = m.end;
+						newGroup.end = g.end;
+						newGroup.name = g.name + " (split by mat)";
+						g.end = m.end;
+						groups.insert(groups.begin() + gIdx + 1, newGroup);
+						materialNames.push_back(m.name);
+						found = true;
+					}
+				}
+				if (!found) throw MLIB_EXCEPTION("could not find a material for group: " + g.name);
+			}
+		}
+
+
+		res.resize(groups.size());
+
+		for (size_t i = 0; i < groups.size(); i++) {
 			Material<FloatType>* m = nullptr;
 			for (size_t j = 0; j < mats.size(); j++) {
-				if (m_MaterialIndices[i].materialName == mats[j].m_name) {
+				if (materialNames[i] == mats[j].m_name) {
 					m = &mats[j];
 					break;
 				}
@@ -608,11 +650,19 @@ public:
 			MeshData& meshData = res[i].first;
 			meshData.clear();
 
+			meshData.m_indicesByMaterial.push_back(GroupIndex());
+			meshData.m_indicesByGroup.push_back(GroupIndex());
+			meshData.m_indicesByMaterial[0].name = materialNames[i];
+			meshData.m_indicesByMaterial[0].start = 0;
+			meshData.m_indicesByMaterial[0].end = groups[i].end - groups[i].start;
+			meshData.m_indicesByGroup[0] = meshData.m_indicesByMaterial[0];
+			meshData.m_indicesByGroup[0].name = groups[i].name;
+
 			//vertices
 			{
 				std::unordered_map<unsigned int, unsigned int> _map(m_Vertices.size());
 				unsigned int cnt = 0;
-				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+				for (size_t j = groups[i].start; j < groups[i].end; j++) {
 					meshData.m_FaceIndicesVertices.push_back(getFaceIndicesVertices()[j]);
 					auto &face = meshData.m_FaceIndicesVertices.back();				
 					for (auto& idx : face) {
@@ -633,7 +683,7 @@ public:
 			if (hasColorIndices()) {
 				std::unordered_map<unsigned int, unsigned int> _map(m_Colors.size());
 				unsigned int cnt = 0;
-				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+				for (size_t j = groups[i].start; j < groups[i].end; j++) {
 					meshData.m_FaceIndicesColors.push_back(getFaceIndicesColors()[j]);
                     auto &face = meshData.m_FaceIndicesColors.back();
 					for (auto& idx : face) {
@@ -651,7 +701,7 @@ public:
 			if (hasNormalIndices()) {
 				std::unordered_map<unsigned int, unsigned int> _map(m_Normals.size());
 				unsigned int cnt = 0;
-				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+				for (size_t j = groups[i].start; j < groups[i].end; j++) {
 					meshData.m_FaceIndicesNormals.push_back(getFaceIndicesNormals()[j]);
 					auto &face = meshData.m_FaceIndicesNormals.back();				
 					for (auto& idx : face) {
@@ -669,7 +719,7 @@ public:
 			if (hasTexCoordsIndices()) {
 				std::unordered_map<unsigned int, unsigned int> _map(m_TextureCoords.size());
 				unsigned int cnt = 0;
-				for (size_t j = m_MaterialIndices[i].start; j < m_MaterialIndices[i].end; j++) {
+				for (size_t j = groups[i].start; j < groups[i].end; j++) {
 					meshData.m_FaceIndicesTextureCoords.push_back(getFaceIndicesTexCoords()[j]);
                     auto &face = meshData.m_FaceIndicesTextureCoords.back();
 					for (auto& idx : face) {
@@ -687,8 +737,6 @@ public:
 
 			meshData.deleteEmptyIndices();
 			meshData.deleteRedundantIndices();
-
-
 		}
 	}
 	
@@ -780,7 +828,6 @@ public:
 
 				if (m_FaceIndicesTextureCoords.size()) {
 					if (m_FaceIndicesTextureCoords[i].size() != f.size()) {
-						int a = 5;
 						throw MLIB_EXCEPTION("mismatch in face valence (texcoods)");
 					}
 					auto f = m_FaceIndicesTextureCoords[i];

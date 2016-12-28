@@ -1822,6 +1822,7 @@ namespace ml {
 		s << VAR_STR_LINE(sensorData.m_colorHeight);
 		s << VAR_STR_LINE(sensorData.m_depthWidth);
 		s << VAR_STR_LINE(sensorData.m_depthHeight);
+		s << VAR_STR_LINE(sensorData.m_depthShift);
 		//s << VAR_STR_LINE(sensorData.m_CalibrationDepth);
 		//s << VAR_STR_LINE(sensorData.m_CalibrationColor);
 		s << VAR_STR_LINE(sensorData.m_frames.size());

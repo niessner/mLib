@@ -389,6 +389,7 @@ namespace util
 	bool moveFile(const std::string& currentFile, const std::string& newFile);
 	bool directoryExists(const std::string& directory);
 	std::string getWorkingDirectory();	//returns the current working directory
+	bool setWorkingDirectory(const std::string& dir);	//sets a new working directory; returns true if successful
 	std::string getExecutablePath();	//returns the path of the program executable
        
     inline void runSystemCommand(const std::string &s)
