@@ -7,6 +7,7 @@
 namespace ml {
 
 	namespace util {
+		std::string getLastErrorString();
 		//! checks an error and exits
 		void errorExit(const std::string& functionName);
 	}
