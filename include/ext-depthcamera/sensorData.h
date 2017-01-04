@@ -1437,10 +1437,18 @@ namespace ml {
 		}
 #endif //_FREEIMAGEWRAPPER_H_
 
+
+		//! compute frame(s) point cloud
+		PointCloudf computePointCloud(unsigned int frameFrom, unsigned int frameTo = -1) const {
+
+		}
+
 		//! save frame(s) to point cloud
 		void saveToPointCloud(const std::string& filename, unsigned int frameFrom, unsigned int frameTo = -1) const {
+			
+			PointCloudf pc = computePointCloud(frameFrom, frameTo);
 			if (frameTo == (unsigned int)-1) frameTo = frameFrom + 1;
-			PointCloudf pc;
+			
 
 			const mat4f intrinsicInv = m_calibrationDepth.m_intrinsic.getInverse();
 			for (unsigned int frame = frameFrom; frame < frameTo; frame++) {
