@@ -361,6 +361,100 @@ unsigned int MeshData<FloatType>::removeIsolatedVertices()
 
 
 template <class FloatType>
+size_t MeshData<FloatType>::traverseNeighbors(const std::vector< std::set<size_t> >& vertex_neighbors, std::vector<size_t>& cluster_ids, size_t cluster_id, size_t vertex_idx) {
+
+	//recursive version (results in stack overflow for larger meshes) .. it may also have an infinite loop :)
+	//if (cluster_ids[vertex_idx] != (size_t)-1) return 0;
+	//cluster_ids[vertex_idx] = cluster_id;
+	//
+	//size_t cluster_size = 1;	//currently it's only myself in the  cluster
+	//for (const auto& n_idx : vertex_neighbors[vertex_idx]) {
+	//	cluster_size += traverseNeighbors(vertex_neighbors, cluster_ids, cluster_id, n_idx);
+	//}
+	//return cluster_size;
+
+
+
+	//iterative version
+	if (cluster_ids[vertex_idx] != (size_t)-1) return 0;
+	std::set<size_t> active_vertex_indices;
+
+	//init with current vertex
+	size_t cluster_size = 0;
+	active_vertex_indices.insert(vertex_idx);
+
+	while (!active_vertex_indices.empty()) {	//process until we have no active vertices anymore
+
+		size_t active_vertex_idx = *active_vertex_indices.begin();
+		active_vertex_indices.erase(active_vertex_indices.begin());
+
+		if (cluster_ids[active_vertex_idx] == (size_t)-1) {	//this should never happen -- unless there are duplicates around
+			cluster_ids[active_vertex_idx] = cluster_id;
+			cluster_size++;
+		}
+
+		//look if we need to process any of the neighbors
+		for (const auto& n_idx : vertex_neighbors[active_vertex_idx]) {
+			if (cluster_ids[n_idx] == (size_t)-1) {	//if it doesn't have a cluster
+				active_vertex_indices.insert(n_idx);
+			}
+		}
+	}
+	return cluster_size;
+}
+
+template <class FloatType>
+size_t MeshData<FloatType>::removeIsolatedPieces(size_t minVertexNum) {
+
+	//std:vector< std::vector< size_t > is a bit faster but requires more memory and less clean because it inserts duplicates
+	std::vector< std::set<size_t> > vertex_neighbors(m_Vertices.size());
+	for (const auto& face : m_FaceIndicesVertices) {
+		for (const auto& v_idx : face) {
+			for (const auto& n_idx : face) {
+				if (v_idx == n_idx) continue; //not a neighbor to itself...
+				vertex_neighbors[v_idx].insert(n_idx);
+			}			
+		}
+	}
+
+	std::vector<size_t> cluster_ids(m_Vertices.size(), (size_t)-1);
+	std::vector<size_t> cluster_sizes;
+	
+	size_t cluster_id = 0;
+	for (size_t vertex_idx = 0; vertex_idx < m_Vertices.size(); vertex_idx++) {
+		size_t cluster_size = traverseNeighbors(vertex_neighbors, cluster_ids, cluster_id, vertex_idx);
+		if (cluster_size > 0) {
+			cluster_sizes.push_back(cluster_size);
+			cluster_id++;
+		}
+	}
+
+	//////////////////// end of clustering
+
+	Indices newFacesIndicesVertices;
+
+	for (size_t i = 0; i < m_FaceIndicesVertices.size(); i++) {
+		auto& face = m_FaceIndicesVertices[i];
+		if (face.size()) {
+			auto& v_id = *face.begin();	//they must be all the same anyway
+			size_t cluster_id = cluster_ids[v_id];
+			size_t cluster_size = cluster_sizes[cluster_id];
+			if (cluster_size >= minVertexNum) {
+				newFacesIndicesVertices.push_back(m_FaceIndicesVertices[i]);
+			}
+		}
+	}
+	if (m_FaceIndicesVertices.size() != newFacesIndicesVertices.size()) {
+		m_FaceIndicesVertices = newFacesIndicesVertices;
+	}
+
+	removeIsolatedVertices();
+
+	return m_Vertices.size();
+}
+
+
+template <class FloatType>
 unsigned int MeshData<FloatType>::removeVerticesInFrontOfPlane( const Plane<FloatType>& plane, FloatType thresh )
 {
 	unsigned int numV = (unsigned int)m_Vertices.size();

@@ -546,8 +546,11 @@ public:
 	unsigned int mergeCloseVertices(FloatType thresh, bool approx = false);
 	unsigned int removeDegeneratedFaces();
 
-	//! also removes isolated normals, colors, etc.
+	//! if a vertex is not part of any face, remove it; also removes isolated normals, colors, etc.
 	unsigned int removeIsolatedVertices();
+
+	//! removes all pieces with respect to the number of vertices (smaller than minVertexNum) (may need to call mergeCloseVertices beforehand) 
+	size_t removeIsolatedPieces(size_t minVertexNum);
 
 	//! removes all the vertices that are behind a plane (faces with one or more of those vertices are being deleted as well)
 	//! larger thresh removes less / negative thresh removes more
@@ -946,6 +949,9 @@ private:
 
 	//! returns -1 if there is no vertex closer to 'v' than thresh; otherwise the vertex id of the closer vertex is returned (manhattan distance)
 	unsigned int hasNearestNeighborApprox(const vec3i& coord, SparseGrid3<unsigned int> &neighborQuery, FloatType thresh );
+
+	//! helper function for removeIsolatedPieces
+	size_t traverseNeighbors(const std::vector< std::set<size_t> >& vertex_neighbors, std::vector<size_t>& cluster_ids, size_t cluster_id, size_t vertex_idx);
 };
 
 typedef MeshData<float>		MeshDataf;
