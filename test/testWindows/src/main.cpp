@@ -37,6 +37,25 @@ private:
 
 int main()
 {
+	//BinaryDataStreamVector stream;
+	//{
+	//	std::fstream fileStream("test.txt", std::ios::out);
+	//	for (unsigned int i = 0; i < 10; i++) fileStream << i << std::endl;
+	//}
+	//{
+	//	std::fstream fileStream("test.txt", std::ios::in | std::ios::out);
+	//	fileStream << "b" << std::endl;
+
+	//	while (!fileStream.eof()) {
+	//		unsigned int i;
+	//		fileStream >> i;
+	//		std::cout << i << std::endl;
+	//	}
+	//}
+
+	//std::cout << "done" << std::endl;
+	//getchar();
+	//exit(1);
 	//std::cout << Directory::enumerateDirectoriesWithPath("../") << std::endl;
 	//util::fileNameFromPath()
 

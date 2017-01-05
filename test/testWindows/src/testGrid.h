@@ -146,7 +146,7 @@ public:
 		grid.fill(fillFunc); 
 		BinaryDataStreamFile out("tmp.bin", true);
 		out << grid;
-		out.closeStream(); 
+		out.close(); 
 		BinaryDataStreamFile in("tmp.bin", false);
 		Grid3<float> re;
 		in >> re;
@@ -164,7 +164,7 @@ public:
 		grid.fill(fillFunc);
 		BinaryDataStreamFile out("tmp.bin", true);
 		out << grid;
-		out.closeStream();
+		out.close();
 		BinaryDataStreamFile in("tmp.bin", false);
 		Grid2<float> re;
 		in >> re;

@@ -180,7 +180,7 @@ void PCA<T>::save(const std::string &filename) const
 {
     BinaryDataStreamFile file(filename, true);
     file << _means << _system.eigenvalues << _system.eigenvectors;
-    file.closeStream();
+    file.close();
 }
 
 template<class T>
@@ -188,5 +188,5 @@ void PCA<T>::load(const std::string &filename)
 {
     BinaryDataStreamFile file(filename, false);
     file >> _means >> _system.eigenvalues >> _system.eigenvectors;
-    file.closeStream();
+    file.close();
 }
