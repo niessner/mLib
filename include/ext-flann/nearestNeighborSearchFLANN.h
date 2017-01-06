@@ -42,7 +42,7 @@ namespace ml
 		void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK)
 		{
 			m_dimension = dimension;
-			std::cout << "Initializing FLANN index with " << points.size() << " points" << std::endl;
+			//std::cout << "Initializing FLANN index with " << points.size() << " points" << std::endl;
 			
 			// FLANN requires that all the points be flat. We could make a different init function
 			// so that if you provide everything in a flat array we can use that instead without
@@ -66,7 +66,7 @@ namespace ml
 			m_indicesStorage = flann::Matrix<int>(new int[maxK], 1, maxK);
 			m_distsStorage = flann::Matrix<float>(new float[maxK], 1, maxK);
 
-			std::cout << "FLANN index created" << std::endl;
+			//std::cout << "FLANN index created" << std::endl;
 		}
 
 		void kNearestInternal(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const

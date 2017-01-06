@@ -2,7 +2,7 @@
 template<class T>
 void PCA<T>::init(const std::vector<const T*> &points, size_t dimension, const EigenSolverFunc &eigenSolver)
 {
-    std::cout << "Initializing PCA, " << points.size() << " points, " << dimension << " dimensions" << std::endl;
+    //std::cout << "Initializing PCA, " << points.size() << " points, " << dimension << " dimensions" << std::endl;
 	
     const size_t n = points.size();
     DenseMatrix<T> B(n, dimension);
@@ -26,7 +26,7 @@ void PCA<T>::init(const std::vector<const T*> &points, size_t dimension, const E
 		}
 	}
 
-    std::cout << "Building cross-correlation matrix..." << std::endl;
+    //std::cout << "Building cross-correlation matrix..." << std::endl;
 	
     DenseMatrix<T> C = B.getTranspose() * B;
 	//DenseMatrix<T>::MultiplyMMTranspose(C, B);
@@ -43,7 +43,7 @@ void PCA<T>::init(DenseMatrix<T> &points, const EigenSolverFunc &eigenSolver)
 {
     const size_t n = points.rows();
     const size_t dimension = points.cols();
-    std::cout << "Initializing PCA, " << n << " points, " << dimension << " dimensions" << std::endl;
+    //std::cout << "Initializing PCA, " << n << " points, " << dimension << " dimensions" << std::endl;
 
     _means.clear();
     _means.resize(dimension, (T)0.0);
@@ -63,7 +63,7 @@ void PCA<T>::init(DenseMatrix<T> &points, const EigenSolverFunc &eigenSolver)
         }
     }
 
-    std::cout << "Building cross-correlation matrix..." << std::endl;
+    //std::cout << "Building cross-correlation matrix..." << std::endl;
 
 	//DenseMatrix<T> C = points * points.transpose();
 	DenseMatrix<T> C = points.getTranspose() * points;
@@ -80,7 +80,7 @@ template<class T>
 void PCA<T>::initFromCorrelationMatrix(const DenseMatrix<T> &C, const EigenSolverFunc &eigenSolver)
 {
     const size_t dimension = C.rows();
-	std::cout << "Computing eigensystem..." << std::endl;
+	//std::cout << "Computing eigensystem..." << std::endl;
 	_system = eigenSolver(C);
     //_system = C.eigenSystem();
 	//_system = C.eigenSystemUsingEigen();
@@ -102,7 +102,7 @@ void PCA<T>::finalizeFromEigenSystem()
 	for(size_t dimIndex = 0; dimIndex < dimension; dimIndex++)
 	{
 		cumulativeEnergy += _system.eigenvalues[dimIndex];
-		std::cout << "Energy at " << dimIndex + 1 << " terms: " << cumulativeEnergy / sum * 100.0f << "%" << std::endl;
+		//std::cout << "Energy at " << dimIndex + 1 << " terms: " << cumulativeEnergy / sum * 100.0f << "%" << std::endl;
 	}
 }
 
