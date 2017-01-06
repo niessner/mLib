@@ -1437,10 +1437,12 @@ namespace ml {
 		}
 #endif //_FREEIMAGEWRAPPER_H_
 
-		//! save frame(s) to point cloud
-		void saveToPointCloud(const std::string& filename, unsigned int frameFrom, unsigned int frameTo = -1) const {
-			if (frameTo == (unsigned int)-1) frameTo = frameFrom + 1;
+
+		//! compute frame(s) point cloud
+		PointCloudf computePointCloud(unsigned int frameFrom, unsigned int frameTo = -1) const {
 			PointCloudf pc;
+
+			if (frameTo == (unsigned int)-1) frameTo = frameFrom + 1;
 
 			const mat4f intrinsicInv = m_calibrationDepth.m_intrinsic.getInverse();
 			for (unsigned int frame = frameFrom; frame < frameTo; frame++) {
@@ -1448,9 +1450,9 @@ namespace ml {
 				unsigned short* depth = decompressDepthAlloc(frame);
 				mat4f transform = m_frames[frame].getCameraToWorld(); if (transform[0] == -std::numeric_limits<float>::infinity() || transform[0] == 0) transform.setIdentity();
 				for (unsigned int i = 0; i < m_depthWidth*m_depthHeight; i++) {
-					unsigned int x = i % m_depthWidth, y =  i / m_depthWidth;
+					unsigned int x = i % m_depthWidth, y = i / m_depthWidth;
 					if (depth[i] != 0) {
-						float d = (float)depth[i]/m_depthShift;
+						float d = (float)depth[i] / m_depthShift;
 						vec3f cameraPos = (intrinsicInv*vec4f((float)x*d, (float)y*d, d, 0.0f)).getVec3();
 						vec3f worldPos = transform * cameraPos;
 						pc.m_points.push_back(worldPos);
@@ -1475,6 +1477,13 @@ namespace ml {
 				std::free(color);
 				std::free(depth);
 			}
+
+			return pc;
+		}
+
+		//! save frame(s) to point cloud
+		void saveToPointCloud(const std::string& filename, unsigned int frameFrom, unsigned int frameTo = -1) const {			
+			PointCloudf pc = computePointCloud(frameFrom, frameTo);
 			PointCloudIOf::saveToFile(filename, pc);
 		}
 

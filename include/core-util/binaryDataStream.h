@@ -5,23 +5,37 @@
 namespace ml
 {
 
-template<class T> class Grid2;
-template<class T> class Grid3;
-
 template<class BinaryDataBuffer, class BinaryDataCompressor>
 class BinaryDataStream {
 public:
 	BinaryDataStream() {}
 	BinaryDataStream(const std::string& filename, bool clearStream) {
-		m_dataBuffer.openBufferStream(filename, clearStream);
+		open(filename, clearStream);
 	}
-	//! only required for files
-	void openStream(const std::string& filename, bool clearStream) {
-		m_dataBuffer.openBufferStream(filename, clearStream);
+	BinaryDataStream(const std::string& filename, typename BinaryDataBuffer::Mode mode) {
+		open(filename, mode);
+	}
+	~BinaryDataStream() {
+		close();
 	}
 
-	void closeStream() {
-		m_dataBuffer.closeBufferStream();
+	//! only required for file streams: clear means write-only and delete file; otherwise it's read only
+	void open(const std::string& filename, bool clearStream) {
+		BinaryDataBuffer::Mode mode = BinaryDataBuffer::Mode::no_flag;
+		if (clearStream) {
+			mode |= BinaryDataBuffer::Mode::clear_flag | BinaryDataBuffer::Mode::write_flag;
+		}
+		else {
+			mode |= BinaryDataBuffer::Mode::read_flag;
+		}
+		m_dataBuffer.open(filename, mode);
+	}
+	void open(const std::string& filename, typename BinaryDataBuffer::Mode mode) {
+		m_dataBuffer.open(filename, mode);
+	}
+
+	void close() {
+		m_dataBuffer.close();
 	}
 
 	template <class T>
@@ -48,7 +62,6 @@ public:
 
 	template <class T>
 	void readData(T& result) {
-		//readData((BYTE*)result, sizeof(T));
 		readData((BYTE*)&result, sizeof(T));
 	}
 
@@ -73,19 +86,9 @@ public:
 	}
 
 	//! destroys all the data in the stream (DELETES ALL DATA!)
-	void clearStream() {
-		m_dataBuffer.clearBuffer();
+	void clear() {
+		m_dataBuffer.clear();
 	}
-
-	//! saves the stream to file; does not affect current data
-	void saveToFile(const std::string &filename) {
-		m_dataBuffer.saveToFile(filename);
-	}
-
-	//! loads a binary stream from file; destorys all previous data in the stream
-	void loadFromFile(const std::string &filename) {
-		m_dataBuffer.loadFromFile(filename);
-	} 
 
 	void reserve(size_t size) {
 		m_dataBuffer.reserve(size);
@@ -95,12 +98,24 @@ public:
 		m_dataBuffer.flushBufferStream();
 	}
 
+	//! saves the stream to file; does not affect current data
+	void saveToFile(const std::string &filename) {
+		m_dataBuffer.saveToFile(filename);
+	}
+
+	//! loads a binary stream from file; destorys all previous data in the stream
+	void loadFromFile(const std::string& filename) {
+		m_dataBuffer.loadFromFile(filename);
+	} 
+
+
+
     const std::vector<BYTE>& getData() const {
         return m_dataBuffer.getData();
     }
 
     void setData(std::vector<BYTE> &&data) {
-        m_dataBuffer.setData(move(data));
+        m_dataBuffer.setData(std::move(data));
     }
 
 private:
@@ -330,7 +345,7 @@ namespace util
     {
         BinaryDataStreamFile out(filename, true);
         out << o;
-        out.closeStream();
+        out.close();
     }
 
     template<class T, class U>
@@ -338,7 +353,7 @@ namespace util
     {
         BinaryDataStreamFile out(filename, true);
         out << o0 << o1;
-        out.closeStream();
+        out.close();
     }
 
     template<class T>

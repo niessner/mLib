@@ -60,12 +60,12 @@ class TestBinaryStream : public Test {
 		BinaryDataStreamZLibFile streamOut(filenameCompressed, true);
 		TestBinaryStreamTestData data;	data.init();
 		streamOut << data << v;
-		streamOut.closeStream();	//must call this here to make sure everything has been written to disk
+		streamOut.close();	//must call this here to make sure everything has been written to disk
 
 		BinaryDataStreamFile streamOutComp(filename, true);
 		TestBinaryStreamTestData data2;	data2.init();
 		streamOutComp << data2 << v;
-		streamOutComp.closeStream();	//must call this here to make sure everything has been written to disk
+		streamOutComp.close();	//must call this here to make sure everything has been written to disk
 		
 
 		UINT64 dataSize = util::getFileData(filename).size();
@@ -110,7 +110,7 @@ class TestBinaryStream : public Test {
 		}
 		BinaryDataStreamFile out("tmp.bin", true);
 		out << v;
-		out.closeStream();
+		out.close();
 		
 		BinaryDataStreamFile in("tmp.bin", false);
 		std::vector<float> re;

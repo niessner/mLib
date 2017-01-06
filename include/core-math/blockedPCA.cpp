@@ -97,7 +97,7 @@ void BlockedPCA<T>::save(const std::string &baseFilename) const
 		file << _subsets[i].startDim << _subsets[i].dimCount;
 		_subsets[i].pca.save(baseFilename + "_" + std::to_string(i) + ".dat");
 	}
-    file.closeStream();
+    file.close();
 
 
 }

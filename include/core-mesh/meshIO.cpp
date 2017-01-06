@@ -477,7 +477,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 				break;
 
 			case 's':
-			//case 'g':	//groups are handled above and reesult int odifferent materials
+			//case 'g':	//groups are handled above and result int different materials
 			case 'u':
 				//all presently ignored
 			default:
