@@ -163,7 +163,9 @@ namespace util
 
 	//! gets the file extension (ignoring case)
 	inline std::string getFileExtension(const std::string& filename) {
-		std::string extension = filename.substr(filename.rfind(".") + 1);
+		size_t pos = filename.rfind(".");
+		if (pos == std::string::npos) return "";
+		std::string extension = filename.substr(pos + 1);
 		for (unsigned int i = 0; i < extension.size(); i++) {
 			extension[i] = tolower(extension[i]);
 		}
