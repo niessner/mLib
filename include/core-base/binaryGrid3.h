@@ -131,7 +131,7 @@ namespace ml {
 		}
 
 		inline bool isVoxelSet(size_t x, size_t y, size_t z) const {
-			size_t linIdx = z*m_dimY*m_dimX + x*m_dimY + y;
+			size_t linIdx = m_dimX*m_dimY*z + m_dimX*y + x;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			return (m_data[baseIdx] & (1 << localIdx)) != 0;
@@ -142,7 +142,7 @@ namespace ml {
 		}
 
 		inline void setVoxel(size_t x, size_t y, size_t z) {
-			size_t linIdx = z*m_dimY*m_dimX + x*m_dimY + y;
+			size_t linIdx = m_dimX*m_dimY*z + m_dimX*y + x;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] |= (1 << localIdx);
@@ -153,7 +153,7 @@ namespace ml {
 		}
 
 		inline void clearVoxel(size_t x, size_t y, size_t z) {
-			size_t linIdx = z*m_dimY*m_dimX + x*m_dimY + y;
+			size_t linIdx = m_dimX*m_dimY*z + m_dimX*y + x;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] &= ~(1 << localIdx);
@@ -164,7 +164,7 @@ namespace ml {
 		}
 
 		inline void toggleVoxel(size_t x, size_t y, size_t z) {
-			size_t linIdx = z*m_dimY*m_dimX + x*m_dimY + y;
+			size_t linIdx = m_dimX*m_dimY*z + m_dimX*y + x;
 			size_t baseIdx = linIdx / bitsPerUInt;
 			size_t localIdx = linIdx % bitsPerUInt;
 			m_data[baseIdx] ^= (1 << localIdx);
