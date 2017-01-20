@@ -127,6 +127,20 @@ public:
         return *m_context;
     }
 
+	void setViewport(unsigned int width, unsigned int height, float minDepth, float maxDepth, float topLeftX, float topLeftY) 
+	{
+		m_viewportWidth = width;
+		m_viewportHeight = height;
+		D3D11_VIEWPORT viewport;
+		viewport.Width = (float)width;
+		viewport.Height = (float)height;
+		viewport.MinDepth = minDepth;
+		viewport.MaxDepth = maxDepth;
+		viewport.TopLeftX = topLeftX;
+		viewport.TopLeftY = topLeftY;
+		m_context->RSSetViewports(1, &viewport);
+	}
+
 
 
 	unsigned int getWidth() const {
@@ -139,7 +153,7 @@ public:
 
 	//! maps from integer pixel coordinates to NDC space [-1;1]^2
 	vec2f pixelToNDC(const vec2i& p) const {
-		return pixelToNDC(p, getWidth(), getHeight());
+		return pixelToNDC(p, m_viewportWidth, m_viewportHeight);
 	}
 
 	//! maps from integer pixel coordinates to NDC space [-1;1]^2
@@ -157,6 +171,7 @@ private:
     void registerDefaultShaders();
 
     UINT m_width, m_height;
+	UINT m_viewportWidth, m_viewportHeight;
     ID3D11Device *m_device;
     ID3D11DeviceContext *m_context;
     ID3D11RenderTargetView *m_renderTargetView;

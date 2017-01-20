@@ -145,9 +145,11 @@ void D3D11GraphicsDevice::createViews() {
 	//
 	// Setup the viewport
 	//
+	m_viewportWidth = m_width;
+	m_viewportHeight = m_height;
 	D3D11_VIEWPORT viewport;
-	viewport.Width = (FLOAT)m_width;
-	viewport.Height = (FLOAT)m_height;
+	viewport.Width = (FLOAT)m_viewportWidth;
+	viewport.Height = (FLOAT)m_viewportHeight;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	viewport.TopLeftX = 0;
@@ -331,8 +333,8 @@ void D3D11GraphicsDevice::bindRenderTarget()
 {
     m_context->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
     D3D11_VIEWPORT viewport;
-    viewport.Width = (FLOAT)m_width;
-    viewport.Height = (FLOAT)m_height;
+    viewport.Width = (FLOAT)m_viewportWidth;
+    viewport.Height = (FLOAT)m_viewportHeight;
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
     viewport.TopLeftX = 0;
