@@ -23,6 +23,8 @@ void ml::D3D11PointCloud::releaseGPU()
 void ml::D3D11PointCloud::createGPU() {
 	releaseGPU();
 	initVB(*m_graphics);
+	const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
+	m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultPointCloud.hlsl", "defaultPointCloud");
 }
 
 void ml::D3D11PointCloud::initVB(GraphicsDevice &g)
