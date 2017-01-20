@@ -335,6 +335,9 @@ namespace ml {
 			m_bHasTexCoords = false;
 			m_bHasColors = false;
 		}
+		bool empty() const {
+			return m_vertices.empty();
+		}
 
 		void transform(const Matrix4x4<FloatType>& m) {
 			Matrix4x4<FloatType> invTrans = m.getInverse().getTranspose();
