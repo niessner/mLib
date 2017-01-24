@@ -146,9 +146,25 @@ namespace ml {
 			}
 		}
 
+		void saveToFile(const std::string& filename) const {
+			//note: unordered_map killed the original ordering
+			std::ofstream ofs(filename);
+			if (!ofs.is_open()) throw MLIB_EXCEPTION("failed to open file (" + filename + ") for write");
+			for (const auto v : m_Values) {
+				ofs << v.first << " " << m_Separator << " " << v.second << std::endl;
+			}
+			ofs.close();
+		}
+
 		void overrideParameter(const std::string &parameter, const std::string &newValue)
 		{
 			m_Values[parameter] = newValue;
+		}
+
+		void deleteParameter(const std::string& parameter, bool verbose = false)
+		{
+			size_t numErased = m_Values.erase(parameter);
+			if (verbose && numErased == 0) std::cout << "warning: could not find parameter (" << parameter << ") to delete" << std::endl;
 		}
 
 	private:
