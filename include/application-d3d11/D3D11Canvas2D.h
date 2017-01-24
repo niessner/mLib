@@ -99,7 +99,7 @@ namespace ml {
 		class ElementBillboard : public Element
 		{
 		public:
-			ElementBillboard(GraphicsDevice& g, const std::string &id, const bbox2i& box, const ColorImageR8G8B8A8& image, float depth) : Element(g, id, ELEMENT_TYPE_BILLBOARD, depth)
+			ElementBillboard(GraphicsDevice& g, const std::string &id, const bbox2i& box, const ColorImageR8G8B8A8& image, float depth, bool useDefaultShader) : Element(g, id, ELEMENT_TYPE_BILLBOARD, depth, useDefaultShader)
 			{
 				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
 				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasBillboard", "billboardVS", "vs_4_0", "billboardPS", "ps_4_0");
@@ -270,8 +270,8 @@ namespace ml {
 			m_namedElements[elementId] = new ElementCircle(*m_graphics, elementId, centerInPixels, radiusInPixels, color, depth);
 		}
 
-		void addBillboard(const std::string &elementId, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
-			m_namedElements[elementId] = new ElementBillboard(*m_graphics, elementId, box, image, depth);
+		void addBillboard(const std::string &elementId, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth, bool useDefaultShader = true) {
+			m_namedElements[elementId] = new ElementBillboard(*m_graphics, elementId, box, image, depth, useDefaultShader);
 		}
 		void addBox(const std::string &elementId, const bbox2i& box, const vec4f& color, float depth, bool useDefaultShader = true) {
 			m_namedElements[elementId] = new ElementBox(*m_graphics, elementId, box, color, depth, useDefaultShader);
@@ -281,8 +281,8 @@ namespace ml {
 			m_unnamedElements.push_back(new ElementCircle(*m_graphics, "", centerInPixels, radiusInPixels, color, depth));
 		}
 
-		void addBillboard(const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth) {
-			m_unnamedElements.push_back(new ElementBillboard(*m_graphics, "", box, image, depth));
+		void addBillboard(const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth, bool useDefaultShader = true) {
+			m_unnamedElements.push_back(new ElementBillboard(*m_graphics, "", box, image, depth, useDefaultShader));
 		}
 
 		void addBox(const bbox2i& box, const vec4f& color, float depth, bool useDefaultShader = true) {
