@@ -59,7 +59,7 @@ namespace ml {
 			if (!dib) throw MLIB_EXCEPTION("Could not load image: " + filename);
 			FREE_IMAGE_TYPE fitype = FreeImage_GetImageType(dib);
 
-			if (fitype != FIT_BITMAP && fitype != FIT_UINT16 && fitype != FIT_RGB16 && fitype != FIT_RGBA16) 
+			if (fitype != FIT_BITMAP && fitype != FIT_UINT16 && fitype != FIT_RGB16 && fitype != FIT_FLOAT && fitype != FIT_RGBAF && fitype != FIT_RGBF) 
 				throw MLIB_EXCEPTION("Unknown image format");
 
 			bits = FreeImage_GetBits(dib);
@@ -132,6 +132,36 @@ namespace ml {
 					const BYTE* dataRowStart = data + (height - 1 - y)*pitch;
 					for (unsigned int x = 0; x < width; x++) {
 						convertFromUSHORT4(resultImage(x, y), (USHORT*)&dataRowStart[x*bytesPerPixel]);
+					}
+				}
+			}
+			else if (fitype == FIT_FLOAT) {
+				float *data = (float*)bits;
+				unsigned int bytesPerPixel = nBits / 8;
+				MLIB_ASSERT(bytesPerPixel == 4);
+				for (unsigned int y = 0; y < height; y++) {
+					for (unsigned int x = 0; x < width; x++) {
+						convertFromFLOAT(resultImage(x, height - 1 - y), &data[y * width + x]);
+					}
+				}
+			}
+			else if (fitype == FIT_RGBF) {
+				float *data = (float *)bits;
+				unsigned int bytesPerPixel = nBits / 8;
+				MLIB_ASSERT(bytesPerPixel == 12);
+				for (unsigned int y = 0; y < height; y++) {
+					for (unsigned int x = 0; x < width; x++) {
+						convertFromFLOAT3(resultImage(x, height - 1 - y), &data[3 * (y * width + x)]);
+					}
+				}
+			}
+			else if (fitype == FIT_RGBAF) {
+				float *data = (float *)bits;
+				unsigned int bytesPerPixel = nBits / 8;
+				MLIB_ASSERT(bytesPerPixel == 16);
+				for (unsigned int y = 0; y < height; y++) {
+					for (unsigned int x = 0; x < width; x++) {
+						convertFromFLOAT4(resultImage(x, height - 1 - y), &data[4 * (y * width + x)]);
 					}
 				}
 			}

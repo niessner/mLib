@@ -228,6 +228,11 @@ template<>	inline void convertFromUSHORT3<vec3d>(vec3d& output, const unsigned s
 	output.y = (double)input[1];
 	output.z = (double)input[2];
 }
+template<>	inline void convertFromUSHORT3<vec3f>(vec3f& output, const unsigned short* input) {
+	output.x = (float)input[0];
+	output.y = (float)input[1];
+	output.z = (float)input[2];
+}
 template<>	inline void convertFromUSHORT3<vec3us>(vec3us& output, const unsigned short* input) {
 	output.x = input[0];
 	output.y = input[1];
@@ -276,6 +281,44 @@ template<>	inline void convertFromUSHORT4<vec3us>(vec3us& output, const unsigned
 
 template<>	inline void convertFromUSHORT4<unsigned short>(unsigned short& output, const unsigned short* input) {
 	output = input[0];
+}
+
+//FLOAT
+template<class T>	inline void convertFromFLOAT(T& output, const float* input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+template<>	inline void convertFromFLOAT<float>(float& output, const float* input) {
+	output = input[0];
+}
+
+//FLOAT3
+template<class T>	inline void convertFromFLOAT3(T& output, const float* input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+template<>	inline void convertFromFLOAT3<vec3f>(vec3f& output, const float* input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+}
+template<>	inline void convertFromFLOAT3<vec4f>(vec4f& output, const float* input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+	output.w = 1;
+}
+
+//FLOAT4
+template<class T>	inline void convertFromFLOAT4(T& output, const float* input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+template<>	inline void convertFromFLOAT4<vec4f>(vec4f& output, const float* input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+	output.w = input[3];
 }
 
 ///////////////////////
