@@ -45,7 +45,7 @@ void D3D11Texture2D<T>::createGPU() {
     D3D_VALIDATE(device.CreateTexture2D(&desc, nullptr, &m_texture));
     D3D_VALIDATE(device.CreateShaderResourceView(m_texture, nullptr, &m_srv));
 
-    context.UpdateSubresource(m_texture, 0, nullptr, m_image.getData(), (UINT)m_image.getWidth() * sizeof(vec4uc), (UINT)m_image.getWidth() * (UINT)m_image.getHeight() * sizeof(vec4uc));
+    context.UpdateSubresource(m_texture, 0, nullptr, m_image.getData(), (UINT)m_image.getWidth() * sizeof(T), (UINT)m_image.getWidth() * (UINT)m_image.getHeight() * sizeof(T));
 
     context.GenerateMips(m_srv);
 }
