@@ -110,17 +110,6 @@ namespace ml {
 				resize();
 			}
 
-			ElementBillboard(const ElementBillboard &other) : Element(*other.m_graphics, other.m_id, ELEMENT_TYPE_BILLBOARD, other.m_depth, other.m_bUseDefaultShader)
-			{
-				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
-				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasBillboard", "billboardVS", "vs_4_0", "billboardPS", "ps_4_0");
-				
-				m_id = other.m_id;
-				m_box = other.m_box;
-				m_tex = other.m_tex;
-				resize();
-			}
-
 			void resize();
 			void render();
 			bool intersects(const vec2i &mouseCoord, Intersection& intersection) const;
@@ -195,16 +184,6 @@ namespace ml {
 				m_id = id;
 				m_box = box;
 				m_color = color;
-				resize();
-			}
-
-			ElementBox(const ElementBox &other) : Element(*other.m_graphics, other.m_id, ELEMENT_TYPE_BOX, other.m_depth, other.m_bUseDefaultShader)
-			{
-				const std::string mLibShaderDir = util::getMLibDir() + "data/shaders/";
-				m_graphics->getShaderManager().registerShader(mLibShaderDir + "defaultCanvas.hlsl", "defaultCanvasBox", "boxVS", "vs_4_0", "boxPS", "ps_4_0");
-				m_id = other.m_id;
-				m_box = other.m_box;
-				m_color = other.m_color;
 				resize();
 			}
 
