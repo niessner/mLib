@@ -166,7 +166,7 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 	file >> numV >> numP >> numE;
 
 	mesh.m_Vertices.resize(numV);
-	mesh.m_FaceIndicesVertices.resize(numP);
+	//mesh.m_FaceIndicesVertices.resize(numP);
 	mesh.m_Colors.resize(numV);
 
 	if(std::string(string1).compare("OFF") == 0)
@@ -204,6 +204,7 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 		}
 		mesh.m_FaceIndicesVertices.push_back(face);
 	}
+	if (mesh.m_FaceIndicesVertices.size() != numP) throw MLIB_EXCEPTION("error: off loader read wrong number of faces");
 }
 
 template <class FloatType>
