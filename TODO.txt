@@ -1,3 +1,5 @@
+make sure obj mtl writing works
+
 Update triMeshAcceleratorBVH to parameterize parallel build and possibly support parelll build for midpoint.
 OBB2f
 parameterize ml::shapes
