@@ -29,7 +29,7 @@ public:
 			throw MLIB_EXCEPTION("unknown file format: " + filename);
 		}
 
-		mesh.deleteRedundantIndices();
+		//mesh.deleteRedundantIndices();
 
 		if (!mesh.isConsistent()) {
 			throw MLIB_EXCEPTION("inconsistent mesh data: " + filename);

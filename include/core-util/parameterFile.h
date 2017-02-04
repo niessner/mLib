@@ -156,6 +156,8 @@ namespace ml {
 			ofs.close();
 		}
 
+		const std::map<std::string, std::string>& getParameters() const { return m_Values; }
+
 		void overrideParameter(const std::string &parameter, const std::string &newValue)
 		{
 			m_Values[parameter] = newValue;
