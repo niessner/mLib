@@ -401,8 +401,8 @@ namespace ml {
 			S s = y - (S)yl;	//y interpolation parameter
 
 			 
-			T p0 = math::lerp(getPixel(xl, yl), getPixel(xh, yl), t);	// lerp between p_00 and p_10
-			T p1 = math::lerp(getPixel(xl, yh), getPixel(xh, yh), t);	// lerp between P_01 and p_11
+			T p0 = (T)math::lerp(getPixel(xl, yl), getPixel(xh, yl), t);	// lerp between p_00 and p_10
+			T p1 = (T)math::lerp(getPixel(xl, yh), getPixel(xh, yh), t);	// lerp between P_01 and p_11
 			return math::lerp(p0, p1, s);
 		}
 
@@ -692,7 +692,12 @@ namespace ml {
 		//! returns true if the depth value at position (x,y) is valid
 		template <class S>
 		bool isValid(S x, S y) const {
-			return getPixel(x, y) != m_invalidValue;
+			return getPixel(x, y) != getInvalidValue();
+		}
+
+		template <class S>
+		bool isValid(const vec2<S>& c) const {
+			return isValid(c.x, c.y);
 		}
 
 		bool isValidCoordinate(unsigned int x, unsigned int y) const {
@@ -792,14 +797,15 @@ namespace ml {
 				if (newHeight > 1) factorY = 1.0f / (newHeight - 1);
 
 				if (bilinearInterpolate) {
-					for (unsigned int i = 0; i < newHeight; i++) {
-						for (unsigned int j = 0; j < newWidth; j++) {
-							const float x = (float)j * factorX;
-							const float y = (float)i * factorY;
-							T tmp = getPixelInterpolated(x, y);
-							res(j, i) = tmp;
-						}
-					}
+					throw MLIB_EXCEPTION("TODO implement without warning... it works what is below");
+					//for (unsigned int i = 0; i < newHeight; i++) {
+					//	for (unsigned int j = 0; j < newWidth; j++) {
+					//		const float x = (float)j * factorX;
+					//		const float y = (float)i * factorY;
+					//		T tmp = getPixelInterpolated(x, y);
+					//		res(j, i) = tmp;
+					//	}
+					//}
 				}
 				else {
 					for (unsigned int i = 0; i < newHeight; i++) {
