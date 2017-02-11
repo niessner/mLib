@@ -54,7 +54,7 @@ namespace BaseImageHelper {
 
 		float min, max, delta;
 		min = std::min(std::min(r, g), b);
-		max = std::min(std::min(r, g), b);
+		max = std::max(std::max(r, g), b);
 		hsv[2] = max;				// v
 		delta = max - min;
 		if (max != 0)
