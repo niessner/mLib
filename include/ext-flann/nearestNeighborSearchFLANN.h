@@ -9,7 +9,7 @@ namespace ml
 	class NearestNeighborSearchFLANN : public NearestNeighborSearch<FloatType>
 	{
 	public:
-		// checkCount is the total number of entries that are checked each query.  Typically max(50, 4 * maxK) is good.
+		// checkCount is the total number of entries that are checked each query (the higher the more accuracte).  Typically max(50, 4 * maxK) is good.
 		// trees: number of parallel kd-trees to use
 		NearestNeighborSearchFLANN(int checkCount, int trees)
 		{
@@ -32,10 +32,13 @@ namespace ml
 			}
 		}
 
-		void getDistances(unsigned int k, std::vector<FloatType> &dists) const
+		std::vector<FloatType> getDistances(unsigned int k) const
 		{
-			dists.resize(k);
-			for (unsigned int i = 0; i < k; i++) dists[i] = (FloatType)m_distsStorage[0][i];
+			std::vector<FloatType> dists(k);
+			for (unsigned int i = 0; i < k; i++) {
+				dists[i] = (FloatType)sqrt(m_distsStorage[0][i]);	//TODO i believe this should be the sqrt
+			}
+			return dists;
 		}
 
 	private:
@@ -69,26 +72,39 @@ namespace ml
 			//std::cout << "FLANN index created" << std::endl;
 		}
 
-		void kNearestInternal(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const
+		void kNearestInternal(const FloatType* query, UINT k, FloatType epsilon, std::vector<UINT> &result) const
 		{
 			memcpy(m_queryStorage.ptr(), query, m_dimension * sizeof(FloatType));
-			m_FLANNIndex->knnSearch(m_queryStorage, m_indicesStorage, m_distsStorage, k, flann::SearchParams((int)m_checkCount));
+			int res = m_FLANNIndex->knnSearch(m_queryStorage, m_indicesStorage, m_distsStorage, k, flann::SearchParams((int)m_checkCount));
 
-			if (result.size() < k) result.resize(k);
-			for (size_t i = 0; i < k; i++)
-			{
+			result.resize(res);
+			for (size_t i = 0; i < result.size(); i++) {
 				result[i] = m_indicesStorage[0][i];
 			}
 		}
 
-		void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector<UINT> &result) const
+		void fixedRadiusInternal(const FloatType* query, UINT k, FloatType radius, FloatType epsilon, std::vector<UINT> &result) const
 		{
-			MLIB_EXCEPTION("fixedRadiusInternal is not yet implemented");
+			memcpy(m_queryStorage.ptr(), query, m_dimension * sizeof(FloatType));
+			int res = m_FLANNIndex->radiusSearch(m_queryStorage, m_indicesStorage, m_distsStorage, radius*radius, flann::SearchParams((int)m_checkCount));
+
+			result.resize(res);
+			for (size_t i = 0; i < result.size(); i++) {
+				result[i] = m_indicesStorage[0][i];
+			} 
 		}
 
-		void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const
+		void fixedRadiusInternalDist(const FloatType* query, UINT k, FloatType radius, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const
 		{
-			MLIB_EXCEPTION("fixedRadiusInternalDist is not yet implemented");
+			memcpy(m_queryStorage.ptr(), query, m_dimension * sizeof(FloatType));
+			int res = m_FLANNIndex->radiusSearch(m_queryStorage, m_indicesStorage, m_distsStorage, radius*radius, flann::SearchParams((int)m_checkCount));
+
+			result.resize(res);
+			for (size_t i = 0; i < result.size(); i++) {
+				result[i].first = m_indicesStorage[0][i];
+				result[i].second = m_distsStorage[0][i];
+				result[i].second = sqrt(result[i].second);
+			}
 		}
 
 		//TODO: abstract over different search metrics

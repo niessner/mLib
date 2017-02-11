@@ -435,7 +435,8 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 						//skipLine( buf, OBJ_LINE_BUF_SIZE, fp);
 					}
 
-					if (n < 3)	throw MLIB_EXCEPTION(filename + ": broken obj (face with less than 3 indices)");
+					if (n < 3)	
+						throw MLIB_EXCEPTION(filename + ": broken obj (face with less than 3 indices)");
 
 					//create face
 					std::vector<unsigned int> currFaceIndicesVertices;
@@ -640,6 +641,10 @@ void MeshIO<FloatType>::saveToOBJ( const std::string& filename, const MeshData<F
 	file << "#\n";
 	file << "####\n";
 
+	if (!mesh.m_materialFile.empty()) {
+		file << "mtllib " << util::splitPath(mesh.m_materialFile).back() << "\n";
+	}
+
 	for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
 		file << "v ";
 		file << mesh.m_Vertices[i].x << " " << mesh.m_Vertices[i].y << " " << mesh.m_Vertices[i].z;
@@ -656,17 +661,24 @@ void MeshIO<FloatType>::saveToOBJ( const std::string& filename, const MeshData<F
 		file << "vt ";
 		file << mesh.m_TextureCoords[i].x << " " << mesh.m_TextureCoords[i].y << "\n";
 	}
+	unsigned int curMaterialIdx = 0;
 	for (unsigned int i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
+		if (!mesh.m_indicesByMaterial.empty()) {
+			if (mesh.m_indicesByMaterial[curMaterialIdx].end == i) 
+				curMaterialIdx++;
+			if (mesh.m_indicesByMaterial[curMaterialIdx].start == i)
+				file << "usemtl " << mesh.m_indicesByMaterial[curMaterialIdx].name << "\n";
+		}
 		file << "f ";
 		for (unsigned int j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
 			file << mesh.m_FaceIndicesVertices[i][j]+1;
 			if (mesh.m_FaceIndicesTextureCoords.size() > 0 || mesh.m_FaceIndicesNormals.size() > 0) {
+				file << "/";
 				if (mesh.m_FaceIndicesTextureCoords.size() > 0) {
-					file << "//";
 					file << mesh.m_FaceIndicesTextureCoords[i][j]+1;
 				}
+				file << "/";
 				if (mesh.m_FaceIndicesNormals.size() > 0) {
-					file << "//";
 					file << mesh.m_FaceIndicesNormals[i][j]+1;
 				}
 			}

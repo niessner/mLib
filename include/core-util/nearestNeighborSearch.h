@@ -63,37 +63,38 @@ public:
 		return result;
 	}
 
-    std::vector<UINT> fixedRadius(const std::vector<FloatType> &query, UINT k, FloatType radiusSq) const
+    std::vector<UINT> fixedRadius(const std::vector<FloatType> &query, UINT k, FloatType radius) const
 	{
 		std::vector<UINT> result;
-		fixedRadiusInternal(&query[0], k, radiusSq, 0.0f, result);
+		fixedRadiusInternal(&query[0], k, radius, 0.0f, result);
 		return result;
 	}
 
-    std::vector<UINT> fixedRadius(const FloatType *query, UINT k, FloatType radiusSq) const
+    std::vector<UINT> fixedRadius(const FloatType* query, UINT k, FloatType radius) const
     {
         std::vector<UINT> result;
-        fixedRadiusInternal(query, k, radiusSq, 0.0f, result);
+        fixedRadiusInternal(query, k, radius, 0.0f, result);
         return result;
     }
 
-    std::vector< std::pair<UINT, FloatType> > fixedRadiusDist(const FloatType *query, UINT k, FloatType radiusSq) const
+    std::vector< std::pair<UINT, FloatType> > fixedRadiusDist(const FloatType *query, UINT k, FloatType radius) const
     {
         std::vector< std::pair<UINT, FloatType> > result;
-        fixedRadiusInternalDist(query, k, radiusSq, 0.0f, result);
+        fixedRadiusInternalDist(query, k, radius, 0.0f, result);
         return result;
     }
 
-	virtual void getDistances(unsigned int k, std::vector<FloatType> &dists) const
+	virtual std::vector<FloatType> getDistances(unsigned int k) const
 	{
 		throw MLIB_EXCEPTION("kNearest not implemented");
+		return std::vector<FloatType>();
 	}
 
 private:
 	virtual void initInternal(const std::vector< const FloatType* > &points, UINT dimension, UINT maxK) = 0;
 	virtual void kNearestInternal(const FloatType *query, UINT k, FloatType epsilon, std::vector<UINT> &result) const = 0;
-    virtual void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector<UINT> &result) const = 0;
-    virtual void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const = 0;
+    virtual void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radius, FloatType epsilon, std::vector<UINT> &result) const = 0;
+    virtual void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radius, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const = 0;
 };
 
 template<class FloatType>
@@ -210,12 +211,12 @@ public:
 		}
 	}
 
-    void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector<UINT> &result) const
+    void fixedRadiusInternal(const FloatType *query, UINT k, FloatType radius, FloatType epsilon, std::vector<UINT> &result) const
     {
         throw MLIB_EXCEPTION("fixedRadiusInternal not implemented");
     }
 
-    void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radiusSq, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const
+    void fixedRadiusInternalDist(const FloatType *query, UINT k, FloatType radius, FloatType epsilon, std::vector< std::pair<UINT, FloatType> > &result) const
     {
         throw MLIB_EXCEPTION("fixedRadiusInternalDist not implemented");
     }

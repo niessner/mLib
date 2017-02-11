@@ -267,6 +267,18 @@ namespace ml {
 				return !((*this) == other);
 			}
 
+			vec3f projToCamera(const vec3f& screenPos) const {
+				return (m_intrinsic.getInverse()*vec4f(screenPos.x*screenPos.z, screenPos.y*screenPos.z, screenPos.z, 0.0f)).getVec3();
+			}
+
+			vec3f cameraToProj(const vec3f& cameraPos) const {
+				vec3f res = m_intrinsic * cameraPos;
+				res.x /= cameraPos.z;
+				res.y /= cameraPos.z;
+				return res;
+			}
+
+
 			//! Camera-to-Proj matrix
 			mat4f m_intrinsic;
 

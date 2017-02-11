@@ -260,7 +260,21 @@ namespace math
 	inline T randomUniform(T _min, T _max) {
 		static std::random_device rd;
 		static std::mt19937 gen(rd());
-		static std::uniform_real_distribution<T> dis(_min, _max);
+		std::uniform_real_distribution<T> dis(_min, _max);
+		return dis(gen);
+	}
+	template<> 
+	inline int randomUniform(int _min, int _max) {
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+		std::uniform_int_distribution<> dis(_min, _max);
+		return dis(gen);
+	}
+	template<> 
+	inline unsigned int randomUniform(unsigned int _min, unsigned int _max) {
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+		std::uniform_int_distribution<> dis(_min, _max);
 		return dis(gen);
 	}
 
@@ -270,7 +284,7 @@ namespace math
 	inline T randomNormal(T mean, T stddev) {
 		static std::random_device rd;
 		static std::mt19937 gen(rd());
-		static std::normal_distribution<T> dis(mean, stddev);
+		std::normal_distribution<T> dis(mean, stddev);
 		return dis(gen);
 	}
 
