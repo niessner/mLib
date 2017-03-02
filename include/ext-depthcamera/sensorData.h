@@ -1449,6 +1449,62 @@ namespace ml {
 		}
 #endif //_FREEIMAGEWRAPPER_H_
 
+		static PointImage computeCameraSpacePositions(const mat4f& depthIntrinsicsInv, const DepthImage32& depthImage)
+		{
+			PointImage campos(depthImage.getWidth(), depthImage.getHeight());
+			campos.setInvalidValue(vec3f(-std::numeric_limits<float>::infinity()));
+			for (const auto& p : depthImage) {
+				if (p.value != -std::numeric_limits<float>::infinity()) {
+					campos(p.x, p.y) = depthIntrinsicsInv*vec3f(p.x*p.value, p.y*p.value, p.value);
+				}
+				else {
+					campos(p.x, p.y) = vec3f(-std::numeric_limits<float>::infinity());
+				}
+			}
+			return campos;
+		}
+		PointImage computeCameraSpacePositions(unsigned int frame)
+		{
+			DepthImage32 depth = computeDepthImage(frame);
+			return computeCameraSpacePositions(m_calibrationDepth.m_intrinsic.getInverse(), depth);
+		}
+
+		static PointImage computeNormals(const PointImage& campos)
+		{
+			PointImage normal(campos.getWidth(), campos.getHeight());
+			normal.setInvalidValue(vec3f(-std::numeric_limits<float>::infinity()));
+			normal.setPixels(vec3f(-std::numeric_limits<float>::infinity()));
+
+			for (const auto& p : campos) {
+				if (p.x > 0 && p.x + 1 < campos.getWidth() && p.y > 0 && p.y + 1 < campos.getHeight()) {
+					const vec3f& CC = campos(p.x + 0, p.y + 0);
+					const vec3f& PC = campos(p.x + 0, p.y + 1);
+					const vec3f& CP = campos(p.x + 1, p.y + 0);
+					const vec3f& MC = campos(p.x + 0, p.y - 1);
+					const vec3f& CM = campos(p.x - 1, p.y + 0);
+
+					if (CC.x != -std::numeric_limits<float>::infinity() && PC.x != -std::numeric_limits<float>::infinity() &&
+						CP.x != -std::numeric_limits<float>::infinity() && MC.x != -std::numeric_limits<float>::infinity() &&
+						CM.x != -std::numeric_limits<float>::infinity()) {
+						const vec3f n = (PC - MC) ^ (CP - CM);
+						const float l = n.length();
+						if (l > 0.0f) 
+							normal(p.x, p.y) = n / -l; //d_output[y*width + x] = make_float4(n / -l, 1.0f);
+					}
+				}
+			}
+			return normal;
+		}
+		static PointImage computeNormals(const mat4f& depthIntrinsicsInv, const DepthImage32& depthImage)
+		{
+			PointImage campos = computeCameraSpacePositions(depthIntrinsicsInv, depthImage);
+			return computeNormals(campos);
+		}
+		PointImage computeNormals(unsigned int frame)
+		{
+			PointImage campos = computeCameraSpacePositions(frame);
+			return computeNormals(campos);
+		}
 
 		//! compute frame(s) point cloud
 		PointCloudf computePointCloud(unsigned int frameFrom, unsigned int frameTo = -1) const {
