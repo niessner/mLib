@@ -224,19 +224,19 @@ template<class T>	inline void convertFromUSHORT3(T& output, const unsigned short
 	//static_assert(false, "Function should never be called");
 }
 template<>	inline void convertFromUSHORT3<vec3d>(vec3d& output, const unsigned short* input) {
-	output.x = (double)input[0];
+	output.z = (double)input[0];
 	output.y = (double)input[1];
-	output.z = (double)input[2];
+	output.x = (double)input[2];
 }
 template<>	inline void convertFromUSHORT3<vec3f>(vec3f& output, const unsigned short* input) {
-	output.x = (float)input[0];
+	output.z = (float)input[0];
 	output.y = (float)input[1];
-	output.z = (float)input[2];
+	output.x = (float)input[2];
 }
 template<>	inline void convertFromUSHORT3<vec3us>(vec3us& output, const unsigned short* input) {
-	output.x = input[0];
+	output.z = input[0];
 	output.y = input[1];
-	output.z = input[2];
+	output.x = input[2];
 }
 
 template<>	inline void convertFromUSHORT3<unsigned short>(unsigned short& output, const unsigned short* input) {
@@ -249,22 +249,22 @@ template<class T>	inline void convertFromUSHORT4(T& output, const unsigned short
 	//static_assert(false, "Function should never be called");
 }
 template<>	inline void convertFromUSHORT4<vec4d>(vec4d& output, const unsigned short* input) {
-	output.x = (double)input[0];
+	output.z = (double)input[0];
 	output.y = (double)input[1];
-	output.z = (double)input[2];
+	output.x = (double)input[2];
 	output.w = (double)input[3];
 }
 template<>	inline void convertFromUSHORT4<vec4us>(vec4us& output, const unsigned short* input) {
-	output.x = input[0];
+	output.z = input[0];
 	output.y = input[1];
-	output.z = input[2];
+	output.x = input[2];
 	output.w = input[3];
 }
 template<>	inline void convertFromUSHORT4<vec4uc>(vec4uc& output, const unsigned short* input) {
 	//this is a hard-coded HDR to non-HDR conversion
-	output.x = (unsigned char)(input[0] / 256);
+	output.z = (unsigned char)(input[0] / 256);
 	output.y = (unsigned char)(input[1] / 256);
-	output.z = (unsigned char)(input[2] / 256);
+	output.x = (unsigned char)(input[2] / 256);
 	output.w = (unsigned char)(input[3] / 256);
 }
 
@@ -274,9 +274,9 @@ template<>	inline void convertFromUSHORT4<vec3d>(vec3d& output, const unsigned s
 	output.z = (double)input[2];
 }
 template<>	inline void convertFromUSHORT4<vec3us>(vec3us& output, const unsigned short* input) {
-	output.x = input[0];
+	output.z = input[0];
 	output.y = input[1];
-	output.z = input[2];
+	output.x = input[2];
 }
 
 template<>	inline void convertFromUSHORT4<unsigned short>(unsigned short& output, const unsigned short* input) {
@@ -481,6 +481,16 @@ template<>	inline void convertToUSHORT<double>(unsigned short& output, const dou
 	output = (unsigned short)(input * 1000.0);
 }
 
+//USHORT3
+template<class T>	inline void convertToUSHORT3(vec3us& output, const T& input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+template<>	inline void convertToUSHORT3<vec3us>(vec3us& output, const vec3us& input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+}
 
 } // namespace
 

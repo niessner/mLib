@@ -226,6 +226,7 @@ namespace ml {
 				filename.length() > 4 && filename.find(".png") != std::string::npos) {
 				FREE_IMAGE_TYPE type = FIT_BITMAP;
 				if (numChannels == 1 && bytesPerChannel == 2) type = FIT_UINT16;
+				else if (numChannels == 3 && bytesPerChannel == 2) type = FIT_RGB16;
 				FIBITMAP *dib = FreeImage_AllocateT(type, width, height, numChannels * 8);
 				BYTE* bits = FreeImage_GetBits(dib);
 				unsigned int pitch = FreeImage_GetPitch(dib);
@@ -274,6 +275,19 @@ namespace ml {
 							bitsRowStart[x*numChannels + FI_RGBA_RED] = (unsigned char)color.x;
 							bitsRowStart[x*numChannels + FI_RGBA_GREEN] = (unsigned char)color.y;
 							bitsRowStart[x*numChannels + FI_RGBA_BLUE] = (unsigned char)color.z;
+						}
+					}
+				}
+				else if (numChannels == 3 && bytesPerChannel == 2) {
+					//3x16bit 
+					for (unsigned int y = 0; y < height; y++) {
+						BYTE* bitsRowStart = bits + (height - 1 - y)*pitch;
+						USHORT* bitsRowStartUShort = (USHORT*)bitsRowStart;
+						for (unsigned int x = 0; x < width; x++) {
+							vec3<unsigned short> v;		convertToUSHORT3(v, image(x, y));
+							bitsRowStartUShort[x*numChannels + FI_RGBA_RED] = v.x;
+							bitsRowStartUShort[x*numChannels + FI_RGBA_GREEN] = v.y;
+							bitsRowStartUShort[x*numChannels + FI_RGBA_BLUE] = v.z;
 						}
 					}
 				}
