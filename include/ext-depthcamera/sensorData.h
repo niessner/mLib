@@ -1463,7 +1463,7 @@ namespace ml {
 			}
 			return campos;
 		}
-		PointImage computeCameraSpacePositions(unsigned int frame)
+		PointImage computeCameraSpacePositions(unsigned int frame) const
 		{
 			DepthImage32 depth = computeDepthImage(frame);
 			return computeCameraSpacePositions(m_calibrationDepth.m_intrinsic.getInverse(), depth);
@@ -1500,7 +1500,7 @@ namespace ml {
 			PointImage campos = computeCameraSpacePositions(depthIntrinsicsInv, depthImage);
 			return computeNormals(campos);
 		}
-		PointImage computeNormals(unsigned int frame)
+		PointImage computeNormals(unsigned int frame) const
 		{
 			PointImage campos = computeCameraSpacePositions(frame);
 			return computeNormals(campos);
