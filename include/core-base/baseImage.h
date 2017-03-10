@@ -713,7 +713,7 @@ namespace ml {
 			if (std::is_same<T, USHORT>::value || std::is_same<T, short >::value) return 1;
 			if (std::is_same<T, double>::value || std::is_same<T, float >::value || std::is_same<T, UCHAR >::value || std::is_same<T, UINT  >::value || std::is_same<T, int   >::value) return 1;
 			if (std::is_same<T, vec2d >::value || std::is_same<T, vec2f >::value || std::is_same<T, vec2uc>::value || std::is_same<T, vec2ui>::value || std::is_same<T, vec2i >::value) return 2;
-			if (std::is_same<T, vec3d >::value || std::is_same<T, vec3f >::value || std::is_same<T, vec3uc>::value || std::is_same<T, vec3ui>::value || std::is_same<T, vec3i >::value) return 3;
+			if (std::is_same<T, vec3d >::value || std::is_same<T, vec3f >::value || std::is_same<T, vec3uc>::value || std::is_same<T, vec3ui>::value || std::is_same<T, vec3i >::value ||  std::is_same<T, vec3us >::value) return 3;
 			if (std::is_same<T, vec4d >::value || std::is_same<T, vec4f >::value || std::is_same<T, vec4uc>::value || std::is_same<T, vec4ui>::value || std::is_same<T, vec4i >::value) return 4;
 			return (unsigned int)-1;
 		}
