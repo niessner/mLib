@@ -7,8 +7,7 @@ namespace ml {
 class D3D11RenderTarget : public GraphicsAsset
 {
 public:
-	D3D11RenderTarget()
-	{
+	D3D11RenderTarget()	{
 		m_graphics = nullptr;
 		m_width = 0;
 		m_height = 0;
@@ -27,8 +26,7 @@ public:
 		m_bHasSRVs = false;
 	}
 
-	D3D11RenderTarget(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false)
-    {
+	D3D11RenderTarget(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false) {
 		m_graphics = nullptr;
 		m_width = 0;
 		m_height = 0;
@@ -46,25 +44,96 @@ public:
 
 		m_bHasSRVs = false;
 
-        load(g, width, height, formats, createSRVs);
+        init(g, width, height, formats, createSRVs);
     }
 
-	~D3D11RenderTarget()
-	{
+	//! copy constructor
+	D3D11RenderTarget(const D3D11RenderTarget& other) {
+		m_graphics = nullptr;
+		m_width = 0;
+		m_height = 0;
+
+		m_targets = nullptr;
+		m_targetsRTV = nullptr;
+		m_targetsSRV = nullptr;
+
+		m_depthStencil = nullptr;
+		m_depthStencilDSV = nullptr;
+		m_depthStencilSRV = nullptr;
+
+		m_captureTextures = nullptr;
+		m_captureDepth = nullptr;
+
+		m_bHasSRVs = false;
+
+		init(*other.m_graphics, other.m_width, other.m_height, other.m_textureFormats, other.m_bHasSRVs);
+	}
+
+	//! move constructor
+	D3D11RenderTarget(D3D11RenderTarget&& other) {
+		m_graphics = nullptr;
+		m_width = 0;
+		m_height = 0;
+
+		m_targets = nullptr;
+		m_targetsRTV = nullptr;
+		m_targetsSRV = nullptr;
+
+		m_depthStencil = nullptr;
+		m_depthStencilDSV = nullptr;
+		m_depthStencilSRV = nullptr;
+
+		m_captureTextures = nullptr;
+		m_captureDepth = nullptr;
+
+		m_bHasSRVs = false;
+
+		swap(*this, other);
+	}
+
+
+	~D3D11RenderTarget() {
 		releaseGPU();
 	}
 
+	//! assignment operator
+	void operator=(const D3D11RenderTarget& other) {
+		init(*other.m_graphics, other.m_width, other.m_height, other.m_textureFormats, other.m_bHasSRVs);
+	}
+
+	//! move operator
+	void operator=(D3D11RenderTarget&& other) {
+		swap(*this, other);
+	}
+
+
+
+	//! adl swap
+	friend void swap(D3D11RenderTarget& a, D3D11RenderTarget& b) {
+		std::swap(a.m_graphics, b.m_graphics);
+		std::swap(a.m_width, b.m_width);
+		std::swap(a.m_height, b.m_height);
+		std::swap(a.m_textureFormats, b.m_textureFormats);
+		std::swap(a.m_targets, b.m_targets);
+		std::swap(a.m_targetsRTV, b.m_targetsRTV);
+		std::swap(a.m_targetsSRV, b.m_targetsSRV);
+		std::swap(a.m_depthStencil, b.m_depthStencil);
+		std::swap(a.m_depthStencilDSV, b.m_depthStencilDSV);
+		std::swap(a.m_depthStencilSRV, b.m_depthStencilSRV);
+		std::swap(a.m_captureTextures, b.m_captureTextures);
+		std::swap(a.m_captureDepth, b.m_captureDepth);
+		std::swap(a.m_bHasSRVs, b.m_bHasSRVs);
+	}
+
+
     // create a new render target with given width and height. Also creates an equal-sized depth buffer.
-	void load(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false) 
-	{
+	void init(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false) {
 		m_graphics = &g.castD3D11();
 		m_width = width;
 		m_height = height;
 
 		m_textureFormats = formats;
 		m_bHasSRVs = createSRVs;
-
-		//g.castD3D11().registerAsset(this);
 
 		createGPU();
 	}
@@ -92,8 +161,8 @@ public:
 	void captureDepthBuffer(DepthImage32& result, const mat4f& perspectiveTransform);	//transforms the depth back to camera space
 	void captureDepthBuffer(PointImage& result, const mat4f& perspectiveTransform);		//transforms it back to 3d camera coordinate
 
-    unsigned int getWidth() { return m_width; }
-    unsigned int getHeight() { return m_height; }
+    unsigned int getWidth() const { return m_width; }
+    unsigned int getHeight() const { return m_height; }
 
 	unsigned int getNumTargets() const {
 		return (unsigned int)m_textureFormats.size();
@@ -131,7 +200,7 @@ public:
 		m_graphics->getContext().PSSetShaderResources(startSlot, 1, srvs);
 	}
 private:
-	D3D11GraphicsDevice *m_graphics;
+	D3D11GraphicsDevice* m_graphics;
 	unsigned int m_width;
 	unsigned int m_height;
 
