@@ -222,7 +222,7 @@ void AppTest::render(ml::ApplicationData &app)
 	//	std::cout << p << "\t\t" << proj * p << std::endl;
 	//	std::cout << p << "\t\t" << m_camera.getPerspective() * p << std::endl;
 	//	}
-	constants.worldViewProj = proj * m_camera.getCamera();
+	constants.worldViewProj = proj * m_camera.getView();
 	constants.modelColor = ml::vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 	m_constants.updateAndBind(constants, 0);
 	//app.graphics.castD3D11().getShaderManager().bindShaders("defaultBasic");
@@ -251,21 +251,22 @@ void AppTest::keyDown(ml::ApplicationData &app, UINT key)
 	if (key == KEY_Z) {
 		const unsigned int width = app.window.getWidth();
 		const unsigned int height = app.window.getHeight();
-		mat4f intrinsic = Cameraf::graphicsToVisionProj(m_camera.getPerspective(), width, height);
-		mat4f extrinsic = m_camera.getCamera();
+		mat4f intrinsic = Cameraf::graphicsToVisionProj(m_camera.getProj(), width, height);
+		mat4f extrinsic = m_camera.getExtrinsic();
 
 		std::cout << "intrinsic before " << intrinsic << std::endl;
 		std::cout << "extrinsic before " << extrinsic << std::endl;
-
+		std::cout << "camera before: " << m_camera.toString() << std::endl;
 		Cameraf newCam = Cameraf::visionToGraphics(extrinsic, width, height, intrinsic(0, 0), intrinsic(1, 1), m_camera.getNearPlane(), m_camera.getFarPlane());
+		newCam.updateWorldUp(m_camera.getWorldUp());
 		m_camera = newCam;
 
-		intrinsic = Cameraf::graphicsToVisionProj(m_camera.getPerspective(), width, height);
-		extrinsic = m_camera.getCamera();
+		intrinsic = Cameraf::graphicsToVisionProj(m_camera.getProj(), width, height);
+		extrinsic = m_camera.getExtrinsic();
+		std::cout << "camera after: " << m_camera.toString() << std::endl;
 		std::cout << "intrinsic after " << intrinsic << std::endl;
 		std::cout << "extrinsic after " << extrinsic << std::endl; 
 
-		int a = 5;
 	}
 }
 
@@ -293,7 +294,7 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 	
 	if (key == KEY_F2) {
 		ml::D3D11RenderTarget renderTarget;
-		renderTarget.load(app.graphics.castD3D11(), app.window.getWidth(), app.window.getHeight(), std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, true);
+		renderTarget.init(app.graphics.castD3D11(), app.window.getWidth(), app.window.getHeight(), std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, true);
 		renderTarget.clear();
 		renderTarget.bind();
 		render(app);
@@ -318,14 +319,13 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		//	0.0f, 0.0f, 1.0f, 0.0f,
 		//	0.0f, 0.0f, 0.0f, 1.0f);
 		//std::cout << intrinsics << std::endl;
-		mat4f intrinsics = Cameraf::graphicsToVisionProj(m_camera.getPerspective(), app.window.getWidth(), app.window.getHeight());
+		mat4f intrinsics = m_camera.getIntrinsic(app.window.getWidth(), app.window.getHeight());
 		
 		//std::cout << intrinsics << std::endl;
 		mat4f intrinsicsInverse = intrinsics.getInverse();
 
-		ml::mat4f projToCam = m_camera.getPerspective().getInverse();
-		ml::mat4f camToWorld = m_camera.getCamera().getInverse();
-		ml::mat4f trans = camToWorld * projToCam;
+		ml::mat4f projToCam = m_camera.getProj().getInverse();
+		ml::mat4f camToWorld = m_camera.getView().getInverse();
 		ml::ColorImageR32G32B32 image(app.window.getWidth(), app.window.getHeight());
 
 		const std::string testFilename = "scans/gates381.ply";
@@ -349,13 +349,14 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 #pragma omp parallel for
 		for (int y_ = 0; y_ < (int)app.window.getHeight(); y_++) {
 			unsigned int y = (unsigned int)y_;
+
 			for (unsigned int x = 0; x < app.window.getWidth(); x++) {
 				//std::cout << " tyring ray " << i << " " << j << std::endl;
 
 				float depth0 = 0.5f;
 				float depth1 = 1.0f;
-				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)x*depth0, (float)y*depth0, depth0, 1.0f);
-				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)x*depth1, (float)y*depth1, depth1, 1.0f);
+				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)x*depth0, (float)(app.window.getHeight() - 1 - y)*depth0, depth0, 1.0f);
+				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)x*depth1, (float)(app.window.getHeight() - 1 - y)*depth1, depth1, 1.0f);
 
 				vec3f eye = m_camera.getEye();
 				Rayf r(m_camera.getEye(), (p1.getVec3() - p0.getVec3()).getNormalized());
