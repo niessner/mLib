@@ -390,7 +390,7 @@ void D3D11GraphicsDevice::toggleCullMode()
     m_context->RSSetState(m_rasterState);
 }
 
-void D3D11GraphicsDevice::captureBackBufferInternal(ColorImageR8G8B8A8 &result)
+void D3D11GraphicsDevice::captureBackBufferColorInternal(ColorImageR8G8B8A8& result)
 {
     ID3D11Texture2D* frameBuffer;
 
@@ -399,31 +399,58 @@ void D3D11GraphicsDevice::captureBackBufferInternal(ColorImageR8G8B8A8 &result)
     D3D11_TEXTURE2D_DESC desc;
     frameBuffer->GetDesc(&desc);
 
-    if (m_captureBuffer == nullptr)
-    {
+    if (m_captureBufferColor == nullptr) {
         desc.BindFlags = 0;
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
         desc.Usage = D3D11_USAGE_STAGING;
-        D3D_VALIDATE(m_device->CreateTexture2D(&desc, nullptr, &m_captureBuffer));
+        D3D_VALIDATE(m_device->CreateTexture2D(&desc, nullptr, &m_captureBufferColor));
     }
 
-    m_context->CopyResource(m_captureBuffer, frameBuffer);
+    m_context->CopyResource(m_captureBufferColor, frameBuffer);
 
     result.allocate(desc.Width, desc.Height);
 
     D3D11_MAPPED_SUBRESOURCE resource;
     UINT subresource = D3D11CalcSubresource(0, 0, 0);
-    HRESULT hr = m_context->Map(m_captureBuffer, subresource, D3D11_MAP_READ_WRITE, 0, &resource);
+    HRESULT hr = m_context->Map(m_captureBufferColor, subresource, D3D11_MAP_READ_WRITE, 0, &resource);
     const BYTE *data = (BYTE *)resource.pData;
     //resource.pData; // TEXTURE DATA IS HERE
 
-    for (UINT y = 0; y < desc.Height; y++)
-    {
+    for (UINT y = 0; y < desc.Height; y++) {
         memcpy(&result(0u, y), data + resource.RowPitch * y, desc.Width * sizeof(vec4uc));
     }
 
-    m_context->Unmap(m_captureBuffer, subresource);
+    m_context->Unmap(m_captureBufferColor, subresource);
     frameBuffer->Release();
+}
+
+void D3D11GraphicsDevice::captureBackBufferDepthInternal(DepthImage32& result)
+{
+	D3D11_TEXTURE2D_DESC desc;
+	m_depthBuffer->GetDesc(&desc);
+
+	if (m_captureBufferDepth == nullptr) {
+		desc.BindFlags = 0;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+		desc.Usage = D3D11_USAGE_STAGING;
+		D3D_VALIDATE(m_device->CreateTexture2D(&desc, nullptr, &m_captureBufferDepth));
+	}
+
+	m_context->CopyResource(m_captureBufferDepth, m_depthBuffer);
+
+	result.allocate(desc.Width, desc.Height);
+
+	D3D11_MAPPED_SUBRESOURCE resource;
+	UINT subresource = D3D11CalcSubresource(0, 0, 0);
+	HRESULT hr = m_context->Map(m_captureBufferDepth, subresource, D3D11_MAP_READ_WRITE, 0, &resource);
+	const BYTE *data = (BYTE *)resource.pData;
+	//resource.pData; // TEXTURE DATA IS HERE
+
+	for (UINT y = 0; y < desc.Height; y++) {
+		memcpy(&result(0u, y), data + resource.RowPitch * y, desc.Width * sizeof(vec4uc));
+	}
+
+	m_context->Unmap(m_captureBufferDepth, subresource);
 }
 
 }

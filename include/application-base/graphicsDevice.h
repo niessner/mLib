@@ -21,30 +21,37 @@ public:
     virtual void clear(const vec4f& clearColor = vec4f(0, 0, 0, 0), float clearDepth = 1.0f) = 0;
 	virtual void renderEndFrame(bool vsync) = 0;
 
-    void captureBackBuffer(ColorImageR8G8B8A8& result)
-    {
-        captureBackBufferInternal(result);
+    void captureBackBufferColor(ColorImageR8G8B8A8& result) {
+        captureBackBufferColorInternal(result);
     }
 
-	ColorImageR8G8B8A8 captureBackBuffer()
-    {
+	void captureBackBufferDepth(DepthImage32& result) {
+		captureBackBufferDepthInternal(result);
+	}
+
+	ColorImageR8G8B8A8 captureBackBufferColor() {
 		ColorImageR8G8B8A8 result;
-        captureBackBuffer(result);
+        captureBackBufferColor(result);
         return result;
     }
 
-	GraphicsDeviceType getType() const
-	{
+	DepthImage32 captureBackBufferDepth() {
+		DepthImage32 result;
+		captureBackBufferDepth(result);
+		return result;
+	}
+
+	GraphicsDeviceType getType() const {
 		return m_type;
 	}
 
-	D3D11GraphicsDevice& castD3D11() const
-	{
+	D3D11GraphicsDevice& castD3D11() const {
 		return *((D3D11GraphicsDevice*)this);
 	}
 
 protected:
-	virtual void captureBackBufferInternal(ColorImageR8G8B8A8& result) = 0;
+	virtual void captureBackBufferColorInternal(ColorImageR8G8B8A8& result) = 0;
+	virtual void captureBackBufferDepthInternal(DepthImage32& result) = 0;
 	GraphicsDeviceType m_type;
 };
 

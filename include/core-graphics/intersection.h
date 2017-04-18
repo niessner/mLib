@@ -78,8 +78,8 @@ namespace intersection {
 	bool intersectRayTriangle(
 		const vec3<FloatType>& v0, const vec3<FloatType>& v1, const vec3<FloatType>& v2, const Ray<FloatType> &r, FloatType& _t, FloatType& _u, FloatType& _v, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max(), bool intersectOnlyFrontFaces = false) 
 	{
-		const vec3<FloatType> &d = r.direction();
-		const vec3<FloatType> &p = r.origin();
+		const vec3<FloatType> &d = r.getDirection();
+		const vec3<FloatType> &p = r.getOrigin();
 
 		vec3<FloatType> e1 = v1 - v0;
 		vec3<FloatType> e2 = v2 - v0;

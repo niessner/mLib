@@ -108,9 +108,9 @@ public:
 
 		FloatType txmin, txmax, tymin, tymax, tzmin, tzmax;
 
-        auto sign = r.sign();
-        auto origin = r.origin();
-        auto invDir = r.inverseDirection();
+        auto sign = r.getSign();
+        auto origin = r.getOrigin();
+        auto invDir = r.getInverseDirection();
 
         txmin = (parameters[sign.x * 3] - origin.x) * invDir.x;
         txmax = (parameters[3 - sign.x * 3] - origin.x) * invDir.x;

@@ -16,52 +16,52 @@ public:
     }
 
 	inline Ray(const vec3<FloatType> &o, const vec3<FloatType> &d) {
-		m_Origin = o;
-		m_Direction = d.getNormalized();
-        m_InverseDirection = vec3<FloatType>((FloatType)1.0 / m_Direction.x, (FloatType)1.0 / m_Direction.y, (FloatType)1.0 / m_Direction.z);
+		m_origin = o;
+		m_direction = d.getNormalized();
+        m_inverseDirection = vec3<FloatType>((FloatType)1.0 / m_direction.x, (FloatType)1.0 / m_direction.y, (FloatType)1.0 / m_direction.z);
 
-		m_Sign.x = (m_InverseDirection.x < (FloatType)0);
-		m_Sign.y = (m_InverseDirection.y < (FloatType)0);
-		m_Sign.z = (m_InverseDirection.z < (FloatType)0);
+		m_sign.x = (m_inverseDirection.x < (FloatType)0);
+		m_sign.y = (m_inverseDirection.y < (FloatType)0);
+		m_sign.z = (m_inverseDirection.z < (FloatType)0);
 	}
 
 	inline vec3<FloatType> getHitPoint(FloatType t) const {
-		return m_Origin + t * m_Direction;
+		return m_origin + t * m_direction;
 	}
 
-	inline const vec3<FloatType>& origin() const {
-		return m_Origin;
+	inline const vec3<FloatType>& getOrigin() const {
+		return m_origin;
 	}
 
-	inline const vec3<FloatType>& direction() const {
-		return m_Direction;
+	inline const vec3<FloatType>& getDirection() const {
+		return m_direction;
 	}
 
-	inline const vec3<FloatType>& inverseDirection() const {
-		return m_InverseDirection;
+	inline const vec3<FloatType>& getInverseDirection() const {
+		return m_inverseDirection;
 	}
 
-	inline const vec3i& sign() const {
-		return m_Sign;
+	inline const vec3i& getSign() const {
+		return m_sign;
 	}
 
 	inline void transform(const Matrix4x4<FloatType>& m) {
-		*this = Ray(m * m_Origin,  m.transformNormalAffine(m_Direction));
+		*this = Ray(m * m_origin,  m.transformNormalAffine(m_direction));
 	}
 
 	inline void rotate(const Matrix3x3<FloatType>& m) {
-		*this = Ray(m_Origin, m * m_Direction);
+		*this = Ray(m_origin, m * m_direction);
 	}
 
 	inline void translate(const vec3<FloatType>& p) {
-		*this = Ray(m_Origin + p, m_Direction);
+		*this = Ray(m_origin + p, m_direction);
 	}
 private:
-	vec3<FloatType> m_Direction;
-	vec3<FloatType> m_InverseDirection;
-	vec3<FloatType> m_Origin;
+	vec3<FloatType> m_direction;
+	vec3<FloatType> m_inverseDirection;
+	vec3<FloatType> m_origin;
 
-	vec3i m_Sign;
+	vec3i m_sign;
 };
 
 template<class FloatType>
@@ -73,7 +73,7 @@ Ray<FloatType> operator*(const Matrix4x4<FloatType>& m, const Ray<FloatType>& r)
 
 template<class FloatType>
 std::ostream& operator<<(std::ostream& os, const Ray<FloatType>& r) {
-	os << r.origin() << " | " << r.direction();
+	os << r.getOrigin() << " | " << r.getDirection();
 	return os;
 }
 

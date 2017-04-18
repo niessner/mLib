@@ -266,7 +266,6 @@ void AppTest::keyDown(ml::ApplicationData &app, UINT key)
 		std::cout << "camera after: " << m_camera.toString() << std::endl;
 		std::cout << "intrinsic after " << intrinsic << std::endl;
 		std::cout << "extrinsic after " << extrinsic << std::endl; 
-
 	}
 }
 
@@ -289,7 +288,13 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 
 	if (key == KEY_F1) {
 		auto color = app.graphics.castD3D11().captureBackBuffer();
-		FreeImageWrapper::saveImage("screenshot.png", color);
+		auto depth = app.graphics.castD3D11().captureBackBufferDepth();
+		FreeImageWrapper::saveImage("screenshot_color.png", color);
+		FreeImageWrapper::saveImage("screenshot_depth.png", ColorImageR32G32B32A32(depth));
+	}
+
+	if (key == KEY_P) {
+		//auto depth = app.graphics.castD3D11().
 	}
 	
 	if (key == KEY_F2) {
@@ -360,6 +365,10 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 
 				vec3f eye = m_camera.getEye();
 				Rayf r(m_camera.getEye(), (p1.getVec3() - p0.getVec3()).getNormalized());
+
+				Rayf _check = m_camera.getScreenRay((float)x / app.window.getWidth(), (float)y / app.window.getHeight());
+
+				int a = 5;
 
 				//mat4f tmp = mat4f::rotationZ(45.0f);
 				//r = tmp * r;

@@ -116,7 +116,7 @@ public:
             Intersection curIntersection;
             if (accelerator.first->intersect(accelerator.second * ray, curIntersection))
             {
-                float curDistSqToOrigin = (float)distSq(accelerator.second.getInverse() * curIntersection.getSurfacePosition(), ray.origin());
+                float curDistSqToOrigin = (float)distSq(accelerator.second.getInverse() * curIntersection.getSurfacePosition(), ray.getOrigin());
                 if (curDistSqToOrigin < bestDistSqToOrigin)
                 {
                     bestDistSqToOrigin = curDistSqToOrigin;

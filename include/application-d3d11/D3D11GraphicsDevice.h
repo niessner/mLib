@@ -19,7 +19,8 @@ public:
         m_depthState = nullptr;
         m_rasterState = nullptr;
         m_depthStencilView = nullptr;
-        m_captureBuffer = nullptr;
+        m_captureBufferColor = nullptr;
+		m_captureBufferDepth = nullptr;
         m_samplerState = nullptr;
 		m_featureLevel = D3D_FEATURE_LEVEL_9_1;
 
@@ -58,7 +59,8 @@ public:
 			SAFE_RELEASE(m_depthBuffer);
 			SAFE_RELEASE(m_depthState);
 			SAFE_RELEASE(m_depthStencilView);
-			SAFE_RELEASE(m_captureBuffer);
+			SAFE_RELEASE(m_captureBufferColor);
+			SAFE_RELEASE(m_captureBufferDepth);
 			SAFE_RELEASE(m_samplerState);
 
 			if (m_debug)
@@ -172,25 +174,26 @@ private:
 
     UINT m_width, m_height;
 	UINT m_viewportWidth, m_viewportHeight;
-    ID3D11Device *m_device;
-    ID3D11DeviceContext *m_context;
-    ID3D11RenderTargetView *m_renderTargetView;
-    ID3D11Debug *m_debug;
+    ID3D11Device* m_device;
+    ID3D11DeviceContext* m_context;
+    ID3D11RenderTargetView* m_renderTargetView;
+    ID3D11Debug* m_debug;
 
-    IDXGISwapChain *m_swapChain;
+    IDXGISwapChain* m_swapChain;
 	DXGI_SWAP_CHAIN_DESC m_swapChainDesc;	//settings
 
 
-    ID3D11RasterizerState *m_rasterState;
+    ID3D11RasterizerState* m_rasterState;
     D3D11_RASTERIZER_DESC m_rasterDesc;
 
-    ID3D11Texture2D *m_depthBuffer;
-    ID3D11DepthStencilState *m_depthState;
-    ID3D11DepthStencilView *m_depthStencilView;
+    ID3D11Texture2D* m_depthBuffer;
+    ID3D11DepthStencilState* m_depthState;
+    ID3D11DepthStencilView* m_depthStencilView;
 
-    ID3D11SamplerState *m_samplerState;
+    ID3D11SamplerState* m_samplerState;
 
-    ID3D11Texture2D *m_captureBuffer;
+    ID3D11Texture2D* m_captureBufferColor;
+	ID3D11Texture2D* m_captureBufferDepth;
 
     std::set<GraphicsAsset*> m_assets;
 
@@ -200,7 +203,8 @@ private:
 	
 	bool m_bExternallyCreated; 
 protected:
-	void captureBackBufferInternal(ColorImageR8G8B8A8& result);
+	void captureBackBufferColorInternal(ColorImageR8G8B8A8& result);
+	void captureBackBufferDepthInternal(DepthImage32& result);
 };
 
 }  // namespace ml

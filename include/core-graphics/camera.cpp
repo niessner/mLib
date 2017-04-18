@@ -204,13 +204,13 @@ namespace ml {
 
 	template <class FloatType>
 	Ray<FloatType> Camera<FloatType>::getScreenRay(FloatType screenX, FloatType screenY) const	{
-		return Ray<T>(m_eye, getScreenRayDirection(screenX, screenY));
+		return Ray<FloatType>(m_eye, getScreenRayDirection(screenX, screenY));
 	}
 
 	template <class FloatType>
 	vec3<FloatType> Camera<FloatType>::getScreenRayDirection(FloatType screenX, FloatType screenY) const {
 		
-		vec3<T> perspectivePoint(
+		vec3<FloatType> perspectivePoint(
 			math::linearMap((FloatType)0.0, (FloatType)1.0, (FloatType)-1.0, (FloatType)1.0, screenX), 
 			math::linearMap((FloatType)0.0, (FloatType)1.0, (FloatType)1.0, (FloatType)-1.0, screenY), 
 			(FloatType)-0.5
