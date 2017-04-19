@@ -451,6 +451,8 @@ void D3D11GraphicsDevice::captureBackBufferDepthInternal(DepthImage32& result)
 	}
 
 	m_context->Unmap(m_captureBufferDepth, subresource);
+
+	result.setInvalidValue(1.0f);	//that's the far plane
 }
 
 }

@@ -2,36 +2,39 @@
 namespace ml {
 
 
-    template <class FloatType>
+	template <class FloatType>
 	Camera<FloatType>::Camera(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& worldUp, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar) {
-        m_eye = eye;
-        m_worldUp = worldUp.getNormalized();
-        m_look = lookDir.getNormalized();
-        m_right = (m_look ^ m_worldUp).getNormalized();
-		m_up = (m_right ^ m_look).getNormalized();
+		m_eye = eye;
+		m_worldUp = worldUp.getNormalized();
+		m_worldUp *= (FloatType)-1.0;	//compensate for projection matrix convention
+		m_look = lookDir.getNormalized();
+		m_right = (m_worldUp ^ m_look).getNormalized();
+		
+		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_worldUp)));
 
-        m_fieldOfView = fieldOfView;
-        m_aspect = aspect;
-        m_zNear = zNear;
-        m_zFar = zFar;
+		m_up = m_worldUp;		
 
-        m_projection = projMatrix(m_fieldOfView, m_aspect, m_zNear, m_zFar);
+		m_fieldOfView = fieldOfView;
+		m_aspect = aspect;
+		m_zNear = zNear;
+		m_zFar = zFar;
 
-        update();
-    }
+		m_projection = projMatrix(m_fieldOfView, m_aspect, m_zNear, m_zFar);
+
+		update();
+	}
 
 	template <class FloatType>
-	Camera<FloatType>::Camera(const Matrix4x4<FloatType>& cameraToWorld, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar, bool flipRight) {
+	Camera<FloatType>::Camera(const Matrix4x4<FloatType>& cameraToWorld, FloatType fieldOfView, FloatType aspect, FloatType zNear, FloatType zFar) {
 		m_eye		= vec3<FloatType>(cameraToWorld(0, 3), cameraToWorld(1, 3), cameraToWorld(2, 3));
-		m_worldUp	= vec3<FloatType>(cameraToWorld(0, 1), cameraToWorld(1, 1), cameraToWorld(2, 1));
+		
 		m_right		= vec3<FloatType>(cameraToWorld(0, 0), cameraToWorld(1, 0), cameraToWorld(2, 0));
-		
-		if (flipRight) {
-			m_right = -m_right;
-		}
-		
-		m_look = (m_worldUp ^ m_right).getNormalized();
-		m_up = (m_right ^ m_look).getNormalized();
+		m_worldUp	= vec3<FloatType>(cameraToWorld(0, 1), cameraToWorld(1, 1), cameraToWorld(2, 1));		
+		m_look		= vec3<FloatType>(cameraToWorld(0, 2), cameraToWorld(1, 2), cameraToWorld(2, 2));
+
+		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_worldUp)));
+	
+		m_up = m_worldUp;
 
 		m_fieldOfView = fieldOfView;
 		m_aspect = aspect;
@@ -59,7 +62,7 @@ namespace ml {
 		s >> m_zNear;
 		s >> m_zFar;
 
-		m_projection = projectionMatrix(m_fieldOfView, m_aspect, m_zNear, m_zFar);
+		m_projection = projMatrix(m_fieldOfView, m_aspect, m_zNear, m_zFar);
 
 		update();
 	}
@@ -91,7 +94,7 @@ namespace ml {
 
 	template <class FloatType>
 	void Camera<FloatType>::updateWorldUp(const vec3<FloatType>& worldUp) {
-		m_worldUp = worldUp;
+		m_worldUp = -worldUp;	//the minus compensates for the projection matrix
 		update();
 	}
 
@@ -170,11 +173,16 @@ namespace ml {
 	// resets given a new eye, lookDir, up, and right vector
 	template <class FloatType>
 	void Camera<FloatType>::reset(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& worldUp) {
-		m_worldUp = worldUp.getNormalized();
-		m_look = lookDir.getNormalized();
-		m_right = (m_look ^ m_worldUp).getNormalized();
-		m_up = worldUp;
 		m_eye = eye;
+		m_worldUp = worldUp.getNormalized();
+		m_worldUp *= (FloatType)-1.0;	//compensate for projection matrix convention
+		m_look = lookDir.getNormalized();
+		m_right = (m_worldUp ^ m_look).getNormalized();
+
+		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_worldUp)));
+
+		m_up = m_worldUp;
+
 		update();
 	}
 
@@ -182,6 +190,8 @@ namespace ml {
 	Matrix4x4<FloatType> Camera<FloatType>::projMatrix(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar) {
 		FloatType width = 1.0f / tanf(math::degreesToRadians(fieldOfView) * 0.5f);
 		FloatType height = aspectRatio / tanf(math::degreesToRadians(fieldOfView) * 0.5f);
+
+		height *= -(FloatType)1.0;	//making it consistent with the kinect projection assumption that y pointing downwards
 
 		return Matrix4x4<FloatType>(
 			width, 0.0f, 0.0f, 0.0f,
@@ -216,7 +226,7 @@ namespace ml {
 			(FloatType)-0.5
 			);
 
-		return getViewProjection().getInverse() * perspectivePoint - m_eye;
+		return getViewProj().getInverse() * perspectivePoint - m_eye;
 	}
 
 }  // namespace ml

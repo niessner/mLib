@@ -169,11 +169,13 @@ void AppTest::init(ml::ApplicationData &app)
 	std::cout << bb << std::endl;
 
 
-	//vec3f eye(1.0f, 2.0f, 3.0f);
 	ml::vec3f eye(-0.5f, -0.5f, 1.5f);
-	ml::vec3f worldUp(0.0f, 0.0f, 1.0f);
-	//m_camera = ml::Cameraf(eye, worldUp, ml::vec3f::eX, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 10.0f);
-	m_camera = Cameraf(eye, vec3f::eY, vec3f::eZ, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 10.0f);
+	//m_camera = Cameraf(eye, vec3f::eZ, -vec3f::eY, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 10.0f);		//same as idenity matrix
+	m_camera = Cameraf(eye, -vec3f::eY, vec3f::eZ, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 10.0f);
+
+	//mat4f view = mat4f::identity();
+	//m_camera = Cameraf(view, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 10.0f);	
+	//m_camera.updateWorldUp(vec3f::eZ);
 
 	m_font.init(app.graphics, "Calibri");
 
@@ -207,22 +209,24 @@ void AppTest::init(ml::ApplicationData &app)
 
 	//app.graphics.castD3D11().printAssets();
 	std::cout << "\nInit done!\n\n" << std::endl;
+
+	std::cout << "NDC: " << D3D11GraphicsDevice::pixelToNDC(vec2i(0, 0), 640, 480) << std::endl;
+	std::cout << "NDC: " << D3D11GraphicsDevice::pixelToNDC(vec2i(640-1, 0), 640, 480) << std::endl;
+	std::cout << "NDC: " << D3D11GraphicsDevice::pixelToNDC(vec2i(0, 480-1), 640, 480) << std::endl;
+	std::cout << "NDC: " << D3D11GraphicsDevice::pixelToNDC(vec2i(640-1, 480-1), 640, 480) << std::endl;
 }
 
-void AppTest::render(ml::ApplicationData &app)
+void AppTest::render(ml::ApplicationData& app)
 {
 	m_timer.frame();
 
 	m_canvas.render();
 
 	ConstantBuffer constants;
-	mat4f proj = Cameraf::visionToGraphicsProj(app.window.getWidth(), app.window.getHeight(), 1108.51f, 1108.51f, 0.1f, 10.0f);
-	//for (unsigned int i = 0; i < 100; i++) {
-	//	vec3f p = vec3f(0.0f, 0.0f, 10.0f - (float)i*0.1f);
-	//	std::cout << p << "\t\t" << proj * p << std::endl;
-	//	std::cout << p << "\t\t" << m_camera.getPerspective() * p << std::endl;
-	//	}
-	constants.worldViewProj = proj * m_camera.getView();
+	mat4f proj = Cameraf::visionToGraphicsProj(app.window.getWidth(), app.window.getHeight(), 1108.51f, 1108.51f, m_camera.getNearPlane(), m_camera.getFarPlane());
+	//constants.worldViewProj = proj * m_camera.getView();
+	
+	constants.worldViewProj = m_camera.getViewProj();
 	constants.modelColor = ml::vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 	m_constants.updateAndBind(constants, 0);
 	//app.graphics.castD3D11().getShaderManager().bindShaders("defaultBasic");
@@ -235,7 +239,7 @@ void AppTest::render(ml::ApplicationData &app)
 	m_shaderManager.bindShaders("pointCloud");
 	m_constants.bind(0);
 	m_pointCloud.render();
-
+	
 	m_font.drawString("FPS: " + ml::convert::toString(m_timer.framesPerSecond()), ml::vec2i(10, 5), 24.0f, ml::RGBColor::Red);
 }
 
@@ -243,10 +247,9 @@ void AppTest::resize(ml::ApplicationData &app)
 {
 	m_canvas.resize();
 	m_camera.updateAspectRatio((float)app.window.getWidth() / app.window.getHeight());
-
 }
 
-void AppTest::keyDown(ml::ApplicationData &app, UINT key)
+void AppTest::keyDown(ml::ApplicationData& app, UINT key)
 {
 	if (key == KEY_Z) {
 		const unsigned int width = app.window.getWidth();
@@ -269,7 +272,55 @@ void AppTest::keyDown(ml::ApplicationData &app, UINT key)
 	}
 }
 
-void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
+
+void backProjectGraphics(const DepthImage32& depth, const ColorImageR8G8B8A8& color, const Cameraf& camera) {
+	PointCloudf pc;
+	mat4f inv = camera.getProj().getInverse();
+	for (auto& d : depth) {
+		if (depth.isValidValue(d.value)) {
+			vec2f p = D3D11GraphicsDevice::pixelToNDC(vec2i((int)d.x, (int)d.y), depth.getWidth(), depth.getHeight());
+			vec3f v = (inv * vec3f((float)p.x, (float)p.y, d.value));
+			pc.m_points.push_back(v);
+			pc.m_colors.push_back(vec4f(color(d.x, d.y)) / 255.0f);
+		}
+	}
+	PointCloudIOf::saveToFile("test_backproj_graphics.ply", pc);
+}
+
+void backProjectVision(const DepthImage32& _depth, const ColorImageR8G8B8A8& color, const Cameraf& camera) {
+	DepthImage32 depth = _depth;
+
+	{
+		//first get it to world space z
+		mat4f inv = camera.getProj().getInverse();
+		for (auto& d : depth) {
+			if (depth.isValidValue(d.value)) {
+				vec2f p = D3D11GraphicsDevice::pixelToNDC(vec2i((int)d.x, (int)d.y), depth.getWidth(), depth.getHeight());
+				vec3f v = (inv * vec3f((float)p.x, (float)p.y, d.value));
+				d.value = v.z;
+			}
+			else {
+				d.value = 0.0f;
+			}
+		}
+		depth.setInvalidValue(0.0f);
+	}
+
+	PointCloudf pc;
+	mat4f inv = camera.getIntrinsic(depth.getWidth(), depth.getHeight()).getInverse();
+	for (auto& d : depth) {
+		if (depth.isValidValue(d.value)) {
+			vec3f p((float)d.x * d.value, (float)d.y * d.value, d.value);
+			p = inv * p;
+
+			pc.m_points.push_back(p);
+			pc.m_colors.push_back(vec4f(color(d.x, d.y)) / 255.0f);
+		}
+	}
+	PointCloudIOf::saveToFile("test_backproj_vision.ply", pc);
+}
+
+void AppTest::keyPressed(ml::ApplicationData& app, UINT key)
 {
 	const float distance = 0.1f;
 	const float theta = 5.0f;
@@ -278,8 +329,8 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 	if (key == KEY_W) m_camera.move(distance);
 	if (key == KEY_A) m_camera.strafe(-distance);
 	if (key == KEY_D) m_camera.strafe(distance);
-	if (key == KEY_E) m_camera.jump(distance);
-	if (key == KEY_Q) m_camera.jump(-distance);
+	if (key == KEY_E) m_camera.jump(-distance);
+	if (key == KEY_Q) m_camera.jump(distance);
 
 	if (key == KEY_UP) m_camera.lookUp(theta);
 	if (key == KEY_DOWN) m_camera.lookUp(-theta);
@@ -287,14 +338,31 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 	if (key == KEY_RIGHT) m_camera.lookRight(-theta);
 
 	if (key == KEY_F1) {
-		auto color = app.graphics.castD3D11().captureBackBuffer();
+		auto color = app.graphics.castD3D11().captureBackBufferColor();
 		auto depth = app.graphics.castD3D11().captureBackBufferDepth();
 		FreeImageWrapper::saveImage("screenshot_color.png", color);
 		FreeImageWrapper::saveImage("screenshot_depth.png", ColorImageR32G32B32A32(depth));
 	}
 
+
+	if (key == KEY_C) {
+		std::cout << "proj:\n";
+		std::cout << m_camera.getProj() << std::endl;
+		std::cout << "view:\n";
+		std::cout << m_camera.getView() << std::endl;
+		std::cout
+			<< m_camera.getEye() << "\n"
+			<< m_camera.getRight() << "\n"
+			<< m_camera.getUp() << "\n"
+			<< m_camera.getLook() << "\n" << std::endl;		
+	}
+
 	if (key == KEY_P) {
-		//auto depth = app.graphics.castD3D11().
+		auto color = app.graphics.castD3D11().captureBackBufferColor();
+		auto depth = app.graphics.castD3D11().captureBackBufferDepth();
+		
+		backProjectGraphics(depth, color, m_camera);
+		backProjectVision(depth, color, m_camera);		
 	}
 	
 	if (key == KEY_F2) {
@@ -310,6 +378,9 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 		renderTarget.captureDepthBuffer(depth);
 		FreeImageWrapper::saveImage("color.png", color);
 		FreeImageWrapper::saveImage("depth.png", ml::ColorImageR32G32B32A32(depth));
+
+
+		//auto depth2 = app.graphics.castD3D11().captureBackBufferDepth();
 	}
 
 	if (key == 'R') {
@@ -356,18 +427,18 @@ void AppTest::keyPressed(ml::ApplicationData &app, UINT key)
 			unsigned int y = (unsigned int)y_;
 
 			for (unsigned int x = 0; x < app.window.getWidth(); x++) {
-				//std::cout << " tyring ray " << i << " " << j << std::endl;
 
 				float depth0 = 0.5f;
 				float depth1 = 1.0f;
-				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)x*depth0, (float)(app.window.getHeight() - 1 - y)*depth0, depth0, 1.0f);
-				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)x*depth1, (float)(app.window.getHeight() - 1 - y)*depth1, depth1, 1.0f);
+				vec4f p0 = camToWorld*intrinsicsInverse*vec4f((float)x*depth0, (float)(y)*depth0, depth0, 1.0f);
+				vec4f p1 = camToWorld*intrinsicsInverse*vec4f((float)x*depth1, (float)(y)*depth1, depth1, 1.0f);
 
 				vec3f eye = m_camera.getEye();
 				Rayf r(m_camera.getEye(), (p1.getVec3() - p0.getVec3()).getNormalized());
 
 				Rayf _check = m_camera.getScreenRay((float)x / app.window.getWidth(), (float)y / app.window.getHeight());
 
+				//r = _check;
 				int a = 5;
 
 				//mat4f tmp = mat4f::rotationZ(45.0f);
@@ -433,13 +504,13 @@ void AppTest::mouseMove(ml::ApplicationData &app)
 
 	if (app.input.mouse.buttons[ml::MouseButtonRight])
 	{
-		m_camera.strafe(-distance * posDelta.x);
+		m_camera.strafe(distance * posDelta.x);
 		m_camera.jump(distance * posDelta.y);
 	}
 
 	if (app.input.mouse.buttons[ml::MouseButtonLeft])
 	{
-		m_camera.lookRight(-theta * posDelta.x);
+		m_camera.lookRight(theta * posDelta.x);
 		m_camera.lookUp(theta * posDelta.y);
 	}
 

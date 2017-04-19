@@ -15,7 +15,7 @@ namespace ml {
 
 		//! Construct camera from extrinsic cameraToWorld matrix (columns are x, y, z vectors and origin of camera in that order).
 		//! If flipRight is set, flip the x coordinate; does set worldUp to the current up vector (might need to call updateWorlUp)
-		Camera(const Matrix4x4<FloatType>& cameraToWorld, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar, bool flipRight = false);
+		Camera(const Matrix4x4<FloatType>& cameraToWorld, const FloatType fieldOfView, const FloatType aspect, const FloatType zNear, const FloatType zFar);
 
 		void updateAspectRatio(FloatType newAspect);
 		void updateWorldUp(const vec3<FloatType>& worldUp);
@@ -46,7 +46,7 @@ namespace ml {
 		}
 
 		//! returns the camera-projection matrix (world -> camera -> proj space)
-		Matrix4x4<FloatType> getViewProjection() const {
+		Matrix4x4<FloatType> getViewProj() const {
 			return m_viewProjection;
 		}
 
@@ -100,7 +100,7 @@ namespace ml {
 
 		void applyTransform(const Matrix3x3<FloatType>& transform);
 		void applyTransform(const Matrix4x4<FloatType>& transform);
-		void reset(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& up);
+		void reset(const vec3<FloatType>& eye, const vec3<FloatType>& lookDir, const vec3<FloatType>& worldUp);
 
 
 		//! extrinsic is camera-to-world
@@ -136,7 +136,7 @@ namespace ml {
 				0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
-		//!  constructs a projection matrix (field of view is in degrees)
+		//!  constructs a projection matrix (field of view is in degrees); matrix is right-handed: assumes x->right, y->down, z->forward
 		static Matrix4x4<FloatType> projMatrix(FloatType fieldOfView, FloatType aspectRatio, FloatType zNear, FloatType zFar);
 
 		//! constructs a view matrix (world -> camera)

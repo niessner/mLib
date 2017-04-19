@@ -32,7 +32,7 @@ namespace math
 	}
 
 	template<class T>
-	inline bool floatEqual(const T& v0, const T& v1, T eps = (T)0.000001) {
+	inline bool floatEqual(T v0, T v1, T eps = (T)0.000001) {
 		return (std::abs(v0 - v1) <= eps);
 	}
 

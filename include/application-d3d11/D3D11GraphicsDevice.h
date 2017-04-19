@@ -144,7 +144,6 @@ public:
 	}
 
 
-
 	unsigned int getWidth() const {
 		return m_width;
 	}

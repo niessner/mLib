@@ -215,7 +215,7 @@ namespace ml
 		}
 	}
 
-	void D3D11RenderTarget::captureDepthBuffer(DepthImage32 &result)
+	void D3D11RenderTarget::captureDepthBuffer(DepthImage32& result)
 	{
 		auto &context = m_graphics->getContext();
 		context.CopyResource(m_captureDepth, m_depthStencil);
@@ -232,6 +232,8 @@ namespace ml
 		}
 
 		context.Unmap(m_captureDepth, subresource);
+
+		result.setInvalidValue(1.0f); //that's the far plane
 	}
 
 }

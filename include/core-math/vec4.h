@@ -378,6 +378,14 @@ typedef vec4<INT64> vec4l;
 
 namespace math {
 	template<class T>
+	inline bool floatEqual(const vec4<T>& v0, const vec4<T>& v1) {
+		return
+			floatEqual(v0.x, v1.x) &&
+			floatEqual(v0.y, v1.y) &&
+			floatEqual(v0.z, v1.z) &&
+			floatEqual(v0.w, v1.w);
+	}
+	template<class T>
 	inline vec4<T> frac(const vec4<T>& f) {
 		return vec4<T>(frac(f.x), frac(f.y), frac(f.z), frac(f.w));
 	}

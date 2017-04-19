@@ -363,6 +363,13 @@ typedef vec3<INT64> vec3l;
 
 namespace math {
 	template<class T>
+	inline bool floatEqual(const vec3<T>& v0, const vec3<T>& v1) {
+		return
+			floatEqual(v0.x, v1.x) &&
+			floatEqual(v0.y, v1.y) &&
+			floatEqual(v0.z, v1.z);
+	}
+	template<class T>
 	inline vec3<T> frac(const vec3<T>& f) {
 		return vec3<T>(frac(f.x), frac(f.y), frac(f.z));
 	}

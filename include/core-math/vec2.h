@@ -300,6 +300,12 @@ typedef vec2<INT64> vec2l;
 
 namespace math {
 	template<class T>
+	inline bool floatEqual(const vec2<T>& v0, const vec2<T>& v1) {
+		return
+			floatEqual(v0.x, v1.x) &&
+			floatEqual(v0.y, v1.y);
+	}
+	template<class T>
 	inline vec2<T> frac(const vec2<T>& f) {
 		return vec2<T>(frac(f.x), frac(f.y));
 	}
