@@ -97,7 +97,10 @@ public:
 		worldToOBB2x2(1, 0) /= scaleValues[1];	worldToOBB2x2(1, 1) /= scaleValues[1];
 
 		vec2<FloatType> trans = worldToOBB2x2 * (-m_Anchor);
-		Matrix3x3<FloatType> worldToOBB = worldToOBB2x2;
+		Matrix3x3<FloatType> worldToOBB = Matrix3x3<FloatType>(
+			worldToOBB2x2(0,0), worldToOBB2x2(0,1), 0.0f,
+			worldToOBB2x2(1,0), worldToOBB2x2(1,1), 0.0f,
+			0.0f, 0.0f, 1.0f);
 		worldToOBB.at(0, 2) = trans.x;
 		worldToOBB.at(1, 2) = trans.y;
 
@@ -153,10 +156,10 @@ public:
 		std::vector< LineSegment2<FloatType> > result;	result.reserve(4);
 		auto v = getVertices();
 
-		result.push_back(LineSegment3<FloatType>(v[0], v[1]));
-		result.push_back(LineSegment3<FloatType>(v[1], v[2]));
-		result.push_back(LineSegment3<FloatType>(v[2], v[3]));
-		result.push_back(LineSegment3<FloatType>(v[3], v[0]));
+		result.push_back(LineSegment2<FloatType>(v[0], v[1]));
+		result.push_back(LineSegment2<FloatType>(v[1], v[2]));
+		result.push_back(LineSegment2<FloatType>(v[2], v[3]));
+		result.push_back(LineSegment2<FloatType>(v[3], v[0]));
 
 		return result;
 	}
@@ -220,6 +223,13 @@ public:
 	//! scales the bounding box by the factor t (for t=1 the bb remains unchanged)
 	void scale(FloatType t) {
 		scale(t, t, t);
+	}
+
+	//! warning: not tested
+	bool intersects(const vec2<FloatType>& point) const {
+		vec3f pp = getWorldToOBB() * vec3f(point.x, point.y, 1.0f);
+		vec2f p(pp.x / pp.z, pp.y / pp.z);
+		return (p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1);
 	}
 private:
 
