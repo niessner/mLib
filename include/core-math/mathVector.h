@@ -121,6 +121,10 @@ public:
         return result;
     }
 
+	T length() const {
+		return sqrt(squaredSum());
+	}
+
 	//! dot product
 	T operator|(const MathVector& other) const {
 		return dot(*this, other);
