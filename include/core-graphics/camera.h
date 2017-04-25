@@ -67,12 +67,12 @@ namespace ml {
 
 		//! returns the (current) up direction
 		vec3<FloatType> getUp() const {
-			return m_up;
+			return -m_up;
 		}
 
 		//! returns the work up direction (which is not necessarily the current up)
 		vec3<FloatType> getWorldUp() const {
-			return m_worldUp;
+			return -m_worldUp;
 		}
 
 		FloatType getFoV() const {
