@@ -208,7 +208,7 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 }
 
 template <class FloatType>
-void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatType>& mesh, bool bIgnoreNans)
 {
 	mesh.clear();
 
@@ -231,6 +231,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 	typename MeshData<FloatType>::GroupIndex activeGroup;
 	bool bActiveMaterial = false;
 	bool bActiveGroup = false;
+	std::vector<unsigned int> badIndices; //for removing NaN values etc
 
 	while ( fscanf( fp, "%s", buf) != EOF ) {
 		if (strncmp(buf, "mtllib", strlen("mtllib")) == 0) {
@@ -279,12 +280,20 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 					//vertex, 3 or 4 components
 					val[3] = 1.0f;  //default w coordinate
 					match = fscanf( fp, "%f %f %f %f %f %f", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5]);	//meshlab stores colors right after vertex pos (3 xyz, 3 rgb)
-					mesh.m_Vertices.push_back(vec3<FloatType>(val[0], val[1], val[2]));
+					if (match >= 3) 
+						mesh.m_Vertices.push_back(vec3<FloatType>(val[0], val[1], val[2]));
+					else if (bIgnoreNans) {
+						badIndices.push_back((unsigned int)mesh.m_Vertices.size());
+						mesh.m_Vertices.push_back(vec3<FloatType>(std::numeric_limits<FloatType>::quiet_NaN()));
+						mesh.m_Colors.push_back(vec4<FloatType>(std::numeric_limits<FloatType>::quiet_NaN()));
+					}
+					else throw MLIB_EXCEPTION("bad vert format");
 
 					if (match == 6) {  //we found color data
 						mesh.m_Colors.push_back(vec4<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
 					}
-					if (!( match == 3 || match == 4 || match == 6)) throw MLIB_EXCEPTION("bad color format");
+					//if (!(match == 3 || match == 4 || match == 6)) throw MLIB_EXCEPTION("bad color format");
+					if (!(match == 3 || match == 4 || match == 6)) std::cerr << "warning: bad vert/color format" << std::endl;
 					break;
 
 				case 'n':
@@ -487,6 +496,9 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 
 			};
 		}
+	}
+	if (!badIndices.empty() && mesh.m_Colors.size() == badIndices.size()) {
+		mesh.m_Colors.clear();
 	}
 
 	fclose(fp);
