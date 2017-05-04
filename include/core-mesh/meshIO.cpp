@@ -314,14 +314,15 @@ void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatT
 						badIndices.push_back((unsigned int)mesh.m_Vertices.size());
 						mesh.m_Vertices.push_back(vec3<FloatType>(std::numeric_limits<FloatType>::quiet_NaN()));
 						mesh.m_Colors.push_back(vec4<FloatType>(std::numeric_limits<FloatType>::quiet_NaN()));
+						std::cerr << "warning: bad vert/color format" << std::endl;
 					}
 					else throw MLIB_EXCEPTION("bad vert format");
 
 					if (match == 6) {  //we found color data
 						mesh.m_Colors.push_back(vec4<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
 					}
-					//if (!(match == 3 || match == 4 || match == 6)) throw MLIB_EXCEPTION("bad color format");
-					if (!(match == 3 || match == 4 || match == 6)) std::cerr << "warning: bad vert/color format" << std::endl;
+					if (!(match == 0 || match == 3 || match == 4 || match == 6)) 
+						throw MLIB_EXCEPTION("bad color format");
 					break;
 
 				case 'n':
@@ -701,9 +702,11 @@ void MeshIO<FloatType>::saveToOBJ( const std::string& filename, const MeshData<F
 
 	for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
 		file << "v ";
-		file << mesh.m_Vertices[i].x << " " << mesh.m_Vertices[i].y << " " << mesh.m_Vertices[i].z;
+		if (isnan(mesh.m_Vertices[i].x))	file << "NaN NaN NaN";
+		else								file << mesh.m_Vertices[i].x << " " << mesh.m_Vertices[i].y << " " << mesh.m_Vertices[i].z;
 		if (mesh.m_Colors.size() > 0) {
-			file << " " << mesh.m_Colors[i].x << " " << mesh.m_Colors[i].y << " " << mesh.m_Colors[i].z;
+			if (isnan(mesh.m_Colors[i].x))	file << " NaN NaN NaN";
+			else							file << " " << mesh.m_Colors[i].x << " " << mesh.m_Colors[i].y << " " << mesh.m_Colors[i].z;
 		}
 		file << "\n";
 	}
