@@ -65,7 +65,7 @@ public:
 	/* Read Functions													    */
 	/************************************************************************/
 
-	static void loadFromPLY(const std::string& filename, MeshData<FloatType>& mesh);
+	static void loadFromPLY(const std::string& filename, MeshData<FloatType>& mesh, PlyProperties* properties = nullptr); //vertex properties only
 
 	static void loadFromOFF(const std::string& filename, MeshData<FloatType>& mesh);
 
@@ -76,7 +76,7 @@ public:
 	/* Write Functions													    */
 	/************************************************************************/
 
-	static void saveToPLY(const std::string& filename, const MeshData<FloatType>& mesh);
+	static void saveToPLY(const std::string& filename, const MeshData<FloatType>& mesh, const PlyProperties* properties = nullptr); //vertex properties only
 
 	static void saveToOFF(const std::string& filename, const MeshData<FloatType>& mesh);
 
