@@ -50,24 +50,29 @@ namespace ml {
 			return m_viewProjection;
 		}
 
+		//! returns the eye point
 		vec3<FloatType> getEye() const {
 			return m_eye;
 		}
 
+		//! returns the look direction
 		vec3<FloatType> getLook() const {
 			return m_look;
 		}
-
+		
+		//! returns the right direction
 		vec3<FloatType> getRight() const {
 			return m_right;
 		}
 
+		//! returns the (current) up direction
 		vec3<FloatType> getUp() const {
-			return m_up;
+			return -m_up;
 		}
 
+		//! returns the work up direction (which is not necessarily the current up)
 		vec3<FloatType> getWorldUp() const {
-			return m_worldUp;
+			return -m_worldUp;
 		}
 
 		FloatType getFoV() const {

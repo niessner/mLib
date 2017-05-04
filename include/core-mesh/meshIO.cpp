@@ -703,27 +703,48 @@ void MeshIO<FloatType>::saveToOBJ( const std::string& filename, const MeshData<F
 		file << "vt ";
 		file << mesh.m_TextureCoords[i].x << " " << mesh.m_TextureCoords[i].y << "\n";
 	}
-	unsigned int curMaterialIdx = 0;
+	unsigned int currMaterialIdx = 0;
+	unsigned int currGroupIdx = 0;
 	for (unsigned int i = 0; i < mesh.m_FaceIndicesVertices.size(); i++) {
+		if (!mesh.m_indicesByGroup.empty()) {
+			if (mesh.m_indicesByGroup[currGroupIdx].end == i)
+				currGroupIdx++;
+			if (mesh.m_indicesByGroup[currGroupIdx].start == i)
+				file << "g " << mesh.m_indicesByGroup[currGroupIdx].name << "\n";
+		}		
 		if (!mesh.m_indicesByMaterial.empty()) {
-			if (mesh.m_indicesByMaterial[curMaterialIdx].end == i) 
-				curMaterialIdx++;
-			if (mesh.m_indicesByMaterial[curMaterialIdx].start == i)
-				file << "usemtl " << mesh.m_indicesByMaterial[curMaterialIdx].name << "\n";
+			if (mesh.m_indicesByMaterial[currMaterialIdx].end == i) 
+				currMaterialIdx++;
+			if (mesh.m_indicesByMaterial[currMaterialIdx].start == i)
+				file << "usemtl " << mesh.m_indicesByMaterial[currMaterialIdx].name << "\n";
 		}
+
 		file << "f ";
 		for (unsigned int j = 0; j < mesh.m_FaceIndicesVertices[i].size(); j++) {
 			file << mesh.m_FaceIndicesVertices[i][j]+1;
-			if (mesh.m_FaceIndicesTextureCoords.size() > 0 || mesh.m_FaceIndicesNormals.size() > 0) {
+
+			if (mesh.hasTexCoords() || mesh.hasNormals()) {
 				file << "/";
-				if (mesh.m_FaceIndicesTextureCoords.size() > 0) {
-					file << mesh.m_FaceIndicesTextureCoords[i][j]+1;
+				if (mesh.hasTexCoords()) {
+					if (mesh.hasTexCoordsIndices()) file << mesh.m_FaceIndicesTextureCoords[i][j] + 1;
+					else if (mesh.hasVertexIndices())  file << mesh.m_FaceIndicesVertices[i][j] + 1;	//in this case the indicesTexCoords and indicesTexCoords are identical
 				}
 				file << "/";
-				if (mesh.m_FaceIndicesNormals.size() > 0) {
-					file << mesh.m_FaceIndicesNormals[i][j]+1;
-				}
+				if (mesh.hasNormals()) {
+					if (mesh.hasNormalIndices()) file << mesh.m_FaceIndicesNormals[i][j] + 1;
+					else if (mesh.hasVertexIndices())	file << mesh.m_FaceIndicesVertices[i][j] + 1;	//in this case the indicesNormals and indicesTexCoords are identical
+				}				
 			}
+			//if (mesh.m_FaceIndicesTextureCoords.size() > 0 || mesh.m_FaceIndicesNormals.size() > 0) {
+			//	file << "/";
+			//	if (mesh.m_FaceIndicesTextureCoords.size() > 0) {
+			//		file << mesh.m_FaceIndicesTextureCoords[i][j]+1;
+			//	}
+			//	file << "/";
+			//	if (mesh.m_FaceIndicesNormals.size() > 0) {
+			//		file << mesh.m_FaceIndicesNormals[i][j]+1;
+			//	}
+			//}
 			file << " ";
 		}
 		file << "\n";

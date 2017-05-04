@@ -97,9 +97,85 @@ struct RGBColor : public vec4uc
 		const float scale = 1.0f / 255.0f;
 		return vec4f(r * scale, g * scale, b * scale, a * scale);
 	}
-/*
-//TOOD IMPLEMENT A GOOD FUNCTION HERE
-	static RGBColor colorPalette(unsigned int idx, unsigned int maxNum = 10000) {
+
+
+	static RGBColor colorPalette(unsigned int idx, unsigned int maxNum = 64) {
+		//TODO make this a more reasonable function: the core idea is with the same 'maxNum' the palette is exactly the same; so need a deterministic procedural generator
+
+
+		vec3f colors[] = { //http://godsnotwheregodsnot.blogspot.ru/2012/09/color-distribution-methodology.html
+			vec3f(1, 0, 103),
+			vec3f(213, 255, 0),
+			vec3f(255, 0, 86),
+			vec3f(158, 0, 142),
+			vec3f(14, 76, 161),
+			vec3f(255, 229, 2),
+			vec3f(0, 95, 57),
+			vec3f(0, 255, 0),
+			vec3f(149, 0, 58),
+			vec3f(255, 147, 126),
+			vec3f(164, 36, 0),
+			vec3f(0, 21, 68),
+			vec3f(145, 208, 203),
+			vec3f(98, 14, 0),
+			vec3f(107, 104, 130),
+			vec3f(0, 0, 255),
+			vec3f(0, 125, 181),
+			vec3f(106, 130, 108),
+			vec3f(0, 174, 126),
+			vec3f(194, 140, 159),
+			vec3f(190, 153, 112),
+			vec3f(0, 143, 156),
+			vec3f(95, 173, 78),
+			vec3f(255, 0, 0),
+			vec3f(255, 0, 246),
+			vec3f(255, 2, 157),
+			vec3f(104, 61, 59),
+			vec3f(255, 116, 163),
+			vec3f(150, 138, 232),
+			vec3f(152, 255, 82),
+			vec3f(167, 87, 64),
+			vec3f(1, 255, 254),
+			vec3f(255, 238, 232),
+			vec3f(254, 137, 0),
+			vec3f(189, 198, 255),
+			vec3f(1, 208, 255),
+			vec3f(187, 136, 0),
+			vec3f(117, 68, 177),
+			vec3f(165, 255, 210),
+			vec3f(255, 166, 254),
+			vec3f(119, 77, 0),
+			vec3f(122, 71, 130),
+			vec3f(38, 52, 0),
+			vec3f(0, 71, 84),
+			vec3f(67, 0, 44),
+			vec3f(181, 0, 255),
+			vec3f(255, 177, 103),
+			vec3f(255, 219, 102),
+			vec3f(144, 251, 146),
+			vec3f(126, 45, 210),
+			vec3f(189, 211, 147),
+			vec3f(229, 111, 254),
+			vec3f(222, 255, 116),
+			vec3f(0, 255, 120),
+			vec3f(0, 155, 255),
+			vec3f(0, 100, 1),
+			vec3f(0, 118, 255),
+			vec3f(133, 169, 0),
+			vec3f(0, 185, 23),
+			vec3f(120, 130, 49),
+			vec3f(0, 255, 198),
+			vec3f(255, 110, 65),
+			vec3f(232, 94, 190)
+		};
+
+		const unsigned int p0 = 73856093;
+		const unsigned int p1 = 19349669;
+
+		const unsigned int _idx = (idx * p0 + p1) % 64;
+		return RGBColor(colors[_idx]);
+
+		/*
 		const unsigned int p0 = 73856093;
 		const unsigned int p1 = 19349669;
 		idx = (idx * p0 + p1) % maxNum;
@@ -138,9 +214,9 @@ struct RGBColor : public vec4uc
 			g = 0.0f;
 			b = x;
 		}
-
 		return RGBColor(vec3f(r, g, b));
-	}*/
+		*/
+	}
 
     static const RGBColor White;
     static const RGBColor Red;
