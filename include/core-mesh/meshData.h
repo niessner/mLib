@@ -453,7 +453,7 @@ public:
 		bool consistent = true;
 		if (m_FaceIndicesNormals.size() > 0			&& m_FaceIndicesVertices.size() != m_FaceIndicesNormals.size())			consistent = false;
 		if (m_FaceIndicesTextureCoords.size() > 0	&& m_FaceIndicesVertices.size() != m_FaceIndicesTextureCoords.size())	consistent = false;
-		if (m_FaceIndicesColors.size() > 0			&& m_FaceIndicesColors.size() != m_FaceIndicesColors.size())			consistent = false;
+		if (m_FaceIndicesColors.size() > 0			&& m_FaceIndicesVertices.size() != m_FaceIndicesColors.size())			consistent = false;
 
 		if (hasPerVertexNormals() && m_Vertices.size() != m_Normals.size())			consistent = false;
 		if (hasPerVertexTexCoords() && m_Vertices.size() != m_TextureCoords.size()) consistent = false;

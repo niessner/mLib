@@ -5,7 +5,8 @@
 namespace ml {
 
 template <class FloatType>
-void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<FloatType>& mesh, 
+	PlyProperties* properties /*= nullptr*/)
 {
 	mesh.clear();
 	std::ifstream file(filename, std::ios::binary);
@@ -22,6 +23,27 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 	if (header.m_bHasNormals) mesh.m_Normals.resize(header.m_numVertices);
 	if (header.m_bHasColors) mesh.m_Colors.resize(header.m_numVertices);
 
+	unsigned int numExtraProperties = 0;
+	if (properties != nullptr) {
+		if (!header.m_bBinary) {
+			std::cout << "warning: ply properties not supported for ascii" << std::endl;
+		}
+		else {
+			PlyProperties& props = *properties; 
+			props.clear();
+			std::unordered_set<std::string> standardHeaders = { "x", "y", "z", "nx", "ny", "nz", "red", "green", "blue", "alpha" };
+			for (const PlyHeader::PlyPropertyHeader& p : header.m_properties["vertex"]) {
+				if (standardHeaders.find(p.name) == standardHeaders.end()) {
+					PlyProperty prop;
+					prop.headerInfo = p;
+					prop.data.resize(header.m_numVertices*p.byteSize);
+					props[p.name] = prop;
+					numExtraProperties++;
+				}
+			}
+		}
+	}
+
 	if (header.m_bBinary)
 	{
 		//unsigned int size = 3*4+3*4+3+11*4;
@@ -34,7 +56,7 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 		file.read(data, size*header.m_numVertices);
 		for (unsigned int i = 0; i < header.m_numVertices; i++) {
 			unsigned int byteOffset = 0;
-			const std::vector<PlyHeader::PlyProperty>& vertexProperties = header.m_properties["vertex"];
+			const std::vector<PlyHeader::PlyPropertyHeader>& vertexProperties = header.m_properties["vertex"];
 
 			for (unsigned int j = 0; j < vertexProperties.size(); j++) {
 				if (vertexProperties[j].name == "x") {
@@ -77,8 +99,14 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 					mesh.m_Colors[i].w = ((unsigned char*)&data[i*size + byteOffset])[0];	mesh.m_Colors[i].w/=255.0f;
 					byteOffset += vertexProperties[j].byteSize;
 				} else {
-					//unknown (ignore)
-					byteOffset += vertexProperties[j].byteSize;
+					if (numExtraProperties > 0) {
+						PlyProperties& props = *properties;
+						auto it = props.find(vertexProperties[j].name);
+						if (it != props.end()) {
+							memcpy(it->second.data.data() + i*it->second.headerInfo.byteSize, (BYTE*)&data[i*size + byteOffset], it->second.headerInfo.byteSize);
+						}
+					}
+					byteOffset += vertexProperties[j].byteSize; //ignore unknown
 				}
 			}
 			assert(byteOffset == size);
@@ -208,7 +236,7 @@ void MeshIO<FloatType>::loadFromOFF( const std::string& filename, MeshData<Float
 }
 
 template <class FloatType>
-void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatType>& mesh, bool bIgnoreNans)
 {
 	mesh.clear();
 
@@ -231,6 +259,7 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 	typename MeshData<FloatType>::GroupIndex activeGroup;
 	bool bActiveMaterial = false;
 	bool bActiveGroup = false;
+	std::vector<unsigned int> badIndices; //for removing NaN values etc
 
 	while ( fscanf( fp, "%s", buf) != EOF ) {
 		if (strncmp(buf, "mtllib", strlen("mtllib")) == 0) {
@@ -279,12 +308,21 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 					//vertex, 3 or 4 components
 					val[3] = 1.0f;  //default w coordinate
 					match = fscanf( fp, "%f %f %f %f %f %f", &val[0], &val[1], &val[2], &val[3], &val[4], &val[5]);	//meshlab stores colors right after vertex pos (3 xyz, 3 rgb)
-					mesh.m_Vertices.push_back(vec3<FloatType>(val[0], val[1], val[2]));
+					if (match >= 3) 
+						mesh.m_Vertices.push_back(vec3<FloatType>(val[0], val[1], val[2]));
+					else if (bIgnoreNans) {
+						badIndices.push_back((unsigned int)mesh.m_Vertices.size());
+						mesh.m_Vertices.push_back(vec3<FloatType>(std::numeric_limits<FloatType>::quiet_NaN()));
+						mesh.m_Colors.push_back(vec4<FloatType>(std::numeric_limits<FloatType>::quiet_NaN()));
+						std::cerr << "warning: bad vert/color format" << std::endl;
+					}
+					else throw MLIB_EXCEPTION("bad vert format");
 
 					if (match == 6) {  //we found color data
 						mesh.m_Colors.push_back(vec4<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
 					}
-					if (!( match == 3 || match == 4 || match == 6)) throw MLIB_EXCEPTION("bad color format");
+					if (!(match == 0 || match == 3 || match == 4 || match == 6)) 
+						throw MLIB_EXCEPTION("bad color format");
 					break;
 
 				case 'n':
@@ -488,6 +526,9 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 			};
 		}
 	}
+	if (!badIndices.empty() && mesh.m_Colors.size() == badIndices.size()) {
+		mesh.m_Colors.clear();
+	}
 
 	fclose(fp);
 
@@ -512,7 +553,8 @@ void MeshIO<FloatType>::loadFromOBJ( const std::string& filename, MeshData<Float
 
 
 template <class FloatType>
-void MeshIO<FloatType>::saveToPLY( const std::string& filename, const MeshData<FloatType>& mesh )
+void MeshIO<FloatType>::saveToPLY( const std::string& filename, const MeshData<FloatType>& mesh, 
+	const PlyProperties* properties /*= nullptr*/)
 {
 	if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float, not for double");
 
@@ -536,6 +578,10 @@ void MeshIO<FloatType>::saveToPLY( const std::string& filename, const MeshData<F
 		file << "property uchar blue\n";
 		file << "property uchar alpha\n";
 	}
+	if (properties != nullptr) {
+		for (const auto& p : *properties) 
+			file << "property " << p.second.headerInfo.nameType << " " << p.second.headerInfo.name << "\n";
+	}
 	file << "element face " << mesh.m_FaceIndicesVertices.size() << "\n";
 	file << "property list uchar int vertex_indices\n";
 	file << "end_header\n";
@@ -556,6 +602,9 @@ void MeshIO<FloatType>::saveToPLY( const std::string& filename, const MeshData<F
 		size_t vertexByteSize = sizeof(float)*3;
 		if (mesh.m_Normals.size() > 0)	vertexByteSize += sizeof(float)*3;
 		if (mesh.m_Colors.size() > 0)	vertexByteSize += sizeof(unsigned char)*4;
+		if (properties != nullptr) {
+			for (const auto& p : *properties) vertexByteSize += p.second.headerInfo.byteSize;
+		}
 		BYTE* data = new BYTE[vertexByteSize*mesh.m_Vertices.size()];
 		size_t byteOffset = 0;
 		for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
@@ -569,6 +618,12 @@ void MeshIO<FloatType>::saveToPLY( const std::string& filename, const MeshData<F
 				vec4uc c(mesh.m_Colors[i]*255);
 				memcpy(&data[byteOffset], &c, sizeof(unsigned char)*4);
 				byteOffset += sizeof(unsigned char)*4;
+			}
+			if (properties != nullptr) {
+				for (const auto& p : *properties) {
+					memcpy(&data[byteOffset], p.second.data.data()+i*p.second.headerInfo.byteSize, p.second.headerInfo.byteSize);
+					byteOffset += p.second.headerInfo.byteSize;
+				}
 			}
 		}
 		file.write((const char*)data, byteOffset);
@@ -647,9 +702,11 @@ void MeshIO<FloatType>::saveToOBJ( const std::string& filename, const MeshData<F
 
 	for (size_t i = 0; i < mesh.m_Vertices.size(); i++) {
 		file << "v ";
-		file << mesh.m_Vertices[i].x << " " << mesh.m_Vertices[i].y << " " << mesh.m_Vertices[i].z;
+		if (isnan(mesh.m_Vertices[i].x))	file << "NaN NaN NaN";
+		else								file << mesh.m_Vertices[i].x << " " << mesh.m_Vertices[i].y << " " << mesh.m_Vertices[i].z;
 		if (mesh.m_Colors.size() > 0) {
-			file << " " << mesh.m_Colors[i].x << " " << mesh.m_Colors[i].y << " " << mesh.m_Colors[i].z;
+			if (isnan(mesh.m_Colors[i].x))	file << " NaN NaN NaN";
+			else							file << " " << mesh.m_Colors[i].x << " " << mesh.m_Colors[i].y << " " << mesh.m_Colors[i].z;
 		}
 		file << "\n";
 	}

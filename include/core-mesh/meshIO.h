@@ -9,13 +9,13 @@ class MeshIO {
 
 public:
 
-	static MeshData<FloatType> loadFromFile(const std::string& filename) {
+	static MeshData<FloatType> loadFromFile(const std::string& filename, bool bIgnoreNans = false) {
 		MeshData<FloatType> data;	
-		loadFromFile(filename, data);
+		loadFromFile(filename, data, bIgnoreNans);
 		return data;
 	}
 
-	static void loadFromFile(const std::string& filename, MeshData<FloatType>& mesh) {
+	static void loadFromFile(const std::string& filename, MeshData<FloatType>& mesh, bool bIgnoreNans = false) {
 		mesh.clear();
 		std::string extension = util::getFileExtension(filename);
 
@@ -24,7 +24,7 @@ public:
 		} else if (extension == "ply") {
 			loadFromPLY(filename, mesh);
 		} else if (extension == "obj") {
-			loadFromOBJ(filename, mesh);
+			loadFromOBJ(filename, mesh, bIgnoreNans);
 		} else 	{
 			throw MLIB_EXCEPTION("unknown file format: " + filename);
 		}
@@ -65,18 +65,18 @@ public:
 	/* Read Functions													    */
 	/************************************************************************/
 
-	static void loadFromPLY(const std::string& filename, MeshData<FloatType>& mesh);
+	static void loadFromPLY(const std::string& filename, MeshData<FloatType>& mesh, PlyProperties* properties = nullptr); //vertex properties only
 
 	static void loadFromOFF(const std::string& filename, MeshData<FloatType>& mesh);
 
-	static void loadFromOBJ(const std::string& filename, MeshData<FloatType>& mesh);
+	static void loadFromOBJ(const std::string& filename, MeshData<FloatType>& mesh, bool bIgnoreNans);
 
 
 	/************************************************************************/
 	/* Write Functions													    */
 	/************************************************************************/
 
-	static void saveToPLY(const std::string& filename, const MeshData<FloatType>& mesh);
+	static void saveToPLY(const std::string& filename, const MeshData<FloatType>& mesh, const PlyProperties* properties = nullptr); //vertex properties only
 
 	static void saveToOFF(const std::string& filename, const MeshData<FloatType>& mesh);
 
