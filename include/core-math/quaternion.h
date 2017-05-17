@@ -402,9 +402,9 @@ template <class FloatType> inline void Quaternion<FloatType>::normalize() {
 		}
 	}
 
-template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::operator+ ( const Quaternion& b ) const { return Quaternion( b.re + m_Real, b.im + m_Imag ); }
+template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::operator+ (const Quaternion& b) const { return Quaternion(b.m_Real + m_Real, b.m_Imag + m_Imag); }
 
-template <class FloatType> inline void Quaternion<FloatType>::operator+=( const Quaternion& b ) { m_Real += b.re; m_Imag += b.im; }
+template <class FloatType> inline void Quaternion<FloatType>::operator+=(const Quaternion& b) { m_Real += b.m_Real; m_Imag += b.m_Imag; }
 
 template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::operator* ( const Quaternion& b ) const {
 	FloatType re2 = ( m_Real * b.real() ) - ( m_Imag | b.imag() );	// | = dot product
@@ -432,7 +432,7 @@ template <class FloatType> inline void Quaternion<FloatType>::operator/=( FloatT
 	}
 
 template <class FloatType> inline FloatType Quaternion<FloatType>::scalarProd( const Quaternion& b ) const { 
-	return ( m_Real * b.re + (m_Imag | b.im ) ); 
+	return (m_Real * b.m_Real + (m_Imag | b.m_Imag));
 }
 
 template <class FloatType> inline Quaternion<FloatType> Quaternion<FloatType>::getConjugated() const { return Quaternion( m_Real, vec3<FloatType>( -m_Imag[ 0 ], -m_Imag[ 1 ], -m_Imag[ 2 ] ) ); }
@@ -489,25 +489,25 @@ template <class FloatType> Quaternion<FloatType> Quaternion<FloatType>::slerp( c
 			scale0 = (FloatType)1.0 - t;
 			scale1 = t;
 			}
-		result.im[ 0 ] = scale0 * m_Imag[ 0 ] + scale1 * q2.im[ 0 ];
-		result.im[ 1 ] = scale0 * m_Imag[ 1 ] + scale1 * q2.im[ 1 ];
-		result.im[ 2 ] = scale0 * m_Imag[ 2 ] + scale1 * q2.im[ 2 ];
-		result.re = scale0 * m_Real + scale1 * q2.re;
+		result.m_Imag[ 0 ] = scale0 * m_Imag[ 0 ] + scale1 * q2.m_Imag[ 0 ];
+		result.m_Imag[ 1 ] = scale0 * m_Imag[ 1 ] + scale1 * q2.m_Imag[ 1 ];
+		result.m_Imag[ 2 ] = scale0 * m_Imag[ 2 ] + scale1 * q2.m_Imag[ 2 ];
+		result.m_Real = scale0 * m_Real + scale1 * q2.m_Real;
 		} else {
 		// quaternions are opposite
 		// calculate orthogonal quaternion and use it to calculate slerp
-		result.im[ 0 ] = -q2.im[ 1 ];
-		result.im[ 1 ] = q2.im[ 0 ];
-		result.im[ 2 ] = -q2.re;
-		result.re = q2.im[ 2 ];
+		result.m_Imag[0] = -q2.m_Imag[1];
+		result.m_Imag[1] = q2.m_Imag[0];
+		result.m_Imag[ 2 ] = -q2.m_Real;
+		result.m_Real = q2.m_Imag[2];
 
 		// slerp
 		scale0 = sin( ( (FloatType)1.0 - t ) * (FloatType)M_PI / (FloatType)2.0 );
 		scale1 = sin( t * (FloatType)M_PI / (FloatType)2.0 );
-		result.im[ 0 ] = scale0 * m_Imag[ 0 ] + scale1 * result.im[ 0 ];
-		result.im[ 1 ] = scale0 * m_Imag[ 1 ] + scale1 * result.im[ 1 ];
-		result.im[ 2 ] = scale0 * m_Imag[ 2 ] + scale1 * result.im[ 2 ];
-		result.re = scale0 * m_Real + scale1 * result.re;
+		result.m_Imag[ 0 ] = scale0 * m_Imag[ 0 ] + scale1 * result.m_Imag[ 0 ];
+		result.m_Imag[ 1 ] = scale0 * m_Imag[ 1 ] + scale1 * result.m_Imag[ 1 ];
+		result.m_Imag[ 2 ] = scale0 * m_Imag[ 2 ] + scale1 * result.m_Imag[ 2 ];
+		result.m_Real = scale0 * m_Real + scale1 * result.m_Real;
 		}
 
 	return result;
