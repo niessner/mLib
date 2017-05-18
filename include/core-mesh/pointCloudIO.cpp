@@ -30,7 +30,7 @@ namespace ml {
 
 			for (unsigned int i = 0; i < header.m_numVertices; i++) {
 				unsigned int byteOffset = 0;
-				const std::vector<PlyHeader::PlyProperty>& vertexProperties = header.m_properties["vertex"];
+				const std::vector<PlyHeader::PlyPropertyHeader>& vertexProperties = header.m_properties["vertex"];
 
 				for (unsigned int j = 0; j < vertexProperties.size(); j++) {
 
