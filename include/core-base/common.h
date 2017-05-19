@@ -106,8 +106,12 @@ private:
 #define MLIB_EXCEPTION(s) ml::MLibException(std::string(__FUNCTION__).append(":").append(std::to_string(__LINE__)).append(": ").append(s).c_str())
 #endif
 
+#ifndef MLIB_QUIET
 #define MLIB_WARNING(s) ml::warningFunctionMLIB(std::string(FUNCTION_LINE_STRING) + std::string() + ": " + std::string(s))
 void warningFunctionMLIB(const std::string &description);
+#else
+#define MLIB_WARNING(s)
+#endif
 
 #define MLIB_ERROR(s) ml::errorFunctionMLIB(std::string(FUNCTION_LINE_STRING) + ": " + std::string(s))
 void errorFunctionMLIB(const std::string &description);
