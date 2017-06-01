@@ -314,14 +314,14 @@ void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatT
 						badIndices.push_back((unsigned int)mesh.m_Vertices.size());
 						mesh.m_Vertices.push_back(vec3<FloatType>(std::numeric_limits<FloatType>::quiet_NaN()));
 						mesh.m_Colors.push_back(vec4<FloatType>(std::numeric_limits<FloatType>::quiet_NaN()));
-						std::cerr << "warning: bad vert/color format" << std::endl;
+						MLIB_WARNING("warning: bad vert/color format");
 					}
 					else throw MLIB_EXCEPTION("bad vert format");
 
 					if (match == 6) {  //we found color data
 						mesh.m_Colors.push_back(vec4<FloatType>(val[3], val[4], val[5], (FloatType)1.0));
 					}
-					if (!(match == 0 || match == 3 || match == 4 || match == 6)) 
+					if (!bIgnoreNans && !(match == 0 || match == 3 || match == 4 || match == 6))
 						throw MLIB_EXCEPTION("bad color format");
 					break;
 
