@@ -266,22 +266,28 @@ namespace ml {
 			 
 		void init(GraphicsDevice& g);
 
-		void addCircle(const std::string &elementId, const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
-			m_namedElements[elementId] = new ElementCircle(*m_graphics, elementId, centerInPixels, radiusInPixels, color, depth);
+		void addCircle(const std::string& elementId, const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
+			if (elementId == "")	addCircle(centerInPixels, radiusInPixels, color, depth);
+			else
+				m_namedElements[elementId] = new ElementCircle(*m_graphics, elementId, centerInPixels, radiusInPixels, color, depth);
 		}
 
-		void addBillboard(const std::string &elementId, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth, bool useDefaultShader = true) {
-			m_namedElements[elementId] = new ElementBillboard(*m_graphics, elementId, box, image, depth, useDefaultShader);
+		void addBillboard(const std::string& elementId, const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth, bool useDefaultShader = true) {
+			if (elementId == "")	addBillboard(box, image, depth, useDefaultShader);
+			else
+				m_namedElements[elementId] = new ElementBillboard(*m_graphics, elementId, box, image, depth, useDefaultShader);
 		}
-		void addBox(const std::string &elementId, const bbox2i& box, const vec4f& color, float depth, bool useDefaultShader = true) {
-			m_namedElements[elementId] = new ElementBox(*m_graphics, elementId, box, color, depth, useDefaultShader);
+		void addBox(const std::string& elementId, const bbox2i& box, const vec4f& color, float depth, bool useDefaultShader = true) {
+			if (elementId == "")	addBox(box, color, depth, useDefaultShader);
+			else
+				m_namedElements[elementId] = new ElementBox(*m_graphics, elementId, box, color, depth, useDefaultShader);
 		}
 
 		void addCircle(const vec2f& centerInPixels, float radiusInPixels, const vec4f& color, float depth) {
 			m_unnamedElements.push_back(new ElementCircle(*m_graphics, "", centerInPixels, radiusInPixels, color, depth));
 		}
 
-		void addBillboard(const bbox2i& box, const ColorImageR8G8B8A8 &image, float depth, bool useDefaultShader = true) {
+		void addBillboard(const bbox2i& box, const ColorImageR8G8B8A8& image, float depth, bool useDefaultShader = true) {
 			m_unnamedElements.push_back(new ElementBillboard(*m_graphics, "", box, image, depth, useDefaultShader));
 		}
 
@@ -290,7 +296,7 @@ namespace ml {
 		}
 
 		//! for copy operators
-		void addElement(const std::string &elementId, const Element& e) {
+		void addElement(const std::string& elementId, const Element& e) {
 			auto type = e.getType();
 			if (type == ELEMENT_TYPE_BILLBOARD) {
 				auto _e = e.castBillboard();

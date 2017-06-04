@@ -138,7 +138,6 @@ void testCollisions() {
 
 void AppTest::init(ml::ApplicationData &app)
 {
-
 	MeshDataf meshData = MeshIOf::loadFromFile("scans/gates381.ply");
 	ml::TriMeshf triMesh(meshData);
 	//triMesh.setColor(vec4f(0.0f, 1.0f, 0.0f, 1.0f));
@@ -162,7 +161,7 @@ void AppTest::init(ml::ApplicationData &app)
 	m_shaderManager.registerShader("shaders/pointCloud.hlsl", "pointCloud");
 	//m_shaderManager.registerShader("shaders/test.hlsl", "geometryShaderTest");
 	m_shaderManager.registerShaderWithGS("shaders/test.hlsl", "geometryShaderTest");
-
+	
 	m_constants.init(app.graphics);
 
 	bbox3f bb = unifiedMesh.computeBoundingBox();
@@ -177,6 +176,7 @@ void AppTest::init(ml::ApplicationData &app)
 	//m_camera = Cameraf(view, 60.0f, (float)app.window.getWidth() / app.window.getHeight(), 0.01f, 10.0f);	
 	//m_camera.updateWorldUp(vec3f::eZ);
 
+
 	m_font.init(app.graphics, "Calibri");
 
 
@@ -188,6 +188,7 @@ void AppTest::init(ml::ApplicationData &app)
 		for (unsigned int y = 0; y < 250; y++)
 			image(x, y) = RGBColor::Red;
 	}
+
 	//ColorImageR8G8B8A8 image; FreeImageWrapper::loadImage("refined.png", image);
 	//Bitmap bmp(image.getWidth(), image.getHeight());
 	//for (unsigned int i = 0; i < image.getWidth()*image.getHeight(); i++) {
@@ -205,7 +206,9 @@ void AppTest::init(ml::ApplicationData &app)
 	}
 	m_buffer.init(app.graphics, bufferData);
 
+
 	D3D11Canvas2D canvas = m_canvas;
+	D3D11Buffer<vec4f> tmp = m_buffer;
 
 	//app.graphics.castD3D11().printAssets();
 	std::cout << "\nInit done!\n\n" << std::endl;

@@ -26,7 +26,8 @@ namespace ml
 
 		D3D11_BUFFER_DESC desc;
 		desc.ByteWidth = (unsigned int)(sizeof(T)*m_data.size());
-		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		//desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = 0;
 		desc.StructureByteStride = sizeof(T);
 		desc.Usage = D3D11_USAGE_DEFAULT;	// read/write GPU

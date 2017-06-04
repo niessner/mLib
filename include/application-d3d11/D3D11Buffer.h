@@ -92,7 +92,7 @@ namespace ml {
 		void unbindSRV(unsigned int slot = 0) const;
 
 		const std::vector<T>& getData() const {
-			return m_buffer;
+			return m_data;
 		}
 
 		bool hasSRV() const {
