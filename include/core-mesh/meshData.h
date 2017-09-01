@@ -413,6 +413,8 @@ public:
 		m_indicesByMaterial = std::move(d.m_indicesByMaterial);
 		m_indicesByGroup = std::move(d.m_indicesByGroup);
 	}
+	MeshData(const MeshData& m) = default;
+	MeshData& operator=(const MeshData&) = default;
 	void operator=(MeshData&& d) {
 		m_Vertices = std::move(d.m_Vertices);
 		m_Normals = std::move(d.m_Normals);

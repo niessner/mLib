@@ -12,6 +12,8 @@ public:
 	Material(Material&& m) {
 		swap(*this, m);
 	}
+	Material(const Material& m) = default;
+	Material& operator=(const Material&) = default;
 
 	void operator=(Material&& m) {
 		swap(*this, m);
