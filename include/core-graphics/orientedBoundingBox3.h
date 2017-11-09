@@ -59,8 +59,8 @@ public:
 		if (m_AxesScaled[2].x != (FloatType)0)		v = vec3<FloatType>(m_AxesScaled[2].z, -m_AxesScaled[2].x, m_AxesScaled[2].y);
 		else if (m_AxesScaled[2].y != (FloatType)0)	v = vec3<FloatType>(m_AxesScaled[2].z, m_AxesScaled[2].x, -m_AxesScaled[2].y);
 		else										v = vec3<FloatType>(-m_AxesScaled[2].z, m_AxesScaled[2].x, m_AxesScaled[2].y);
-		v0 = (v ^ m_AxesScaled[2]);
-		v1 = (v0 ^ m_AxesScaled[2]);
+		v1 = (v ^ m_AxesScaled[2]);
+		v0 = (v1 ^ m_AxesScaled[2]);
 		v0.normalize();
 		v1.normalize();
 
@@ -75,7 +75,6 @@ public:
 
 		const vec2<FloatType>& ev0 = pca[0].first;
 		const vec2<FloatType>& ev1 = pca[1].first;
-		
 
 		//Eigenvector computation has some numerical issues...
 		assert((ev0 | ev1) < 0.001);
@@ -321,13 +320,12 @@ private:
 		}
 
 		m_Anchor = OBBSpaceToWorld * minValues;
-
+		
 		FloatType extent[3];
 
 		extent[0] = maxValues.x - minValues.x;
 		extent[1] = maxValues.y - minValues.y;
 		extent[2] = maxValues.z - minValues.z;
-
 
 		//if bounding box has no extent; set invalid and return
 		if (extent[0] < (FloatType)0.00001 ||
