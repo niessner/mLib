@@ -1596,11 +1596,9 @@ namespace ml {
 
 			for (size_t i = 0; i < second.m_frames.size(); i++) {
 				m_frames.push_back(second.m_frames[i]);	//this is a bit of hack (relying on the fact that no copy-operator is implemented)
-				RGBDFrame& f = m_frames.back();
-				f.m_colorCompressed = (unsigned char*)std::malloc(f.m_colorSizeBytes);
-				f.m_depthCompressed = (unsigned char*)std::malloc(f.m_depthSizeBytes);
-				std::memcpy(f.m_colorCompressed, second.m_frames[i].m_colorCompressed, f.m_colorSizeBytes);
-				std::memcpy(f.m_depthCompressed, second.m_frames[i].m_depthCompressed, f.m_depthSizeBytes);
+			}
+			for (size_t i = 0; i < second.m_IMUFrames.size(); i++) {
+				m_IMUFrames.push_back(second.m_IMUFrames[i]);
 			}
 		}
 
