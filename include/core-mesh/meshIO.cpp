@@ -358,21 +358,21 @@ void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatT
 						//This face has vertex and normal indices
 
 						//remap them to the right spot
-						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_Normals.size() - idx[0][1]);
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() + idx[0][0]);
+						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_Normals.size() + idx[0][1]);
 
 						//grab the second vertex to prime
 						fscanf( fp, "%d//%d", &idx[1][0], &idx[1][1]);
 
 						//remap them to the right spot
-						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_Normals.size() - idx[1][1]);
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() + idx[1][0]);
+						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_Normals.size() + idx[1][1]);
 
 						//create the fan
 						while ( fscanf( fp, "%d//%d", &idx[n][0], &idx[n][1]) == 2) {
 							//remap them to the right spot
-							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_Normals.size() - idx[n][1]);
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() + idx[n][0]);
+							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_Normals.size() + idx[n][1]);
 							n++;
 						}
 					}
@@ -381,24 +381,24 @@ void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatT
 						//This face has vertex, texture coordinate, and normal indices
 
 						//remap them to the right spot
-						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
-						idx[0][2] = (idx[0][2] > 0) ? (idx[0][2] - 1) : ((int)mesh.m_Normals.size() - idx[0][2]);
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() + idx[0][0]);
+						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[0][1]);
+						idx[0][2] = (idx[0][2] > 0) ? (idx[0][2] - 1) : ((int)mesh.m_Normals.size() + idx[0][2]);
 
 						//grab the second vertex to prime
 						fscanf( fp, "%d/%d/%d", &idx[1][0], &idx[1][1], &idx[1][2]);
 
 						//remap them to the right spot
-						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
-						idx[1][2] = (idx[1][2] > 0) ? (idx[1][2] - 1) : ((int)mesh.m_Normals.size() - idx[1][2]);
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() + idx[1][0]);
+						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[1][1]);
+						idx[1][2] = (idx[1][2] > 0) ? (idx[1][2] - 1) : ((int)mesh.m_Normals.size() + idx[1][2]);
 
 						//create the fan
 						while ( fscanf( fp, "%d/%d/%d", &idx[n][0], &idx[n][1], &idx[n][2]) == 3) {
 							//remap them to the right spot
-							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
-							idx[n][2] = (idx[n][2] > 0) ? (idx[n][2] - 1) : ((int)mesh.m_Normals.size() - idx[n][2]);
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() + idx[n][0]);
+							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[n][1]);
+							idx[n][2] = (idx[n][2] > 0) ? (idx[n][2] - 1) : ((int)mesh.m_Normals.size() + idx[n][2]);
 							n++;
 						}
 					}
@@ -407,21 +407,21 @@ void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatT
 						//This face has vertex and texture coordinate indices
 
 						//remap them to the right spot
-						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() + idx[0][0]);
+						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[0][1]);
 
 						//grab the second vertex to prime
 						fscanf( fp, "%d/%d/", &idx[1][0], &idx[1][1]);
 
 						//remap them to the right spot
-						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() + idx[1][0]);
+						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[1][1]);
 
 						//create the fan
 						while ( fscanf( fp, "%d/%d/", &idx[n][0], &idx[n][1]) == 2) {
 							//remap them to the right spot
-							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() + idx[n][0]);
+							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[n][1]);
 							n++;
 						}
 					}
@@ -430,21 +430,21 @@ void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatT
 						//This face has vertex and texture coordinate indices
 
 						//remap them to the right spot
-						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
-						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[0][1]);
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() + idx[0][0]);
+						idx[0][1] = (idx[0][1] > 0) ? (idx[0][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[0][1]);
 
 						//grab the second vertex to prime
 						fscanf( fp, "%d/%d", &idx[1][0], &idx[1][1]);
 
 						//remap them to the right spot
-						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
-						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[1][1]);
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() + idx[1][0]);
+						idx[1][1] = (idx[1][1] > 0) ? (idx[1][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[1][1]);
 
 						//create the fan
 						while ( fscanf( fp, "%d/%d", &idx[n][0], &idx[n][1]) == 2) {
 							//remap them to the right spot
-							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
-							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() - idx[n][1]);
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() + idx[n][0]);
+							idx[n][1] = (idx[n][1] > 0) ? (idx[n][1] - 1) : ((int)mesh.m_TextureCoords.size() + idx[n][1]);
 							n++;
 						}
 					}
@@ -453,18 +453,18 @@ void MeshIO<FloatType>::loadFromOBJ(const std::string& filename, MeshData<FloatT
 						//This face has only vertex indices
 
 						//remap them to the right spot
-						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() - idx[0][0]);
+						idx[0][0] = (idx[0][0] > 0) ? (idx[0][0] - 1) : ((int)mesh.m_Vertices.size() + idx[0][0]);
 
 						//grab the second vertex to prime
 						fscanf( fp, "%d", &idx[1][0]);
 
 						//remap them to the right spot
-						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() - idx[1][0]);
+						idx[1][0] = (idx[1][0] > 0) ? (idx[1][0] - 1) : ((int)mesh.m_Vertices.size() + idx[1][0]);
 
 						//create the fan
 						while ( fscanf( fp, "%d", &idx[n][0]) == 1) {
 							//remap them to the right spot
-							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() - idx[n][0]);
+							idx[n][0] = (idx[n][0] > 0) ? (idx[n][0] - 1) : ((int)mesh.m_Vertices.size() + idx[n][0]);
 							n++;
 						}
 					}
