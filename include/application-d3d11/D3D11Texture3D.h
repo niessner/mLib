@@ -24,7 +24,7 @@ public:
 	D3D11Texture3D(const D3D11Texture3D& t) {
 		m_texture = nullptr;
 		m_srv = nullptr;
-		init(g, t.getData());
+		init(*t.m_graphics, t.getData());
 	}
 	//! move constructor
     D3D11Texture3D(D3D11Texture3D&& t) {
