@@ -331,13 +331,16 @@ namespace ml {
 			RGBDFrame(const RGBDFrame& other) {
 				m_colorSizeBytes = other.m_colorSizeBytes;
 				m_depthSizeBytes = other.m_depthSizeBytes;
-				m_colorCompressed = (unsigned char*)std::malloc(m_colorSizeBytes);
-				m_depthCompressed = (unsigned char*)std::malloc(m_depthSizeBytes);
+				m_colorCompressed = NULL;
+				m_depthCompressed = NULL;
 
-				if (!m_colorCompressed || !m_depthCompressed) throw MLIB_EXCEPTION("out of memory");
+				if (m_colorSizeBytes > 0) m_colorCompressed = (unsigned char*)std::malloc(m_colorSizeBytes);
+				if (m_depthSizeBytes > 0) m_depthCompressed = (unsigned char*)std::malloc(m_depthSizeBytes);
 
-				std::memcpy(m_colorCompressed, other.m_colorCompressed, m_colorSizeBytes);
-				std::memcpy(m_depthCompressed, other.m_depthCompressed, m_depthSizeBytes);
+				if ((m_colorSizeBytes > 0 && !m_colorCompressed) || (m_depthSizeBytes > 0 && !m_depthCompressed)) throw MLIB_EXCEPTION("out of memory");
+
+				if (m_colorSizeBytes > 0) std::memcpy(m_colorCompressed, other.m_colorCompressed, m_colorSizeBytes);
+				if (m_depthSizeBytes > 0) std::memcpy(m_depthCompressed, other.m_depthCompressed, m_depthSizeBytes);
 
 				m_timeStampColor = other.m_timeStampColor;
 				m_timeStampDepth = other.m_timeStampDepth;
@@ -470,13 +473,16 @@ namespace ml {
 
 					m_colorSizeBytes = other.m_colorSizeBytes;
 					m_depthSizeBytes = other.m_depthSizeBytes;
-					m_colorCompressed = (unsigned char*)std::malloc(m_colorSizeBytes);
-					m_depthCompressed = (unsigned char*)std::malloc(m_depthSizeBytes);
+					m_colorCompressed = NULL;
+					m_depthCompressed = NULL;
 
-					if (!m_colorCompressed || !m_depthCompressed) throw MLIB_EXCEPTION("out of memory");
+					if (m_colorSizeBytes > 0) m_colorCompressed = (unsigned char*)std::malloc(m_colorSizeBytes);
+					if (m_depthSizeBytes > 0) m_depthCompressed = (unsigned char*)std::malloc(m_depthSizeBytes);
 
-					std::memcpy(m_colorCompressed, other.m_colorCompressed, m_colorSizeBytes);
-					std::memcpy(m_depthCompressed, other.m_depthCompressed, m_depthSizeBytes);
+					if ((m_colorSizeBytes > 0 && !m_colorCompressed) || (m_depthSizeBytes > 0 && !m_depthCompressed)) throw MLIB_EXCEPTION("out of memory");
+
+					if (m_colorSizeBytes > 0) std::memcpy(m_colorCompressed, other.m_colorCompressed, m_colorSizeBytes);
+					if (m_depthSizeBytes > 0) std::memcpy(m_depthCompressed, other.m_depthCompressed, m_depthSizeBytes);
 
 					m_timeStampColor = other.m_timeStampColor;
 					m_timeStampDepth = other.m_timeStampDepth;
@@ -504,6 +510,18 @@ namespace ml {
 				}
 				return true;
 			}
+
+			//! adl swap
+			friend void swap(RGBDFrame& a, RGBDFrame& b) {
+				std::swap(a.m_colorSizeBytes, b.m_colorSizeBytes);
+				std::swap(a.m_depthSizeBytes, b.m_depthSizeBytes);
+				std::swap(a.m_colorCompressed, b.m_colorCompressed);
+				std::swap(a.m_depthCompressed, b.m_depthCompressed);
+				std::swap(a.m_timeStampColor, b.m_timeStampColor);
+				std::swap(a.m_timeStampDepth, b.m_timeStampDepth);
+				std::swap(a.m_cameraToWorld, b.m_cameraToWorld);
+			}
+
 
 
 			void compressColor(const vec3uc* color, unsigned int width, unsigned int height, COMPRESSION_TYPE_COLOR type) {
@@ -861,6 +879,16 @@ namespace ml {
 		RGBDFrame& addFrame(const vec3uc* color, const unsigned short* depth, const mat4f& cameraToWorld = mat4f::identity(), UINT64 timeStampColor = 0, UINT64 timeStampDepth = 0) {
 			m_frames.push_back(RGBDFrame(color, m_colorWidth, m_colorHeight, depth, m_depthWidth, m_depthHeight, cameraToWorld, m_colorCompressionType, m_depthCompressionType, timeStampColor, timeStampDepth));
 			return m_frames.back();
+		}
+
+		//! removes the i-th frame
+		void removeFrame(size_t frameIdx) {
+			if (frameIdx >= m_frames.size()) return;
+			m_frames[frameIdx].free();
+			for (size_t i = frameIdx; i < m_frames.size() - 1; i++) {
+				swap(m_frames[i], m_frames[i + 1]);
+			} 
+			m_frames.pop_back();			
 		}
 
 		IMUFrame& addIMUFrame(const IMUFrame& frame) {
@@ -1568,11 +1596,9 @@ namespace ml {
 
 			for (size_t i = 0; i < second.m_frames.size(); i++) {
 				m_frames.push_back(second.m_frames[i]);	//this is a bit of hack (relying on the fact that no copy-operator is implemented)
-				RGBDFrame& f = m_frames.back();
-				f.m_colorCompressed = (unsigned char*)std::malloc(f.m_colorSizeBytes);
-				f.m_depthCompressed = (unsigned char*)std::malloc(f.m_depthSizeBytes);
-				std::memcpy(f.m_colorCompressed, second.m_frames[i].m_colorCompressed, f.m_colorSizeBytes);
-				std::memcpy(f.m_depthCompressed, second.m_frames[i].m_depthCompressed, f.m_depthSizeBytes);
+			}
+			for (size_t i = 0; i < second.m_IMUFrames.size(); i++) {
+				m_IMUFrames.push_back(second.m_IMUFrames[i]);
 			}
 		}
 
