@@ -122,6 +122,44 @@ namespace intersection {
 
 	}
 
+	//triangle ray
+	template <class FloatType>
+	bool intersectRayBox(
+		const vec3<FloatType>& boxmin, vec3<FloatType>& boxmax, const Ray<FloatType> &r, FloatType& _tmin, FloatType& _tmax, FloatType tmin = (FloatType)0, FloatType tmax = std::numeric_limits<FloatType>::max())
+	{
+		const FloatType t0 = tmin;
+		const FloatType t1 = tmax;
+
+		FloatType txmin, txmax, tymin, tymax, tzmin, tzmax;
+
+		auto sign = r.getSign();
+		auto origin = r.getOrigin();
+		auto invDir = r.getInverseDirection();
+
+		vec6<FloatType> parameters(boxmin, boxmax);
+		txmin = (parameters[sign.x * 3] - origin.x) * invDir.x;
+		txmax = (parameters[3 - sign.x * 3] - origin.x) * invDir.x;
+		tymin = (parameters[sign.y * 3 + 1] - origin.y) * invDir.y;
+		tymax = (parameters[3 - sign.y * 3 + 1] - origin.y) * invDir.y;
+
+		if ((txmin > tymax) || (tymin > txmax)) return false;
+
+		if (tymin > txmin)	txmin = tymin;
+		if (tymax < txmax)	txmax = tymax;
+
+		tzmin = (parameters[sign.z * 3 + 2] - origin.z) * invDir.z;
+		tzmax = (parameters[3 - sign.z * 3 + 2] - origin.z) * invDir.z;
+
+		if ((txmin > tzmax) || (tzmin > txmax))
+			return false;
+		if (tzmin > txmin)
+			txmin = tzmin;
+		if (tzmax < txmax)
+			txmax = tzmax;
+		_tmin = std::max(t0, txmin);
+		_tmax = std::min(t1, txmax);
+		return ((txmin <= t1) && (txmax >= t0));
+	}
 
 
 
