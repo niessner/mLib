@@ -1,5 +1,5 @@
 mLib is a library to support research projects, and has been used in a large number of publications. 
-You are free to use this code with proper attribution in non-commercial applications (Please see LICENSE.txt).
+You are free to use this code with proper attribution under the MIT license (Please see LICENSE).
 For the possibilities of commercial use, please contact the authors.
 
 
