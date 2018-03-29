@@ -9,10 +9,9 @@ namespace ml {
 		m_worldUp *= (FloatType)-1.0;	//compensate for projection matrix convention
 		m_look = lookDir.getNormalized();
 		m_right = (m_worldUp ^ m_look).getNormalized();
-		
-		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_worldUp)));
+		m_up = (m_look ^ m_right).getNormalized();
 
-		m_up = m_worldUp;		
+		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_up)));
 
 		m_fieldOfView = fieldOfView;
 		m_aspect = aspect;
