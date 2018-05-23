@@ -79,6 +79,14 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 	size_t numFaces = m_FaceIndicesVertices.size();
 	Indices faces_new;
 	faces_new.reserve(numFaces);
+	Indices faceNormalsNew, faceTexturesNew;
+	bool hasFaceIndicesNormals = false, hasFaceIndicesTexture = false;
+	if (m_FaceIndicesNormals.size() > 0) {
+		faceNormalsNew.reserve(numFaces); hasFaceIndicesNormals = true;
+	}
+	if (m_FaceIndicesTextureCoords.size() > 0) {
+		faceTexturesNew.reserve(numFaces); hasFaceIndicesTexture = true;
+	}
 
 	unsigned int count = 0; unsigned int ordered = 0;
 	std::unordered_set<std::vector<unsigned int>, vecHash> _set;
@@ -92,10 +100,18 @@ unsigned int MeshData<FloatType>::removeDuplicateFaces()
 			//not found yet
 			_set.insert(face);
 			faces_new.push_back(m_FaceIndicesVertices[i]);	//inserted the unsorted one
+			if (hasFaceIndicesNormals) faceNormalsNew.push_back(m_FaceIndicesNormals[i]);
+			if (hasFaceIndicesTexture) faceTexturesNew.push_back(m_FaceIndicesTextureCoords[i]);
 		}
 	}
 	if (m_FaceIndicesVertices.size() != faces_new.size()) {
 		m_FaceIndicesVertices = Indices(faces_new);
+	}
+	if (hasFaceIndicesNormals && m_FaceIndicesNormals.size() != faceNormalsNew.size()) {
+		m_FaceIndicesNormals = Indices(faceNormalsNew);
+	}
+	if (hasFaceIndicesTexture && m_FaceIndicesTextureCoords.size() != faceTexturesNew.size()) {
+		m_FaceIndicesTextureCoords = Indices(faceTexturesNew);
 	}
 
 	//std::cout << "Removed " << numFaces-faces_new.size() << " duplicate faces of " << numFaces << " faces" << std::endl;
