@@ -492,6 +492,19 @@ template<>	inline void convertToUSHORT3<vec3us>(vec3us& output, const vec3us& in
 	output.z = input[2];
 }
 
+// FLOAT4
+template<class T> inline void convertToFLOAT4(vec4f& output, const T& input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+
+template<> inline void convertToFLOAT4(vec4f& output, const vec4f& input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+	output.w = input[3];
+}
+
 } // namespace
 
 #endif

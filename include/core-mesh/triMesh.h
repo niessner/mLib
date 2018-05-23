@@ -316,7 +316,7 @@ namespace ml {
 
 		//! move operator
 		void operator=(TriMesh&& t) {
-			std::swap(*this, t);
+			swap(*this, t);
 		}
 
 		//! adl swap

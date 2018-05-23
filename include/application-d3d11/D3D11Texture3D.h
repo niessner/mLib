@@ -24,7 +24,7 @@ public:
 	D3D11Texture3D(const D3D11Texture3D& t) {
 		m_texture = nullptr;
 		m_srv = nullptr;
-		init(g, t.getData());
+		init(*t.m_graphics, t.getData());
 	}
 	//! move constructor
     D3D11Texture3D(D3D11Texture3D&& t) {
@@ -65,13 +65,13 @@ public:
 	void unbind(unsigned int slot = 0) const;
 
 
-    const Grid3<RGBColor>& getData() const {
+    const Grid3<T>& getData() const {
         return m_data;
     }
 
 private:
 	D3D11GraphicsDevice* m_graphics;
-    Grid3<RGBColor> m_data;
+    Grid3<T> m_data;
     ID3D11Texture3D* m_texture;
     ID3D11ShaderResourceView* m_srv;
 };
