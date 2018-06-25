@@ -134,6 +134,7 @@ namespace ml {
                 return i.image != image;
             }
 
+            template <class T_>
             friend void swap(iterator &a, iterator &b);
 
             unsigned int x, y;
@@ -188,6 +189,7 @@ namespace ml {
                 return i.image != image;
             }
 
+            template <class T_>
             friend void swap(constIterator &a, constIterator &b);
 
             unsigned int x, y;
