@@ -103,8 +103,8 @@ public:
 	static void saveToMTL(const std::string& filename, const std::vector<Material>& _mats) {
 
 		std::vector<Material> mats = _mats;
-		auto glambda0 = [](const Materialf& m0, const Materialf& m1)	{ return m0.m_name < m1.m_name;	};
-		auto glambda1 = [](const Materialf& m0, const Materialf& m1)	{ return m0.m_name == m1.m_name; };
+		auto glambda0 = [](const Material& m0, const Material& m1)	{ return m0.m_name < m1.m_name;	};
+		auto glambda1 = [](const Material& m0, const Material& m1)	{ return m0.m_name == m1.m_name; };
 		std::sort(mats.begin(), mats.end(), glambda0);
 		auto last = std::unique(mats.begin(), mats.end(), glambda1);	//collapsing the same materials
 		mats.erase(last, mats.end()); 
@@ -118,7 +118,7 @@ public:
 			out << "Kd " << m.m_diffuse.x << " " << m.m_diffuse.y << " " << m.m_diffuse.z << "\n";
 			out << "Ks " << m.m_specular.x << " " << m.m_specular.y << " " << m.m_specular.z << "\n";
 			out << "Ns " << m.m_shiny << "\n";
-			out << "Ke " << m_emission << "\n";
+			out << "Ke " << m.m_emission << "\n";
 			out << "illum 2" << "\n";	//todo check the illum consistencies
 			if (m.m_TextureFilename_Ka != "")	out << "map_Ka " << m.m_TextureFilename_Ka << "\n";
 			if (m.m_TextureFilename_Kd != "")	out << "map_Kd " << m.m_TextureFilename_Kd << "\n";
