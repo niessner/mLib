@@ -361,7 +361,7 @@ namespace util
     {
         BinaryDataStreamFile in(filename, false);
         in >> o;
-        in.closeStream();
+        in.close();
     }
 
     template<class T, class U>
@@ -369,7 +369,7 @@ namespace util
     {
         BinaryDataStreamFile in(filename, false);
         in >> o0 >> o1;
-        in.closeStream();
+        in.close();
     }
 	//
 	// TODO: these cannot be forward declared without zlib, and should be moved into the mlib-zlib header.
