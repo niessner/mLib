@@ -186,55 +186,55 @@ void DenseMatrix<FloatType>::invertInPlace()
 			(*this)(j, i) = sum / (*this)(j, j);
 		}
 
-		//
-		// invert U
-		//
-		for (UINT i = 0; i < m_rows; i++)
-			for (UINT j = i; j < m_rows; j++)
+	//
+	// invert U
+	//
+	for (UINT i = 0; i < m_rows; i++)
+		for (UINT j = i; j < m_rows; j++)
+		{
+			if ( i == j )
 			{
-				if ( i == j )
-				{
-					continue;
-				}
-				FloatType sum = 0;
-				for (UINT k = i; k < j; k++)
-				{
-					FloatType val = (FloatType)1.0;
-					if(i != k)
-					{
-						val = (*this)(i, k);
-					}
-					sum += (*this)(k, j) * val;
-				}
-				(*this)(i, j) = -sum;
+				continue;
 			}
+			FloatType sum = 0;
+			for (UINT k = i; k < j; k++)
+			{
+				FloatType val = (FloatType)1.0;
+				if(i != k)
+				{
+					val = (*this)(i, k);
+				}
+				sum += (*this)(k, j) * val;
+			}
+			(*this)(i, j) = -sum;
+		}
 
-			//
-			// final inversion
-			//
-			for (UINT i = 0; i < m_rows; i++)
+	//
+	// final inversion
+	//
+	for (UINT i = 0; i < m_rows; i++)
+	{
+		for (UINT j = 0; j < m_rows; j++)
+		{
+			FloatType sum = 0;
+			UINT larger = j;
+			if(i > j)
 			{
-				for (UINT j = 0; j < m_rows; j++)
-				{
-					FloatType sum = 0;
-					UINT larger = j;
-					if(i > j)
-					{
-						larger = i;
-					}
-					for (UINT k = larger; k < m_rows; k++)
-					{
-						FloatType val = (FloatType)1.0;
-						if(j != k)
-						{
-							val = (*this)(j, k);
-						}
-						sum += val * (*this)(k, i);
-					}
-					(*this)(j, i) = sum;
-				}
+				larger = i;
 			}
-			//Assert(ElementsValid(), "Degenerate Matrix inversion.");
+			for (UINT k = larger; k < m_rows; k++)
+			{
+				FloatType val = (FloatType)1.0;
+				if(j != k)
+				{
+					val = (*this)(j, k);
+				}
+				sum += val * (*this)(k, i);
+			}
+			(*this)(j, i) = sum;
+		}
+	}
+	//Assert(ElementsValid(), "Degenerate Matrix inversion.");
 }
 
 }  // namespace ml
