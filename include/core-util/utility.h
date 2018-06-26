@@ -461,7 +461,7 @@ namespace util
 	}
 
 	inline void checkedFSeek(UINT offset, FILE* file) {
-		int result = fseek(file, offset, SEEK_SET);
+		int result = fseek(file, offset, SEEK_SET); (void) result; // Silence unused warning
 		MLIB_ASSERT_STR(!ferror(file) && result == 0, "fseek failed");
 	}
 
