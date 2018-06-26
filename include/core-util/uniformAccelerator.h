@@ -20,7 +20,7 @@ namespace ml
             for (auto &v : points)
                 _bbox.include(v);
             init(_bbox, _cubeSize);
-            for (int i = 0; i < points.size(); i++)
+            for (int i = 0; i < (int)points.size(); i++)
                 addPoint(points[i], i);
         }
 

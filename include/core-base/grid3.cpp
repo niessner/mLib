@@ -160,7 +160,7 @@ namespace ml
 						minValue = curValue;
 					}
 				}
-			return minIndex;
+		return minIndex;
 	}
 
 	template <class T> const T& Grid3<T>::getMinValue() const
