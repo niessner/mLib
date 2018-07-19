@@ -56,7 +56,7 @@ public:
 
 			std::string token;
 			ss >> token;
-			if (token == "newmtl") {
+            if (token == "newmtl") {
 				if (!found) {
 					found = true;
 				} else {
@@ -82,12 +82,10 @@ public:
 				ss >> activeMaterial.m_TextureFilename_Ks;
 			} else if (token == "map_Ke") {
 				ss >> activeMaterial.m_TextureFilename_Ke;
-			}
-            else if (token == "d") {
-                // d token not implemented
+			} else if (token == "d") {
+				// d token not implemented
 				//MLIB_WARNING("d token not implemented");
-            }
-            else if (token != "") {
+			} else if (token != "" || (token.size() > 0 && token[0] == '#')) {
 				MLIB_WARNING("unknown token: " + line);
 			}
 		}
@@ -168,22 +166,22 @@ typedef Material<double> Materiald;
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class FloatType>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator<< (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, const Material<FloatType> &m) {
-    s << m.m_name << m.m_ambient << m.m_diffuse << m.m_specular << m.m_shiny << m.m_emission;
-    s << m.m_TextureFilename_Ka;
-    s << m.m_TextureFilename_Kd;
-    s << m.m_TextureFilename_Ks;
+	s << m.m_name << m.m_ambient << m.m_diffuse << m.m_specular << m.m_shiny << m.m_emission;
+	s << m.m_TextureFilename_Ka;
+	s << m.m_TextureFilename_Kd;
+	s << m.m_TextureFilename_Ks;
 	s << m.m_TextureFilename_Ke;
-    return s;
+	return s;
 }
 
 template<class BinaryDataBuffer, class BinaryDataCompressor, class FloatType>
 inline BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& operator>> (BinaryDataStream<BinaryDataBuffer, BinaryDataCompressor>& s, Material<FloatType> &m) {
-    s >> m.m_name >> m.m_ambient >> m.m_diffuse >> m.m_specular >> m.m_shiny >> m.m_emission;
-    s >> m.m_TextureFilename_Ka;
-    s >> m.m_TextureFilename_Kd;
-    s >> m.m_TextureFilename_Ks;
+	s >> m.m_name >> m.m_ambient >> m.m_diffuse >> m.m_specular >> m.m_shiny >> m.m_emission;
+	s >> m.m_TextureFilename_Ka;
+	s >> m.m_TextureFilename_Kd;
+	s >> m.m_TextureFilename_Ks;
 	s >> m.m_TextureFilename_Ke;
-    return s;
+	return s;
 }
 
 }
