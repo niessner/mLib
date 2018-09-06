@@ -88,7 +88,7 @@ public:
 				//MLIB_WARNING("d token not implemented");
             }
             else if (token != "") {
-				MLIB_WARNING("unknown token: " + line);
+				//MLIB_WARNING("unknown token: " + line);
 			}
 		}
 
