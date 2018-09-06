@@ -128,6 +128,21 @@ namespace math
 	}
 
 	template<class T>
+	inline T sqrt(T x) {
+		return std::sqrt(x);
+	}
+
+	template<class T>
+	inline T exp(T x) {
+		return std::exp(x);
+	}
+
+	template<class T>
+	inline T log(T x) {
+		return std::log(x);
+	}
+
+	template<class T>
 	inline int round(const T& f) {
 		return (f > (T)0.0) ? (int)floor(f + (T)0.5) : (int)ceil(f - (T)0.5);
 	}

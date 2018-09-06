@@ -326,6 +326,10 @@ namespace math {
 		return vec2<T>(abs(p.x), abs(p.y));
 	}
 	template<class T>
+	inline vec2<T> square(const vec2<T>& v) {
+		return vec2<T>(square(v.x), square(v.y));
+	}
+	template<class T>
 	inline vec2<T> sqrt(const vec2<T>& v) {
 		return vec2<T>(sqrt(v.x), sqrt(v.y));
 	}

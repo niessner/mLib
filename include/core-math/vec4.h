@@ -406,6 +406,10 @@ namespace math {
 		return vec4<T>(abs(p.x), abs(p.y), abs(p.z), abs(p.w));
 	}
 	template<class T>
+	inline vec4<T> square(const vec4<T>& v) {
+		return vec4<T>(square(v.x), square(v.y), square(v.z), square(v.w));
+	}
+	template<class T>
 	inline vec4<T> sqrt(const vec4<T>& v) {
 		return vec4<T>(sqrt(v.x), sqrt(v.y), sqrt(v.z), sqrt(v.w));
 	}
