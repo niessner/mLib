@@ -161,7 +161,7 @@ namespace ml {
 
 		struct edgeCompare
 		{
-			bool operator() (const Edge &a, const Edge &b)
+			bool operator() (const Edge &a, const Edge &b) const
 			{
 				return a.val < b.val;
 			}
