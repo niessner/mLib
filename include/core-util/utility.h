@@ -133,6 +133,11 @@ namespace math
 	}
 
 	template<class T>
+	inline T pow(T x, T e) {
+		return std::pow(x, e);
+	}
+
+	template<class T>
 	inline T exp(T x) {
 		return std::exp(x);
 	}

@@ -399,7 +399,7 @@ namespace math {
 	}
 	template<class T>
 	inline vec3<T> pow(const vec3<T>& v, T e) {
-		return vec3<T>(std::pow(v.x, e), std::pow(v.y, e), std::pow(v.z, e));
+		return vec3<T>(pow(v.x, e), pow(v.y, e), pow(v.z, e));
 	}
 	template<class T>
 	inline vec3<T> exp(const vec3<T>& v) {
