@@ -9,10 +9,9 @@ namespace ml {
 		m_worldUp *= (FloatType)-1.0;	//compensate for projection matrix convention
 		m_look = lookDir.getNormalized();
 		m_right = (m_worldUp ^ m_look).getNormalized();
-		
-		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_worldUp)));
+		m_up = (m_look ^ m_right).getNormalized();
 
-		m_up = m_worldUp;		
+		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_up)));
 
 		m_fieldOfView = fieldOfView;
 		m_aspect = aspect;
@@ -29,12 +28,12 @@ namespace ml {
 		m_eye		= vec3<FloatType>(cameraToWorld(0, 3), cameraToWorld(1, 3), cameraToWorld(2, 3));
 		
 		m_right		= vec3<FloatType>(cameraToWorld(0, 0), cameraToWorld(1, 0), cameraToWorld(2, 0));
-		m_worldUp	= vec3<FloatType>(cameraToWorld(0, 1), cameraToWorld(1, 1), cameraToWorld(2, 1));		
+		m_up	    = vec3<FloatType>(cameraToWorld(0, 1), cameraToWorld(1, 1), cameraToWorld(2, 1));		
 		m_look		= vec3<FloatType>(cameraToWorld(0, 2), cameraToWorld(1, 2), cameraToWorld(2, 2));
 
-		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_worldUp)));
+		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_up)));
 	
-		m_up = m_worldUp;
+		m_worldUp = m_up;
 
 		m_fieldOfView = fieldOfView;
 		m_aspect = aspect;
@@ -178,10 +177,9 @@ namespace ml {
 		m_worldUp *= (FloatType)-1.0;	//compensate for projection matrix convention
 		m_look = lookDir.getNormalized();
 		m_right = (m_worldUp ^ m_look).getNormalized();
+		m_up = (m_look ^ m_right).getNormalized();
 
-		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_worldUp)));
-
-		m_up = m_worldUp;
+		MLIB_ASSERT(math::floatEqual(m_look, (m_right ^ m_up)));
 
 		update();
 	}

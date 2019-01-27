@@ -389,11 +389,32 @@ namespace math {
 	inline vec3<T> abs(const vec3<T>& p) {
 		return vec3<T>(abs(p.x), abs(p.y), abs(p.z));
 	}
+	template<class T>
+	inline vec3<T> square(const vec3<T>& v) {
+		return vec3<T>(square(v.x), square(v.y), square(v.z));
+	}
+	template<class T>
+	inline vec3<T> sqrt(const vec3<T>& v) {
+		return vec3<T>(sqrt(v.x), sqrt(v.y), sqrt(v.z));
+	}
+	template<class T>
+	inline vec3<T> pow(const vec3<T>& v, T e) {
+		return vec3<T>(pow(v.x, e), pow(v.y, e), pow(v.z, e));
+	}
+	template<class T>
+	inline vec3<T> exp(const vec3<T>& v) {
+		return vec3<T>(exp(v.x), exp(v.y), exp(v.z));
+	}
+	template<class T>
+	inline vec3<T> log(const vec3<T>& v) {
+		return vec3<T>(log(v.x), log(v.y), log(v.z));
+	}
     template<class T>
     inline vec3<T> max(const vec3<T>& p, T v) {
-        return vec3<T>( std::max(p.x, v),
-                           std::max(p.y, v),
-                           std::max(p.z, v));
+        return vec3<T>(
+			std::max(p.x, v),
+            std::max(p.y, v),
+            std::max(p.z, v));
     }
 	template<class T>
 	inline vec3<T> max(const vec3<T>& p, const vec3<T>& v) {
@@ -404,9 +425,10 @@ namespace math {
 	}
 	template<class T>
 	inline vec3<T> min(const vec3<T>& p, T v) {
-		return vec3<T>(	std::min(p.x, v),
-							std::min(p.y, v),
-							std::min(p.z, v));
+		return vec3<T>(
+			std::min(p.x, v),
+			std::min(p.y, v),
+			std::min(p.z, v));
 	}
 	template<class T>
 	inline vec3<T> min(const vec3<T>& p, const vec3<T>& v) {

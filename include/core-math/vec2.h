@@ -326,6 +326,22 @@ namespace math {
 		return vec2<T>(abs(p.x), abs(p.y));
 	}
 	template<class T>
+	inline vec2<T> square(const vec2<T>& v) {
+		return vec2<T>(square(v.x), square(v.y));
+	}
+	template<class T>
+	inline vec2<T> sqrt(const vec2<T>& v) {
+		return vec2<T>(sqrt(v.x), sqrt(v.y));
+	}
+	template<class T>
+	inline vec2<T> exp(const vec2<T>& v) {
+		return vec2<T>(exp(v.x), exp(v.y));
+	}
+	template<class T>
+	inline vec2<T> log(const vec2<T>& v) {
+		return vec2<T>(log(v.x), log(v.y));
+	}
+	template<class T>
 	inline vec2<T> max(const vec2<T>& p, T v) {
 		return vec2<T>(std::max(p.x, v),
 			std::max(p.y, v));

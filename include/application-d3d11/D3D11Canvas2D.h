@@ -299,15 +299,15 @@ namespace ml {
 		void addElement(const std::string& elementId, const Element& e) {
 			auto type = e.getType();
 			if (type == ELEMENT_TYPE_BILLBOARD) {
-				auto _e = e.castBillboard();
+				const ElementBillboard& _e = e.castBillboard();
 				addBillboard(elementId, _e.m_box, ColorImageR8G8B8A8(_e.m_tex.getImage()), _e.m_depth);
 			}
 			else if (type == ELEMENT_TYPE_BOX) {
-				auto _e = e.castBox();
+				const ElementBox& _e = e.castBox();
 				addBox(elementId, _e.m_box, _e.m_color, _e.m_depth, _e.m_bUseDefaultShader);
 			}
 			else if (type == ELEMENT_TYPE_CIRCLE) {
-				auto _e = e.castCircle();
+				const ElementCircle& _e = e.castCircle();
 				addCircle(elementId, _e.m_constants.center, _e.m_constants.radius, _e.m_constants.color, _e.m_depth);
 			}
 			else throw MLIB_EXCEPTION("unknown type");

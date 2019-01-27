@@ -128,6 +128,26 @@ namespace math
 	}
 
 	template<class T>
+	inline T sqrt(T x) {
+		return std::sqrt(x);
+	}
+
+	template<class T>
+	inline T pow(T x, T e) {
+		return std::pow(x, e);
+	}
+
+	template<class T>
+	inline T exp(T x) {
+		return std::exp(x);
+	}
+
+	template<class T>
+	inline T log(T x) {
+		return std::log(x);
+	}
+
+	template<class T>
 	inline int round(const T& f) {
 		return (f > (T)0.0) ? (int)floor(f + (T)0.5) : (int)ceil(f - (T)0.5);
 	}
@@ -461,7 +481,7 @@ namespace util
 	}
 
 	inline void checkedFSeek(UINT offset, FILE* file) {
-		int result = fseek(file, offset, SEEK_SET);
+		int result = fseek(file, offset, SEEK_SET); (void) result; // Silence unused warning
 		MLIB_ASSERT_STR(!ferror(file) && result == 0, "fseek failed");
 	}
 

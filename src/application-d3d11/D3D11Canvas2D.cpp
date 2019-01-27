@@ -24,6 +24,7 @@ void D3D11Canvas2D::ElementBillboard::render()
     if (m_bUseDefaultShader) m_graphics->getShaderManager().bindShaders("defaultCanvasBillboard");
     m_tex.bind();
     m_mesh.render();
+	m_tex.unbind();
 }
 
 void D3D11Canvas2D::init(GraphicsDevice& g)

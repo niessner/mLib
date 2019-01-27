@@ -322,6 +322,33 @@ namespace ml {
 				}
 				FreeImage_Unload(dib);
 			}
+			else if (filename.length() > 4 && filename.find(".exr") != std::string::npos) {
+				FREE_IMAGE_TYPE type = FIT_RGBAF;
+				FIBITMAP *dib = FreeImage_AllocateT(type, width, height);
+				BYTE* bits = FreeImage_GetBits(dib);
+				unsigned int pitch = FreeImage_GetPitch(dib);
+
+				if (numChannels == 4 && bytesPerChannel == 4) {
+					//color map; R32G32B32A32
+					for (unsigned int y = 0; y < height; y++) {
+						BYTE* bitsRowStart = bits + (height - 1 - y)*pitch;
+						FLOAT* bitsRowStartFloat = (FLOAT*)bitsRowStart;
+						for (unsigned int x = 0; x < width; x++) {
+							vec4f color;		convertToFLOAT4(color, image(x, y));
+							bitsRowStartFloat[x*numChannels + 0] = color.x;
+							bitsRowStartFloat[x*numChannels + 1] = color.y;
+							bitsRowStartFloat[x*numChannels + 2] = color.z;
+							bitsRowStartFloat[x*numChannels + 3] = color.w;
+						}
+					}
+				}
+				else {
+					throw MLIB_EXCEPTION("Unknown image format (" + std::to_string(image.getNumChannels()) + "|" + std::to_string(image.getNumBytesPerChannel()) + ")");
+				}
+
+				FreeImage_Save(FIF_EXR, dib, filename.c_str(), EXR_NONE);
+				FreeImage_Unload(dib);
+			}
 			else {
 				throw MLIB_EXCEPTION("Unknown file format");
 			}

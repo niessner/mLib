@@ -406,6 +406,22 @@ namespace math {
 		return vec4<T>(abs(p.x), abs(p.y), abs(p.z), abs(p.w));
 	}
 	template<class T>
+	inline vec4<T> square(const vec4<T>& v) {
+		return vec4<T>(square(v.x), square(v.y), square(v.z), square(v.w));
+	}
+	template<class T>
+	inline vec4<T> sqrt(const vec4<T>& v) {
+		return vec4<T>(sqrt(v.x), sqrt(v.y), sqrt(v.z), sqrt(v.w));
+	}
+	template<class T>
+	inline vec4<T> exp(const vec4<T>& v) {
+		return vec4<T>(exp(v.x), exp(v.y), exp(v.z), exp(v.w));
+	}
+	template<class T>
+	inline vec4<T> log(const vec4<T>& v) {
+		return vec4<T>(log(v.x), log(v.y), log(v.z), log(v.w));
+	}
+	template<class T>
 	inline vec4<T> max(const vec4<T>& p, T v) {
 		return vec4<T>(
 			std::max(p.x, v),

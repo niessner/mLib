@@ -134,7 +134,11 @@ namespace convert {
 		ss >> res.x >> res.y >> res.z >> res.w;
 	} 
 	template<class U> inline void to(const std::string& s, Matrix4x4<U>& res) {
-		std::stringstream ss(util::removeChar(s, 'f'));
+		std::string sFixed = util::removeChar(s, 'f');
+		if (util::contains(sFixed, ','))
+			sFixed = util::replace(sFixed, ',', ' ');
+
+		std::stringstream ss(sFixed);
 		ss >> res(0,0) >> res(0,1) >> res(0,2)  >> res(0,3) >>
 			  res(1,0) >> res(1,1) >> res(1,2)  >> res(1,3) >>
 			  res(2,0) >> res(2,1) >> res(2,2)  >> res(2,3) >>

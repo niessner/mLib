@@ -8,8 +8,13 @@ namespace ml {
 class ColorGradient
 {
 public:
-    ColorGradient() {}
-    ColorGradient(const ColorImageR8G8B8A8 &image, RGBColor leftColor = RGBColor::Black, RGBColor rightColor = RGBColor::White)
+	ColorGradient(RGBColor leftColor = RGBColor::Black, RGBColor rightColor = RGBColor::White) : m_leftColor(leftColor), m_rightColor(rightColor)
+	{
+		m_colors.push_back(m_leftColor);
+		m_colors.push_back(m_rightColor);
+	}
+
+	ColorGradient(const ColorImageR8G8B8A8 &image, RGBColor leftColor = RGBColor::Black, RGBColor rightColor = RGBColor::White) : m_leftColor(leftColor), m_rightColor(rightColor)
     {
 		m_colors.resize(image.getWidth());
 		for (unsigned int i = 0; i < image.getWidth(); i++) {

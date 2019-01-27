@@ -188,7 +188,7 @@ private:
 		if (!util::fileExists(m_filename))	m_fileSize = 0;	//in case there was no file before
 		else m_fileSize = util::getFileSize(m_filename);
 
-		std::ios_base::open_mode m = std::ios::binary;
+		std::ios_base::openmode m = std::ios::binary;
 		if (m_mode & Mode::read_flag) m |= std::ios::in;
 		if (m_mode & Mode::write_flag) m |= std::ios::out;
 
