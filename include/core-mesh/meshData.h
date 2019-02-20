@@ -51,8 +51,8 @@ public:
 			template<bool is_const_iterator = true>
 			class const_noconst_iterator : public std::iterator<std::random_access_iterator_tag, unsigned int> {
 			public:
-				typedef typename std::conditional<is_const_iterator, const Indices*, Indices*>::type IndicesPtr;
-				typedef typename std::conditional<is_const_iterator, const Indices&, Indices&>::type IndicesRef;
+				//typedef typename std::conditional<is_const_iterator, const Indices*, Indices*>::type IndicesPtr;
+				//typedef typename std::conditional<is_const_iterator, const Indices&, Indices&>::type IndicesRef;
 				typedef typename std::conditional<is_const_iterator, const Face*, Face*>::type FacePtr;
 				typedef typename std::conditional<is_const_iterator, const Face&, Face&>::type FaceRef;
 				typedef typename std::conditional<is_const_iterator, const unsigned int*, unsigned int*>::type uintPtr;
@@ -63,6 +63,10 @@ public:
 					curr = c;
 				}
 				const_noconst_iterator(const_noconst_iterator<false>& other) {
+					face = other.getFace();
+					curr = other.getCurr();
+				}
+				const_noconst_iterator(const_noconst_iterator<false>&& other) {
 					face = other.getFace();
 					curr = other.getCurr();
 				}
@@ -251,14 +255,18 @@ public:
 		public:
 			typedef typename std::conditional<is_const_iterator, const Indices*, Indices*>::type IndicesPtr;
 			typedef typename std::conditional<is_const_iterator, const Indices&, Indices&>::type IndicesRef;
-			typedef typename std::conditional<is_const_iterator, const Face*, Face*>::type FacePtr;
-			typedef typename std::conditional<is_const_iterator, const Face&, Face&>::type FaceRef;
+			//typedef typename std::conditional<is_const_iterator, const Face*, Face*>::type FacePtr;
+			//typedef typename std::conditional<is_const_iterator, const Face&, Face&>::type FaceRef;
 
 			const_noconst_iterator(IndicesPtr i, size_t c = 0) {
 				curr = c;
 				indices = i;
 			}
 			const_noconst_iterator(const_noconst_iterator<false>& other) {
+				curr = other.getCurr();
+				indices = other.getIndices();
+			}
+			const_noconst_iterator(const_noconst_iterator<false>&& other) {
 				curr = other.getCurr();
 				indices = other.getIndices();
 			}
@@ -463,18 +471,18 @@ public:
 
 		if (detailedCheck) {
 			//make sure no index is out of bounds
-			for (auto& face : m_FaceIndicesVertices) {
-				for (auto idx : face) {
+			for (const auto& face : m_FaceIndicesVertices) {
+				for (const auto idx : face) {
 					if (idx >= m_Vertices.size())	consistent = false;
 				}
 			}
-			for (auto& face : m_FaceIndicesColors) {
-				for (auto idx : face) {
+			for (const auto& face : m_FaceIndicesColors) {
+				for (const auto idx : face) {
 					if (idx >= m_Colors.size())	consistent = false;
 				}
 			}
-			for (auto& face : m_FaceIndicesNormals) {
-				for (auto idx : face) {
+			for (const auto& face : m_FaceIndicesNormals) {
+				for (const auto idx : face) {
 					if (idx >= m_FaceIndicesNormals.size())	consistent = false;
 				}
 			}
@@ -782,7 +790,7 @@ public:
 	}
 
 	bool isTriMesh() const {
-		for (auto &f : m_FaceIndicesVertices) {
+		for (const auto &f : m_FaceIndicesVertices) {
 			if (f.size() != 3) return false;
 		}
 		return true;

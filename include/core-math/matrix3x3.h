@@ -557,11 +557,11 @@ public:
 			if (matrix2[2][0] <= -1 + eps) {
 				//if (abs(R(2, 0) + 1) < eps) { // R(2, 0) == - 1
 				//if (abs(R(2, 0) + 1) > eps) {
-				theta = ml::math::PIf / 2.0f;
+				theta = ml::math::PI / 2.0f;
 				psi = phi + atan2(matrix2[0][1], matrix2[0][2]);
 			}
 			else {
-				theta = -ml::math::PIf / 2.0f;
+				theta = -ml::math::PI / 2.0f;
 				psi = -phi + atan2(-matrix2[0][1], -matrix2[0][2]);
 			}
 		}

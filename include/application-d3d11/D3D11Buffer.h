@@ -67,7 +67,7 @@ namespace ml {
 
 		//! move operator
 		void operator=(D3D11Buffer&& t)	{
-			swap(*this, grid);
+			swap(*this, t);
 		}				
 
 		//! adl swap

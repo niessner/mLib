@@ -347,7 +347,7 @@ template <class FloatType> inline void Quaternion<FloatType>::setImag( const vec
 
 template <class FloatType> inline FloatType Quaternion<FloatType>::angleRad() const { return acos( m_Real ); }
 
-template <class FloatType> inline FloatType Quaternion<FloatType>::angleDeg() const { return ( angleRad() * ( 360.0 / M_PI ) ); }
+template <class FloatType> inline FloatType Quaternion<FloatType>::angleDeg() const { return ( angleRad() * ( 360.0 / math::PI ) ); }
 
 //template <class FloatType> inline Matrix4x4<FloatType> Quaternion<FloatType>::matrix4x4() const {
 //	/*
@@ -502,8 +502,8 @@ template <class FloatType> Quaternion<FloatType> Quaternion<FloatType>::slerp( c
 		result.m_Real = q2.m_Imag[2];
 
 		// slerp
-		scale0 = sin( ( (FloatType)1.0 - t ) * (FloatType)M_PI / (FloatType)2.0 );
-		scale1 = sin( t * (FloatType)M_PI / (FloatType)2.0 );
+		scale0 = sin( ( (FloatType)1.0 - t ) * (FloatType)math::PI / (FloatType)2.0 );
+		scale1 = sin( t * (FloatType)math::PI / (FloatType)2.0 );
 		result.m_Imag[ 0 ] = scale0 * m_Imag[ 0 ] + scale1 * result.m_Imag[ 0 ];
 		result.m_Imag[ 1 ] = scale0 * m_Imag[ 1 ] + scale1 * result.m_Imag[ 1 ];
 		result.m_Imag[ 2 ] = scale0 * m_Imag[ 2 ] + scale1 * result.m_Imag[ 2 ];
