@@ -345,7 +345,7 @@ template <class FloatType> inline void Quaternion<FloatType>::setReal( const Flo
 
 template <class FloatType> inline void Quaternion<FloatType>::setImag( const vec3<FloatType>& imag ) { m_Imag = imag; }
 
-template <class FloatType> inline FloatType Quaternion<FloatType>::angleRad() const { return acos( m_Real ); }
+template <class FloatType> inline FloatType Quaternion<FloatType>::angleRad() const { return 2*acos( m_Real ); }
 
 template <class FloatType> inline FloatType Quaternion<FloatType>::angleDeg() const { return ( angleRad() * ( 360.0 / math::PI ) ); }
 
@@ -456,11 +456,13 @@ template <class FloatType> vec3<FloatType> Quaternion<FloatType>::axis() const {
 	FloatType halfAngle = acos( m_Real );
 	FloatType s = sin( halfAngle );
 	vec3<FloatType> a;
-	if ( isZero( s ) ) {
-		a[ 0 ] = 1.0;
+	//if ( isZero( s ) ) {
+	if ( abs(s) <= Quaternion<FloatType>::eps ){
+		// halfangle is zero
+		a[ 0 ] = 0.0;
 		a[ 1 ] = 0.0;
 		a[ 2 ] = 0.0;
-		} else {
+	} else {
 		FloatType c = 1.0 / s;
 		a = c * m_Imag;
 		}
