@@ -62,7 +62,7 @@ public:
 					face = f;
 					curr = c;
 				}
-				const_noconst_iterator(const_noconst_iterator<false>& other) {
+				const_noconst_iterator(const_noconst_iterator<false> const& other) {
 					face = other.getFace();
 					curr = other.getCurr();
 				}
@@ -119,12 +119,12 @@ public:
 					return curr;
 				}
 
-				FacePtr getFace() {
+				FacePtr getFace() const {
 					return face;
 				}
-				const Face* getFace() const {
-					return face;
-				}
+				//const Face* getFace() const {
+				//	return face;
+				//}
 			private:
 				unsigned int curr;
 				FacePtr face;
@@ -139,10 +139,10 @@ public:
 			iterator end() {
 				return iterator(this, size());
 			}
-			const_iterator begin() const {
+			const_iterator cbegin() const {
 				return const_iterator(this);
 			}
-			const_iterator end() const {
+			const_iterator cend() const {
 				return const_iterator(this, size());
 			}
 
@@ -258,7 +258,7 @@ public:
 				curr = c;
 				indices = i;
 			}
-			const_noconst_iterator(const_noconst_iterator<false>& other) {
+			const_noconst_iterator(const_noconst_iterator<false> const & other) {
 				curr = other.getCurr();
 				indices = other.getIndices();
 			}
@@ -316,13 +316,13 @@ public:
 			size_t getCurr() const {
 				return curr;
 			}
-			IndicesPtr getIndices() {
+			IndicesPtr getIndices() const{
 				return indices;
 			}
 
-			const Indices* getIndices() const {
-				return indices;
-			}
+			//const Indices* getIndices() const {
+			//	return indices;
+			//}
 		private:
 			size_t curr;
 			IndicesPtr indices;
@@ -337,10 +337,10 @@ public:
 		iterator end() {
 			return iterator(this, size());
 		}
-		const_iterator begin() const {
+		const_iterator cbegin() const {
 			return const_iterator(this);
 		}
-		const_iterator end() const {
+		const_iterator cend() const {
 			return const_iterator(this, size());
 		}
 

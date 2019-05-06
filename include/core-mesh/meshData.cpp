@@ -285,11 +285,18 @@ unsigned int MeshData<FloatType>::mergeCloseVertices(FloatType thresh, bool appr
 	}
 
 	// Update faces
-	for (auto it = m_FaceIndicesVertices.begin(); it != m_FaceIndicesVertices.end(); it++) {
-		for (auto idx = it->begin(); idx != it->end(); idx++) {
+	typename Indices::iterator _it(m_FaceIndicesVertices.begin());
+
+	for (; _it != m_FaceIndicesVertices.end(); _it++) {
+		for (auto idx = _it->begin(); idx != _it->end(); idx++) {
 			*idx = vertexLookUp[*idx];
 		}
 	}
+	//for (auto it = m_FaceIndicesVertices.begin(); it != m_FaceIndicesVertices.end(); it++) {
+	//	for (auto idx = it->begin(); idx != it->end(); idx++) {
+	//		*idx = vertexLookUp[*idx];
+	//	}
+	//}
 
 	if (m_Vertices.size() != new_verts.size()) {
 		m_Vertices = std::vector<vec3<FloatType>>(new_verts.begin(), new_verts.end());
