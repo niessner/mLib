@@ -10,7 +10,7 @@ adai@cs.stanford.edu
 
 
 INSTALLATION:
-Make to check out mLib and mLibExternal on the same directory level; ideally, in you work folder. A typical file structure looks this:
+Make to check out mLib and [mLibExternal](http://kaldir.vc.in.tum.de/mLib/mLibExternal.zip) on the same directory level; ideally, in you work folder. A typical file structure looks this:
 E:\Work\mLib
 E:\Work\mLibExternal
 E:\Work\<project name>
