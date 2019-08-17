@@ -28,6 +28,7 @@ We are also looking for active participation in maintaining and extending mLib. 
 
 
 Example of mLibInclude.h:
+```shell
 	#include "mLibCore.h"
 	#include "mLibD3D11.h"
 	#include "mLibD3D11Font.h"
@@ -40,10 +41,12 @@ Example of mLibInclude.h:
 	#include "mLibOpenMesh.h"
 	#include "mLibFreeImage.h"	//this must be included after OpenMesh; otherwise there is a crash
 	using namespace ml;
-
+```
 
 Example of mLibInclude.cpp:
+```shell
 	#include "mLibCore.cpp"
 	#include "mLibD3D11.cpp"
 	#include "mLibLodePNG.cpp"
 	#include "mLibZLib.cpp"
+```
