@@ -1,3 +1,12 @@
+#include <utility>
+#include <vector>
+#include <cstdlib>
+
+#include <core-mesh/triMesh.h>
+#include <core-math/matrix4x4.h>
+#include <core-mesh/meshUtil.h>
+#include <core-math/vec3.h>
+#include <core-math/vec4.h>
 
 namespace ml {
 

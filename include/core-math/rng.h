@@ -61,6 +61,7 @@
 #include <cmath>
 #include <climits>
 #include <vector>
+#include "vec2.h"
 
 
 namespace ml {

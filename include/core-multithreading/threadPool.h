@@ -1,6 +1,8 @@
 #ifndef CORE_MULTITHREADING_THREADPOOL_H_
 #define CORE_MULTITHREADING_THREADPOOL_H_
 
+#include "workerThread.h"
+
 namespace ml
 {
 

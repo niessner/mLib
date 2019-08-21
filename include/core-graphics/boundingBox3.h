@@ -3,6 +3,10 @@
 #define CORE_GRAPHICS_BOUNDINGBOX3_H_
 
 #include "ray.h"
+#include "lineSegment2.h"
+#include "lineSegment3.h"
+#include "plane.h"
+#include "intersection.h"
 
 #include <cfloat>
 #include <vector>

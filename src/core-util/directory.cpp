@@ -1,3 +1,9 @@
+#include <string>
+#include <vector>
+#include <core-util/directory.h>
+#include <core-util/stringUtil.h>
+#include <iostream>
+#include <dirent.h>
 
 namespace ml {
 

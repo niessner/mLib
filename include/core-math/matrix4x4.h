@@ -2,6 +2,10 @@
 #ifndef CORE_MATH_MATRIX4X4_H_
 #define CORE_MATH_MATRIX4X4_H_
 
+#include "matrix3x3.h"
+#include "vec6.h"
+#include "eigenSolver.h"
+
 namespace ml {
 
 template <class FloatType>

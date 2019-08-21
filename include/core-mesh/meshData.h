@@ -1,6 +1,11 @@
 #ifndef CORE_MESH_MESHDATA_H_
 #define CORE_MESH_MESHDATA_H_
 
+#include <core-util/sparseGrid3.h>
+#include <unordered_map>
+#include <type_traits>
+#include "material.h"
+
 namespace ml {
 
 

@@ -1,6 +1,9 @@
 #ifndef _BASEIMAGE_HELPER_H_
 #define _BASEIMAGE_HELPER_H_
 
+#include <core-math/vec3.h>
+#include <core-math/vec4.h>
+
 namespace ml {
 
 namespace BaseImageHelper {

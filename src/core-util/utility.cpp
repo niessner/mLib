@@ -1,3 +1,12 @@
+#include <core-base/common.h>
+#include <core-util/stringUtil.h>
+#include <core-util/utility.h>
+#ifdef _WIN32
+#include <direct.h>
+#elif defined(LINUX)
+#include <sys/stat.h>
+#endif
+
 namespace ml {
 
 namespace util

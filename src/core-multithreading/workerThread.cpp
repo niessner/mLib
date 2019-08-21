@@ -1,3 +1,6 @@
+#include <core-multithreading/workerThread.h>
+#include <core-base/common.h>
+#include <core-multithreading/taskList.h>
 
 namespace ml
 {

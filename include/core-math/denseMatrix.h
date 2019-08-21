@@ -2,6 +2,20 @@
 #ifndef CORE_MATH_DENSEMATRIX_H_
 #define CORE_MATH_DENSEMATRIX_H_
 
+template<typename T>
+class Matrix3x3;
+
+template<typename T>
+class Matrix4x4;
+
+#include "matrix4x4.h"
+#include "matrix3x3.h"
+#include "matrix2x2.h"
+#include <core-util/stringUtil.h>
+#include "mathVector.h"
+#include "sparseMatrix.h"
+#include "eigenSolver.h"
+
 namespace ml {
 
 template <class T> class DenseMatrix

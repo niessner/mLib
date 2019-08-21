@@ -2,6 +2,8 @@
 #ifndef CORE_MATH_MATRIX3X3_H_
 #define CORE_MATH_MATRIX3X3_H_
 
+#include "eigenSolver.h"
+
 namespace ml {
 
 template <class FloatType>

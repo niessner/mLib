@@ -1,3 +1,10 @@
+#include <core-base/baseImage.h>
+#include <core-util/utility.h>
+#include <iostream>
+#include <string>
+#include <mLibLodePNG.h>
+#include <core-base/common.h>
+#include <core-graphics/RGBColor.h>
 
 namespace ml
 {

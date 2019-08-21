@@ -2,6 +2,8 @@
 #ifndef CORE_UTIL_BINARYDATACOMPRESSOR_H_
 #define CORE_UTIL_BINARYDATACOMPRESSOR_H_
 
+#include <core-base/common.h>
+
 namespace ml
 {
 

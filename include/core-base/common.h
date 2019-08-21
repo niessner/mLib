@@ -23,6 +23,7 @@
 #endif
 
 #ifdef LINUX
+#include <cassert>
 #define DEBUG_BREAK assert(false)
 #endif
 

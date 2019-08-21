@@ -1,3 +1,5 @@
+#include <core-base/common.h>
+#include <core-math/rng.h>
 
 namespace ml
 {

@@ -2,6 +2,10 @@
 #ifndef CORE_MATH_EIGENSOLVER_H_
 #define CORE_MATH_EIGENSOLVER_H_
 
+#include "denseMatrix.h"
+#include "mathVector.h"
+#include "numericalRecipesTemplates.h"
+
 namespace ml {
 
 //

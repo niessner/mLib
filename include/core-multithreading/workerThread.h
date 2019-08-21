@@ -1,6 +1,9 @@
 #ifndef CORE_MULTITHREADING_WORKERTHREAD_H_
 #define CORE_MULTITHREADING_WORKERTHREAD_H_
 
+#include <core-base/common.h>
+#include "taskList.h"
+
 namespace ml
 {
 

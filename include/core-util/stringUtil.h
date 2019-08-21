@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <core-base/common.h>
 
 namespace ml
 {

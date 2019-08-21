@@ -1,13 +1,19 @@
+#include <vector>
+#include <string>
+#include <iostream>
+#include <functional>
+#include <core-util/eventMap.h>
+#include <core-util/stringUtil.h>
 
 namespace ml
 {
 
-void EventMap::registerEvent(const std::string &event, const std::function<void(vector<std::string> &params)> &handler)
+void EventMap::registerEvent(const std::string &event, const std::function<void(std::vector<std::string> &params)> &handler)
 {
     _handlers[event] = handler;
 }
 
-void EventMap::dispatchEvents(const vector<std::string> &messages) const
+void EventMap::dispatchEvents(const std::vector<std::string> &messages) const
 {
     for (const std::string &message : messages)
     {

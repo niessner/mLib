@@ -1,3 +1,5 @@
+#include <cmath>
+#include <core-math/vec3.h>
 
 namespace ml {
 
@@ -30,7 +32,6 @@ namespace ml {
  * isectpt1, isectpt2 are the endpoints of the line of intersection
  */
 
-#include <math.h>
 
 #define FABS(x) ((float)fabs(x))        /* implement as is fastest on your machine */
 

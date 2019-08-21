@@ -2,7 +2,10 @@
 #ifndef CORE_GRAPHICS_BOUNDINGBOX2_H_
 #define CORE_GRAPHICS_BOUNDINGBOX2_H_
 
+#include "lineSegment2.h"
+#include "lineSegment3.h"
 #include "ray.h"
+#include "intersection.h"
 
 #include <cfloat>
 #include <vector>
