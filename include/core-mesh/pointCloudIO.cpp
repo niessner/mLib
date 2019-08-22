@@ -2,6 +2,10 @@
 #ifndef CORE_MESH_POINTIO_INL_H_
 #define CORE_MESH_POINTIO_INL_H_
 
+#include <string>
+#include <iostream>
+#include <core-mesh/pointCloudIO.h>
+
 namespace ml {
 
 

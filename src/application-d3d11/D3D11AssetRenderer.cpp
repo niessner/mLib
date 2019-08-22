@@ -1,4 +1,11 @@
 
+#include <application-d3d11/D3D11AssetRenderer.h>
+#include <application-d3d11/D3D11TriMesh.h>
+#include <application-base/graphicsDevice.h>
+#include <core-math/vec4.h>
+#include <core-mesh/meshShapes.h>
+
+
 namespace ml {
 	
 void D3D11AssetRenderer::init(GraphicsDevice &g, bool useTexture)

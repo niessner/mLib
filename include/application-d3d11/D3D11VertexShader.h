@@ -2,6 +2,12 @@
 #ifndef APPLICATION_D3D11_D3D11VERTEXSHADER_H_
 #define APPLICATION_D3D11_D3D11VERTEXSHADER_H_
 
+#include <d3d11.h>
+#include <string>
+#include <application-base/graphicsAsset.h>
+#include <application-base/graphicsDevice.h>
+
+
 namespace ml {
 
 	class D3D11VertexShader : public GraphicsAsset

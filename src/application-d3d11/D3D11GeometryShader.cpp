@@ -1,3 +1,8 @@
+#include <application-d3d11/D3D11GeometryShader.h>
+#include <application-d3d11/D3D11Utility.h>
+#include <application-d3d11/D3D11GraphicsDevice.h>
+#include <application-base/graphicsDevice.h>
+#include <string>
 
 void ml::D3D11GeometryShader::init(
 	GraphicsDevice& g, 

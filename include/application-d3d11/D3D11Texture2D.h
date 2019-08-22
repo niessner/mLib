@@ -2,6 +2,10 @@
 #ifndef APPLICATION_D3D11_D3D11TEXTURE2D_H_
 #define APPLICATION_D3D11_D3D11TEXTURE2D_H_
 
+#include <d3d11.h>
+#include <application-base/graphicsDevice.h>
+#include <core-base/baseImage.h>
+
 namespace ml {
 
 template<class T>
@@ -83,6 +87,5 @@ private:
 
 }  // namespace ml
 
-#include "D3D11Texture2D.cpp"
 
 #endif  // APPLICATION_D3D11_D3D11TEXTURE2D_H_

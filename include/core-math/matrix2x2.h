@@ -2,6 +2,8 @@
 #ifndef CORE_MATH_MATRIX2X2_H_
 #define CORE_MATH_MATRIX2X2_H_
 
+#include <core-util/binaryDataSerialize.h>
+
 namespace ml {
 
 template <class FloatType>

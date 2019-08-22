@@ -3,7 +3,11 @@
 #include <core-util/directory.h>
 #include <core-util/stringUtil.h>
 #include <iostream>
+#if defined (_WIN32)
+#include <Windows.h>
+#elif defined(LINUX)
 #include <dirent.h>
+#endif
 
 namespace ml {
 

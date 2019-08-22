@@ -2,6 +2,11 @@
 #ifndef APPLICATION_D3D11_D3D11GRAPHICSDEVICE_H_
 #define APPLICATION_D3D11_D3D11GRAPHICSDEVICE_H_
 
+#include <d3d11.h>
+#include <application-base/graphicsDevice.h>
+#include <application-base/graphicsAsset.h>
+#include <application-d3d11/D3D11ShaderManager.h>
+
 namespace ml {
 
 class D3D11GraphicsDevice : public GraphicsDevice

@@ -2,6 +2,9 @@
 #ifndef CORE_GRAPHICS_LINESEGMENT3_H_
 #define CORE_GRAPHICS_LINESEGMENT3_H_
 
+#include <core-graphics/lineSegment3.h>
+#include <core-math/vec3.h>
+
 namespace ml {
 
 template<class FloatType>

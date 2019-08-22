@@ -2,6 +2,8 @@
 #ifndef CORE_MESH_POINTCLOUD_INL_H_
 #define CORE_MESH_POINTCLOUD_INL_H_
 
+#include <core-mesh/pointCloud.h>
+
 namespace ml {
 template<class FloatType>
 std::ostream& operator<<(std::ostream& os, const PointCloud<FloatType>& pointCloud) {

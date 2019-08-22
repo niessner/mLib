@@ -1,3 +1,5 @@
+#include <d3d11.h>
+#include <application-d3d11/D3D11TriMesh.h>
 
 const D3D11_INPUT_ELEMENT_DESC ml::D3D11TriMesh::layout[layoutElementCount] =
 {

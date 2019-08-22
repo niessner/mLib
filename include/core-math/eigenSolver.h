@@ -2,7 +2,9 @@
 #ifndef CORE_MATH_EIGENSOLVER_H_
 #define CORE_MATH_EIGENSOLVER_H_
 
-#include "denseMatrix.h"
+template <class FloatType>
+class DenseMatrix;
+
 #include "mathVector.h"
 #include "numericalRecipesTemplates.h"
 
@@ -265,6 +267,5 @@ public:
 
 }  // namespace ml
 
-#include "eigenSolver.cpp"
 
 #endif  // CORE_MATH_EIGENSOLVER_H_

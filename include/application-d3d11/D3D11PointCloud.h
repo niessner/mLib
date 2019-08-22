@@ -2,6 +2,13 @@
 #ifndef APPLICATION_D3D11_D3D11POINTCLOUD_H_
 #define APPLICATION_D3D11_D3D11POINTCLOUD_H_
 
+#include <d3d11.h>
+#include <application-base/graphicsAsset.h>
+#include <application-base/graphicsDevice.h>
+#include <core-mesh/pointCloud.h>
+#include <core-mesh/triMesh.h>
+#include <core-graphics/boundingBox3.h>
+#include <application-d3d11/D3D11GraphicsDevice.h>
 
 namespace ml {
 

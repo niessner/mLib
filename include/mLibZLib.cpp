@@ -2,7 +2,7 @@
 //
 // external ZLib headers
 //
-#include "zlib/zlib.h"
+#include <zlib.h>
 
 //
 // ext-zlib source files

@@ -2,6 +2,8 @@
 #ifndef APPLICATION_BASE_GRAPHICSASSET_H_
 #define APPLICATION_BASE_GRAPHICSASSET_H_
 
+#include <string>
+
 namespace ml {
 
 class GraphicsAsset

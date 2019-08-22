@@ -2,6 +2,13 @@
 #ifndef APPLICATION_D3D11_D3D11PIXELSHADER_H_
 #define APPLICATION_D3D11_D3D11PIXELSHADER_H_
 
+#include <string>
+#include <vector>
+#include <utility>
+#include <d3d11.h>
+#include <application-base/graphicsAsset.h>
+#include <application-base/graphicsDevice.h>
+
 namespace ml {
 
 	class D3D11PixelShader : public GraphicsAsset

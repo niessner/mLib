@@ -1,4 +1,10 @@
 
+#include <Windows.h>
+#include <application-base/windowWin32.h>
+#include <application-base/applicationWin32.h>
+#include <core-util/stringUtil.h>
+#include <core-math/vec2.h>
+#include <core-util/windowsUtil.h>
 
 namespace ml {
 	//

@@ -2,6 +2,10 @@
 #ifndef APPLICATION_BASE_APPLICATIONWIN32_H_
 #define APPLICATION_BASE_APPLICATIONWIN32_H_
 
+#include <core-math/vec2.h>
+#include <application-base/graphicsDevice.h>
+#include <Windows.h>
+
 namespace ml {
 
 enum MouseButtonType

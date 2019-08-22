@@ -2,6 +2,9 @@
 #ifndef CORE_GRAPHICS_POLYGON_INL_H_
 #define CORE_GRAPHICS_POLYGON_INL_H_
 
+#include <core-math/vec2.h>
+#include <core-graphics/polygon.h>
+
 namespace ml {
 
 //

@@ -2,6 +2,8 @@
 #ifndef CORE_BASE_GRID2D_H_INL_
 #define CORE_BASE_GRID2D_H_INL_
 
+#include <core-base/grid2.h>
+
 namespace ml
 {
 

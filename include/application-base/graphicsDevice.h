@@ -2,6 +2,9 @@
 #ifndef APPLICATION_BASE_GRAPHICSDEVICE_H_
 #define APPLICATION_BASE_GRAPHICSDEVICE_H_
 
+#include <application-base/windowWin32.h>
+#include <core-base/baseImage.h>
+
 namespace ml {
 
 enum GraphicsDeviceType

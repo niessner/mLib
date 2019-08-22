@@ -2,6 +2,11 @@
 #ifndef EXT_ZLIB_ZLIBWRAPPER_H_
 #define EXT_ZLIB_ZLIBWRAPPER_H_
 
+#include <vector>
+#include <core-base/common.h>
+#include <core-util/binaryDataCompressor.h>
+#include <core-util/binaryDataStream.h>
+
 namespace ml
 {
 

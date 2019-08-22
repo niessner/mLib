@@ -2,6 +2,7 @@
 #define _EVENT_MAP_H_
 
 #include <map>
+#include <core-util/UIConnection.h>
 
 namespace ml
 {

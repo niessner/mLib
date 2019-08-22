@@ -1,5 +1,5 @@
 
-
+#include <application-d3d11/D3D11PointCloud.h>
 
 void ml::D3D11PointCloud::updateColors(const std::vector<vec4f> &newValues) 
 {	

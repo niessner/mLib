@@ -4,6 +4,7 @@
 #include <functional>
 #include <core-util/eventMap.h>
 #include <core-util/stringUtil.h>
+#include <core-util/UIConnection.h>
 
 namespace ml
 {

@@ -36,16 +36,19 @@
 #include "core-math/matrix4x4.h"
 #include "core-math/quaternion.h"
 #include "core-math/mathVector.h"
-#include "core-math/sparseMatrix.h"
-#include "core-math/denseMatrix.h"
 #include "core-math/linearSolver.h"
-#include "core-math/eigenSolver.h"
 #include "core-math/rng.h"
 #include "core-math/kMeansClustering.h"
 #include "core-math/sampling.h"
 #include "core-math/mathUtil.h"
-#include "core-math/PCA.h"
-#include "core-math/blockedPCA.h"
+//(template definitions)
+//TODO: provide only headers and use explicit instantiations instead for common template arguments.
+//	This will reduce compile time for library users, retaining their ability to instantiate by including the .tpp files separately.
+#include "core-math/PCA.tpp"
+#include "core-math/blockedPCA.tpp"
+#include "core-math/denseMatrix.tpp"
+#include "core-math/sparseMatrix.tpp"
+#include "core-math/eigenSolver.tpp"
 
 namespace ml
 {

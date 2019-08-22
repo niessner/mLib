@@ -2,6 +2,8 @@
 #ifndef CORE_BASE_GRID3D_H_
 #define CORE_BASE_GRID3D_H_
 
+#include <core-math/vec3.h>
+
 namespace ml
 {
 

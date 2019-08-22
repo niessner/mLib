@@ -2,6 +2,19 @@
 #ifndef APPLICATION_D3D11_D3D11CANVAS2D_H_
 #define APPLICATION_D3D11_D3D11CANVAS2D_H_
 
+#include <limits>
+#include <string>
+#include <core-math/vec2.h>
+#include <core-math/vec4.h>
+#include <core-graphics/boundingBox2.h>
+#include <core-mesh/meshShapes.h>
+#include <application-base/graphicsAsset.h>
+#include <application-base/graphicsDevice.h>
+#include <application-d3d11/D3D11GraphicsDevice.h>
+#include <application-d3d11/D3D11Texture2D.h>
+#include <application-d3d11/D3D11TriMesh.h>
+#include <application-d3d11/D3D11ConstantBuffer.h>
+
 namespace ml {
 
 	class D3D11Canvas2D : public GraphicsAsset
@@ -232,22 +245,24 @@ namespace ml {
 			for (Element* e : other.m_unnamedElements)
 				addElement(*e);
 		}
+
+
+		//! adl swap
+		friend void swap(D3D11Canvas2D& a, D3D11Canvas2D& b) {
+			a.swap_with(b);
+		}
+
 		//! move constructor
 		D3D11Canvas2D(D3D11Canvas2D&& other) {
 			m_graphics = nullptr;
-			swap(*this, other);
+			this->swap_with(other);
 		}
 
 		~D3D11Canvas2D() {
 			clearElements();
 		}
 
-		//! adl swap
-		friend void swap(D3D11Canvas2D& a, D3D11Canvas2D& b) {
-			std::swap(a.m_graphics, b.m_graphics);
-			std::swap(a.m_namedElements, b.m_namedElements);
-			std::swap(a.m_unnamedElements, b.m_unnamedElements);
-		}
+		
 		
 		//! assignment operator
 		void operator=(D3D11Canvas2D& other) {
@@ -261,7 +276,7 @@ namespace ml {
 		}
 		//! move operator
 		void operator=(D3D11Canvas2D&& other) {
-			swap(*this, other);
+			this->swap_with(other);
 		}
 			 
 		void init(GraphicsDevice& g);
@@ -350,6 +365,13 @@ namespace ml {
 		D3D11GraphicsDevice* m_graphics;
 		std::map<std::string, Element*> m_namedElements;
 		std::vector<Element*> m_unnamedElements;
+
+		void swap_with(D3D11Canvas2D& other) {
+			std::swap(this->m_graphics, other.m_graphics);
+			std::swap(this->m_namedElements, other.m_namedElements);
+			std::swap(this->m_unnamedElements, other.m_unnamedElements);
+		}
+
 	};
 
 }  // namespace ml

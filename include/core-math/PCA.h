@@ -1,3 +1,7 @@
+#include <functional>
+#include <core-math/denseMatrix.h>
+#include <core-math/eigenSolver.h>
+
 namespace ml {
 
 template <class T>
@@ -31,8 +35,6 @@ private:
 	std::vector<T> _means;
     EigenSystem<T> _system;
 };
-
-#include "PCA.cpp"
 
 typedef PCA<float> PCAf;
 typedef PCA<double> PCAd;

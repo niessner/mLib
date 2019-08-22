@@ -2,6 +2,11 @@
 #ifndef CORE_GRAPHICS_CAMERA_H_
 #define CORE_GRAPHICS_CAMERA_H_
 
+#include <core-util/binaryDataSerialize.h>
+#include <core-math/vec3.h>
+#include <core-math/matrix4x4.h>
+#include <core-graphics/ray.h>
+
 namespace ml {
 
 	template <class FloatType>
@@ -163,7 +168,5 @@ namespace ml {
 	typedef Camera<double> Camerad;
 
 }  // namespace ml
-
-#include "camera.cpp"
 
 #endif  // CORE_GRAPHICS_CAMERA_H_

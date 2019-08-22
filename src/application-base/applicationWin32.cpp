@@ -1,4 +1,7 @@
 
+#include <application-base/applicationWin32.h>
+#include <application-d3d11/D3D11GraphicsDevice.h>
+
 ml::ApplicationWin32::ApplicationWin32(HINSTANCE instance, UINT windowWidth, UINT windowHeight, const std::string &name, GraphicsDeviceType graphicsType, ApplicationCallback &callback, unsigned int initWindowPosX, unsigned int initWindowPosY) :
 	m_callback(callback),
 	m_window(*this)

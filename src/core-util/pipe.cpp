@@ -3,6 +3,8 @@
 
 #include <AccCtrl.h>
 #include <Aclapi.h>
+#include <core-util/pipe.h>
+#include <core-base/common.h>
 
 namespace ml {
 

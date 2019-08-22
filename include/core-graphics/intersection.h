@@ -2,9 +2,14 @@
 #ifndef CORE_GRAPHICS_INTERSECTION_H_
 #define CORE_GRAPHICS_INTERSECTION_H_
 
+#include <algorithm>
+#include <utility>
+#include <core-math/vec2.h>
+#include <core-math/vec3.h>
 #include "line2.h"
 #include "plane.h"
 #include "triangle.h"
+#include "lineSegment2.h"
 
 namespace ml {
 
@@ -165,24 +170,21 @@ namespace intersection {
 		return ((txmin <= t1) && (txmax >= t0));
 	}
 
-
-
-
-
-
+	// NOTE: renamed from SORT to avoid conflicts with triangleIntersection.cpp
 	// sort so that a<=b 
 	template<class FloatType>
-	void SORT(FloatType& a, FloatType& b) {
+	void sort(FloatType & a, FloatType & b) {
 		if (a > b) {
 			std::swap(a,b);
 		}
 	}
 
+	// NOTE: renamed from EDGE_EDGE_TEST to avoid conflicts with triangleIntersection.cpp
 	// this edge to edge test is based on Franlin Antonio's gem:
     //"Faster Line Segment Intersection", in Graphics Gems III,
     //pp. 199-202
 	template<class FloatType> 
-	bool EDGE_EDGE_TEST(
+	bool edgeEdgeTest(
 		const vec3<FloatType>& V0, 
 		const vec3<FloatType>& U0, 
 		const vec3<FloatType>& U1,
@@ -214,9 +216,9 @@ namespace intersection {
 		return false;
 	}
 	
-
+	// NOTE: renamed from EDGE_AGAINST_TRI_EDGES to avoid conflicts with triangleIntersection.cpp
 	template<class FloatType> 
-	bool EDGE_AGAINST_TRI_EDGES(
+	bool edgeAgainstTriEdges(
 		const vec3<FloatType>& V0,
 		const vec3<FloatType>& V1,
 		const vec3<FloatType>& U0,
@@ -229,18 +231,18 @@ namespace intersection {
 		a.x = V1[i0]-V0[i0];                           
 		a.y = V1[i1]-V0[i1];                           
 		//test edge U0,U1 against V0,V1         
-		if (EDGE_EDGE_TEST(V0,U0,U1,i0,i1,a,b,c,d,e,f)) return true;                
+		if (edgeEdgeTest(V0,U0,U1,i0,i1,a,b,c,d,e,f)) return true;                
 		//test edge U1,U2 against V0,V1        
-		if (EDGE_EDGE_TEST(V0,U1,U2,i0,i1,a,b,c,d,e,f)) return true;                 
+		if (edgeEdgeTest(V0,U1,U2,i0,i1,a,b,c,d,e,f)) return true;                 
 		//test edge U2,U1 against V0,V1    
-		if (EDGE_EDGE_TEST(V0,U2,U0,i0,i1,a,b,c,d,e,f)) return true;
+		if (edgeEdgeTest(V0,U2,U0,i0,i1,a,b,c,d,e,f)) return true;
 
 		return false;
 	}
 
-
+	// NOTE: renamed from POINT_IN_TRI to avoid conflicts with triangleIntersection.cpp
 	template<class FloatType> 
-	bool POINT_IN_TRI(
+	bool pointInTry(
 		const vec3<FloatType>& V0,
 		const vec3<FloatType>& U0,
 		const vec3<FloatType>& U1,
@@ -270,9 +272,9 @@ namespace intersection {
 		return false;
 	}
 
-
+	// NOTE: renamed from coplanar_tri_tri to avoid conflicts with triangleIntersection.cpp
 	template<class FloatType>
-	bool coplanar_tri_tri(
+	bool coplanarTriTri(
 		const vec3<FloatType>& N,
 		const vec3<FloatType>& V0,
 		const vec3<FloatType>& V1,
@@ -309,21 +311,21 @@ namespace intersection {
 		}
 
 		// test all edges of triangle 1 against the edges of triangle 2 
-		if (EDGE_AGAINST_TRI_EDGES(V0,V1,U0,U1,U2,i0,i1))	return true;
-		if (EDGE_AGAINST_TRI_EDGES(V1,V2,U0,U1,U2,i0,i1))	return true;
-		if (EDGE_AGAINST_TRI_EDGES(V2,V0,U0,U1,U2,i0,i1))	return true;
+		if (edgeAgainstTriEdges(V0,V1,U0,U1,U2,i0,i1))	return true;
+		if (edgeAgainstTriEdges(V1,V2,U0,U1,U2,i0,i1))	return true;
+		if (edgeAgainstTriEdges(V2,V0,U0,U1,U2,i0,i1))	return true;
 
 		// finally, test if tri1 is totally contained in tri2 or vice versa 
-		if (POINT_IN_TRI(V0,U0,U1,U2,i0,i1)) return true;
-		if (POINT_IN_TRI(U0,V0,V1,V2,i0,i1)) return true;
+		if (pointInTry(V0,U0,U1,U2,i0,i1)) return true;
+		if (pointInTry(U0,V0,V1,V2,i0,i1)) return true;
 
 		return false;
 	}
 
-
+	// NOTE: renamed from NEWCOMPUTE_INTERVALS to avoid conflicts with triangleIntersection.cpp
 	//returns true if coplanar
 	template<class FloatType>
-	bool NEWCOMPUTE_INTERVALS(
+	bool NewcomputeIntervals(
 		const vec3<FloatType>& v0,
 		const vec3<FloatType>& v1,
 		const vec3<FloatType>& v2,
@@ -454,14 +456,14 @@ namespace intersection {
 
 		// compute interval for triangle 1
 		FloatType a,b,c,x0,x1;
-		if (NEWCOMPUTE_INTERVALS(u0,u1,u2,v0,v1,v2,n1,vp0,vp1,vp2,dv0,dv1,dv2,dv0dv1,dv0dv2,a,b,c,x0,x1)) {
-			return (coplanar_tri_tri(n1,v0,v1,v2,u0,u1,u2));	//triangles are a co-planar
+		if (NewcomputeIntervals(u0,u1,u2,v0,v1,v2,n1,vp0,vp1,vp2,dv0,dv1,dv2,dv0dv1,dv0dv2,a,b,c,x0,x1)) {
+			return (coplanarTriTri(n1,v0,v1,v2,u0,u1,u2));	//triangles are a co-planar
 		}
 
 		// compute interval for triangle 2 
 		FloatType d,e,f,y0,y1;
-		if (NEWCOMPUTE_INTERVALS(u0,u1,u2,v0,v1,v2,n1,up0,up1,up2,du0,du1,du2,du0du1,du0du2,d,e,f,y0,y1)) {
-			return (coplanar_tri_tri(n1,v0,v1,v2,u0,u1,u2));	//triangles are a co-planar
+		if (NewcomputeIntervals(u0,u1,u2,v0,v1,v2,n1,up0,up1,up2,du0,du1,du2,du0du1,du0du2,d,e,f,y0,y1)) {
+			return (coplanarTriTri(n1,v0,v1,v2,u0,u1,u2));	//triangles are a co-planar
 		}
 
 		FloatType xx,yy,xxyy,tmp;
@@ -479,8 +481,8 @@ namespace intersection {
 		isect2[0]=tmp+e*xx*y1;
 		isect2[1]=tmp+f*xx*y0;
 
-		SORT(isect1[0],isect1[1]);
-		SORT(isect2[0],isect2[1]);
+		sort(isect1[0],isect1[1]);
+		sort(isect2[0],isect2[1]);
 
 		if(isect1[1]<isect2[0] || isect2[1]<isect1[0]) return false;
 		return true;
@@ -489,7 +491,7 @@ namespace intersection {
 
 
 
-//
+//TODO: remove or restore dead code
 ////////////////////////////////////////////////////////
 //// Triangle ABBB: http://fileadmin.cs.lth.se/cs/Personal/Tomas_Akenine-Moller/code/tribox3.txt
 ////////////////////////////////////////////////////////

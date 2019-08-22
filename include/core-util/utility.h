@@ -7,6 +7,11 @@
 #include <sstream>
 #include <iomanip>
 
+#ifdef _WIN32
+#undef min
+#undef max
+#endif
+
 namespace ml
 {
 
@@ -68,12 +73,14 @@ namespace math
 		return x * x;
 	}
 
-	template <class T> inline T min(T A, T B) {
+	template <typename Type> 
+	inline Type min(Type A, Type B) {
 		if (A < B) { return A; }
 		else { return B; }
 	}
 
-	template <class T> inline T min(T A, T B, T C) {
+	template <class T> 
+	inline T min(T A, T B, T C) {
 		if (A < B && A < C) { return A; }
 		else if (B < C) { return B; }
 		else { return C; }
