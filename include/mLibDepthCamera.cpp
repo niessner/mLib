@@ -5,6 +5,11 @@
 //#include "ext-depthcamera/calibratedSensorData.h"	//this is obsolete
 //
 
+#ifdef LINUX
+using namespace std;
+#include <cmath>
+#include <cstdlib>
+#endif
 
 namespace stb {
 	#define STB_IMAGE_IMPLEMENTATION

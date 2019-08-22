@@ -379,8 +379,9 @@ namespace intersection {
 		const vec3<FloatType> &u1,
 		const vec3<FloatType> &u2) 
 	{
-		const bool USE_EPSILON_TEST = true;
-		const FloatType EPSILON = (FloatType)0.000001;
+		// NOTE: renamed from USE_EPSILON_TEST and EPSILON to avoid conflicts with triangleIntersection.cpp
+		const bool useEpsilonTest = true;
+		const FloatType epsilon = (FloatType)0.000001;
 
 		//compute plane equation of triangle(V0,V1,V2)
 		vec3<FloatType> e1 = v1 - v0;
@@ -396,10 +397,10 @@ namespace intersection {
 
 		//co-planarity robustness check
 //#if USE_EPSILON_TEST==TRUE
-		if (USE_EPSILON_TEST) {
-			if(math::abs(du0)<EPSILON) du0=(FloatType)0.0;
-			if(math::abs(du1)<EPSILON) du1=(FloatType)0.0;
-			if(math::abs(du2)<EPSILON) du2=(FloatType)0.0;
+		if (useEpsilonTest) {
+			if(math::abs(du0) < epsilon) du0=(FloatType)0.0;
+			if(math::abs(du1) < epsilon) du1=(FloatType)0.0;
+			if(math::abs(du2) < epsilon) du2=(FloatType)0.0;
 		}
 //#endif
 		FloatType du0du1 = du0*du1;
@@ -421,10 +422,10 @@ namespace intersection {
 		FloatType dv2 = (n2 | v2)+d2;
 
 //#if USE_EPSILON_TEST==TRUE
-		if (USE_EPSILON_TEST) {
-			if(math::abs(dv0)<EPSILON) dv0 = (FloatType)0.0;
-			if(math::abs(dv1)<EPSILON) dv1 = (FloatType)0.0;
-			if(math::abs(dv2)<EPSILON) dv2 = (FloatType)0.0;
+		if (useEpsilonTest) {
+			if(math::abs(dv0) < epsilon) dv0 = (FloatType)0.0;
+			if(math::abs(dv1) < epsilon) dv1 = (FloatType)0.0;
+			if(math::abs(dv2) < epsilon) dv2 = (FloatType)0.0;
 		}
 //#endif
 
