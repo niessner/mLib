@@ -542,7 +542,7 @@ namespace ml {
 
 		//! saves an array of binary m images
 		static void saveBinaryMImageArray(const std::string& filename, const void** data, unsigned int width, unsigned int height, unsigned int numImages = 1) {
-			if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinRGB") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
+			if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinrgb") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
 
 			std::ofstream file(filename, std::ios::binary);
 			if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);
@@ -573,7 +573,7 @@ namespace ml {
 
 		//! loads a binary array of m images
 		static void loadBinaryMImageArray(const std::string& filename, std::vector<void*>& data, unsigned int& width, unsigned int& height) {
-			if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinRGB") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
+			if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinrgb") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
 
 			std::ifstream file(filename, std::ios::binary);
 			if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);
