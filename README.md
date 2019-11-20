@@ -10,7 +10,7 @@ adai@cs.stanford.edu
 
 
 INSTALLATION:
-Make to check out mLib and mLibExternal on the same directory level; ideally, in you work folder. A typical file structure looks this:
+Make to check out mLib and [mLibExternal](http://kaldir.vc.in.tum.de/mLib/mLibExternal.zip) on the same directory level; ideally, in you work folder. A typical file structure looks this:
 E:\Work\mLib
 E:\Work\mLibExternal
 E:\Work\<project name>
@@ -28,6 +28,7 @@ We are also looking for active participation in maintaining and extending mLib. 
 
 
 Example of mLibInclude.h:
+```shell
 	#include "mLibCore.h"
 	#include "mLibD3D11.h"
 	#include "mLibD3D11Font.h"
@@ -40,10 +41,12 @@ Example of mLibInclude.h:
 	#include "mLibOpenMesh.h"
 	#include "mLibFreeImage.h"	//this must be included after OpenMesh; otherwise there is a crash
 	using namespace ml;
-
+```
 
 Example of mLibInclude.cpp:
+```shell
 	#include "mLibCore.cpp"
 	#include "mLibD3D11.cpp"
 	#include "mLibLodePNG.cpp"
 	#include "mLibZLib.cpp"
+```
