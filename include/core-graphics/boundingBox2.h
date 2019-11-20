@@ -42,6 +42,12 @@ namespace ml {
 			maxB = maxBound;
 		}
 
+		BoundingBox2(const BoundingBox2& other) {
+			reset();
+			minB = other.minB;
+			maxB = other.maxB;
+		}
+
 		//TODO
 		//explicit BoundingBox2(const ObjectOrientedBoundingBox2<FloatType> &oobb) {
 		//	reset();
