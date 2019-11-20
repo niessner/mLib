@@ -799,15 +799,14 @@ namespace ml {
 				if (newHeight > 1) factorY = 1.0f / (newHeight - 1);
 
 				if (bilinearInterpolate) {
-					throw MLIB_EXCEPTION("TODO implement without warning... it works what is below");
-					//for (unsigned int i = 0; i < newHeight; i++) {
-					//	for (unsigned int j = 0; j < newWidth; j++) {
-					//		const float x = (float)j * factorX;
-					//		const float y = (float)i * factorY;
-					//		T tmp = getPixelInterpolated(x, y);
-					//		res(j, i) = tmp;
-					//	}
-					//}
+					//throw MLIB_EXCEPTION("TODO implement without warning... it works what is below");
+					for (unsigned int i = 0; i < newHeight; i++) {
+						for (unsigned int j = 0; j < newWidth; j++) {
+							const float x = (float)j * factorX;
+							const float y = (float)i * factorY;
+							res(j, i) = getPixelInterpolated(x, y);
+						}
+					}
 				}
 				else {
 					for (unsigned int i = 0; i < newHeight; i++) {
