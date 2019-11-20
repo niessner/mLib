@@ -26,7 +26,7 @@ public:
 		m_bHasSRVs = false;
 	}
 
-	D3D11RenderTarget(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false) {
+	D3D11RenderTarget(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false, unsigned int sampleCount = 1, unsigned int sampleQuality = 0) {
 		m_graphics = nullptr;
 		m_width = 0;
 		m_height = 0;
@@ -44,7 +44,7 @@ public:
 
 		m_bHasSRVs = false;
 
-        init(g, width, height, formats, createSRVs);
+        init(g, width, height, formats, createSRVs, sampleCount, sampleQuality);
     }
 
 	//! copy constructor
@@ -127,10 +127,13 @@ public:
 
 
     // create a new render target with given width and height. Also creates an equal-sized depth buffer.
-	void init(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false) {
+	void init(GraphicsDevice &g, unsigned int width, unsigned int height, const std::vector<DXGI_FORMAT>& formats = std::vector < DXGI_FORMAT > {DXGI_FORMAT_R8G8B8A8_UNORM}, bool createSRVs = false, unsigned int sampleCount = 1, unsigned int sampleQuality = 0) {
 		m_graphics = &g.castD3D11();
 		m_width = width;
 		m_height = height;
+
+		m_sampleCount = sampleCount;
+		m_sampleQuality = sampleQuality;
 
 		m_textureFormats = formats;
 		m_bHasSRVs = createSRVs;
@@ -203,6 +206,8 @@ private:
 	D3D11GraphicsDevice* m_graphics;
 	unsigned int m_width;
 	unsigned int m_height;
+	unsigned int m_sampleCount;
+	unsigned int m_sampleQuality;
 
 	std::vector<DXGI_FORMAT>	m_textureFormats;
 
