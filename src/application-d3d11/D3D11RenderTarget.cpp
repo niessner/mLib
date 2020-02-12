@@ -184,9 +184,9 @@ namespace ml
 
 		ID3D11Texture2D* intermediateTexture;
 		device.CreateTexture2D(&desc, nullptr, &intermediateTexture);
-		context.ResolveSubresource(&(intermediateTexture[which]), 0, m_targets[which], 0, m_textureFormats[which]);
+		context.ResolveSubresource(intermediateTexture, 0, m_targets[which], 0, m_textureFormats[which]);
 		
-		context.CopyResource(m_captureTextures[which], &(intermediateTexture[which]));
+		context.CopyResource(m_captureTextures[which], intermediateTexture);
 
 		result.allocate(m_width, m_height);
 
