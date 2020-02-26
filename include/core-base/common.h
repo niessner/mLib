@@ -58,6 +58,7 @@
 #include <queue> 
 #include <random>
 #include <iomanip>
+#include <boost/serialization/array_wrapper.hpp>
 
 
 namespace boost {

@@ -377,6 +377,11 @@ namespace ml {
         TriMesh<FloatType> flatLoopSubdivision(float minEdgeLength) const;
         TriMesh<FloatType> flatLoopSubdivision(UINT iterations, float minEdgeLength) const;
 
+		//! Subdivides each face into four faces by splitting edges at their midpoint
+		TriMesh<FloatType> trivialMidpointSubdivision() const;
+
+		void removeDuplicateVertices();
+
         TriMesh<FloatType> flatten() const;
 
 		const std::vector<Vertex>& getVertices() const { return m_vertices; }
