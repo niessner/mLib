@@ -159,6 +159,7 @@ namespace ml
 	//force explicit template instantiation
 	template void D3D11RenderTarget::captureColorBuffer<vec4uc>(BaseImage<vec4uc>& result, unsigned int which);
 	template void D3D11RenderTarget::captureColorBuffer<vec4f>(BaseImage<vec4f>& result, unsigned int which);
+	template void D3D11RenderTarget::captureColorBuffer<uint>(BaseImage<uint>& result, unsigned int which);
 
 	template <class T>	void D3D11RenderTarget::captureColorBuffer(BaseImage<T>& result, unsigned int which)
 	{
@@ -168,6 +169,9 @@ namespace ml
 		}
 		else if (format == DXGI_FORMAT_R32G32B32A32_FLOAT) {
 			if (!std::is_same<vec4f, T>::value)		throw MLIB_EXCEPTION("incompatible image format");
+		}
+		else if (format == DXGI_FORMAT_R32_UINT) {
+			if (!std::is_same<uint, T>::value)		throw MLIB_EXCEPTION("incompatible image format");
 		}
 		else {
 			throw MLIB_EXCEPTION("unknown image format");
@@ -187,6 +191,7 @@ namespace ml
 		context.ResolveSubresource(intermediateTexture, 0, m_targets[which], 0, m_textureFormats[which]);
 		
 		context.CopyResource(m_captureTextures[which], intermediateTexture);
+		SAFE_RELEASE(intermediateTexture);
 
 		result.allocate(m_width, m_height);
 
