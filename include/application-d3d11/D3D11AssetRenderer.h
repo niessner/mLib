@@ -2,6 +2,14 @@
 #ifndef APPLICATION_D3D11_D3D11ASSETRENDERER_H_
 #define APPLICATION_D3D11_D3D11ASSETRENDERER_H_
 
+#include <core-math/matrix4x4.h>
+#include <core-math/vec4.h>
+#include <core-graphics/polygon.h>
+#include <application-base/graphicsDevice.h>
+#include <application-d3d11/D3D11TriMesh.h>
+#include <application-d3d11/D3D11ConstantBuffer.h>
+#include <application-d3d11/D3D11ShaderManager.h>
+
 namespace ml {
 
 struct AssetRendererConstantBuffer

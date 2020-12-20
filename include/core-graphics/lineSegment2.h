@@ -2,6 +2,9 @@
 #ifndef CORE_GRAPHICS_LINESEGMENT2_H_
 #define CORE_GRAPHICS_LINESEGMENT2_H_
 
+#include <core-graphics/lineSegment2.h>
+#include <core-math/vec2.h>
+
 namespace ml {
 
 template<class T>

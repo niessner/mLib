@@ -2,6 +2,9 @@
 #ifndef CORE_MESH_MESHDATA_INL_H_
 #define CORE_MESH_MESHDATA_INL_H_
 
+#include <iostream>
+#include <core-mesh/meshData.h>
+
 namespace ml {
 
 template<class FloatType>

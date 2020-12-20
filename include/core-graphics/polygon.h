@@ -2,6 +2,10 @@
 #ifndef CORE_GRAPHICS_POLYGON_H_
 #define CORE_GRAPHICS_POLYGON_H_
 
+#include <vector>
+#include "line2.h"
+#include "lineSegment2.h"
+
 namespace ml {
 
 template<class T>
@@ -10,9 +14,9 @@ struct Polygon
     static Polygon<T> clip(const Polygon<T> &sourcePoly, const Polygon<T> &clipPoly);
     static Polygon<T> clip(const Polygon<T> &sourcePoly, const Line2<T> &clipLine, const vec2<T> &clipCentroid);
 
-    vector< LineSegment2<T> > segments() const
+    std::vector< LineSegment2<T> > segments() const
     {
-        vector< LineSegment2<T> > result;
+        std::vector< LineSegment2<T> > result;
         if (points.size() <= 1)
             return result;
         for (UINT pointIndex = 0; pointIndex < points.size() - 1; pointIndex++)
@@ -51,7 +55,7 @@ struct Polygon
         return sum;
     }
 
-    vector< vec2<T> > points;
+    std::vector< vec2<T> > points;
 };
 
 typedef Polygon<float> Polygonf;

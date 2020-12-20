@@ -2,6 +2,10 @@
 #ifndef CORE_UTIL_PIPE_H_
 #define CORE_UTIL_PIPE_H_
 
+#include <string>
+#include <vector>
+#include <core-base/common.h>
+
 namespace ml
 {
 

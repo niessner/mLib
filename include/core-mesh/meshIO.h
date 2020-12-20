@@ -2,6 +2,10 @@
 #ifndef CORE_MESH_MESHIO_H_
 #define CORE_MESH_MESHIO_H_
 
+#include <string>
+#include <core-util/utility.h>
+#include <core-mesh/meshData.h>
+
 namespace ml {
 
 template <class FloatType>

@@ -1,3 +1,5 @@
+#include <application-d3d11/D3D11ShaderManager.h>
+#include <application-d3d11/D3D11GraphicsDevice.h>
 
 namespace ml {
 

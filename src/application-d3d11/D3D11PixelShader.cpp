@@ -1,3 +1,6 @@
+#include <application-d3d11/D3D11PixelShader.h>
+#include <application-d3d11/D3D11Utility.h>
+#include <application-d3d11/D3D11GraphicsDevice.h>
 
 void ml::D3D11PixelShader::init(
 	GraphicsDevice &g, 

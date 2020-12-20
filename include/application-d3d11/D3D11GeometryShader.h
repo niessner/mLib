@@ -2,6 +2,14 @@
 #ifndef APPLICATION_D3D11_D3D11GEOMETRYSHADER_H_
 #define APPLICATION_D3D11_D3D11GEOMETRYSHADER_H_
 
+#include <string>
+#include <vector>
+#include <utility>
+#include <d3d11.h>
+#include <application-base/graphicsAsset.h>
+#include <application-base/graphicsDevice.h>
+#include <application-d3d11/D3D11GeometryShader.h>
+
 namespace ml {
 
 	class D3D11GeometryShader : public GraphicsAsset

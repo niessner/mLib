@@ -2,6 +2,9 @@
 #ifndef CORE_GRAPHICS_RAY_H_
 #define CORE_GRAPHICS_RAY_H_
 
+#include <core-math/matrix4x4.h>
+#include <core-math/matrix3x3.h>
+
 namespace ml {
 
 

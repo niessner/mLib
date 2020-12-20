@@ -1,3 +1,14 @@
+#include <core-base/common.h>
+#include <core-util/stringUtil.h>
+#include <core-util/utility.h>
+#include <core-util/directory.h>
+#ifdef _WIN32
+#include <direct.h>
+#include <Windows.h>
+#elif defined(LINUX)
+#include <sys/stat.h>
+#endif
+
 namespace ml {
 
 namespace util
@@ -288,7 +299,7 @@ namespace util
 		return result;
 	}
 
-	UINT64 getFileSize(const std::string &filename)
+	size_t getFileSize(const std::string &filename)
 	{
 		BOOL success;
 		WIN32_FILE_ATTRIBUTE_DATA fileInfo;

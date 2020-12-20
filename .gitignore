@@ -1,3 +1,4 @@
+# test target output
 /test/testWindows/*.opensdf
 /test/testWindows/*.sdf
 /test/testWindows/x64/Debug/*.log
@@ -13,3 +14,9 @@
 /test/testWindows/x64/Debug/testCore.exe
 /test/testWindows/x64/Debug/testCore.ilk
 /test/testWindows/x64/Debug/testCore.pch
+
+#IDE files, common build folders
+.idea/
+build/
+cmake-build-debug/
+cmake-build-release/

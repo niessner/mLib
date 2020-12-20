@@ -1,3 +1,7 @@
+#include <vector>
+#include <ext-zlib/ZLibWrapper.h>
+#include <core-base/common.h>
+
 namespace ml
 {
 

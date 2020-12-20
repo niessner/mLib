@@ -2,6 +2,8 @@
 #ifndef CORE_MATH_MATHVECTOR_H_
 #define CORE_MATH_MATHVECTOR_H_
 
+#include <type_traits>
+
 namespace ml {
 
 /************************************************************************/

@@ -1,3 +1,6 @@
+#include <application-d3d11/D3D11Canvas2D.h>
+#include <core-math/vec2.h>
+#include <core-mesh/meshShapes.h>
 
 namespace ml {
 

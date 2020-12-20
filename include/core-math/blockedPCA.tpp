@@ -1,5 +1,7 @@
 #include <string>
 
+#include <core-math/blockedPCA.h>
+
 template<class T>
 void BlockedPCA<T>::init(const DenseMatrix<T> &points, size_t subsetCount, const EigenSolverFunc &eigenSolver)
 {

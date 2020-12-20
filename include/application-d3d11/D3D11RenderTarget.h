@@ -2,6 +2,12 @@
 #ifndef APPLICATION_D3D11_D3D11RENDERTARGET_H_
 #define APPLICATION_D3D11_D3D11RENDERTARGET_H_
 
+#include <vector>
+#include <d3d11.h>
+#include <application-base/graphicsAsset.h>
+#include <application-base/graphicsDevice.h>
+#include <application-d3d11/D3D11GraphicsDevice.h>
+
 namespace ml {
 
 class D3D11RenderTarget : public GraphicsAsset
@@ -88,7 +94,7 @@ public:
 
 		m_bHasSRVs = false;
 
-		swap(*this, other);
+		this->swap_with(other);
 	}
 
 
@@ -103,26 +109,12 @@ public:
 
 	//! move operator
 	void operator=(D3D11RenderTarget&& other) {
-		swap(*this, other);
+		this->swap_with(other);
 	}
-
-
 
 	//! adl swap
 	friend void swap(D3D11RenderTarget& a, D3D11RenderTarget& b) {
-		std::swap(a.m_graphics, b.m_graphics);
-		std::swap(a.m_width, b.m_width);
-		std::swap(a.m_height, b.m_height);
-		std::swap(a.m_textureFormats, b.m_textureFormats);
-		std::swap(a.m_targets, b.m_targets);
-		std::swap(a.m_targetsRTV, b.m_targetsRTV);
-		std::swap(a.m_targetsSRV, b.m_targetsSRV);
-		std::swap(a.m_depthStencil, b.m_depthStencil);
-		std::swap(a.m_depthStencilDSV, b.m_depthStencilDSV);
-		std::swap(a.m_depthStencilSRV, b.m_depthStencilSRV);
-		std::swap(a.m_captureTextures, b.m_captureTextures);
-		std::swap(a.m_captureDepth, b.m_captureDepth);
-		std::swap(a.m_bHasSRVs, b.m_bHasSRVs);
+		a.swap_with(b);
 	}
 
 
@@ -223,6 +215,22 @@ private:
     ID3D11Texture2D* m_captureDepth;   
     
 	bool m_bHasSRVs;
+
+	void swap_with(D3D11RenderTarget& other) {
+		std::swap(this->m_graphics, other.m_graphics);
+		std::swap(this->m_width, other.m_width);
+		std::swap(this->m_height, other.m_height);
+		std::swap(this->m_textureFormats, other.m_textureFormats);
+		std::swap(this->m_targets, other.m_targets);
+		std::swap(this->m_targetsRTV, other.m_targetsRTV);
+		std::swap(this->m_targetsSRV, other.m_targetsSRV);
+		std::swap(this->m_depthStencil, other.m_depthStencil);
+		std::swap(this->m_depthStencilDSV, other.m_depthStencilDSV);
+		std::swap(this->m_depthStencilSRV, other.m_depthStencilSRV);
+		std::swap(this->m_captureTextures, other.m_captureTextures);
+		std::swap(this->m_captureDepth, other.m_captureDepth);
+		std::swap(this->m_bHasSRVs, other.m_bHasSRVs);
+	}
 };
 
 }  // namespace ml

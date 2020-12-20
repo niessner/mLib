@@ -1,6 +1,9 @@
 #ifndef CORE_UTIL_DIRECTORY_H_
 #define CORE_UTIL_DIRECTORY_H_
 
+#include <algorithm>
+#include "stringUtil.h"
+
 namespace ml
 {
 

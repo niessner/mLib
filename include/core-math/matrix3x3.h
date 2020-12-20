@@ -2,6 +2,10 @@
 #ifndef CORE_MATH_MATRIX3X3_H_
 #define CORE_MATH_MATRIX3X3_H_
 
+#include <core-util/binaryDataSerialize.h>
+#include <core-math/vec3.h>
+#include "eigenSolver.h"
+
 namespace ml {
 
 template <class FloatType>

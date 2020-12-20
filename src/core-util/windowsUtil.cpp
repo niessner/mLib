@@ -4,6 +4,8 @@
 
 #include <windows.h>
 #include <strsafe.h>
+#include <string>
+#include <core-util/stringUtil.h>
 
 namespace ml {
 

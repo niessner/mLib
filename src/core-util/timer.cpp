@@ -1,3 +1,10 @@
+#include <core-util/timer.h>
+#if defined(_WIN32)
+#include <Windows.h>
+#elif defined(LINUX)
+#include <sys/time.h>
+#include <core-base/common.h>
+#endif
 
 namespace ml {
 

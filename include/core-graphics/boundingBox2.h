@@ -2,12 +2,16 @@
 #ifndef CORE_GRAPHICS_BOUNDINGBOX2_H_
 #define CORE_GRAPHICS_BOUNDINGBOX2_H_
 
-#include "ray.h"
-
 #include <cfloat>
 #include <vector>
 #include <cmath>
 #include <iostream>
+#include <core-math/vec2.h>
+#include <core-math/matrix2x2.h>
+#include "lineSegment2.h"
+#include "lineSegment3.h"
+#include "ray.h"
+#include "intersection.h"
 
 namespace ml {
 

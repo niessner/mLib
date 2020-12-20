@@ -1,6 +1,10 @@
 
 #ifdef _WIN32
 
+#include <core-util/UIConnection.h>
+#include <iostream>
+#include <core-util/utility.h>
+
 namespace ml {
 
 void UIConnection::init(const std::string &executableFile, const std::string &pipeBaseName)

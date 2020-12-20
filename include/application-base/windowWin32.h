@@ -3,6 +3,7 @@
 #define APPLICATION_BASE_WINDOWWIN32_H_
 
 #include <windows.h>
+#include <string>
 
 namespace ml {
 

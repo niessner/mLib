@@ -4,6 +4,8 @@
 #ifdef _WIN32
 
 #include <string>
+#include <vector>
+#include <core-util/pipe.h>
 
 namespace ml {
 

@@ -2,6 +2,12 @@
 #ifndef CORE_UTIL_BINARYDATASTREAM_H_
 #define CORE_UTIL_BINARYDATASTREAM_H_
 
+#include <type_traits>
+#include <core-base/common.h>
+#include "binaryDataCompressor.h"
+#include "binaryDataBuffer.h"
+
+
 namespace ml
 {
 

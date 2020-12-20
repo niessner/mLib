@@ -2,6 +2,9 @@
 #ifndef APPLICATION_D3D11_D3D11TEXTURE3D_H_
 #define APPLICATION_D3D11_D3D11TEXTURE3D_H_
 
+#include <application-base/graphicsDevice.h>
+#include <core-base/grid3.h>
+
 namespace ml {
 
 template<class T>

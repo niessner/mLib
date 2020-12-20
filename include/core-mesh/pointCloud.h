@@ -1,6 +1,15 @@
 #ifndef CORE_MESH_POINTCLOUD_H_
 #define CORE_MESH_POINTCLOUD_H_
 
+#include <vector>
+#include <core-math/vec2.h>
+#include <core-math/vec3.h>
+#include <core-math/vec4.h>
+#include <core-math/matrix4x4.h>
+#include <core-base/binaryGrid3.h>
+#include <core-util/sparseGrid3.h>
+#include <core-graphics/boundingBox3.h>
+
 namespace ml {
 
 template <class FloatType>

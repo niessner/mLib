@@ -1,6 +1,10 @@
 #ifndef CORE_MESH_MATERIAL_H_
 #define CORE_MESH_MATERIAL_H_
 
+#include <core-math/vec4.h>
+#include <string>
+#include <core-util/binaryDataStream.h>
+
 namespace ml {
 
 template<class FloatType>

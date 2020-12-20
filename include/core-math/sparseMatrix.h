@@ -278,6 +278,4 @@ typedef SparseMatrix<double> SparseMatrixd;
 
 }  // namespace ml
 
-#include "sparseMatrix.cpp"
-
 #endif  // CORE_MATH_SPARSEMATRIX_H_

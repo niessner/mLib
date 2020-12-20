@@ -1,3 +1,4 @@
+#include <core-math/vec3.h>
 
 namespace ml {
 

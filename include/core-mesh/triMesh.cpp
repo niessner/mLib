@@ -2,6 +2,8 @@
 #ifndef CORE_MESH_TRIMESH_INL_H_
 #define CORE_MESH_TRIMESH_INL_H_
 
+#include <core-mesh/triMesh.h>
+
 namespace ml {
 
 	template<class FloatType>

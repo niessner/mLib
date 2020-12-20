@@ -1,6 +1,16 @@
 #ifndef CORE_MESH_MESHDATA_H_
 #define CORE_MESH_MESHDATA_H_
 
+#include <unordered_map>
+#include <type_traits>
+#include <core-util/sparseGrid3.h>
+#include <core-math/matrix4x4.h>
+#include <core-math/vec2.h>
+#include <core-math/vec3.h>
+#include <core-math/vec4.h>
+#include <core-graphics/boundingBox3.h>
+#include "material.h"
+
 namespace ml {
 
 

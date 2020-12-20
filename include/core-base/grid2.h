@@ -2,6 +2,8 @@
 #ifndef CORE_BASE_GRID2D_H_
 #define CORE_BASE_GRID2D_H_
 
+#include <core-math/vec2.h>
+
 namespace ml
 {
 	template <class T> class Grid2

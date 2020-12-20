@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include <cassert>
+#include <core-util/binaryDataSerialize.h>
 
 namespace ml {
 

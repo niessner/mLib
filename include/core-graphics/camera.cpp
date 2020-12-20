@@ -1,3 +1,6 @@
+#include <core-graphics/camera.h>
+#include <core-math/vec3.h>
+#include <core-math/matrix4x4.h>
 
 namespace ml {
 

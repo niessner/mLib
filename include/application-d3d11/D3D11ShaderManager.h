@@ -2,6 +2,12 @@
 #ifndef APPLICATION_D3D11_D3D11SHADERMANAGER_H_
 #define APPLICATION_D3D11_D3D11SHADERMANAGER_H_
 
+#include <core-base/common.h>
+#include <application-base/graphicsDevice.h>
+#include <application-d3d11/D3D11PixelShader.h>
+#include <application-d3d11/D3D11GeometryShader.h>
+#include <application-d3d11/D3D11VertexShader.h>
+
 namespace ml {
 
 	struct D3D11ShaderPair

@@ -1,6 +1,14 @@
 #ifndef CORE_MESH_TRIMESH_H_
 #define CORE_MESH_TRIMESH_H_
 
+#include <core-math/vec3.h>
+#include <core-math/vec4.h>
+#include <core-graphics/boundingBox3.h>
+#include <core-base/binaryGrid3.h>
+#include <core-math/matrix4x4.h>
+#include <core-graphics/intersection.h>
+#include "meshData.h"
+
 namespace ml {
 
 	template<class FloatType>

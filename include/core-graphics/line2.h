@@ -2,6 +2,8 @@
 #ifndef CORE_GRAPHICS_LINE2D_H_
 #define CORE_GRAPHICS_LINE2D_H_
 
+#include "lineSegment2.h"
+
 namespace ml {
 
 template<class T>

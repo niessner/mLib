@@ -1,3 +1,7 @@
+#include <string>
+#include <vector>
+#include <core-math/PCA.h>
+
 namespace ml {
 
 template <class T>
@@ -41,8 +45,6 @@ private:
 	std::vector< Subset > _subsets;
 	size_t _totalDimensions;
 };
-
-#include "blockedPCA.cpp"
 
 typedef BlockedPCA<float> BlockedPCAf;
 typedef BlockedPCA<double> BlockedPCAd;

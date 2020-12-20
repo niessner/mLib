@@ -4,6 +4,8 @@
 
 namespace ml {
 
+#include <core-mesh/meshIO.h>
+
 template <class FloatType>
 void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<FloatType>& mesh, 
 	PlyProperties* properties /*= nullptr*/)

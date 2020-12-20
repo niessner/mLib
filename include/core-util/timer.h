@@ -3,6 +3,9 @@
 #ifndef CORE_UTIL_TIMER_H_
 #define CORE_UTIL_TIMER_H_
 
+#include <string>
+#include <iostream>
+
 namespace ml {
 
 class Timer {

@@ -1,3 +1,7 @@
+#include <core-mesh/meshShapes.h>
+#include <core-mesh/triMesh.h>
+#include <core-graphics/orientedBoundingBox3.h>
+
 namespace ml {
 
 	template<class FloatType>

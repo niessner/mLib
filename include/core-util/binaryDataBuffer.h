@@ -6,6 +6,7 @@
 #include <list>
 #include <fstream>
 #include <string>
+#include "utility.h"
 
 namespace ml
 {

@@ -2,6 +2,12 @@
 #ifndef APPLICATION_D3D11_D3D11UTILITY_H_
 #define APPLICATION_D3D11_D3D11UTILITY_H_
 
+#include <string>
+#include <vector>
+#include <utility>
+#include <d3d11.h>
+
+
 namespace ml {
 
 class D3D11Utility

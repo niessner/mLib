@@ -1,3 +1,6 @@
+#include <application-d3d11/D3D11VertexShader.h>
+#include <application-d3d11/D3D11Utility.h>
+#include <application-d3d11/D3D11TriMesh.h>
 
 void ml::D3D11VertexShader::init(
 	GraphicsDevice &g,

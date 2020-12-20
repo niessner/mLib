@@ -3,6 +3,10 @@
 #define _BASEIMAGE_H_
 
 #include <utility>
+#include <core-math/vec3.h>
+#include <core-math/vec4.h>
+#include <core-util/stringUtil.h>
+#include <core-graphics/boundingBox2.h>
 #include "baseImageHelper.h"
 
 namespace ml {

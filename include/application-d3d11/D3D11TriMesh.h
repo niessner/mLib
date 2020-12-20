@@ -2,6 +2,16 @@
 #ifndef APPLICATION_D3D11_D3D11TRIMESH_H_
 #define APPLICATION_D3D11_D3D11TRIMESH_H_
 
+#include <d3d11.h>
+#include <core-mesh/triMesh.h>
+#include <application-base/graphicsAsset.h>
+#include <application-base/graphicsDevice.h>
+#include <application-d3d11/D3D11GraphicsDevice.h>
+#include <core-mesh/meshData.h>
+#include <core-mesh/triMesh.h>
+#include <core-graphics/boundingBox3.h>
+
+
 namespace ml {
 
 class D3D11TriMesh : public GraphicsAsset

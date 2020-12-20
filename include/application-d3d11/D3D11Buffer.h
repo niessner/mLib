@@ -2,6 +2,10 @@
 #ifndef APPLICATION_D3D11_D3D11BUFFER_H_
 #define APPLICATION_D3D11_D3D11BUFFER_H_
 
+#include <vector>
+#include <application-base/graphicsDevice.h>
+#include <d3d11.h>
+
 namespace ml {
 
 	template<class T>
@@ -118,7 +122,5 @@ namespace ml {
 	};
 
 }  // namespace ml
-
-#include "D3D11Buffer.cpp"
 
 #endif  // APPLICATION_D3D11_D3D11Buffer_H_

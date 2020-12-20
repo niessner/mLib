@@ -1,6 +1,12 @@
 #ifndef CORE_MESH_MESHSHAPES_H_
 #define CORE_MESH_MESHSHAPES_H_
 
+#include <core-math/vec2.h>
+#include <core-math/vec4.h>
+#include <core-graphics/boundingBox3.h>
+#include <core-graphics/orientedBoundingBox3.h>
+#include <core-mesh/triMesh.h>
+
 namespace ml {
 
 template<class FloatType>

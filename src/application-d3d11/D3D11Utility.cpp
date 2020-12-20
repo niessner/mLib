@@ -1,3 +1,14 @@
+#include <tchar.h>
+#include <string>
+#include <assert.h>
+#include <d3d11.h>
+#include <atlbase.h>
+#include <atlconv.h>
+#include <core-base/common.h>
+#include <core-util/utility.h>
+#include <application-d3d11/D3D11Utility.h>
+#include <d3dcompiler.h>
+
 
 ID3DBlob* ml::D3D11Utility::CompileShader(const std::string& filename, const std::string& entryPoint, const std::string& shaderModel, const std::vector<std::pair<std::string, std::string>>& macros)
 {
@@ -81,11 +92,12 @@ ID3DBlob* ml::D3D11Utility::CompileShader(const std::string& filename, const std
 #endif
 
 		//D3DX version
-		HRESULT hr = D3DX11CompileFromFile(s.c_str(), shader_macros, nullptr, entryPoint.c_str(), shaderModel.c_str(), shaderFlags, 0, nullptr, &blob, &errorBlob, nullptr);
+		//HRESULT hr = D3DX11CompileFromFile(s.c_str(), shader_macros, nullptr, entryPoint.c_str(), shaderModel.c_str(), shaderFlags, 0, nullptr, &blob, &errorBlob, nullptr);
 
-		//TODO check that this is currectly working with the shaer pre-compiler // compile-to-file	
+		//TODO check that this is currectly working with the shader pre-compiler // compile-to-file	
 		// D3DX is deprecated, so I've switched over to D3DCompileFromFile, which may change the dependencies you need for D3D apps.
-		//HRESULT hr = D3DCompileFromFile(s.c_str(), shader_macros, nullptr, entryPoint.c_str(), shaderModel.c_str(), shaderFlags, 0, &blob, &errorBlob);
+		CA2W unicodeStr(s.c_str());
+		HRESULT hr = D3DCompileFromFile(unicodeStr, shader_macros, nullptr, entryPoint.c_str(), shaderModel.c_str(), shaderFlags, 0, &blob, &errorBlob);
 		
 		if (FAILED(hr)) {
 			std::string errorBlobText;
