@@ -16,6 +16,7 @@ namespace ml {
 			Vertex() : position(vec3<FloatType>::origin), normal(vec3<FloatType>::origin), color(vec4<FloatType>::origin), texCoord(vec2<FloatType>::origin) { }
 			Vertex(const vec3<FloatType>& _position) : position(_position) { }
 			Vertex(const vec3<FloatType>& _p, const vec3<FloatType>& _n) : position(_p), normal(_n) { }
+			Vertex(const vec3<FloatType>& _p, const vec3<FloatType>& _n, const vec4<FloatType>& _c) : position(_p), normal(_n), color(_c) { }
 			Vertex(const vec3<FloatType>& _p, const vec3<FloatType>& _n, const vec4<FloatType>& _c, const vec2<FloatType>& _t) : position(_p), normal(_n), color(_c), texCoord(_t) { }
 
 			Vertex operator*(FloatType t) const {
@@ -437,6 +438,9 @@ namespace ml {
 		}
 		void setHasColors(bool b) {
 			m_bHasColors = b;
+		}
+		void setHasNormals(bool b) {
+			m_bHasNormals = b;
 		}
 
 
