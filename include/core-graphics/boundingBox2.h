@@ -22,7 +22,6 @@ namespace ml {
 		BoundingBox2(void) {
 			reset();
 		}
-		BoundingBox2(const BoundingBox2& other) : minB(other.minB), maxB(other.maxB) {}
 
 		BoundingBox2(const std::vector< vec2<FloatType> >& verts) {
 			reset();
