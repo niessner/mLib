@@ -49,8 +49,14 @@ public:
 
 			//iterator over all indices within a face
 			template<bool is_const_iterator = true>
-			class const_noconst_iterator : public std::iterator<std::random_access_iterator_tag, unsigned int> {
+			class const_noconst_iterator {
 			public:
+				using difference_type = std::ptrdiff_t;
+				using value_type = unsigned int;
+				using pointer = unsigned int*;
+				using reference = unsigned int&;
+				using iterator_category = std::random_access_iterator_tag;
+
 				//typedef typename std::conditional<is_const_iterator, const Indices*, Indices*>::type IndicesPtr;
 				//typedef typename std::conditional<is_const_iterator, const Indices&, Indices&>::type IndicesRef;
 				typedef typename std::conditional<is_const_iterator, const Face*, Face*>::type FacePtr;
@@ -251,8 +257,14 @@ public:
 
 		//iterator over all faces
 		template<bool is_const_iterator = true>
-		class const_noconst_iterator : public std::iterator<std::random_access_iterator_tag, Face> {
+		class const_noconst_iterator {
 		public:
+			using difference_type = std::ptrdiff_t;
+			using value_type = Face;
+			using pointer = Face*;
+			using reference = Face&;
+			using iterator_category = std::random_access_iterator_tag;
+
 			typedef typename std::conditional<is_const_iterator, const Indices*, Indices*>::type IndicesPtr;
 			typedef typename std::conditional<is_const_iterator, const Indices&, Indices&>::type IndicesRef;
 			//typedef typename std::conditional<is_const_iterator, const Face*, Face*>::type FacePtr;

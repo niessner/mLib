@@ -155,6 +155,26 @@ namespace ml {
 		UnregisterClass(className.c_str(), m_class.hInstance);
 	}
 
+	void ml::WindowWin32::resize(UINT newWidth, UINT newHeight)
+	{
+		RECT rect;
+		GetClientRect(m_handle, &rect);
+		rect.right = rect.left + newWidth;
+		rect.bottom = rect.top + newHeight;
+
+		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+
+		SetWindowPos(
+			m_handle,
+			HWND_TOP,
+			rect.left,
+			rect.top,
+			rect.right - rect.left,
+			rect.bottom - rect.top,
+			SWP_NOMOVE | SWP_NOOWNERZORDER
+		);
+	}
+
 	UINT ml::WindowWin32::getWidth() const
 	{
 		RECT rect;

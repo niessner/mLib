@@ -49,8 +49,8 @@ namespace ml
 			renderDesc.ArraySize = 1;
 			//renderDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 			renderDesc.Format = m_textureFormats[i];
-			renderDesc.SampleDesc.Count = 1;
-			renderDesc.SampleDesc.Quality = 0;
+			renderDesc.SampleDesc.Count = m_sampleCount;
+			renderDesc.SampleDesc.Quality = m_sampleQuality;
 			renderDesc.Usage = D3D11_USAGE_DEFAULT;
 			renderDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
 			if (hasSRVs()) renderDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
@@ -66,6 +66,8 @@ namespace ml
 			renderDesc.BindFlags = 0;
 			renderDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 			renderDesc.Usage = D3D11_USAGE_STAGING;
+			renderDesc.SampleDesc.Count = 1;
+			renderDesc.SampleDesc.Quality = 0;
 			D3D_VALIDATE(device.CreateTexture2D(&renderDesc, nullptr, &m_captureTextures[i]));
 		}
 
@@ -77,8 +79,8 @@ namespace ml
 		depthDesc.ArraySize = 1;
 		//depthDesc.Format = DXGI_FORMAT_D32_FLOAT;	//we just assume the depth buffer to always have 32 bit
 		depthDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-		depthDesc.SampleDesc.Count = 1;
-		depthDesc.SampleDesc.Quality = 0;
+		depthDesc.SampleDesc.Count = m_sampleCount;
+		depthDesc.SampleDesc.Quality = m_sampleQuality;
 		depthDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		if (hasSRVs()) depthDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
@@ -90,14 +92,14 @@ namespace ml
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthViewDSVDesc;
 		depthViewDSVDesc.Flags = 0;
 		depthViewDSVDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		depthViewDSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthViewDSVDesc.ViewDimension = (m_sampleCount > 1) ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthViewDSVDesc.Texture2D.MipSlice = 0;
 		D3D_VALIDATE(device.CreateDepthStencilView(m_depthStencil, &depthViewDSVDesc, &m_depthStencilDSV));
 
 		// Create the shader resource view
 		D3D11_SHADER_RESOURCE_VIEW_DESC depthViewSRVDesc;
 		depthViewSRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
-		depthViewSRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		depthViewSRVDesc.ViewDimension = (m_sampleCount > 1) ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
 		depthViewSRVDesc.Texture2D.MipLevels = 1;
 		depthViewSRVDesc.Texture2D.MostDetailedMip = 0;
 		if (hasSRVs())	D3D_VALIDATE(device.CreateShaderResourceView(m_depthStencil, &depthViewSRVDesc, &m_depthStencilSRV));	// create the shader resource view
@@ -107,6 +109,8 @@ namespace ml
 		depthDesc.BindFlags = 0;
 		depthDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 		depthDesc.Usage = D3D11_USAGE_STAGING;
+		depthDesc.SampleDesc.Count = 1;
+		depthDesc.SampleDesc.Quality = 0;
 		D3D_VALIDATE(device.CreateTexture2D(&depthDesc, nullptr, &m_captureDepth));
 	}
 
@@ -155,6 +159,7 @@ namespace ml
 	//force explicit template instantiation
 	template void D3D11RenderTarget::captureColorBuffer<vec4uc>(BaseImage<vec4uc>& result, unsigned int which);
 	template void D3D11RenderTarget::captureColorBuffer<vec4f>(BaseImage<vec4f>& result, unsigned int which);
+	template void D3D11RenderTarget::captureColorBuffer<uint>(BaseImage<uint>& result, unsigned int which);
 
 	template <class T>	void D3D11RenderTarget::captureColorBuffer(BaseImage<T>& result, unsigned int which)
 	{
@@ -165,12 +170,28 @@ namespace ml
 		else if (format == DXGI_FORMAT_R32G32B32A32_FLOAT) {
 			if (!std::is_same<vec4f, T>::value)		throw MLIB_EXCEPTION("incompatible image format");
 		}
+		else if (format == DXGI_FORMAT_R32_UINT) {
+			if (!std::is_same<uint, T>::value)		throw MLIB_EXCEPTION("incompatible image format");
+		}
 		else {
 			throw MLIB_EXCEPTION("unknown image format");
 		}
 
-		auto &context = m_graphics->getContext();
-		context.CopyResource(m_captureTextures[which], m_targets[which]);
+		D3D11_TEXTURE2D_DESC desc;
+		m_targets[which]->GetDesc(&desc);
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.Usage = D3D11_USAGE_DEFAULT;
+
+		auto& context = m_graphics->getContext();
+		auto& device = m_graphics->getDevice();
+
+		ID3D11Texture2D* intermediateTexture;
+		device.CreateTexture2D(&desc, nullptr, &intermediateTexture);
+		context.ResolveSubresource(intermediateTexture, 0, m_targets[which], 0, m_textureFormats[which]);
+		
+		context.CopyResource(m_captureTextures[which], intermediateTexture);
+		SAFE_RELEASE(intermediateTexture);
 
 		result.allocate(m_width, m_height);
 

@@ -293,7 +293,7 @@ template <class FloatType> class Quaternion {
 		vec3<FloatType> m_Imag;	//! the imaginary part of the quaternion
 
 		//! read a quaternion from a stream
-		template <class t> friend std::istream& operator>> ( std::istream& s, Quaternion<FloatType>& q );
+		template <class FloatType> friend std::istream& operator>> ( std::istream& s, Quaternion<FloatType>& q );
 
 		static const FloatType eps;
 	};

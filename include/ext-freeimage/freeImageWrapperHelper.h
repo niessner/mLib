@@ -505,6 +505,28 @@ template<> inline void convertToFLOAT4(vec4f& output, const vec4f& input) {
 	output.w = input[3];
 }
 
+// FLOAT3
+template<class T> inline void convertToFLOAT3(vec3f& output, const T& input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+
+template<> inline void convertToFLOAT3(vec3f& output, const vec3f& input) {
+	output.x = input[0];
+	output.y = input[1];
+	output.z = input[2];
+}
+
+// FLOAT
+template<class T> inline void convertToFLOAT(float& output, const T& input) {
+	throw MLIB_EXCEPTION("Invalid Data Conversion");
+	//static_assert(false, "Function should never be called");
+}
+
+template<> inline void convertToFLOAT(float& output, const float& input) {
+	output = input;
+}
+
 } // namespace
 
 #endif

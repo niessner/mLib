@@ -542,7 +542,7 @@ namespace ml {
 
 		//! saves an array of binary m images
 		static void saveBinaryMImageArray(const std::string& filename, const void** data, unsigned int width, unsigned int height, unsigned int numImages = 1) {
-			if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinRGB") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
+			if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinrgb") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
 
 			std::ofstream file(filename, std::ios::binary);
 			if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);
@@ -573,7 +573,7 @@ namespace ml {
 
 		//! loads a binary array of m images
 		static void loadBinaryMImageArray(const std::string& filename, std::vector<void*>& data, unsigned int& width, unsigned int& height) {
-			if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinRGB") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
+			if (util::getFileExtension(filename) != "mbindepth" && util::getFileExtension(filename) != "mbinrgb") throw MLIB_EXCEPTION("invalid file extension" + util::getFileExtension(filename));
 
 			std::ifstream file(filename, std::ios::binary);
 			if (!file.is_open())	throw std::ios::failure(__FUNCTION__ + std::string(": could not open file ") + filename);
@@ -799,15 +799,14 @@ namespace ml {
 				if (newHeight > 1) factorY = 1.0f / (newHeight - 1);
 
 				if (bilinearInterpolate) {
-					throw MLIB_EXCEPTION("TODO implement without warning... it works what is below");
-					//for (unsigned int i = 0; i < newHeight; i++) {
-					//	for (unsigned int j = 0; j < newWidth; j++) {
-					//		const float x = (float)j * factorX;
-					//		const float y = (float)i * factorY;
-					//		T tmp = getPixelInterpolated(x, y);
-					//		res(j, i) = tmp;
-					//	}
-					//}
+					//throw MLIB_EXCEPTION("TODO implement without warning... it works what is below");
+					for (unsigned int i = 0; i < newHeight; i++) {
+						for (unsigned int j = 0; j < newWidth; j++) {
+							const float x = (float)j * factorX;
+							const float y = (float)i * factorY;
+							res(j, i) = getPixelInterpolated(x, y);
+						}
+					}
 				}
 				else {
 					for (unsigned int i = 0; i < newHeight; i++) {

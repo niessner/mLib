@@ -219,6 +219,119 @@ namespace ml {
 		return result;
 	}
 
+	template<class FloatType>
+	TriMesh<FloatType> TriMesh<FloatType>::trivialMidpointSubdivision() const {
+		std::vector<Vertex> vertices = getVertices();
+		std::vector<vec3ui> faces = getIndices();
+
+		UINT numVertices = (UINT)vertices.size();
+		UINT numFaces = (UINT)faces.size();
+
+		vertices.reserve(numVertices + numFaces * 3);
+		faces.reserve(numFaces * 4);
+
+		for (UINT i = 0; i < numFaces; i++) {
+			// Current face which we are splitting
+			vec3ui& fi = faces[i];
+
+			// Vertices of current face
+			UINT v0_index = fi[0];
+			UINT v1_index = fi[1];
+			UINT v2_index = fi[2];
+
+			const Vertex& v0 = vertices[v0_index];
+			const Vertex& v1 = vertices[v1_index];
+			const Vertex& v2 = vertices[v2_index];
+
+			// Three new vertices (midpoints of the edges)
+			Vertex mp01, mp12, mp02;
+
+			mp01.position = (v0.position + v1.position) / FloatType(2.0);
+			if (hasColors()) mp01.color = (v0.color + v1.color) / FloatType(2.0);
+			if (hasNormals()) mp01.normal = (v0.normal + v1.normal) / FloatType(2.0);
+			if (hasTexCoords()) mp01.texCoord = (v0.texCoord + v1.texCoord) / FloatType(2.0);
+
+			mp12.position = (v1.position + v2.position) / FloatType(2.0);
+			if (hasColors()) mp12.color = (v1.color + v2.color) / FloatType(2.0);
+			if (hasNormals()) mp12.normal = (v1.normal + v2.normal) / FloatType(2.0);
+			if (hasTexCoords()) mp12.texCoord = (v1.texCoord + v2.texCoord) / FloatType(2.0);
+
+			mp02.position = (v0.position + v2.position) / FloatType(2.0);
+			if (hasColors()) mp02.color = (v0.color + v2.color) / FloatType(2.0);
+			if (hasNormals()) mp02.normal = (v0.normal + v2.normal) / FloatType(2.0);
+			if (hasTexCoords()) mp02.texCoord = (v0.texCoord + v2.texCoord) / FloatType(2.0);
+
+			// Push the midpoints into the vertices vector
+			vertices.push_back(mp01);
+			vertices.push_back(mp12);
+			vertices.push_back(mp02);
+
+			// Update fi and add new faces
+			UINT mp01_index = vertices.size() - 3;
+			UINT mp12_index = vertices.size() - 2;
+			UINT mp02_index = vertices.size() - 1;
+
+			fi[0] = v0_index; fi[1] = mp01_index; fi[2] = mp02_index;
+
+			// Add the new faces
+			faces.push_back(vec3ui(v1_index, mp12_index, mp01_index));
+			faces.push_back(vec3ui(v2_index, mp02_index, mp12_index));
+			faces.push_back(vec3ui(mp12_index, mp02_index, mp01_index));
+		}
+
+		TriMesh<FloatType> result(vertices, faces, false, true, true, true);
+		result.removeDuplicateVertices();
+		return result;
+	}
+
+	template<class FloatType>
+	void TriMesh<FloatType>::removeDuplicateVertices() {
+		UINT numVertices = (UINT)m_vertices.size();
+
+		struct vec3compare {
+			bool operator()(const Vertex& v0, const Vertex& v1) const {
+				if (v0.position[0] < v1.position[0]) return true;
+				if (v0.position[0] > v1.position[0]) return false;
+				if (v0.position[1] < v1.position[1]) return true;
+				if (v0.position[1] > v1.position[1]) return false;
+				if (v0.position[2] < v1.position[2]) return true;
+
+				return false;
+			}
+		};
+
+		std::map<Vertex, UINT, vec3compare> vertexMap;
+
+		std::vector<UINT> vertexLookUp;	vertexLookUp.resize(numVertices);
+		std::vector<Vertex> newVertices; newVertices.reserve(numVertices);
+
+		unsigned int count = 0;
+		for (size_t i = 0; i < numVertices; i++) {
+			const Vertex& vertex = m_vertices[i];
+
+			auto it = vertexMap.find(vertex);
+
+			if (it != vertexMap.end()) {
+				vertexLookUp[i] = it->second;
+			}
+			else {
+				vertexMap.insert(std::make_pair(vertex, count));
+				newVertices.push_back(vertex);
+				vertexLookUp[i] = count;
+				count++;
+			}
+		}
+
+		// Update vertices
+		m_vertices = newVertices;
+
+		// Update faces
+		for (vec3ui& index : m_indices) {
+			index[0] = vertexLookUp[index[0]];
+			index[1] = vertexLookUp[index[1]];
+			index[2] = vertexLookUp[index[2]];
+		}
+	}
 
 }
 

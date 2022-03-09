@@ -8,7 +8,7 @@
 namespace std {
 
 template <>
-struct hash<ml::vec3i> : public std::unary_function<ml::vec3i, size_t> {
+struct hash<ml::vec3i> {
 	size_t operator()(const ml::vec3i& v) const {
 		//TODO larger prime number (64 bit) to match size_t
 		const size_t p0 = 73856093;

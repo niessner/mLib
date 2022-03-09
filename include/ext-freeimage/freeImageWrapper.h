@@ -323,7 +323,11 @@ namespace ml {
 				FreeImage_Unload(dib);
 			}
 			else if (filename.length() > 4 && filename.find(".exr") != std::string::npos) {
-				FREE_IMAGE_TYPE type = FIT_RGBAF;
+				FREE_IMAGE_TYPE type;
+				if (numChannels == 1) type = FIT_FLOAT;
+				else if (numChannels == 3) type = FIT_RGBF;
+				else if (numChannels == 4) type = FIT_RGBAF;
+
 				FIBITMAP *dib = FreeImage_AllocateT(type, width, height);
 				BYTE* bits = FreeImage_GetBits(dib);
 				unsigned int pitch = FreeImage_GetPitch(dib);
@@ -331,7 +335,7 @@ namespace ml {
 				if (numChannels == 4 && bytesPerChannel == 4) {
 					//color map; R32G32B32A32
 					for (unsigned int y = 0; y < height; y++) {
-						BYTE* bitsRowStart = bits + (height - 1 - y)*pitch;
+						BYTE* bitsRowStart = bits + (height - 1 - y) * pitch;
 						FLOAT* bitsRowStartFloat = (FLOAT*)bitsRowStart;
 						for (unsigned int x = 0; x < width; x++) {
 							vec4f color;		convertToFLOAT4(color, image(x, y));
@@ -342,11 +346,35 @@ namespace ml {
 						}
 					}
 				}
+				else if (numChannels == 3 && bytesPerChannel == 4) {
+					//color map; R32G32B32
+					for (unsigned int y = 0; y < height; y++) {
+						BYTE* bitsRowStart = bits + (height - 1 - y) * pitch;
+						FLOAT* bitsRowStartFloat = (FLOAT*)bitsRowStart;
+						for (unsigned int x = 0; x < width; x++) {
+							vec3f color;		convertToFLOAT3(color, image(x, y));
+							bitsRowStartFloat[x * numChannels + 0] = color.x;
+							bitsRowStartFloat[x * numChannels + 1] = color.y;
+							bitsRowStartFloat[x * numChannels + 2] = color.z;
+						}
+					}
+				}
+				else if (numChannels == 1 && bytesPerChannel == 4) {
+					//depth map; R32
+					for (unsigned int y = 0; y < height; y++) {
+						BYTE* bitsRowStart = bits + (height - 1 - y) * pitch;
+						FLOAT* bitsRowStartFloat = (FLOAT*)bitsRowStart;
+						for (unsigned int x = 0; x < width; x++) {
+							float color;		convertToFLOAT(color, image(x, y));
+							bitsRowStartFloat[x * numChannels + 0] = color;
+						}
+					}
+				}
 				else {
 					throw MLIB_EXCEPTION("Unknown image format (" + std::to_string(image.getNumChannels()) + "|" + std::to_string(image.getNumBytesPerChannel()) + ")");
 				}
 
-				FreeImage_Save(FIF_EXR, dib, filename.c_str(), EXR_NONE);
+				FreeImage_Save(FIF_EXR, dib, filename.c_str(), EXR_ZIP);
 				FreeImage_Unload(dib);
 			}
 			else {
