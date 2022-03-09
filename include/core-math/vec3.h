@@ -270,6 +270,9 @@ public:
 	inline T* getData() {
 		return &array[0];
 	}
+	inline const T* getData() const {
+		return &array[0];
+	}
 
 	inline std::vector<T> toStdVector() const {
 		std::vector<T> result(3);

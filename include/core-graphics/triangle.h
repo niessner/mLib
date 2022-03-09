@@ -24,13 +24,14 @@ struct Triangle
 		vec3f ab = vertices[1] - vertices[0];
 		vec3f ac = vertices[2] - vertices[0];
 		float len = ab.length() * ac.length();
+		if (len < 0.00001f) return 0.0f;
 		float cosTheta = (ab | ac) / len;
 		if (fabs(cosTheta + 1) < 0.00001f || fabs(cosTheta - 1) < 0.00001f) {
-			return 0;
+			return 0.0f;
 		}
 		float theta = std::acos(cosTheta);
 		float area (0.5f * len * std::sin(theta));
-		MLIB_ASSERT(area > 0);
+		//MLIB_ASSERT(area > 0);
 		return area;
 	}
 

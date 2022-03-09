@@ -215,6 +215,10 @@ public:
 		return &array[0];
 	}
 
+	const inline T* getData() const {
+		return &array[0];
+	}
+
     inline std::vector<T> toStdVector() const {
         std::vector<T> result(2);
         result[0] = x;

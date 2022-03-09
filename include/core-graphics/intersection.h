@@ -161,7 +161,93 @@ namespace intersection {
 		return ((txmin <= t1) && (txmax >= t0));
 	}
 
+	template <class FloatType>
+	vec3<FloatType> closestPointOnTriangle(const Triangle<FloatType>& triangle, const vec3<FloatType> &sourcePosition, FloatType& s, FloatType& t) {
+		return closestPointOnTriangle(triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], sourcePosition, s, t);
+	}
+	//https://www.geometrictools.com/Documentation/DistancePoint3Triangle3.pdf
+	template <class FloatType>
+	vec3<FloatType> closestPointOnTriangle(const vec3<FloatType> &v0, const vec3<FloatType> &v1, const vec3<FloatType> &v2, 
+		const vec3<FloatType> &sourcePosition, FloatType& s, FloatType& t)
+	{
+		const vec3<FloatType> edge0 = v1 - v0;
+		const vec3<FloatType> edge1 = v2 - v0;
+		const vec3<FloatType> p0 = v0 - sourcePosition;
 
+		FloatType a = edge0 | edge0;
+		FloatType b = edge0 | edge1;
+		FloatType c = edge1 | edge1;
+		FloatType d = edge0 | p0;
+		FloatType e = edge1 | p0;
+
+		FloatType det = a*c - b*b;
+		s = b*e - c*d;
+		t = b*d - a*e;
+
+		if (s + t < det) {
+			if (s < (FloatType)0) {
+				if (t < (FloatType)0) {
+					if (d < (FloatType)0) {
+						s = math::clamp(-d / a, (FloatType)0, (FloatType)1);
+						t = (FloatType)0;
+					}
+					else {
+						s = (FloatType)0;
+						t = math::clamp(-e / c, (FloatType)0, (FloatType)1);
+					}
+				}
+				else {
+					s = (FloatType)0;
+					t = math::clamp(-e / c, (FloatType)0, (FloatType)1);
+				}
+			}
+			else if (t < (FloatType)0) {
+				s = math::clamp(-d / a, (FloatType)0, (FloatType)1);
+				t = (FloatType)0;
+			}
+			else {
+				FloatType invDet = (FloatType)1 / det;
+				s *= invDet;
+				t *= invDet;
+			}
+		}
+		else {
+			if (s < (FloatType)0) {
+				FloatType tmp0 = b + d;
+				FloatType tmp1 = c + e;
+				if (tmp1 > tmp0) {
+					FloatType numer = tmp1 - tmp0;
+					FloatType denom = a - 2 * b + c;
+					s = math::clamp(numer / denom, (FloatType)0, (FloatType)1);
+					t = (FloatType)1 - s;
+				}
+				else {
+					t = math::clamp(-e / c, (FloatType)0, (FloatType)1);
+					s = (FloatType)0;
+				}
+			}
+			else if (t < (FloatType)0) {
+				if (a + d > b + e) {
+					float numer = c + e - b - d;
+					float denom = a - 2 * b + c;
+					s = math::clamp(numer / denom, (FloatType)0, (FloatType)1);
+					t = 1 - s;
+				}
+				else {
+					s = math::clamp(-e / c, (FloatType)0, (FloatType)1);
+					t = (FloatType)0;
+				}
+			}
+			else {
+				FloatType numer = c + e - b - d;
+				FloatType denom = a - 2 * b + c;
+				s = math::clamp(numer / denom, (FloatType)0, (FloatType)1);
+				t = (FloatType)1 - s;
+			}
+		}
+
+		return v0 + s * edge0 + t * edge1;
+	}
 
 
 

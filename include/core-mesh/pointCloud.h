@@ -39,6 +39,9 @@ public:
 		m_texCoords = std::move(pc.m_texCoords);
 	}
 
+	PointCloud(const PointCloud&) = default;
+	PointCloud& operator=(const PointCloud&) = default;
+
 	bool hasNormals() const { return m_normals.size() > 0; }
 	bool hasColors() const { return m_colors.size() > 0; }
 	bool hasTexCoords() const { return m_texCoords.size() > 0; }

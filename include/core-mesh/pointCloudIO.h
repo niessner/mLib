@@ -44,6 +44,8 @@ public:
 		std::string extension = util::getFileExtension(filename);
 		if (extension == "ply") {
 			saveToPLY(filename, pointCloud);
+		} else if (extension == "obj") {
+			saveToOBJ(filename, pointCloud);
 		} else {
 			throw MLIB_EXCEPTION("unknown file extension" + filename);
 		}
@@ -136,6 +138,23 @@ public:
 			file.write((const char*)&pc.m_points[0], sizeof(float)*3*pc.m_points.size());
 		}
 
+		file.close();
+	}
+
+
+	static void saveToOBJ(const std::string& filename, const PointCloud<FloatType>& pc) {
+
+		if (!std::is_same<FloatType, float>::value) throw MLIB_EXCEPTION("only implemented for float, not for double");
+
+		std::ofstream file(filename);
+		if (!file.is_open()) throw MLIB_EXCEPTION("Could not open file for writing " + filename);
+		for (unsigned int i = 0; i < pc.m_points.size(); i++) {
+			file << "v " << pc.m_points[i].x << " " << pc.m_points[i].y << " " << pc.m_points[i].z;
+			if (pc.m_colors.size() == pc.m_points.size()) {
+				file << " " << pc.m_colors[i].r << " " << pc.m_colors[i].g << " " << pc.m_colors[i].b;
+			}
+			file << std::endl;
+		}
 		file.close();
 	}
 
