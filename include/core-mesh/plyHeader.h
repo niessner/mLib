@@ -44,6 +44,23 @@ namespace ml {
 			}
 		}
 
+		static unsigned int getByteSizeFromNameType(const std::string& nameType) {
+			/*
+			nameType: double/float/int/uint/char/uchar/short/ushort
+			return: number of bytes occupied by this type
+			*/
+			unsigned int size;
+
+			if (nameType == "double") size = 8;
+			else if (nameType == "float" || nameType == "int" || nameType == "uint") size = 4;
+			else if (nameType == "ushort" || nameType == "short") size = 2;
+			else if (nameType == "uchar" || nameType == "char") size = 1;
+			else {
+				throw MLIB_EXCEPTION("unkown data type");
+			}
+			return size;
+		}
+
 		static void PlyHeaderLine(const std::string& line, PlyHeader& header, std::string& activeElement) {
 
 			std::stringstream ss(line);
@@ -80,14 +97,23 @@ namespace ml {
 						if (p.name == "red") header.m_bHasColors = true;
 					}
 
-					if (p.nameType == "double") p.byteSize = 8;
-					else if (p.nameType == "float" || p.nameType == "int" || p.nameType == "uint") p.byteSize = 4;
-					else if (p.nameType == "ushort" || p.nameType == "short") p.byteSize = 2;
-					else if (p.nameType == "uchar" || p.nameType == "char") p.byteSize = 1;
-					else {
-						throw MLIB_EXCEPTION("unkown data type");
-					}
+					p.byteSize = getByteSizeFromNameType(p.nameType);
 					header.m_properties[activeElement].push_back(p);
+				}
+				// read the line about face indices
+				//eg: property list uchar int vertex_indices
+				//eg: property list int int vertex_indices
+				else if (util::endsWith(line, "vertex_indices") || util::endsWith(line, "vertex_index")) {
+					PlyHeader::PlyPropertyHeader p;
+					std::string ignore;
+					// "list"
+					ss >> ignore;
+					// uchar/int
+					ss >> p.nameType;
+					// create our own name for this
+					p.name = "verticesPerFace";
+					p.byteSize = getByteSizeFromNameType(p.nameType);
+					header.m_properties[p.name].push_back(p);
 				}
 				else {
 					//property belonging to unknown element
