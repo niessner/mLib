@@ -275,6 +275,9 @@ class vec4 : public BinaryDataSerialize< vec4<T> >
 		inline T* getData() {
 			return &array[0];
 		}
+		const inline T* getData() const {
+			return &array[0];
+		}
 
 		inline std::vector<T> toStdVector() const {
 			std::vector<T> result(4);

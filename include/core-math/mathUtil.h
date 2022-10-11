@@ -60,9 +60,13 @@ vector< std::pair<vec3<T>, T> > pointSetPCA(const std::vector< vec3<T> > &points
     const auto &v = system.eigenvectors;
     
     vector< std::pair<vec3<T>, T> > result;
-    result.push_back(std::make_pair(vec3<T>(v(0, 0), v(0, 1), v(0, 2)), system.eigenvalues[0]));
-    result.push_back(std::make_pair(vec3<T>(v(1, 0), v(1, 1), v(1, 2)), system.eigenvalues[1]));
-    result.push_back(std::make_pair(vec3<T>(v(2, 0), v(2, 1), v(2, 2)), system.eigenvalues[2]));
+ //   result.push_back(std::make_pair(vec3<T>(v(0, 0), v(0, 1), v(0, 2)), system.eigenvalues[0]));
+ //   result.push_back(std::make_pair(vec3<T>(v(1, 0), v(1, 1), v(1, 2)), system.eigenvalues[1]));
+	//result.push_back(std::make_pair(vec3<T>(v(2, 0), v(2, 1), v(2, 2)), system.eigenvalues[2]));
+	result.push_back(std::make_pair(vec3<T>(v(0, 0), v(1, 0), v(2, 0)), system.eigenvalues[0]));
+	result.push_back(std::make_pair(vec3<T>(v(0, 1), v(1, 1), v(2, 1)), system.eigenvalues[1]));
+	result.push_back(std::make_pair(vec3<T>(v(0, 2), v(1, 2), v(2, 2)), system.eigenvalues[2]));
+
     return result;
 }
 
