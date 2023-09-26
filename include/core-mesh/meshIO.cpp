@@ -115,25 +115,22 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 
 		delete [] data;
 
-		size = 1+3*4;	//typically 1 uchar for numVertices per triangle, 3 * int for indices
+		// size of the #vertices/face field, uchar=1, int=4
+		// need to support int field, for eg. PLY files coming from PoissonRecon's SurfaceTrimmer.exe
+		unsigned int verticesPerFaceFieldSize = header.m_properties["verticesPerFace"][0].byteSize;
+		//typically 1 uchar for numVertices per triangle, 3 * int for indices
+		size = verticesPerFaceFieldSize + 3*4;	
 		data = new char[size*header.m_numFaces];
 		file.read(data, size*header.m_numFaces);
-		for (unsigned int i = 0; i < header.m_numFaces; i++) {	
-			mesh.m_FaceIndicesVertices[i][0] = ((int*)&data[i*size+1])[0];
-			mesh.m_FaceIndicesVertices[i][1] = ((int*)&data[i*size+1])[1];
-			mesh.m_FaceIndicesVertices[i][2] = ((int*)&data[i*size+1])[2];
 
-			//mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[0]);
-			//mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[1]);
-			//mesh.m_FaceIndicesVertices[i].push_back(((int*)&data[i*size+1])[2]);
+		for (unsigned int i = 0; i < header.m_numFaces; i++) {	
+			// go to the line containing i'th face, then skip the first field (#vertices/face)
+			unsigned int offset = i * size + verticesPerFaceFieldSize;
+			mesh.m_FaceIndicesVertices[i][0] = ((int*)&data[offset])[0];
+			mesh.m_FaceIndicesVertices[i][1] = ((int*)&data[offset])[1];
+			mesh.m_FaceIndicesVertices[i][2] = ((int*)&data[offset])[2];
 		}
 
-		//if (mesh.m_Colors.size() == 0) {
-		//	mesh.m_Colors.resize(header.m_NumVertices);
-		//	for (size_t i = 0; i < mesh.m_Colors.size(); i++) {
-		//		mesh.m_Colors[i] = vec3f(0.5f, 0.5f, 0.5f);
-		//	}
-		//}
 		delete [] data;
 
 	}
@@ -164,14 +161,6 @@ void MeshIO<FloatType>::loadFromPLY( const std::string& filename, MeshData<Float
 			}
 			mesh.m_FaceIndicesVertices.push_back(face);
 		}
-
-		//if (mesh.m_Colors.size() == 0) {
-		//	mesh.m_Colors.resize(header.m_NumVertices);
-		//	for (size_t i = 0; i < mesh.m_Colors.size(); i++) {
-		//		mesh.m_Colors[i] = vec3f(0.5f, 0.5f, 0.5f);
-		//	}
-		//}
-
 	}
 }
 
