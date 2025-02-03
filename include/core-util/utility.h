@@ -164,7 +164,7 @@ namespace math
 	}
 
 	template<class T>
-	inline T nextLargeestPow2(T x) {
+	inline T nextLargestPow2(T x) {
 		x |= (x >> 1);
 		x |= (x >> 2);
 		x |= (x >> 4);
@@ -308,7 +308,7 @@ namespace math
 		return dis(gen);
 	}
 
-	//! flips a coin: 50% chance to retrun true; otherwise false
+	//! flips a coin: 50% chance to return true; otherwise false
 	inline bool randomCointoss() {
 		if (randomUniform(0.0f, 1.0f) > 0.5f) return false;	//there may be some bias
 		else return true;
@@ -428,7 +428,7 @@ namespace util
        
     inline void runSystemCommand(const std::string &s)
     {
-		//TODO fix it: this should in theroy call s = util::replace(s, "/", "\\");
+		//TODO fix it: this should in theory call s = util::replace(s, "/", "\\");
         system(s.c_str());
     }
 

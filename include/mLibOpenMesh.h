@@ -10,7 +10,7 @@
 //#define OM_STATIC_BUILD
 //#endif
 
-//This is pretty bad design choice to define it here because it will cause different behaviror if math.h was included before...
+//This is pretty bad design choice to define it here because it will cause different behaviour if math.h was included before...
 #ifndef _USE_MATH_DEFINES
 #define _USE_MATH_DEFINES
 #endif
